@@ -31,7 +31,6 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.destroy = jest.fn();
     this.sendRequest = jest.fn();
     this.clearSelection = jest.fn();
-    this.setAppendRequestData = jest.fn();
 }));
 
 jest.mock('../../../containers/Datagrid/registries/DatagridAdapterRegistry', () => ({

@@ -18,7 +18,6 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.deselect = jest.fn();
     this.selectEntirePage = jest.fn();
     this.deselectEntirePage = jest.fn();
-    this.setAppendRequestData = jest.fn();
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
