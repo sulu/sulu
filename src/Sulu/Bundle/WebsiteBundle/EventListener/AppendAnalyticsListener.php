@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
+use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -21,6 +22,11 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class AppendAnalyticsListener
 {
+    const POSITION_HEAD_OPEN = 'head-open';
+    const POSITION_HEAD_CLOSE = 'head-close';
+    const POSITION_BODY_OPEN = 'body-open';
+    const POSITION_BODY_CLOSE = 'body-close';
+
     /**
      * @var EngineInterface
      */
@@ -82,16 +88,55 @@ class AppendAnalyticsListener
         }
 
         $portalUrl = $this->requestAnalyzer->getAttribute('urlExpression');
-        $analytics = $this->analyticsRepository->findByUrl(
+        /** @var Analytics[] $analyticsArray */
+        $analyticsArray = $this->analyticsRepository->findByUrl(
             $portalUrl,
             $this->requestAnalyzer->getPortalInformation()->getWebspaceKey(),
             $this->environment
         );
 
-        $content = $this->engine->render('SuluWebsiteBundle:Analytics:website.html.twig', ['analytics' => $analytics]);
+        $analyticsContent = [
+            self::POSITION_HEAD_OPEN => null,
+            self::POSITION_HEAD_CLOSE => null,
+            self::POSITION_BODY_OPEN => null,
+            self::POSITION_BODY_CLOSE => null,
+        ];
+        foreach ($analyticsArray as $analytics) {
+            $type = $analytics->getType();
+            foreach ($analyticsContent as $tag => &$value) {
+                $template = 'SuluWebsiteBundle:Analytics:' . $type . DIRECTORY_SEPARATOR . $tag . '.html.twig';
+
+                if (!$this->engine->exists($template)) {
+                    continue;
+                }
+
+                $value .= $this->engine->render($template, ['analytics' => $analytics]);
+            }
+        }
 
         $response = $event->getResponse();
-        $responseContent = $response->getContent();
-        $response->setContent(str_replace('</body>', $content . '</body>', $responseContent));
+        $content = $response->getContent();
+
+        if ($analyticsContent[self::POSITION_HEAD_OPEN]) {
+            $matches = [];
+            preg_match('/<head[^>]*>/', $content, $matches);
+            $content = str_replace($matches[0],  $matches[0] . $analyticsContent[self::POSITION_HEAD_OPEN], $content);
+        }
+
+        if ($analyticsContent[self::POSITION_HEAD_CLOSE]) {
+            $content = str_replace('</head>', $analyticsContent[self::POSITION_HEAD_CLOSE] . '</head>', $content);
+        }
+
+        if ($analyticsContent[self::POSITION_BODY_OPEN]) {
+            $matches = [];
+            preg_match('/<body[^>]*>/', $content, $matches);
+            $content = str_replace($matches[0], $matches[0] . $analyticsContent[self::POSITION_BODY_OPEN], $content);
+        }
+
+        if ($analyticsContent[self::POSITION_BODY_CLOSE]) {
+            $content = str_replace('</body>', $analyticsContent[self::POSITION_BODY_CLOSE] . '</body>', $content);
+        }
+
+        $response->setContent($content);
     }
 }

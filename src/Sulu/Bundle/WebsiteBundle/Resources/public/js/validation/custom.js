@@ -25,19 +25,23 @@ define([
                         value = {};
                     }
 
-                    this.$el.find('#analytics-content-url').val(value.url || '');
-                    this.$el.find('#analytics-content-site-id').val(value.siteId || '');
+                    this.$el.find('#analytics-content-head-open').val(value.headOpen || '');
+                    this.$el.find('#analytics-content-head-close').val(value.headClose || '');
+                    this.$el.find('#analytics-content-body-open').val(value.bodyOpen || '');
+                    this.$el.find('#analytics-content-body-close').val(value.bodyClose || '');
                 },
 
                 getValue: function() {
                     return {
-                        url: this.$el.find('#analytics-content-url').val(),
-                        siteId: this.$el.find('#analytics-content-site-id').val()
-                    }
+                        headOpen: this.$el.find('#analytics-content-head-open').val(),
+                        headClose: this.$el.find('#analytics-content-head-close').val(),
+                        bodyOpen: this.$el.find('#analytics-content-body-open').val(),
+                        bodyClose: this.$el.find('#analytics-content-body-close').val()
+                    };
                 },
 
                 needsValidation: function() {
-                    return false;
+                    return true;
                 },
 
                 validate: function() {
@@ -45,6 +49,6 @@ define([
                 }
             };
 
-        return new Default($el, defaults, options, 'piwik', subType);
+        return new Default($el, defaults, options, 'custom', subType);
     };
 });

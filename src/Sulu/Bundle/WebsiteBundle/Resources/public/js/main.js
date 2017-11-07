@@ -13,6 +13,7 @@ require.config({
         suluwebsitecss: '../../suluwebsite/css',
 
         'type/piwik': '../../suluwebsite/js/validation/piwik',
+        'type/custom': '../../suluwebsite/js/validation/custom',
         'services/suluwebsite/reference-store': '../../suluwebsite/js/services/reference-store'
     }
 });

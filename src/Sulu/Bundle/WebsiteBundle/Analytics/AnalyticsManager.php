@@ -131,6 +131,13 @@ class AnalyticsManager implements AnalyticsManagerInterface
             $domainEntity = $this->findOrCreateNewDomain($domain);
             $analytics->addDomain($domainEntity);
         }
+
+        switch ($analytics->getType()) {
+            case 'google_tag_manager':
+                break;
+            case 'google':
+                break;
+        }
     }
 
     /**

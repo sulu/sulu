@@ -13,9 +13,9 @@ define([
     'config',
     'text!./form.html',
     'text!./input.html',
-    'text!./textarea.html',
+    'text!./custom.html',
     'text!./piwik.html'
-], function($, _, Config, form, input, textarea, piwik) {
+], function($, _, Config, form, input, custom, piwik) {
 
     'use strict';
 
@@ -50,9 +50,14 @@ define([
                 {
                     id: 'custom',
                     title: 'website.webspace.settings.type.custom',
-                    input: 'textarea',
-                    labels: ['website.webspace.settings.script'],
-                    inputTemplate: textarea
+                    input: 'custom',
+                    labels: [
+                        'website.webspace.settings.scriptHeadOpen',
+                        'website.webspace.settings.scriptHeadClose',
+                        'website.webspace.settings.scriptBodyOpen',
+                        'website.webspace.settings.scriptBodyClose'
+                    ],
+                    inputTemplate: custom
                 }
             ]
         },
