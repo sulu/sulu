@@ -1,7 +1,10 @@
 // @flow
 import type {Node, Element} from 'react';
+import ButtonComponent from './Button';
+import DropdownComponent from './Dropdown';
+import SelectComponent from './Select';
 
-export type Item = Element<typeof Button> | Element<typeof Dropdown> | Element<typeof Select>;
+export type Item = Element<typeof ButtonComponent> | Element<typeof DropdownComponent> | Element<typeof SelectComponent>;
 
 export type Button = {
     children?: Node,
