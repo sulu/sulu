@@ -12,8 +12,8 @@ exports[`The component should render in body when open 2`] = `
         <header>My dialog title</header>
         <article>My dialog content</article>
         <footer>
-          <button class=\\"button secondary\\">Cancel</button>
-          <button class=\\"button primary\\">Confirm</button>
+          <button class=\\"secondary\\">Cancel</button>
+          <button class=\\"primary\\">Confirm</button>
         </footer>
       </section>
     </div>

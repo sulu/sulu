@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import classNames from 'classnames';
 import buttonStyles from './button.scss';
 
 type Props = {
@@ -20,14 +19,8 @@ export default class Button extends React.PureComponent<Props> {
             skin,
         } = this.props;
 
-        let buttonClass = buttonStyles.link;
-
-        if ('link' !== skin) {
-            buttonClass = classNames(buttonStyles.button, buttonStyles[skin]);
-        }
-
         return (
-            <button className={buttonClass} onClick={this.handleClick}>
+            <button className={buttonStyles[skin]} onClick={this.handleClick}>
                 {children}
             </button>
         );
