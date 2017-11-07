@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import 'url-search-params-polyfill';
 import createHistory from 'history/createMemoryHistory';
 import {extendObservable, observable, isObservable} from 'mobx';
@@ -52,13 +52,13 @@ test('Navigate to route with search parameters using state', () => {
     const history = createHistory();
     const router = new Router(history);
 
-    router.navigate('page', {uuid: 'some-uuid'}, {page: '1', sort: 'title'});
+    router.navigate('page', {uuid: 'some-uuid', page: '1', sort: 'title'});
     expect(isObservable(router.route)).toBe(true);
     expect(router.route.view).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
-    expect(router.query.page).toBe('1');
-    expect(router.query.sort).toBe('title');
+    expect(router.attributes.page).toBe('1');
+    expect(router.attributes.sort).toBe('title');
     expect(history.location.pathname).toBe('/pages/some-uuid');
     expect(history.location.search).toBe('?page=1&sort=title');
 });
@@ -122,8 +122,8 @@ test('Navigate to route using URL with search parameters', () => {
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(router.attributes.test).toBe('value');
-    expect(router.query.page).toBe('1');
-    expect(router.query.sort).toBe('date');
+    expect(router.attributes.page).toBe('1');
+    expect(router.attributes.sort).toBe('date');
     expect(history.location.pathname).toBe('/pages/some-uuid/value');
     expect(history.location.search).toBe('?page=1&sort=date');
 });
@@ -197,11 +197,11 @@ test('Navigate to route changing only search parameters', () => {
     const history = createHistory();
     const router = new Router(history);
 
-    router.navigate('page', {uuid: 'some-uuid'}, {sort: 'date'});
+    router.navigate('page', {uuid: 'some-uuid', sort: 'date'});
     expect(history.location.pathname).toBe('/pages/some-uuid');
     expect(history.location.search).toBe('?sort=date');
 
-    router.navigate('page', {uuid: 'some-uuid'}, {sort: 'title'});
+    router.navigate('page', {uuid: 'some-uuid', sort: 'title'});
     expect(history.location.pathname).toBe('/pages/some-uuid');
     expect(history.location.search).toBe('?sort=title');
 });
@@ -218,11 +218,11 @@ test('Navigate to route by adding search parameters', () => {
     const history = createHistory();
     const router = new Router(history);
 
-    router.navigate('page', {uuid: 'some-uuid'}, {sort: 'date'});
+    router.navigate('page', {uuid: 'some-uuid', sort: 'date'});
     expect(history.location.pathname).toBe('/pages/some-uuid');
     expect(history.location.search).toBe('?sort=date');
 
-    router.navigate('page', {uuid: 'some-uuid'}, {sort: 'date', order: 'asc'});
+    router.navigate('page', {uuid: 'some-uuid', sort: 'date', order: 'asc'});
     expect(history.location.pathname).toBe('/pages/some-uuid');
     expect(history.location.search).toBe('?sort=date&order=asc');
 });
@@ -239,11 +239,11 @@ test('Navigate to route by removing search parameters', () => {
     const history = createHistory();
     const router = new Router(history);
 
-    router.navigate('page', {uuid: 'some-uuid'}, {sort: 'date', order: 'asc'});
+    router.navigate('page', {uuid: 'some-uuid', sort: 'date', order: 'asc'});
     expect(history.location.pathname).toBe('/pages/some-uuid');
     expect(history.location.search).toBe('?sort=date&order=asc');
 
-    router.navigate('page', {uuid: 'some-uuid'}, {sort: 'date'});
+    router.navigate('page', {uuid: 'some-uuid', sort: 'date'});
     expect(history.location.pathname).toBe('/pages/some-uuid');
     expect(history.location.search).toBe('?sort=date');
 });
@@ -307,19 +307,19 @@ test('Use current route from URL', () => {
     expect(router.route.name).toBe('page');
 });
 
-test('Bound query parameter should update passed observable', () => {
+test('Binding should update passed observable', () => {
     const value = observable();
 
     const history = createHistory();
     const router = new Router(history);
 
-    router.bindQuery('page', value);
-    router.navigate('list', {}, {page: 2});
+    router.bind('page', value);
+    router.navigate('list', {page: 2});
 
     expect(value.get()).toBe(2);
 });
 
-test('Bound query parameter should update state in router', () => {
+test('Binding should update state in router', () => {
     routeRegistry.getAll.mockReturnValue({
         list: {
             name: 'list',
@@ -333,15 +333,58 @@ test('Bound query parameter should update state in router', () => {
     const history = createHistory();
     const router = new Router(history);
 
-    router.navigate('list', {}, {page: 1});
-    router.bindQuery('page', page);
-    expect(router.query.page).toBe('1');
+    router.navigate('list', {page: 1});
+    router.bind('page', page);
+    expect(router.attributes.page).toBe('1');
 
     page.set(2);
-    expect(router.query.page).toBe('2');
+    expect(router.attributes.page).toBe('2');
 });
 
-test('Bound query parameter should update state in router with other default query parameters', () => {
+test('Binding should set default attribute', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            view: 'page',
+            path: '/page/:locale',
+        },
+    });
+
+    const locale = observable();
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bind('locale', locale, 'en');
+    router.navigate('page');
+    expect(router.attributes.locale).toBe('en');
+    expect(router.url).toBe('/page/en');
+});
+
+test('Binding should update URL with fixed attributes', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            view: 'page',
+            path: '/page/:uuid',
+        },
+    });
+
+    const uuid = observable(1);
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.navigate('page', {uuid: 1, locale: 'de'});
+    router.bind('uuid', uuid);
+    expect(router.attributes.uuid).toBe('1');
+    expect(router.url).toBe('/page/1?locale=de');
+
+    uuid.set(2);
+    expect(router.attributes.uuid).toBe('2');
+});
+
+test('Binding should update state in router with other default bindings', () => {
     routeRegistry.getAll.mockReturnValue({
         list: {
             name: 'list',
@@ -356,40 +399,40 @@ test('Bound query parameter should update state in router with other default que
     const history = createHistory();
     const router = new Router(history);
 
-    router.bindQuery('page', page, '1');
-    router.bindQuery('locale', locale);
+    router.bind('page', page, '1');
+    router.bind('locale', locale);
     router.navigate('list');
 
     locale.set('de');
     expect(history.location.search).toBe('?locale=de');
-    expect(router.query.locale).toBe('de');
+    expect(router.attributes.locale).toBe('de');
 });
 
-test('Unbind query should remove query binding', () => {
+test('Unbind should remove binding', () => {
     const value = observable();
 
     const history = createHistory();
     const router = new Router(history);
 
-    router.bindQuery('remove', value);
-    expect(router.queryBinds.has('remove')).toBe(true);
+    router.bind('remove', value);
+    expect(router.bindings.has('remove')).toBe(true);
 
-    router.unbindQuery('remove', value);
-    expect(router.queryBinds.has('remove')).toBe(false);
+    router.unbind('remove', value);
+    expect(router.bindings.has('remove')).toBe(false);
 });
 
-test('Unbind query should not remove query binding if it is assigned to a new observable', () => {
+test('Unbind query should not remove binding if it is assigned to a new observable', () => {
     const history = createHistory();
     const router = new Router(history);
 
     const value = observable();
-    router.bindQuery('remove', value);
-    expect(router.queryBinds.get('remove')).toBe(value);
+    router.bind('remove', value);
+    expect(router.bindings.get('remove')).toBe(value);
 
     const newValue = observable();
-    router.bindQuery('remove', newValue);
-    router.unbindQuery('remove', value);
-    expect(router.queryBinds.get('remove')).toBe(newValue);
+    router.bind('remove', newValue);
+    router.unbind('remove', value);
+    expect(router.bindings.get('remove')).toBe(newValue);
 });
 
 test('Do not add parameter to URL if undefined', () => {
@@ -406,7 +449,7 @@ test('Do not add parameter to URL if undefined', () => {
     const history = createHistory();
     const router = new Router(history);
 
-    router.bindQuery('page', value);
+    router.bind('page', value);
     history.push('/list');
     expect(history.location.search).toBe('');
 });
@@ -425,7 +468,7 @@ test('Set state to undefined if parameter is removed from URL', () => {
     const history = createHistory();
     const router = new Router(history);
 
-    router.bindQuery('page', value);
+    router.bind('page', value);
     history.push('/list');
     expect(value.get()).toBe(undefined);
 });
@@ -444,7 +487,7 @@ test('Bound query should update state to default value if removed from URL', () 
     const history = createHistory();
     const router = new Router(history);
 
-    router.bindQuery('page', value, '1');
+    router.bind('page', value, '1');
     history.push('/list');
     expect(value.get()).toBe('1');
 });
@@ -464,7 +507,7 @@ test('Bound query should omit URL parameter if set to default value', () => {
     const router = new Router(history);
     router.navigate('list');
 
-    router.bindQuery('page', value, '1');
+    router.bind('page', value, '1');
     value.set('1');
     expect(history.location.search).toBe('');
 });
@@ -483,7 +526,7 @@ test('Bound query should initially not be set to undefined in URL', () => {
     const history = createHistory();
     history.push('/list');
     const router = new Router(history);
-    router.bindQuery('page', value, '1');
+    router.bind('page', value, '1');
 
     expect(history.location.search).toBe('');
 });
@@ -502,7 +545,7 @@ test('Bound query should be set to initial passed value from URL', () => {
     const history = createHistory();
     history.push('/list?page=2');
     const router = new Router(history);
-    router.bindQuery('page', value, '1');
+    router.bind('page', value, '1');
 
     expect(value.get()).toBe('2');
     expect(history.location.search).toBe('?page=2');
@@ -556,11 +599,15 @@ test('Navigate to child route using state', () => {
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(history.location.pathname).toBe('/snippets/some-uuid/detail');
 
-    expect(router.route.parent.view).toBe('sulu_admin.tab');
-    expect(router.route.parent.options.resourceKey).toBe('snippet');
-    expect(router.route.parent.children).toHaveLength(2);
-    expect(router.route.parent.children[0]).toBe(router.route);
-    expect(router.route.parent.children[1].options.tabTitle).toBe('Taxonomies');
+    const parent = router.route.parent;
+    if (!parent) {
+        throw new Error('Parent must be set!');
+    }
+    expect(parent.view).toBe('sulu_admin.tab');
+    expect(parent.options.resourceKey).toBe('snippet');
+    expect(parent.children).toHaveLength(2);
+    expect(parent.children[0]).toBe(router.route);
+    expect(parent.children[1].options.tabTitle).toBe('Taxonomies');
 });
 
 test('Navigate to child route using URL', () => {
@@ -611,9 +658,13 @@ test('Navigate to child route using URL', () => {
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(history.location.pathname).toBe('/snippets/some-uuid/detail');
 
-    expect(router.route.parent.view).toBe('sulu_admin.tab');
-    expect(router.route.parent.options.resourceKey).toBe('snippet');
-    expect(router.route.parent.children).toHaveLength(2);
-    expect(router.route.parent.children[0]).toBe(router.route);
-    expect(router.route.parent.children[1].options.tabTitle).toBe('Taxonomies');
+    const parent = router.route.parent;
+    if (!parent) {
+        throw new Error('Parent must be set!');
+    }
+    expect(parent.view).toBe('sulu_admin.tab');
+    expect(parent.options.resourceKey).toBe('snippet');
+    expect(parent.children).toHaveLength(2);
+    expect(parent.children[0]).toBe(router.route);
+    expect(parent.children[1].options.tabTitle).toBe('Taxonomies');
 });

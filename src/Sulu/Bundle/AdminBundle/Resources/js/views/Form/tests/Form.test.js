@@ -48,7 +48,7 @@ test('Should navigate to defined route on back button click', () => {
 
     const router = {
         navigate: jest.fn(),
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 backRoute: 'test_route',
@@ -62,7 +62,7 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.backButton.onClick();
-    expect(router.navigate).toBeCalledWith('test_route', {}, {locale: 'de'});
+    expect(router.navigate).toBeCalledWith('test_route', {locale: 'de'});
 });
 
 test('Should not render back button when no editLink is configured', () => {
@@ -74,7 +74,7 @@ test('Should not render back button when no editLink is configured', () => {
 
     const router = {
         navigate: jest.fn(),
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 locales: [],
@@ -97,7 +97,7 @@ test('Should change locale in form store via locale chooser', () => {
 
     const router = {
         navigate: jest.fn(),
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 backRoute: 'test_route',
@@ -123,7 +123,7 @@ test('Should show locales from router options in toolbar', () => {
 
     const router = {
         navigate: jest.fn(),
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 locales: ['en', 'de'],
@@ -149,7 +149,7 @@ test('Should not show a locale chooser if no locales are passed in router option
 
     const router = {
         navigate: jest.fn(),
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {},
         },
@@ -167,7 +167,7 @@ test('Should initialize the ResourceStore with a schema', () => {
     const resourceStore = new ResourceStore('snippets', 12);
 
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 locales: [],
@@ -199,7 +199,7 @@ test('Should render save button disabled only if form is not dirty', () => {
     const resourceStore = new ResourceStore('snippets', 12);
 
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         navigate: jest.fn(),
         route: {
             options: {
@@ -224,7 +224,7 @@ test('Should save form when submitted', () => {
     const resourceStore = new ResourceStore('snippets', 8);
 
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         navigate: jest.fn(),
         route: {
             options: {
@@ -250,7 +250,7 @@ test('Should pass store, schema and onSubmit handler to FormContainer', () => {
     const resourceStore = new ResourceStore('snippets', 12);
 
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         navigate: jest.fn(),
         route: {
             options: {
@@ -283,7 +283,7 @@ test('Should render save button loading only if form is not saving', () => {
     const resourceStore = new ResourceStore('snippets', 12);
 
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         navigate: jest.fn(),
         route: {
             options: {
@@ -300,13 +300,13 @@ test('Should render save button loading only if form is not saving', () => {
     expect(getSaveItem().loading).toBe(true);
 });
 
-test('Should unbind the query parameter and destroy the store on unmount', () => {
+test('Should unbind the binding and destroy the store on unmount', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12);
     const router = {
-        bindQuery: jest.fn(),
-        unbindQuery: jest.fn(),
+        bind: jest.fn(),
+        unbind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'snippets',
@@ -319,8 +319,8 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
     const form = mount(<Form router={router} resourceStore={resourceStore} />);
     const locale = form.find('Form').at(1).prop('store').locale;
 
-    expect(router.bindQuery).toBeCalledWith('locale', locale);
+    expect(router.bind).toBeCalledWith('locale', locale);
 
     form.unmount();
-    expect(router.unbindQuery).toBeCalledWith('locale', locale);
+    expect(router.unbind).toBeCalledWith('locale', locale);
 });

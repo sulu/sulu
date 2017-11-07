@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, observable} from 'mobx';
+import {action, autorun, computed, observable, toJS} from 'mobx';
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import pathToRegexp, {compile} from 'path-to-regexp';
@@ -10,9 +10,8 @@ export default class Router {
     history: Object;
     @observable route: Route;
     @observable attributes: Object = {};
-    @observable query: Object = {};
-    @observable queryBinds: Map<string, observable> = new Map();
-    queryBindDefaults: Map<string, ?string> = new Map();
+    @observable bindings: Map<string, observable> = new Map();
+    bindingDefaults: Map<string, ?string> = new Map();
 
     constructor(history: Object) {
         this.history = history;
@@ -35,11 +34,11 @@ export default class Router {
         });
     }
 
-    @action bindQuery(key: string, value: observable, defaultValue: ?string = undefined) {
-        if (key in this.query) {
-            // when the query parameter is bound set the state of the passed observable to the current value once
+    @action bind(key: string, value: observable, defaultValue: ?string = undefined) {
+        if (key in this.attributes) {
+            // when the bound parameter is bound set the state of the passed observable to the current value once
             // required because otherwise the parameter will be overridden on the initial start of the application
-            value.set(this.query[key]);
+            value.set(this.attributes[key]);
         }
 
         if (typeof(value.get()) === 'undefined') {
@@ -47,17 +46,17 @@ export default class Router {
             value.set(defaultValue);
         }
 
-        this.queryBinds.set(key, value);
-        this.queryBindDefaults.set(key, defaultValue);
+        this.bindings.set(key, value);
+        this.bindingDefaults.set(key, defaultValue);
     }
 
-    @action unbindQuery(key: string, value: observable) {
-        if (this.queryBinds.get(key) !== value) {
+    @action unbind(key: string, value: observable) {
+        if (this.bindings.get(key) !== value) {
             return;
         }
 
-        this.queryBinds.delete(key);
-        this.queryBindDefaults.delete(key);
+        this.bindings.delete(key);
+        this.bindingDefaults.delete(key);
     }
 
     match(path: string, queryString: string) {
@@ -76,35 +75,32 @@ export default class Router {
             }
 
             const search = new URLSearchParams(queryString);
-            const query = {};
             search.forEach((value, key) => {
-                query[key] = value;
+                attributes[key] = value;
             });
 
-            this.navigate(name, attributes, query);
+            this.navigate(name, attributes);
 
             break;
         }
     }
 
-    @action navigate(name: string, attributes: Object = {}, query: Object = {}) {
+    @action navigate(name: string, attributes: Object = {}) {
         const route = routeRegistry.get(name);
 
         if (this.route
             && route
             && this.route.name === route.name
             && equal(this.attributes, attributes)
-            && equal(this.query, query)
         ) {
             return;
         }
 
         this.route = route;
         this.attributes = attributes;
-        this.query = query;
 
-        for (const [key, observableValue] of this.queryBinds.entries()) {
-            observableValue.set(this.query[key] || this.queryBindDefaults.get(key));
+        for (const [key, observableValue] of this.bindings.entries()) {
+            observableValue.set(this.attributes[key] || this.bindingDefaults.get(key));
         }
     }
 
@@ -113,21 +109,26 @@ export default class Router {
             return '';
         }
 
-        const url = compile(Router.getRoutePath(this.route))(this.attributes);
-        const searchParameters = new URLSearchParams();
-        Object.keys(this.query).forEach((key) => {
-            searchParameters.set(key, this.query[key]);
-        });
+        const path = Router.getRoutePath(this.route);
+        const keys = [];
+        pathToRegexp(path, keys);
+        const keyNames = keys.map((key) => key.name);
 
-        for (const [key, observableValue] of this.queryBinds.entries()) {
+        const attributes = toJS(this.attributes);
+        for (const [key, observableValue] of this.bindings.entries()) {
             const value = observableValue.get();
-            if (value == this.queryBindDefaults.get(key)) {
-                searchParameters.delete(key);
-                continue;
-            }
-
-            searchParameters.set(key, value);
+            attributes[key] = value;
         }
+
+        const url = compile(path)(attributes);
+        const searchParameters = new URLSearchParams();
+        Object.keys(attributes).forEach((key) => {
+            const value = attributes[key];
+            if (keyNames.includes(key) || value == this.bindingDefaults.get(key)) {
+                return;
+            }
+            searchParameters.set(key, value);
+        });
 
         const queryString = searchParameters.toString();
 
