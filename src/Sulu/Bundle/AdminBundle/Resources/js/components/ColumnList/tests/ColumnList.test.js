@@ -23,12 +23,12 @@ test('The ColumnList component should render', () => {
     const toolbarItems = [
         {
             icon: 'plus',
-            type: 'simple',
+            type: 'button',
             onClick: () => {},
         },
         {
             icon: 'search',
-            type: 'simple',
+            type: 'button',
             onClick: () => {},
         },
         {
@@ -88,12 +88,12 @@ test('The ColumnList component should trigger the item callback', () => {
     const toolbarItems = [
         {
             icon: 'plus',
-            type: 'simple',
+            type: 'button',
             onClick: () => {},
         },
         {
             icon: 'search',
-            type: 'simple',
+            type: 'button',
             onClick: () => {},
         },
         {
@@ -165,12 +165,12 @@ test('The ColumnList component should handle which toolbar is active on mouse en
     const toolbarItems = [
         {
             icon: 'plus',
-            type: 'simple',
+            type: 'button',
             onClick: () => {},
         },
         {
             icon: 'search',
-            type: 'simple',
+            type: 'button',
             onClick: () => {},
         },
         {

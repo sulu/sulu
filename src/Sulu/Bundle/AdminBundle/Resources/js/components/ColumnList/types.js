@@ -25,6 +25,6 @@ export type ToolbarButton = ToolbarBase & {
 
 export type ToolbarDropdownConfig = ToolbarDropdown & { type: 'dropdown' };
 
-export type ToolbarButtonConfig = ToolbarButton & { type: 'simple'};
+export type ToolbarButtonConfig = ToolbarButton & { type: 'button'};
 
 export type ToolbarItemConfig = ToolbarDropdownConfig | ToolbarButtonConfig;

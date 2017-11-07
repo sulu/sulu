@@ -26,14 +26,14 @@ const handleOnItemClick = (id) => {
 const toolbarItems = [
     {
         icon: 'plus',
-        type: 'simple',
+        type: 'button',
         onClick: (index) => {
             alert('Clicked plus button for item with index: ' + index);
         },
     },
     {
         icon: 'search',
-        type: 'simple',
+        type: 'button',
         skin: 'secondary',
         onClick: (index) => {
             alert('Clicked search button for column with index: ' + index);

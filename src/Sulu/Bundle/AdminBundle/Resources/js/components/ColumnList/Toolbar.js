@@ -18,7 +18,7 @@ export default class Toolbar extends React.Component<Props> {
             switch (toolbarItemConfig.type) {
                 case 'dropdown':
                     return <ToolbarDropdown key={index} index={this.props.index} {...toolbarItemConfig} />;
-                case 'simple':
+                case 'button':
                     return <ToolbarButton key={index} index={this.props.index} {...toolbarItemConfig} />;
                 default:
                     throw new Error('Unknown toolbar item type given: "' + toolbarItemConfig.type + '"');

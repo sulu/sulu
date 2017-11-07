@@ -20,12 +20,12 @@ exports[`The ColumnList component should render 1`] = `
       Object {
         "icon": "plus",
         "onClick": [Function],
-        "type": "simple",
+        "type": "button",
       },
       Object {
         "icon": "search",
         "onClick": [Function],
-        "type": "simple",
+        "type": "button",
       },
       Object {
         "icon": "gear",
@@ -72,12 +72,12 @@ exports[`The ColumnList component should render 1`] = `
             Object {
               "icon": "plus",
               "onClick": [Function],
-              "type": "simple",
+              "type": "button",
             },
             Object {
               "icon": "search",
               "onClick": [Function],
-              "type": "simple",
+              "type": "button",
             },
             Object {
               "icon": "gear",
@@ -108,12 +108,12 @@ exports[`The ColumnList component should render 1`] = `
                 Object {
                   "icon": "plus",
                   "onClick": [Function],
-                  "type": "simple",
+                  "type": "button",
                 },
                 Object {
                   "icon": "search",
                   "onClick": [Function],
-                  "type": "simple",
+                  "type": "button",
                 },
                 Object {
                   "icon": "gear",
@@ -140,7 +140,7 @@ exports[`The ColumnList component should render 1`] = `
                 index={0}
                 onClick={[Function]}
                 skin="primary"
-                type="simple"
+                type="button"
               >
                 <div
                   className="item primary"
@@ -161,7 +161,7 @@ exports[`The ColumnList component should render 1`] = `
                 index={0}
                 onClick={[Function]}
                 skin="primary"
-                type="simple"
+                type="button"
               >
                 <div
                   className="item primary"
@@ -487,12 +487,12 @@ exports[`The ColumnList component should render 1`] = `
             Object {
               "icon": "plus",
               "onClick": [Function],
-              "type": "simple",
+              "type": "button",
             },
             Object {
               "icon": "search",
               "onClick": [Function],
-              "type": "simple",
+              "type": "button",
             },
             Object {
               "icon": "gear",
@@ -523,12 +523,12 @@ exports[`The ColumnList component should render 1`] = `
                 Object {
                   "icon": "plus",
                   "onClick": [Function],
-                  "type": "simple",
+                  "type": "button",
                 },
                 Object {
                   "icon": "search",
                   "onClick": [Function],
-                  "type": "simple",
+                  "type": "button",
                 },
                 Object {
                   "icon": "gear",
@@ -555,7 +555,7 @@ exports[`The ColumnList component should render 1`] = `
                 index={1}
                 onClick={[Function]}
                 skin="primary"
-                type="simple"
+                type="button"
               >
                 <div
                   className="item primary"
@@ -576,7 +576,7 @@ exports[`The ColumnList component should render 1`] = `
                 index={1}
                 onClick={[Function]}
                 skin="primary"
-                type="simple"
+                type="button"
               >
                 <div
                   className="item primary"
@@ -824,12 +824,12 @@ exports[`The ColumnList component should render 1`] = `
             Object {
               "icon": "plus",
               "onClick": [Function],
-              "type": "simple",
+              "type": "button",
             },
             Object {
               "icon": "search",
               "onClick": [Function],
-              "type": "simple",
+              "type": "button",
             },
             Object {
               "icon": "gear",
@@ -860,12 +860,12 @@ exports[`The ColumnList component should render 1`] = `
                 Object {
                   "icon": "plus",
                   "onClick": [Function],
-                  "type": "simple",
+                  "type": "button",
                 },
                 Object {
                   "icon": "search",
                   "onClick": [Function],
-                  "type": "simple",
+                  "type": "button",
                 },
                 Object {
                   "icon": "gear",
@@ -892,7 +892,7 @@ exports[`The ColumnList component should render 1`] = `
                 index={2}
                 onClick={[Function]}
                 skin="primary"
-                type="simple"
+                type="button"
               >
                 <div
                   className="item primary"
@@ -913,7 +913,7 @@ exports[`The ColumnList component should render 1`] = `
                 index={2}
                 onClick={[Function]}
                 skin="primary"
-                type="simple"
+                type="button"
               >
                 <div
                   className="item primary"

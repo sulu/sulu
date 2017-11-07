@@ -18,12 +18,12 @@ test('The Column component should render', () => {
     const toolbarItems = [
         {
             icon: 'plus',
-            type: 'simple',
+            type: 'button',
             onClick: () => {},
         },
         {
             icon: 'search',
-            type: 'simple',
+            type: 'button',
             onClick: () => {},
         },
         {
