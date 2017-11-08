@@ -655,7 +655,7 @@ test('Bound query should initially not be set to undefined in URL', () => {
     expect(history.location.search).toBe('');
 });
 
-test('Bound query should be set to initial passed value from URL', () => {
+test('Binding should be set to initial passed value from URL', () => {
     routeRegistry.getAll.mockReturnValue({
         list: {
             name: 'list',
@@ -674,6 +674,32 @@ test('Bound query should be set to initial passed value from URL', () => {
 
     expect(value.get()).toBe('2');
     expect(history.location.search).toBe('?page=2');
+});
+
+test('Binding should not be updated if only data type changes', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const page = jest.fn(() => ({
+        get: jest.fn(),
+        set: jest.fn(),
+    }))();
+
+    const history = createHistory();
+    const router = new Router(history);
+    router.bind('page', page);
+
+    router.navigate('list', {page: 2});
+    page.get.mockReturnValue(2);
+
+    router.navigate('list', {page: '2'});
+    expect(page.set.mock.calls).not.toContainEqual(['2']);
 });
 
 test('Navigate to child route using state', () => {

@@ -100,7 +100,12 @@ export default class Router {
         this.attributes = attributes;
 
         for (const [key, observableValue] of this.bindings.entries()) {
-            observableValue.set(this.attributes[key] || this.bindingDefaults.get(key));
+            const value = this.attributes[key] || this.bindingDefaults.get(key);
+
+            // Type unsafe comparison to not trigger a new navigation when only data type changes
+            if (value != observableValue.get()) {
+                observableValue.set(value);
+            }
         }
     }
 
