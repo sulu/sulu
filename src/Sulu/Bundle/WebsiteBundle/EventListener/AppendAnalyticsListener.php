@@ -28,16 +28,16 @@ class AppendAnalyticsListener
             'sprintf' => '$1%s',
         ],
         'head-close' => [
-            'regex' => '</head>',
-            'sprintf' => '%s$1',
+            'regex' => '/<\/head>/',
+            'sprintf' => '%s</head>',
         ],
         'body-open' => [
             'regex' => '/(<body [^>]*>|<body>)/',
             'sprintf' => '$1%s',
         ],
         'body-close' => [
-            'regex' => '</body>',
-            'sprintf' => '%s$1',
+            'regex' => '/<\/body>/',
+            'sprintf' => '%s</body>',
         ],
     ];
 
@@ -129,8 +129,8 @@ class AppendAnalyticsListener
     protected function generateAnalyticsContent(array &$analyticsContent, Analytics $analytics)
     {
         foreach (array_keys(self::POSITIONS) as $position) {
-            $template =
-                'SuluWebsiteBundle:Analytics:' . $analytics->getType() . DIRECTORY_SEPARATOR . $position . '.html.twig';
+            $templateName = $position . '.html.twig';
+            $template = 'SuluWebsiteBundle:Analytics:' . $analytics->getType() . DIRECTORY_SEPARATOR . $templateName;
 
             if (!$this->engine->exists($template)) {
                 continue;
