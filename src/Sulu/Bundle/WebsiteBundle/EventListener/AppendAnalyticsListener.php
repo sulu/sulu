@@ -103,7 +103,6 @@ class AppendAnalyticsListener
 
         $portalUrl = $this->requestAnalyzer->getAttribute('urlExpression');
 
-        /** @var Analytics[] $analyticsArray */
         $analyticsArray = $this->analyticsRepository->findByUrl(
             $portalUrl,
             $this->requestAnalyzer->getPortalInformation()->getWebspaceKey(),
@@ -112,15 +111,11 @@ class AppendAnalyticsListener
 
         $analyticsContent = [];
         foreach ($analyticsArray as $analytics) {
-            $this->generateAnalyticsContent($analyticsContent, $analytics);
+            $analyticsContent = $this->generateAnalyticsContent($analyticsContent, $analytics);
         }
 
         $response = $event->getResponse();
-        $content = $response->getContent();
-
-        $this->setAnalyticsContent($content, $analyticsContent);
-
-        $response->setContent($content);
+        $response->setContent($this->setAnalyticsContent($response->getContent(), $analyticsContent));
     }
 
     /**
@@ -128,6 +123,8 @@ class AppendAnalyticsListener
      *
      * @param array $analyticsContent
      * @param Analytics $analytics
+     *
+     * @return array
      */
     protected function generateAnalyticsContent(array &$analyticsContent, Analytics $analytics)
     {
@@ -140,7 +137,6 @@ class AppendAnalyticsListener
             }
 
             $content = $this->engine->render($template, ['analytics' => $analytics]);
-
             if (!$content) {
                 continue;
             }
@@ -151,6 +147,8 @@ class AppendAnalyticsListener
 
             $analyticsContent[$position] .= $content;
         }
+
+        return $analyticsContent;
     }
 
     /**
@@ -158,8 +156,10 @@ class AppendAnalyticsListener
      *
      * @param string $responseContent
      * @param array $analyticsContent
+     *
+     * @return string
      */
-    protected function setAnalyticsContent(&$responseContent, array $analyticsContent)
+    protected function setAnalyticsContent($responseContent, array $analyticsContent)
     {
         foreach ($analyticsContent as $id => $content) {
             if (!$content) {
@@ -172,5 +172,7 @@ class AppendAnalyticsListener
                 $responseContent
             );
         }
+
+        return $responseContent;
     }
 }

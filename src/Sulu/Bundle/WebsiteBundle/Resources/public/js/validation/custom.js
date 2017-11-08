@@ -26,7 +26,7 @@ define([
                     }
 
                     if (!content.hasOwnProperty('value') || !content.hasOwnProperty('position')) {
-                        content.value = '';
+                        return;
                     }
 
                     this.$el.find('#analytics-content-value').val(content.value || '');
