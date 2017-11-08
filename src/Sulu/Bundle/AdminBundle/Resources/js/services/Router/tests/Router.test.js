@@ -23,6 +23,7 @@ test('Navigate to route using state', () => {
             options: {
                 type: 'page',
             },
+            attributeDefaults: {},
         },
     });
 
@@ -46,6 +47,7 @@ test('Navigate to route with search parameters using state', () => {
             options: {
                 type: 'page',
             },
+            attributeDefaults: {},
         },
     });
 
@@ -69,6 +71,7 @@ test('Navigate to route without parameters using state', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid',
+            attributeDefaults: {},
         },
     });
 
@@ -77,6 +80,106 @@ test('Navigate to route without parameters using state', () => {
 
     router.navigate('page', {uuid: 'some-uuid'});
     expect(router.route.name).toBe('page');
+});
+
+test('Navigate to route with default attribute', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list/:locale',
+            attributeDefaults: {
+                locale: 'en',
+            },
+        },
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.navigate('list');
+    expect(router.attributes.locale).toBe('en');
+    expect(history.location.pathname).toBe('/list/en');
+});
+
+test('Navigate to route without default attribute when observable is changed', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list/:locale',
+            attributeDefaults: {
+                locale: 'en',
+            },
+        },
+    });
+
+    const locale = observable();
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bind('locale', locale);
+
+    router.navigate('list');
+    expect(router.attributes.locale).toBe('en');
+    expect(history.location.pathname).toBe('/list/en');
+
+    locale.set('de');
+    expect(router.attributes.locale).toBe('de');
+    expect(history.location.pathname).toBe('/list/de');
+});
+
+test('Update observable attribute on route change', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list/:locale',
+            attributeDefaults: {
+                locale: 'en',
+            },
+        },
+    });
+
+    const locale = observable();
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bind('locale', locale);
+
+    router.navigate('list');
+    expect(router.attributes.locale).toBe('en');
+    expect(history.location.pathname).toBe('/list/en');
+
+    history.push('/list/de');
+    expect(router.attributes.locale).toBe('de');
+    expect(history.location.pathname).toBe('/list/de');
+});
+
+test('Navigate to route without default attribute when default observable is set', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list/:locale',
+            attributeDefaults: {
+                locale: 'en',
+            },
+        },
+    });
+
+    const locale = observable();
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bind('locale', locale, 'de');
+
+    router.navigate('list');
+    expect(router.attributes.locale).toBe('de');
+    expect(history.location.pathname).toBe('/list/de');
 });
 
 test('Navigate to route using URL', () => {
@@ -88,6 +191,7 @@ test('Navigate to route using URL', () => {
             options: {
                 type: 'page',
             },
+            attributeDefaults: {},
         },
     });
 
@@ -111,6 +215,7 @@ test('Navigate to route using URL with search parameters', () => {
             options: {
                 type: 'page',
             },
+            attributeDefaults: {},
         },
     });
 
@@ -134,6 +239,7 @@ test('Navigate to route changing only parameters', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid',
+            attributeDefaults: {},
         },
     });
 
@@ -153,6 +259,7 @@ test('Navigate to route by adding parameters', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid/:value?',
+            attributeDefaults: {},
         },
     });
 
@@ -172,6 +279,7 @@ test('Navigate to route by removing parameters', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid/:value?',
+            attributeDefaults: {},
         },
     });
 
@@ -191,6 +299,7 @@ test('Navigate to route changing only search parameters', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid',
+            attributeDefaults: {},
         },
     });
 
@@ -212,6 +321,7 @@ test('Navigate to route by adding search parameters', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid',
+            attributeDefaults: {},
         },
     });
 
@@ -233,6 +343,7 @@ test('Navigate to route by removing search parameters', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid',
+            attributeDefaults: {},
         },
     });
 
@@ -254,11 +365,13 @@ test('Navigate to route and let history react', () => {
             name: 'home',
             view: 'home',
             path: '/',
+            attributeDefaults: {},
         },
         page: {
             name: 'page',
             view: 'page',
             path: '/page',
+            attributeDefaults: {},
         },
     });
 
@@ -276,6 +389,7 @@ test('Do not navigate if all parameters are equal', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid',
+            attributeDefaults: {},
         },
     });
 
@@ -296,6 +410,7 @@ test('Use current route from URL', () => {
             name: 'page',
             view: 'page',
             path: '/page',
+            attributeDefaults: {},
         },
     });
 
@@ -325,6 +440,7 @@ test('Binding should update state in router', () => {
             name: 'list',
             view: 'list',
             path: '/list',
+            attributeDefaults: {},
         },
     });
 
@@ -347,6 +463,7 @@ test('Binding should set default attribute', () => {
             name: 'page',
             view: 'page',
             path: '/page/:locale',
+            attributeDefaults: {},
         },
     });
 
@@ -367,6 +484,7 @@ test('Binding should update URL with fixed attributes', () => {
             name: 'page',
             view: 'page',
             path: '/page/:uuid',
+            attributeDefaults: {},
         },
     });
 
@@ -390,6 +508,7 @@ test('Binding should update state in router with other default bindings', () => 
             name: 'list',
             view: 'list',
             path: '/list',
+            attributeDefaults: {},
         },
     });
 
@@ -441,6 +560,7 @@ test('Do not add parameter to URL if undefined', () => {
             name: 'list',
             view: 'list',
             path: '/list',
+            attributeDefaults: {},
         },
     });
 
@@ -460,6 +580,7 @@ test('Set state to undefined if parameter is removed from URL', () => {
             name: 'list',
             view: 'list',
             path: '/list',
+            attributeDefaults: {},
         },
     });
 
@@ -479,6 +600,7 @@ test('Bound query should update state to default value if removed from URL', () 
             name: 'list',
             view: 'list',
             path: '/list',
+            attributeDefaults: {},
         },
     });
 
@@ -498,6 +620,7 @@ test('Bound query should omit URL parameter if set to default value', () => {
             name: 'list',
             view: 'list',
             path: '/list',
+            attributeDefaults: {},
         },
     });
 
@@ -518,6 +641,7 @@ test('Bound query should initially not be set to undefined in URL', () => {
             name: 'list',
             view: 'list',
             path: '/list',
+            attributeDefaults: {},
         },
     });
 
@@ -537,6 +661,7 @@ test('Bound query should be set to initial passed value from URL', () => {
             name: 'list',
             view: 'list',
             path: '/list',
+            attributeDefaults: {},
         },
     });
 
@@ -559,6 +684,7 @@ test('Navigate to child route using state', () => {
         options: {
             resourceKey: 'snippet',
         },
+        attributeDefaults: {},
     });
 
     const detailRoute = extendObservable({
@@ -569,6 +695,7 @@ test('Navigate to child route using state', () => {
         options: {
             tabTitle: 'Detail',
         },
+        attributeDefaults: {},
     });
 
     const taxonomyRoute = extendObservable({
@@ -579,6 +706,7 @@ test('Navigate to child route using state', () => {
         options: {
             tabTitle: 'Taxonomies',
         },
+        attributeDefaults: {},
     });
 
     formRoute.children = [detailRoute, taxonomyRoute];
@@ -618,6 +746,7 @@ test('Navigate to child route using URL', () => {
         options: {
             resourceKey: 'snippet',
         },
+        attributeDefaults: {},
     });
 
     const detailRoute = extendObservable({
@@ -628,6 +757,7 @@ test('Navigate to child route using URL', () => {
         options: {
             tabTitle: 'Detail',
         },
+        attributeDefaults: {},
     });
 
     const taxonomyRoute = extendObservable({
@@ -638,6 +768,7 @@ test('Navigate to child route using URL', () => {
         options: {
             tabTitle: 'Taxonomies',
         },
+        attributeDefaults: {},
     });
 
     formRoute.children = [detailRoute, taxonomyRoute];

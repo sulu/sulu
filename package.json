@@ -2,7 +2,6 @@
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
     "scripts": {
-        "build": "webpack -p",
         "lint:js": "eslint .",
         "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss",
         "flow": "flow",

@@ -120,6 +120,14 @@ export default class Router {
             attributes[key] = value;
         }
 
+        const attributeDefaults = this.route.attributeDefaults;
+        Object.keys(attributeDefaults).forEach((key) => {
+            if (typeof attributes[key] !== 'undefined') {
+                return;
+            }
+            attributes[key] = attributeDefaults[key];
+        });
+
         const url = compile(path)(attributes);
         const searchParameters = new URLSearchParams();
         Object.keys(attributes).forEach((key) => {
