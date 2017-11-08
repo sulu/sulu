@@ -13,7 +13,7 @@ import toolbarStyles from './toolbar.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Controls>>,
-    skin: ?Skins,
+    skin?: Skins,
 };
 
 export default class Toolbar extends React.PureComponent<Props> {
@@ -33,7 +33,7 @@ export default class Toolbar extends React.PureComponent<Props> {
 
     static Select = Select;
 
-    static createChildren(children: ChildrenArray<Element<typeof Controls>>, skin: Skins) {
+    static createChildren(children: ChildrenArray<Element<typeof Controls>>, skin?: Skins) {
         return React.Children.map(children, (child) => {
             return React.cloneElement(
                 child,

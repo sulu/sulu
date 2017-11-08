@@ -7,7 +7,7 @@ import itemsStyles from './items.scss';
 
 type Props = {
     children: ChildrenArray<Item>,
-    skin: ?Skins,
+    skin?: Skins,
 };
 
 export default class Items extends React.PureComponent<Props> {
@@ -29,10 +29,14 @@ export default class Items extends React.PureComponent<Props> {
         return (
             <ul className={itemsClass}>
                 {children && React.Children.map(children, (item, index) => {
-                    return <li key={index}>{React.cloneElement(item, {
-                        ...item.props,
-                        skin: skin,
-                    })}</li>;
+                    return (
+                        <li key={index}>
+                            {React.cloneElement(item, {
+                                ...item.props,
+                                skin: skin,
+                            })}
+                        </li>
+                    );
                 })}
             </ul>
         );

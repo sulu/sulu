@@ -24,6 +24,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
         const {
             icon,
             size,
+            asdf,
             skin,
             value,
             active,
@@ -33,10 +34,11 @@ export default class Button extends React.PureComponent<ButtonProps> {
         } = this.props;
         const buttonClass = classNames(
             buttonStyles.button,
+            buttonStyles[skin],
             {
                 [buttonStyles.active]: active,
                 [buttonStyles[size]]: size,
-                [buttonStyles[skin]]: skin,
+                [buttonStyles[asdf]]: asdf,
             }
         );
         const buttonContent = this.props.children || value;

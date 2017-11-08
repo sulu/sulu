@@ -1,13 +1,13 @@
 // @flow
-import type {ChildrenArray, Element, Node} from 'react';
+import type {ChildrenArray} from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import type {Group, Item, Skins} from './types';
 import controlsStyles from './controls.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Item> | Element<typeof Group>>,
-    skin: ?Skins,
+    children: ChildrenArray<Item | Group>,
+    skin?: Skins,
 };
 
 export default class Controls extends React.PureComponent<Props> {
@@ -15,7 +15,7 @@ export default class Controls extends React.PureComponent<Props> {
         skin: 'light',
     };
 
-    static createChildren(children: ChildrenArray<Element<typeof Item> | Element<typeof Group>>, skin: Skins) {
+    static createChildren(children: ChildrenArray<Item | Group>, skin?: Skins) {
         return React.Children.map(children, (child) => {
             if (!child) {
                 return;
