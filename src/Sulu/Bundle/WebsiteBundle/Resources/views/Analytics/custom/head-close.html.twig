@@ -1,1 +1,1 @@
-{{ analytics.content.headClose|raw }}
+{% if analytics.content.position == 'headClose' %}{{ analytics.content.value|raw }}{% endif %}

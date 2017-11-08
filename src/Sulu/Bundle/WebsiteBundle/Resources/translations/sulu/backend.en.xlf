@@ -70,33 +70,41 @@
                 <source>website.webspace.settings.key</source>
                 <target>Key</target>
             </trans-unit>
-            <trans-unit id="11" resname="website.webspace.settings.url">
+            <trans-unit id="11" resname="website.webspace.settings.script">
+                <source>website.webspace.settings.script</source>
+                <target>Script</target>
+            </trans-unit>
+            <trans-unit id="12" resname="website.webspace.settings.url">
                 <source>website.webspace.settings.url</source>
                 <target>URL</target>
             </trans-unit>
-            <trans-unit id="12" resname="website.webspace.settings.site-id">
+            <trans-unit id="13" resname="website.webspace.settings.site-id">
                 <source>website.webspace.settings.site-id</source>
                 <target>Site-ID</target>
             </trans-unit>
-            <trans-unit id="13" resname="website.webspace.settings.type.google_tag_manager">
+            <trans-unit id="14" resname="website.webspace.settings.type.google_tag_manager">
                 <source>website.webspace.settings.type.google_tag_manager</source>
                 <target>Google Tag Manager</target>
             </trans-unit>
-            <trans-unit id="14" resname="website.webspace.settings.scriptHeadOpen">
-                <source>website.webspace.settings.scriptHeadOpen</source>
-                <target>Script (Head opening)</target>
+            <trans-unit id="15" resname="website.webspace.settings.position">
+                <source>website.webspace.settings.type.position</source>
+                <target>Position</target>
             </trans-unit>
-            <trans-unit id="15" resname="website.webspace.settings.scriptHeadClose">
-                <source>website.webspace.settings.scriptHeadClose</source>
-                <target>Script (Head close)</target>
+            <trans-unit id="16" resname="website.webspace.settings.position.headOpen">
+                <source>website.webspace.settings.type.headOpen</source>
+                <target>Head Open</target>
             </trans-unit>
-            <trans-unit id="16" resname="website.webspace.settings.scriptBodyOpen">
-                <source>website.webspace.settings.scriptBodyOpen</source>
-                <target>Script (Body opening)</target>
+            <trans-unit id="17" resname="website.webspace.settings.position.headClose">
+                <source>website.webspace.settings.type.headClose</source>
+                <target>Head Close</target>
             </trans-unit>
-            <trans-unit id="17" resname="website.webspace.settings.scriptBodyClose">
-                <source>website.webspace.settings.scriptBodyClose</source>
-                <target>Script (Body close)</target>
+            <trans-unit id="18" resname="website.webspace.settings.position.bodyOpen">
+                <source>website.webspace.settings.type.bodyOpen</source>
+                <target>Body Open</target>
+            </trans-unit>
+            <trans-unit id="19" resname="website.webspace.settings.position.bodyClose">
+                <source>website.webspace.settings.type.bodyClose</source>
+                <target>Body Close</target>
             </trans-unit>
         </body>
     </file>

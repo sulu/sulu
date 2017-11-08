@@ -20,36 +20,34 @@ define([
             },
 
             subType = {
-                setValue: function(value) {
-                    if (value === null) {
-                        value = {};
+                setValue: function(content) {
+                    if (content === null) {
+                        content = {};
                     }
 
-                    for (var prop in value) {
-                        if (!value.hasOwnProperty(prop)) {
-                            continue;
-                        }
-
-                        this.$el.find('#analytics-content').val(value[prop] || '');
-
-                        this.$el.find('#analytics-position').data({
-                            'selection': prop
-                        }).trigger('data-changed');
+                    if (!content.hasOwnProperty('value') || !content.hasOwnProperty('position')) {
+                        content.value = '';
                     }
+
+                    this.$el.find('#analytics-content-value').val(content.value || '');
+
+                    this.$el.find('#analytics-content-position').data({
+                        'selection': content.position
+                    }).trigger('data-changed');
                 },
 
                 getValue: function() {
-                    var content = this.$el.find('#analytics-content').val();
-                    var position = this.$el.find('#analytics-position').data('selection');
+                    var value = this.$el.find('#analytics-content-value').val();
+                    var position = this.$el.find('#analytics-content-position').data('selection');
 
-                    if (!content || !position) {
+                    if (!value || !position) {
                         return null;
                     }
 
-                    var returnValue = {};
-                    returnValue[position[0]] = content;
-
-                    return returnValue;
+                    return {
+                        position: position[0],
+                        value: value
+                    };
                 },
 
                 needsValidation: function() {

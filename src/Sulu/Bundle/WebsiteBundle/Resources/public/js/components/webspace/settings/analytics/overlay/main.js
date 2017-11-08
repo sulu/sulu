@@ -234,7 +234,6 @@ define([
 
             $(contentSelector).html(
                 _.template(type.inputTemplate, {
-                        translate: this.sandbox.translate,
                         labels: _.map(type.labels, function(item) {
                             return this.sandbox.translate(item);
                         }.bind(this))
@@ -248,8 +247,9 @@ define([
             }.bind(this));
 
             $.when(deferreds).then(function() {
-                this.sandbox.form.setData(formSelector, data);
-                this.sandbox.start(contentSelector);
+                this.sandbox.form.setData(formSelector, data).then(function() {
+                    this.sandbox.start(contentSelector);
+                }.bind(this));
             }.bind(this));
         },
 

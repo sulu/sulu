@@ -22,10 +22,24 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class AppendAnalyticsListener
 {
-    const POSITION_HEAD_OPEN = 'head-open';
-    const POSITION_HEAD_CLOSE = 'head-close';
-    const POSITION_BODY_OPEN = 'body-open';
-    const POSITION_BODY_CLOSE = 'body-close';
+    const POSITIONS = [
+        'head-open' => [
+            'regex' => '/(<head [^>]*>|<head>)/',
+            'sprintf' => '$1%s',
+        ],
+        'head-close' => [
+            'regex' => '</head>',
+            'sprintf' => '%s$1',
+        ],
+        'body-open' => [
+            'regex' => '/(<body [^>]*>|<body>)/',
+            'sprintf' => '$1%s',
+        ],
+        'body-close' => [
+            'regex' => '</body>',
+            'sprintf' => '%s$1',
+        ],
+    ];
 
     /**
      * @var EngineInterface
@@ -88,6 +102,7 @@ class AppendAnalyticsListener
         }
 
         $portalUrl = $this->requestAnalyzer->getAttribute('urlExpression');
+
         /** @var Analytics[] $analyticsArray */
         $analyticsArray = $this->analyticsRepository->findByUrl(
             $portalUrl,
@@ -95,48 +110,67 @@ class AppendAnalyticsListener
             $this->environment
         );
 
-        $analyticsContent = [
-            self::POSITION_HEAD_OPEN => null,
-            self::POSITION_HEAD_CLOSE => null,
-            self::POSITION_BODY_OPEN => null,
-            self::POSITION_BODY_CLOSE => null,
-        ];
+        $analyticsContent = [];
         foreach ($analyticsArray as $analytics) {
-            $type = $analytics->getType();
-            foreach ($analyticsContent as $tag => &$value) {
-                $template = 'SuluWebsiteBundle:Analytics:' . $type . DIRECTORY_SEPARATOR . $tag . '.html.twig';
-
-                if (!$this->engine->exists($template)) {
-                    continue;
-                }
-
-                $value .= $this->engine->render($template, ['analytics' => $analytics]);
-            }
+            $this->generateAnalyticsContent($analyticsContent, $analytics);
         }
 
         $response = $event->getResponse();
         $content = $response->getContent();
 
-        if ($analyticsContent[self::POSITION_HEAD_OPEN]) {
-            $matches = [];
-            preg_match('/<head[^>]*>/', $content, $matches);
-            $content = str_replace($matches[0],  $matches[0] . $analyticsContent[self::POSITION_HEAD_OPEN], $content);
-        }
-
-        if ($analyticsContent[self::POSITION_HEAD_CLOSE]) {
-            $content = str_replace('</head>', $analyticsContent[self::POSITION_HEAD_CLOSE] . '</head>', $content);
-        }
-
-        if ($analyticsContent[self::POSITION_BODY_OPEN]) {
-            $matches = [];
-            preg_match('/<body[^>]*>/', $content, $matches);
-            $content = str_replace($matches[0], $matches[0] . $analyticsContent[self::POSITION_BODY_OPEN], $content);
-        }
-
-        if ($analyticsContent[self::POSITION_BODY_CLOSE]) {
-            $content = str_replace('</body>', $analyticsContent[self::POSITION_BODY_CLOSE] . '</body>', $content);
-        }
+        $this->setAnalyticsContent($content, $analyticsContent);
 
         $response->setContent($content);
+    }
+
+    /**
+     * Generate content for each possible position.
+     *
+     * @param array $analyticsContent
+     * @param Analytics $analytics
+     */
+    protected function generateAnalyticsContent(array &$analyticsContent, Analytics $analytics)
+    {
+        foreach (array_keys(self::POSITIONS) as $position) {
+            $template =
+                'SuluWebsiteBundle:Analytics:' . $analytics->getType() . DIRECTORY_SEPARATOR . $position . '.html.twig';
+
+            if (!$this->engine->exists($template)) {
+                continue;
+            }
+
+            $content = $this->engine->render($template, ['analytics' => $analytics]);
+
+            if (!$content) {
+                continue;
+            }
+
+            if (!array_key_exists($position, $analyticsContent)) {
+                $analyticsContent[$position] = '';
+            }
+
+            $analyticsContent[$position] .= $content;
+        }
+    }
+
+    /**
+     * Set the generated content for each position.
+     *
+     * @param string $responseContent
+     * @param array $analyticsContent
+     */
+    protected function setAnalyticsContent(&$responseContent, array $analyticsContent)
+    {
+        foreach ($analyticsContent as $id => $content) {
+            if (!$content) {
+                continue;
+            }
+
+            $responseContent = preg_replace(
+                self::POSITIONS[$id]['regex'],
+                sprintf(self::POSITIONS[$id]['sprintf'], $content),
+                $responseContent
+            );
+        }
     }
 }

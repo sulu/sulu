@@ -1,1 +1,1 @@
-{{ analytics.content.bodyOpen|raw }}
+{% if analytics.content.position == 'bodyOpen' %}{{ analytics.content.value|raw }}{% endif %}
