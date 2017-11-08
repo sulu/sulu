@@ -41,7 +41,7 @@ export default class Router {
             value.set(this.attributes[key]);
         }
 
-        if (typeof(value.get()) === 'undefined') {
+        if (value.get() === undefined) {
             // when the observable value is not set we want it to be the default value
             value.set(defaultValue);
         }
@@ -127,7 +127,7 @@ export default class Router {
 
         const attributeDefaults = this.route.attributeDefaults;
         Object.keys(attributeDefaults).forEach((key) => {
-            if (typeof attributes[key] !== 'undefined') {
+            if (attributes[key] !== undefined) {
                 return;
             }
             attributes[key] = attributeDefaults[key];
