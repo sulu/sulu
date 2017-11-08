@@ -1,0 +1,13 @@
+$itemMarginRight: 20px;
+$sectionMarginBottom: 30px;
+
+.grid {
+    margin-right: -$itemMarginRight;
+    margin-bottom: -$sectionMarginBottom;
+
+    &::after {
+        content: "";
+        clear: both;
+        display: block;
+    }
+}
