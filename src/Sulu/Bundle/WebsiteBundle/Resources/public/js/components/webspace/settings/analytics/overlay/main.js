@@ -51,12 +51,7 @@ define([
                     id: 'custom',
                     title: 'website.webspace.settings.type.custom',
                     input: 'custom',
-                    labels: [
-                        'website.webspace.settings.scriptHeadOpen',
-                        'website.webspace.settings.scriptHeadClose',
-                        'website.webspace.settings.scriptBodyOpen',
-                        'website.webspace.settings.scriptBodyClose'
-                    ],
+                    labels: ['website.webspace.settings.position', 'website.webspace.settings.script'],
                     inputTemplate: custom
                 }
             ]
@@ -234,10 +229,12 @@ define([
             }
 
             this.sandbox.form.removeField(formSelector, contentSelector);
+            this.sandbox.stop(contentSelector);
             $(contentSelector).children().remove();
 
             $(contentSelector).html(
                 _.template(type.inputTemplate, {
+                        translate: this.sandbox.translate,
                         labels: _.map(type.labels, function(item) {
                             return this.sandbox.translate(item);
                         }.bind(this))
@@ -252,6 +249,7 @@ define([
 
             $.when(deferreds).then(function() {
                 this.sandbox.form.setData(formSelector, data);
+                this.sandbox.start(contentSelector);
             }.bind(this));
         },
 

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\EventListener;
 
 use Prophecy\Argument;
+use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -65,6 +66,9 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $engine = $this->prophesize(EngineInterface::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
+        $analytics = $this->prophesize(Analytics::class);
+        $analytics->getType()->willReturn('google');
+        $analytics->getContent()->willReturn('<script>var i = 0;</script>');
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $portalInformation->getUrlExpression()->willReturn('sulu.lo/{localization}');
@@ -73,7 +77,7 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
         $requestAnalyzer->getAttribute('urlExpression')->willReturn('sulu.lo/{localization}');
 
-        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')->willReturn(['test' => 1]);
+        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')->willReturn($analytics);
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
@@ -89,7 +93,7 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
         $event->getResponse()->willReturn($response->reveal());
 
-        $engine->render('SuluWebsiteBundle:Analytics:website.html.twig', ['analytics' => ['test' => 1]])
+        $engine->render('SuluWebsiteBundle:Analytics:website.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('<script>var i = 0;</script>');
         $response->getContent()->willReturn('<html><head><title>Test</title></head><body><h1>Title</h1></body></html>');
         $response->setContent(
@@ -103,6 +107,9 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $engine = $this->prophesize(EngineInterface::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
+        $analytics = $this->prophesize(Analytics::class);
+        $analytics->getType()->willReturn('google');
+        $analytics->getContent()->willReturn('<script>var i = 0;</script>');
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $portalInformation->getUrlExpression()->willReturn('*.sulu.lo/*');
@@ -111,7 +118,7 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
         $requestAnalyzer->getAttribute('urlExpression')->willReturn('1.sulu.lo/2');
 
-        $analyticsRepository->findByUrl('1.sulu.lo/2', 'sulu_io', 'prod')->willReturn(['test' => 1]);
+        $analyticsRepository->findByUrl('1.sulu.lo/2', 'sulu_io', 'prod')->willReturn($analytics);
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),

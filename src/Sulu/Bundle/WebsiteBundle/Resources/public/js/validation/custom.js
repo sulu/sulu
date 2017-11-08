@@ -25,19 +25,31 @@ define([
                         value = {};
                     }
 
-                    this.$el.find('#analytics-content-head-open').val(value.headOpen || '');
-                    this.$el.find('#analytics-content-head-close').val(value.headClose || '');
-                    this.$el.find('#analytics-content-body-open').val(value.bodyOpen || '');
-                    this.$el.find('#analytics-content-body-close').val(value.bodyClose || '');
+                    for (var prop in value) {
+                        if (!value.hasOwnProperty(prop)) {
+                            continue;
+                        }
+
+                        this.$el.find('#analytics-content').val(value[prop] || '');
+
+                        this.$el.find('#analytics-position').data({
+                            'selection': prop
+                        }).trigger('data-changed');
+                    }
                 },
 
                 getValue: function() {
-                    return {
-                        headOpen: this.$el.find('#analytics-content-head-open').val(),
-                        headClose: this.$el.find('#analytics-content-head-close').val(),
-                        bodyOpen: this.$el.find('#analytics-content-body-open').val(),
-                        bodyClose: this.$el.find('#analytics-content-body-close').val()
-                    };
+                    var content = this.$el.find('#analytics-content').val();
+                    var position = this.$el.find('#analytics-position').data('selection');
+
+                    if (!content || !position) {
+                        return null;
+                    }
+
+                    var returnValue = {};
+                    returnValue[position[0]] = content;
+
+                    return returnValue;
                 },
 
                 needsValidation: function() {
@@ -45,7 +57,7 @@ define([
                 },
 
                 validate: function() {
-                    return true;
+                    return !!this.getValue();
                 }
             };
 

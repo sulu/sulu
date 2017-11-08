@@ -1,33 +1,20 @@
 <div data-type="custom" data-mapper-property="content" data-form="true">
     <div class="form-group grid-row">
-        <label for="analytics-content-head-open" id="analytics-content-head-open-label">
-            <%= labels[0] %>
-        </label>
+        <label for="analytics-position" class="required"><%= labels[0] %></label>
 
-        <textarea id="analytics-content-head-open" name="content-head-open" class="form-element"></textarea>
+        <div id="analytics-position"
+             class="form-element"
+             data-aura-component="select@husky"
+             data-aura-instance-name="analytics-position"
+             data-aura-data='[{"id": "headOpen", "name": "Head open"},{"id": "headClose", "name": "Head close"}]'
+             data-aura-multiple-select="false"
+             data-type="husky-select"
+             data-form="true">
+        </div>
     </div>
-
     <div class="form-group grid-row">
-        <label for="analytics-content-head-close" id="analytics-content-head-close-label">
-            <%= labels[1] %>
-        </label>
+        <label for="analytics-content" class="required" id="analytics-content-label"><%= labels[1] %></label>
 
-        <textarea id="analytics-content-head-close" name="content-head-close" class="form-element"></textarea>
-    </div>
-
-    <div class="form-group grid-row">
-        <label for="analytics-content-body-open" id="analytics-content-body-open-label">
-            <%= labels[2] %>
-        </label>
-
-        <textarea id="analytics-content-body-open" name="content-body-open" class="form-element"></textarea>
-    </div>
-
-    <div class="form-group grid-row">
-        <label for="analytics-content-body-close" id="analytics-content-body-close-label">
-            <%= labels[3] %>
-        </label>
-
-        <textarea id="analytics-content-body-close" name="content-body-open" class="form-element"></textarea>
+        <textarea id="analytics-content" name="content" class="form-element"></textarea>
     </div>
 </div>
