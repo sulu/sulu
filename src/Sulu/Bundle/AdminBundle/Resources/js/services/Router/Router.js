@@ -127,6 +127,8 @@ export default class Router {
 
         const attributeDefaults = this.route.attributeDefaults;
         Object.keys(attributeDefaults).forEach((key) => {
+            // set default attributes if not passed, to automatically set important omitted attributes everywhere
+            // e.g. allows to always pass the default locale if nothing is passed
             if (attributes[key] !== undefined) {
                 return;
             }
