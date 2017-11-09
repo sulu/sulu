@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {shallow, render} from 'enzyme';
 import React from 'react';
 import MediaCardAdapter from '../../adapters/MediaCardAdapter';
@@ -40,6 +40,8 @@ test('Render a basic Masonry view with MediaCards', () => {
     const mediaCardAdapter = render(
         <MediaCardAdapter
             data={data}
+            icon="pencil"
+            schema={{}}
             selections={[]}
             showDownloadDropdown={true}
         />
@@ -76,6 +78,8 @@ test('MediaCard should call the the appropriate handler', () => {
     const mediaCardAdapter = shallow(
         <MediaCardAdapter
             data={data}
+            icon="pencil"
+            schema={{}}
             selections={[]}
             onItemClick={mediaCardClickSpy}
             onItemSelectionChange={mediaCardSelectionChangeSpy}

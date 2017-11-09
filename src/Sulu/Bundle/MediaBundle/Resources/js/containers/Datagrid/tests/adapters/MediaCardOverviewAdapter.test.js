@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {render} from 'enzyme';
 import React from 'react';
 import MediaCardOverviewAdapter from '../../adapters/MediaCardOverviewAdapter';
@@ -40,6 +40,8 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
     const mediaCardAdapter = render(
         <MediaCardOverviewAdapter
             data={data}
+            icon="pencil"
+            schema={{}}
             selections={[]}
         />
     );

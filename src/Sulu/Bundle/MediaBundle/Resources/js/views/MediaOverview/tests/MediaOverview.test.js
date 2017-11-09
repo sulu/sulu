@@ -51,25 +51,25 @@ test('Should navigate to defined route on back button click', () => {
 test('Unbind all query params and destroy all stores on unmount', () => {
     const MediaOverview = require('../MediaOverview').default;
     const router = {
-        bindQuery: jest.fn(),
-        unbindQuery: jest.fn(),
+        bind: jest.fn(),
+        unbind: jest.fn(),
         attributes: {},
     };
 
     const mediaOverview = mount(<MediaOverview router={router} />);
     const mediaOverviewInstance = mediaOverview.instance();
-    const page = router.bindQuery.mock.calls[0][1];
-    const locale = router.bindQuery.mock.calls[1][1];
+    const page = router.bind.mock.calls[0][1];
+    const locale = router.bind.mock.calls[1][1];
 
     expect(page.get()).toBe(undefined);
     expect(locale.get()).toBe(undefined);
-    expect(router.bindQuery).toBeCalledWith('collectionPage', page, '1');
-    expect(router.bindQuery).toBeCalledWith('locale', locale);
+    expect(router.bind).toBeCalledWith('collectionPage', page, '1');
+    expect(router.bind).toBeCalledWith('locale', locale);
 
     mediaOverview.unmount();
     expect(mediaOverviewInstance.mediaDatagridStore.destroy).toBeCalled();
     expect(mediaOverviewInstance.collectionDatagridStore.destroy).toBeCalled();
     expect(mediaOverviewInstance.collectionStore.destroy).toBeCalled();
-    expect(router.unbindQuery).toBeCalledWith('collectionPage', page);
-    expect(router.unbindQuery).toBeCalledWith('locale', locale);
+    expect(router.unbind).toBeCalledWith('collectionPage', page);
+    expect(router.unbind).toBeCalledWith('locale', locale);
 });

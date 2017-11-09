@@ -90,7 +90,12 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
         />
         <div
           class="cover"
-        />
+        >
+          <span
+            aria-label="pencil"
+            class="mediaIcon fa fa-pencil"
+          />
+        </div>
       </div>
     </div>
   </li>
@@ -180,7 +185,12 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
         />
         <div
           class="cover"
-        />
+        >
+          <span
+            aria-label="pencil"
+            class="mediaIcon fa fa-pencil"
+          />
+        </div>
       </div>
     </div>
   </li>
