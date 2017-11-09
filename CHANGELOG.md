@@ -3,12 +3,12 @@ CHANGELOG for Sulu
 
 * dev-master
     * ENHANCEMENT #3608 [WebsiteBundle]           Analytics: Added possibility to determine the position of content (head open, head close, body open, body close)
-    * HOTFIX     #3610 [ContactBundle]           ContactSelectionContentType: Fixed bug in serialization with missing category data
-    * HOTFIX     #3597 [WebsiteBundle]           Only display analytics in the actual environment
-    * HOTFIX     #3598 [SecurityBundle]          Fixed misleading security warning message
-    * HOTFIX     #3573 [RouteBundle]             Added rawurldecode to decode path-info before searching for route
-    * HOTFIX     #3573 [ContentBundle]           Added rawurldecode to decode path-info before searching for route
-    * HOTFIX     #3573 [CustomUrlBundle]         Added rawurldecode to decode path-info before searching for route
+    * HOTFIX      #3610 [ContactBundle]           ContactSelectionContentType: Fixed bug in serialization with missing category data
+    * HOTFIX      #3597 [WebsiteBundle]           Only display analytics in the actual environment
+    * HOTFIX      #3598 [SecurityBundle]          Fixed misleading security warning message
+    * HOTFIX      #3573 [RouteBundle]             Added rawurldecode to decode path-info before searching for route
+    * HOTFIX      #3573 [ContentBundle]           Added rawurldecode to decode path-info before searching for route
+    * HOTFIX      #3573 [CustomUrlBundle]         Added rawurldecode to decode path-info before searching for route
 
 * 1.6.6 (2017-10-12)
     * ENHANCEMENT #3557 [ContentBundle]           Added option to decorate index name for document types
