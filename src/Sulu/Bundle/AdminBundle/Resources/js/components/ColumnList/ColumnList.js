@@ -23,7 +23,7 @@ export default class ColumnList extends React.Component<Props> {
 
     @observable activeColumnIndex: number = 0;
 
-    handleOnActive = (index: number) => {
+    handleActive = (index: number) => {
         this.activeColumnIndex = index;
     };
 
@@ -37,7 +37,7 @@ export default class ColumnList extends React.Component<Props> {
                     index: index,
                     buttons: this.props.buttons,
                     active: this.activeColumnIndex === index,
-                    onActive: this.handleOnActive,
+                    onActive: this.handleActive,
                     onItemClick: onItemClick,
                     toolbarItems: toolbarItems,
                 }

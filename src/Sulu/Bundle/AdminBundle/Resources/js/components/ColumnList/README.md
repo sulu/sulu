@@ -19,7 +19,7 @@ const buttons = [
     },
 ];
 
-const handleOnItemClick = (id) => {
+const handleItemClick = (id) => {
     alert('Item with id: ' + id + ' clicked');
 };
 
@@ -60,7 +60,7 @@ const toolbarItems = [
 ];
 
 <div style={{height: '60vh'}}>
-    <ColumnList buttons={buttons} onItemClick={handleOnItemClick} toolbarItems={toolbarItems}>
+    <ColumnList buttons={buttons} onItemClick={handleItemClick} toolbarItems={toolbarItems}>
         <Column>
             <Item id="1" selected="true">Item 1</Item>
             <Item id="2" hasChildren="true">Item 1</Item>
