@@ -140,7 +140,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
                 <MediaCollection
                     page={this.collectionPage}
                     locale={this.locale}
-                    mediaViews={['mediaCardOverview']}
+                    mediaViews={['media_card_overview']}
                     collectionStore={this.collectionStore}
                     mediaDatagridStore={this.mediaDatagridStore}
                     collectionDatagridStore={this.collectionDatagridStore}

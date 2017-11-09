@@ -5,6 +5,6 @@ import {MediaCardOverviewAdapter} from './containers/Datagrid';
 import MediaOverview from './views/MediaOverview';
 
 viewRegistry.add('sulu_media.overview', MediaOverview);
-datagridAdapterRegistry.add('mediaCardOverview', MediaCardOverviewAdapter, 'infiniteScroll');
+datagridAdapterRegistry.add('media_card_overview', MediaCardOverviewAdapter, 'infiniteScroll');
 
 bundleReady();

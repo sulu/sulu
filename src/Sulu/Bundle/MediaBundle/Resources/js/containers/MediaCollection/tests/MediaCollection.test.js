@@ -127,11 +127,11 @@ beforeEach(() => {
 
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        folder: {
+        'folder': {
             Adapter: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
             paginationType: 'pagination',
         },
-        mediaCardOverview: {
+        'media_card_overview': {
             Adapter: MediaCardOverviewAdapter,
             paginationType: 'infiniteScroll',
         },
@@ -158,7 +158,7 @@ test('Render the MediaCollection', () => {
         <MediaCollection
             page={page}
             locale={locale}
-            mediaViews={['mediaCardOverview']}
+            mediaViews={['media_card_overview']}
             mediaDatagridStore={mediaDatagridStore}
             collectionDatagridStore={collectionDatagridStore}
             collectionStore={collectionStore}
