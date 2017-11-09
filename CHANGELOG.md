@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * HOTFIX     #XXXX [ContactBundle]           ContactSelectionContentType: Fixed bug in serialization with missing category data
+    * HOTFIX     #3610 [ContactBundle]           ContactSelectionContentType: Fixed bug in serialization with missing category data
     * HOTFIX     #3597 [WebsiteBundle]           Only display analytics in the actual environment
     * HOTFIX     #3598 [SecurityBundle]          Fixed misleading security warning message
     * HOTFIX     #3573 [RouteBundle]             Added rawurldecode to decode path-info before searching for route
