@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {mount} from 'enzyme';
 import Column from '../Column';
@@ -17,16 +17,19 @@ test('The Column component should render', () => {
 
     const toolbarItems = [
         {
+            index: 0,
             icon: 'plus',
             type: 'button',
             onClick: () => {},
         },
         {
+            index: 0,
             icon: 'search',
             type: 'button',
             onClick: () => {},
         },
         {
+            index: 0,
             icon: 'gear',
             type: 'dropdown',
             options: [

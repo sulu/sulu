@@ -74,6 +74,7 @@ const toolbarItems = [
             <Item id="1-1-1">Item 1</Item>
             <Item id="1-1-2">Item 1</Item>
         </Column>
+        <Column />
     </ColumnList>
 </div>
 ```

@@ -9,22 +9,28 @@ import columnListStyles from './columnList.scss';
 
 type Props = {
     index: number,
-    children: ChildrenArray<Element<typeof Item>>,
+    children?: ChildrenArray<Element<typeof Item>>,
     buttons?: Array<ItemButtonConfig>,
     active: boolean,
-    onActive: (index: number) => void,
-    onItemClick: (id: string | number) => void,
+    onActive?: (index: number) => void,
+    onItemClick?: (id: string | number) => void,
     toolbarItems: Array<ToolbarItemConfig>,
 };
 
 export default class Column extends React.Component<Props> {
-    cloneItems = (originalItems: ChildrenArray<Element<typeof Item>>) => {
+    cloneItems = (originalItems?: ChildrenArray<Element<typeof Item>>) => {
+        if (!originalItems) {
+            return null;
+        }
+
+        const {buttons, onItemClick} = this.props;
+
         return React.Children.map(originalItems, (column) => {
             return React.cloneElement(
                 column,
                 {
-                    buttons: this.props.buttons,
-                    onClick: this.props.onItemClick,
+                    buttons: buttons,
+                    onClick: onItemClick,
                 }
             );
         });
