@@ -23,8 +23,8 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     componentWillMount() {
         const {router} = this.props;
 
-        router.bindQuery('page', this.page, '1');
-        router.bindQuery('locale', this.locale);
+        router.bind('page', this.page, '1');
+        router.bind('locale', this.locale);
 
         this.disposer = autorun(this.load);
     }
@@ -32,8 +32,8 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     componentWillUnmount() {
         const {router} = this.props;
         this.disposer();
-        router.unbindQuery('locale', this.page);
-        router.unbindQuery('page', this.locale);
+        router.unbind('locale', this.page);
+        router.unbind('page', this.locale);
         this.collectionStore.destroy();
     }
 
@@ -89,7 +89,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
     handleOpenFolder = (collectionId) => {
         const {router} = this.props;
-        router.navigate(COLLECTION_ROUTE, {id: collectionId}, {page: '1', locale: this.locale.get()});
+        router.navigate(COLLECTION_ROUTE, {id: collectionId, page: '1', locale: this.locale.get()});
     };
 
     render() {

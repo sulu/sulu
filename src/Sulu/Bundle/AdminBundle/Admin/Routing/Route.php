@@ -37,6 +37,11 @@ class Route
     private $options = [];
 
     /**
+     * @var array
+     */
+    private $attributeDefaults = [];
+
+    /**
      * @var string
      */
     private $parent;
@@ -51,6 +56,13 @@ class Route
     public function addOption(string $key, $value): self
     {
         $this->options[$key] = $value;
+
+        return $this;
+    }
+
+    public function addAttributeDefault(string $key, string $value): self
+    {
+        $this->attributeDefaults[$key] = $value;
 
         return $this;
     }

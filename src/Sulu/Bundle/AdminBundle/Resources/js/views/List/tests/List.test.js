@@ -71,7 +71,7 @@ beforeEach(() => {
 test('Should render the datagrid with the correct resourceKey', () => {
     const List = require('../List').default;
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'snippets',
@@ -86,7 +86,7 @@ test('Should render the datagrid with the correct resourceKey', () => {
 test('Should render the list with a title', () => {
     const List = require('../List').default;
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'snippets',
@@ -102,7 +102,7 @@ test('Should render the list with a title', () => {
 test('Should render the datagrid with the pencil icon if a editRoute has been passed', () => {
     const List = require('../List').default;
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'snippets',
@@ -126,11 +126,11 @@ test('Should throw an error when no resourceKey is defined in the route options'
     expect(() => render(<List router={router} />)).toThrow(/mandatory resourceKey option/);
 });
 
-test('Should unbind the query parameter and destroy the store on unmount', () => {
+test('Should unbind the binding and destroy the store on unmount', () => {
     const List = require('../List').default;
     const router = {
-        bindQuery: jest.fn(),
-        unbindQuery: jest.fn(),
+        bind: jest.fn(),
+        unbind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'snippets',
@@ -140,24 +140,24 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
     };
 
     const list = mount(<List router={router} />);
-    const page = router.bindQuery.mock.calls[0][1];
-    const locale = router.bindQuery.mock.calls[1][1];
+    const page = router.bind.mock.calls[0][1];
+    const locale = router.bind.mock.calls[1][1];
 
     expect(page.get()).toBe(undefined);
     expect(locale.get()).toBe(undefined);
-    expect(router.bindQuery).toBeCalledWith('page', page, '1');
-    expect(router.bindQuery).toBeCalledWith('locale', locale);
+    expect(router.bind).toBeCalledWith('page', page, '1');
+    expect(router.bind).toBeCalledWith('locale', locale);
 
     list.unmount();
-    expect(router.unbindQuery).toBeCalledWith('page', page);
-    expect(router.unbindQuery).toBeCalledWith('locale', locale);
+    expect(router.unbind).toBeCalledWith('page', page);
+    expect(router.unbind).toBeCalledWith('locale', locale);
 });
 
-test('Should unbind the query parameter and destroy the store on unmount without locale', () => {
+test('Should unbind the binding and destroy the store on unmount without locale', () => {
     const List = require('../List').default;
     const router = {
-        bindQuery: jest.fn(),
-        unbindQuery: jest.fn(),
+        bind: jest.fn(),
+        unbind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'snippets',
@@ -166,22 +166,22 @@ test('Should unbind the query parameter and destroy the store on unmount without
     };
 
     const list = mount(<List router={router} />);
-    const page = router.bindQuery.mock.calls[0][1];
+    const page = router.bind.mock.calls[0][1];
 
     expect(page.get()).toBe(undefined);
-    expect(router.bindQuery).toBeCalledWith('page', page, '1');
-    expect(router.bindQuery).not.toBeCalledWith('locale');
+    expect(router.bind).toBeCalledWith('page', page, '1');
+    expect(router.bind).not.toBeCalledWith('locale');
 
     list.unmount();
-    expect(router.unbindQuery).toBeCalledWith('page', page);
-    expect(router.unbindQuery).not.toBeCalledWith('locale');
+    expect(router.unbind).toBeCalledWith('page', page);
+    expect(router.unbind).not.toBeCalledWith('locale');
 });
 
 test('Should navigate when pencil button is clicked', () => {
     const List = require('../List').default;
     const router = {
         navigate: jest.fn(),
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 editRoute: 'editRoute',
@@ -197,7 +197,7 @@ test('Should navigate when pencil button is clicked', () => {
         },
     };
     listWrapper.find('ButtonCell button').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith('editRoute', {id: 1}, {locale: 'de'});
+    expect(router.navigate).toBeCalledWith('editRoute', {id: 1, locale: 'de'});
 });
 
 test('Should render the delete item enabled only if something is selected', () => {
@@ -205,7 +205,7 @@ test('Should render the delete item enabled only if something is selected', () =
     const List = require('../List').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'test',
@@ -232,7 +232,7 @@ test('Should render the locale dropdown with the options from router', () => {
     const List = require('../List').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'test',
@@ -259,7 +259,7 @@ test('Should render the locale dropdown with the options from router', () => {
 test('Should pass locale and page observables to the DatagridStore', () => {
     const List = require('../List').default;
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'test',
@@ -278,7 +278,7 @@ test('Should pass locale and page observables to the DatagridStore', () => {
 test('Should not pass the locale observable to the DatagridStore if no locales are defined', () => {
     const List = require('../List').default;
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'test',
@@ -303,7 +303,7 @@ test('Should delete selected items when click on delete button', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const router = {
-        bindQuery: jest.fn(),
+        bind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'test',

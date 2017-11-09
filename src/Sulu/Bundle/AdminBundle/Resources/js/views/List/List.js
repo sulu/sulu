@@ -34,11 +34,11 @@ class List extends React.PureComponent<ViewProps> {
 
         const observableOptions = {};
 
-        router.bindQuery('page', this.page, '1');
+        router.bind('page', this.page, '1');
         observableOptions.page = this.page;
 
         if (locales) {
-            router.bindQuery('locale', this.locale);
+            router.bind('locale', this.locale);
             observableOptions.locale = this.locale;
         }
 
@@ -55,15 +55,15 @@ class List extends React.PureComponent<ViewProps> {
             },
         } = router;
         this.datagridStore.destroy();
-        router.unbindQuery('page', this.page);
+        router.unbind('page', this.page);
         if (locales) {
-            router.unbindQuery('locale', this.locale);
+            router.unbind('locale', this.locale);
         }
     }
 
     handleEditClick = (rowId) => {
         const {router} = this.props;
-        router.navigate(router.route.options.editRoute, {id: rowId}, {locale: this.locale.get()});
+        router.navigate(router.route.options.editRoute, {id: rowId, locale: this.locale.get()});
     };
 
     render() {

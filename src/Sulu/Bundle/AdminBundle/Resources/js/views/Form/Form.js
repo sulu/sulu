@@ -28,11 +28,11 @@ class Form extends React.PureComponent<Props> {
     componentWillMount() {
         const {router} = this.props;
         this.props.resourceStore.changeSchema(schema);
-        router.bindQuery('locale', this.props.resourceStore.locale);
+        router.bind('locale', this.props.resourceStore.locale);
     }
 
     componentWillUnmount() {
-        this.props.router.unbindQuery('locale', this.props.resourceStore.locale);
+        this.props.router.unbind('locale', this.props.resourceStore.locale);
     }
 
     handleSubmit = () => {
@@ -64,7 +64,7 @@ export default withToolbar(Form, function() {
     const backButton = backRoute
         ? {
             onClick: () => {
-                router.navigate(backRoute, {}, {locale: this.props.resourceStore.locale.get()});
+                router.navigate(backRoute, {locale: this.props.resourceStore.locale.get()});
             },
         }
         : undefined;

@@ -108,15 +108,11 @@ test('Should navigate to child route if tab is clicked', () => {
     const attributes = {
         attribute: 'value',
     };
-    const query = {
-        query: 'value',
-    };
 
     const router = {
         navigate: jest.fn(),
         route,
         attributes,
-        query,
     };
 
     const Child = () => (<h1>Child</h1>);
@@ -124,7 +120,7 @@ test('Should navigate to child route if tab is clicked', () => {
 
     resourceTabs.find('Tab button').at(1).simulate('click');
 
-    expect(router.navigate).toBeCalledWith('route2', attributes, query);
+    expect(router.navigate).toBeCalledWith('route2', attributes);
 });
 
 test('Should create a ResourceStore on mount and destroy it on unmount', () => {

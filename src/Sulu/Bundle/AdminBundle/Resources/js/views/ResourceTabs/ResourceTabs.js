@@ -29,7 +29,7 @@ export default class ResourceTabs extends React.PureComponent<ViewProps> {
 
     handleSelect = (index: number) => {
         const {router, route} = this.props;
-        router.navigate(route.children[index].name, router.attributes, router.query);
+        router.navigate(route.children[index].name, router.attributes);
     };
 
     render() {
