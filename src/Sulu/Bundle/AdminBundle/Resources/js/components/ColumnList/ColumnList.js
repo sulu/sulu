@@ -24,7 +24,7 @@ export default class ColumnList extends React.Component<Props> {
     @observable activeColumnIndex: number = 0;
 
     handleActive = (index?: number) => {
-        if (!index) {
+        if (index === undefined) {
             return;
         }
 

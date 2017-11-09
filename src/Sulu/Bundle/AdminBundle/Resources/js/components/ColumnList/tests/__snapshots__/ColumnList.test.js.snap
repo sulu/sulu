@@ -19,16 +19,19 @@ exports[`The ColumnList component should render 1`] = `
     Array [
       Object {
         "icon": "plus",
+        "index": 0,
         "onClick": [Function],
         "type": "button",
       },
       Object {
         "icon": "search",
+        "index": 0,
         "onClick": [Function],
         "type": "button",
       },
       Object {
         "icon": "gear",
+        "index": 0,
         "options": Array [
           Object {
             "label": "Option1 ",
@@ -71,16 +74,19 @@ exports[`The ColumnList component should render 1`] = `
           Array [
             Object {
               "icon": "plus",
+              "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
               "icon": "search",
+              "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
               "icon": "gear",
+              "index": 0,
               "options": Array [
                 Object {
                   "label": "Option1 ",
@@ -107,16 +113,19 @@ exports[`The ColumnList component should render 1`] = `
               Array [
                 Object {
                   "icon": "plus",
+                  "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
                   "icon": "search",
+                  "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
                   "icon": "gear",
+                  "index": 0,
                   "options": Array [
                     Object {
                       "label": "Option1 ",
@@ -233,9 +242,10 @@ exports[`The ColumnList component should render 1`] = `
                   },
                 ]
               }
+              hasChildren={false}
               id="1"
               onClick={[Function]}
-              selected="true"
+              selected={true}
             >
               <div
                 className="item selected"
@@ -311,9 +321,10 @@ exports[`The ColumnList component should render 1`] = `
                   },
                 ]
               }
-              hasChildren="true"
+              hasChildren={true}
               id="2"
               onClick={[Function]}
+              selected={false}
             >
               <div
                 className="item"
@@ -398,8 +409,10 @@ exports[`The ColumnList component should render 1`] = `
                   },
                 ]
               }
+              hasChildren={false}
               id="3"
               onClick={[Function]}
+              selected={false}
             >
               <div
                 className="item"
@@ -486,16 +499,19 @@ exports[`The ColumnList component should render 1`] = `
           Array [
             Object {
               "icon": "plus",
+              "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
               "icon": "search",
+              "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
               "icon": "gear",
+              "index": 0,
               "options": Array [
                 Object {
                   "label": "Option1 ",
@@ -522,16 +538,19 @@ exports[`The ColumnList component should render 1`] = `
               Array [
                 Object {
                   "icon": "plus",
+                  "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
                   "icon": "search",
+                  "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
                   "icon": "gear",
+                  "index": 0,
                   "options": Array [
                     Object {
                       "label": "Option1 ",
@@ -552,7 +571,7 @@ exports[`The ColumnList component should render 1`] = `
             >
               <ToolbarButton
                 icon="plus"
-                index={1}
+                index={0}
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -573,7 +592,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarButton
                 icon="search"
-                index={1}
+                index={0}
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -594,7 +613,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarDropdown
                 icon="gear"
-                index={1}
+                index={0}
                 options={
                   Array [
                     Object {
@@ -648,8 +667,10 @@ exports[`The ColumnList component should render 1`] = `
                   },
                 ]
               }
+              hasChildren={false}
               id="1-1"
               onClick={[Function]}
+              selected={false}
             >
               <div
                 className="item"
@@ -725,9 +746,10 @@ exports[`The ColumnList component should render 1`] = `
                   },
                 ]
               }
-              hasChildren="true"
+              hasChildren={true}
               id="1-2"
               onClick={[Function]}
+              selected={false}
             >
               <div
                 className="item"
@@ -823,16 +845,19 @@ exports[`The ColumnList component should render 1`] = `
           Array [
             Object {
               "icon": "plus",
+              "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
               "icon": "search",
+              "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
               "icon": "gear",
+              "index": 0,
               "options": Array [
                 Object {
                   "label": "Option1 ",
@@ -859,16 +884,19 @@ exports[`The ColumnList component should render 1`] = `
               Array [
                 Object {
                   "icon": "plus",
+                  "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
                   "icon": "search",
+                  "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
                   "icon": "gear",
+                  "index": 0,
                   "options": Array [
                     Object {
                       "label": "Option1 ",
@@ -889,7 +917,7 @@ exports[`The ColumnList component should render 1`] = `
             >
               <ToolbarButton
                 icon="plus"
-                index={2}
+                index={0}
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -910,7 +938,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarButton
                 icon="search"
-                index={2}
+                index={0}
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -931,7 +959,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarDropdown
                 icon="gear"
-                index={2}
+                index={0}
                 options={
                   Array [
                     Object {
@@ -985,8 +1013,10 @@ exports[`The ColumnList component should render 1`] = `
                   },
                 ]
               }
+              hasChildren={false}
               id="1-1-1"
               onClick={[Function]}
+              selected={false}
             >
               <div
                 className="item"
@@ -1062,8 +1092,10 @@ exports[`The ColumnList component should render 1`] = `
                   },
                 ]
               }
+              hasChildren={false}
               id="1-1-2"
               onClick={[Function]}
+              selected={false}
             >
               <div
                 className="item"
