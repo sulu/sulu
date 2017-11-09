@@ -4,7 +4,11 @@
 
 ### Custom Analytics
 
-Update custom analytics with following SQL statement on your database:
+We've added the possibility to determine the position of the content.
+The '<script></script>' wrapper was also removed from the custom template.
+That means the user has to add this wrapper when it's needed.
+ 
+Changes to existing custom analytics needs to be deployed with following SQL statement on your database:
 
 ```sql
 UPDATE we_analytics w SET content = CONCAT('{"position":"bodyClose","value":"<script>', SUBSTRING(content,2,LENGTH(content) -2), '</script>"}') WHERE w.type = 'custom';
