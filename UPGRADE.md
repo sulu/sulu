@@ -1,5 +1,15 @@
 # Upgrade
 
+## dev-master
+
+### Custom Analytics
+
+Update custom analytics with following SQL statement on your database:
+
+```sql
+UPDATE we_analytics w SET content = CONCAT('{"position":"bodyClose","value":"<script>', SUBSTRING(content,2,LENGTH(content) -2), '</script>"}') WHERE w.type = 'custom';
+```
+
 ## 1.6.4
 
 ### File Version - Tag Cascading

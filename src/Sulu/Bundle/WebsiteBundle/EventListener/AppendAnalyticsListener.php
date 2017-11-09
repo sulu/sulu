@@ -126,7 +126,7 @@ class AppendAnalyticsListener
      *
      * @return array
      */
-    protected function generateAnalyticsContent(array &$analyticsContent, Analytics $analytics)
+    protected function generateAnalyticsContent(array $analyticsContent, Analytics $analytics)
     {
         foreach (array_keys(self::POSITIONS) as $position) {
             $template = 'SuluWebsiteBundle:Analytics:' . $analytics->getType() . '/' . $position . '.html.twig';
