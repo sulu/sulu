@@ -13,9 +13,9 @@ define([
     'config',
     'text!./form.html',
     'text!./input.html',
-    'text!./textarea.html',
+    'text!./custom.html',
     'text!./piwik.html'
-], function($, _, Config, form, input, textarea, piwik) {
+], function($, _, Config, form, input, custom, piwik) {
 
     'use strict';
 
@@ -50,9 +50,9 @@ define([
                 {
                     id: 'custom',
                     title: 'website.webspace.settings.type.custom',
-                    input: 'textarea',
-                    labels: ['website.webspace.settings.script'],
-                    inputTemplate: textarea
+                    input: 'custom',
+                    labels: ['website.webspace.settings.position', 'website.webspace.settings.script'],
+                    inputTemplate: custom
                 }
             ]
         },
@@ -229,6 +229,7 @@ define([
             }
 
             this.sandbox.form.removeField(formSelector, contentSelector);
+            this.sandbox.stop(contentSelector);
             $(contentSelector).children().remove();
 
             $(contentSelector).html(
@@ -246,7 +247,9 @@ define([
             }.bind(this));
 
             $.when(deferreds).then(function() {
-                this.sandbox.form.setData(formSelector, data);
+                this.sandbox.form.setData(formSelector, data).then(function() {
+                    this.sandbox.start(contentSelector);
+                }.bind(this));
             }.bind(this));
         },
 

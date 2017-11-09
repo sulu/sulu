@@ -86,6 +86,26 @@
                 <source>website.webspace.settings.type.google_tag_manager</source>
                 <target>Google Tag Manager</target>
             </trans-unit>
+            <trans-unit id="15" resname="website.webspace.settings.position">
+                <source>website.webspace.settings.type.position</source>
+                <target>Position</target>
+            </trans-unit>
+            <trans-unit id="16" resname="website.webspace.settings.position.headOpen">
+                <source>website.webspace.settings.type.headOpen</source>
+                <target>Head Open</target>
+            </trans-unit>
+            <trans-unit id="17" resname="website.webspace.settings.position.headClose">
+                <source>website.webspace.settings.type.headClose</source>
+                <target>Head Close</target>
+            </trans-unit>
+            <trans-unit id="18" resname="website.webspace.settings.position.bodyOpen">
+                <source>website.webspace.settings.type.bodyOpen</source>
+                <target>Body Open</target>
+            </trans-unit>
+            <trans-unit id="19" resname="website.webspace.settings.position.bodyClose">
+                <source>website.webspace.settings.type.bodyClose</source>
+                <target>Body Close</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -45,6 +45,6 @@ define([
                 }
             };
 
-        return new Default($el, defaults, options, 'textEditor', subType);
+        return new Default($el, defaults, options, 'piwik', subType);
     };
 });
