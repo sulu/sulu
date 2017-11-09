@@ -1,7 +1,7 @@
 // @flow
-import {action, autorun, computed, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import type {BreadcrumbItem, BreadcrumbItems, Collection} from '../types';
+import type {BreadcrumbItem, BreadcrumbItems, Collection} from './types';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
@@ -11,13 +11,10 @@ export default class CollectionInfoStore {
         parentId: null,
         breadcrumb: null,
     };
-    @observable parentCollectionId: ?string | number;
     disposer: () => void;
 
     constructor(collectionId: ?string | number, locale: string) {
-        this.disposer = autorun(() => {
-            this.load(collectionId, locale);
-        });
+        this.load(collectionId, locale);
     }
 
     destroy() {

@@ -70,6 +70,16 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
             image/png 12.35 KB
           </div>
         </div>
+        <div>
+          <button
+            class="downloadButton"
+          >
+            <span
+              aria-label="cloud-download"
+              class="fa fa-cloud-download"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="media"
@@ -149,6 +159,16 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
           >
             image/jpeg 54.32 KB
           </div>
+        </div>
+        <div>
+          <button
+            class="downloadButton"
+          >
+            <span
+              aria-label="cloud-download"
+              class="fa fa-cloud-download"
+            />
+          </button>
         </div>
       </div>
       <div

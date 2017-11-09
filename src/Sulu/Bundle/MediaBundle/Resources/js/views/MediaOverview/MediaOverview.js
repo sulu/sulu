@@ -5,7 +5,8 @@ import {observer} from 'mobx-react';
 import {translate} from 'sulu-admin-bundle/services';
 import {withToolbar, DatagridStore} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import {CollectionInfoStore, MediaCollection} from '../../containers/MediaCollection';
+import MediaCollection from '../../containers/MediaCollection';
+import CollectionStore from '../../stores/CollectionStore';
 import mediaOverviewStyles from './mediaOverview.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
@@ -18,9 +19,9 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     collectionPage: observable = observable();
     locale: observable = observable();
     @observable collectionId: ?string | number;
-    @observable mediaStore: DatagridStore;
-    @observable collectionStore: DatagridStore;
-    collectionInfoStore: CollectionInfoStore;
+    @observable mediaDatagridStore: DatagridStore;
+    @observable collectionDatagridStore: DatagridStore;
+    collectionStore: CollectionStore;
     disposer: () => void;
 
     componentWillMount() {
@@ -39,9 +40,9 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
         router.unbind('collectionPage', this.collectionPage);
         router.unbind('locale', this.locale);
-        this.mediaStore.destroy();
+        this.mediaDatagridStore.destroy();
+        this.collectionDatagridStore.destroy();
         this.collectionStore.destroy();
-        this.collectionInfoStore.destroy();
         this.disposer();
     }
 
@@ -59,11 +60,11 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     createStores = () => {
         const collectionId = this.getCollectionId();
 
-        if (collectionId !== this.collectionId || !this.collectionStore) {
+        if (collectionId !== this.collectionId || !this.collectionDatagridStore) {
             this.setCollectionId(collectionId);
-            this.createMediaStore(collectionId, this.mediaPage, this.locale);
-            this.createCollectionStore(collectionId, this.collectionPage, this.locale);
-            this.createCollectionInfoStore(collectionId, this.locale);
+            this.createMediaDatagridStore(collectionId, this.mediaPage, this.locale);
+            this.createCollectionDatagridStore(collectionId, this.collectionPage, this.locale);
+            this.createCollectionStore(collectionId, this.locale);
         }
     };
 
@@ -71,12 +72,12 @@ class MediaOverview extends React.PureComponent<ViewProps> {
         this.collectionId = id;
     }
 
-    @action createCollectionStore(collectionId, page, locale) {
-        if (this.collectionStore) {
-            this.collectionStore.destroy();
+    @action createCollectionDatagridStore(collectionId, page, locale) {
+        if (this.collectionDatagridStore) {
+            this.collectionDatagridStore.destroy();
         }
 
-        this.collectionStore = new DatagridStore(
+        this.collectionDatagridStore = new DatagridStore(
             COLLECTIONS_RESOURCE_KEY,
             {
                 page,
@@ -86,15 +87,15 @@ class MediaOverview extends React.PureComponent<ViewProps> {
         );
     }
 
-    createCollectionInfoStore = (collectionId, locale) => {
-        if (this.collectionInfoStore) {
-            this.collectionInfoStore.destroy();
+    createCollectionStore = (collectionId, locale) => {
+        if (this.collectionStore) {
+            this.collectionStore.destroy();
         }
 
-        this.collectionInfoStore = new CollectionInfoStore(collectionId, locale);
+        this.collectionStore = new CollectionStore(collectionId, locale);
     };
 
-    @action createMediaStore(collectionId, page, locale) {
+    @action createMediaDatagridStore(collectionId, page, locale) {
         const options = {};
         options.fields = [
             'id',
@@ -113,11 +114,11 @@ class MediaOverview extends React.PureComponent<ViewProps> {
             options.collection = collectionId;
         }
 
-        if (this.mediaStore) {
-            this.mediaStore.destroy();
+        if (this.mediaDatagridStore) {
+            this.mediaDatagridStore.destroy();
         }
 
-        this.mediaStore = new DatagridStore(
+        this.mediaDatagridStore = new DatagridStore(
             MEDIA_RESOURCE_KEY,
             {
                 page,
@@ -140,9 +141,9 @@ class MediaOverview extends React.PureComponent<ViewProps> {
                     page={this.collectionPage}
                     locale={this.locale}
                     mediaViews={['mediaCardOverview']}
-                    mediaStore={this.mediaStore}
                     collectionStore={this.collectionStore}
-                    collectionInfoStore={this.collectionInfoStore}
+                    mediaDatagridStore={this.mediaDatagridStore}
+                    collectionDatagridStore={this.collectionDatagridStore}
                     onCollectionNavigate={this.handleCollectionOpen}
                 />
             </div>
@@ -152,7 +153,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
 export default withToolbar(MediaOverview, function() {
     const router = this.props.router;
-    const loading = this.collectionStore.loading || this.mediaStore.loading;
+    const loading = this.collectionDatagridStore.loading || this.mediaDatagridStore.loading;
 
     const {
         route: {
@@ -184,7 +185,7 @@ export default withToolbar(MediaOverview, function() {
                     router.restore(
                         COLLECTION_ROUTE,
                         {
-                            id: this.collectionInfoStore.parentId,
+                            id: this.collectionStore.parentId,
                         },
                         {
                             locale: this.locale.get(),

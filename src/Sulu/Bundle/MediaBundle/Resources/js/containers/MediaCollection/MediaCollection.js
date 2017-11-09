@@ -4,16 +4,16 @@ import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
 import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
-import CollectionInfoStore from './stores/CollectionInfoStore';
-import BreadcrumbBuilder from './BreadcrumbBuilder';
+import CollectionStore from '../../stores/CollectionStore';
+import CollectionBreadcrumb from './CollectionBreadcrumb';
 
 type Props = {
     page: observable,
     locale: observable,
     mediaViews: Array<string>,
-    mediaStore: DatagridStore,
-    collectionStore: DatagridStore,
-    collectionInfoStore: CollectionInfoStore,
+    mediaDatagridStore: DatagridStore,
+    collectionDatagridStore: DatagridStore,
+    collectionStore: CollectionStore,
     onCollectionNavigate: (collectionId?: string | number) => void,
 };
 
@@ -34,28 +34,28 @@ export default class MediaCollection extends React.PureComponent<Props> {
     render() {
         const {
             mediaViews,
-            mediaStore,
             collectionStore,
-            collectionInfoStore,
+            mediaDatagridStore,
+            collectionDatagridStore,
         } = this.props;
 
         return (
             <div>
-                {!collectionInfoStore.loading &&
-                    <BreadcrumbBuilder
-                        breadcrumb={collectionInfoStore.breadcrumb}
+                {!collectionStore.loading &&
+                    <CollectionBreadcrumb
+                        breadcrumb={collectionStore.breadcrumb}
                         onNavigate={this.handleBreadcrumbNavigate}
                     />
                 }
                 <Datagrid
                     views={['folder']}
-                    store={collectionStore}
+                    store={collectionDatagridStore}
                     onItemClick={this.handleCollectionClick}
                 />
                 <Divider />
                 <Datagrid
                     views={mediaViews}
-                    store={mediaStore}
+                    store={mediaDatagridStore}
                 />
             </div>
         );

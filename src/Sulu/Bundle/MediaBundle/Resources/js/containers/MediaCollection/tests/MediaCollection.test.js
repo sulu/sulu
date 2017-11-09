@@ -82,7 +82,7 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
     };
 });
 
-jest.mock('../stores/CollectionInfoStore', () => {
+jest.mock('../../../stores/CollectionStore', () => {
     return jest.fn();
 });
 
@@ -143,25 +143,25 @@ test('Render the MediaCollection', () => {
     const locale = observable();
     const collectionNavigateSpy = jest.fn();
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
+    const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
         page,
         locale,
     });
-    const collectionStore = new DatagridStore(COLLECTIONS_RESOURCE_KEY, {
+    const collectionDatagridStore = new DatagridStore(COLLECTIONS_RESOURCE_KEY, {
         page,
         locale,
     });
-    const CollectionInfoStore = require('../stores/CollectionInfoStore');
-    const collectionInfoStore = new CollectionInfoStore(1, locale);
+    const CollectionStore = require('../../../stores/CollectionStore');
+    const collectionStore = new CollectionStore(1, locale);
 
     const mediaCollection = render(
         <MediaCollection
             page={page}
             locale={locale}
             mediaViews={['mediaCardOverview']}
-            mediaStore={mediaStore}
+            mediaDatagridStore={mediaDatagridStore}
+            collectionDatagridStore={collectionDatagridStore}
             collectionStore={collectionStore}
-            collectionInfoStore={collectionInfoStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );

@@ -1,13 +1,12 @@
 // @flow
-
 export type BreadcrumbItem = {
-    id: string | number,
+    id: number,
     title: string,
 }
 
 export type BreadcrumbItems = Array<BreadcrumbItem>;
 
 export type Collection =  {
-    parentId: ?string | number,
+    parentId: ?number,
     breadcrumb: ?BreadcrumbItems,
 };

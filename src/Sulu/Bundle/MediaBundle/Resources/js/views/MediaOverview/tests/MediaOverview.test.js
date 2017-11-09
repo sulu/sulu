@@ -67,9 +67,9 @@ test('Unbind all query params and destroy all stores on unmount', () => {
     expect(router.bindQuery).toBeCalledWith('locale', locale);
 
     mediaOverview.unmount();
-    expect(mediaOverviewInstance.mediaStore.destroy).toBeCalled();
+    expect(mediaOverviewInstance.mediaDatagridStore.destroy).toBeCalled();
+    expect(mediaOverviewInstance.collectionDatagridStore.destroy).toBeCalled();
     expect(mediaOverviewInstance.collectionStore.destroy).toBeCalled();
-    expect(mediaOverviewInstance.collectionInfoStore.destroy).toBeCalled();
     expect(router.unbindQuery).toBeCalledWith('collectionPage', page);
     expect(router.unbindQuery).toBeCalledWith('locale', locale);
 });

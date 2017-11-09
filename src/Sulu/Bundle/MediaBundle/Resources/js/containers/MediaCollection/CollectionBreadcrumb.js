@@ -2,14 +2,14 @@
 import React from 'react';
 import {Breadcrumb} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/services';
-import type {BreadcrumbItems} from './types';
+import type {BreadcrumbItems} from '../../stores/CollectionStore';
 
 type Props = {
     breadcrumb: ?BreadcrumbItems,
     onNavigate: (collectionId?: string | number) => void,
 };
 
-export default class BreadcrumbBuilder extends React.PureComponent<Props> {
+export default class CollectionBreadcrumb extends React.PureComponent<Props> {
     handleNavigate = (collectionId?: string | number) => {
         this.props.onNavigate(collectionId);
     };

@@ -6,9 +6,9 @@ import MediaCardAdapter from '../../adapters/MediaCardAdapter';
 jest.mock('sulu-admin-bundle/services', () => ({
     translate: function(key) {
         switch (key) {
-            case 'sulu_admin.copy_url':
+            case 'sulu_media.copy_url':
                 return 'Copy URL';
-            case 'sulu_admin.download_masterfile':
+            case 'sulu_media.download_masterfile':
                 return 'Download master file';
         }
     },
