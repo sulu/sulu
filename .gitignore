@@ -10,6 +10,7 @@
 /tests/app/data
 /tests/app/logs
 /tests/Resources/cache
+/tests/web
 /vendor
 
 # Composer

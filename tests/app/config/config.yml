@@ -5,3 +5,6 @@ sulu_core:
                  internal:
                      path: "%kernel.root_dir%/../../src/Sulu/Bundle/CoreBundle/Content/templates"
                      type: "page"
+framework:
+    assets:
+        json_manifest_path: "%kernel.project_dir%/tests/web/adminV2/manifest.json"

@@ -18,6 +18,8 @@ class AppKernel extends SuluTestKernel
     {
         $bundles = parent::registerBundles();
 
+        $bundles[] = new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
+
         return $bundles;
     }
 

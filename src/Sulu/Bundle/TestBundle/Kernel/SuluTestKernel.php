@@ -37,6 +37,7 @@ class SuluTestKernel extends SuluKernel
             new \Symfony\Bundle\MonologBundle\MonologBundle(),
             new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
+            new \Symfony\Bundle\WebServerBundle\WebServerBundle(),
             new \Dubture\FFmpegBundle\DubtureFFmpegBundle(),
 
             // Massive
