@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, autorun, computed, observable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import type {BreadcrumbItem, BreadcrumbItems, Collection} from './types';
 
@@ -13,15 +13,17 @@ export default class CollectionInfoStore {
     };
     disposer: () => void;
 
-    constructor(collectionId: ?string | number, locale: string) {
-        this.load(collectionId, locale);
+    constructor(collectionId: ?number, locale: observable) {
+        this.disposer = autorun(() => {
+            this.load(collectionId, locale.get());
+        });
     }
 
     destroy() {
         this.disposer();
     }
 
-    @computed get parentId(): ?string | number {
+    @computed get parentId(): ?number {
         return this.collection.parentId;
     }
 
@@ -33,7 +35,7 @@ export default class CollectionInfoStore {
         this.loading = loading;
     }
 
-    @action load(collectionId: ?string | number, locale: string) {
+    @action load(collectionId: ?number, locale: string) {
         if (!collectionId) {
             this.collection.breadcrumb = null;
 
@@ -47,7 +49,7 @@ export default class CollectionInfoStore {
             collectionId,
             {
                 depth: 1,
-                locale,
+                locale: locale,
                 breadcrumb: true,
             }
         ).then((collectionInfo) => {

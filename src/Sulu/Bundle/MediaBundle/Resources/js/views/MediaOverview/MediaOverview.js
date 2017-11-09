@@ -18,7 +18,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     mediaPage: observable = observable();
     collectionPage: observable = observable();
     locale: observable = observable();
-    @observable collectionId: ?string | number;
+    @observable collectionId: ?number;
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;
     collectionStore: CollectionStore;
@@ -62,9 +62,9 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
         if (collectionId !== this.collectionId || !this.collectionDatagridStore) {
             this.setCollectionId(collectionId);
+            this.createCollectionStore(collectionId, this.locale);
             this.createMediaDatagridStore(collectionId, this.mediaPage, this.locale);
             this.createCollectionDatagridStore(collectionId, this.collectionPage, this.locale);
-            this.createCollectionStore(collectionId, this.locale);
         }
     };
 
