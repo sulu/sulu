@@ -1,7 +1,6 @@
 **/node_modules/
 **/vendor/
 **/flow-typed/
-/web
 styleguide
 
 # TODO Remove these rules once the old code is removed
