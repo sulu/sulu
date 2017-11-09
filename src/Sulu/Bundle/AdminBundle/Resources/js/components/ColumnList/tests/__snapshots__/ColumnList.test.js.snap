@@ -145,6 +145,7 @@ exports[`The ColumnList component should render 1`] = `
               className="toolbar active"
             >
               <ToolbarButton
+                columnIndex={0}
                 icon="plus"
                 index={0}
                 onClick={[Function]}
@@ -166,6 +167,7 @@ exports[`The ColumnList component should render 1`] = `
                 </div>
               </ToolbarButton>
               <ToolbarButton
+                columnIndex={0}
                 icon="search"
                 index={0}
                 onClick={[Function]}
@@ -187,6 +189,7 @@ exports[`The ColumnList component should render 1`] = `
                 </div>
               </ToolbarButton>
               <ToolbarDropdown
+                columnIndex={0}
                 icon="gear"
                 index={0}
                 options={
@@ -570,6 +573,7 @@ exports[`The ColumnList component should render 1`] = `
               className="toolbar"
             >
               <ToolbarButton
+                columnIndex={1}
                 icon="plus"
                 index={0}
                 onClick={[Function]}
@@ -591,6 +595,7 @@ exports[`The ColumnList component should render 1`] = `
                 </div>
               </ToolbarButton>
               <ToolbarButton
+                columnIndex={1}
                 icon="search"
                 index={0}
                 onClick={[Function]}
@@ -612,6 +617,7 @@ exports[`The ColumnList component should render 1`] = `
                 </div>
               </ToolbarButton>
               <ToolbarDropdown
+                columnIndex={1}
                 icon="gear"
                 index={0}
                 options={
@@ -916,6 +922,7 @@ exports[`The ColumnList component should render 1`] = `
               className="toolbar"
             >
               <ToolbarButton
+                columnIndex={2}
                 icon="plus"
                 index={0}
                 onClick={[Function]}
@@ -937,6 +944,7 @@ exports[`The ColumnList component should render 1`] = `
                 </div>
               </ToolbarButton>
               <ToolbarButton
+                columnIndex={2}
                 icon="search"
                 index={0}
                 onClick={[Function]}
@@ -958,6 +966,7 @@ exports[`The ColumnList component should render 1`] = `
                 </div>
               </ToolbarButton>
               <ToolbarDropdown
+                columnIndex={2}
                 icon="gear"
                 index={0}
                 options={

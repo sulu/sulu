@@ -5,7 +5,7 @@ import type {ToolbarDropdownOptionConfig} from './types';
 import toolbarDropdownStyles from './toolbarDropdown.scss';
 
 type Props = {
-    index?: number,
+    columnIndex?: number,
     options: Array<ToolbarDropdownOptionConfig>,
     skin?: 'primary' | 'secondary',
 };
@@ -18,17 +18,17 @@ export default class ToolbarDropdownList extends React.Component<Props> {
     renderOptions = () => {
         const {options} = this.props;
 
-        return options.map((dropdownOptionConfig: ToolbarDropdownOptionConfig, index: number) => {
-            const key = `option-${index}`;
+        return options.map((dropdownOptionConfig: ToolbarDropdownOptionConfig, columnIndex: number) => {
+            const key = `option-${columnIndex}`;
             const handleClick = () => {
-                dropdownOptionConfig.onClick(this.props.index);
+                dropdownOptionConfig.onClick(this.props.columnIndex);
             };
 
             return (
                 <li
                     className={toolbarDropdownStyles.option}
                     key={key}
-                    value={this.props.index}
+                    value={this.props.columnIndex}
                 >
                     <button className={toolbarDropdownStyles.button} onClick={handleClick}>
                         {dropdownOptionConfig.label}

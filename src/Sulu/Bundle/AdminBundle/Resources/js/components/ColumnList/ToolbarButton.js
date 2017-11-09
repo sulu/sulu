@@ -11,11 +11,11 @@ export default class ToolbarButton extends React.Component<ToolbarButtonProps> {
     };
 
     handleClick = () => {
-        this.props.onClick(this.props.index);
+        this.props.onClick(this.props.columnIndex);
     };
 
     render = () => {
-        const {index, icon, skin} = this.props;
+        const {icon, skin} = this.props;
 
         const className = classNames(
             toolbarStyles.item,
@@ -23,7 +23,7 @@ export default class ToolbarButton extends React.Component<ToolbarButtonProps> {
         );
 
         return (
-            <div key={index} onClick={this.handleClick} className={className}>
+            <div onClick={this.handleClick} className={className}>
                 <Icon name={icon} />
             </div>
         );

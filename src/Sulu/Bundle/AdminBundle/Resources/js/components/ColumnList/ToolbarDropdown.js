@@ -29,7 +29,7 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
     };
 
     render = () => {
-        const {icon, options, skin, index} = this.props;
+        const {icon, options, skin, columnIndex} = this.props;
 
         const className = classNames(
             toolbarStyles.item,
@@ -51,7 +51,7 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
                                 ref={setPopoverElementRef}
                             >
                                 <ToolbarDropdownList
-                                    index={index}
+                                    columnIndex={columnIndex}
                                     style={popoverStyle}
                                     options={options}
                                 />
