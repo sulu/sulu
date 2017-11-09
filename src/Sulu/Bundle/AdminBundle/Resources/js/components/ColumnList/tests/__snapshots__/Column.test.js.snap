@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The Column component should render 1`] = `
+<div
+  class="columnContainer active"
+>
+  <div
+    class="toolbar active"
+  >
+    <div
+      class="item primary"
+    >
+      <span
+        aria-label="plus"
+        class="fa fa-plus"
+      />
+    </div>
+    <div
+      class="item primary"
+    >
+      <span
+        aria-label="search"
+        class="fa fa-search"
+      />
+    </div>
+    <div
+      class="item primary"
+    >
+      <span
+        aria-label="gear"
+        class="fa fa-gear"
+      />
+    </div>
+  </div>
+  <div
+    class="column"
+  />
+</div>
+`;
+
+exports[`The Column component should render 2`] = `
+<div
+  class="columnContainer"
+>
+  <div
+    class="toolbar"
+  >
+    <div
+      class="item primary"
+    >
+      <span
+        aria-label="plus"
+        class="fa fa-plus"
+      />
+    </div>
+    <div
+      class="item primary"
+    >
+      <span
+        aria-label="search"
+        class="fa fa-search"
+      />
+    </div>
+    <div
+      class="item primary"
+    >
+      <span
+        aria-label="gear"
+        class="fa fa-gear"
+      />
+    </div>
+  </div>
+  <div
+    class="column"
+  />
+</div>
+`;

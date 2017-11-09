@@ -5,8 +5,8 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 
 type Props = SelectProps & {
-    value?: string,
-    onChange?: (value: string) => void,
+    value?: string | number,
+    onChange?: (value: string | number) => void,
 };
 
 export default class SingleSelect extends React.PureComponent<Props> {
@@ -36,7 +36,7 @@ export default class SingleSelect extends React.PureComponent<Props> {
         return option.props.value === this.props.value && !option.props.disabled;
     };
 
-    handleSelect = (value: string) => {
+    handleSelect = (value: string | number) => {
         if (this.props.onChange) {
             this.props.onChange(value);
         }

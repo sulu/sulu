@@ -30,6 +30,13 @@ module.exports = { // eslint-disable-line
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/global.scss',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/styleguidist.scss',
     ],
+    styles: {
+        Playground: {
+            preview: {
+                background: '#f5f5f5',
+            },
+        },
+    },
     sections: [
         {
             name: 'Components',

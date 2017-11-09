@@ -1,0 +1,1176 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The ColumnList component should render 1`] = `
+<ColumnList
+  buttons={
+    Array [
+      Object {
+        "icon": "heart",
+        "onClick": [Function],
+      },
+      Object {
+        "icon": "pencil",
+        "onClick": [Function],
+      },
+    ]
+  }
+  onItemClick={[Function]}
+  toolbarItems={
+    Array [
+      Object {
+        "icon": "plus",
+        "index": 0,
+        "onClick": [Function],
+        "type": "button",
+      },
+      Object {
+        "icon": "search",
+        "index": 0,
+        "onClick": [Function],
+        "type": "button",
+      },
+      Object {
+        "icon": "gear",
+        "index": 0,
+        "options": Array [
+          Object {
+            "label": "Option1 ",
+            "onClick": [Function],
+          },
+          Object {
+            "label": "Option2 ",
+            "onClick": [Function],
+          },
+        ],
+        "type": "dropdown",
+      },
+    ]
+  }
+>
+  <div
+    className="columnListContainer"
+  >
+    <div
+      className="columnList"
+    >
+      <Column
+        active={true}
+        buttons={
+          Array [
+            Object {
+              "icon": "heart",
+              "onClick": [Function],
+            },
+            Object {
+              "icon": "pencil",
+              "onClick": [Function],
+            },
+          ]
+        }
+        index={0}
+        onActive={[Function]}
+        onItemClick={[Function]}
+        toolbarItems={
+          Array [
+            Object {
+              "icon": "plus",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "search",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "gear",
+              "index": 0,
+              "options": Array [
+                Object {
+                  "label": "Option1 ",
+                  "onClick": [Function],
+                },
+                Object {
+                  "label": "Option2 ",
+                  "onClick": [Function],
+                },
+              ],
+              "type": "dropdown",
+            },
+          ]
+        }
+      >
+        <div
+          className="columnContainer active"
+          onMouseEnter={[Function]}
+        >
+          <Toolbar
+            active={true}
+            columnIndex={0}
+            toolbarItems={
+              Array [
+                Object {
+                  "icon": "plus",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "search",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "gear",
+                  "index": 0,
+                  "options": Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ],
+                  "type": "dropdown",
+                },
+              ]
+            }
+          >
+            <div
+              className="toolbar active"
+            >
+              <ToolbarButton
+                columnIndex={0}
+                icon="plus"
+                index={0}
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="plus"
+                  >
+                    <span
+                      aria-label="plus"
+                      className="fa fa-plus"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarButton
+                columnIndex={0}
+                icon="search"
+                index={0}
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="search"
+                  >
+                    <span
+                      aria-label="search"
+                      className="fa fa-search"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarDropdown
+                columnIndex={0}
+                icon="gear"
+                index={0}
+                options={
+                  Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ]
+                }
+                skin="primary"
+                type="dropdown"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="gear"
+                  >
+                    <span
+                      aria-label="gear"
+                      className="fa fa-gear"
+                    />
+                  </Icon>
+                  <Popover
+                    horizontalOffset={0}
+                    onClose={[Function]}
+                    open={false}
+                    verticalOffset={0}
+                  />
+                </div>
+              </ToolbarDropdown>
+            </div>
+          </Toolbar>
+          <div
+            className="column"
+          >
+            <Item
+              buttons={
+                Array [
+                  Object {
+                    "icon": "heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={false}
+              id="1"
+              onClick={[Function]}
+              selected={true}
+            >
+              <div
+                className="item selected"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1"
+                  >
+                    <Icon
+                      className="button"
+                      name="heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="heart"
+                        className="button fa fa-heart"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1"
+                  >
+                    <Icon
+                      className="button"
+                      name="pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="pencil"
+                        className="button fa fa-pencil"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  Item 1
+                </span>
+              </div>
+            </Item>
+            <Item
+              buttons={
+                Array [
+                  Object {
+                    "icon": "heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={true}
+              id="2"
+              onClick={[Function]}
+              selected={false}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="2"
+                  >
+                    <Icon
+                      className="button"
+                      name="heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="heart"
+                        className="button fa fa-heart"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="2"
+                  >
+                    <Icon
+                      className="button"
+                      name="pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="pencil"
+                        className="button fa fa-pencil"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  Item 1
+                </span>
+                <Icon
+                  className="children"
+                  name="chevron-right"
+                >
+                  <span
+                    aria-label="chevron-right"
+                    className="children fa fa-chevron-right"
+                  />
+                </Icon>
+              </div>
+            </Item>
+            <Item
+              buttons={
+                Array [
+                  Object {
+                    "icon": "heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={false}
+              id="3"
+              onClick={[Function]}
+              selected={false}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="3"
+                  >
+                    <Icon
+                      className="button"
+                      name="heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="heart"
+                        className="button fa fa-heart"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="3"
+                  >
+                    <Icon
+                      className="button"
+                      name="pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="pencil"
+                        className="button fa fa-pencil"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  Item 1
+                </span>
+              </div>
+            </Item>
+          </div>
+        </div>
+      </Column>
+      <Column
+        active={false}
+        buttons={
+          Array [
+            Object {
+              "icon": "heart",
+              "onClick": [Function],
+            },
+            Object {
+              "icon": "pencil",
+              "onClick": [Function],
+            },
+          ]
+        }
+        index={1}
+        onActive={[Function]}
+        onItemClick={[Function]}
+        toolbarItems={
+          Array [
+            Object {
+              "icon": "plus",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "search",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "gear",
+              "index": 0,
+              "options": Array [
+                Object {
+                  "label": "Option1 ",
+                  "onClick": [Function],
+                },
+                Object {
+                  "label": "Option2 ",
+                  "onClick": [Function],
+                },
+              ],
+              "type": "dropdown",
+            },
+          ]
+        }
+      >
+        <div
+          className="columnContainer"
+          onMouseEnter={[Function]}
+        >
+          <Toolbar
+            active={false}
+            columnIndex={1}
+            toolbarItems={
+              Array [
+                Object {
+                  "icon": "plus",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "search",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "gear",
+                  "index": 0,
+                  "options": Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ],
+                  "type": "dropdown",
+                },
+              ]
+            }
+          >
+            <div
+              className="toolbar"
+            >
+              <ToolbarButton
+                columnIndex={1}
+                icon="plus"
+                index={0}
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="plus"
+                  >
+                    <span
+                      aria-label="plus"
+                      className="fa fa-plus"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarButton
+                columnIndex={1}
+                icon="search"
+                index={0}
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="search"
+                  >
+                    <span
+                      aria-label="search"
+                      className="fa fa-search"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarDropdown
+                columnIndex={1}
+                icon="gear"
+                index={0}
+                options={
+                  Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ]
+                }
+                skin="primary"
+                type="dropdown"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="gear"
+                  >
+                    <span
+                      aria-label="gear"
+                      className="fa fa-gear"
+                    />
+                  </Icon>
+                  <Popover
+                    horizontalOffset={0}
+                    onClose={[Function]}
+                    open={false}
+                    verticalOffset={0}
+                  />
+                </div>
+              </ToolbarDropdown>
+            </div>
+          </Toolbar>
+          <div
+            className="column"
+          >
+            <Item
+              buttons={
+                Array [
+                  Object {
+                    "icon": "heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={false}
+              id="1-1"
+              onClick={[Function]}
+              selected={false}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="heart"
+                        className="button fa fa-heart"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="pencil"
+                        className="button fa fa-pencil"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  Item 1
+                </span>
+              </div>
+            </Item>
+            <Item
+              buttons={
+                Array [
+                  Object {
+                    "icon": "heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={true}
+              id="1-2"
+              onClick={[Function]}
+              selected={false}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-2"
+                  >
+                    <Icon
+                      className="button"
+                      name="heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="heart"
+                        className="button fa fa-heart"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-2"
+                  >
+                    <Icon
+                      className="button"
+                      name="pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="pencil"
+                        className="button fa fa-pencil"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  Item 1
+                </span>
+                <Icon
+                  className="children"
+                  name="chevron-right"
+                >
+                  <span
+                    aria-label="chevron-right"
+                    className="children fa fa-chevron-right"
+                  />
+                </Icon>
+              </div>
+            </Item>
+          </div>
+        </div>
+      </Column>
+      <Column
+        active={false}
+        buttons={
+          Array [
+            Object {
+              "icon": "heart",
+              "onClick": [Function],
+            },
+            Object {
+              "icon": "pencil",
+              "onClick": [Function],
+            },
+          ]
+        }
+        index={2}
+        onActive={[Function]}
+        onItemClick={[Function]}
+        toolbarItems={
+          Array [
+            Object {
+              "icon": "plus",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "search",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "gear",
+              "index": 0,
+              "options": Array [
+                Object {
+                  "label": "Option1 ",
+                  "onClick": [Function],
+                },
+                Object {
+                  "label": "Option2 ",
+                  "onClick": [Function],
+                },
+              ],
+              "type": "dropdown",
+            },
+          ]
+        }
+      >
+        <div
+          className="columnContainer"
+          onMouseEnter={[Function]}
+        >
+          <Toolbar
+            active={false}
+            columnIndex={2}
+            toolbarItems={
+              Array [
+                Object {
+                  "icon": "plus",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "search",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "gear",
+                  "index": 0,
+                  "options": Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ],
+                  "type": "dropdown",
+                },
+              ]
+            }
+          >
+            <div
+              className="toolbar"
+            >
+              <ToolbarButton
+                columnIndex={2}
+                icon="plus"
+                index={0}
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="plus"
+                  >
+                    <span
+                      aria-label="plus"
+                      className="fa fa-plus"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarButton
+                columnIndex={2}
+                icon="search"
+                index={0}
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="search"
+                  >
+                    <span
+                      aria-label="search"
+                      className="fa fa-search"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarDropdown
+                columnIndex={2}
+                icon="gear"
+                index={0}
+                options={
+                  Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ]
+                }
+                skin="primary"
+                type="dropdown"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="gear"
+                  >
+                    <span
+                      aria-label="gear"
+                      className="fa fa-gear"
+                    />
+                  </Icon>
+                  <Popover
+                    horizontalOffset={0}
+                    onClose={[Function]}
+                    open={false}
+                    verticalOffset={0}
+                  />
+                </div>
+              </ToolbarDropdown>
+            </div>
+          </Toolbar>
+          <div
+            className="column"
+          >
+            <Item
+              buttons={
+                Array [
+                  Object {
+                    "icon": "heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={false}
+              id="1-1-1"
+              onClick={[Function]}
+              selected={false}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="heart"
+                        className="button fa fa-heart"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="pencil"
+                        className="button fa fa-pencil"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  Item 1
+                </span>
+              </div>
+            </Item>
+            <Item
+              buttons={
+                Array [
+                  Object {
+                    "icon": "heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={false}
+              id="1-1-2"
+              onClick={[Function]}
+              selected={false}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1-2"
+                  >
+                    <Icon
+                      className="button"
+                      name="heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="heart"
+                        className="button fa fa-heart"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1-2"
+                  >
+                    <Icon
+                      className="button"
+                      name="pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="pencil"
+                        className="button fa fa-pencil"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  Item 1
+                </span>
+              </div>
+            </Item>
+          </div>
+        </div>
+      </Column>
+    </div>
+  </div>
+</ColumnList>
+`;

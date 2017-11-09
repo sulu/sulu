@@ -10,13 +10,24 @@ type Props = {
 };
 
 export default class Icon extends React.PureComponent<Props> {
+    handleClick = (event: SyntheticEvent<HTMLElement>) => {
+        const {onClick} = this.props;
+
+        if (!onClick) {
+            return;
+        }
+
+        event.stopPropagation();
+        onClick();
+    };
+
     render() {
         const {className, name, onClick} = this.props;
         const iconClass = classNames(className, 'fa', 'fa-' + name);
 
         const onClickProperties = onClick
             ? {
-                onClick,
+                onClick: this.handleClick,
                 role: 'button',
                 tabIndex: 0,
             }

@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The Toolbar component should render with active 1`] = `
+<div
+  class="toolbar active"
+>
+  <div
+    class="item primary"
+  >
+    <span
+      aria-label="plus"
+      class="fa fa-plus"
+    />
+  </div>
+  <div
+    class="item primary"
+  >
+    <span
+      aria-label="search"
+      class="fa fa-search"
+    />
+  </div>
+  <div
+    class="item primary"
+  >
+    <span
+      aria-label="gear"
+      class="fa fa-gear"
+    />
+  </div>
+</div>
+`;
+
+exports[`The Toolbar component should render with active 2`] = `"<div><div data-reactroot=\\"\\" class=\\"container\\"><div style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\"><div class=\\"listContainer\\"><ul class=\\"list primary\\"><li class=\\"option\\"><button class=\\"button\\">Option1</button></li><li class=\\"option\\"><button class=\\"button\\">Option2</button></li></ul></div></div></div></div><div><div data-reactroot=\\"\\" class=\\"backdrop\\"></div></div>"`;
+
+exports[`The Toolbar component should render with active 3`] = `
+<div
+  class="toolbar"
+>
+  <div
+    class="item primary"
+  >
+    <span
+      aria-label="plus"
+      class="fa fa-plus"
+    />
+  </div>
+  <div
+    class="item primary"
+  >
+    <span
+      aria-label="search"
+      class="fa fa-search"
+    />
+  </div>
+  <div
+    class="item primary"
+  >
+    <span
+      aria-label="gear"
+      class="fa fa-gear"
+    />
+  </div>
+</div>
+`;

@@ -1,0 +1,46 @@
+@import '../../containers/Application/colors.scss';
+
+$itemBackgroundColorPrimary: $silver;
+$itemBackgroundColorSecondary: $shakespeare;
+$itemBorderColorSecondary: $concrete;
+
+$borderRadius: 3px;
+$dropdownContainerBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
+
+.toolbar {
+    height: 30px;
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+    visibility: hidden;
+
+    &.active {
+        visibility: visible;
+    }
+}
+
+.item {
+    flex: 1;
+    text-align: center;
+    padding: 5px 0;
+    cursor: pointer;
+
+    &:first-child {
+        border-radius: $borderRadius 0 0;
+    }
+
+    &:last-child {
+        border-radius: 0 $borderRadius 0 0;
+    }
+
+    &.primary {
+        background: $itemBackgroundColorPrimary;
+    }
+
+    &.secondary {
+        background: $itemBackgroundColorSecondary;
+        border-left: 1px solid $itemBorderColorSecondary;
+        border-right: 1px solid $itemBorderColorSecondary;
+        color: $white;
+    }
+}
