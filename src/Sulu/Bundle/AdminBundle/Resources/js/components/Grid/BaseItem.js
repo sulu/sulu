@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
+import type {Element} from 'react';
 import type {BaseItemProps, Size} from './types';
 
 type Props = BaseItemProps & {
     className: string,
+    children: Element<*>,
 };
 
 export default class BaseItem extends React.PureComponent<Props> {
