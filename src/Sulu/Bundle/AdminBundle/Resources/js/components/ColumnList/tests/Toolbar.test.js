@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {mount} from 'enzyme';
 import Toolbar from '../Toolbar';
@@ -6,6 +6,10 @@ import ToolbarDropdown from '../ToolbarDropdown';
 
 test('The Toolbar component should render with active', () => {
     const body = document.body;
+    if (!body) {
+        throw new Error('Body tag should exist!');
+    }
+
     const toolbarItems = [
         {
             icon: 'plus',
@@ -51,18 +55,4 @@ test('The Toolbar component should render with active', () => {
     );
 
     expect(toolbarActive.render()).toMatchSnapshot();
-});
-
-test('The component should throw an exception when an unknown toolbar item type is given', () => {
-    const toolbarItems = [
-        {
-            icon: 'plus',
-            type: 'xxx-not-valid',
-            onClick: () => {},
-        },
-    ];
-
-    expect(() => {
-        mount(<Toolbar active={false} index={0} toolbarItems={toolbarItems} />);
-    }).toThrow(/xxx-not-valid/);
 });
