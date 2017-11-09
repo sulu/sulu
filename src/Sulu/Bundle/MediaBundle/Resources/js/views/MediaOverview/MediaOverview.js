@@ -131,7 +131,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
     handleCollectionOpen = (collectionId) => {
         const {router} = this.props;
-        router.navigate(COLLECTION_ROUTE, {id: collectionId, locale: this.locale.get()});
+        router.navigate(COLLECTION_ROUTE, {id: collectionId, collectionPage: '1', locale: this.locale.get()});
     };
 
     render() {
