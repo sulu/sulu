@@ -159,6 +159,8 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
                     $groups = ['fullAccount', 'partialContact'];
                 }
 
+                $groups[] = 'partialCategory';
+
                 return $this->serializer->serialize(
                     $entity,
                     'array',
