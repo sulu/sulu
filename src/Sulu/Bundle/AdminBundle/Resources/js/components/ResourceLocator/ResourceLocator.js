@@ -14,45 +14,40 @@ export default class ResourceLocator extends React.PureComponent<Props> {
         value: '',
     };
 
-    componentWillMount = () => {
-        const {value, mode} = this.props;
-
-        let parts, part;
-        if ('leaf' === mode) {
-            parts = value.split('/');
-            part = parts.pop();
-        } else {
-            parts = [];
-            part = value.substring(1);
-        }
-
-        this.fixed = parts.join('/');
-        this.changeable = part;
-    };
-
-    componentWillReceiveProps = (nextProps: Props) => {
-        this.changeable = nextProps.value.substring(this.fixed.length +1 );
-    };
-
     fixed: string = '';
     changeable: string = '';
 
-    handleChange = (value: string) => {
-        const {onChange, mode} = this.props;
+    componentWillMount = () => {
+        const {value, mode} = this.props;
+        let parts;
 
-        if ('leaf' === mode) {
-            value = this.fixed + '/' + value;
-        } else {
-            value = '/' + value;
+        switch (mode) {
+            case 'leaf':
+                parts = value.split('/');
+                this.changeable = parts.pop();
+                this.fixed = parts.join('/') + '/';
+                break;
+            case 'full':
+                this.fixed = '/';
+                this.changeable = value.substring(1);
+                break;
         }
+    };
 
-        onChange(value);
+    componentWillReceiveProps = (nextProps: Props) => {
+        this.changeable = nextProps.value.substring(this.fixed.length);
+    };
+
+    handleChange = (value: string) => {
+        const {onChange} = this.props;
+
+        onChange(this.fixed + value);
     };
 
     render() {
         return (
             <div className={resourceLocatorStyles.container}>
-                <span>{this.fixed + '/'}</span>
+                <span>{this.fixed}</span>
                 <Input onChange={this.handleChange} type="string" value={this.changeable} />
             </div>
         );
