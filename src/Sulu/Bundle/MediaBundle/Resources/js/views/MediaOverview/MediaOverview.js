@@ -186,8 +186,6 @@ export default withToolbar(MediaOverview, function() {
                         COLLECTION_ROUTE,
                         {
                             id: this.collectionStore.parentId,
-                        },
-                        {
                             locale: this.locale.get(),
                             collectionPage: '1',
                         }
