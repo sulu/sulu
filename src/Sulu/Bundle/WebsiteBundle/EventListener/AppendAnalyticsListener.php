@@ -22,7 +22,7 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class AppendAnalyticsListener
 {
-    const POSITIONS = [
+    private static $positions = [
         'head-open' => [
             'regex' => '/(<head [^>]*>|<head>)/',
             'sprintf' => '$1%s',
@@ -128,7 +128,7 @@ class AppendAnalyticsListener
      */
     protected function generateAnalyticsContent(array $analyticsContent, Analytics $analytics)
     {
-        foreach (array_keys(self::POSITIONS) as $position) {
+        foreach (array_keys(self::$positions) as $position) {
             $template = 'SuluWebsiteBundle:Analytics:' . $analytics->getType() . '/' . $position . '.html.twig';
 
             if (!$this->engine->exists($template)) {
@@ -166,8 +166,8 @@ class AppendAnalyticsListener
             }
 
             $responseContent = preg_replace(
-                self::POSITIONS[$id]['regex'],
-                sprintf(self::POSITIONS[$id]['sprintf'], $content),
+                self::$positions[$id]['regex'],
+                sprintf(self::$positions[$id]['sprintf'], $content),
                 $responseContent
             );
         }
