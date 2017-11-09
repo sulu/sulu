@@ -8,16 +8,21 @@ import type {ItemButtonConfig, ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
 type Props = {
-    index: number,
+    index?: number,
     children?: ChildrenArray<Element<typeof Item>>,
     buttons?: Array<ItemButtonConfig>,
     active: boolean,
-    onActive?: (index: number) => void,
+    onActive?: (index?: number) => void,
     onItemClick?: (id: string | number) => void,
     toolbarItems: Array<ToolbarItemConfig>,
 };
 
 export default class Column extends React.Component<Props> {
+    static defaultProps = {
+        active: false,
+        toolbarItems: [],
+    };
+
     cloneItems = (originalItems?: ChildrenArray<Element<typeof Item>>) => {
         if (!originalItems) {
             return null;
@@ -37,13 +42,13 @@ export default class Column extends React.Component<Props> {
     };
 
     handleMouseEnter = () => {
-        const {onActive} = this.props;
+        const {index, onActive} = this.props;
 
         if (!onActive) {
             return;
         }
 
-        onActive(this.props.index);
+        onActive(index);
     };
 
     render() {

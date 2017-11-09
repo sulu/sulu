@@ -6,11 +6,11 @@ export type ItemButtonConfig = {
 
 export type ToolbarDropdownOptionConfig = {
     label: string,
-    onClick: (index: string | number) => void,
+    onClick: (index?: string | number) => void,
 };
 
 type ToolbarBase = {
-    index: number,
+    index?: number,
     icon: string,
     skin?: 'primary' | 'secondary',
 };
@@ -20,7 +20,7 @@ export type ToolbarDropdown = ToolbarBase & {
 };
 
 export type ToolbarButton = ToolbarBase & {
-    onClick: (index: string | number) => void,
+    onClick: (index?: string | number) => void,
 };
 
 export type ToolbarDropdownConfig = ToolbarDropdown & { type: 'dropdown' };

@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {mount} from 'enzyme';
 import ColumnList from '../ColumnList';
@@ -22,16 +22,19 @@ test('The ColumnList component should render', () => {
 
     const toolbarItems = [
         {
+            index: 0,
             icon: 'plus',
             type: 'button',
             onClick: () => {},
         },
         {
+            index: 0,
             icon: 'search',
             type: 'button',
             onClick: () => {},
         },
         {
+            index: 0,
             icon: 'gear',
             type: 'dropdown',
             options: [
@@ -54,13 +57,13 @@ test('The ColumnList component should render', () => {
             toolbarItems={toolbarItems}
         >
             <Column>
-                <Item id="1" selected="true">Item 1</Item>
-                <Item id="2" hasChildren="true">Item 1</Item>
+                <Item id="1" selected={true}>Item 1</Item>
+                <Item id="2" hasChildren={true}>Item 1</Item>
                 <Item id="3">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1">Item 1</Item>
-                <Item id="1-2" hasChildren="true">Item 1</Item>
+                <Item id="1-2" hasChildren={true}>Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1-1">Item 1</Item>
@@ -87,16 +90,19 @@ test('The ColumnList component should trigger the item callback', () => {
 
     const toolbarItems = [
         {
+            index: 0,
             icon: 'plus',
             type: 'button',
             onClick: () => {},
         },
         {
+            index: 0,
             icon: 'search',
             type: 'button',
             onClick: () => {},
         },
         {
+            index: 0,
             icon: 'gear',
             type: 'dropdown',
             options: [
@@ -119,13 +125,13 @@ test('The ColumnList component should trigger the item callback', () => {
             toolbarItems={toolbarItems}
         >
             <Column>
-                <Item id="1" selected="true">Item 1</Item>
-                <Item id="2" hasChildren="true">Item 1</Item>
+                <Item id="1" selected={true}>Item 1</Item>
+                <Item id="2" hasChildren={true}>Item 1</Item>
                 <Item id="3">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1">Item 1</Item>
-                <Item id="1-2" hasChildren="true">Item 1</Item>
+                <Item id="1-2" hasChildren={true}>Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1-1">Item 1</Item>
@@ -164,16 +170,19 @@ test('The ColumnList component should handle which toolbar is active on mouse en
 
     const toolbarItems = [
         {
+            index: 0,
             icon: 'plus',
             type: 'button',
             onClick: () => {},
         },
         {
+            index: 0,
             icon: 'search',
             type: 'button',
             onClick: () => {},
         },
         {
+            index: 0,
             icon: 'gear',
             type: 'dropdown',
             options: [
@@ -196,13 +205,13 @@ test('The ColumnList component should handle which toolbar is active on mouse en
             toolbarItems={toolbarItems}
         >
             <Column>
-                <Item id="1" selected="true">Item 1</Item>
-                <Item id="2" hasChildren="true">Item 1</Item>
+                <Item id="1" selected={true}>Item 1</Item>
+                <Item id="2" hasChildren={true}>Item 1</Item>
                 <Item id="3">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1">Item 1</Item>
-                <Item id="1-2" hasChildren="true">Item 1</Item>
+                <Item id="1-2" hasChildren={true}>Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1-1">Item 1</Item>

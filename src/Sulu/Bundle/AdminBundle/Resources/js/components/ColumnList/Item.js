@@ -12,10 +12,15 @@ type Props = {
     selected: boolean,
     hasChildren: boolean,
     buttons?: Array<ItemButtonConfig>,
-    onClick: (id: string | number) => void,
+    onClick?: (id: string | number) => void,
 };
 
 export default class Item extends React.Component<Props> {
+    static defaultProps = {
+        selected: false,
+        hasChildren: false,
+    };
+
     handleClick = () => {
         if (this.props.onClick) {
             this.props.onClick(this.props.id);

@@ -7,7 +7,7 @@ import type {ToolbarItemConfig} from './types';
 import toolbarStyles from './toolbar.scss';
 
 type Props = {
-    index: number,
+    index?: number,
     active: boolean,
     toolbarItems: Array<ToolbarItemConfig>,
 };
