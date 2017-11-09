@@ -108,7 +108,7 @@ exports[`The ColumnList component should render 1`] = `
         >
           <Toolbar
             active={true}
-            index={0}
+            columnIndex={0}
             toolbarItems={
               Array [
                 Object {
@@ -536,7 +536,7 @@ exports[`The ColumnList component should render 1`] = `
         >
           <Toolbar
             active={false}
-            index={1}
+            columnIndex={1}
             toolbarItems={
               Array [
                 Object {
@@ -885,7 +885,7 @@ exports[`The ColumnList component should render 1`] = `
         >
           <Toolbar
             active={false}
-            index={2}
+            columnIndex={2}
             toolbarItems={
               Array [
                 Object {

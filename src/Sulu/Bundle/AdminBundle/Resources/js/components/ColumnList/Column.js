@@ -63,7 +63,7 @@ export default class Column extends React.Component<Props> {
 
         return (
             <div onMouseEnter={this.handleMouseEnter} className={columnContainerClass}>
-                <Toolbar active={active} index={index} toolbarItems={toolbarItems} />
+                <Toolbar active={active} columnIndex={index} toolbarItems={toolbarItems} />
                 <div className={columnListStyles.column}>
                     {this.cloneItems(children)}
                 </div>
