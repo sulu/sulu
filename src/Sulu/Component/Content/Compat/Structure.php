@@ -763,17 +763,7 @@ abstract class Structure implements StructureInterface
      */
     public function getNodeName()
     {
-        if (
-            self::NODE_TYPE_INTERNAL_LINK === $this->getNodeType() &&
-            null !== $this->getInternalLinkContent() &&
-            $this->getInternalLinkContent()->hasProperty('title')
-        ) {
-            return $this->internalLinkContent->getPropertyValue('title');
-        } elseif ($this->hasProperty('title')) {
-            return $this->getPropertyValue('title');
-        }
-
-        return;
+        return $this->getPropertyValue('title');
     }
 
     /**

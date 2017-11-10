@@ -19,6 +19,7 @@ use Sulu\Component\Export\Export;
 use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -32,17 +33,7 @@ class SnippetExport extends Export implements SnippetExportInterface
     private $snippetManager;
 
     /**
-     * @var ExportManagerInterface
-     */
-    protected $exportManager;
-
-    /**
-     * @var string[]
-     */
-    protected $formatFilePaths;
-
-    /**
-     * @var Output
+     * @var OutputInterface
      */
     protected $output;
 
@@ -138,7 +129,7 @@ class SnippetExport extends Export implements SnippetExportInterface
     /**
      * Returns all Snippets.
      *
-     * @return SnippetBridge[]
+     * @return SnippetDocument[]
      */
     protected function getSnippets()
     {

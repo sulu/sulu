@@ -15,6 +15,11 @@ use Sulu\Component\Webspace\Segment;
 
 class SegmentTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Segment
+     */
+    private $segment;
+
     public function setUp()
     {
         parent::setUp();

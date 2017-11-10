@@ -11,7 +11,10 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit;
 
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Webspace;
 
 class PortalInformationTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,13 +23,28 @@ class PortalInformationTest extends \PHPUnit_Framework_TestCase
      */
     private $portalInformation;
 
+    /**
+     * @var Webspace
+     */
+    private $webspace;
+
+    /**
+     * @var Portal
+     */
+    private $portal;
+
+    /**
+     * @var Localization
+     */
+    private $localization;
+
     public function setUp()
     {
         parent::setUp();
         $this->portalInformation = new PortalInformation(null, null, null, null, null);
-        $this->webspace = $this->prophesize('Sulu\Component\Webspace\Webspace');
-        $this->portal = $this->prophesize('Sulu\Component\Webspace\Portal');
-        $this->localization = $this->prophesize('Sulu\Component\Localization\Localization');
+        $this->webspace = $this->prophesize(Webspace::class);
+        $this->portal = $this->prophesize(Portal::class);
+        $this->localization = $this->prophesize(Localization::class);
     }
 
     public function provideUrl()

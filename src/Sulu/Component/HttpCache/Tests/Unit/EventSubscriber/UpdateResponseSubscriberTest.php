@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\HttpCache\Tests\Unit\EventListener;
+namespace Sulu\Component\HttpCache\Tests\Unit\EventSubscriber;
 
 use Prophecy\Argument;
 use Sulu\Component\Content\Compat\StructureInterface;

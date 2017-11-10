@@ -22,6 +22,7 @@ use Sulu\Component\Export\Export;
 use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -55,7 +56,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
     protected $formatFilePaths;
 
     /**
-     * @var Output
+     * @var OutputInterface
      */
     protected $output;
 
@@ -137,9 +138,9 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         $progress->start();
 
         foreach ($documents as $key => $document) {
-            $contentData = $this->getContentData($document, $this->exportLocale, $this->format);
-            $extensionData = $this->getExtensionData($document, $this->format);
-            $settingData = $this->getSettingData($document, $this->format);
+            $contentData = $this->getContentData($document, $this->exportLocale);
+            $extensionData = $this->getExtensionData($document);
+            $settingData = $this->getSettingData($document);
 
             $documentData[] = [
                 'uuid' => $document->getUuid(),

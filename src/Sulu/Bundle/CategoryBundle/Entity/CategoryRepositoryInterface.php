@@ -79,8 +79,8 @@ interface CategoryRepositoryInterface extends RepositoryInterface
     /**
      * Returns all categories. Can be filtered with parent and depth.
      *
-     * @param number      $parent    the id of the parent to filter for
-     * @param number      $depth     the depth-level to filter for
+     * @param int         $parent    the id of the parent to filter for
+     * @param int         $depth     the depth-level to filter for
      * @param string|null $sortBy    column name to sort the categories by
      * @param string|null $sortOrder sort order
      *

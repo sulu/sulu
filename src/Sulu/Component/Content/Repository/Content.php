@@ -350,7 +350,7 @@ class Content implements \ArrayAccess
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getUrls()
     {
@@ -358,7 +358,7 @@ class Content implements \ArrayAccess
     }
 
     /**
-     * @param \string[] $urls
+     * @param string[] $urls
      */
     public function setUrls(array $urls)
     {

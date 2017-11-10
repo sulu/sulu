@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Document\Initializer;
+namespace Sulu\Component\Webspace\Tests\Unit\Document\Initializer;
 
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;

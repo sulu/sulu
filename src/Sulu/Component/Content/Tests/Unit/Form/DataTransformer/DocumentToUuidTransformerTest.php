@@ -20,6 +20,7 @@ class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
     private $documentManager;
     private $node;
     private $document;
+    private $transformer;
 
     public function setUp()
     {

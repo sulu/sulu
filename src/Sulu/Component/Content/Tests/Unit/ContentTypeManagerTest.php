@@ -12,14 +12,24 @@
 namespace Sulu\Component\Content\Tests\Unit;
 
 use Sulu\Component\Content\ContentTypeManager;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ContentTypeManagerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
+
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    protected $manager;
 
     public function setUp()
     {
-        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->container = $this->getMock(ContainerInterface::class);
         $this->manager = new ContentTypeManager($this->container);
 
         $this->manager->mapAliasToServiceId('content_1.alias', 'content_1.service.id');

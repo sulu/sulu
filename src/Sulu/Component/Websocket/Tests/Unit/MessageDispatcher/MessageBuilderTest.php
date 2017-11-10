@@ -12,6 +12,7 @@
 namespace Sulu\Component\Websocket\Tests\Unit\MessageDispatcher;
 
 use Sulu\Component\Websocket\MessageDispatcher\MessageBuilder;
+use Sulu\Component\Websocket\MessageDispatcher\MessageBuilderInterface;
 
 class MessageBuilderTest extends \PHPUnit_Framework_TestCase
 {

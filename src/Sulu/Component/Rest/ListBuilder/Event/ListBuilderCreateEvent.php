@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\Event;
 class ListBuilderCreateEvent extends Event
 {
     /**
-     * @var ListbuilderInterface
+     * @var ListBuilderInterface
      */
     protected $listBuilder;
 

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver;
+namespace Sulu\Component\Rest\Tests\ListBuilder\Doctrine\Driver;
 
 use Metadata\ClassMetadata;
 use Metadata\Driver\FileLocatorInterface;

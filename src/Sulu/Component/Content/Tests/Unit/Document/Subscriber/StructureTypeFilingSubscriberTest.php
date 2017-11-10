@@ -50,7 +50,7 @@ class StructureTypeFilingSubscriberTest extends \PHPUnit_Framework_TestCase
     private $metadataFactory;
 
     /**
-     * @var MetaData
+     * @var Metadata
      */
     private $metadata;
 

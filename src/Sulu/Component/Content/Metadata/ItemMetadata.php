@@ -66,7 +66,7 @@ abstract class ItemMetadata
     /**
      * Children of this item, f.e. properties, sections or structures.
      *
-     * @var Item[]
+     * @var ItemMetadata[]
      */
     public $children = [];
 

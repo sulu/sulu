@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Template;
 
+use Sulu\Component\Content\Compat\Structure;
+
 /**
  * Resolves template for node types.
  */

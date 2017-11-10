@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Functional\ResourceLocator\Strategy;
+namespace Sulu\Component\Content\Tests\Functional\ResourceLocator\Mapper;
 
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;

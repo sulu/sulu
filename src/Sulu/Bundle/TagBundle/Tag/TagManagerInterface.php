@@ -60,7 +60,7 @@ interface TagManagerInterface
      *
      * @param array       $data   The data of the tag to save
      * @param int         $userId The id of the user, who is doing this change
-     * @param number|null $id     The id for saving the tag (optional)
+     * @param int|null    $id     The id for saving the tag (optional)
      *
      * @return
      */
@@ -69,7 +69,7 @@ interface TagManagerInterface
     /**
      * Deletes the given Tag.
      *
-     * @param number $id The tag to delete
+     * @param int $id The tag to delete
      */
     public function delete($id);
 
@@ -78,7 +78,7 @@ interface TagManagerInterface
      * The source tag will be deleted.
      *
      * @param array $srcTagIds The source tags, which will be removed afterwards
-     * @param number $destTagId The destination tag, which will replace the source tag
+     * @param int $destTagId The destination tag, which will replace the source tag
      *
      * @throws Exception\TagNotFoundException
      *

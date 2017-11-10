@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
+namespace Sulu\Component\Content\Tests\Unit\Rlp\Strategy;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;

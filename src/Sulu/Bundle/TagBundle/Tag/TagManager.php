@@ -105,7 +105,7 @@ class TagManager implements TagManagerInterface
     /**
      * Loads the tag with the given id.
      *
-     * @param $id number The id of the tag
+     * @param int $id The id of the tag
      *
      * @return TagInterface
      */
@@ -179,7 +179,7 @@ class TagManager implements TagManagerInterface
     /**
      * Deletes the given Tag.
      *
-     * @param number $id The tag to delete
+     * @param int $id The tag to delete
      *
      * @throws Exception\TagNotFoundException
      */
@@ -203,8 +203,8 @@ class TagManager implements TagManagerInterface
      * Merges the source tag into the destination tag.
      * The source tag will be deleted.
      *
-     * @param number $srcTagIds The source tags, which will be removed afterwards
-     * @param number $destTagId The destination tag, which will replace the source tag
+     * @param int $srcTagIds The source tags, which will be removed afterwards
+     * @param int $destTagId The destination tag, which will replace the source tag
      *
      * @throws Exception\TagNotFoundException
      *

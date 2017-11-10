@@ -29,11 +29,6 @@ use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-//FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
-interface MyNodeInterface extends \PHPCR\NodeInterface, \Iterator
-{
-}
-
 /**
  * @group unit
  */

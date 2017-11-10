@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Cache\Tests\Unit;
+namespace Sulu\Component\Cache\Tests\Unit\Cache;
 
 use Sulu\Component\Cache\CacheInterface;
 use Sulu\Component\Cache\DataCache;

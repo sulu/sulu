@@ -9,16 +9,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\HttpCache\Tests\Unit\EventListener;
+namespace Sulu\Component\HttpCache\Tests\Unit\EventSubscriber;
 
 use Sulu\Component\HttpCache\EventSubscriber\FlushSubscriber;
-use Sulu\Component\HttpCache\EventSubscriber\KernelSubscriber;
 use Sulu\Component\HttpCache\HandlerInterface;
 
 class FlushSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var KernelSubscriber
+     * @var FlushSubscriber
      */
     private $subscriber;
 

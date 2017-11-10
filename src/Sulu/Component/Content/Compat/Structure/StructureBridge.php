@@ -783,7 +783,7 @@ class StructureBridge implements StructureInterface
 
     private function normalizeValue($value)
     {
-        if ($value instanceof ContentDocumentInterface) {
+        if ($value instanceof StructureBehavior) {
             return $this->documentToStructure($value);
         }
 

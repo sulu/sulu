@@ -11,7 +11,15 @@
 
 namespace Sulu\Component\Export;
 
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
+use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\DocumentManager\DocumentInspector;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Export\Manager\ExportManagerInterface;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Base export for sulu documents.
@@ -19,12 +27,22 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 class Export
 {
     /**
+     * @var ExportManagerInterface
+     */
+    protected $exportManager;
+
+    /**
+     * @var string[]
+     */
+    protected $formatFilePaths = [];
+
+    /**
      * @var EngineInterface
      */
     protected $templating;
 
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     protected $documentManager;
 
@@ -179,7 +197,7 @@ class Export
         /** @var BasePageDocument $loadedDocument */
         $loadedDocument = $this->documentManager->find($document->getUuid(), $locale);
 
-        /** @var \Sulu\Component\Content\Metadata\StructureMetadata $metaData */
+        /** @var StructureMetadata $metaData */
         $metaData = $this->documentInspector->getStructureMetadata($document);
 
         $propertyValues = $loadedDocument->getStructure()->toArray();

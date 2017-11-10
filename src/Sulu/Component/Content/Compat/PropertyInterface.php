@@ -112,7 +112,7 @@ interface PropertyInterface extends ArrayableInterface
     /**
      * Returns tags defined in xml.
      *
-     * @return \Sulu\Component\Content\PropertyTag[]
+     * @return PropertyTag[]
      */
     public function getTags();
 

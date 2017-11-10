@@ -16,7 +16,7 @@ class InvalidNavigationContextExtension extends \Exception
     /**
      * @var string[]
      */
-    private $selectedNavContext;
+    private $selectedNavContexts;
 
     /**
      * @var string[]
@@ -45,7 +45,7 @@ class InvalidNavigationContextExtension extends \Exception
      */
     public function getSelectedNavContext()
     {
-        return $this->selectedNavContext;
+        return $this->selectedNavContexts;
     }
 
     /**

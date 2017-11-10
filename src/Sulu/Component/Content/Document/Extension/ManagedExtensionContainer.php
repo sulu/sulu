@@ -80,6 +80,7 @@ class ManagedExtensionContainer extends ExtensionContainer
         $internalPrefix,
         $webspaceName
     ) {
+        parent::__construct();
         $this->extensionManager = $extensionManager;
         $this->node = $node;
         $this->locale = $locale;

@@ -9,10 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Cache\Tests\Unit;
+namespace Sulu\Component\Cache\Tests\Unit\Cache;
 
 use Doctrine\Common\Cache\Cache;
 use Sulu\Component\Cache\Memoize;
+use Sulu\Component\Cache\MemoizeInterface;
 
 class MemoizeTest extends \PHPUnit_Framework_TestCase
 {

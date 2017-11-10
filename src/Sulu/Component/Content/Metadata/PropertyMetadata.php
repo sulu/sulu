@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Metadata;
 
+use Sulu\Component\Content\Compat\StructureInterface;
+
 /**
  * Metadata for a property. Contains both UI and model metadata.
  */
@@ -74,7 +76,7 @@ class PropertyMetadata extends ItemMetadata
     public $maxOccurs = 1;
 
     /**
-     * @var Structure
+     * @var StructureInterface
      */
     public $structure;
 

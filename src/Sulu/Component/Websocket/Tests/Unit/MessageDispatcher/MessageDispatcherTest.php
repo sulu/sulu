@@ -16,6 +16,7 @@ use Ratchet\ConnectionInterface;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 use Sulu\Component\Websocket\MessageDispatcher\MessageBuilderInterface;
 use Sulu\Component\Websocket\MessageDispatcher\MessageDispatcher;
+use Sulu\Component\Websocket\MessageDispatcher\MessageDispatcherInterface;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerException;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;

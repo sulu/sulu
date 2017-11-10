@@ -16,6 +16,14 @@ use Sulu\Component\Persistence\EventSubscriber\ORM\TimestampableSubscriber;
 
 class TimestampableSubscriberTest extends \PHPUnit_Framework_TestCase
 {
+    private $loadClassMetadataEvent;
+    private $lifecycleEvent;
+    private $timestampableObject;
+    private $classMetadata;
+    private $refl;
+    private $entityManager;
+    private $subscriber;
+
     public function setUp()
     {
         parent::setUp();

@@ -13,6 +13,7 @@ namespace Sulu\Component\Localization\Tests\Unit\Manager;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManager;
+use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 
 class LocalizationManagerTest extends \PHPUnit_Framework_TestCase
 {

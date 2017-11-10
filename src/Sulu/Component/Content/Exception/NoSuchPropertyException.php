@@ -18,8 +18,12 @@ class NoSuchPropertyException extends \Exception
      */
     private $propertyName;
 
-    public function __construct($propertyName, $message)
+    public function __construct($propertyName, $message = '')
     {
+        if (!$message) {
+            $message = sprintf('Property "%s" was not found.', $propertyName);
+        }
+
         parent::__construct($message);
         $this->propertyName = $propertyName;
     }

@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
-use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Subscriber\RedirectTypeSubscriber;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Metadata;
@@ -48,7 +47,7 @@ class RedirectTypeSubscriberTest extends SubscriberTestCase
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->metadata = $this->prophesize(Metadata::class);
         $this->event = $this->prophesize(MetadataLoadEvent::class);
-        $this->subscriber = new RedirectTypeSubscriber($this->encoder->reveal());
+        $this->subscriber = new RedirectTypeSubscriber();
 
         $this->event->getMetadata()->willReturn($this->metadata);
     }

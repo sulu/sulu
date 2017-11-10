@@ -45,6 +45,7 @@ use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
+use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
@@ -585,7 +586,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Return the resource locator content type.
      *
-     * @return ResourceLocatorInterface
+     * @return ResourceLocator
      */
     public function getResourceLocator()
     {
@@ -597,7 +598,7 @@ class ContentMapper implements ContentMapperInterface
      *
      * @param $webspaceKey
      *
-     * @return Document
+     * @return object
      */
     private function getContentDocument($webspaceKey, $locale, array $options = [])
     {
@@ -949,9 +950,9 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Return a structure bridge corresponding to the given document.
      *
-     * @param DocumentInterface $document
+     * @param StructureBehavior $document
      *
-     * @return StructureBridge
+     * @return StructureInterface
      */
     private function documentToStructure($document)
     {

@@ -11,6 +11,9 @@
 
 namespace Sulu\Component\Content\Import;
 
+use Sulu\Component\Import\Format\FormatImportInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
 /**
  * Interface for Webspace import.
  */
@@ -19,8 +22,8 @@ interface WebspaceImportInterface
     /**
      * Add import format like XLIFF1.2.
      *
-     * @param WebspaceFormatImportInterface $service
-     * @param $format
+     * @param FormatImportInterface $service
+     * @param string $format
      */
     public function add($service, $format);
 
@@ -30,7 +33,7 @@ interface WebspaceImportInterface
      * @param string $webspaceKey
      * @param string $locale
      * @param string $filePath
-     * @param $output
+     * @param OutputInterface $output
      * @param string $format
      * @param string $uuid
      *

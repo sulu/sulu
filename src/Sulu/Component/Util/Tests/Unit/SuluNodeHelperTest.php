@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Unit\Mapper\Translation;
+namespace Sulu\Component\Util\Tests\Unit;
 
 use Jackalope\Node;
 use Jackalope\Property;

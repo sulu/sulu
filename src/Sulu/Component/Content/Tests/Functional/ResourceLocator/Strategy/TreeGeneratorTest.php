@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\ResourceLocator\Strategy;
+namespace Sulu\Component\Content\Tests\Functional\ResourceLocator\Strategy;
 
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeGenerator;
 

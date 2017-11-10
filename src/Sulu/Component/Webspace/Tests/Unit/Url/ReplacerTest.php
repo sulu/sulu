@@ -17,7 +17,7 @@ class ReplacerTest extends \PHPUnit_Framework_TestCase
 {
     public function testHasLanguageReplacer()
     {
-        $replacer = new Replacer('sulu.io');
+        $replacer = new Replacer();
         $this->assertFalse($replacer->hasLanguageReplacer('sulu.io'));
         $this->assertTrue($replacer->hasLanguageReplacer('sulu.io/{language}'));
     }

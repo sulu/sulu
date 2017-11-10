@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Unit\Document\Property;
+namespace Sulu\Component\Content\Tests\Unit\Document\Structure;
 
 use PHPCR\NodeInterface;
 use Prophecy\Argument;

@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Exception;
 
+use Sulu\Component\Content\Compat\StructureInterface;
+
 class ExtensionNotFoundException extends \Exception
 {
     /**

@@ -33,6 +33,7 @@ class ResourceLocatorMovedException extends Exception
     {
         $this->newResourceLocator = $newResourceLocator;
         $this->newResourceLocatorUuid = $newResourceLocatorUuid;
+        parent::__construct();
     }
 
     /**

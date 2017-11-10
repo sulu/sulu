@@ -49,7 +49,7 @@ class DocumentToUuidTransformer implements DataTransformerInterface
             return;
         }
 
-        if (!UUIDHelper::isUuid($uuid)) {
+        if (!UUIDHelper::isUUID($uuid)) {
             throw new TransformationFailedException(sprintf(
                 'Given UUID is not a UUID, given: "%s"',
                 $uuid

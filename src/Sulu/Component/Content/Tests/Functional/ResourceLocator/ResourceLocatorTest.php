@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Functional\Compat\ResourceLocator;
+namespace Sulu\Component\Content\Tests\Functional\ResourceLocator;
 
 use Doctrine\ORM\EntityManager;
 use PHPCR\SessionInterface;
