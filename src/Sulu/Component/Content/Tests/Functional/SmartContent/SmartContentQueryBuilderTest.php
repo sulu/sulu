@@ -559,7 +559,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            null,
             $this->languageNamespace
         );
 

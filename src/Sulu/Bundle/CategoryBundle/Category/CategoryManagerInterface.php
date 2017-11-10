@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Category;
 
+use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
@@ -152,7 +153,7 @@ interface CategoryManagerInterface
      * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface[] $categories
      * @param string     $locale
      *
-     * @return CategoryInterface
+     * @return Category[]
      */
     public function getApiObjects($categories, $locale);
 

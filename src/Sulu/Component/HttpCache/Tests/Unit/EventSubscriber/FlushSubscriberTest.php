@@ -12,7 +12,8 @@
 namespace Sulu\Component\HttpCache\Tests\Unit\EventSubscriber;
 
 use Sulu\Component\HttpCache\EventSubscriber\FlushSubscriber;
-use Sulu\Component\HttpCache\HandlerInterface;
+use Sulu\Component\HttpCache\HandlerFlushInterface;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
 class FlushSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,16 +23,21 @@ class FlushSubscriberTest extends \PHPUnit_Framework_TestCase
     private $subscriber;
 
     /**
-     * @var HandlerInterface
+     * @var HandlerFlushInterface
      */
     private $handler;
+
+    /**
+     * @var PostResponseEvent
+     */
+    private $postResponseEvent;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->postResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\PostResponseEvent');
-        $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerFlushInterface');
+        $this->postResponseEvent = $this->prophesize(PostResponseEvent::class);
+        $this->handler = $this->prophesize(HandlerFlushInterface::class);
 
         $this->subscriber = new FlushSubscriber(
             $this->handler->reveal()

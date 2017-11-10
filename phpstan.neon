@@ -1,0 +1,4 @@
+parameters:
+    excludes_analyse:
+        - %currentWorkingDirectory%/src/Sulu/Component/*/Tests/*
+        - %currentWorkingDirectory%/src/Sulu/Bundle/*/Tests/*

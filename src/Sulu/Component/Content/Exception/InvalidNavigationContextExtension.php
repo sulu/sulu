@@ -41,7 +41,7 @@ class InvalidNavigationContextExtension extends \Exception
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getSelectedNavContext()
     {

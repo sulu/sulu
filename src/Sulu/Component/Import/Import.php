@@ -13,6 +13,7 @@ namespace Sulu\Component\Import;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Import\Exception\FormatImporterNotFoundException;
 use Sulu\Component\Import\Format\FormatImportInterface;

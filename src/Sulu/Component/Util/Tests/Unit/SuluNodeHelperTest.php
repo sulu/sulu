@@ -247,12 +247,9 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testSiblingNodes()
     {
-        for ($i = 1; $i <= 3; ++$i) {
-            ${'node' . $i} = $this->getMockBuilder('Jackalope\Node')->disableOriginalConstructor()->getMock();
-            ${'node' . $i}->expects($this->any())
-                ->method('getPath')
-                ->will($this->returnValue('/foobar/foobar-' . $i));
-        }
+        $node1 = $this->createNodeMock(1);
+        $node2 = $this->createNodeMock(2);
+        $node3 = $this->createNodeMock(3);
 
         $node2->expects($this->any())
             ->method('getParent')
@@ -283,5 +280,15 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($baseSnippetNode));
 
         $this->assertEquals('some-uuid', $this->helper->getBaseSnippetUuid('snippet'));
+    }
+
+    private function createNodeMock($i)
+    {
+        $node = $this->getMockBuilder('Jackalope\Node')->disableOriginalConstructor()->getMock();
+        $node->expects($this->any())
+            ->method('getPath')
+            ->will($this->returnValue('/foobar/foobar-' . $i));
+
+        return $node;
     }
 }

@@ -478,6 +478,8 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $document = $this->documentManager->find($uuid, $srcLocale);
+
+        $resourceLocatorStrategy = null;
         if ($document instanceof ResourceSegmentBehavior) {
             $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
         }
@@ -573,6 +575,8 @@ class ContentMapper implements ContentMapperInterface
                 $targetSibling = $siblings[$position];
             } elseif ($currentPosition > $position) {
                 $targetSibling = $siblings[$position - 1];
+            } else {
+                throw new \RuntimeException('Target sibling not found.');
             }
 
             $this->documentManager->reorder($document, $targetSibling->getUuid());

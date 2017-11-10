@@ -55,7 +55,7 @@ class TranslatedProperty implements PropertyInterface
     }
 
     /**
-     * @return \Sulu\Component\Content\Document\Property\PropertyInterface
+     * @return PropertyInterface
      */
     public function getProperty()
     {

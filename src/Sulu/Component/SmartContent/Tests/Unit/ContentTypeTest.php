@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\SmartContent\Tests\Unit;
 
+use PHPCR\NodeInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -166,7 +167,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         );
 
         $node = $this->getMockForAbstractClass(
-            MyNodeInterface::class,
+            NodeInterface::class,
             [],
             '',
             true,
@@ -234,7 +235,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         ];
 
         $node = $this->getMockForAbstractClass(
-            MyNodeInterface::class,
+            NodeInterface::class,
             [],
             '',
             true,

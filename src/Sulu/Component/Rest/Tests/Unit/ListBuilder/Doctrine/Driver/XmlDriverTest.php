@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\Tests\ListBuilder\Doctrine\Driver;
+namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine\Driver;
 
 use Metadata\ClassMetadata;
 use Metadata\Driver\FileLocatorInterface;
@@ -19,6 +19,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class XmlDriverTest extends \PHPUnit_Framework_TestCase

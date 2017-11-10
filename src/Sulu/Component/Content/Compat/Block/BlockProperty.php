@@ -232,7 +232,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
             $item = $items[$i];
             $type = $this->initProperties($i, $item['type']);
 
-            /** @var PropertyInterface $subProperty */
+            /** @var Property $subProperty */
             foreach ($type->getChildProperties() as $subProperty) {
                 if (!isset($item[$subProperty->getName()])) {
                     continue;

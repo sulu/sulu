@@ -263,12 +263,13 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
     {
         $resourceLocator = ltrim($resourceLocator, '/');
 
+        $path = sprintf(
+            '%s/%s',
+            $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
+            $resourceLocator
+        );
+
         try {
-            $path = sprintf(
-                '%s/%s',
-                $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
-                $resourceLocator
-            );
             if ('' !== $resourceLocator) {
                 // get requested resource locator route node
                 $route = $this->sessionManager->getSession()->getNode($path);

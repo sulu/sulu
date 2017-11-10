@@ -23,6 +23,7 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\Property;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 
@@ -68,7 +69,8 @@ class LegacyPropertyFactory
     /**
      * Create a new property.
      *
-     * @param Item $item
+     * @param ItemMetadata $property
+     * @param StructureInterface $structure
      *
      * @return PropertyInterface $property
      */
@@ -82,7 +84,7 @@ class LegacyPropertyFactory
             return $this->createBlockProperty($property, $structure);
         }
 
-        if (null === $property->getType()) {
+        if (!$property instanceof PropertyMetadata || null === $property->getType()) {
             throw new \RuntimeException(sprintf(
                 'Property name "%s" has no type.',
                 $property->name
@@ -104,7 +106,7 @@ class LegacyPropertyFactory
             $property->getMinOccurs(),
             $parameters,
             [],
-            $property->getColspan()
+            $property->getColSpan()
         );
 
         foreach ($property->tags as $tag) {
@@ -140,7 +142,7 @@ class LegacyPropertyFactory
                 'title' => $property->title,
                 'info_text' => $property->description,
             ],
-            $property->getColspan()
+            $property->getColSpan()
         );
 
         foreach ($property->getChildren() as $child) {
@@ -165,7 +167,7 @@ class LegacyPropertyFactory
             $property->getMinOccurs(),
             $property->getParameters(),
             [],
-            $property->getColspan()
+            $property->getColSpan()
         );
         $blockProperty->setStructure($structure);
 

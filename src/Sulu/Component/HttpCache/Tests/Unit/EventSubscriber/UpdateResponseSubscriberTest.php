@@ -15,9 +15,12 @@ use Prophecy\Argument;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\EventSubscriber\UpdateResponseSubscriber;
 use Sulu\Component\HttpCache\HandlerInterface;
+use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
+use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,6 +50,11 @@ class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
     private $structure;
 
     /**
+     * @var GetResponseEvent
+     */
+    private $getResponseEvent;
+
+    /**
      * @var FilterResponseEvent
      */
     private $filterResponseEvent;
@@ -55,11 +63,11 @@ class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->getResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\GetResponseEvent');
-        $this->filterResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
-        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
-        $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerUpdateResponseInterface')
-            ->willImplement('Sulu\Component\HttpCache\HandlerInvalidateStructureInterface');
+        $this->getResponseEvent = $this->prophesize(GetResponseEvent::class);
+        $this->filterResponseEvent = $this->prophesize(FilterResponseEvent::class);
+        $this->structure = $this->prophesize(StructureInterface::class);
+        $this->handler = $this->prophesize(HandlerUpdateResponseInterface::class)
+            ->willImplement(HandlerInvalidateStructureInterface::class);
 
         $this->response = new Response();
         $this->request = new Request();

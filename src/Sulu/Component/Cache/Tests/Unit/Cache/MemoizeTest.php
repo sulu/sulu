@@ -36,7 +36,7 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->cache = $this->prophesize('Doctrine\Common\Cache\Cache');
+        $this->cache = $this->prophesize(Cache::class);
 
         $this->mem = new Memoize($this->cache->reveal(), $this->defaultLifeTime);
     }

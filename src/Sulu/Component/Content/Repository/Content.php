@@ -382,7 +382,7 @@ class Content implements \ArrayAccess
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getConcreteLanguages()
     {
@@ -390,7 +390,7 @@ class Content implements \ArrayAccess
     }
 
     /**
-     * @param \string[] $concreteLanguages
+     * @param string[] $concreteLanguages
      */
     public function setConcreteLanguages($concreteLanguages)
     {

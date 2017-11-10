@@ -58,6 +58,7 @@ class CustomUrlRouteProviderTest extends \PHPUnit_Framework_TestCase
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
         $request = $this->prophesize(Request::class);
+        $customUrl = $this->prophesize(CustomUrlDocument::class);
 
         $requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
         $requestAnalyzer->getAttribute('localization')->willReturn(new Localization('de'));
@@ -84,11 +85,9 @@ class CustomUrlRouteProviderTest extends \PHPUnit_Framework_TestCase
                 $routeDocument->getTargetDocument()->willReturn($target->reveal());
                 $requestAnalyzer->getAttribute('customUrl')->willReturn(null);
 
-                $customUrl = $this->prophesize(CustomUrlDocument::class);
                 $customUrl->isRedirect()->willReturn(false);
                 $target->getTargetDocument()->willReturn($customUrl->reveal());
             } else {
-                $customUrl = $this->prophesize(CustomUrlDocument::class);
                 $customUrl->isPublished()->willReturn($published);
                 $customUrl->getTargetLocale()->willReturn('de');
                 $requestAnalyzer->getAttribute('customUrl')->willReturn($customUrl->reveal());
