@@ -35,7 +35,7 @@
         </service>
 
         <service id="sulu_core.rest.view_handler.csv" class="Sulu\Component\Rest\Csv\CsvHandler">
-            <argument type="service" id="serializer"/>
+            <argument type="service" id="jms_serializer"/>
         </service>
     </services>
 </container>

@@ -83,6 +83,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                     'metadata' => [
                         'directories' => [
                             [
+                                'name' => 'sulu_category',
                                 'path' => __DIR__ . '/../Resources/config/serializer',
                                 'namespace_prefix' => 'Sulu\Bundle\CategoryBundle\Entity',
                             ],

@@ -144,7 +144,7 @@
         <!-- preview -->
         <service id="sulu_content.preview.object_provider" class="Sulu\Bundle\ContentBundle\Preview\PageObjectProvider">
             <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="serializer"/>
+            <argument type="service" id="jms_serializer"/>
 
             <tag name="sulu_preview.object_provider" class="Sulu\Bundle\ContentBundle\Document\HomeDocument"/>
             <tag name="sulu_preview.object_provider" class="Sulu\Bundle\ContentBundle\Document\PageDocument"/>

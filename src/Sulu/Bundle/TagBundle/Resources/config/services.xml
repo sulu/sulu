@@ -42,7 +42,7 @@
         <service id="sulu_tag.twig_extension" class="%sulu_tag.twig_extension.class%">
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_tag.tag_request_handler"/>
-            <argument type="service" id="serializer"/>
+            <argument type="service" id="jms_serializer"/>
             <argument type="service" id="sulu_core.cache.memoize"/>
 
             <tag name="twig.extension"/>
