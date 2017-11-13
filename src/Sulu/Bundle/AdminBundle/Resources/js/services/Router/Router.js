@@ -112,6 +112,17 @@ export default class Router {
 
     @action update(name: string, attributes: Object) {
         this.route = routeRegistry.get(name);
+
+        const attributeDefaults = this.route.attributeDefaults;
+        Object.keys(attributeDefaults).forEach((key) => {
+            // set default attributes if not passed, to automatically set important omitted attributes everywhere
+            // e.g. allows to always pass the default locale if nothing is passed
+            if (attributes[key] !== undefined) {
+                return;
+            }
+            attributes[key] = attributeDefaults[key];
+        });
+
         this.attributes = attributes;
 
         for (const [key, observableValue] of this.bindings.entries()) {
@@ -139,16 +150,6 @@ export default class Router {
             const value = observableValue.get();
             attributes[key] = value;
         }
-
-        const attributeDefaults = this.route.attributeDefaults;
-        Object.keys(attributeDefaults).forEach((key) => {
-            // set default attributes if not passed, to automatically set important omitted attributes everywhere
-            // e.g. allows to always pass the default locale if nothing is passed
-            if (attributes[key] !== undefined) {
-                return;
-            }
-            attributes[key] = attributeDefaults[key];
-        });
 
         const url = compile(path)(attributes);
         const searchParameters = new URLSearchParams();
