@@ -86,34 +86,31 @@ export default class Router {
         }
     }
 
-    @action navigate(name: string, attributes: Object = {}, createHistory: boolean = true) {
+    navigate(name: string, attributes: Object = {}) {
         if (!this.isRouteChanging(name, attributes)) {
             return;
         }
 
-        if (createHistory) {
-            this.createAttributesHistory();
-        }
-
+        this.createAttributesHistory();
         this.update(name, attributes);
     }
 
     restore(name: string, attributes: Object = {}) {
-        if (!this.isRouteChanging(name, attributes)) {
-            return;
-        }
-
         if (!this.attributesHistory[name] || this.attributesHistory[name].length === 0) {
             this.navigate(name, attributes);
             return;
         }
 
+        if (!this.isRouteChanging(name, attributes)) {
+            return;
+        }
+
         const attributesHistory = this.attributesHistory[name].pop();
 
-        this.navigate(name, {...attributesHistory, ...attributes}, false);
+        this.update(name, {...attributesHistory, ...attributes});
     }
 
-    update(name: string,attributes: Object) {
+    @action update(name: string, attributes: Object) {
         this.route = routeRegistry.get(name);
         this.attributes = attributes;
 
