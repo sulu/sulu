@@ -82,6 +82,7 @@ export default class Datagrid extends React.PureComponent<Props> {
                         type={paginationType}
                         total={pageCount}
                         current={page}
+                        loading={this.props.store.loading}
                         onChange={this.handlePageChange}
                     >
                         <Adapter
