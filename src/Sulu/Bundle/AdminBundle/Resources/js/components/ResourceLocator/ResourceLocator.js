@@ -46,7 +46,7 @@ export default class ResourceLocator extends React.PureComponent<Props> {
 
     render() {
         return (
-            <div className={resourceLocatorStyles.container}>
+            <div className={resourceLocatorStyles.resourceLocatorContainer}>
                 <span>{this.fixed}</span>
                 <Input onChange={this.handleChange} type="string" value={this.changeable} />
             </div>

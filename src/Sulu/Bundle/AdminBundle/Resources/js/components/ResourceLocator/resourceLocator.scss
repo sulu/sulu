@@ -1,20 +1,12 @@
 @import '../../containers/Application/colors.scss';
 
-$breadcrumbTextColor: $silver;
+$textColor: $silver;
 
-.breadcrumb {
-    margin: 0 0 30px;
-    padding: 0;
-    list-style: none;
+.resource-locator-container {
     display: flex;
-    color: $breadcrumbTextColor;
-
-    & > li {
-        display: flex;
-        align-items: center;
-    }
+    align-items: center;
 }
 
-.arrow {
-    padding: 0 20px;
+.fixed {
+    color: $textColor;
 }
