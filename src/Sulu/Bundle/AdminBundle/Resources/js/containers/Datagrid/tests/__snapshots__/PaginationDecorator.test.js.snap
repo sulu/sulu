@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a default pagination if no type is specified 1`] = `
+<section>
+  <div
+    class="adapter"
+  />
+  <div
+    class="paginationContainer"
+  >
+    <nav
+      class="pagination"
+    >
+      <div
+        class="control"
+      >
+        <span
+          class="display"
+        >
+          Page: 1 of 10
+        </span>
+        <a
+          class="previous"
+        >
+          <span
+            aria-label="angle-left"
+            class="fa fa-angle-left"
+          />
+        </a>
+        <a
+          class="next enabled"
+        >
+          <span
+            aria-label="angle-right"
+            class="fa fa-angle-right"
+          />
+        </a>
+      </div>
+    </nav>
+  </div>
+</section>
+`;
+
+exports[`Render an infinite scroll loader if the loading prop is set to true 1`] = `
+<section>
+  <div>
+    <div>
+      <div
+        class="adapter"
+      />
+    </div>
+    <div
+      class="infiniteScrollLoader"
+    >
+      <div
+        class="spinner"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+`;
+
+exports[`Render an infinite scroll pagination if the type is set to infiniteScroll 1`] = `
+<section>
+  <div>
+    <div>
+      <div
+        class="adapter"
+      />
+    </div>
+    <div
+      class="infiniteScrollLoader"
+    />
+  </div>
+</section>
+`;
