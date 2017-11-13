@@ -87,8 +87,6 @@ export default class Router {
     }
 
     @action navigate(name: string, attributes: Object = {}, createHistory: boolean = true) {
-        const route = routeRegistry.get(name);
-
         if (!this.isRouteChanging(name, attributes)) {
             return;
         }
@@ -97,7 +95,26 @@ export default class Router {
             this.createAttributesHistory();
         }
 
-        this.route = route;
+        this.update(name, attributes);
+    }
+
+    restore(name: string, attributes: Object = {}) {
+        if (!this.isRouteChanging(name, attributes)) {
+            return;
+        }
+
+        if (!this.attributesHistory[name] || this.attributesHistory[name].length === 0) {
+            this.navigate(name, attributes);
+            return;
+        }
+
+        const attributesHistory = this.attributesHistory[name].pop();
+
+        this.navigate(name, {...attributesHistory, ...attributes}, false);
+    }
+
+    update(name: string,attributes: Object) {
+        this.route = routeRegistry.get(name);
         this.attributes = attributes;
 
         for (const [key, observableValue] of this.bindings.entries()) {
@@ -108,17 +125,6 @@ export default class Router {
                 observableValue.set(value);
             }
         }
-    }
-
-    restore(name: string, attributes: Object = {}) {
-        if (!this.attributesHistory[name] || this.attributesHistory[name].length === 0) {
-            this.navigate(name, attributes);
-            return;
-        }
-
-        const attributesHistory = this.attributesHistory[name].pop();
-
-        this.navigate(name, {...attributesHistory, ...attributes}, false);
     }
 
     @computed get url(): string {
