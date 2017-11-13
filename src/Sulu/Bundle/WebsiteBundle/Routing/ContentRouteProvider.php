@@ -280,6 +280,10 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private function decodePathInfo($pathInfo)
     {
-        return rawurldecode($pathInfo);
+        if ('' === $pathInfo) {
+            return $pathInfo;
+        }
+
+        return '/' . ltrim(rawurldecode($pathInfo), '/');
     }
 }

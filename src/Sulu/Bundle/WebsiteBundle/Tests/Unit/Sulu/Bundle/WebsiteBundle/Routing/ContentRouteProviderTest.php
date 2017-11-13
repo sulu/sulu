@@ -134,7 +134,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $document->getTitle()->willReturn('');
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
-        $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/']);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => rawurlencode('/')]);
 
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
         $this->assertCount(0, $routes);
@@ -182,7 +182,14 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $pageBridge->getController()->willReturn('::Controller');
         $this->structureManager->wrapStructure('page', $structureMetadata)->willReturn($pageBridge->reveal());
 
-        $request = new Request([], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => '/de']);
+        $request = new Request(
+            [],
+            [],
+            ['_sulu' => $attributes->reveal()],
+            [],
+            [],
+            ['REQUEST_URI' => rawurlencode('/de')]
+        );
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
 
@@ -296,7 +303,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getMetadata($document->reveal())->willReturn($metadata);
         $this->documentInspector->getStructureMetadata($document->reveal())->willReturn(null);
 
-        $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/']);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => rawurlencode('/')]);
 
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
         $this->assertCount(0, $routes);
@@ -345,7 +352,12 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->structureManager->wrapStructure('page', $structureMetadata)->willReturn($pageBridge->reveal());
 
         $request = new Request(
-            ['partial' => 'true'], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => '/de']
+            ['partial' => 'true'],
+            [],
+            ['_sulu' => $attributes->reveal()],
+            [],
+            [],
+            ['REQUEST_URI' => rawurlencode('/de')]
         );
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
@@ -374,7 +386,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
-        $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/']);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => rawurlencode('/')]);
 
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
 
@@ -402,7 +414,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')
             ->willThrow(ResourceLocatorNotFoundException::class);
 
-        $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/']);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => rawurlencode('/')]);
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(0, $routes);
@@ -442,7 +454,9 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $document->getUuid()->willReturn('some-uuid');
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
-        $request = new Request([], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => '/de/test']);
+        $request = new Request(
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/test')]
+        );
 
         // Test the route provider
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
@@ -492,8 +506,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             [],
             ['_sulu' => $attributes->reveal()],
             [],
-            [],
-            ['REQUEST_URI' => '/de/test', 'QUERY_STRING' => 'test1=value1']
+            [], ['REQUEST_URI' => rawurlencode('/de/test'), 'QUERY_STRING' => 'test1=value1']
         );
 
         // Test the route provider
@@ -539,7 +552,9 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $document->getUuid()->willReturn('some-uuid');
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
-        $request = new Request([], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => '/de/test']);
+        $request = new Request(
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/test')]
+        );
 
         // Test the route provider
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
@@ -575,7 +590,9 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->resourceLocatorStrategy->loadByResourceLocator('/qwertz', 'webspace', 'de_at')
             ->willThrow(new ResourceLocatorMovedException('/new-test', '123-123-123'));
 
-        $request = new Request([], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => '/de/qwertz/']);
+        $request = new Request(
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/qwertz/')]
+        );
 
         // Test the route provider
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
@@ -627,7 +644,9 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $pageBridge->getController()->willReturn('::Controller');
         $this->structureManager->wrapStructure('page', $structureMetadata)->willReturn($pageBridge->reveal());
 
-        $request = new Request([], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => '/']);
+        $request = new Request(
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/')]
+        );
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
 
@@ -668,7 +687,9 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
 
-        $request = new Request([], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => '/de/qwertz/']);
+        $request = new Request(
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/qwertz/')]
+        );
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
@@ -708,7 +729,9 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
 
-        $request = new Request([], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => '/de/']);
+        $request = new Request(
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/')]
+        );
 
         // Test the route provider
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
@@ -766,7 +789,9 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $pageBridge = $this->prophesize(PageBridge::class);
         $this->structureManager->wrapStructure('page', $structureMetadata)->willReturn($pageBridge->reveal());
 
-        $request = new Request([], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => '/']);
+        $request = new Request(
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/')]
+        );
 
         // Test the route provider
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
