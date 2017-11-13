@@ -89,11 +89,7 @@ export default class Router {
     @action navigate(name: string, attributes: Object = {}, createHistory: boolean = true) {
         const route = routeRegistry.get(name);
 
-        if (this.route
-            && route
-            && this.route.name === route.name
-            && equal(this.attributes, attributes)
-        ) {
+        if (!this.isRouteChanging(name, attributes)) {
             return;
         }
 
@@ -176,6 +172,16 @@ export default class Router {
         }
 
         this.attributesHistory[this.route.name].push(toJS(this.attributes));
+    }
+
+    isRouteChanging(name: string, attributes: Object) {
+        const route = routeRegistry.get(name);
+
+        return !(
+            this.route
+            && this.route.name === route.name
+            && equal(this.attributes, attributes)
+        );
     }
 
     static getRoutePath(route: Route) {
