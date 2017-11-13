@@ -11,7 +11,7 @@ type Props = {
 
 export default class ResourceLocator extends React.PureComponent<Props> {
     static defaultProps = {
-        value: '',
+        value: '/',
     };
 
     fixed: string = '';
@@ -22,14 +22,14 @@ export default class ResourceLocator extends React.PureComponent<Props> {
         let parts;
 
         switch (mode) {
+            case 'full':
+                this.fixed = '/';
+                this.changeable = value.substring(1);
+                break;
             case 'leaf':
                 parts = value.split('/');
                 this.changeable = parts.pop();
                 this.fixed = parts.join('/') + '/';
-                break;
-            case 'full':
-                this.fixed = '/';
-                this.changeable = value.substring(1);
                 break;
         }
     };
@@ -47,7 +47,7 @@ export default class ResourceLocator extends React.PureComponent<Props> {
     render() {
         return (
             <div className={resourceLocatorStyles.resourceLocatorContainer}>
-                <span>{this.fixed}</span>
+                <span className={resourceLocatorStyles.fixed}>{this.fixed}</span>
                 <Input onChange={this.handleChange} type="string" value={this.changeable} />
             </div>
         );

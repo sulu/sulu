@@ -1,6 +1,6 @@
 @import '../../containers/Application/colors.scss';
 
-$textColor: $silver;
+$textColor: $black;
 
 .resource-locator-container {
     display: flex;
@@ -8,5 +8,8 @@ $textColor: $silver;
 }
 
 .fixed {
+    font-size: 12px;
+    line-height: 22px;
     color: $textColor;
+    margin-right: 20px;
 }

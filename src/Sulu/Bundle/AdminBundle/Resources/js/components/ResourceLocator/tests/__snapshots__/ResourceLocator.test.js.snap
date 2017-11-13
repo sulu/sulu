@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResourceLocator should render with type full 1`] = `
+<div
+  class="resourceLocatorContainer"
+>
+  <span
+    class="fixed"
+  >
+    /
+  </span>
+  <label
+    class="input"
+  >
+    <input
+      type="string"
+      value="parent"
+    />
+  </label>
+</div>
+`;
+
+exports[`ResourceLocator should render with type leaf 1`] = `
+<div
+  class="resourceLocatorContainer"
+>
+  <span
+    class="fixed"
+  >
+    /parent/
+  </span>
+  <label
+    class="input"
+  >
+    <input
+      type="string"
+      value="child"
+    />
+  </label>
+</div>
+`;
