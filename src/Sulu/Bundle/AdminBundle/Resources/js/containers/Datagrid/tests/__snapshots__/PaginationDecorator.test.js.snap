@@ -50,7 +50,7 @@ exports[`Render an infinite scroll loader if the loading prop is set to true 1`]
       />
     </div>
     <div
-      class="infiniteScrollLoader"
+      class="infiniteScrollIndicator"
     >
       <div
         class="spinner"
@@ -76,8 +76,25 @@ exports[`Render an infinite scroll pagination if the type is set to infiniteScro
       />
     </div>
     <div
-      class="infiniteScrollLoader"
+      class="infiniteScrollIndicator"
     />
+  </div>
+</section>
+`;
+
+exports[`The infinite scroll pagination should show an info when the last page is reached 1`] = `
+<section>
+  <div>
+    <div>
+      <div
+        class="adapter"
+      />
+    </div>
+    <div
+      class="infiniteScrollIndicator"
+    >
+      You reached the end of the page
+    </div>
   </div>
 </section>
 `;

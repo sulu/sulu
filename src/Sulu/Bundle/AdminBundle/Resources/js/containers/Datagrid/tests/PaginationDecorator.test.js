@@ -10,6 +10,8 @@ jest.mock('../../../services/Translator', () => ({
                 return 'Page';
             case 'sulu_admin.of':
                 return 'of';
+            case 'sulu_admin.reached_end_of_list':
+                return 'You reached the end of the page';
         }
     },
 }));
@@ -98,4 +100,20 @@ test('The infinite scroll pagination calls the onChange callback if it wants to 
 
     paginationDecorator.find('InfiniteScroller').props().onLoad(testPage);
     expect(onChangeSpy).toBeCalledWith(testPage);
+});
+
+test('The infinite scroll pagination should show an info when the last page is reached', () => {
+    const onChangeSpy = jest.fn();
+
+    expect(render(
+        <PaginationDecorator
+            type="infiniteScroll"
+            total={10}
+            current={10}
+            loading={false}
+            onChange={onChangeSpy}
+        >
+            <div className="adapter" />
+        </PaginationDecorator>
+    )).toMatchSnapshot();
 });

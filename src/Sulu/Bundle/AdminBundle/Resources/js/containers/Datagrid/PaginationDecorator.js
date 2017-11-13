@@ -4,6 +4,7 @@ import type {Element} from 'react';
 import Pagination from '../../components/Pagination';
 import InfiniteScroller from '../../components/InfiniteScroller';
 import Loader from '../../components/Loader';
+import {translate} from '../../services/Translator';
 import type {PaginationType} from './types';
 import paginationDecoratorStyles from './paginationDecorator.scss';
 
@@ -40,9 +41,12 @@ export default class PaginationDecorator extends React.PureComponent<Props> {
                         >
                             {children}
                         </InfiniteScroller>
-                        <div className={paginationDecoratorStyles.infiniteScrollLoader}>
+                        <div className={paginationDecoratorStyles.infiniteScrollIndicator}>
                             {loading &&
                                 <Loader />
+                            }
+                            {current === total && !loading &&
+                                translate('sulu_admin.reached_end_of_list')
                             }
                         </div>
                     </div>
