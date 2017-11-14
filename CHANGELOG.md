@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* 1.6.7 (2017-11-13)
+* 1.6.7 (2017-11-14)
     * BUGFIX      #3614 [WebsiteBundle]           Fixed content-route tests for umlauts
     * ENHANCEMENT #3608 [WebsiteBundle]           Analytics: Added possibility to determine the position of content (head open, head close, body open, body close)
     * HOTFIX      #3610 [ContactBundle]           ContactSelectionContentType: Fixed bug in serialization with missing category data
