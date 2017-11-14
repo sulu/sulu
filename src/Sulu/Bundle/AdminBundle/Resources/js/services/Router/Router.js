@@ -97,7 +97,7 @@ export default class Router {
 
     restore(name: string, attributes: Object = {}) {
         if (!this.attributesHistory[name] || this.attributesHistory[name].length === 0) {
-            this.navigate(name, attributes);
+            this.update(name, attributes);
             return;
         }
 
