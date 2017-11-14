@@ -5,7 +5,6 @@ import Pagination from '../../components/Pagination';
 import InfiniteScroller from '../../components/InfiniteScroller';
 import {translate} from '../../services/Translator';
 import type {PaginationType} from './types';
-import paginationDecoratorStyles from './paginationDecorator.scss';
 
 type Props = {
     type: PaginationType,
@@ -32,17 +31,15 @@ export default class PaginationDecorator extends React.PureComponent<Props> {
         return (
             <section>
                 {!!current && !!total &&
-                    <div>
-                        <InfiniteScroller
-                            total={total}
-                            current={current}
-                            onLoad={this.handlePageChange}
-                            loading={loading}
-                            lastPageReachedText={translate('sulu_admin.reached_end_of_list')}
-                        >
-                            {children}
-                        </InfiniteScroller>
-                    </div>
+                    <InfiniteScroller
+                        total={total}
+                        current={current}
+                        onLoad={this.handlePageChange}
+                        loading={loading}
+                        lastPageReachedText={translate('sulu_admin.reached_end_of_list')}
+                    >
+                        {children}
+                    </InfiniteScroller>
                 }
             </section>
         );
@@ -59,13 +56,11 @@ export default class PaginationDecorator extends React.PureComponent<Props> {
             <section>
                 {children}
                 {!!current && !!total &&
-                    <div className={paginationDecoratorStyles.paginationContainer}>
-                        <Pagination
-                            total={total}
-                            current={current}
-                            onChange={this.handlePageChange}
-                        />
-                    </div>
+                    <Pagination
+                        total={total}
+                        current={current}
+                        onChange={this.handlePageChange}
+                    />
                 }
             </section>
         );

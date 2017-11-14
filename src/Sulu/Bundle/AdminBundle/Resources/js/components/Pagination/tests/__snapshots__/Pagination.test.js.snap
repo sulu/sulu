@@ -12,22 +12,23 @@ exports[`Render disabled next link if current page is last page 1`] = `
     >
       Page: 5 of 5
     </span>
-    <a
-      class="previous enabled"
+    <button
+      class="previous"
     >
       <span
         aria-label="angle-left"
         class="fa fa-angle-left"
       />
-    </a>
-    <a
+    </button>
+    <button
       class="next"
+      disabled=""
     >
       <span
         aria-label="angle-right"
         class="fa fa-angle-right"
       />
-    </a>
+    </button>
   </div>
 </nav>
 `;
@@ -44,22 +45,23 @@ exports[`Render disabled previous link current page is first page 1`] = `
     >
       Page: 1 of 5
     </span>
-    <a
+    <button
       class="previous"
+      disabled=""
     >
       <span
         aria-label="angle-left"
         class="fa fa-angle-left"
       />
-    </a>
-    <a
-      class="next enabled"
+    </button>
+    <button
+      class="next"
     >
       <span
         aria-label="angle-right"
         class="fa fa-angle-right"
       />
-    </a>
+    </button>
   </div>
 </nav>
 `;
@@ -76,22 +78,22 @@ exports[`Render pagination with page numbers 1`] = `
     >
       Page: 5 of 10
     </span>
-    <a
-      class="previous enabled"
+    <button
+      class="previous"
     >
       <span
         aria-label="angle-left"
         class="fa fa-angle-left"
       />
-    </a>
-    <a
-      class="next enabled"
+    </button>
+    <button
+      class="next"
     >
       <span
         aria-label="angle-right"
         class="fa fa-angle-right"
       />
-    </a>
+    </button>
   </div>
 </nav>
 `;
