@@ -54,12 +54,12 @@ test('Navigate to route with search parameters using state', () => {
     const history = createHistory();
     const router = new Router(history);
 
-    router.navigate('page', {uuid: 'some-uuid', page: '1', sort: 'title'});
+    router.navigate('page', {uuid: 'some-uuid', page: 1, sort: 'title'});
     expect(isObservable(router.route)).toBe(true);
     expect(router.route.view).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
-    expect(router.attributes.page).toBe('1');
+    expect(router.attributes.page).toBe(1);
     expect(router.attributes.sort).toBe('title');
     expect(history.location.pathname).toBe('/pages/some-uuid');
     expect(history.location.search).toBe('?page=1&sort=title');
@@ -203,7 +203,7 @@ test('Navigate to route using URL with search parameters', () => {
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(router.attributes.test).toBe('value');
-    expect(router.attributes.page).toBe('1');
+    expect(router.attributes.page).toBe(1);
     expect(router.attributes.sort).toBe('date');
     expect(history.location.pathname).toBe('/pages/some-uuid/value');
     expect(history.location.search).toBe('?page=1&sort=date');
@@ -436,10 +436,10 @@ test('Binding should update state in router', () => {
 
     router.navigate('list', {page: 1});
     router.bind('page', page);
-    expect(router.attributes.page).toBe('1');
+    expect(router.attributes.page).toBe(1);
 
     page.set(2);
-    expect(router.attributes.page).toBe('2');
+    expect(router.attributes.page).toBe(2);
 });
 
 test('Binding should set default attribute', () => {
@@ -480,11 +480,35 @@ test('Binding should update URL with fixed attributes', () => {
 
     router.navigate('page', {uuid: 1, locale: 'de'});
     router.bind('uuid', uuid);
-    expect(router.attributes.uuid).toBe('1');
+    expect(router.attributes.uuid).toBe(1);
     expect(router.url).toBe('/page/1?locale=de');
 
     uuid.set(2);
-    expect(router.attributes.uuid).toBe('2');
+    expect(router.attributes.uuid).toBe(2);
+});
+
+test('Binding should update URL with fixed attributes as string if not a number', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            view: 'page',
+            path: '/page/:uuid',
+            attributeDefaults: {},
+        },
+    });
+
+    const uuid = observable(1);
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.navigate('page', {uuid: 'some-uuid', locale: 'de'});
+    router.bind('uuid', uuid);
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.url).toBe('/page/some-uuid?locale=de');
+
+    uuid.set('another-uuid');
+    expect(router.attributes.uuid).toBe('another-uuid');
 });
 
 test('Binding should update state in router with other default bindings', () => {
@@ -655,9 +679,9 @@ test('Binding should be set to initial passed value from URL', () => {
     const history = createHistory();
     history.push('/list?page=2');
     const router = new Router(history);
-    router.bind('page', value, '1');
+    router.bind('page', value, 1);
 
-    expect(value.get()).toBe('2');
+    expect(value.get()).toBe(2);
     expect(history.location.search).toBe('?page=2');
 });
 
