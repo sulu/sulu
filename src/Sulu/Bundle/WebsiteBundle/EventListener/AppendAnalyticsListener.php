@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
+use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -21,6 +22,25 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class AppendAnalyticsListener
 {
+    private static $positions = [
+        'head-open' => [
+            'regex' => '/(<head [^>]*>|<head>)/',
+            'sprintf' => '$1%s',
+        ],
+        'head-close' => [
+            'regex' => '/<\/head>/',
+            'sprintf' => '%s</head>',
+        ],
+        'body-open' => [
+            'regex' => '/(<body [^>]*>|<body>)/',
+            'sprintf' => '$1%s',
+        ],
+        'body-close' => [
+            'regex' => '/<\/body>/',
+            'sprintf' => '%s</body>',
+        ],
+    ];
+
     /**
      * @var EngineInterface
      */
@@ -82,16 +102,76 @@ class AppendAnalyticsListener
         }
 
         $portalUrl = $this->requestAnalyzer->getAttribute('urlExpression');
-        $analytics = $this->analyticsRepository->findByUrl(
+
+        $analyticsArray = $this->analyticsRepository->findByUrl(
             $portalUrl,
             $this->requestAnalyzer->getPortalInformation()->getWebspaceKey(),
             $this->environment
         );
 
-        $content = $this->engine->render('SuluWebsiteBundle:Analytics:website.html.twig', ['analytics' => $analytics]);
+        $analyticsContent = [];
+        foreach ($analyticsArray as $analytics) {
+            $analyticsContent = $this->generateAnalyticsContent($analyticsContent, $analytics);
+        }
 
         $response = $event->getResponse();
-        $responseContent = $response->getContent();
-        $response->setContent(str_replace('</body>', $content . '</body>', $responseContent));
+        $response->setContent($this->setAnalyticsContent($response->getContent(), $analyticsContent));
+    }
+
+    /**
+     * Generate content for each possible position.
+     *
+     * @param array $analyticsContent
+     * @param Analytics $analytics
+     *
+     * @return array
+     */
+    protected function generateAnalyticsContent(array $analyticsContent, Analytics $analytics)
+    {
+        foreach (array_keys(self::$positions) as $position) {
+            $template = 'SuluWebsiteBundle:Analytics:' . $analytics->getType() . '/' . $position . '.html.twig';
+
+            if (!$this->engine->exists($template)) {
+                continue;
+            }
+
+            $content = $this->engine->render($template, ['analytics' => $analytics]);
+            if (!$content) {
+                continue;
+            }
+
+            if (!array_key_exists($position, $analyticsContent)) {
+                $analyticsContent[$position] = '';
+            }
+
+            $analyticsContent[$position] .= $content;
+        }
+
+        return $analyticsContent;
+    }
+
+    /**
+     * Set the generated content for each position.
+     *
+     * @param string $responseContent
+     * @param array $analyticsContent
+     *
+     * @return string
+     */
+    protected function setAnalyticsContent($responseContent, array $analyticsContent)
+    {
+        foreach ($analyticsContent as $id => $content) {
+            if (!$content) {
+                continue;
+            }
+
+            $responseContent = preg_replace(
+                self::$positions[$id]['regex'],
+                sprintf(self::$positions[$id]['sprintf'], $content),
+                $responseContent
+            );
+        }
+
+        return $responseContent;
     }
 }

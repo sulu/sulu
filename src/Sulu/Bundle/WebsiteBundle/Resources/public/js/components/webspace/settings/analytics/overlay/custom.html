@@ -1,0 +1,20 @@
+<div data-type="custom" data-mapper-property="content" data-form="true">
+    <div class="form-group grid-row">
+        <label for="analytics-content-position" class="required"><%= labels[0] %></label>
+
+        <div id="analytics-content-position"
+             class="form-element"
+             data-aura-component="select@husky"
+             data-aura-instance-name="analytics-content-position"
+             data-aura-data='[{"id": "headOpen", "name": "website.webspace.settings.position.headOpen"},{"id": "headClose", "name": "website.webspace.settings.position.headClose"},{"id": "bodyOpen", "name": "website.webspace.settings.position.bodyOpen"},{"id": "bodyClose", "name": "website.webspace.settings.position.bodyClose"}]'
+             data-aura-multiple-select="false"
+             data-type="husky-select"
+             data-form="true">
+        </div>
+    </div>
+    <div class="form-group grid-row">
+        <label for="analytics-content-value" class="required"><%= labels[1] %></label>
+
+        <textarea id="analytics-content-value" name="content-value" class="form-element"></textarea>
+    </div>
+</div>
