@@ -41,59 +41,18 @@ exports[`Render a default pagination if no type is specified 1`] = `
 </section>
 `;
 
-exports[`Render an infinite scroll loader if the loading prop is set to true 1`] = `
-<section>
-  <div>
-    <div>
-      <div
-        class="adapter"
-      />
-    </div>
-    <div
-      class="infiniteScrollIndicator"
-    >
-      <div
-        class="spinner"
-      >
-        <div
-          class="doubleBounce1"
-        />
-        <div
-          class="doubleBounce2"
-        />
-      </div>
-    </div>
-  </div>
-</section>
-`;
-
 exports[`Render an infinite scroll pagination if the type is set to infiniteScroll 1`] = `
 <section>
   <div>
     <div>
+      <div>
+        <div
+          class="adapter"
+        />
+      </div>
       <div
-        class="adapter"
+        class="indicator"
       />
-    </div>
-    <div
-      class="infiniteScrollIndicator"
-    />
-  </div>
-</section>
-`;
-
-exports[`The infinite scroll pagination should show an info when the last page is reached 1`] = `
-<section>
-  <div>
-    <div>
-      <div
-        class="adapter"
-      />
-    </div>
-    <div
-      class="infiniteScrollIndicator"
-    >
-      You reached the end of the page
     </div>
   </div>
 </section>

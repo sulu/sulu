@@ -47,22 +47,6 @@ test('Render an infinite scroll pagination if the type is set to infiniteScroll'
     )).toMatchSnapshot();
 });
 
-test('Render an infinite scroll loader if the loading prop is set to true', () => {
-    const onChangeSpy = jest.fn();
-
-    expect(render(
-        <PaginationDecorator
-            type="infiniteScroll"
-            total={10}
-            current={1}
-            loading={true}
-            onChange={onChangeSpy}
-        >
-            <div className="adapter" />
-        </PaginationDecorator>
-    )).toMatchSnapshot();
-});
-
 test('The default pagination calls the onChange callback if it wants to load a new page', () => {
     const testPage = 2;
     const onChangeSpy = jest.fn();
@@ -100,20 +84,4 @@ test('The infinite scroll pagination calls the onChange callback if it wants to 
 
     paginationDecorator.find('InfiniteScroller').props().onLoad(testPage);
     expect(onChangeSpy).toBeCalledWith(testPage);
-});
-
-test('The infinite scroll pagination should show an info when the last page is reached', () => {
-    const onChangeSpy = jest.fn();
-
-    expect(render(
-        <PaginationDecorator
-            type="infiniteScroll"
-            total={10}
-            current={10}
-            loading={false}
-            onChange={onChangeSpy}
-        >
-            <div className="adapter" />
-        </PaginationDecorator>
-    )).toMatchSnapshot();
 });
