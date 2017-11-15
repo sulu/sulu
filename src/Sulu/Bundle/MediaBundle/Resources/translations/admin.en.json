@@ -1,5 +1,3 @@
 {
-    "sulu_admin.object": "Object",
-    "sulu_admin.objects": "Objects",
-    "sulu_admin.all_media": "All media"    
+    "sulu_media.all_media": "All media"
 }

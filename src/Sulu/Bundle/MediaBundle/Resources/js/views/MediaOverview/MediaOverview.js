@@ -65,7 +65,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
     getTitle() {
         if (!this.collectionId) {
-            return translate('sulu_admin.all_media');
+            return translate('sulu_media.all_media');
         }
 
         return this.title;
@@ -89,7 +89,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
     handleOpenFolder = (collectionId) => {
         const {router} = this.props;
-        router.navigate(COLLECTION_ROUTE, {id: collectionId, page: '1', locale: this.locale.get()});
+        router.navigate(COLLECTION_ROUTE, {id: collectionId, locale: this.locale.get()});
     };
 
     render() {
@@ -136,7 +136,7 @@ export default withToolbar(MediaOverview, function() {
         backButton: (this.collectionId !== undefined)
             ? {
                 onClick: () => {
-                    router.navigate(COLLECTION_ROUTE, {id: this.parentId}, {locale: this.locale.get(), page: 1});
+                    router.restore(COLLECTION_ROUTE, {id: this.parentId, locale: this.locale.get()});
                 },
             }
             : undefined,

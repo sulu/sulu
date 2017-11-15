@@ -64,7 +64,7 @@ export default withToolbar(Form, function() {
     const backButton = backRoute
         ? {
             onClick: () => {
-                router.navigate(backRoute, {locale: this.props.resourceStore.locale.get()});
+                router.restore(backRoute, {locale: this.props.resourceStore.locale.get()});
             },
         }
         : undefined;

@@ -3,7 +3,7 @@ import {action, autorun, computed, observable, toJS} from 'mobx';
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import pathToRegexp, {compile} from 'path-to-regexp';
-import type {Route} from './types';
+import type {Route, AttributeMap} from './types';
 import routeRegistry from './registries/RouteRegistry';
 
 export default class Router {
@@ -11,7 +11,8 @@ export default class Router {
     @observable route: Route;
     @observable attributes: Object = {};
     @observable bindings: Map<string, observable> = new Map();
-    bindingDefaults: Map<string, ?string> = new Map();
+    bindingDefaults: Map<string, ?string | number> = new Map();
+    attributesHistory: {[string]: Array<AttributeMap>} = {};
 
     constructor(history: Object) {
         this.history = history;
@@ -34,7 +35,7 @@ export default class Router {
         });
     }
 
-    @action bind(key: string, value: observable, defaultValue: ?string = undefined) {
+    @action bind(key: string, value: observable, defaultValue: ?string | number = undefined) {
         if (key in this.attributes) {
             // when the bound parameter is bound set the state of the passed observable to the current value once
             // required because otherwise the parameter will be overridden on the initial start of the application
@@ -71,12 +72,12 @@ export default class Router {
 
             const attributes = {};
             for (let i= 1; i < match.length; i++) {
-                attributes[names[i - 1].name] = match[i];
+                attributes[names[i - 1].name] = Router.tryParseNumber(match[i]);
             }
 
             const search = new URLSearchParams(queryString);
             search.forEach((value, key) => {
-                attributes[key] = value;
+                attributes[key] = Router.tryParseNumber(value);
             });
 
             this.navigate(name, attributes);
@@ -85,18 +86,43 @@ export default class Router {
         }
     }
 
-    @action navigate(name: string, attributes: Object = {}) {
-        const route = routeRegistry.get(name);
-
-        if (this.route
-            && route
-            && this.route.name === route.name
-            && equal(this.attributes, attributes)
-        ) {
+    navigate(name: string, attributes: Object = {}) {
+        if (!this.isRouteChanging(name, attributes)) {
             return;
         }
 
-        this.route = route;
+        this.createAttributesHistory();
+        this.update(name, attributes);
+    }
+
+    restore(name: string, attributes: Object = {}) {
+        if (!this.attributesHistory[name] || this.attributesHistory[name].length === 0) {
+            this.update(name, attributes);
+            return;
+        }
+
+        if (!this.isRouteChanging(name, attributes)) {
+            return;
+        }
+
+        const attributesHistory = this.attributesHistory[name].pop();
+
+        this.update(name, {...attributesHistory, ...attributes});
+    }
+
+    @action update(name: string, attributes: Object) {
+        this.route = routeRegistry.get(name);
+
+        const attributeDefaults = this.route.attributeDefaults;
+        Object.keys(attributeDefaults).forEach((key) => {
+            // set default attributes if not passed, to automatically set important omitted attributes everywhere
+            // e.g. allows to always pass the default locale if nothing is passed
+            if (attributes[key] !== undefined) {
+                return;
+            }
+            attributes[key] = attributeDefaults[key];
+        });
+
         this.attributes = attributes;
 
         for (const [key, observableValue] of this.bindings.entries()) {
@@ -125,16 +151,6 @@ export default class Router {
             attributes[key] = value;
         }
 
-        const attributeDefaults = this.route.attributeDefaults;
-        Object.keys(attributeDefaults).forEach((key) => {
-            // set default attributes if not passed, to automatically set important omitted attributes everywhere
-            // e.g. allows to always pass the default locale if nothing is passed
-            if (attributes[key] !== undefined) {
-                return;
-            }
-            attributes[key] = attributeDefaults[key];
-        });
-
         const url = compile(path)(attributes);
         const searchParameters = new URLSearchParams();
         Object.keys(attributes).forEach((key) => {
@@ -150,11 +166,41 @@ export default class Router {
         return url + (queryString ? '?' + queryString : '');
     }
 
+    createAttributesHistory() {
+        if (!this.route) {
+            return;
+        }
+
+        if (!(this.route.name in this.attributesHistory)) {
+            this.attributesHistory[this.route.name] = [];
+        }
+
+        this.attributesHistory[this.route.name].push(toJS(this.attributes));
+    }
+
+    isRouteChanging(name: string, attributes: Object) {
+        const route = routeRegistry.get(name);
+
+        return !(
+            this.route
+            && this.route.name === route.name
+            && equal(this.attributes, attributes)
+        );
+    }
+
     static getRoutePath(route: Route) {
         if (!route.parent) {
             return route.path;
         }
 
         return Router.getRoutePath(route.parent) + route.path;
+    }
+
+    static tryParseNumber(value: string) {
+        if (isNaN(value)) {
+            return value;
+        }
+
+        return parseFloat(value);
     }
 }
