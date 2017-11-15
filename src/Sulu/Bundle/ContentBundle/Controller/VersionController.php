@@ -127,7 +127,7 @@ class VersionController extends FOSRestController implements
                 break;
         }
 
-        $view = $this->view($data, $data !== null ? 200 : 204);
+        $view = $this->view($data, null !== $data ? 200 : 204);
 
         $context = new Context();
         $context->setGroups(['defaultPage']);

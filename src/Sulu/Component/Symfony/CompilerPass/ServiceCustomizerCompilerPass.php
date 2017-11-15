@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ServiceCustomizerCompilerPass implements CompilerPassInterface
 {
-    public static function customize(string $serviceId): ServiceCustomizerCompilerPass
+    public static function customize(string $serviceId): self
     {
         return new self($serviceId);
     }
