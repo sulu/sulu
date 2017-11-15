@@ -6,6 +6,7 @@ import CroppedText from './CroppedText';
 import Divider from './Divider';
 import Icon from './Icon';
 import InfiniteScroller from './InfiniteScroller';
+import Loader from './Loader';
 import Menu from './Menu';
 import Masonry from './Masonry';
 import MultiItemSelection from './MultiItemSelection';
@@ -21,6 +22,7 @@ export {
     Divider,
     Icon,
     InfiniteScroller,
+    Loader,
     Menu,
     Masonry,
     MultiItemSelection,
