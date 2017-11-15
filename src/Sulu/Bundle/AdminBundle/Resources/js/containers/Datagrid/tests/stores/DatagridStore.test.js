@@ -246,3 +246,84 @@ test('Clear the selection', () => {
     datagridStore.clearSelection();
     expect(datagridStore.selections).toHaveLength(0);
 });
+
+test('The data should be appended when the appendData flag is true', () => {
+    const page = observable();
+    const locale = observable();
+    const datagridStore = new DatagridStore('tests',
+        {
+            page,
+            locale,
+        },
+        {},
+        true
+    );
+
+    datagridStore.handleResponse({
+        _embedded: {
+            tests: [
+                {id: 1},
+                {id: 2},
+                {id: 3},
+            ],
+        },
+    });
+
+    expect(datagridStore.data.toJS()).toEqual([
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ]);
+
+    datagridStore.handleResponse({
+        _embedded: {
+            tests: [
+                {id: 4},
+                {id: 5},
+                {id: 6},
+            ],
+        },
+    });
+
+    expect(datagridStore.data.toJS()).toEqual([
+        {id: 1},
+        {id: 2},
+        {id: 3},
+        {id: 4},
+        {id: 5},
+        {id: 6},
+    ]);
+
+    datagridStore.destroy();
+});
+
+test('When appendRequest is set, changing the locale observable resets the data property and sets page to 1', () => {
+    ResourceRequester.getList.mockReturnValue(Promise.resolve({
+        _embedded: {
+            tests: [
+                {id: 1},
+                {id: 2},
+                {id: 3},
+            ],
+        },
+    }));
+
+    const page = observable();
+    const locale = observable();
+    const datagridStore = new DatagridStore('tests',
+        {
+            page,
+            locale,
+        },
+        {},
+        true
+    );
+
+    page.set(3);
+    locale.set(2);
+
+    expect(page.get()).toBe(1);
+    expect(datagridStore.data.toJS()).toEqual([]);
+
+    datagridStore.destroy();
+});

@@ -37,6 +37,8 @@ export default class DatagridStore {
     localeInterceptor = (change: observable) => {
         if (this.observableOptions.locale !== change.newValue) {
             this.data = [];
+            this.observableOptions.page.set(1);
+
             return change;
         }
     };
