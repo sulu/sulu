@@ -19,6 +19,7 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
             nullableAuthor: false,
             data: {
                 authored: null,
+                authoredTime: null,
                 author: null
             },
             selectCallback: function(data) {
@@ -31,15 +32,23 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
         },
         templates: {
             skeleton: [
-                '<div class="grid">',
-                '   <div class="grid-row form-group">',
-                '       <label for="authored"><%= translations.authored %></label>',
-                '       <div class="authored-component"',
-                '            data-aura-component="input@husky"',
-                '            data-aura-skin="date"',
-                '            data-value="<%= authored %>" />',
-                '       </div>',
+                '   <div class="grid-row">', 
+                 '       <label for="authored"><%= translations.authored %></label>',
                 '   </div>',
+                '   <div class="grid-row form-group">', 
+                '       <div class="grid-col-6">',
+                 '           <div class="authored-component"',
+                 '              data-aura-component="input@husky"', 
+                '               data-aura-skin="date"', 
+                '               data-value="<%= authored %>" />',
+                 '       </div>', 
+                '       <div class="grid-col-6">',
+                 '           <div class="authored-time-component"', 
+                '              data-aura-component="input@husky"',
+                 '               data-aura-skin="time"',
+                 '               data-value="<%= authoredTime %>" />',
+                 '       </div>',
+                 '   </div>',
                 '   <div class="grid-row search-row">',
                 '       <div class="grid-col-8">',
                 '<% if (nullableAuthor) { %>',
@@ -73,7 +82,10 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
             this.html($(this.templates.skeleton({
                 translations: this.translations,
                 nullableAuthor: this.options.nullableAuthor,
-                authored: this.options.data.authored ? this.options.data.authored : null
+                authored: this.options.data.authored ? this.options.data.authored : null,
+                authoredTime: this.options.data.authored
+                    ? Globalize.format(new Date(this.options.data.authored), Globalize.culture().calendar.patterns.t)
+                    : null
             })));
 
             this.sandbox.start([
@@ -121,8 +133,7 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
 
         bindCustomEvents: function() {
             this.sandbox.once('sulu.content.contents.get-author', function() {
-                this.data.authored = this.$el.find('.authored-component').data('value');
-
+                this.data.authored = document.test.$el.find('.authored-component').data('value')+' '+ document.test.$el.find('.authored-time-component').data('value');
                 this.sandbox.emit('husky.datagrid.' + constants.instanceName + '.items.get-selected', function(ids, items) {
                     if (items.length > 0) {
                         this.data.author = ids[0];
