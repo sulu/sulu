@@ -1,51 +1,151 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {mount} from 'enzyme';
+import {mount, render} from 'enzyme';
+import MediaCardOverviewAdapter from '../../../containers/Datagrid/adapters/MediaCardOverviewAdapter';
 
-jest.mock('sulu-admin-bundle/services/Translator', () => ({
+jest.mock('sulu-admin-bundle/containers', () => {
+    return {
+        withToolbar: jest.fn((Component) => Component),
+        Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
+        DatagridStore: jest.fn(function(resourceKey) {
+            const COLLECTIONS_RESOURCE_KEY = 'collections';
+
+            const collectionData = [
+                {
+                    id: 1,
+                    title: 'Title 1',
+                    objectCount: 1,
+                    description: 'Description 1',
+                },
+                {
+                    id: 2,
+                    title: 'Title 2',
+                    objectCount: 0,
+                    description: 'Description 2',
+                },
+            ];
+
+            const thumbnails = {
+                'sulu-260x': 'http://lorempixel.com/260/100',
+                'sulu-100x100': 'http://lorempixel.com/100/100',
+            };
+
+            const mediaData = [
+                {
+                    id: 1,
+                    title: 'Title 1',
+                    mimeType: 'image/png',
+                    size: 12345,
+                    url: 'http://lorempixel.com/500/500',
+                    thumbnails: thumbnails,
+                },
+                {
+                    id: 2,
+                    title: 'Title 1',
+                    mimeType: 'image/jpeg',
+                    size: 54321,
+                    url: 'http://lorempixel.com/500/500',
+                    thumbnails: thumbnails,
+                },
+            ];
+
+            this.loading = false;
+            this.pageCount = 3;
+            this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
+                ? collectionData
+                : mediaData;
+            this.selections = [];
+            this.getPage = jest.fn().mockReturnValue(2);
+            this.getFields = jest.fn().mockReturnValue({
+                title: {},
+                description: {},
+            });
+            this.destroy = jest.fn();
+            this.sendRequest = jest.fn();
+            this.clearSelection = jest.fn();
+        }),
+    };
+});
+
+jest.mock('../../../stores/CollectionStore', () => jest.fn(function() {
+    this.parentId = 1;
+    this.destroy = jest.fn();
+}));
+
+jest.mock('sulu-admin-bundle/services', () => ({
     translate: function(key) {
         switch (key) {
-            case 'sulu_admin.add':
-                return 'Add';
-            case 'sulu_admin.delete':
-                return 'Delete';
+            case 'sulu_media.all_media':
+                return 'All Media';
+            case 'sulu_media.copy_url':
+                return 'Copy URL';
+            case 'sulu_media.download_masterfile':
+                return 'Downoad master file';
+            case 'sulu_admin.page':
+                return 'Page';
+            case 'sulu_admin.of':
+                return 'of';
+            case 'sulu_admin.object':
+                return 'Object';
+            case 'sulu_admin.objects':
+                return 'Objects';
         }
     },
 }));
 
-jest.mock('sulu-admin-bundle/containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
-
-jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => ({
-    get: jest.fn().mockReturnValue(function() {
-        return null;
-    }),
-    has: jest.fn().mockReturnValue(function() {
-        return false;
-    }),
+jest.mock('sulu-admin-bundle/services/Translator', () => ({
+    translate: function(key) {
+        switch (key) {
+            case 'sulu_admin.page':
+                return 'Page';
+            case 'sulu_admin.of':
+                return 'of';
+            case 'sulu_admin.object':
+                return 'Object';
+            case 'sulu_admin.objects':
+                return 'Objects';
+        }
+    },
 }));
 
-test('Should navigate to defined route on back button click', () => {
-    const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => {
+    const getAllAdaptersMock = jest.fn();
 
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-            },
+    return {
+        getAllAdaptersMock: getAllAdaptersMock,
+        add: jest.fn(),
+        get: jest.fn((key) => getAllAdaptersMock()[key]),
+        has: jest.fn(),
+    };
+});
+
+beforeEach(() => {
+    jest.resetModules();
+
+    const datagridAdapterRegistry = require('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry');
+
+    datagridAdapterRegistry.has.mockReturnValue(true);
+    datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
+        'folder': {
+            Adapter: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
+            paginationType: 'pagination',
         },
+        'media_card_overview': {
+            Adapter: MediaCardOverviewAdapter,
+            paginationType: 'infiniteScroll',
+        },
+    });
+});
+
+test('Render a simple MediaOverview', () => {
+    const MediaOverview = require('../MediaOverview').default;
+    const router = {
+        bind: jest.fn(),
         attributes: {},
     };
-    const mediaOverview = mount(<MediaOverview router={router} />).get(0);
-    mediaOverview.collectionId = 4;
-    mediaOverview.locale.set('de');
 
-    const toolbarConfig = toolbarFunction.call(mediaOverview);
-    toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('sulu_media.overview', {locale: 'de'});
+    const mediaOverview = render(<MediaOverview router={router} />);
+    expect(mediaOverview).toMatchSnapshot();
 });
 
 test('Unbind all query params and destroy all stores on unmount', () => {
@@ -72,4 +172,34 @@ test('Unbind all query params and destroy all stores on unmount', () => {
     expect(mediaOverviewInstance.collectionStore.destroy).toBeCalled();
     expect(router.unbind).toBeCalledWith('collectionPage', page);
     expect(router.unbind).toBeCalledWith('locale', locale);
+});
+
+test('Should navigate to defined route on back button click', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />).get(0);
+    mediaOverview.collectionId = 4;
+    mediaOverview.locale.set('de');
+
+    const toolbarConfig = toolbarFunction.call(mediaOverview);
+    toolbarConfig.backButton.onClick();
+    expect(router.restore).toBeCalledWith('sulu_media.overview', {
+        'collectionPage': '1',
+        'id': 1,
+        'locale': 'de',
+    });
 });
