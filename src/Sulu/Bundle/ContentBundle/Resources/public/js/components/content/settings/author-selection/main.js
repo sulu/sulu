@@ -12,8 +12,8 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
     'use strict';
 
     var constants = {
-            instanceName: 'author-selection'
-        },
+        instanceName: 'author-selection'
+    },
         defaults = {
         options: {
             nullableAuthor: false,
@@ -31,23 +31,29 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
             noAuthor: 'sulu.content.form.settings.no-author'
         },
         templates: {
+            formId: '#authored-form',
             skeleton: [
                 '   <div class="grid-row">', 
                  '       <label for="authored"><%= translations.authored %></label>',
                 '   </div>',
-                '   <div class="grid-row form-group">', 
-                '       <div class="grid-col-6">',
-                 '           <div class="authored-component"',
-                 '              data-aura-component="input@husky"', 
-                '               data-aura-skin="date"', 
-                '               data-value="<%= authored %>" />',
-                 '       </div>', 
-                '       <div class="grid-col-6">',
-                 '           <div class="authored-time-component"', 
-                '              data-aura-component="input@husky"',
-                 '               data-aura-skin="time"',
-                 '               data-value="<%= authoredTime %>" />',
-                 '       </div>',
+                '   <div class="grid-row form-group">',
+                '       <form id="<%= formId %>">', 
+                '           <div class="grid-col-6">',
+                 '              <div data-type="husky-input"',
+                 '                  data-aura-component="input@husky"',
+                '                  data-mapper-property="authored"',
+                '                  data-validation-required="true"',
+                '                  data-aura-skin="date" />',
+                 '          </div>', 
+                '           <div class="grid-col-6">',
+                 '              <div data-type="husky-input"',
+                '                  data-value="<%= authoredTime %>"',
+                '                  data-aura-component="input@husky"',
+                '                  data-mapper-property="authoredTime"',
+                '                  data-validation-required="true"',
+                 '                  data-aura-skin="time" />',
+                 '          </div>',
+                 '       </form>',
                  '   </div>',
                 '   <div class="grid-row search-row">',
                 '       <div class="grid-col-8">',
@@ -77,54 +83,67 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
 
         initialize: function() {
             this.data = this.options.data;
-
             this.bindCustomEvents();
+
+            var authored = this.options.data.authored ? this.options.data.authored : null;
+            var authoredTime = authored
+                ? Globalize.format(new Date(authored), Globalize.culture().calendar.patterns.t)
+                : null;
+
             this.html($(this.templates.skeleton({
                 translations: this.translations,
                 nullableAuthor: this.options.nullableAuthor,
-                authored: this.options.data.authored ? this.options.data.authored : null,
-                authoredTime: this.options.data.authored
-                    ? Globalize.format(new Date(this.options.data.authored), Globalize.culture().calendar.patterns.t)
-                    : null
+                authoredTime: authoredTime,
+                formId: this.templates.formId
             })));
 
-            this.sandbox.start([
-                {
-                    name: 'search@husky',
-                    options: {
-                        el: '.author-selection-search',
-                        appearance: 'white small',
-                        instanceName: constants.instanceName + '-search'
-                    }
-                },
-                {
-                    name: 'datagrid@husky',
-                    options: {
-                        el: '.author-selection-list',
-                        instanceName: constants.instanceName,
-                        url: '/admin/api/contacts?flat=true',
-                        resultKey: 'contacts',
-                        sortable: false,
-                        selectedCounter: false,
-                        searchInstanceName: constants.instanceName + '-search',
-                        searchFields: ['fullName', 'mainEmail'],
-                        preselected: !!this.options.data.author ? [this.options.data.author] : [],
-                        paginationOptions: {
-                            dropdown: {
-                                limit: 20
+            this.form = this.sandbox.form.create(this.templates.formId);
+
+            this.initialized.then(function() {
+                this.sandbox.form.setData(this.templates.formId, {
+                    authored: authored,
+                    authoredTime: authoredTime
+                }).then(function() {
+                    this.sandbox.start(this);
+                    this.sandbox.start([
+                        {
+                            name: 'search@husky',
+                            options: {
+                                el: '.author-selection-search',
+                                appearance: 'white small',
+                                instanceName: constants.instanceName + '-search'
                             }
                         },
-                        viewOptions: {
-                            table: {
-                                selectItem: {
-                                    type: 'radio'
-                                }
+                        {
+                            name: 'datagrid@husky',
+                            options: {
+                                el: '.author-selection-list',
+                                instanceName: constants.instanceName,
+                                url: '/admin/api/contacts?flat=true',
+                                resultKey: 'contacts',
+                                sortable: false,
+                                selectedCounter: false,
+                                searchInstanceName: constants.instanceName + '-search',
+                                searchFields: ['fullName', 'mainEmail'],
+                                preselected: !!this.options.data.author ? [this.options.data.author] : [],
+                                paginationOptions: {
+                                    dropdown: {
+                                        limit: 20
+                                    }
+                                },
+                                viewOptions: {
+                                    table: {
+                                        selectItem: {
+                                            type: 'radio'
+                                        }
+                                    }
+                                },
+                                matchings: this.options.matchings
                             }
-                        },
-                        matchings: this.options.matchings
-                    }
-                }
-            ]);
+                        }
+                    ]);
+                }.bind(this));
+            }.bind(this));
 
             if (this.options.nullableAuthor) {
                 this.initializeNullableRadio();
@@ -133,13 +152,13 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
 
         bindCustomEvents: function() {
             this.sandbox.once('sulu.content.contents.get-author', function() {
-                this.data.authored = document.test.$el.find('.authored-component').data('value')+' '+ document.test.$el.find('.authored-time-component').data('value');
+                var data = this.form.mapper.getData();
+                this.data.authored = new Date(data.authored + (data.authoredTime ? ' '+ data.authoredTime : '')).toISOString();
                 this.sandbox.emit('husky.datagrid.' + constants.instanceName + '.items.get-selected', function(ids, items) {
                     if (items.length > 0) {
                         this.data.author = ids[0];
                         this.data.authorItem = items[0];
                     }
-
                     this.options.selectCallback(this.data);
                 }.bind(this), true);
             }.bind(this));
