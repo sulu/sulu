@@ -153,7 +153,10 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
         bindCustomEvents: function() {
             this.sandbox.once('sulu.content.contents.get-author', function() {
                 var data = this.form.mapper.getData();
-                this.data.authored = new Date(data.authored + (data.authoredTime ? ' '+ data.authoredTime : '')).toISOString();
+                this.data.authored = Globalize.format(
+                    new Date(data.authored + (data.authoredTime ? ' '+ data.authoredTime : '')),
+                    "yyyy'-'MM'-'dd'T'HH':'mm':'sszz'00'"
+                );
                 this.sandbox.emit('husky.datagrid.' + constants.instanceName + '.items.get-selected', function(ids, items) {
                     if (items.length > 0) {
                         this.data.author = ids[0];
