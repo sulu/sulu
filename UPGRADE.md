@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-master
+## 1.6.7
 
 ### Custom Analytics
 
