@@ -109,7 +109,7 @@ interface CollectionRepositoryInterface
     /**
      * Finds the parent collections and all the sliblings of them + the children of given id.
      *
-     * @param id $id
+     * @param int $id
      * @param string $locale
      *
      * @return Collection[]

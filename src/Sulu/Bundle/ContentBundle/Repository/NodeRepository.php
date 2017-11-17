@@ -753,7 +753,7 @@ class NodeRepository implements NodeRepositoryInterface
         try {
             // call mapper function
             $structure = $this->getMapper()->copyLanguage($uuid, $userId, $webspaceKey, $srcLocale, $destLocales);
-        } catch (PHPCRException $ex) {
+        } catch (DocumentManagerException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         } catch (RepositoryException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);

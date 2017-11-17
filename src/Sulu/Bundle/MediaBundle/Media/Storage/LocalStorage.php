@@ -11,13 +11,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use stdClass;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Log\NullLogger;
-use Symfony\Component\HttpKernel\Tests\Logger;
 
 class LocalStorage implements StorageInterface
 {
@@ -42,7 +42,7 @@ class LocalStorage implements StorageInterface
     private $filesystem;
 
     /**
-     * @var NullLogger|Logger
+     * @var LoggerInterface
      */
     protected $logger;
 

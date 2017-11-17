@@ -28,7 +28,7 @@ class ProviderNotFoundException extends \Exception
 
     /**
      * @param string $name
-     * @param \string[] $available
+     * @param string[] $available
      */
     public function __construct($name, array $available)
     {

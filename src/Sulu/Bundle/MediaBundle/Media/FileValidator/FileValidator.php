@@ -64,7 +64,7 @@ class FileValidator implements FileValidatorInterface
         }
 
         if (in_array(self::VALIDATOR_MAX_FILE_SIZE, $methods) && null !== $this->maxFileSize && $file->getSize() >= $this->maxFileSize) {
-            throw new MaxFileSizeExceededException(sprintf('File "%s" exceeds the configured maximum filesize of "%s"', $file->getFilename(), $this->maxFilesize));
+            throw new MaxFileSizeExceededException(sprintf('File "%s" exceeds the configured maximum filesize of "%s"', $file->getFilename(), $this->maxFileSize));
         }
     }
 

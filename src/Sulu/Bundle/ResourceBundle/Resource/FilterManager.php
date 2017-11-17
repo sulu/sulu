@@ -257,7 +257,7 @@ class FilterManager implements FilterManagerInterface
                 return $this->addConditionGroup($filter, $conditionGroupData);
             };
 
-            $delete = function (ConditionGroupEntity $conditionGroup) use ($filter) {
+            $delete = function (ConditionGroupEntity $conditionGroup) {
                 $this->em->remove($conditionGroup);
 
                 return true;

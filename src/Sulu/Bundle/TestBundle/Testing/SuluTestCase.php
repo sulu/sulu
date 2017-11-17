@@ -20,10 +20,10 @@ use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
 /**
  * Base test case for functional tests in Sulu.
@@ -86,7 +86,7 @@ abstract class SuluTestCase extends KernelTestCase
      * Return the test user (which is provided / created
      * by the test_user_provider in this Bundle at runtime).
      *
-     * @return TestUser
+     * @return User
      */
     protected function getTestUser()
     {

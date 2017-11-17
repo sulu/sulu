@@ -26,6 +26,7 @@ matrix:
         - SYMFONY__DATABASE__USER=postgres
         - SYMFONY__DATABASE__PASSWORD=postgres
         - SYMFONY__PHPCR__TRANSPORT=jackrabbit
+        - PHPSTAN=true
         # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
         - TEST_FLAGS="--jackrabbit-restart"
 
@@ -59,6 +60,7 @@ before_script:
   - phpenv config-rm xdebug.ini
   - composer self-update
   - composer update $COMPOSER_FLAGS
+  - if [[ $PHPSTAN == 'true' ]]; then travis_retry composer require --dev phpstan/phpstan $COMPOSER_FLAGS ; else travis_retry composer update $COMPOSER_FLAGS ; fi
   - if [[ $SYMFONY__PHPCR__TRANSPORT = jackrabbit ]]; then composer require jackalope/jackalope-jackrabbit:~1.2 ; fi
 
 script: 

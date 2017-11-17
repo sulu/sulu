@@ -81,10 +81,10 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * Overwrites given keyword.
      *
+     * @param KeywordInterface $keyword
      * @param CategoryInterface $category
-     * @param Keyword $keyword
      *
-     * @return Keyword
+     * @return KeywordInterface
      */
     private function handleOverwrite(KeywordInterface $keyword, CategoryInterface $category)
     {
@@ -122,10 +122,10 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * Detach given and create new keyword entity.
      *
+     * @param KeywordInterface $keyword
      * @param CategoryInterface $category
-     * @param Keyword $keyword
      *
-     * @return Keyword
+     * @return KeywordInterface
      */
     private function handleDetach(KeywordInterface $keyword, CategoryInterface $category)
     {
@@ -177,9 +177,9 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * Find the same keyword in the database or returns null if no synonym exists.
      *
-     * @param Keyword $keyword
+     * @param KeywordInterface $keyword
      *
-     * @return Keyword|null
+     * @return KeywordInterface|null
      */
     private function findSynonym(KeywordInterface $keyword)
     {

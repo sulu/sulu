@@ -11,8 +11,7 @@
 
 namespace Sulu\Bundle\TagBundle\Tag;
 
-use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
  * Defines the operations of the TagManager.

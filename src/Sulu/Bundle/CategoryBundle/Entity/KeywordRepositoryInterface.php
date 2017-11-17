@@ -23,7 +23,7 @@ interface KeywordRepositoryInterface extends RepositoryInterface
      *
      * @param int $id
      *
-     * @return KeywordInterface
+     * @return KeywordInterface|null
      */
     public function findById($id);
 
@@ -33,7 +33,7 @@ interface KeywordRepositoryInterface extends RepositoryInterface
      * @param string $keyword
      * @param string $locale
      *
-     * @return KeywordInterface
+     * @return KeywordInterface|null
      */
     public function findByKeyword($keyword, $locale);
 }

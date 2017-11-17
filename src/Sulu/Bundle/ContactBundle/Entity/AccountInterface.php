@@ -177,7 +177,7 @@ interface AccountInterface
     /**
      * Set logo.
      *
-     * @param Media $logo
+     * @param MediaInterface $logo
      *
      * @return AccountInterface
      */
@@ -186,7 +186,7 @@ interface AccountInterface
     /**
      * Get logo.
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function getLogo();
 

@@ -34,6 +34,13 @@ class GeolocatorLocation
     protected $displayTitle;
 
     /**
+     * Name to display.
+     *
+     * @var string
+     */
+    protected $displayName;
+
+    /**
      * @var string
      */
     protected $street;
@@ -156,6 +163,8 @@ class GeolocatorLocation
     /**
      * This is a hack for the husky component which is now
      * hard coded to use the "name" property.
+     *
+     * @param string $name
      */
     public function setName($name)
     {

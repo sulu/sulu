@@ -152,7 +152,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
      */
     public function getFullName()
     {
-        return $this->getContact()->getFullName();
+        return $this->getUsername();
     }
 
     /**

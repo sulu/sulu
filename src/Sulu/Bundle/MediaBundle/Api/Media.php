@@ -890,7 +890,7 @@ class Media extends ApiWrapper
             return $this->file;
         }
 
-        throw new FileNotFoundException($this->entity->getId(), $this->version);
+        throw new FileNotFoundException($this->entity->getId());
     }
 
     /**

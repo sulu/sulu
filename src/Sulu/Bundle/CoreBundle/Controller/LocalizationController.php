@@ -36,9 +36,6 @@ class LocalizationController extends FOSRestController implements ClassResourceI
             'localizations'
         );
 
-        return $this->handleView(
-            $this->view($representation),
-            200
-        );
+        return $this->handleView($this->view($representation));
     }
 }

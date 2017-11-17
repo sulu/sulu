@@ -421,7 +421,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     /**
      * getCreated.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -431,7 +431,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     /**
      * setCreated.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return BaseAccount
      */
@@ -445,7 +445,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     /**
      * getChanged.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -455,7 +455,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     /**
      * setChanged.
      *
-     * @param DateTime $changed
+     * @param \DateTime $changed
      *
      * @return $this
      */
@@ -515,7 +515,7 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     /**
      * getMainContact.
      *
-     * @return Contact
+     * @return ContactInterface
      */
     public function getMainContact()
     {

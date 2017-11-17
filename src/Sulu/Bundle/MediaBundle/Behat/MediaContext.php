@@ -51,7 +51,8 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
 
         if (!$meta) {
             throw new \InvalidArgumentException(sprintf(
-                'Collection "%s" should exist'
+                'Collection "%s" should exist',
+                $name
             ));
         }
     }
@@ -67,7 +68,8 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
 
         if ($meta) {
             throw new \InvalidArgumentException(sprintf(
-                'Collection "%s" should not exist'
+                'Collection "%s" should not exist',
+                $name
             ));
         }
     }

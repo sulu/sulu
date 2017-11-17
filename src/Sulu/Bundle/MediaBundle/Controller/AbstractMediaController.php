@@ -55,7 +55,7 @@ class AbstractMediaController extends RestController
         $data['collection'] = $request->get('collection');
         $data['contentLanguages'] = $request->get('contentLanguages', []);
         $data['publishLanguages'] = $request->get('publishLanguages', []);
-        $data['title'] = $request->get('title', $fallback ? $this->getTitleFromUpload($request, 'fileVersion') : null);
+        $data['title'] = $request->get('title', $fallback ? $this->getTitleFromUpload($request) : null);
         $data['formats'] = $request->get('formats', []);
 
         return $data;

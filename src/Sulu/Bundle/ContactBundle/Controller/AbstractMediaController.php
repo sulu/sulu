@@ -23,6 +23,8 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes accounts available through a REST API.
@@ -43,7 +45,7 @@ abstract class AbstractMediaController extends RestController
      * @param string $id
      * @param string $mediaId
      *
-     * @return Media
+     * @return Response
      */
     protected function addMediaToEntity($entityName, $id, $mediaId)
     {

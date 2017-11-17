@@ -24,9 +24,10 @@ class AppJsConfig extends JsConfig
      */
     private $appManager;
 
-    public function __construct($appManager)
+    public function __construct($appManager, $bundleName, array $params)
     {
         $this->appManager = $appManager;
+        parent::__construct($bundleName, $params);
     }
 
     /**

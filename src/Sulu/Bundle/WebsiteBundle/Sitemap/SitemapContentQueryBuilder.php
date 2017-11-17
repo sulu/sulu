@@ -29,10 +29,10 @@ class SitemapContentQueryBuilder extends ContentQueryBuilder
                 ISDESCENDANTNODE('/cmf/%s/contents')
                 OR ISSAMENODE('/cmf/%s/contents')
             ) AND (
-                page.[i18n:de-seo-hideInSitemap] IS NULL
-                OR page.[i18n:de-seo-hideInSitemap] = false
+                page.[i18n:%s-seo-hideInSitemap] IS NULL
+                OR page.[i18n:%s-seo-hideInSitemap] = false
             )
-        )", $webspaceKey, $webspaceKey, $locale);
+        )", $webspaceKey, $webspaceKey, $locale, $locale);
     }
 
     /**

@@ -38,6 +38,11 @@
 
         <service id="sulu_content.jsconfig.apps" class="%sulu_websocket.jsconfig.class%">
             <argument type="service" id="sulu_websocket.manager"/>
+            <argument type="string">sulu_websocket</argument>
+            <argument type="collection">
+                <argument key="mode" type="string">%sulu_preview.mode%</argument>
+                <argument key="delay" type="string">%sulu_preview.delay%</argument>
+            </argument>
 
             <tag name="sulu.js_config"/>
         </service>

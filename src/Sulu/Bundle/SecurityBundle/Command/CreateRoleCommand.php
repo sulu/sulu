@@ -110,7 +110,6 @@ class CreateRoleCommand extends ContainerAwareCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
-        $doctrine = $this->getContainer()->get('doctrine');
 
         $pool = $this->getContainer()->get('sulu_admin.admin_pool');
         $contexts = $pool->getSecurityContexts();
@@ -119,7 +118,7 @@ class CreateRoleCommand extends ContainerAwareCommand
         if (!$input->getArgument('name')) {
             $question = new Question('Please choose a rolename: ');
             $question->setValidator(
-                function ($name) use ($doctrine) {
+                function ($name) {
                     if (empty($name)) {
                         throw new \InvalidArgumentException('Rolename cannot be empty');
                     }

@@ -161,7 +161,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
     private function tryLoad($file)
     {
         try {
-            return XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
+            return XmlUtils::loadFile($file);
         } catch (\InvalidArgumentException $e) {
             throw new InvalidMediaFormatException(
                 sprintf('Could not parse image formats XML file "%s"', $file),

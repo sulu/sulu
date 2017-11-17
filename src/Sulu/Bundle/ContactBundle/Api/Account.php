@@ -17,10 +17,10 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Api\Category;
-use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
@@ -972,7 +972,7 @@ class Account extends ApiWrapper
     /**
      * Returns the main address.
      *
-     * @return mixed
+     * @return Address|null
      * @VirtualProperty
      * @SerializedName("mainAddress")
      * @Groups({"fullAccount", "partialAccount"})
@@ -989,8 +989,6 @@ class Account extends ApiWrapper
                 }
             }
         }
-
-        return;
     }
 
     /**
@@ -1067,7 +1065,7 @@ class Account extends ApiWrapper
      *
      * @param MediaInterface $media
      */
-    public function removeMedia(MediaInterfae $media)
+    public function removeMedia(MediaInterface $media)
     {
         $this->entity->removeMedia($media);
     }

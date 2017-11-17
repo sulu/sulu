@@ -17,6 +17,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\Mapper\ContentEvents;
 
 /**
  * Content Type for target groups from the audience targeting.
@@ -43,7 +44,7 @@ class AudienceTargetingGroups extends ComplexContentType implements ContentTypeE
      */
     public function getType()
     {
-        return ContentTypeInterface::PRE_SAVE;
+        return ContentEvents::NODE_PRE_SAVE;
     }
 
     /**

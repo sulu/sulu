@@ -249,7 +249,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         if (!empty($contactsEntities)) {
             $contacts = [];
             foreach ($contactsEntities as $contact) {
-                $contacts[] = new Contact($contact, $locale, $this->tagManager);
+                $contacts[] = new Contact($contact, $locale);
             }
 
             return $contacts;

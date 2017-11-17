@@ -35,6 +35,6 @@ class PropertyEncoder extends BasePropertyEncoder
             return $this->localizedContentName($property->getName(), $locale);
         }
 
-        return $this->contentname($property->getName());
+        return $this->contentName($property->getName());
     }
 }

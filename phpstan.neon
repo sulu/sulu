@@ -2,3 +2,10 @@ parameters:
     excludes_analyse:
         - %currentWorkingDirectory%/src/Sulu/Component/*/Tests/*
         - %currentWorkingDirectory%/src/Sulu/Bundle/*/Tests/*
+        - %currentWorkingDirectory%/src/Sulu/Bundle/*/Resources/phpcr-migrations/*
+        # PHPStan can run into too many nested function error in configuration tree
+        - %currentWorkingDirectory%/src/Sulu/Bundle/*/DependencyInjection/Configuration.php
+        # Following classes access kernel class project dir
+        - %currentWorkingDirectory%/src/Sulu/Bundle/TestBundle/Testing/KernelTestCase.php
+        - %currentWorkingDirectory%/src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewKernel.php
+        - %currentWorkingDirectory%/src/Sulu/Bundle/PreviewBundle/Preview/Renderer/WebsiteKernelFactory.php

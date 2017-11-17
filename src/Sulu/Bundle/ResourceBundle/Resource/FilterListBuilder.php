@@ -19,6 +19,7 @@ use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -157,7 +158,7 @@ class FilterListBuilder implements FilterListBuilderInterface
      * Creates expressions from conditions and add them to the expressions array.
      *
      * @param Condition $condition
-     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param FieldDescriptorInterface $fieldDescriptor
      */
     protected function createExpression(Condition $condition, $fieldDescriptor)
     {

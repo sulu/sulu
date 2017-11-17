@@ -136,7 +136,7 @@ class TemplateController extends RestController
         $values = [];
 
         $emailTypeEntity = 'SuluContactBundle:EmailType';
-        $values['emailTypes'] = $this->getDoctrine($emailTypeEntity)
+        $values['emailTypes'] = $this->getDoctrine()
             ->getRepository($emailTypeEntity)
             ->findAll();
 
@@ -180,7 +180,7 @@ class TemplateController extends RestController
         $defaults = [];
 
         $emailTypeEntity = 'SuluContactBundle:EmailType';
-        $defaults['emailType'] = $this->getDoctrine($emailTypeEntity)
+        $defaults['emailType'] = $this->getDoctrine()
             ->getRepository($emailTypeEntity)
             ->find($config['emailType']);
 
@@ -224,7 +224,7 @@ class TemplateController extends RestController
         }
 
         $emailTypeEntity = 'SuluContactBundle:EmailType';
-        $data['email_types'] = $this->getDoctrine($emailTypeEntity)
+        $data['email_types'] = $this->getDoctrine()
             ->getRepository($emailTypeEntity)
             ->findAll();
 

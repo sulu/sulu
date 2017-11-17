@@ -54,6 +54,7 @@ class Role extends BaseRole
         $this->userRoles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->settings = new ArrayCollection();
+        parent::__construct();
     }
 
     /**
