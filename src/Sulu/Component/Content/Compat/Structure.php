@@ -764,7 +764,7 @@ abstract class Structure implements StructureInterface
     public function getNodeName()
     {
         if ($this->hasProperty('title')) {
-	    return $this->getPropertyValue('title');
+            return $this->getPropertyValue('title');
         }
     }
 
