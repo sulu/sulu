@@ -59,12 +59,13 @@ before_script:
   - echo "memory_limit=2048M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - phpenv config-rm xdebug.ini
   - composer self-update
+  - if [[ $PHPSTAN == 'true' ]]; then composer require phpstan/phpstan:^0.8.5 --dev --no-progress --no-suggest --no-update --no-scripts ; fi
+  - if [[ $SYMFONY__PHPCR__TRANSPORT = jackrabbit ]]; then composer require jackalope/jackalope-jackrabbit:~1.2 --dev --no-progress --no-suggest --no-update --no-scripts ; fi
   - composer update $COMPOSER_FLAGS
-  - if [[ $PHPSTAN == 'true' ]]; then travis_retry composer require --dev phpstan/phpstan $COMPOSER_FLAGS ; else travis_retry composer update $COMPOSER_FLAGS ; fi
-  - if [[ $SYMFONY__PHPCR__TRANSPORT = jackrabbit ]]; then composer require jackalope/jackalope-jackrabbit:~1.2 ; fi
 
 script: 
   - time ./bin/runtests -i -a $TEST_FLAGS
+  - if [[ $PHPSTAN == 'true' ]]; then vendor/bin/phpstan analyse src/ --level 0 -c phpstan.neon ; fi
 
 notifications:
   slack:
