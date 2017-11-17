@@ -17,6 +17,7 @@ use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
@@ -601,7 +602,7 @@ class ContentMapper implements ContentMapperInterface
      *
      * @param $webspaceKey
      *
-     * @return object
+     * @return BasePageDocument|object
      */
     private function getContentDocument($webspaceKey, $locale, array $options = [])
     {
