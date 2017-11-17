@@ -1,6 +1,7 @@
 parameters:
     excludes_analyse:
         - %currentWorkingDirectory%/vendor/*
+        - %currentWorkingDirectory%/src/Sulu/Bundle/*/vendor/*
         - %currentWorkingDirectory%/src/Sulu/Component/*/Tests/*
         - %currentWorkingDirectory%/src/Sulu/Bundle/*/Tests/*
         - %currentWorkingDirectory%/src/Sulu/Bundle/*/Resources/phpcr-migrations/*
