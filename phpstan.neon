@@ -1,5 +1,6 @@
 parameters:
     excludes_analyse:
+        - %currentWorkingDirectory%/vendor/*
         - %currentWorkingDirectory%/src/Sulu/Component/*/Tests/*
         - %currentWorkingDirectory%/src/Sulu/Bundle/*/Tests/*
         - %currentWorkingDirectory%/src/Sulu/Bundle/*/Resources/phpcr-migrations/*
@@ -9,3 +10,4 @@ parameters:
         - %currentWorkingDirectory%/src/Sulu/Bundle/TestBundle/Testing/KernelTestCase.php
         - %currentWorkingDirectory%/src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewKernel.php
         - %currentWorkingDirectory%/src/Sulu/Bundle/PreviewBundle/Preview/Renderer/WebsiteKernelFactory.php
+
