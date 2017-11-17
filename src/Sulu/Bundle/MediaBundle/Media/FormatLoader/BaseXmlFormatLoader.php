@@ -24,6 +24,8 @@ abstract class BaseXmlFormatLoader extends FileLoader
 
     const SCHEMA_URI = '';
 
+    const SCHEME_PATH = '';
+
     const SCALE_MODE_DEFAULT = 'outbound';
 
     const SCALE_RETINA_DEFAULT = false;
@@ -161,7 +163,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
     private function tryLoad($file)
     {
         try {
-            return XmlUtils::loadFile($file);
+            return XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
         } catch (\InvalidArgumentException $e) {
             throw new InvalidMediaFormatException(
                 sprintf('Could not parse image formats XML file "%s"', $file),
