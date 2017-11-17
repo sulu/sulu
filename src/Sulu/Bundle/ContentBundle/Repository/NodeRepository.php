@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Repository;
 
-use Doctrine\ODM\PHPCR\PHPCRException;
 use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;

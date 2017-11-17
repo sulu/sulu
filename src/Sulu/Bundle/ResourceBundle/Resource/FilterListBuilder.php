@@ -16,7 +16,6 @@ use Sulu\Bundle\ResourceBundle\Api\ConditionGroup;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionFieldNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionTypeMismatchException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
-use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
