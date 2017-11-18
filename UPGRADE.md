@@ -1,5 +1,11 @@
 # Upgrade
 
+## dev-develop
+
+### Node api
+
+The api endpoint for `/admin/api/nodes/filter` was removed and replaced by `/admin/api/items`.
+
 ## 1.6.7
 
 ### Custom Analytics
