@@ -76,6 +76,10 @@ export default class Datagrid extends React.PureComponent<Props> {
         this.props.store.updateLoadingStrategy(this.currentAdapter.getLoadingStrategy());
     };
 
+    handleLoadChildren = (id: string | number, columnId: number, hasChildren: boolean) => {
+        this.props.store.loadChildren(hasChildren, id, columnId+1);
+    };
+
     render() {
         const {
             store,
@@ -111,6 +115,8 @@ export default class Datagrid extends React.PureComponent<Props> {
                             onItemClick={onItemClick}
                             onItemSelectionChange={this.handleItemSelectionChange}
                             onAllSelectionChange={this.handleAllSelectionChange}
+                            onLoadChildren={this.handleLoadChildren}
+                            depthLoading={store.depthLoading}
                         />
                     </PaginationDecorator>
                 }

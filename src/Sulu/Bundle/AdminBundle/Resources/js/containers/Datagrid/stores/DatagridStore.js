@@ -10,6 +10,7 @@ export default class DatagridStore {
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
     @observable loadingStrategy: ?string;
+    @observable depthLoading: ?number = null;
     disposer: () => void;
     resourceKey: string;
     options: Object;
@@ -99,10 +100,63 @@ export default class DatagridStore {
         } else {
             this.data = data;
         }
-
-        this.pageCount = response.pages;
-        this.setLoading(false);
     };
+
+    @action loadChildren = (hasChildren: boolean, id: number | string, depth: number) => {
+        const page = this.getPage();
+
+        if (!page) {
+            return;
+        }
+
+        this.setTreeData([], depth);
+
+        if (!hasChildren) {
+            return;
+        }
+
+        this.setDepthLoading(depth);
+        const observableOptions = {};
+        observableOptions.page = page;
+
+        if (this.observableOptions.locale) {
+            observableOptions.locale = this.observableOptions.locale.get();
+        }
+
+        const options = {
+            ... this.options,
+            parent: id,
+        };
+
+        ResourceRequester.getList(this.resourceKey, {
+            ...observableOptions,
+            ...options,
+        }).then((response: Object) => {
+            this.handleChildrenResponse(depth, response);
+        });
+    };
+
+    @action handleChildrenResponse = (depth: number, response: Object) => {
+        this.setTreeData(response._embedded[this.resourceKey], depth);
+        this.pageCount = response.pages;
+        this.setDepthLoading(null);
+    };
+
+    @action setTreeData = (data: Array, depth: number) => {
+        let newData = this.data.slice(0, depth + 1);
+
+        if (!this.data[depth]) {
+            newData.push(data);
+        } else {
+            newData[depth] = data;
+        }
+
+        this.data = newData;
+    };
+
+    @action setDepthLoading(depth: ?number) {
+        this.depthLoading = depth;
+    }
 
     @action setLoading(loading: boolean) {
         this.loading = loading;

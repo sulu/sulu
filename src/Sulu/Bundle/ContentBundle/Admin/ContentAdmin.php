@@ -12,8 +12,10 @@
 namespace Sulu\Bundle\ContentBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -109,6 +111,45 @@ class ContentAdmin extends Admin
     public function getJsBundleName()
     {
         return 'sulucontent';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoutes(): array
+    {
+        $routes = [];
+
+        $adapters = ['column_list'];
+
+        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
+            $routeKey = 'sulu_content.' . $webspace->getKey() . '.pages';
+            $path = '/pages/' . $webspace->getKey() . '/:locale';
+
+            $locales = array_values(
+                array_map(
+                    function(Localization $localization) {
+                        return $localization->getLocale();
+                    },
+                    $this->webspaceManager->getAllLocalizations()
+                )
+            );
+
+            $apiOptions = [
+                'webspace' => $webspace->getKey(),
+            ];
+
+            $routes[] = (new Route($routeKey, $path, 'sulu_admin.list'))
+                ->addOption('title', 'sulu_admin.pages')
+                ->addOption('resourceKey', 'nodes')
+                ->addOption('editRoute', 'sulu_admin.pages.detail')
+                ->addOption('locales', $locales)
+                ->addOption('apiOptions', $apiOptions)
+                ->addOption('adapters', $adapters)
+                ->addAttributeDefault('locale', $locales[0]);
+        }
+
+        return $routes;
     }
 
     /**

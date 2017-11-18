@@ -11,7 +11,7 @@ import Input from './components/Input';
 import Application from './containers/Application';
 import {fieldRegistry} from './containers/Form';
 import {viewRegistry} from './containers/ViewRenderer';
-import {datagridAdapterRegistry, TableAdapter, FolderAdapter} from './containers/Datagrid';
+import {datagridAdapterRegistry, TableAdapter, FolderAdapter, ColumnListAdapter} from './containers/Datagrid';
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
 import List from './views/List';
@@ -25,15 +25,12 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 viewRegistry.add('sulu_admin.form', Form);
 viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
 viewRegistry.add('sulu_admin.list', List);
+
 datagridAdapterRegistry.add('table', TableAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
+datagridAdapterRegistry.add('column_list', ColumnListAdapter);
 
 fieldRegistry.add('text_line', Input);
-
-function startApplication() {
-    const router = new Router(createHistory());
-    render(<Application router={router} />, document.getElementById('application'));
-}
 
 const translationPromise = Requester.get('/admin/v2/translations?locale=en')
     .then((response) => setTranslations(response));
@@ -45,6 +42,9 @@ Promise.all([
     translationPromise,
     configPromise,
     bundlesReadyPromise,
-]).then(startApplication);
+]).then(() => {
+    const router = new Router(createHistory());
+    render(<Application router={router} />, document.getElementById('application'));
+});
 
 bundleReady();

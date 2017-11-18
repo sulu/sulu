@@ -24,6 +24,7 @@ class List extends React.PureComponent<ViewProps> {
                 options: {
                     resourceKey,
                     locales,
+                    apiOptions,
                     adapters,
                 },
             },
@@ -47,7 +48,7 @@ class List extends React.PureComponent<ViewProps> {
             observableOptions.locale = this.locale;
         }
 
-        this.datagridStore = new DatagridStore(resourceKey, observableOptions);
+        this.datagridStore = new DatagridStore(resourceKey, observableOptions, apiOptions);
     }
 
     componentWillUnmount() {

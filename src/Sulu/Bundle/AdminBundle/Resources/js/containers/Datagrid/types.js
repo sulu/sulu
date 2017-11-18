@@ -16,6 +16,8 @@ export type DatagridAdapterProps = {
     onItemClick?: (rowId: string | number) => void,
     onItemSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     onAllSelectionChange?: (selected?: boolean) => void,
+    onLoadChildren?: (id: string | number, columnId: number, hasChildren: boolean) => void,
+    depthLoading?: number,
 };
 
 export type ObservableOptions = {

@@ -8,11 +8,12 @@ import itemStyles from './item.scss';
 
 type Props = {
     id: string | number,
+    columnIndex: number,
     children: string,
     selected: boolean,
     hasChildren: boolean,
     buttons?: Array<ItemButtonConfig>,
-    onClick?: (id: string | number) => void,
+    onClick?: (id: string | number, columnIndex: number, hasChildren: boolean) => void,
 };
 
 export default class Item extends React.Component<Props> {
@@ -22,9 +23,13 @@ export default class Item extends React.Component<Props> {
     };
 
     handleClick = () => {
-        if (this.props.onClick) {
-            this.props.onClick(this.props.id);
+        const {onClick, id, hasChildren, columnIndex} = this.props;
+
+        if (!onClick) {
+            return;
         }
+
+        onClick(id, columnIndex, hasChildren);
     };
 
     createButtons = () => {

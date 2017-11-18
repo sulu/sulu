@@ -7,6 +7,8 @@ $columnHeight: 30px;
 $columnBackgroundColor: $white;
 $columnBorderColor: $silver;
 
+$emptyColor: $silver;
+
 .column-list-container {
     overflow: scroll;
     height: 100%;
@@ -25,6 +27,12 @@ $columnBorderColor: $silver;
     width: $columnWidth;
     height: calc(100% - $columnHeight);
     overflow: hidden;
+
+    &.centerContent {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .column-container:first-child {
@@ -54,4 +62,16 @@ $columnBorderColor: $silver;
 
 .column-container {
     height: inherit;
+}
+
+.empty-message {
+    color: $emptyColor;
+
+    .icon {
+        font-size: 70px;
+    }
+
+    div {
+        text-align: center;
+    }
 }
