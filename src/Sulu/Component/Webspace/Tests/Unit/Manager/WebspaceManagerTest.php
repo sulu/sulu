@@ -361,7 +361,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $portalInformations = $this->webspaceManager->findPortalInformationsByUrl('sulu.at/test/test/test', 'prod');
         $portalInformation = reset($portalInformations);
-        $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocalization());
+        $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
         $this->assertNull($portalInformation->getSegment());
 
         /** @var Webspace $webspace */
