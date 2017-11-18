@@ -8,7 +8,6 @@
         <parameter key="sulu_core.build.builder.phpcr.class">Sulu\Bundle\CoreBundle\Build\PhpcrBuilder</parameter>
         <parameter key="sulu_core.build.builder.phpcr_migrations.class">Sulu\Bundle\CoreBundle\Build\PhpcrMigrationsBuilder</parameter>
         <parameter key="sulu_core.build.builder.fixtures.class">Sulu\Bundle\CoreBundle\Build\FixturesBuilder</parameter>
-        <parameter key="sulu_core.build.builder.cache.class">Sulu\Bundle\CoreBundle\Build\CacheBuilder</parameter>
     </parameters>
 
     <services>
@@ -18,14 +17,6 @@
         </service>
 
         <service id="sulu_core.build.builder.phpcr" class="%sulu_core.build.builder.phpcr.class%">
-            <tag name="massive_build.builder" />
-        </service>
-
-        <service id="sulu_core.build.builder.cache" class="%sulu_core.build.builder.cache.class%">
-            <tag name="massive_build.builder" />
-        </service>
-
-        <service id="sulu_core.build.builder.fixtures" class="%sulu_core.build.builder.fixtures.class%">
             <tag name="massive_build.builder" />
         </service>
 
