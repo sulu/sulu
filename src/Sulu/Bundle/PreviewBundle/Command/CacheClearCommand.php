@@ -30,6 +30,8 @@ class CacheClearCommand extends BaseCacheClearCommand
     protected function configure()
     {
         parent::configure();
+
+        $this->setName('cache:clear');
     }
 
     /**
