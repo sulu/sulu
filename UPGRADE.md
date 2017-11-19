@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+## Dependency updates
+
+Follow upgrade path of following libraries:
+
+* https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING-2.0.md
+* https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING-2.1.md
+* https://github.com/schmittjoh/JMSSerializerBundle/blob/master/UPGRADING.md
+
 ### Node api
 
 The api endpoint for `/admin/api/nodes/filter` was removed and replaced by `/admin/api/items`.
