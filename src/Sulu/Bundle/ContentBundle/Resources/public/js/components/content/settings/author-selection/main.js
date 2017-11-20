@@ -12,8 +12,8 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
     'use strict';
 
     var constants = {
-        instanceName: 'author-selection'
-    },
+            instanceName: 'author-selection'
+        },
         defaults = {
         options: {
             nullableAuthor: false,
