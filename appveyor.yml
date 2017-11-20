@@ -1,7 +1,7 @@
 build: false
 
 init:
-  - SET PATH=C:\Program Files\OpenSSL;c:\tools\php71;c:\cygwin\bin;%PATH%
+  - SET PATH=%PATH%;C:\Program Files\OpenSSL;c:\tools\php71;c:\cygwin\bin
 
   # uncomment to allow remote desktop connection
   #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

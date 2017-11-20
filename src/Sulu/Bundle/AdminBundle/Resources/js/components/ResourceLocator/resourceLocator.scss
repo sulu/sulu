@@ -1,0 +1,15 @@
+@import '../../containers/Application/colors.scss';
+
+$textColor: $black;
+
+.resource-locator {
+    display: flex;
+    align-items: center;
+}
+
+.fixed {
+    font-size: 12px;
+    line-height: 22px;
+    color: $textColor;
+    margin-right: 10px;
+}
