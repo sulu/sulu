@@ -7,11 +7,11 @@ $progressbarBackgroundColor: rgba($nobel, .5);
 .root {
     width: 100%;
 }
-  
+
 .path {
     stroke: $progressbarStrokeColor;
     stroke-linecap: round;
-    transition: stroke-dashoffset 0.5s ease 0s;
+    transition: stroke-dashoffset .5s ease 0s;
 }
 
 .trail {
@@ -26,5 +26,5 @@ $progressbarBackgroundColor: rgba($nobel, .5);
 }
 
 .background {
-    fill: $progressbarBackgroundColor;    
+    fill: $progressbarBackgroundColor;
 }
