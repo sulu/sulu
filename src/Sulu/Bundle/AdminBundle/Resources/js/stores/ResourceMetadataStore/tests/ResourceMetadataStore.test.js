@@ -18,6 +18,16 @@ test('Load configuration for given key', () => {
             changed: {},
             created: {},
         },
+        form: {
+            title: {
+                label: 'Title',
+                type: 'text_line',
+            },
+            slogan: {
+                label: 'Slogan',
+                type: 'text_line',
+            },
+        },
     });
 });
 
