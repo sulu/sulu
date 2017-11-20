@@ -19,7 +19,6 @@ export default class ResourceLocator extends React.PureComponent<Props> {
 
     componentWillMount = () => {
         const {value, mode} = this.props;
-        let parts;
 
         switch (mode) {
             case 'full':
@@ -27,7 +26,7 @@ export default class ResourceLocator extends React.PureComponent<Props> {
                 this.changeable = value.substring(1);
                 break;
             case 'leaf':
-                parts = value.split('/');
+                const parts = value.split('/');
                 this.changeable = parts.pop();
                 this.fixed = parts.join('/') + '/';
                 break;
@@ -46,9 +45,9 @@ export default class ResourceLocator extends React.PureComponent<Props> {
 
     render() {
         return (
-            <div className={resourceLocatorStyles.resourceLocatorContainer}>
+            <div className={resourceLocatorStyles.resourceLocator}>
                 <span className={resourceLocatorStyles.fixed}>{this.fixed}</span>
-                <Input onChange={this.handleChange} type="string" value={this.changeable} />
+                <Input onChange={this.handleChange} value={this.changeable} />
             </div>
         );
     }

@@ -2,7 +2,7 @@ The input component can be used to get input from the user in the same way as wi
 
 ```javascript
 initialState = {value: ''};
-onChange = (newValue) => {
+const onChange = (newValue) => {
 	setState({value: newValue});
 };
 
@@ -13,7 +13,7 @@ Beneath attributes known from the native input, it provides properties to style 
 
 ```javascript
 initialState = {value: ''};
-onChange = (newValue) => {
+const onChange = (newValue) => {
 	setState({value: newValue});
 };
 

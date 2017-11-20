@@ -2,7 +2,7 @@
 
 exports[`ResourceLocator should render with type full 1`] = `
 <div
-  class="resourceLocatorContainer"
+  class="resourceLocator"
 >
   <span
     class="fixed"
@@ -13,7 +13,7 @@ exports[`ResourceLocator should render with type full 1`] = `
     class="input"
   >
     <input
-      type="string"
+      type="text"
       value="parent"
     />
   </label>
@@ -22,7 +22,7 @@ exports[`ResourceLocator should render with type full 1`] = `
 
 exports[`ResourceLocator should render with type leaf 1`] = `
 <div
-  class="resourceLocatorContainer"
+  class="resourceLocator"
 >
   <span
     class="fixed"
@@ -33,7 +33,7 @@ exports[`ResourceLocator should render with type leaf 1`] = `
     class="input"
   >
     <input
-      type="string"
+      type="text"
       value="child"
     />
   </label>

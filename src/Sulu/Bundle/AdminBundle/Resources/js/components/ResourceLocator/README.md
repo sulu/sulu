@@ -1,11 +1,14 @@
-The input component can be used to get input from the user in the same way as with the native browser input.
+The ResourceLocator component can be used to get a URL from user input in two modes.
+
+* `full`: User can change everything after the initial slash.
+* `leaf`: User just can change the part after the last slash.
 
 ```javascript
 initialState = {value: '/parent'};
-onChange = (newValue) => {
+const onChange = (newValue) => {
 	setState({value: newValue});
 };
-
+``
 <div>
     <div style={{paddingBottom: '50px'}}>Current value: {state.value}</div>
     <ResourceLocator onChange={onChange} value={state.value} mode="full"/>
@@ -14,7 +17,7 @@ onChange = (newValue) => {
 
 ```javascript
 initialState = {value: '/parent/child'};
-onChange = (newValue) => {
+const onChange = (newValue) => {
 	setState({value: newValue});
 };
 
