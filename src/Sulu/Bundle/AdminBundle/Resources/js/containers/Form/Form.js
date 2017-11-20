@@ -16,6 +16,12 @@ type Props = {
 export default class Form extends React.PureComponent<Props> {
     renderer: ?ElementRef<typeof Renderer>;
 
+    componentWillMount() {
+        const {store} = this.props;
+        const schema = metadataStore.getFields(store.resourceKey);
+        store.changeSchema(schema);
+    }
+
     /** @public */
     submit = () => {
         if (!this.renderer) {

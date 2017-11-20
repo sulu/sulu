@@ -165,10 +165,11 @@ test('Should not show a locale chooser if no locales are passed in router option
     expect(toolbarConfig.locale).toBe(undefined);
 });
 
-test.skip('Should initialize the ResourceStore with a schema', () => {
+test('Should initialize the ResourceStore with a schema', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12);
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
 
     const router = {
         bind: jest.fn(),
@@ -182,6 +183,10 @@ test.skip('Should initialize the ResourceStore with a schema', () => {
         },
     };
 
+    metadataStore.getFields.mockReturnValue({
+        title: {},
+        slogan: {},
+    });
     mount(<Form router={router} resourceStore={resourceStore} />).get(0);
     expect(resourceStore.resourceKey).toBe('snippets');
     expect(resourceStore.id).toBe(12);
