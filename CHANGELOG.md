@@ -1,6 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
     * BUGFIX      #3629 [WebsiteBundle]           home page route not matched
 
 * 1.6.7 (2017-11-14)
