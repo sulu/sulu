@@ -5,7 +5,7 @@ import type {BreadcrumbItem, BreadcrumbItems, Collection} from './types';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
-export default class CollectionInfoStore {
+export default class CollectionStore {
     @observable loading: boolean = false;
     @observable collection: Collection = {
         parentId: null,

@@ -101,9 +101,8 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
     };
 });
 
-jest.mock('../../MediaContainer', () => ({
-    MediaContainer: require.requireActual('../../../containers/MediaContainer/MediaContainer').default,
-    CollectionInfoStore: jest.fn(),
+jest.mock('../../../stores/CollectionStore', () => ({
+    CollectionStore: jest.fn(),
 }));
 
 jest.mock('sulu-admin-bundle/services', () => ({
