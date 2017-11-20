@@ -97,6 +97,7 @@ export default class Application extends React.PureComponent<Props> {
                             return (
                                 <li
                                     key={index}
+                                    // eslint-disable-next-line react/jsx-no-bind
                                     onClick={handleClick}
                                     style={{
                                         padding: 10,
