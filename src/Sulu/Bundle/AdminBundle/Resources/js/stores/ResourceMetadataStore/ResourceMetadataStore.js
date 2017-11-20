@@ -21,6 +21,16 @@ class ResourceMetadataStore {
                 changed: {},
                 created: {},
             },
+            form: {
+                title: {
+                    label: 'Title',
+                    type: 'text_line',
+                },
+                slogan: {
+                    label: 'Slogan',
+                    type: 'text_line',
+                },
+            },
         },
         contacts: {
             list: {
@@ -29,6 +39,16 @@ class ResourceMetadataStore {
                 lastName: {},
                 title: {},
                 fullName: {},
+            },
+            form: {
+                firstName: {
+                    label: 'First Name',
+                    type: 'text_line',
+                },
+                lastName: {
+                    label: 'Last Name',
+                    type: 'text_line',
+                },
             },
         },
         accounts: {
