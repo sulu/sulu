@@ -4,13 +4,13 @@ import {render, mount} from 'enzyme';
 import ResourceLocator from '../ResourceLocator';
 
 test('ResourceLocator should render with type full', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     const value = '/parent';
     expect(render(<ResourceLocator value={value} mode="full" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('ResourceLocator should render with type leaf', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     const value = '/parent/child';
     expect(render(<ResourceLocator value={value} mode="leaf" onChange={onChange} />)).toMatchSnapshot();
 });
