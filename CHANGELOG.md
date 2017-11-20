@@ -1,6 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
+    * BUGFIX      #3629 [WebsiteBundle]           home page route not matched
+
 * 1.6.7 (2017-11-14)
     * BUGFIX      #3614 [WebsiteBundle]           Fixed content-route tests for umlauts
     * ENHANCEMENT #3608 [WebsiteBundle]           Analytics: Added possibility to determine the position of content (head open, head close, body open, body close)
