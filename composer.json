@@ -48,7 +48,6 @@
         "symfony/form": "^3.0",
         "symfony/polyfill": "^1.6",
         "symfony/security-bundle": "^3.0",
-        "symfony/serializer": "^3.0",
         "symfony/swiftmailer-bundle": "^3.0",
         "symfony/templating": "^3.0",
         "symfony/translation": "^3.0",
