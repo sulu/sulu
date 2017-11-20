@@ -2,6 +2,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {observable} from 'mobx';
+import {observer} from 'mobx-react';
 import Tabs from '../../components/Tabs';
 import Loader from '../../components/Loader';
 import type {ViewProps} from '../../containers/ViewRenderer';

@@ -50,7 +50,6 @@ export default class MediaUploadStore {
         const url = baseUrl + '/' + mediaId + queryString;
 
         this.setUploading(true);
-
         this.upload(file, url)
             .then((data: Object) => {
                 for (const key of Object.keys(data)) {
