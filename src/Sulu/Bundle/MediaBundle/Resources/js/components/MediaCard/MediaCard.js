@@ -13,8 +13,11 @@ const DOWNLOAD_ICON = 'cloud-download';
 type Props = {
     id: string | number,
     selected: boolean,
-    /** Called when the image at the bottom part of this element was clicked */
-    onClick?: (id: string | number) => void,
+    /**
+     * Called when the image at the bottom part of this element was clicked.
+     * Gets the new selection state passed as second argument.
+     */
+    onClick?: (id: string | number, selected: boolean) => void,
     /** Called when the header or the checkbox was clicked to select/deselect this item */
     onSelectionChange?: (id: string | number, selected: boolean) => void,
     /** The title which will be displayed in the header besides the checkbox */
@@ -27,6 +30,11 @@ type Props = {
     image: string,
     /** List of available image sizes */
     imageSizes: Array<{url: string, label: string}>,
+    /** For the `Item` in the "DownloadList" which will open the defined url to download the image */
+    downloadUrl: string,
+    downloadText: string,
+    /** Called when the "Download"-item was clicked */
+    onDownload?: (url: string) => void,
     /** Info text which is shown, when a download link is hovered */
     downloadCopyText: string,
     /** When true the cover is permanently shown */
@@ -62,10 +70,11 @@ export default class MediaCard extends React.PureComponent<Props> {
         const {
             id,
             onClick,
+            selected,
         } = this.props;
 
         if (onClick) {
-            onClick(id);
+            onClick(id, !selected);
         }
     };
 
@@ -89,6 +98,15 @@ export default class MediaCard extends React.PureComponent<Props> {
         this.closeDownloadList();
     };
 
+    handleDownload = (url: string) => {
+        const {onDownload} = this.props;
+
+        if (onDownload) {
+            onDownload(url);
+            this.closeDownloadList();
+        }
+    };
+
     render() {
         const {
             id,
@@ -99,6 +117,8 @@ export default class MediaCard extends React.PureComponent<Props> {
             selected,
             showCover,
             imageSizes,
+            downloadUrl,
+            downloadText,
             downloadCopyText,
         } = this.props;
         const mediaCardClass = classNames(
@@ -138,7 +158,7 @@ export default class MediaCard extends React.PureComponent<Props> {
                             {meta}
                         </div>
                     </div>
-                    {!!imageSizes.length &&
+                    {(!!imageSizes.length && !!downloadUrl && !!downloadText) &&
                         <div>
                             <button
                                 ref={this.setDownloadButtonRef}
@@ -150,9 +170,12 @@ export default class MediaCard extends React.PureComponent<Props> {
                             <DownloadList
                                 open={this.downloadListOpen}
                                 onClose={this.handleDownloadListClose}
+                                copyText={downloadCopyText}
                                 buttonRef={this.downloadButtonRef}
                                 imageSizes={imageSizes}
-                                copyText={downloadCopyText}
+                                downloadUrl={downloadUrl}
+                                downloadText={downloadText}
+                                onDownload={this.handleDownload}
                             />
                         </div>
                     }

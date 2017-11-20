@@ -3,13 +3,15 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import equal from 'fast-deep-equal';
 import Loader from '../../components/Loader';
-import Pagination from '../../components/Pagination';
+import PaginationDecorator from './PaginationDecorator';
 import DatagridStore from './stores/DatagridStore';
-import datagridStyles from './datagrid.scss';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
+import type {AdapterConfig} from './types';
+
+const INFINITE_SCROLL_TYPE = 'infiniteScroll';
 
 type Props = {
-    onItemClick?: (rowId: string | number) => void,
+    onItemClick?: (itemId: string | number) => void,
     store: DatagridStore,
     views: Array<string>,
 };
@@ -37,11 +39,17 @@ export default class Datagrid extends React.PureComponent<Props> {
         });
     }
 
-    getAdapter(name: string = this.props.views[0]) {
+    getAdapterConfig(name: string = this.props.views[0]): AdapterConfig {
         return datagridAdapterRegistry.get(name);
     }
 
-    handleChangePage = (page: number) => {
+    hasScrollPagination() {
+        const {paginationType} = this.getAdapterConfig();
+
+        return paginationType === INFINITE_SCROLL_TYPE;
+    }
+
+    handlePageChange = (page: number) => {
         this.props.store.setPage(page);
     };
 
@@ -62,14 +70,22 @@ export default class Datagrid extends React.PureComponent<Props> {
         } = this.props;
         const page = store.getPage();
         const pageCount = store.pageCount;
-        const Adapter = this.getAdapter();
-
+        const {
+            Adapter,
+            paginationType,
+        } = this.getAdapterConfig();
         return (
-            <section>
-                <div className={datagridStyles.content}>
-                    {this.props.store.loading
-                        ? <Loader />
-                        : <Adapter
+            <div>
+                {this.props.store.loading && !this.props.store.appendRequestData
+                    ? <Loader />
+                    : <PaginationDecorator
+                        type={paginationType}
+                        total={pageCount}
+                        current={page}
+                        loading={this.props.store.loading}
+                        onChange={this.handlePageChange}
+                    >
+                        <Adapter
                             data={store.data}
                             selections={store.selections}
                             schema={store.getFields()}
@@ -77,16 +93,9 @@ export default class Datagrid extends React.PureComponent<Props> {
                             onItemSelectionChange={this.handleItemSelectionChange}
                             onAllSelectionChange={this.handleAllSelectionChange}
                         />
-                    }
-                </div>
-                {!!page && !!pageCount &&
-                    <Pagination
-                        current={page}
-                        total={pageCount}
-                        onChange={this.handleChangePage}
-                    />
+                    </PaginationDecorator>
                 }
-            </section>
+            </div>
         );
     }
 }

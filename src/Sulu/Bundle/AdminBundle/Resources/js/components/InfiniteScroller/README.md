@@ -2,7 +2,7 @@ The 'InfiniteScroller' component enables a pagination where the user will need t
 receive further content. The component finds its scrollable container automatically by traversing the DOM-Tree upwards
 until it detects a container with the styling `overflow: scroll` or `overflow: auto` applied.
 
-```
+```javascript
 const getBackgroundColor = () => {
     const colors = [
         '#7CB9E8',

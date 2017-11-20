@@ -3,8 +3,9 @@ import {mount} from 'enzyme';
 import React from 'react';
 import pretty from 'pretty';
 import Select from '../Select';
-import Divider from '../Divider';
 import Option from '../Option';
+
+const Divider = Select.Divider;
 
 afterEach(() => document.body.innerHTML = '');
 

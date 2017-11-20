@@ -6,6 +6,10 @@ import type {DatagridAdapterProps} from '../types';
 
 @observer
 export default class TableAdapter extends React.Component<DatagridAdapterProps> {
+    static defaultProps = {
+        data: [],
+    };
+
     render() {
         const {
             data,

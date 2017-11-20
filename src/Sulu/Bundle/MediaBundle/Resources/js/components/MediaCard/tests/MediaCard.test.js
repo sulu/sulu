@@ -36,6 +36,8 @@ test('Render a MediaCard with download list', () => {
             meta="Test/Test"
             imageSizes={imageSizes}
             downloadCopyText="Copy URL"
+            downloadUrl="http://lorempixel.com/300/200"
+            downloadText="Direct download"
             image="http://lorempixel.com/300/200"
         />
     );
@@ -61,7 +63,7 @@ test('Clicking on an item should call the responsible handler on the MediaCard c
     );
 
     mediaCard.find('MediaCard .media').simulate('click');
-    expect(clickSpy).toHaveBeenCalledWith(itemId);
+    expect(clickSpy).toHaveBeenCalledWith(itemId, true);
 
     mediaCard.find('MediaCard .description').simulate('click');
     expect(selectionSpy).toHaveBeenCalledWith(itemId, true);

@@ -65,7 +65,10 @@ beforeEach(() => {
 
     const datagridAdapterRegistry = require('../../../containers/Datagrid/registries/DatagridAdapterRegistry');
     datagridAdapterRegistry.has.mockReturnValue(true);
-    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    datagridAdapterRegistry.get.mockReturnValue({
+        Adapter: TableAdapter,
+        paginationType: 'default',
+    });
 });
 
 test('Should render the datagrid with the correct resourceKey', () => {
@@ -85,6 +88,7 @@ test('Should render the datagrid with the correct resourceKey', () => {
 
 test('Should render the list with a title', () => {
     const List = require('../List').default;
+
     const router = {
         bind: jest.fn(),
         route: {

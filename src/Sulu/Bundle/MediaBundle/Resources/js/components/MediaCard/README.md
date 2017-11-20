@@ -1,5 +1,6 @@
-The `MediaCard` is useful for displaying a list of selectable images. When the `imageSizes` property is set a button
-will be shown in the header of the `MediaCard` which will open a list of copyable URLs on click.
+The `MediaCard` is useful for displaying a list of selectable images. When the `imageSizes` and `directDownload`
+properties are set a button will be shown in the header of the `MediaCard` which will open a list of copyable URLs on
+click.
 
 ```
 initialState = {
@@ -33,6 +34,10 @@ const handleClick = (id) => {
     });
 };
 
+const handleDirectDownload = (url) => {
+    alert(`(Fake) Download started for: ${url}`);
+};
+
 <div style={{backgroundColor: '#e5e5e5', padding: 20}}>
     <MediaCard
         id="What is luv?"
@@ -44,6 +49,11 @@ const handleClick = (id) => {
         title="Lorempixel sdsdasdsd sdadasd asdasd"
         image={'http://lorempixel.com/300/200'}
         imageSizes={imageSizes}
+        directDownload={{
+            url: 'http://lorempixel.com/300/200',
+            label: 'This is a downloadable image'
+        }}
+        onDirectDownload={handleDirectDownload}
         downloadCopyText="Copy URL"
         showCover={state.selected}
     />

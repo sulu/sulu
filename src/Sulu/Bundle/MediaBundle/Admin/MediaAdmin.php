@@ -81,7 +81,7 @@ class MediaAdmin extends Admin
         return [
             (new Route('sulu_media.overview', '/collections/:locale/:id?', 'sulu_media.overview'))
                 ->addOption('locales', $mediaLocales)
-                ->addAttributeDefault('locale', 'en'),
+                ->addAttributeDefault('locale', $mediaLocales[0]),
         ];
     }
 

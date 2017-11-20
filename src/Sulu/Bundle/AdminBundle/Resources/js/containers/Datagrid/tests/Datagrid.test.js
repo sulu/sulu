@@ -10,7 +10,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
-    this.data = {test: 'value'};
+    this.data = [{title: 'value', id: 1}];
     this.selections = [];
     this.loading = false;
     this.getFields = jest.fn().mockReturnValue({test: {}});
@@ -39,20 +39,23 @@ jest.mock('../../../services/Translator', () => ({
 
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);
-    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    datagridAdapterRegistry.get.mockReturnValue({
+        Adapter: TableAdapter,
+        paginationType: 'default',
+    });
 });
 
 test('Change page in DatagridStore on pagination click', () => {
     const datagridStore = new DatagridStore('test');
-    const datagrid = shallow(<Datagrid views={['table']} store={datagridStore} />);
-    datagrid.find('Pagination').simulate('change', 3);
-    expect(datagridStore.setPage).toBeCalledWith(3);
+    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
+    datagrid.find('Pagination').find('.next').simulate('click');
+    expect(datagridStore.setPage).toBeCalledWith(datagridStore.getPage() + 1);
 });
 
 test ('Render Pagination with correct values', () => {
     const datagridStore = new DatagridStore('test');
 
-    const datagrid = shallow(<Datagrid views={['table']} store={datagridStore} />);
+    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
     const pagination = datagrid.find('Pagination');
 
     expect(pagination.prop('current')).toEqual(4);
@@ -68,7 +71,7 @@ test('Render TableAdapter with correct values', () => {
     const datagrid = shallow(<Datagrid views={['table']} store={datagridStore} onItemClick={editClickSpy} />);
     const tableAdapter = datagrid.find('TableAdapter');
 
-    expect(tableAdapter.prop('data')).toEqual({test: 'value'});
+    expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
     expect(tableAdapter.prop('selections')).toEqual([1, 3]);
     expect(tableAdapter.prop('schema')).toEqual({test: {}});
     expect(tableAdapter.prop('onItemClick')).toBe(editClickSpy);

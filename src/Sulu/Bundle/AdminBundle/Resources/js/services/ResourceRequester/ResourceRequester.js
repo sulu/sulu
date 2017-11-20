@@ -43,7 +43,7 @@ export default class ResourceRequester {
             searchParameters.set(searchKey, searchOptions[searchKey]);
         });
 
-        const queryString = searchParameters.toString();
+        const queryString = searchParameters.toString().replace(/%2C/gi, ',');
 
         return Requester.get(baseUrl + (queryString ? '?' + queryString : ''));
     }

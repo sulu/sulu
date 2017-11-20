@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, intercept, observable} from 'mobx';
 import type {ObservableOptions} from '../types';
 import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
@@ -13,13 +13,35 @@ export default class DatagridStore {
     resourceKey: string;
     options: Object;
     observableOptions: ObservableOptions;
+    appendRequestData: boolean;
+    localeInterceptDisposer: () => void;
+    dataObserveDisposer: () => void;
 
-    constructor(resourceKey: string, observableOptions: ObservableOptions, options: Object = {}) {
+    constructor(
+        resourceKey: string,
+        observableOptions: ObservableOptions,
+        options: Object = {},
+        appendRequestData: boolean = false
+    ) {
         this.resourceKey = resourceKey;
         this.observableOptions = observableOptions;
         this.options = options;
         this.disposer = autorun(this.sendRequest);
+        this.appendRequestData = appendRequestData;
+
+        if (this.appendRequestData) {
+            this.localeInterceptDisposer = intercept(this.observableOptions.locale, this.localeInterceptor);
+        }
     }
+
+    localeInterceptor = (change: observable) => {
+        if (this.observableOptions.locale !== change.newValue) {
+            this.data = [];
+            this.observableOptions.page.set(1);
+
+            return change;
+        }
+    };
 
     getFields() {
         return metadataStore.getFields(this.resourceKey);
@@ -32,13 +54,14 @@ export default class DatagridStore {
             return;
         }
 
-        this.setLoading(true);
         const observableOptions = {};
         observableOptions.page = page;
 
         if (this.observableOptions.locale) {
             observableOptions.locale = this.observableOptions.locale.get();
         }
+
+        this.setLoading(true);
 
         ResourceRequester.getList(this.resourceKey, {
             ...observableOptions,
@@ -47,7 +70,14 @@ export default class DatagridStore {
     };
 
     @action handleResponse = (response: Object) => {
-        this.data = response._embedded[this.resourceKey];
+        const data = response._embedded[this.resourceKey];
+
+        if (this.appendRequestData) {
+            this.data = [...this.data, ...data];
+        } else {
+            this.data = data;
+        }
+
         this.pageCount = response.pages;
         this.setLoading(false);
     };
@@ -104,5 +134,9 @@ export default class DatagridStore {
 
     destroy() {
         this.disposer();
+
+        if (this.localeInterceptDisposer) {
+            this.localeInterceptDisposer();
+        }
     }
 }

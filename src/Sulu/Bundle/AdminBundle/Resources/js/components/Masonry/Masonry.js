@@ -6,8 +6,7 @@ import MasonryLayout from 'masonry-layout';
 import masonryStyles from './masonry.scss';
 
 const MASONRY_OPTIONS = {
-    gutter: 20,
-    horizontalOrder: true,
+    gutter: 30,
     transitionDuration: 250,
 };
 

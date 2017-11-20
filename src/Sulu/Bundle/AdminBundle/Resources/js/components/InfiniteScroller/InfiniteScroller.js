@@ -2,6 +2,8 @@
 import React from 'react';
 import debounce from 'debounce';
 import type {Element, ElementRef} from 'react';
+import Loader from '../Loader';
+import infiniteScrollerStyles from './infiniteScroller.scss';
 
 const THRESHOLD = 100;
 
@@ -10,6 +12,8 @@ type Props = {
     onLoad: (loadedPage: number) => void,
     current: number,
     total: number,
+    loading: boolean,
+    lastPageReachedText: string,
 };
 
 export default class InfiniteScroller extends React.PureComponent<Props> {
@@ -96,12 +100,28 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
 
     render() {
         const {
+            total,
+            current,
+            loading,
             children,
+            lastPageReachedText,
         } = this.props;
+        let indicator = null;
+
+        if (loading) {
+            indicator = <Loader />;
+        } else if (current === total && !loading) {
+            indicator = lastPageReachedText;
+        }
 
         return (
             <div ref={this.setRef}>
-                {children}
+                <div>
+                    {children}
+                </div>
+                <div className={infiniteScrollerStyles.indicator}>
+                    {indicator}
+                </div>
             </div>
         );
     }

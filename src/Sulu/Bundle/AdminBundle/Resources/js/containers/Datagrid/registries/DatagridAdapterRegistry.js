@@ -1,8 +1,13 @@
 // @flow
-import type {DatagridAdapter} from '../types';
+import type {
+    AdapterConfigs,
+    AdapterConfig,
+    DatagridAdapter,
+    PaginationType,
+} from '../types';
 
 class DatagridAdapterRegistry {
-    adapters: {[string]: DatagridAdapter};
+    adapters: AdapterConfigs;
 
     constructor() {
         this.clear();
@@ -16,15 +21,18 @@ class DatagridAdapterRegistry {
         return !!this.adapters[name];
     }
 
-    add(name: string, adapter: DatagridAdapter) {
+    add(name: string, Adapter: DatagridAdapter, paginationType: PaginationType = 'pagination') {
         if (name in this.adapters) {
             throw new Error('The key "' + name + '" has already been used for another datagrid adapter');
         }
 
-        this.adapters[name] = adapter;
+        this.adapters[name] = {
+            Adapter,
+            paginationType,
+        };
     }
 
-    get(name: string): DatagridAdapter {
+    get(name: string): AdapterConfig {
         if (!(name in this.adapters)) {
             throw new Error(
                 'The datagrid adapter with the key "' + name + '" is not defined. ' +

@@ -1,5 +1,4 @@
 // @flow
-import classNames from 'classnames';
 import React from 'react';
 import Icon from '../Icon';
 import {translate} from '../../services/Translator';
@@ -37,27 +36,29 @@ export default class Pagination extends React.PureComponent<Props> {
     };
 
     render() {
-        const previousClass = classNames({
-            [paginationStyles.previous]: true,
-            [paginationStyles.enabled]: this.hasPreviousPage(),
-        });
-        const nextClass = classNames({
-            [paginationStyles.next]: true,
-            [paginationStyles.enabled]: this.hasNextPage(),
-        });
         const {current, total} = this.props;
 
         return (
             <nav className={paginationStyles.pagination}>
-                <span className={paginationStyles.display}>
-                    {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
-                </span>
-                <a className={previousClass} onClick={this.handlePreviousClick}>
-                    <Icon name="angle-left" />
-                </a>
-                <a className={nextClass} onClick={this.handleNextClick}>
-                    <Icon name="angle-right" />
-                </a>
+                <div className={paginationStyles.control}>
+                    <span className={paginationStyles.display}>
+                        {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
+                    </span>
+                    <button
+                        className={paginationStyles.previous}
+                        disabled={!this.hasPreviousPage()}
+                        onClick={this.handlePreviousClick}
+                    >
+                        <Icon name="angle-left" />
+                    </button>
+                    <button
+                        className={paginationStyles.next}
+                        disabled={!this.hasNextPage()}
+                        onClick={this.handleNextClick}
+                    >
+                        <Icon name="angle-right" />
+                    </button>
+                </div>
             </nav>
         );
     }

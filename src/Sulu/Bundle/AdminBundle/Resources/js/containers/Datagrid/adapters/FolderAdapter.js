@@ -7,6 +7,10 @@ import {translate} from '../../../services/Translator';
 
 @observer
 export default class FolderAdapter extends React.Component<DatagridAdapterProps> {
+    static defaultProps = {
+        data: [],
+    };
+
     static getInfoText(item: Object) {
         const label = (item.objectCount === 1)
             ? translate('sulu_admin.object')

@@ -4,10 +4,18 @@ $borderRadius: 4px;
 $buttonWidth: 33px;
 
 .pagination {
-    float: right;
     color: $gray;
     font-size: 12px;
-    line-height: 40px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.control {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    flex-flow: row;
 }
 
 .display {
@@ -24,7 +32,7 @@ $buttonWidth: 33px;
     text-align: center;
     font-size: 18px;
 
-    &.enabled {
+    &:not(:disabled) {
         color: $blueZodiac;
         cursor: pointer;
     }
