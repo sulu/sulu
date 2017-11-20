@@ -110,10 +110,3 @@ sulu_document_manager:
 jms_serializer:
     metadata:
         debug: "%kernel.debug%"
-
-dubture_f_fmpeg:
-    ffmpeg_binary: /usr/local/bin/ffmpeg # path to ffmpeg
-    ffprobe_binary: /usr/local/bin/ffprobe # path to ffprobe
-    binary_timeout: 300 # Use 0 for infinite
-    threads_count: 4
-

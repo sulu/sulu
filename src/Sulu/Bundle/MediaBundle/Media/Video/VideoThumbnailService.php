@@ -25,9 +25,8 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
      */
     protected $ffmpeg;
 
-    public function __construct(
-        FFMpeg $ffmpeg
-    ) {
+    public function __construct(FFMpeg $ffmpeg = null)
+    {
         $this->ffmpeg = $ffmpeg;
     }
 
@@ -36,6 +35,10 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
      */
     public function generate($file, $time, $destination)
     {
+        if (!$this->ffmpeg) {
+            return false;
+        }
+
         $destination = $this->normalizeFilename($destination);
 
         try {
