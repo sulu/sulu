@@ -8,8 +8,8 @@ afterEach(() => document.body.innerHTML = '');
 
 test('The component should render in body when open', () => {
     const body = document.body;
-    const onCancel = () => {};
-    const onConfirm = () => {};
+    const onCancel = jest.fn();
+    const onConfirm = jest.fn();
     const view = mount(
         <Dialog
             title="My dialog title"
@@ -29,8 +29,8 @@ test('The component should render in body when open', () => {
 
 test('The component should not render in body when closed', () => {
     const body = document.body;
-    const onCancel = () => {};
-    const onConfirm = () => {};
+    const onCancel = jest.fn();
+    const onConfirm = jest.fn();
     const view = mount(
         <Dialog
             title="My dialog title"
@@ -49,7 +49,7 @@ test('The component should not render in body when closed', () => {
 });
 
 test('The component should call the callback when the confirm button is clicked', () => {
-    const onCancel = () => {};
+    const onCancel = jest.fn();
     const onConfirm = jest.fn();
     const view = shallow(
         <Dialog
@@ -70,7 +70,7 @@ test('The component should call the callback when the confirm button is clicked'
 });
 
 test('The component should call the callback when the cancel button is clicked', () => {
-    const onConfirm = () => {};
+    const onConfirm = jest.fn();
     const onCancel = jest.fn();
     const view = shallow(
         <Dialog

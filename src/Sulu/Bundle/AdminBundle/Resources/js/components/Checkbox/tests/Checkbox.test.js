@@ -14,7 +14,7 @@ test('The component should render in dark skin', () => {
 });
 
 test('The component pass the props correctly to the generic checkbox', () => {
-    const onChange = () => 'my-on-change';
+    const onChange = jest.fn().mockReturnValue('my-on-change');
     const checkbox = shallow(
         <Checkbox
             onChange={onChange}

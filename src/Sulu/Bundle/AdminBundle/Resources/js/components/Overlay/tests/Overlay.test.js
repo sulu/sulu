@@ -9,7 +9,7 @@ afterEach(() => document.body.innerHTML = '');
 
 test('The component should render in body when open', () => {
     const body = document.body;
-    const onClose = () => {};
+    const onClose = jest.fn();
     const view = mount(
         <Overlay
             title="My overlay title"
@@ -31,7 +31,7 @@ test('The component should render in body with actions when open', () => {
         {title: 'Action 2', onClick: () => {}},
     ];
     const body = document.body;
-    const onClose = () => {};
+    const onClose = jest.fn();
     const view = mount(
         <Overlay
             title="My overlay title"
@@ -50,7 +50,7 @@ test('The component should render in body with actions when open', () => {
 
 test('The component should not render in body when closed', () => {
     const body = document.body;
-    const onClose = () => {};
+    const onClose = jest.fn();
     const view = mount(
         <Overlay
             title="My overlay title"
@@ -122,7 +122,7 @@ test('The component should request to be closed when the esc key is pressed', ()
 });
 
 test('The component should call the callback when the confirm button is clicked', () => {
-    const onClose = () => {};
+    const onClose = jest.fn();
     const onConfirm = jest.fn();
     const view = shallow(
         <Overlay

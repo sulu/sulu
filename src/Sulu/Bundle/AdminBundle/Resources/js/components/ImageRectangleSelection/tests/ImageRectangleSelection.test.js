@@ -24,10 +24,10 @@ test('The component should render with image source', () => {
 });
 
 test('The component should calculate the selection with respect to the image', (done) => {
-    const onChangeSpy = (data) => {
+    const onChangeSpy = jest.fn((data) => {
         expect(data).toEqual({width: 1920, height: 1080, top: 0, left: 0});
         done();
-    };
+    });
 
     mount(
         <MockedImageSelection
@@ -40,13 +40,13 @@ test('The component should calculate the selection with respect to the image', (
 });
 
 test('The component should render with initial selection', (done) => {
-    const spy = () => {
+    const spy = jest.fn(() => {
         expect(view.render()).toMatchSnapshot();
         done();
-    };
-    const onChangeSpy = (data) => {
+    });
+    const onChangeSpy = jest.fn((data) => {
         expect(data).toEqual({ width: 1500, height: 800, top: 200, left: 300 });
-    };
+    });
 
     const view = mount(
         <MockedImageSelection
@@ -61,13 +61,13 @@ test('The component should render with initial selection', (done) => {
 });
 
 test('The component should render with minWidth and minHeight', (done) => {
-    const spy = () => {
+    const spy = jest.fn(() => {
         const rectangle = view.find('RectangleSelection');
         expect(rectangle.length).toBe(1);
         expect(rectangle.props().minWidth).toBe(200);
         expect(rectangle.props().minHeight).toBe(100);
         done();
-    };
+    });
 
     const view = mount(
         <MockedImageSelection
