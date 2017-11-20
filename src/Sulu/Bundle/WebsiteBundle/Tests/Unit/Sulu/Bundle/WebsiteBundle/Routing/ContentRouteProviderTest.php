@@ -157,7 +157,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $attributes->getAttribute('portal', null)->willReturn($portal);
 
         $attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
-        $attributes->getAttribute('resourceLocator', null)->willReturn('');
+        $attributes->getAttribute('resourceLocator', null)->willReturn(null);
         $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
 
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
@@ -326,7 +326,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $attributes->getAttribute('portal', null)->willReturn($portal);
 
         $attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
-        $attributes->getAttribute('resourceLocator', null)->willReturn('');
+        $attributes->getAttribute('resourceLocator', null)->willReturn(null);
         $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
 
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
