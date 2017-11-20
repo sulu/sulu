@@ -4,9 +4,6 @@ $listBackgroundColorPrimary: $silver;
 $listBackgroundColorSecondary: $shakespeare;
 $listShadowColor: $silver;
 
-$buttonTextColor: $blueZodiac;
-$buttonTextColorHover: $shakespeare;
-
 $listBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
 
 .list-container {
@@ -34,25 +31,5 @@ $listBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
 
     & > li {
         display: block;
-    }
-}
-
-.button {
-    display: block;
-    overflow: hidden;
-    min-width: 120px;
-    width: 100%;
-    padding: 10px 20px;
-    text-align: left;
-    border: 0;
-    font-weight: inherit;
-    background-color: transparent;
-    color: $buttonTextColor;
-
-    &:hover,
-    &:active,
-    &:focus {
-        cursor: pointer;
-        color: $shakespeare;
     }
 }
