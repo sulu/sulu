@@ -7,14 +7,12 @@ const handleDrop = (file) => {
     alert('Upload does not work in the doc. FeelsBadMan...');
 };
 
-<div>
-    <SingleMediaDropzone
-        source="http://lorempixel.com/400/400"
-        uploading={false}
-        progress={0}
-        onDrop={handleDrop}
-    />
-</div>
+<SingleMediaDropzone
+    source="http://lorempixel.com/400/400"
+    uploading={false}
+    progress={0}
+    onDrop={handleDrop}
+/>
 ```
 
 If no `source` is provided an upload indicator is shown instead.
@@ -24,13 +22,11 @@ const handleDrop = (file) => {
     alert('Upload does not work in the doc. FeelsBadMan...');
 };
 
-<div>
-    <SingleMediaDropzone
-        uploading={false}
-        progress={0}
-        onDrop={handleDrop}
-    />
-</div>
+<SingleMediaDropzone
+    uploading={false}
+    progress={0}
+    onDrop={handleDrop}
+/>
 ```
 
 The progress is shown while uploading.
@@ -40,12 +36,10 @@ const handleDrop = (file) => {
     alert('Upload does not work in the doc. FeelsBadMan...');
 };
 
-<div>
-    <SingleMediaDropzone
-        source="http://lorempixel.com/400/400"
-        uploading={true}
-        progress={60}
-        onDrop={handleDrop}
-    />
-</div>
+<SingleMediaDropzone
+    source="http://lorempixel.com/400/400"
+    uploading={true}
+    progress={60}
+    onDrop={handleDrop}
+/>
 ```
