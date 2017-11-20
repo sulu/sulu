@@ -4,7 +4,6 @@ $dropzoneSize: 400px;
 $uploadIconColor: $white;
 $uploadIndicatorBackgroundColor: rgba($nobel, .5);
 
-
 .media-container {
     position: relative;
     display: flex;
@@ -58,7 +57,7 @@ $uploadIndicatorBackgroundColor: rgba($nobel, .5);
 .upload-indicator {
     opacity: 0;
     transform: scale(.5);
-    transition: all .25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all .25s cubic-bezier(.68, -.55, .265, 1.55);
 }
 
 .upload-indicator {
