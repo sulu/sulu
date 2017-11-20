@@ -4,6 +4,7 @@ import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
 import type {Schema} from '../../stores/ResourceStore/types';
+import Grid from '../../components/Grid';
 import Field from './Field';
 import rendererStyles from './renderer.scss';
 
@@ -44,16 +45,23 @@ export default class Renderer extends React.PureComponent<Props> {
 
         return (
             <form onSubmit={this.handleSubmit} className={rendererStyles.form}>
-                {schemaKeys.map((schemaKey) => (
-                    <Field
-                        key={schemaKey}
-                        name={schemaKey}
-                        schema={schema[schemaKey]}
-                        onChange={onChange}
-                        value={data[schemaKey]}
-                        locale={locale}
-                    />
-                ))}
+                <Grid>
+                    {schemaKeys.map((schemaKey) => (
+                        <Grid.Item
+                            key={schemaKey}
+                            size={schema[schemaKey].size}
+                            spaceAfter={schema[schemaKey].spaceAfter}
+                        >
+                            <Field
+                                name={schemaKey}
+                                schema={schema[schemaKey]}
+                                onChange={onChange}
+                                value={data[schemaKey]}
+                                locale={locale}
+                            />
+                        </Grid.Item>
+                    ))}
+                </Grid>
                 <button ref={this.setSubmitButtonRef} type="submit" className={rendererStyles.submit}>Submit</button>
             </form>
         );

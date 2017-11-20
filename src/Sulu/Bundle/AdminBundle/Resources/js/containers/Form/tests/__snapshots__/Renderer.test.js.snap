@@ -4,6 +4,9 @@ exports[`Should render a form tag 1`] = `
 <form
   class="form"
 >
+  <div
+    class="grid"
+  />
   <button
     class="submit"
     type="submit"
@@ -18,28 +21,42 @@ exports[`Should render field types based on schema 1`] = `
   class="form"
 >
   <div
-    class="field"
+    class="grid"
   >
-    <label
-      class="label"
+    <div
+      class="item"
+      style="width:100%;margin-left:0%;margin-right:0%;"
     >
-      Text
-    </label>
-    <input
-      type="text"
-    />
-  </div>
-  <div
-    class="field"
-  >
-    <label
-      class="label"
+      <div
+        class="field"
+      >
+        <label
+          class="label"
+        >
+          Text
+        </label>
+        <input
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      class="item"
+      style="width:100%;margin-left:0%;margin-right:0%;"
     >
-      Datetime
-    </label>
-    <input
-      type="datetime"
-    />
+      <div
+        class="field"
+      >
+        <label
+          class="label"
+        >
+          Datetime
+        </label>
+        <input
+          type="datetime"
+        />
+      </div>
+    </div>
   </div>
   <button
     class="submit"
