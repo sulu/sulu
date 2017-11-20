@@ -4,5 +4,6 @@
     "sulu_media.download_masterfile": "Original herunterladen",
     "sulu_media.select_media": "Medien auswählen",
     "sulu_media.reset_selection": "Auswahl zurücksetzen",
-    "sulu_media.copy_masterfile_url": "Original URL kopieren"
+    "sulu_media.copy_masterfile_url": "Original URL kopieren",
+    "sulu_media.information_taxonomy": "Informationen und Taxonomiem"    
 }

@@ -1,0 +1,30 @@
+@import '../../containers/Application/colors.scss';
+
+$progressbarTextColor: $shakespeare;
+$progressbarStrokeColor: $shakespeare;
+$progressbarBackgroundColor: rgba($nobel, .5);
+
+.root {
+    width: 100%;
+}
+  
+.path {
+    stroke: $progressbarStrokeColor;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease 0s;
+}
+
+.trail {
+    stroke: transparent;
+}
+
+.text {
+    fill: $progressbarTextColor;
+    font-size: 14px;
+    dominant-baseline: middle;
+    text-anchor: middle;
+}
+
+.background {
+    fill: $progressbarBackgroundColor;    
+}
