@@ -70,6 +70,7 @@
         "phpunit/phpunit": "^4.8.31",
         "sensio/framework-extra-bundle": "~3.0",
         "symfony/browser-kit": "^3.0",
+        "symfony/css-selector": "^3.0",
         "symfony/monolog-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0",
         "zendframework/zend-stdlib": "~2.3",
