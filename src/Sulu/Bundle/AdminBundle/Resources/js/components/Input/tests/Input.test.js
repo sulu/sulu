@@ -4,32 +4,32 @@ import {render, shallow} from 'enzyme';
 import Input from '../Input';
 
 test('Input should render', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     expect(render(<Input onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Input should render with icon', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     expect(render(<Input icon="my-icon" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Input should render with type', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     expect(render(<Input type="password" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Input should render with placeholder', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     expect(render(<Input placeholder="My placeholder" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Input should render with value', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     expect(render(<Input value="My value" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Input should render null value as empty string', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     expect(render(<Input value={null} onChange={onChange} />)).toMatchSnapshot();
 });
 

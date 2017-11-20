@@ -1,0 +1,24 @@
+@import '../../containers/Application/colors.scss';
+
+$optionTextColor: $blueZodiac;
+$optionTextColorHover: $shakespeare;
+
+.option {
+    display: block;
+    overflow: hidden;
+    min-width: 120px;
+    width: 100%;
+    padding: 10px 20px;
+    text-align: left;
+    border: 0;
+    font-weight: inherit;
+    background-color: transparent;
+    color: $optionTextColor;
+
+    &:hover,
+    &:active,
+    &:focus {
+        cursor: pointer;
+        color: $optionTextColorHover;
+    }
+}

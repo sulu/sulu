@@ -10,7 +10,7 @@ const Divider = MultiSelect.Divider;
 jest.mock('../../Select');
 
 test('The component should render a generic select', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     const select = shallow(
         <MultiSelect
             noneSelectedText="None selected"
@@ -27,7 +27,7 @@ test('The component should render a generic select', () => {
 });
 
 test('The component should pass the correct display value if nothing is selected', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     const select = shallow(
         <MultiSelect
             noneSelectedText="None selected"
@@ -45,7 +45,7 @@ test('The component should pass the correct display value if nothing is selected
 });
 
 test('The component should pass the correct display value if everything is selected', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     const select = shallow(
         <MultiSelect
             values={['option-1', 'option-2', 'option-3']}
@@ -64,7 +64,7 @@ test('The component should pass the correct display value if everything is selec
 });
 
 test('The component should pass the correct display value if some options are selected', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     const select = shallow(
         <MultiSelect
             values={['option-1', 'option-2']}
@@ -83,7 +83,7 @@ test('The component should pass the correct display value if some options are se
 });
 
 test('The component should select the correct option', () => {
-    const onChange = () => {};
+    const onChange = jest.fn();
     const select = shallow(
         <MultiSelect
             values={['option-1', 'option-2']}

@@ -11,8 +11,8 @@ afterEach(() => document.body.innerHTML = '');
 
 test('The component should render with the popover closed', () => {
     const body = document.body;
-    const isOptionSelected = () => false;
-    const onSelect = () => {};
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const onSelect = jest.fn();
     const select = mount(
         <Select
             onSelect={onSelect}
@@ -31,8 +31,8 @@ test('The component should render with the popover closed', () => {
 
 test('The component should render with an icon', () => {
     const body = document.body;
-    const isOptionSelected = () => false;
-    const onSelect = () => {};
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const onSelect = jest.fn();
     const select = mount(
         <Select
             icon="plus"
@@ -52,8 +52,8 @@ test('The component should render with an icon', () => {
 
 test('The component should open the popover when the display value is clicked', () => {
     const body = document.body;
-    const isOptionSelected = () => false;
-    const onSelect = () => {};
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const onSelect = jest.fn();
     const select = mount(
         <Select
             onSelect={onSelect}
@@ -73,11 +73,11 @@ test('The component should open the popover when the display value is clicked', 
 
 test('The component should trigger the select callback and close the popover when an option is clicked', () => {
     const body = document.body;
-    const onSelectSpy = jest.fn();
-    const isOptionSelected = () => false;
+    const onSelect = jest.fn();
+    const isOptionSelected = jest.fn().mockReturnValue(false);
     const select = mount(
         <Select
-            onSelect={onSelectSpy}
+            onSelect={onSelect}
             isOptionSelected={isOptionSelected}
             displayValue="My text"
         >
@@ -89,13 +89,13 @@ test('The component should trigger the select callback and close the popover whe
     );
     select.instance().handleDisplayValueClick();
     body.getElementsByTagName('button')[2].click();
-    expect(onSelectSpy).toHaveBeenCalledWith('option-3');
+    expect(onSelect).toHaveBeenCalledWith('option-3');
     expect(body.innerHTML).toBe('');
 });
 
 test('The component should pass the centered child node to the popover', () => {
-    const onSelect = () => {};
-    const isOptionSelected = (child) => child.props.value === 'option-3';
+    const onSelect = jest.fn();
+    const isOptionSelected = jest.fn((child) => child.props.value === 'option-3');
     const selectedOption = (<Option value="option-3">Option 3</Option>);
     const select = mount(
         <Select
@@ -115,8 +115,8 @@ test('The component should pass the centered child node to the popover', () => {
 });
 
 test('The component should pass the selected property to the options', () => {
-    const isOptionSelected = () => true;
-    const onSelect = () => {};
+    const isOptionSelected = jest.fn().mockReturnValue(true);
+    const onSelect = jest.fn();
     const select = mount(
         <Select
             onSelect={onSelect}

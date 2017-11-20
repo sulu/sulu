@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
+import ToolbarDropdownListOption from './ToolbarDropdownListOption';
 import type {ToolbarDropdownOptionConfig} from './types';
 import toolbarDropdownStyles from './toolbarDropdown.scss';
 
@@ -20,20 +21,12 @@ export default class ToolbarDropdownList extends React.Component<Props> {
 
         return options.map((dropdownOptionConfig: ToolbarDropdownOptionConfig, columnIndex: number) => {
             const key = `option-${columnIndex}`;
-            const handleClick = () => {
-                dropdownOptionConfig.onClick(this.props.columnIndex);
-            };
+            const {onClick, label} = dropdownOptionConfig;
 
             return (
-                <li
-                    className={toolbarDropdownStyles.option}
-                    key={key}
-                    value={this.props.columnIndex}
-                >
-                    <button className={toolbarDropdownStyles.button} onClick={handleClick}>
-                        {dropdownOptionConfig.label}
-                    </button>
-                </li>
+                <ToolbarDropdownListOption key={key} onClick={onClick} columnIndex={this.props.columnIndex}>
+                    {label}
+                </ToolbarDropdownListOption>
             );
         });
     };

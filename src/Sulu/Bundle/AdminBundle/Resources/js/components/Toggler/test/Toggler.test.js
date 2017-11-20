@@ -4,7 +4,7 @@ import React from 'react';
 import Toggler from '../Toggler';
 
 test('The component pass the props correctly to the generic checkbox', () => {
-    const onChange = () => 'my-on-change';
+    const onChange = jest.fn().mockReturnValue('my-on-change');
     const toggler = shallow(
         <Toggler
             onChange={onChange}

@@ -34,7 +34,7 @@ test('The component should check the correct radio', () => {
 });
 
 test('The component should pass the change callback to the radios', () => {
-    const onChange = () => 'my-on-change';
+    const onChange = jest.fn().mockReturnValue('my-on-change');
     const group = mount(
         <RadioGroup onChange={onChange}>
             <Radio value="1" />

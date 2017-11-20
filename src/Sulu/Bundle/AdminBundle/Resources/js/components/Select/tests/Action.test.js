@@ -4,8 +4,8 @@ import React from 'react';
 import Action from '../Action';
 
 test('The component should render', () => {
-    const onClick = () => {};
-    const afterAction = () => {};
+    const onClick = jest.fn();
+    const afterAction = jest.fn();
     const action = render(<Action onClick={onClick} afterAction={afterAction} value="my-option">My action</Action>);
     expect(action).toMatchSnapshot();
 });

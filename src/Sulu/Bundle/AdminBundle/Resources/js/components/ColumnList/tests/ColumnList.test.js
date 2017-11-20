@@ -7,7 +7,7 @@ import Item from '../Item';
 import Toolbar from '../Toolbar';
 
 test('The ColumnList component should render', () => {
-    const onItemClick = () => {};
+    const onItemClick = jest.fn();
 
     const buttonsConfig = [
         {
