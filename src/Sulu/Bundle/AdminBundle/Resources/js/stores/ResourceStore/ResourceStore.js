@@ -56,7 +56,12 @@ export default class ResourceStore {
 
     @action save() {
         this.saving = true;
-        ResourceRequester.put(this.resourceKey, this.id, this.data, {locale: this.locale.get()})
+        const {locale} = this.observableOptions;
+        const options = {};
+        if (locale) {
+            options.locale = locale.get();
+        }
+        ResourceRequester.put(this.resourceKey, this.id, this.data, options)
             .then(action((response) => {
                 this.data = response;
                 this.saving = false;

@@ -135,6 +135,15 @@ test('Save the store should send a PUT request', () => {
     expect(ResourceRequester.put).toBeCalledWith('snippets', '3', {title: 'Title'}, {locale: 'de'});
 });
 
+test('Save the store should send a PUT request without a locale', () => {
+    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    const resourceStore = new ResourceStore('snippets', '3', {});
+    resourceStore.data = {title: 'Title'};
+    resourceStore.dirty = false;
+
+    resourceStore.save();
+    expect(ResourceRequester.put).toBeCalledWith('snippets', '3', {title: 'Title'}, {});
+});
 test('Saving flag should be set to true when saving', () => {
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable()});
