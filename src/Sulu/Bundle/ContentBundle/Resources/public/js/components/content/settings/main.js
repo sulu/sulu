@@ -102,7 +102,7 @@ define([
         },
 
         setAuthorChangelog = function(fullName, time, remove) {
-            var authoredText, formattedTime = this.sandbox.date.format(time);
+            var authoredText, formattedTime = this.sandbox.date.format(time, true);
 
             if (!fullName && !remove) {
                 fullName = this.authorFullname;
@@ -736,7 +736,6 @@ define([
             this.data.author = data.author;
             if (!data.authorItem) {
                 setAuthorChangelog.call(this, null, new Date(data.authored), true);
-
                 return;
             }
 

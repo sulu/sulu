@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.8 (2017-11-21)
+    * BUGFIX      #3629 [WebsiteBundle]           home page route not matched
+    * FEATURE     #3602 [ContentBundle]           Editable time field in author-selection overlay
+
 * 1.6.7 (2017-11-14)
     * BUGFIX      #3614 [WebsiteBundle]           Fixed content-route tests for umlauts
     * ENHANCEMENT #3608 [WebsiteBundle]           Analytics: Added possibility to determine the position of content (head open, head close, body open, body close)
