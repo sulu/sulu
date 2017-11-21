@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.8 (2017-11-21)
     * BUGFIX      #3629 [WebsiteBundle]           home page route not matched
     * FEATURE     #3602 [ContentBundle]           Editable time field in author-selection overlay
 
