@@ -90,10 +90,10 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                                   <label class=\\"label\\"><span class=\\"switch checkbox dark checkbox\\"><input type=\\"checkbox\\" value=\\"2\\"><span></span></span>
                                     <div>
                                       <div class=\\"titleText\\">
-                                        <div title=\\"Title 1\\" aria-label=\\"Title 1\\" class=\\"croppedText\\">
+                                        <div title=\\"Title 2\\" aria-label=\\"Title 2\\" class=\\"croppedText\\">
                                           <div class=\\"front\\" aria-hidden=\\"true\\">Titl</div>
-                                          <div class=\\"back\\" aria-hidden=\\"true\\"><span>e 1</span></div>
-                                          <div class=\\"whole\\">Title 1</div>
+                                          <div class=\\"back\\" aria-hidden=\\"true\\"><span>e 2</span></div>
+                                          <div class=\\"whole\\">Title 2</div>
                                         </div>
                                       </div>
                                     </div>
@@ -103,7 +103,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                               </div>
                             </div>
                             <div class=\\"media\\">
-                              <img alt=\\"Title 1\\" src=\\"http://lorempixel.com/260/100\\">
+                              <img alt=\\"Title 2\\" src=\\"http://lorempixel.com/260/100\\">
                               <div class=\\"cover\\"><span class=\\"mediaIcon fa fa-check\\" aria-label=\\"check\\"></span></div>
                             </div>
                           </div>

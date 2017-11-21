@@ -344,3 +344,45 @@ test('When appendRequest is set, changing the locale observable resets the data 
 
     datagridStore.destroy();
 });
+
+test('Should call the selection handler when an item gets selected or deselected', () => {
+    const page = observable();
+    const locale = observable();
+    const selectionSpy = jest.fn();
+    const datagridStore = new DatagridStore('tests',
+        {
+            page,
+            locale,
+        },
+        {},
+        true,
+        selectionSpy
+    );
+    datagridStore.select(1);
+    expect(selectionSpy).toBeCalledWith(1, true);
+
+    datagridStore.deselect(1);
+    expect(selectionSpy).toBeCalledWith(1, false);
+
+    datagridStore.destroy();
+});
+
+test('Should add the preselected ids to the selection array', () => {
+    const page = observable();
+    const locale = observable();
+    const selectionSpy = jest.fn();
+    const datagridStore = new DatagridStore('tests',
+        {
+            page,
+            locale,
+        },
+        {},
+        true,
+        selectionSpy,
+        [1, 2, 3]
+    );
+
+    expect(datagridStore.selections.toJS()).toEqual([1, 2, 3]);
+
+    datagridStore.destroy();
+});

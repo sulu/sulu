@@ -24,7 +24,6 @@ export default class MediaCardSelectionAdapter extends AbstractAdapter {
             <MediaCardAdapter
                 {...this.props}
                 icon={SELECT_ICON}
-                onItemClick={this.handleItemClick}
                 showCoverWhenSelected={true}
             />
         );
