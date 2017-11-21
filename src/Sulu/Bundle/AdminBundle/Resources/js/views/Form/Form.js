@@ -16,30 +16,16 @@ class Form extends React.PureComponent<Props> {
 
     componentWillMount() {
         const {resourceStore, router} = this.props;
-        const {
-            route: {
-                options: {
-                    locales,
-                },
-            },
-        } = router;
 
-        if (locales) {
+        if (resourceStore.locale) {
             router.bind('locale', resourceStore.locale);
         }
     }
 
     componentWillUnmount() {
         const {resourceStore, router} = this.props;
-        const {
-            route: {
-                options: {
-                    locales,
-                },
-            },
-        } = router;
 
-        if (locales) {
+        if (resourceStore.locale) {
             router.unbind('locale', resourceStore.locale);
         }
     }
@@ -72,7 +58,13 @@ export default withToolbar(Form, function() {
     const backButton = backRoute
         ? {
             onClick: () => {
-                router.restore(backRoute, {locale: this.props.resourceStore.locale.get()});
+                const {resourceStore} = this.props;
+
+                const options = {};
+                if (resourceStore.locale) {
+                    options.locale = resourceStore.locale.get();
+                }
+                router.restore(backRoute, options);
             },
         }
         : undefined;

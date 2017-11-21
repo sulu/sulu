@@ -139,7 +139,34 @@ test('Should create a ResourceStore on mount and destroy it on unmount', () => {
 
     const resourceTabs = mount(<ResourceTabs router={router} route={route}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
-    expect(resourceStoreConstructorCall[0]).toEqual(['snippets', 5]);
+    expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
+    expect(resourceStoreConstructorCall[0][1]).toEqual(5);
+    expect(resourceStoreConstructorCall[0][2].locale).not.toBeDefined();
+
+    resourceTabs.unmount();
+    expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
+});
+
+test('Should create a ResourceStore with locale on mount if locales have been passed in route options', () => {
+    const route = {
+        children: [],
+        options: {
+            resourceKey: 'snippets',
+            locales: ['de', 'en'],
+        },
+    };
+    const router = {
+        route,
+        attributes: {
+            id: 5,
+        },
+    };
+
+    const resourceTabs = mount(<ResourceTabs router={router} route={route}>{() => null}</ResourceTabs>);
+    const resourceStoreConstructorCall = ResourceStore.mock.calls;
+    expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
+    expect(resourceStoreConstructorCall[0][1]).toEqual(5);
+    expect(resourceStoreConstructorCall[0][2].locale).toBeDefined();
 
     resourceTabs.unmount();
     expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
