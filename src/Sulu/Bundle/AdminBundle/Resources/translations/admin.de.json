@@ -6,5 +6,6 @@
     "sulu_admin.save": "Speichern",
     "sulu_admin.object": "Objekt",
     "sulu_admin.objects": "Objekte",
-    "sulu_admin.reached_end_of_list": "Sie haben das Ende der Liste erreicht"
+    "sulu_admin.reached_end_of_list": "Sie haben das Ende der Liste erreicht",
+    "sulu_admin.confirm": "Bestätigen"
 }

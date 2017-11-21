@@ -101,9 +101,7 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
     };
 });
 
-jest.mock('../../../stores/CollectionStore', () => ({
-    CollectionStore: jest.fn(),
-}));
+jest.mock('../../../stores/CollectionStore', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/services', () => ({
     translate: function(key) {
@@ -131,11 +129,11 @@ beforeEach(() => {
 
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        folder: {
+        'folder': {
             Adapter: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
             paginationType: 'default',
         },
-        mediaCardSelection: {
+        'media_card_selection': {
             Adapter: MediaCardSelectionAdapter,
             paginationType: 'infiniteScroll',
         },

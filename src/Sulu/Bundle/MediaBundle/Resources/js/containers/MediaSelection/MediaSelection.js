@@ -30,6 +30,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
     @observable collectionDatagridStore: DatagridStore;
     collectionStore: CollectionStore;
     mediaSelectionStore: MediaSelectionStore;
+    selectedMediaIds: Array<string | number> = [];
     @observable overlayOpen: boolean = false;
     overlayDisposer: () => void;
 
@@ -51,6 +52,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
     @action closeMediaOverlay() {
         this.overlayOpen = false;
 
+        this.selectedMediaIds = [];
         this.overlayDisposer();
     }
 
@@ -135,19 +137,25 @@ export default class MediaSelection extends React.PureComponent<Props> {
             options,
             true,
             this.handleMediaSelection,
-            this.mediaSelectionStore.selectedMediaIds
+            this.selectedMediaIds
         );
+    }
+
+    addMediaToSelectionStore() {
+        this.selectedMediaIds.forEach((mediaId) => {
+            const media = this.mediaDatagridStore.data.find((item) => item.id === mediaId);
+
+            if (media) {
+                this.mediaSelectionStore.add(media);
+            }
+        });
     }
 
     handleMediaSelection = (mediaId: string | number, selected: boolean) => {
         if (selected) {
-            const selectedMediaItem = this.mediaDatagridStore.data.find((media) => media.id === mediaId);
-
-            if (selectedMediaItem) {
-                this.mediaSelectionStore.add(selectedMediaItem);
-            }
+            this.selectedMediaIds.push(mediaId);
         } else {
-            this.mediaSelectionStore.removeById(mediaId);
+            this.selectedMediaIds = this.selectedMediaIds.filter((id) => id !== mediaId);
         }
     };
 
@@ -174,12 +182,14 @@ export default class MediaSelection extends React.PureComponent<Props> {
     };
 
     handleOverlayConfirm = () => {
+        this.addMediaToSelectionStore();
         this.props.onChange(this.mediaSelectionStore.selectedMediaIds);
         this.closeMediaOverlay();
     };
 
-    handleFieldsReset = () => {
-        // reset fields
+    handleSelectionReset = () => {
+        this.selectedMediaIds = [];
+        this.mediaDatagridStore.deselectEntirePage();
     };
 
     render() {
@@ -187,7 +197,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
         const actions = [
             {
                 title: translate('sulu_media.reset_selection'),
-                onClick: this.handleFieldsReset,
+                onClick: this.handleSelectionReset,
             },
         ];
 
@@ -234,7 +244,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
                         <MediaCollection
                             page={this.collectionPage}
                             locale={locale}
-                            mediaView="media_card_selection"
+                            mediaViews={['media_card_selection']}
                             mediaDatagridStore={this.mediaDatagridStore}
                             collectionDatagridStore={this.collectionDatagridStore}
                             collectionStore={this.collectionStore}
