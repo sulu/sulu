@@ -36,7 +36,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
 }));
 
 jest.mock('../../../containers/Form/stores/MetadataStore', () => ({
-    getFields: jest.fn().mockReturnValue({}),
+    getSchema: jest.fn().mockReturnValue({}),
 }));
 
 beforeEach(() => {
@@ -183,7 +183,7 @@ test('Should initialize the ResourceStore with a schema', () => {
         },
     };
 
-    metadataStore.getFields.mockReturnValue({
+    metadataStore.getSchema.mockReturnValue({
         title: {},
         slogan: {},
     });

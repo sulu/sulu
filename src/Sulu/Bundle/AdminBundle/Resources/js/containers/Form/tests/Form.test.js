@@ -17,13 +17,13 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey) {
 }));
 
 jest.mock('../stores/MetadataStore', () => ({
-    getFields: jest.fn(),
+    getSchema: jest.fn(),
 }));
 
 test('Should render form using renderer', () => {
     const submitSpy = jest.fn();
     const store = new ResourceStore('snippet', '1');
-    metadataStore.getFields.mockReturnValue({});
+    metadataStore.getSchema.mockReturnValue({});
 
     const form = render(<Form store={store} onSubmit={submitSpy} />);
     expect(form).toMatchSnapshot();
@@ -32,7 +32,7 @@ test('Should render form using renderer', () => {
 test('Should call onSubmit callback on submit', () => {
     const submitSpy = jest.fn();
     const store = new ResourceStore('snippet', '1');
-    metadataStore.getFields.mockReturnValue({});
+    metadataStore.getSchema.mockReturnValue({});
 
     const form = mount(<Form onSubmit={submitSpy} store={store} />);
     form.instance().submit();
@@ -48,7 +48,7 @@ test('Should pass schema and data to renderer', () => {
         title: 'Title',
         description: 'Description',
     };
-    metadataStore.getFields.mockReturnValue(schema);
+    metadataStore.getSchema.mockReturnValue(schema);
     const form = shallow(<Form onSubmit={submitSpy} store={store} />);
 
     expect(form.find('Renderer').props().schema).toBe(schema);
@@ -67,7 +67,7 @@ test('Should initialize resourceStore with correct schema', () => {
         title: 'Title',
         slogan: 'Slogan',
     };
-    metadataStore.getFields.mockReturnValue(schema);
+    metadataStore.getSchema.mockReturnValue(schema);
     mount(<Form onSubmit={submitSpy} store={store} />);
 
     expect(store.changeSchema).toBeCalledWith(schema);

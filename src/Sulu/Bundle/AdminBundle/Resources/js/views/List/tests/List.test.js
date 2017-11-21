@@ -24,7 +24,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     ];
     this.selections = [];
     this.getPage = jest.fn().mockReturnValue(2);
-    this.getFields = jest.fn().mockReturnValue({
+    this.getSchema = jest.fn().mockReturnValue({
         title: {},
         description: {},
     });

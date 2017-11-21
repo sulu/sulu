@@ -30,12 +30,12 @@ test('Return form fields for given resourceKey from ResourceMetadataStore', () =
     };
     resourceMetadataStore.loadConfiguration.mockImplementation((resourceKey) => resourceMetadata[resourceKey]);
 
-    const snippetFields = metadataStore.getFields('snippets');
+    const snippetFields = metadataStore.getSchema('snippets');
     expect(Object.keys(snippetFields)).toHaveLength(2);
     expect(snippetFields.id).toEqual({});
     expect(snippetFields.title).toEqual({highlight: true});
 
-    const contactFields = metadataStore.getFields('contacts');
+    const contactFields = metadataStore.getSchema('contacts');
     expect(Object.keys(contactFields)).toHaveLength(3);
     expect(contactFields.id).toEqual({});
     expect(contactFields.firstName).toEqual({highlight: true});
@@ -49,6 +49,6 @@ test('Throw exception if no form fields for given resourceKey are available', ()
     };
     resourceMetadataStore.loadConfiguration.mockImplementation((resourceKey) => resourceMetadata[resourceKey]);
 
-    expect(() => metadataStore.getFields('snippets')).toThrow(/"snippets"/);
-    expect(() => metadataStore.getFields('contacts')).toThrow(/"contacts"/);
+    expect(() => metadataStore.getSchema('snippets')).toThrow(/"snippets"/);
+    expect(() => metadataStore.getSchema('contacts')).toThrow(/"contacts"/);
 });

@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import 'url-search-params-polyfill';
-import {when, observable} from 'mobx';
+import {observable, toJS, when} from 'mobx';
 import DatagridStore from '../../stores/DatagridStore';
 import metadataStore from '../../stores/MetadataStore';
 import ResourceRequester from '../../../../services/ResourceRequester';
@@ -10,7 +10,7 @@ jest.mock('../../../../services/ResourceRequester', () => ({
 }));
 
 jest.mock('../../stores/MetadataStore', () => ({
-    getFields: jest.fn(),
+    getSchema: jest.fn(),
 }));
 
 test('Do not send request without defined page parameter', () => {
@@ -38,7 +38,7 @@ test('Send request with default parameters', (done) => {
     when(
         () => !datagridStore.loading,
         () => {
-            expect(datagridStore.data.toJS()).toEqual([{id: 1}]);
+            expect(toJS(datagridStore.data)).toEqual([{id: 1}]);
             expect(datagridStore.pageCount).toEqual(3);
             datagridStore.destroy();
             done();
@@ -132,14 +132,14 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     const fields = {
         test: {},
     };
-    metadataStore.getFields.mockReturnValue(fields);
+    metadataStore.getSchema.mockReturnValue(fields);
 
     const page = observable();
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    expect(datagridStore.getFields()).toBe(fields);
-    expect(metadataStore.getFields).toBeCalledWith('tests');
+    expect(datagridStore.getSchema()).toBe(fields);
+    expect(metadataStore.getSchema).toBeCalledWith('tests');
     datagridStore.destroy();
 });
 
@@ -159,10 +159,10 @@ test('Select an item', () => {
     });
     datagridStore.select(1);
     datagridStore.select(2);
-    expect(datagridStore.selections.toJS()).toEqual([1, 2]);
+    expect(toJS(datagridStore.selections)).toEqual([1, 2]);
 
     datagridStore.deselect(1);
-    expect(datagridStore.selections.toJS()).toEqual([2]);
+    expect(toJS(datagridStore.selections)).toEqual([2]);
     datagridStore.destroy();
 });
 
@@ -174,7 +174,7 @@ test('Deselect an item that has not been selected yet', () => {
     datagridStore.select(1);
     datagridStore.deselect(2);
 
-    expect(datagridStore.selections.toJS()).toEqual([1]);
+    expect(toJS(datagridStore.selections)).toEqual([1]);
     datagridStore.destroy();
 });
 
@@ -199,7 +199,7 @@ test('Select the entire page', (done) => {
         () => !datagridStore.loading,
         () => {
             datagridStore.selectEntirePage();
-            expect(datagridStore.selections.toJS()).toEqual([1, 7, 2, 3]);
+            expect(toJS(datagridStore.selections)).toEqual([1, 7, 2, 3]);
             datagridStore.destroy();
             done();
         }
@@ -227,7 +227,7 @@ test('Deselect the entire page', (done) => {
         () => !datagridStore.loading,
         () => {
             datagridStore.deselectEntirePage();
-            expect(datagridStore.selections.toJS()).toEqual([7]);
+            expect(toJS(datagridStore.selections)).toEqual([7]);
             datagridStore.destroy();
             done();
         }
@@ -269,7 +269,7 @@ test('The data should be appended when the appendData flag is true', () => {
         },
     });
 
-    expect(datagridStore.data.toJS()).toEqual([
+    expect(toJS(datagridStore.data)).toEqual([
         {id: 1},
         {id: 2},
         {id: 3},
@@ -285,7 +285,7 @@ test('The data should be appended when the appendData flag is true', () => {
         },
     });
 
-    expect(datagridStore.data.toJS()).toEqual([
+    expect(toJS(datagridStore.data)).toEqual([
         {id: 1},
         {id: 2},
         {id: 3},
@@ -323,7 +323,7 @@ test('When appendRequest is set, changing the locale observable resets the data 
     locale.set(2);
 
     expect(page.get()).toBe(1);
-    expect(datagridStore.data.toJS()).toEqual([]);
+    expect(toJS(datagridStore.data)).toEqual([]);
 
     datagridStore.destroy();
 });

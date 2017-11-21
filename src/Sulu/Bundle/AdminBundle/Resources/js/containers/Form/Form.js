@@ -18,7 +18,7 @@ export default class Form extends React.PureComponent<Props> {
 
     componentWillMount() {
         const {store} = this.props;
-        const schema = metadataStore.getFields(store.resourceKey);
+        const schema = metadataStore.getSchema(store.resourceKey);
         store.changeSchema(schema);
     }
 
@@ -45,7 +45,7 @@ export default class Form extends React.PureComponent<Props> {
 
     render() {
         const {store} = this.props;
-        const schema = metadataStore.getFields(store.resourceKey);
+        const schema = metadataStore.getSchema(store.resourceKey);
 
         return store.loading
             ? <Loader />

@@ -88,7 +88,7 @@ export default class Datagrid extends React.PureComponent<Props> {
                         <Adapter
                             data={store.data}
                             selections={store.selections}
-                            schema={store.getFields()}
+                            schema={store.getSchema()}
                             onItemClick={onItemClick}
                             onItemSelectionChange={this.handleItemSelectionChange}
                             onAllSelectionChange={this.handleAllSelectionChange}
