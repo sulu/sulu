@@ -1170,6 +1170,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             ],
             'tags' => [],
             'meta' => [],
+            'internal' => false,
         ];
 
         $result = $this->loadFixture('template_meta_params.xml');
@@ -1220,7 +1221,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         );
 
         // no exception should be thrown
-        $this->assertNotNull($result);
+        $this->assertTrue($result['internal']);
     }
 
     public function testWithoutRlpTagTypeHome()

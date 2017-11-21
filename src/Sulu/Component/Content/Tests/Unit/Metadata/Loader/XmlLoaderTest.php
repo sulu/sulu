@@ -39,6 +39,18 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true);
 
         $result = $this->load('template.xml');
+
+        $this->assertFalse($result->internal);
+    }
+
+    public function testLoadInternalTemplate()
+    {
+        $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
+            ->willReturn(true);
+
+        $result = $this->load('template_load_internal.xml');
+
+        $this->assertTrue($result->internal);
     }
 
     public function testLoadBlockMetaTitles()
