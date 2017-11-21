@@ -34,7 +34,7 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
             formId: '#authored-form',
             skeleton: [
                 '   <div class="grid-row form-group">',
-            '           <label for="authored"><%= translations.authored %></label>',
+                '       <label for="authored"><%= translations.authored %></label>',
                 '       <form id="<%= formId %>">',
                 '           <div class="grid-col-6">',
                  '              <div data-type="husky-input"',
