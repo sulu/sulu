@@ -16,11 +16,32 @@ class Form extends React.PureComponent<Props> {
 
     componentWillMount() {
         const {resourceStore, router} = this.props;
-        router.bind('locale', resourceStore.locale);
+        const {
+            route: {
+                options: {
+                    locales,
+                },
+            },
+        } = router;
+
+        if (locales) {
+            router.bind('locale', resourceStore.locale);
+        }
     }
 
     componentWillUnmount() {
-        this.props.router.unbind('locale', this.props.resourceStore.locale);
+        const {resourceStore, router} = this.props;
+        const {
+            route: {
+                options: {
+                    locales,
+                },
+            },
+        } = router;
+
+        if (locales) {
+            router.unbind('locale', resourceStore.locale);
+        }
     }
 
     handleSubmit = () => {

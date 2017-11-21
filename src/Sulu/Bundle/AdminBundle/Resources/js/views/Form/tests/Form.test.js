@@ -353,3 +353,26 @@ test('Should unbind the binding and destroy the store on unmount', () => {
     form.unmount();
     expect(router.unbind).toBeCalledWith('locale', locale);
 });
+
+test('Should not bind the locale if no locales have been passed via options', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 12);
+    const router = {
+        bind: jest.fn(),
+        unbind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+            },
+        },
+        attributes: {},
+    };
+
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+
+    expect(router.bind).not.toBeCalled();
+
+    form.unmount();
+    expect(router.unbind).not.toBeCalled();
+});
