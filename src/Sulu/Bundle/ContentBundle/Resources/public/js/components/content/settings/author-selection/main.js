@@ -33,11 +33,9 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
         templates: {
             formId: '#authored-form',
             skeleton: [
-                '   <div class="grid-row">', 
-                 '       <label for="authored"><%= translations.authored %></label>',
-                '   </div>',
                 '   <div class="grid-row form-group">',
-                '       <form id="<%= formId %>">', 
+            '           <label for="authored"><%= translations.authored %></label>',
+                '       <form id="<%= formId %>">',
                 '           <div class="grid-col-6">',
                  '              <div data-type="husky-input"',
                  '                  data-aura-component="input@husky"',
