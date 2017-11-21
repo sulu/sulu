@@ -4,11 +4,10 @@ import type {ElementRef} from 'react';
 import React from 'react';
 import Loader from '../../components/Loader';
 import ResourceStore from '../../stores/ResourceStore';
-import type {Schema} from '../../stores/ResourceStore/types';
 import Renderer from './Renderer';
+import metadataStore from './stores/MetadataStore';
 
 type Props = {
-    schema: Schema,
     store: ResourceStore,
     onSubmit: () => void,
 };
@@ -16,6 +15,12 @@ type Props = {
 @observer
 export default class Form extends React.PureComponent<Props> {
     renderer: ?ElementRef<typeof Renderer>;
+
+    componentWillMount() {
+        const {store} = this.props;
+        const schema = metadataStore.getSchema(store.resourceKey);
+        store.changeSchema(schema);
+    }
 
     /** @public */
     submit = () => {
@@ -39,7 +44,9 @@ export default class Form extends React.PureComponent<Props> {
     };
 
     render() {
-        const {schema, store} = this.props;
+        const {store} = this.props;
+        const schema = metadataStore.getSchema(store.resourceKey);
+
         return store.loading
             ? <Loader />
             : <Renderer

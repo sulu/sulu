@@ -56,7 +56,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                 : mediaData;
             this.selections = [];
             this.getPage = jest.fn().mockReturnValue(2);
-            this.getFields = jest.fn().mockReturnValue({
+            this.getSchema = jest.fn().mockReturnValue({
                 title: {},
                 description: {},
             });

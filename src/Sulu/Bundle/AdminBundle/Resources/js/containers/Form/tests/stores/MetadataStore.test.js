@@ -6,24 +6,24 @@ jest.mock('../../../../stores/ResourceMetadataStore', () => ({
     loadConfiguration: jest.fn(),
 }));
 
-test('Return list fields for given resourceKey from ResourceMetadataStore', () => {
+test('Return form fields for given resourceKey from ResourceMetadataStore', () => {
     const resourceMetadata = {
         snippets: {
-            list: {
+            form: {
                 id: {},
                 title: {
-                    sortable: true,
+                    highlight: true,
                 },
             },
         },
         contacts: {
-            list: {
+            form: {
                 id: {},
                 firstName: {
-                    sortable: true,
+                    highlight: true,
                 },
                 lastName: {
-                    sortable: true,
+                    highlight: true,
                 },
             },
         },
@@ -33,16 +33,16 @@ test('Return list fields for given resourceKey from ResourceMetadataStore', () =
     const snippetFields = metadataStore.getSchema('snippets');
     expect(Object.keys(snippetFields)).toHaveLength(2);
     expect(snippetFields.id).toEqual({});
-    expect(snippetFields.title).toEqual({sortable: true});
+    expect(snippetFields.title).toEqual({highlight: true});
 
     const contactFields = metadataStore.getSchema('contacts');
     expect(Object.keys(contactFields)).toHaveLength(3);
     expect(contactFields.id).toEqual({});
-    expect(contactFields.firstName).toEqual({sortable: true});
-    expect(contactFields.lastName).toEqual({sortable: true});
+    expect(contactFields.firstName).toEqual({highlight: true});
+    expect(contactFields.lastName).toEqual({highlight: true});
 });
 
-test('Throw exception if no list fields for given resourceKey are available', () => {
+test('Throw exception if no form fields for given resourceKey are available', () => {
     const resourceMetadata = {
         snippets: {},
         contacts: {},

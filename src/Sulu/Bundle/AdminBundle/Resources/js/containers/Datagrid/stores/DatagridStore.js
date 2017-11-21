@@ -43,8 +43,8 @@ export default class DatagridStore {
         }
     };
 
-    getFields() {
-        return metadataStore.getFields(this.resourceKey);
+    getSchema() {
+        return metadataStore.getSchema(this.resourceKey);
     }
 
     sendRequest = () => {

@@ -55,7 +55,7 @@ export default class ResourceStore {
             }));
     }
 
-    changeSchema(schema: Schema) {
+    @action changeSchema(schema: Schema) {
         const schemaFields = Object.keys(schema).reduce((object, key) => {
             object[key] = null;
             return object;

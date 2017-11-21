@@ -7,17 +7,6 @@ import {translate} from '../../services/Translator';
 import ResourceStore from '../../stores/ResourceStore';
 import formStyles from './form.scss';
 
-const schema = {
-    title: {
-        label: 'Title',
-        type: 'text_line',
-    },
-    slogan: {
-        label: 'Slogan',
-        type: 'text_line',
-    },
-};
-
 type Props = ViewProps & {
     resourceStore: ResourceStore,
 };
@@ -26,9 +15,8 @@ class Form extends React.PureComponent<Props> {
     form: ?FormContainer;
 
     componentWillMount() {
-        const {router} = this.props;
-        this.props.resourceStore.changeSchema(schema);
-        router.bind('locale', this.props.resourceStore.locale);
+        const {resourceStore, router} = this.props;
+        router.bind('locale', resourceStore.locale);
     }
 
     componentWillUnmount() {
@@ -50,7 +38,6 @@ class Form extends React.PureComponent<Props> {
                     ref={this.setFormRef}
                     store={this.props.resourceStore}
                     onSubmit={this.handleSubmit}
-                    schema={schema}
                 />
             </div>
         );
