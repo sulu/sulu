@@ -27,6 +27,10 @@ test('Load configuration for given key', () => {
                 label: 'Slogan',
                 type: 'text_line',
             },
+            media: {
+                label: 'Media',
+                type: 'media_selection',
+            },
         },
     });
 });

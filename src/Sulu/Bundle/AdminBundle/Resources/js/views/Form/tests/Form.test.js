@@ -216,7 +216,6 @@ test('Should initialize the ResourceStore with a schema', () => {
     expect(resourceStore.data).toEqual({
         title: null,
         slogan: null,
-        media: null,
     });
 });
 

@@ -55,6 +55,7 @@ export default class Form extends React.PureComponent<Props> {
                 onChange={this.handleChange}
                 schema={schema}
                 data={store.data}
+                locale={store.locale}
             />;
     }
 }

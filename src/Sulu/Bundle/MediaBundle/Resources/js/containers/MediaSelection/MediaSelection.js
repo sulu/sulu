@@ -43,6 +43,11 @@ export default class MediaSelection extends React.PureComponent<Props> {
         this.mediaSelectionStore = new MediaSelectionStore(value, locale);
     }
 
+    componentWillUnmount() {
+        this.destroyStores();
+        this.overlayDisposer();
+    }
+
     @action openMediaOverlay() {
         this.overlayOpen = true;
 
@@ -51,9 +56,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
 
     @action closeMediaOverlay() {
         this.overlayOpen = false;
-
-        this.selectedMediaIds = [];
-        this.overlayDisposer();
+        this.destroyOverlay();
     }
 
     @action setMediaPage(page: number) {
@@ -68,6 +71,14 @@ export default class MediaSelection extends React.PureComponent<Props> {
         this.collectionId = id;
     }
 
+    destroyOverlay() {
+        this.selectedMediaIds = [];
+        this.collectionId = undefined;
+
+        this.destroyStores();
+        this.overlayDisposer();
+    }
+
     createStores = () => {
         this.setMediaPage(1);
         this.setCollectionPage(1);
@@ -76,6 +87,20 @@ export default class MediaSelection extends React.PureComponent<Props> {
         this.createMediaDatagridStore(this.collectionId, this.mediaPage, this.props.locale);
         this.createCollectionDatagridStore(this.collectionId, this.collectionPage, this.props.locale);
     };
+
+    destroyStores() {
+        if (this.collectionStore) {
+            this.collectionStore.destroy();
+        }
+
+        if (this.mediaDatagridStore) {
+            this.mediaDatagridStore.destroy();
+        }
+
+        if (this.collectionDatagridStore) {
+            this.collectionDatagridStore.destroy();
+        }
+    }
 
     @action createCollectionDatagridStore(collectionId: ?observable, page: observable, locale: string) {
         if (this.collectionDatagridStore) {

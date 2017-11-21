@@ -71,6 +71,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.clearSelection = jest.fn();
             this.setAppendRequestData = jest.fn();
             this.deselectEntirePage = jest.fn();
+            this.getSchema = jest.fn().mockReturnValue({});
         }),
     };
 });
@@ -86,7 +87,9 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
     };
 });
 
-jest.mock('../../../stores/CollectionStore', () => jest.fn());
+jest.mock('../../../stores/CollectionStore', () => jest.fn(function() {
+    this.destroy = jest.fn();
+}));
 
 jest.mock('sulu-admin-bundle/services', () => ({
     translate: function(key) {
@@ -353,4 +356,29 @@ test('Should reset the selection array when the "Reset Selection" button was cli
     mediaSelectionInstance.handleSelectionReset();
     expect(mediaSelectionInstance.selectedMediaIds).toEqual([]);
     expect(mediaSelectionInstance.mediaDatagridStore.deselectEntirePage).toBeCalled();
+});
+
+test('Should destroy the stores and cleanup all states when the overlay is closed', () => {
+    MediaSelectionStore.mockImplementation(function() {
+        this.selectedMedia = [];
+        this.selectedMediaIds = [];
+    });
+
+    const changeSpy = jest.fn();
+    const mediaSelectionInstance = shallow(<MediaSelection onChange={changeSpy} />).instance();
+
+    mediaSelectionInstance.openMediaOverlay();
+    mediaSelectionInstance.handleMediaSelection(1, true);
+    mediaSelectionInstance.handleMediaSelection(2, true);
+    mediaSelectionInstance.setCollectionId(1);
+
+    expect(mediaSelectionInstance.collectionId).toBe(1);
+    expect(mediaSelectionInstance.selectedMediaIds).toEqual([1, 2]);
+
+    mediaSelectionInstance.closeMediaOverlay();
+    expect(mediaSelectionInstance.collectionId).toBe(undefined);
+    expect(mediaSelectionInstance.selectedMediaIds).toEqual([]);
+    expect(mediaSelectionInstance.collectionStore.destroy).toBeCalled();
+    expect(mediaSelectionInstance.mediaDatagridStore.destroy).toBeCalled();
+    expect(mediaSelectionInstance.collectionDatagridStore.destroy).toBeCalled();
 });
