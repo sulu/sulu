@@ -306,6 +306,15 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritdoc}
      */
+    public function notIn(FieldDescriptorInterface $fieldDescriptor, array $values)
+    {
+        $this->expressions[] = $this->createNotExpression($this->createInExpression($fieldDescriptor, $values));
+        $this->addFieldDescriptor($fieldDescriptor);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function between(FieldDescriptorInterface $fieldDescriptor, array $values)
     {
         $this->expressions[] = $this->createBetweenExpression($fieldDescriptor, $values);

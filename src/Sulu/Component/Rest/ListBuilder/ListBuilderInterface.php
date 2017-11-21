@@ -208,6 +208,14 @@ interface ListBuilderInterface
     public function in(FieldDescriptorInterface $fieldDescriptor, array $values);
 
     /**
+     * Defines an NOT IN constraint.
+     *
+     * @param FieldDescriptorInterface $fieldDescriptor
+     * @param array $values
+     */
+    public function notIn(FieldDescriptorInterface $fieldDescriptor, array $values);
+
+    /**
      * Defines a between constraint.
      *
      * @param FieldDescriptorInterface $fieldDescriptor
@@ -284,6 +292,13 @@ interface ListBuilderInterface
      * @return mixed
      */
     public function createWhereExpression(FieldDescriptorInterface $fieldDescriptor, $value, $comparator);
+
+    /**
+     * Creates a negation of the given expression.
+     *
+     * @return mixed
+     */
+    public function createNotExpression(ExpressionInterface $createInExpression);
 
     /**
      * Creates an and expression with the given expressions.
