@@ -4,7 +4,7 @@ which the selection box cannot undercut.
 If both a minimum height and a minimum width is given, the ratio between these two is enforced.
 A double click on the selection box centers it and maximizes its size.
 
-```
+```javascript
 <RectangleSelection
     initialSelection={{width: 300, height: 100, left: 50, top: 50}}>
     <div>
@@ -17,7 +17,7 @@ Content placed inside the component is not allowed to change it's size after ren
 Otherwise, the behaviour will be undefined.
 For example when rendering images, they need to be preloaded before rendering the selection.
 
-```
+```javascript
 // preload image
 let image = new Image();
 image.src = 'https://unsplash.it/800/500';
@@ -29,7 +29,7 @@ initialState = {imageLoaded: image.complete, selection: {}};
 if (state.imageLoaded) {
     <div>
         <RectangleSelection
-            minWidth={150}
+            minWidth={100}
             minHeight={50}
             onChange={s => setState({selection: s})}>
             <img src="https://unsplash.it/800/500" />
