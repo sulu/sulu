@@ -70,9 +70,52 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
 
         $routes = $this->adminPool->getRoutes();
         $this->assertCount(3, $routes);
-        $this->assertContains($route1, $routes);
-        $this->assertContains($route2, $routes);
-        $this->assertContains($route3, $routes);
+        $this->assertEquals($route1, $routes[0]);
+        $this->assertEquals($route2, $routes[1]);
+        $this->assertEquals($route3, $routes[2]);
+    }
+
+    public function testRoutesMergeOptions()
+    {
+        $route1 = new Route('test1', '/test1', 'test1');
+        $route1->addOption('route1', 'test1');
+        $route1->addOption('override', 'override');
+        $route1_1 = new Route('test1_1', '/test1_1', 'test1_1');
+        $route1_1->addOption('route1_1', 'test1_1');
+        $route1_1->setParent('test1');
+        $route1_1_1 = new Route('test1_1_1', '/test1_1_1', 'test1_1_1');
+        $route1_1_1->addOption('override', 'overriden-value');
+        $route1_1_1->addOption('route1_1_1', 'test1_1_1');
+        $route1_1_1->setParent('test1_1');
+        $route2 = new Route('test2', '/test2', 'test2');
+        $route2->addOption('value', 'test');
+
+        $this->admin1->getRoutes()->willReturn([$route1, $route1_1, $route1_1_1, $route2]);
+        $this->admin2->getRoutes()->willReturn([]);
+
+        $routes = $this->adminPool->getRoutes();
+        $this->assertCount(4, $routes);
+        $this->assertAttributeEquals(
+            ['route1' => 'test1', 'override' => 'override'],
+            'options',
+            $routes[0]
+        );
+        $this->assertAttributeEquals(
+            ['route1' => 'test1', 'route1_1' => 'test1_1', 'override' => 'override'],
+            'options',
+            $routes[1]
+        );
+        $this->assertAttributeEquals(
+            [
+                'route1' => 'test1',
+                'route1_1' => 'test1_1',
+                'route1_1_1' => 'test1_1_1',
+                'override' => 'overriden-value',
+            ],
+            'options',
+            $routes[2]
+        );
+        $this->assertAttributeEquals(['value' => 'test'], 'options', $routes[3]);
     }
 
     public function testNavigation()

@@ -53,9 +53,21 @@ class Route
         $this->view = $view;
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     public function addOption(string $key, $value): self
     {
         $this->options[$key] = $value;
+
+        return $this;
+    }
+
+    public function mergeRoute(self $route): self
+    {
+        $this->options = array_merge($route->options, $this->options);
 
         return $this;
     }
@@ -72,5 +84,10 @@ class Route
         $this->parent = $parent;
 
         return $this;
+    }
+
+    public function getParent(): ?string
+    {
+        return $this->parent;
     }
 }
