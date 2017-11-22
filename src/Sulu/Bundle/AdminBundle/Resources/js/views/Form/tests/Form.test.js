@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
+import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
@@ -48,7 +49,7 @@ test('Should navigate to defined route on back button click', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('snippet', 1);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable()});
 
     const router = {
         restore: jest.fn(),
@@ -69,6 +70,30 @@ test('Should navigate to defined route on back button click', () => {
     expect(router.restore).toBeCalledWith('test_route', {locale: 'de'});
 });
 
+test('Should navigate to defined route on back button click without locale', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                backRoute: 'test_route',
+            },
+        },
+        attributes: {},
+    };
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+
+    const toolbarConfig = toolbarFunction.call(form);
+    toolbarConfig.backButton.onClick();
+    expect(router.restore).toBeCalledWith('test_route', {});
+});
+
 test('Should not render back button when no editLink is configured', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
@@ -80,9 +105,7 @@ test('Should not render back button when no editLink is configured', () => {
         navigate: jest.fn(),
         bind: jest.fn(),
         route: {
-            options: {
-                locales: [],
-            },
+            options: {},
         },
         attributes: {},
     };
@@ -97,7 +120,7 @@ test('Should change locale in form store via locale chooser', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('snippet', 1);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable()});
 
     const router = {
         navigate: jest.fn(),
@@ -123,7 +146,7 @@ test('Should show locales from router options in toolbar', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('snippet', 1);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable()});
 
     const router = {
         navigate: jest.fn(),
@@ -211,9 +234,7 @@ test('Should render save button disabled only if form is not dirty', () => {
         bind: jest.fn(),
         navigate: jest.fn(),
         route: {
-            options: {
-                locales: [],
-            },
+            options: {},
         },
         attributes: {},
     };
@@ -230,7 +251,7 @@ test('Should save form when submitted', () => {
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const resourceStore = new ResourceStore('snippets', 8);
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable()});
 
     const router = {
         bind: jest.fn(),
@@ -276,7 +297,7 @@ test('Should pass store and schema handler to FormContainer', () => {
     expect(formContainer.prop('onSubmit')).toBeInstanceOf(Function);
 });
 
-test('Should render save button loading only if form is not saving', () => {
+test('Should render save button loading only if form is saving', () => {
     function getSaveItem() {
         return toolbarFunction.call(form).items.find((item) => item.value === 'Save');
     }
@@ -291,9 +312,7 @@ test('Should render save button loading only if form is not saving', () => {
         bind: jest.fn(),
         navigate: jest.fn(),
         route: {
-            options: {
-                locales: [],
-            },
+            options: {},
         },
         attributes: {},
     };
@@ -308,7 +327,7 @@ test('Should render save button loading only if form is not saving', () => {
 test('Should unbind the binding and destroy the store on unmount', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const resourceStore = new ResourceStore('snippets', 12);
+    const resourceStore = new ResourceStore('snippets', 12, {locale: observable()});
     const router = {
         bind: jest.fn(),
         unbind: jest.fn(),
@@ -328,4 +347,27 @@ test('Should unbind the binding and destroy the store on unmount', () => {
 
     form.unmount();
     expect(router.unbind).toBeCalledWith('locale', locale);
+});
+
+test('Should not bind the locale if no locales have been passed via options', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 12);
+    const router = {
+        bind: jest.fn(),
+        unbind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+            },
+        },
+        attributes: {},
+    };
+
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+
+    expect(router.bind).not.toBeCalled();
+
+    form.unmount();
+    expect(router.unbind).not.toBeCalled();
 });

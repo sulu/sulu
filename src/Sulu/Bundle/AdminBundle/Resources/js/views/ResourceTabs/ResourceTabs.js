@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import Tabs from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../services/Translator';
@@ -18,9 +19,16 @@ export default class ResourceTabs extends React.PureComponent<ViewProps> {
         const {
             options: {
                 resourceKey,
+                locales,
             },
         } = route;
-        this.resourceStore = new ResourceStore(resourceKey, id);
+
+        const options = {};
+        if (locales) {
+            options.locale = observable();
+        }
+
+        this.resourceStore = new ResourceStore(resourceKey, id, options);
     }
 
     componentWillUnmount() {
