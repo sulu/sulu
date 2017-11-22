@@ -29,8 +29,8 @@ initialState = {imageLoaded: image.complete, selection: {}};
 if (state.imageLoaded) {
     <div>
         <RectangleSelection
-            minWidth={100}
-            minHeight={50}
+            minWidth={115}
+            minHeight={100}
             onChange={s => setState({selection: s})}>
             <img src="https://unsplash.it/800/500" />
         </RectangleSelection>
