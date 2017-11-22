@@ -117,7 +117,8 @@ class TagController extends RestController implements ClassResourceInterface, Se
         );
 
         $context = new Context();
-        $view->setContext($context->setGroups(['partialTag']));
+        $context->setGroups(['partialTag']);
+        $view->setContext($context);
 
         return $this->handleView($view);
     }
@@ -162,7 +163,8 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $list = new CollectionRepresentation($this->getManager()->findAll(), self::$entityKey);
 
             $context = new Context();
-            $view = $this->view($list, 200)->setContext($context->setGroups(['partialTag']));
+            $context->setGroups(['partialTag']);
+            $view = $this->view($list, 200)->setContext($context);
         }
 
         return $this->handleView($view);
@@ -193,7 +195,8 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $tag = $this->getManager()->save($this->getData($request), $this->getUser()->getId());
 
             $context = new Context();
-            $view = $this->view($tag)->setContext($context->setGroups(['partialTag']));
+            $context->setGroups(['partialTag']);
+            $view = $this->view($tag)->setContext($context);
         } catch (TagAlreadyExistsException $exc) {
             $cvExistsException = new ConstraintViolationException(
                 'A tag with the name "' . $exc->getName() . '"already exists!',
@@ -231,7 +234,8 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $tag = $this->getManager()->save($this->getData($request), $this->getUser()->getId(), $id);
 
             $context = new Context();
-            $view = $this->view($tag)->setContext($context->setGroups(['partialTag']));
+            $context->setGroups(['partialTag']);
+            $view = $this->view($tag)->setContext($context);
         } catch (TagAlreadyExistsException $exc) {
             $cvExistsException = new ConstraintViolationException(
                 'A tag with the name "' . $exc->getName() . '"already exists!',
@@ -325,7 +329,8 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $this->getDoctrine()->getManager()->flush();
 
             $context = new Context();
-            $view = $this->view($tags)->setContext($context->setGroups(['partialTag']));
+            $context->setGroups(['partialTag']);
+            $view = $this->view($tags)->setContext($context);
         } catch (TagAlreadyExistsException $exc) {
             $cvExistsException = new ConstraintViolationException(
                 'A tag with the name "' . $exc->getName() . '"already exists!',

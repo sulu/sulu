@@ -18,7 +18,7 @@ use JMS\Serializer\Context;
 /**
  * Our handler for thrown exceptions in REST controllers.
  */
-class ExceptionSerializerSubscriber extends ExceptionHandler
+class ExceptionSerializerHandler extends ExceptionHandler
 {
     /**
      * @var string
@@ -37,7 +37,7 @@ class ExceptionSerializerSubscriber extends ExceptionHandler
         $data = parent::convertToArray($exception, $context);
         $data['code'] = $exception->getCode();
         if (in_array($this->environment, ['dev', 'test'])) {
-            $data['errors'] = [$exception->__toString()];
+            $data['errors'] = [(string) $exception];
         }
 
         return $data;

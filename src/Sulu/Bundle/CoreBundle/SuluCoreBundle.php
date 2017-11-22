@@ -12,15 +12,12 @@
 namespace Sulu\Bundle\CoreBundle;
 
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\CsvHandlerCompilerPass;
+use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ExceptionHandlerCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ListBuilderMetadataProviderCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterContentTypesCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ReplacersCompilerPass;
-use Sulu\Component\Rest\ExceptionSerializerSubscriber;
-use Sulu\Component\Symfony\CompilerPass\Customizer\AddArgumentCustomizer;
-use Sulu\Component\Symfony\CompilerPass\Customizer\ReplaceClassCustomizer;
-use Sulu\Component\Symfony\CompilerPass\ServiceCustomizerCompilerPass;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -52,10 +49,6 @@ class SuluCoreBundle extends Bundle
             )
         );
 
-        $container->addCompilerPass(
-            ServiceCustomizerCompilerPass::customize('fos_rest.serializer.exception_normalizer.jms')
-                ->with(new ReplaceClassCustomizer(ExceptionSerializerSubscriber::class))
-                ->with(new AddArgumentCustomizer('%kernel.environment%'))
-        );
+        $container->addCompilerPass(new ExceptionHandlerCompilerPass());
     }
 }
