@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextArea should render 1`] = `
+<textarea
+  class="textArea"
+/>
+`;
+
+exports[`TextArea should render null value as empty string 1`] = `
+<textarea
+  class="textArea"
+/>
+`;
+
+exports[`TextArea should render with placeholder 1`] = `
+<textarea
+  class="textArea"
+  placeholder="My placeholder"
+/>
+`;
+
+exports[`TextArea should render with value 1`] = `
+<textarea
+  class="textArea"
+>
+  My value
+</textarea>
+`;

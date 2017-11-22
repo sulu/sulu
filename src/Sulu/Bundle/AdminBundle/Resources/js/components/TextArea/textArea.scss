@@ -1,0 +1,14 @@
+@import '../../containers/Application/colors.scss';
+
+$textareaBorderColor: $silver;
+
+.text-area {
+    width: 100%;
+    min-height: 75px;
+    padding: 10px;
+    border: 1px solid $textareaBorderColor;
+    border-radius: 3px;
+    resize: vertical;
+    font-size: 12px;
+    line-height: 20px;
+}
