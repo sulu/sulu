@@ -66,7 +66,7 @@ class AdminPool
     private function mergeRouteOptions(array $routes, string $parent = null)
     {
         /** @var Route[] $childRoutes */
-        $childRoutes = array_filter($routes, function(Route $route) use($parent) {
+        $childRoutes = array_filter($routes, function(Route $route) use ($parent) {
             return $route->getParent() === $parent;
         });
 
@@ -75,7 +75,7 @@ class AdminPool
         }
 
         /** @var Route $parentRoute */
-        $parentRoutes = array_values(array_filter($routes, function(Route $route) use($parent) {
+        $parentRoutes = array_values(array_filter($routes, function(Route $route) use ($parent) {
             return $route->getName() === $parent;
         }));
 

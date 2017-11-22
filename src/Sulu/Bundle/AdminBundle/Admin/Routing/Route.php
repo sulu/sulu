@@ -65,7 +65,8 @@ class Route
         return $this;
     }
 
-    public function mergeRoute(self $route): self {
+    public function mergeRoute(self $route): self
+    {
         $this->options = array_merge($route->options, $this->options);
 
         return $this;

@@ -70,9 +70,9 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
 
         $routes = $this->adminPool->getRoutes();
         $this->assertCount(3, $routes);
-        $this->assertContains($route1, $routes);
-        $this->assertContains($route2, $routes);
-        $this->assertContains($route3, $routes);
+        $this->assertEquals($route1, $routes[0]);
+        $this->assertEquals($route2, $routes[1]);
+        $this->assertEquals($route3, $routes[2]);
     }
 
     public function testRoutesMergeOptions()
@@ -110,13 +110,12 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
                 'route1' => 'test1',
                 'route1_1' => 'test1_1',
                 'route1_1_1' => 'test1_1_1',
-                'override' => 'overriden-value'
+                'override' => 'overriden-value',
             ],
             'options',
             $routes[2]
         );
         $this->assertAttributeEquals(['value' => 'test'], 'options', $routes[3]);
-
     }
 
     public function testNavigation()
