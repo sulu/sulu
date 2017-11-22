@@ -235,6 +235,8 @@ class AdminController
      * Returns a array of all bundles.
      *
      * @return JsonResponse
+     *
+     * @deprecated Will not be needed anymore with the new version of the admin and be removed in 2.0
      */
     public function bundlesAction()
     {
