@@ -103,7 +103,7 @@ test('Should not load the data with the ResourceRequester if locale should be pr
 
 test('Loading flag should be set to true when loading', () => {
     ResourceRequester.get.mockReturnValue(Promise.resolve());
-    const resourceStore = new ResourceStore('snippets', '1');
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable()});
     resourceStore.loading = false;
     resourceStore.setLocale('en');
 
@@ -114,7 +114,7 @@ test('Loading flag should be set to true when loading', () => {
 test('Loading flag should be set to false when loading has finished', () => {
     const promise = Promise.resolve();
     ResourceRequester.get.mockReturnValue(promise);
-    const resourceStore = new ResourceStore('snippets', '1');
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable()});
     resourceStore.setLocale('en');
     resourceStore.loading = true;
 
@@ -192,4 +192,9 @@ test('Saving and dirty flag should be set to false when saving has failed', (don
             }
         );
     });
+});
+
+test('Calling setLocale on a non-localizable ResourceStore should throw an exception', () => {
+    const resourceStore = new ResourceStore('snippets', '1', {});
+    expect(() => resourceStore.setLocale('de')).toThrow();
 });

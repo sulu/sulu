@@ -47,8 +47,9 @@ export default class ResourceStore {
     @action setLocale(locale: string) {
         const {locale: observableLocale} = this.observableOptions;
         if (!observableLocale) {
-            // TODO Should there really be a silent return, or should we throw an exception instead?
-            return;
+            throw new Error(
+                '"setLocale" should not be called on a ResourceStore which got no locale passed in the constructor'
+            );
         }
 
         observableLocale.set(locale);
