@@ -82,7 +82,6 @@ class SnippetAdminTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame([
             'tabTitle' => 'sulu_snippet.details',
             'backRoute' => 'sulu_snippet.list',
-            'locales' => array_keys($locales),
         ], 'options', $detailRoute);
         $this->assertAttributeEquals('sulu_snippet.form.taxonomies', 'name', $taxonomiesRoute);
         $this->assertAttributeEquals('sulu_snippet.form', 'parent', $taxonomiesRoute);
@@ -90,7 +89,6 @@ class SnippetAdminTest extends \PHPUnit_Framework_TestCase
             'resourceKey' => 'snippets',
             'tabTitle' => 'sulu_snippet.taxonomies',
             'backRoute' => 'sulu_snippet.list',
-            'locales' => array_keys($locales),
         ], 'options', $taxonomiesRoute);
     }
 }
