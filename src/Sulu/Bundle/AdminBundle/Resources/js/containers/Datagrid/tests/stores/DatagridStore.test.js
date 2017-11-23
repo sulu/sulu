@@ -366,23 +366,3 @@ test('Should call the selection handler when an item gets selected or deselected
 
     datagridStore.destroy();
 });
-
-test('Should add the preselected ids to the selection array', () => {
-    const page = observable();
-    const locale = observable();
-    const selectionSpy = jest.fn();
-    const datagridStore = new DatagridStore('tests',
-        {
-            page,
-            locale,
-        },
-        {},
-        true,
-        selectionSpy,
-        [1, 2, 3]
-    );
-
-    expect(datagridStore.selections.toJS()).toEqual([1, 2, 3]);
-
-    datagridStore.destroy();
-});

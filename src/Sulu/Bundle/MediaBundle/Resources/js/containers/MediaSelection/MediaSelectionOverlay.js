@@ -14,7 +14,7 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
     open: boolean,
-    locale: string,
+    locale: observable,
     excludedIds: Array<string | number>,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
@@ -23,6 +23,7 @@ type Props = {
 @observer
 export default class MediaSelectionOverlay extends React.PureComponent<Props> {
     static defaultProps = {
+        open: false,
         excludedIds: [],
     };
 
@@ -40,8 +41,14 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         this.overlayDisposer();
     }
 
+    componentWillMount() {
+        if (this.props.open) {
+            this.overlayDisposer = autorun(this.createStores);
+        }
+    }
+
     componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.open && !this.props.open) {
+        if (!this.props.open && nextProps.open) {
             this.overlayDisposer = autorun(this.createStores);
         }
     }
@@ -89,7 +96,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         }
     }
 
-    @action createCollectionDatagridStore(collectionId: ?observable, page: observable, locale: string) {
+    @action createCollectionDatagridStore(collectionId: ?string | number, page: observable, locale: string) {
         if (this.collectionDatagridStore) {
             this.collectionDatagridStore.destroy();
         }
@@ -104,7 +111,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         );
     }
 
-    createCollectionStore = (collectionId: ?observable, locale: string) => {
+    createCollectionStore = (collectionId: ?string | number, locale: string) => {
         if (this.collectionStore) {
             this.collectionStore.destroy();
         }
@@ -112,7 +119,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         this.collectionStore = new CollectionStore(collectionId, locale);
     };
 
-    @action createMediaDatagridStore(collectionId: ?observable, page: observable, locale: string) {
+    @action createMediaDatagridStore(collectionId: ?string | number, page: observable, locale: string) {
         const {excludedIds} = this.props;
         const options = {};
 

@@ -5,4 +5,16 @@
     height: 650px;
     overflow-y: auto;
     padding: $viewPadding;
+
+    @media (max-width: 1280px) {
+        width: 900px;
+    }
+
+    @media (max-width: 1024px) {
+        width: 630px;
+    }
+
+    @media (max-width: 720px) {
+        width: 360px;
+    }
 }

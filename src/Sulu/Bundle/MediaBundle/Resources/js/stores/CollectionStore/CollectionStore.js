@@ -13,7 +13,7 @@ export default class CollectionStore {
     };
     disposer: () => void;
 
-    constructor(collectionId: ?number, locale: observable) {
+    constructor(collectionId: ?string | number, locale: observable) {
         this.disposer = autorun(() => {
             this.load(collectionId, locale.get());
         });
@@ -35,7 +35,7 @@ export default class CollectionStore {
         this.loading = loading;
     }
 
-    @action load(collectionId: ?number, locale: string) {
+    @action load(collectionId: ?string | number, locale: string) {
         if (!collectionId) {
             this.collection.breadcrumb = null;
 
