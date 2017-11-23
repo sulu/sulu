@@ -169,6 +169,30 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['title' => []], $result['view']);
     }
 
+    public function testLoadNull()
+    {
+        $extension = new ContentTwigExtension(
+            $this->contentMapper->reveal(),
+            $this->structureResolver,
+            $this->sessionManager->reveal(),
+            $this->requestAnalyzer->reveal()
+        );
+
+        $this->assertNull($extension->load(null));
+    }
+
+    public function testLoadNotExistingDocument()
+    {
+        $extension = new ContentTwigExtension(
+            $this->contentMapper->reveal(),
+            $this->structureResolver,
+            $this->sessionManager->reveal(),
+            $this->requestAnalyzer->reveal()
+        );
+
+        $this->assertNull($extension->load('999-999-999'));
+    }
+
     public function testLoadParent()
     {
         $this

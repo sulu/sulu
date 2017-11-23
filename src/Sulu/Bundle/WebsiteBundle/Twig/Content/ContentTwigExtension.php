@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
@@ -73,13 +74,17 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
      */
     public function load($uuid)
     {
-        $contentStructure = $this->contentMapper->load(
-            $uuid,
-            $this->requestAnalyzer->getWebspace()->getKey(),
-            $this->requestAnalyzer->getCurrentLocalization()->getLocale()
-        );
+        try {
+            $contentStructure = $this->contentMapper->load(
+                $uuid,
+                $this->requestAnalyzer->getWebspace()->getKey(),
+                $this->requestAnalyzer->getCurrentLocalization()->getLocale()
+            );
 
-        return $this->structureResolver->resolve($contentStructure);
+            return $this->structureResolver->resolve($contentStructure);
+        } catch (DocumentNotFoundException $e) {
+            return;
+        }
     }
 
     /**
