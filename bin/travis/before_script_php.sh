@@ -14,5 +14,9 @@ fi
 echo "memory_limit=2048M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 phpenv config-rm xdebug.ini
 composer self-update
+echo "Install prestissimo"
+composer global require "hirak/prestissimo:^0.3" --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative  --no-interaction
+echo "Install dependencies ..."
 composer update $COMPOSER_FLAGS
 if [[ $SYMFONY__PHPCR__TRANSPORT = jackrabbit ]]; then composer require jackalope/jackalope-jackrabbit:~1.2 ; fi
+
