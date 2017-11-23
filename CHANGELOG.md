@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * BUGFIX      #     [WebsiteBundle]           Fixed sulu_content_load throwing exception when reference was deleted
+    * BUGFIX      #3647 [WebsiteBundle]           Fixed sulu_content_load throwing exception when reference was deleted
 
 * 1.6.8 (2017-11-21)
     * BUGFIX      #3629 [WebsiteBundle]           home page route not matched
