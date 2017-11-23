@@ -46,7 +46,7 @@ class PageDocumentSerializationTest extends SuluTestCase
         $this->initPhpcr();
         $this->parent = $this->documentManager->find('/cmf/sulu_io/contents', 'de');
         $this->serializer = $this->getContainer()->get('jms_serializer');
-        $this->registry = $this->getContainer()->get('sulu_document_manager.document_registry');
+        $this->registry = $this->getContainer()->get('sulu_document_manager_test.document_registry');
     }
 
     /**

@@ -42,7 +42,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
     {
         $application = new Application($this->getContainer()->get('kernel'));
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->documentRegistry = $this->getContainer()->get('sulu_document_manager.document_registry');
+        $this->documentRegistry = $this->getContainer()->get('sulu_document_manager_test.document_registry');
 
         $command = new WebspaceCopyCommand();
         $command->setApplication($application);
