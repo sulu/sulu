@@ -189,17 +189,7 @@
             <tag name="sulu.context" context="website"/>
         </service>
 
-        <service id="sulu_website.exception.controller" alias="twig.controller.exception">
-            <deprecated>The "%service_id%" service is deprecated since 1.5. Use "twig.controller.exception" instead</deprecated>
-
-            <argument type="service" id="twig.controller.exception"/>
-            <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
-            <argument type="service" id="sulu_website.resolver.parameter"/>
-            <argument type="service" id="twig"/>
-            <argument>%kernel.debug%</argument>
-
-            <tag name="sulu.context" context="website"/>
-        </service>
+        <service id="sulu_website.exception.controller" alias="twig.controller.exception" />
 
         <!-- cache clearer -->
         <service id="sulu_website.http_cache.clearer" class="Sulu\Bundle\WebsiteBundle\Cache\CacheClearer">

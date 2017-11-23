@@ -5,3 +5,7 @@ sulu_core:
                  internal:
                      path: "%kernel.root_dir%/../../src/Sulu/Bundle/CoreBundle/Content/templates"
                      type: "page"
+
+services:
+    sulu_document_manager_test.property_encoder:
+        alias: sulu_document_manager.property_encoder

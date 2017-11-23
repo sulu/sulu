@@ -220,7 +220,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de_at', $request->getLocale());
-        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
+        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocale());
         $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
         $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getSegment());
@@ -267,7 +267,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected['format'], $request->getRequestFormat());
         $this->assertEquals('de_at', $request->getLocale());
-        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
+        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocale());
         $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
         $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getSegment());
@@ -337,7 +337,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->validate($request);
 
         $this->assertEquals('de_at', $request->getLocale());
-        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
+        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocale());
         $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
         $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getSegment());

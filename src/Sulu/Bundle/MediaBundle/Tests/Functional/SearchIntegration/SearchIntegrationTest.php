@@ -51,7 +51,7 @@ class SearchIntegrationTest extends SuluTestCase
     {
         $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->nodeManager = $this->getContainer()->get('sulu_document_manager.node_manager');
+        $this->nodeManager = $this->getContainer()->get('sulu_document_manager_test.node_manager');
         $this->webspaceDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $mediaEntity = new Media();

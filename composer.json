@@ -41,8 +41,8 @@
         "stof/doctrine-extensions-bundle": "^1.2.2",
         "sulu/document-manager": "~0.10.0",
         "symfony-cmf/routing-bundle": "^1.2 || ^2.0",
+        "symfony/symfony": "^2.8.13 || ^3.0",
         "symfony/swiftmailer-bundle": "^3.0",
-        "symfony/symfony": "^2.8.7 || ^3.0",
         "twig/twig": "^1.11 || ^2.0",
         "willdurand/hateoas-bundle": "^1.1"
     },

@@ -109,7 +109,7 @@
             <tag name="sulu.smart_content.data_provider" alias="account"/>
         </service>
 
-        <service id="sulu_contact.util.index_comparator" class="%sulu_contact.util.index_comparator.class%" public="false"/>
+        <service id="sulu_contact.util.index_comparator" class="%sulu_contact.util.index_comparator.class%"/>
         <service id="sulu_contact.util.id_converter" class="%sulu_contact.util.id_converter.class%" public="false"/>
 
         <service id="sulu_contact.js_config" class="Sulu\Bundle\ContactBundle\Admin\JsConfigAvatarCollection">
