@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
-use JMS\Serializer\SerializationContext;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
@@ -395,8 +395,8 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     }
 
     /**
-    * Returns user.
-    */
+     * Returns user.
+     */
     private function getUser()
     {
         $token = $this->tokenStorage->getToken();
@@ -539,10 +539,10 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
     private function handleView($document)
     {
-        $view = View::create($document);
-        $view->setSerializationContext(
-            SerializationContext::create()->setSerializeNull(true)
-        );
+        $context = new Context();
+        $context->setSerializeNull(true);
+
+        $view = View::create($document)->setContext($context);
 
         return $this->viewHandler->handle($view);
     }

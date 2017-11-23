@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use JMS\Serializer\SerializationContext;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Version;
@@ -128,9 +128,11 @@ class VersionController extends FOSRestController implements
         }
 
         $view = $this->view($data, null !== $data ? 200 : 204);
-        $view->setSerializationContext(SerializationContext::create()->setGroups(['defaultPage']));
 
-        return $this->handleView($view);
+        $context = new Context();
+        $context->setGroups(['defaultPage']);
+
+        return $this->handleView($view->setContext($context));
     }
 
     /**

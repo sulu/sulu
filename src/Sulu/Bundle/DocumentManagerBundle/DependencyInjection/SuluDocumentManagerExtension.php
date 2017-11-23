@@ -85,6 +85,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
                     'metadata' => [
                         'directories' => [
                             [
+                                'name' => 'sulu_document_manager',
                                 'path' => __DIR__ . '/../Resources/config/serializer',
                                 'namespace_prefix' => 'Sulu\Component\DocumentManager',
                             ],

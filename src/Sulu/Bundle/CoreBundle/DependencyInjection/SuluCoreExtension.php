@@ -101,9 +101,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             ObjectNotSupportedException::class => 406,
                         ],
                     ],
-                    'service' => [
-                        'exception_handler' => 'sulu_core.rest.exception_wrapper_handler',
-                    ],
                 ]
             );
         }

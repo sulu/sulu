@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
-use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
@@ -99,9 +99,8 @@ class ContactController extends RestController implements ClassResourceInterface
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = $this->get(
-            'sulu_core.list_builder.field_descriptor_factory'
-        )->getFieldDescriptorForClass(Contact::class);
+        $this->fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
+            ->getFieldDescriptorForClass(Contact::class);
 
         // field descriptors for the account contact list
         $this->accountContactFieldDescriptors = [];
@@ -236,11 +235,9 @@ class ContactController extends RestController implements ClassResourceInterface
 
         // set serialization groups
         if (count($serializationGroups) > 0) {
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    $serializationGroups
-                )
-            );
+            $context = new Context();
+            $context->setGroups($serializationGroups);
+            $view->setContext($context);
         }
 
         return $this->handleView($view);
@@ -355,11 +352,9 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             );
 
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
-            );
+            $context = new Context();
+            $context->setGroups(static::$contactSerializationGroups);
+            $view->setContext($context);
         } catch (EntityNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
         }
@@ -386,11 +381,9 @@ class ContactController extends RestController implements ClassResourceInterface
                 $this->getLocale($request)
             );
             $view = $this->view($apiContact, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
-            );
+            $context = new Context();
+            $context->setGroups(static::$contactSerializationGroups);
+            $view->setContext($context);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (MissingArgumentException $maex) {
@@ -418,11 +411,9 @@ class ContactController extends RestController implements ClassResourceInterface
 
             $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
             $view = $this->view($apiContact, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
-            );
+            $context = new Context();
+            $context->setGroups(static::$contactSerializationGroups);
+            $view->setContext($context);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {
@@ -451,11 +442,9 @@ class ContactController extends RestController implements ClassResourceInterface
 
             $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
             $view = $this->view($apiContact, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
-            );
+            $context = new Context();
+            $context->setGroups(static::$contactSerializationGroups);
+            $view->setContext($context);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {

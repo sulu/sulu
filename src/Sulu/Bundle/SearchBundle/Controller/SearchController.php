@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\SearchBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Hateoas\Representation\CollectionRepresentation;
-use JMS\Serializer\SerializationContext;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
@@ -142,10 +142,10 @@ class SearchController
         );
 
         $view = View::create($representation);
-        $context = SerializationContext::create();
-        $context->enableMaxDepthChecks();
+        $context = new Context();
+        $context->enableMaxDepth();
         $context->setSerializeNull(true);
-        $view->setSerializationContext($context);
+        $view->setContext($context);
 
         return $this->viewHandler->handle($view);
     }

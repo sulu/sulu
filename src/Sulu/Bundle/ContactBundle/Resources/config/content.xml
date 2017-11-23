@@ -12,7 +12,7 @@
             <argument>%sulu_contact.content-type.contact.template%</argument>
             <argument type="service" id="sulu_contact.contact_manager" />
             <argument type="service" id="sulu_contact.account_manager" />
-            <argument type="service" id="serializer" />
+            <argument type="service" id="jms_serializer" />
             <argument type="service" id="sulu_contact.util.id_converter" />
             <argument type="service" id="sulu_contact.util.index_comparator" />
 

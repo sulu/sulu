@@ -86,6 +86,7 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
                     'metadata' => [
                         'directories' => [
                             [
+                                'name' => 'sulu_custom_url',
                                 'path' => __DIR__ . '/../Resources/config/serializer',
                                 'namespace_prefix' => 'Sulu\Component\CustomUrl',
                             ],
