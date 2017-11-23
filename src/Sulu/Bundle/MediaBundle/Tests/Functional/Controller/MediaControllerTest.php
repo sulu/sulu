@@ -527,6 +527,7 @@ class MediaControllerTest extends SuluTestCase
     public function testCget()
     {
         $this->createMedia('photo');
+        $this->createMedia('photo2');
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -538,7 +539,31 @@ class MediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(2, $response->total);
+    }
+
+    /**
+     * Test GET all Media.
+     */
+    public function testCgetExcluded()
+    {
+        $media = $this->createMedia('photo');
+        $this->createMedia('photo1');
+        $media2 = $this->createMedia('photo2');
+        $this->createMedia('photo3');
+        $client = $this->createAuthenticatedClient();
+        $excluded = implode(',', [$media->getId(), $media2->getId()]);
+
+        $client->request(
+            'GET',
+            '/api/media?locale=en-gb&excluded=' . $excluded
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+        $this->assertEquals(2, $response->total);
     }
 
     /**

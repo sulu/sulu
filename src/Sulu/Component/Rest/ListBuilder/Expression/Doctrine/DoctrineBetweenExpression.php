@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression\Doctrine;
 
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\BetweenExpressionInterface;
 
 /**
@@ -23,7 +23,7 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
     /**
      * Field descriptor used for comparison.
      *
-     * @var AbstractDoctrineFieldDescriptor
+     * @var DoctrineFieldDescriptorInterface
      */
     protected $field;
 
@@ -40,11 +40,11 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
     /**
      * DoctrineInExpression constructor.
      *
-     * @param AbstractDoctrineFieldDescriptor $field
+     * @param DoctrineFieldDescriptorInterface $field
      * @param $start
      * @param $end
      */
-    public function __construct(AbstractDoctrineFieldDescriptor $field, $start, $end)
+    public function __construct(DoctrineFieldDescriptorInterface $field, $start, $end)
     {
         $this->start = $start;
         $this->end = $end;
