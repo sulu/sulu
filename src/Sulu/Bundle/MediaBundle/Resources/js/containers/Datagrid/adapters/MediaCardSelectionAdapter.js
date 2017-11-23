@@ -20,9 +20,12 @@ export default class MediaCardSelectionAdapter extends AbstractAdapter {
     };
 
     render() {
+        const {onItemSelectionChange} = this.props;
+
         return (
             <MediaCardAdapter
                 {...this.props}
+                onItemClick={onItemSelectionChange}
                 icon={SELECT_ICON}
                 showCoverWhenSelected={true}
             />

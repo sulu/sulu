@@ -2,6 +2,7 @@
 import {mount, render, shallow} from 'enzyme';
 import pretty from 'pretty';
 import React from 'react';
+import datagridAdapterRegistry from 'sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import MediaSelection from '../MediaSelection';
 import MediaCardSelectionAdapter from '../../Datagrid/adapters/MediaCardSelectionAdapter';
@@ -99,7 +100,7 @@ jest.mock('sulu-admin-bundle/services', () => ({
             case 'sulu_media.copy_url':
                 return 'Copy URL';
             case 'sulu_media.download_masterfile':
-                return 'Downoad master file';
+                return 'Download master file';
             case 'sulu_admin.page':
                 return 'Page';
             case 'sulu_admin.of':
@@ -111,22 +112,6 @@ jest.mock('sulu-admin-bundle/services', () => ({
         }
     },
 }));
-
-beforeEach(() => {
-    const datagridAdapterRegistry = require('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry');
-
-    datagridAdapterRegistry.has.mockReturnValue(true);
-    datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        'folder': {
-            Adapter: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
-            paginationType: 'default',
-        },
-        'media_card_selection': {
-            Adapter: MediaCardSelectionAdapter,
-            paginationType: 'infiniteScroll',
-        },
-    });
-});
 
 jest.mock('sulu-admin-bundle/services/Translator', () => ({
     translate: function(key) {
@@ -155,6 +140,20 @@ jest.mock('sulu-admin-bundle/services', () => ({
         }
     },
 }));
+
+beforeEach(() => {
+    datagridAdapterRegistry.has.mockReturnValue(true);
+    datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
+        'folder': {
+            Adapter: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
+            paginationType: 'default',
+        },
+        'media_card_selection': {
+            Adapter: MediaCardSelectionAdapter,
+            paginationType: 'infiniteScroll',
+        },
+    });
+});
 
 test('Render a MediaSelection field', () => {
     MediaSelectionStore.mockImplementation(function() {

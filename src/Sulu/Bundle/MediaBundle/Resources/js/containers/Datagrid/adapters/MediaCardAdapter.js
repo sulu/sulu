@@ -54,6 +54,7 @@ export default class MediaCardAdapter extends React.Component<Props> {
             data,
             icon,
             selections,
+            onItemClick,
             onItemSelectionChange,
             showCoverWhenSelected,
         } = this.props;
@@ -77,7 +78,7 @@ export default class MediaCardAdapter extends React.Component<Props> {
                             image={item.thumbnails[THUMBNAIL_SIZE]}
                             onClick={onItemSelectionChange}
                             selected={selected}
-                            onSelectionChange={onItemSelectionChange}
+                            onSelectionChange={onItemClick}
                             showCover={showCoverWhenSelected && selected}
                         />
                     );

@@ -234,7 +234,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     {
         $document = $this->findDocument($uuid, $this->getLocale($request));
 
-        // $this->requestHashChecker->checkHash($request, $document, $document->getUuid());
+        $this->requestHashChecker->checkHash($request, $document, $document->getUuid());
         $this->processForm($request, $document);
 
         return $this->handleView($document);
