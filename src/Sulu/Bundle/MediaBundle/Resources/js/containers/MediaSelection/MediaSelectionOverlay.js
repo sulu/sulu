@@ -42,14 +42,24 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
     }
 
     componentWillMount() {
-        if (this.props.open) {
-            this.overlayDisposer = autorun(this.createStores);
+        const {
+            open,
+            locale,
+        } = this.props;
+
+        if (open) {
+            this.overlayDisposer = autorun(() => this.createStores(locale));
         }
     }
 
     componentWillReceiveProps(nextProps: Props) {
-        if (!this.props.open && nextProps.open) {
-            this.overlayDisposer = autorun(this.createStores);
+        const {
+            open,
+            locale,
+        } = this.props;
+
+        if (!open && nextProps.open) {
+            this.overlayDisposer = autorun(() => this.createStores(locale));
         }
     }
 
@@ -73,13 +83,13 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         this.collectionId = id;
     }
 
-    createStores = () => {
+    createStores = (locale: observable) => {
         this.setMediaPage(1);
         this.setCollectionPage(1);
 
-        this.createCollectionStore(this.collectionId, this.props.locale);
-        this.createMediaDatagridStore(this.collectionId, this.mediaPage, this.props.locale);
-        this.createCollectionDatagridStore(this.collectionId, this.collectionPage, this.props.locale);
+        this.createCollectionStore(this.collectionId, locale);
+        this.createMediaDatagridStore(this.collectionId, this.mediaPage, locale);
+        this.createCollectionDatagridStore(this.collectionId, this.collectionPage, locale);
     };
 
     destroyStores() {
@@ -190,6 +200,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
 
     handleConfirm = () => {
         this.props.onConfirm(this.selectedMedia);
+        this.destroy();
     };
 
     render() {
