@@ -95,7 +95,7 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
 
             return $this->structureResolver->resolve($contentStructure);
         } catch (DocumentNotFoundException $e) {
-            $this->logger->error((string)$e);
+            $this->logger->error((string) $e);
 
             return;
         }

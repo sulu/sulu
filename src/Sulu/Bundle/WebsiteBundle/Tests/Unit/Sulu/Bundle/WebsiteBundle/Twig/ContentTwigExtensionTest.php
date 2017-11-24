@@ -192,7 +192,7 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
             ->contentMapper
             ->load(Argument::cetera())
             ->willThrow($this->prophesize(DocumentNotFoundException::class)->reveal());
-        
+
         $extension = new ContentTwigExtension(
             $this->contentMapper->reveal(),
             $this->structureResolver,
