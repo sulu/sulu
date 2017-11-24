@@ -2,24 +2,28 @@
 import type {Normalizer, SelectionData} from '../types';
 
 export default class RatioNormalizer implements Normalizer {
-    width: number;
-    height: number;
+    minWidth: number;
+    minHeight: number;
+    containerWidth: number;
+    containerHeight: number;
 
-    constructor(width: number, height: number) {
-        this.width = width;
-        this.height = height;
+    constructor(containerWidth: number, containerHeight: number, width: number, height: number) {
+        this.containerWidth = containerWidth;
+        this.containerHeight = containerHeight;
+        this.minWidth = width;
+        this.minHeight = height;
     }
 
     normalize(data: SelectionData): SelectionData {
         let height = data.height;
         let width = data.width;
-        let calculatedHeight = width * (this.height / this.width);
-        let calculatedWidth = height * (this.width / this.height);
+        let calculatedWidth = height * (this.minWidth / this.minHeight);
 
-        if (calculatedWidth <= width) {
-            width = calculatedWidth;
+        if (calculatedWidth > this.containerWidth) {
+            width = this.containerWidth;
+            height = width * (this.minHeight / this.minWidth);
         } else {
-            height = calculatedHeight;
+            width = calculatedWidth;
         }
 
         return {...data, width, height};

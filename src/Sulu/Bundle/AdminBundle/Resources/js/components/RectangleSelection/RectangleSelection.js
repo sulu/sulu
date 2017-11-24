@@ -55,7 +55,12 @@ export class RectangleSelection extends React.PureComponent<Props> {
         ));
         normalizers.push(new PositionNormalizer(props.containerWidth, props.containerHeight));
         if (props.minWidth && props.minHeight) {
-            normalizers.push(new RatioNormalizer(props.minWidth, props.minHeight));
+            normalizers.push(new RatioNormalizer(
+                props.containerWidth,
+                props.containerHeight,
+                props.minWidth,
+                props.minHeight
+            ));
         }
         if (props.round) {
             normalizers.push(new RoundingNormalizer());
