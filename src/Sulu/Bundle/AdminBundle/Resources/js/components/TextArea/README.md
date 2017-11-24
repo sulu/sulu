@@ -1,3 +1,5 @@
+A simple textarea component.
+
 ```javascript
 initialState = {
     value: '',
