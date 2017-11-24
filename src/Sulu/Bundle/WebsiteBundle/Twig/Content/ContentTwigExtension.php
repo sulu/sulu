@@ -74,7 +74,6 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
      */
     public function load($uuid)
     {
-
         if (!$uuid) {
             return;
         }
