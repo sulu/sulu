@@ -13,6 +13,8 @@ namespace Sulu\Bundle\WebsiteBundle\Twig;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
@@ -22,6 +24,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Types\TextLine;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -94,6 +97,11 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
      */
     private $startPageNode;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     protected function setUp()
     {
         parent::setUp();
@@ -107,6 +115,7 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->node = $this->prophesize(NodeInterface::class);
         $this->parentNode = $this->prophesize(NodeInterface::class);
         $this->startPageNode = $this->prophesize(NodeInterface::class);
+        $this->logger = $this->prophesize(LoggerInterface::class);
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_test');
@@ -152,7 +161,8 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
             $this->contentMapper->reveal(),
             $this->structureResolver,
             $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal()
+            $this->requestAnalyzer->reveal(),
+            $this->logger->reveal()
         );
 
         $result = $extension->load('123-123-123');
@@ -180,7 +190,8 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
             $this->contentMapper->reveal(),
             $this->structureResolver,
             $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal()
+            $this->requestAnalyzer->reveal(),
+            $this->logger->reveal()
         );
 
         $this->assertNull($extension->load(null));
@@ -197,7 +208,8 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
             $this->contentMapper->reveal(),
             $this->structureResolver,
             $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal()
+            $this->requestAnalyzer->reveal(),
+            $this->logger->reveal()
         );
 
         $this->assertNull($extension->load('999-999-999'));
@@ -214,7 +226,8 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
             $this->contentMapper->reveal(),
             $this->structureResolver,
             $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal()
+            $this->requestAnalyzer->reveal(),
+            $this->logger->reveal()
         );
 
         $result = $extension->loadParent('123-123-123');
@@ -242,7 +255,8 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
             $this->contentMapper->reveal(),
             $this->structureResolver,
             $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal()
+            $this->requestAnalyzer->reveal(),
+            $this->logger->reveal()
         );
 
         $extension->loadParent('321-321-321');
