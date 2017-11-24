@@ -171,6 +171,11 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadNull()
     {
+        $this
+            ->contentMapper
+            ->load(Argument::cetera())
+            ->shouldNotBeCalled();
+
         $extension = new ContentTwigExtension(
             $this->contentMapper->reveal(),
             $this->structureResolver,
@@ -183,6 +188,11 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadNotExistingDocument()
     {
+        $this
+            ->contentMapper
+            ->load(Argument::cetera())
+            ->willThrow($this->prophesize(DocumentNotFoundException::class)->reveal());
+        
         $extension = new ContentTwigExtension(
             $this->contentMapper->reveal(),
             $this->structureResolver,
