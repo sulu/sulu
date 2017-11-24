@@ -45,13 +45,21 @@ class ResourceMetadataStore {
                 fullName: {},
             },
             form: {
+                title: {
+                    label: 'Title',
+                    type: 'text_line',
+                    size: 6,
+                    spaceAfter: 6,
+                },
                 firstName: {
                     label: 'First Name',
                     type: 'text_line',
+                    size: 6,
                 },
                 lastName: {
                     label: 'Last Name',
                     type: 'text_line',
+                    size: 6,
                 },
             },
         },
