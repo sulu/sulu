@@ -41,13 +41,12 @@ beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.get.mockReturnValue({
         Adapter: TableAdapter,
-        paginationType: 'default',
     });
 });
 
 test('Change page in DatagridStore on pagination click', () => {
     const datagridStore = new DatagridStore('test', {page: null});
-    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
     datagrid.find('Pagination').find('.next').simulate('click');
     expect(datagridStore.setPage).toBeCalledWith(datagridStore.getPage() + 1);
 });
@@ -55,7 +54,7 @@ test('Change page in DatagridStore on pagination click', () => {
 test ('Render Pagination with correct values', () => {
     const datagridStore = new DatagridStore('test', {page: null});
 
-    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
     const pagination = datagrid.find('Pagination');
 
     expect(pagination.prop('current')).toEqual(4);
@@ -68,7 +67,7 @@ test('Render TableAdapter with correct values', () => {
     datagridStore.selections.push(3);
     const editClickSpy = jest.fn();
 
-    const datagrid = shallow(<Datagrid views={['table']} store={datagridStore} onItemClick={editClickSpy} />);
+    const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} onItemClick={editClickSpy} />);
     const tableAdapter = datagrid.find('TableAdapter');
 
     expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
@@ -84,7 +83,7 @@ test('Selecting and deselecting items should update store', () => {
         {id: 2},
         {id: 3},
     ];
-    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
     const checkboxes = datagrid.find('input[type="checkbox"]');
     // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
@@ -105,7 +104,7 @@ test('Selecting and unselecting all items on current page should update store', 
         {id: 2},
         {id: 3},
     ];
-    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
     const headerCheckbox = datagrid.find('input[type="checkbox"]').at(0);
     // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114

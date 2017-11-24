@@ -1,5 +1,5 @@
 // @flow
-import Datagrid, {DatagridStore, datagridAdapterRegistry} from './Datagrid';
+import Datagrid, {DatagridStore, datagridAdapterRegistry, AbstractAdapter} from './Datagrid';
 import type {DatagridAdapterProps} from './Datagrid';
 import {viewRegistry} from './ViewRenderer';
 import type {ViewProps} from './ViewRenderer';
@@ -15,5 +15,6 @@ export {
     withToolbar,
     Datagrid,
     DatagridStore,
+    AbstractAdapter,
     datagridAdapterRegistry,
 };

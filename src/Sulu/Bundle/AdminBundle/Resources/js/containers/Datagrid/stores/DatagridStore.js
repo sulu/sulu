@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, intercept, observable} from 'mobx';
+import {action, autorun, intercept, observable, whyRun} from 'mobx';
 import type {ObservableOptions} from '../types';
 import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
@@ -9,13 +9,14 @@ export default class DatagridStore {
     @observable data: Array<Object> = [];
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
+    @observable reset: boolean = false;
     disposer: () => void;
     resourceKey: string;
     options: Object;
     observableOptions: ObservableOptions;
     appendRequestData: boolean;
     localeInterceptDisposer: () => void;
-    dataObserveDisposer: () => void;
+    resetInterceptDisposer: () => void;
 
     constructor(
         resourceKey: string,
@@ -34,10 +35,24 @@ export default class DatagridStore {
         }
     }
 
+    @action updateLoadingStrategy = (loadingStrategy: string) => {
+        switch (loadingStrategy) {
+            case 'infiniteScroll':
+                this.appendRequestData = true;
+                break;
+            default:
+                this.appendRequestData = false;
+                break;
+        }
+
+        this.reset = true;
+        this.sendRequest();
+    };
+
     localeInterceptor = (change: observable) => {
         if (this.observableOptions.locale !== change.newValue) {
-            this.data = [];
-            this.observableOptions.page.set(1);
+            this.reset = true;
+            this.sendRequest();
 
             return change;
         }
