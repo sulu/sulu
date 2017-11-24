@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -44,18 +45,25 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
     private $sessionManager;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Constructor.
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
         SessionManagerInterface $sessionManager,
-        RequestAnalyzerInterface $requestAnalyzer
+        RequestAnalyzerInterface $requestAnalyzer,
+        LoggerInterface $logger
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
         $this->sessionManager = $sessionManager;
         $this->requestAnalyzer = $requestAnalyzer;
+        $this->logger = $logger;
     }
 
     /**
@@ -74,7 +82,6 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
      */
     public function load($uuid)
     {
-
         if (!$uuid) {
             return;
         }
@@ -88,6 +95,8 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
 
             return $this->structureResolver->resolve($contentStructure);
         } catch (DocumentNotFoundException $e) {
+            $this->logger->error((string)$e);
+
             return;
         }
     }
