@@ -199,10 +199,13 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadNotExistingDocument()
     {
+        $documentNotFoundException = $this->prophesize(DocumentNotFoundException::class);
+        $documentNotFoundException->__toString()->willReturn('something');
+
         $this
             ->contentMapper
             ->load(Argument::cetera())
-            ->willThrow($this->prophesize(DocumentNotFoundException::class)->reveal());
+            ->willThrow($documentNotFoundException->reveal());
 
         $extension = new ContentTwigExtension(
             $this->contentMapper->reveal(),
