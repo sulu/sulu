@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, observable} from 'mobx';
+import {action, computed, autorun, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
@@ -14,7 +14,7 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
     open: boolean,
-    locale: observable,
+    locale: string,
     excludedIds: Array<string | number>,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
@@ -42,25 +42,23 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
     }
 
     componentWillMount() {
-        const {
-            open,
-            locale,
-        } = this.props;
+        const {open} = this.props;
 
         if (open) {
-            this.overlayDisposer = autorun(() => this.createStores(locale));
+            this.overlayDisposer = autorun(this.createStores);
         }
     }
 
     componentWillReceiveProps(nextProps: Props) {
-        const {
-            open,
-            locale,
-        } = this.props;
+        const {open} = this.props;
 
         if (!open && nextProps.open) {
-            this.overlayDisposer = autorun(() => this.createStores(locale));
+            this.overlayDisposer = autorun(this.createStores);
         }
+    }
+
+    @computed get locale(): string {
+        return this.props.locale;
     }
 
     @action destroy() {
@@ -83,13 +81,13 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         this.collectionId = id;
     }
 
-    createStores = (locale: observable) => {
+    createStores = () => {
         this.setMediaPage(1);
         this.setCollectionPage(1);
 
-        this.createCollectionStore(this.collectionId, locale);
-        this.createMediaDatagridStore(this.collectionId, this.mediaPage, locale);
-        this.createCollectionDatagridStore(this.collectionId, this.collectionPage, locale);
+        this.createCollectionStore(this.collectionId, this.locale);
+        this.createMediaDatagridStore(this.collectionId, this.mediaPage, this.locale);
+        this.createCollectionDatagridStore(this.collectionId, this.collectionPage, this.locale);
     };
 
     destroyStores() {
@@ -151,7 +149,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         }
 
         if (excludedIds.length) {
-            options['excluded-ids'] = excludedIds.join(',');
+            options.excluded = excludedIds.join(',');
         }
 
         if (this.mediaDatagridStore) {

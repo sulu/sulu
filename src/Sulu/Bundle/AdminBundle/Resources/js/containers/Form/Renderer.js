@@ -41,6 +41,8 @@ export default class Renderer extends React.PureComponent<Props> {
         } = this.props;
         const schemaKeys = Object.keys(schema);
 
+
+        console.log(schemaKeys);
         return (
             <form onSubmit={this.handleSubmit} className={rendererStyles.form}>
                 {schemaKeys.map((schemaKey) => (

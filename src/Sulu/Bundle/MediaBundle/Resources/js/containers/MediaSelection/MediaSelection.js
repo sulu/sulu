@@ -11,7 +11,7 @@ import MediaSelectionItem from './MediaSelectionItem';
 const ADD_ICON = 'plus';
 
 type Props = {
-    locale: observable,
+    locale: string,
     value: Array<string | number>,
     onChange: (ids: Array<string | number>) => void,
 };
@@ -38,14 +38,18 @@ export default class MediaSelection extends React.PureComponent<Props> {
         this.overlayOpen = false;
     }
 
+    callChangeHandler() {
+        this.props.onChange(this.mediaSelectionStore.selectedMediaIds);
+    }
+
     handleRemove = (mediaId: string | number) => {
         this.mediaSelectionStore.removeById(mediaId);
-        this.props.onChange(this.mediaSelectionStore.selectedMediaIds);
+        this.callChangeHandler();
     };
 
     handleSorted = (oldItemIndex: number, newItemIndex: number) => {
         this.mediaSelectionStore.move(oldItemIndex, newItemIndex);
-        this.props.onChange(this.mediaSelectionStore.selectedMediaIds);
+        this.callChangeHandler();
     };
 
     handleOverlayOpen = () => {
@@ -58,7 +62,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
 
     handleOverlayConfirm = (selectedMedia: Array<Object>) => {
         selectedMedia.forEach((media) => this.mediaSelectionStore.add(media));
-        this.props.onChange(this.mediaSelectionStore.selectedMediaIds);
+        this.callChangeHandler();
         this.closeMediaOverlay();
     };
 
