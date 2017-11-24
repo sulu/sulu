@@ -16,7 +16,6 @@ export default class DatagridStore {
     observableOptions: ObservableOptions;
     appendRequestData: boolean;
     localeInterceptDisposer: () => void;
-    resetInterceptDisposer: () => void;
 
     constructor(
         resourceKey: string,
@@ -45,14 +44,12 @@ export default class DatagridStore {
                 break;
         }
 
-        this.reset = true;
-        this.sendRequest();
+        this.sendRequest(true);
     };
 
     localeInterceptor = (change: observable) => {
         if (this.observableOptions.locale !== change.newValue) {
-            this.reset = true;
-            this.sendRequest();
+            this.sendRequest(true);
 
             return change;
         }
@@ -62,7 +59,12 @@ export default class DatagridStore {
         return metadataStore.getSchema(this.resourceKey);
     }
 
-    sendRequest = () => {
+    sendRequest = (reset: boolean = false) => {
+        if (reset === true) {
+            this.setPage(1);
+            this.data = [];
+        }
+
         const page = this.getPage();
 
         if (!page) {
