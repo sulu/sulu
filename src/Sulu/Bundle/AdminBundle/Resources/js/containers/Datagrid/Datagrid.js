@@ -8,6 +8,7 @@ import PaginationDecorator from './PaginationDecorator';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
+import AdapterSwitch from './AdapterSwitch';
 
 type Props = {
     onItemClick?: (itemId: string | number) => void,
@@ -26,6 +27,7 @@ export default class Datagrid extends React.PureComponent<Props> {
 
     componentWillMount() {
         this.validateAdapters();
+        this.props.store.init(this.currentAdapter.adapter.getLoadingStrategy());
     }
 
     componentWillReceiveProps(nextProps: Props) {
@@ -89,20 +91,11 @@ export default class Datagrid extends React.PureComponent<Props> {
 
         return (
             <div>
-                <ul>
-                    {adapters.map((adapter, index) => {
-                        const handleClick = () => {
-                            this.handleAdapterChange(adapter);
-                        };
-
-                        return (
-                            <li key={index} onClick={handleClick}>
-                                {adapter}
-                            </li>
-                        );
-                    })
-                    }
-                </ul>
+                <AdapterSwitch
+                    adapters={adapters}
+                    currentAdapter={this.currentAdapter.key}
+                    onAdapterChange={this.handleAdapterChange}
+                />
                 {this.props.store.loading && !this.props.store.appendRequestData
                     ? <Loader />
                     : <PaginationDecorator

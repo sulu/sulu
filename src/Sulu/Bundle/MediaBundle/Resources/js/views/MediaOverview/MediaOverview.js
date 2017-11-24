@@ -124,8 +124,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
                 page,
                 locale,
             },
-            options,
-            true
+            options
         );
     }
 

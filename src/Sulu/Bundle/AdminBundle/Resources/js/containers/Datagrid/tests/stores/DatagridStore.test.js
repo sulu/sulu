@@ -33,6 +33,7 @@ test('Send request with default parameters', (done) => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     page.set(1);
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     when(
@@ -51,6 +52,7 @@ test('Send request to other base URL', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     page.set(1);
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     datagridStore.destroy();
@@ -61,6 +63,7 @@ test('Send request to other page', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     page.set(1);
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     page.set(2);
@@ -75,6 +78,7 @@ test('Send request to other locale', () => {
         page,
         locale,
     });
+    datagridStore.init('pagination');
     page.set(1);
     locale.set('en');
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1, locale: 'en'});
@@ -88,6 +92,7 @@ test('Send not request without locale if undefined', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     page.set(1);
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     expect(ResourceRequester.getList.mock.calls[0][1]).not.toHaveProperty('locale');
@@ -100,6 +105,7 @@ test('Set loading flag to true before request', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     page.set(1);
     datagridStore.setLoading(false);
     datagridStore.sendRequest();
@@ -118,6 +124,7 @@ test('Set loading flag to false after request', () => {
             tests: [],
         },
     }));
+    datagridStore.init('pagination');
     datagridStore.sendRequest();
     when(
         () => !datagridStore.loading,
@@ -138,6 +145,7 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     expect(datagridStore.getSchema()).toBe(fields);
     expect(metadataStore.getSchema).toBeCalledWith('tests');
     datagridStore.destroy();
@@ -148,6 +156,7 @@ test('After initialization no row should be selected', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     expect(datagridStore.selections.length).toBe(0);
     datagridStore.destroy();
 });
@@ -157,6 +166,7 @@ test('Select an item', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     datagridStore.select(1);
     datagridStore.select(2);
     expect(toJS(datagridStore.selections)).toEqual([1, 2]);
@@ -171,6 +181,7 @@ test('Deselect an item that has not been selected yet', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     datagridStore.select(1);
     datagridStore.deselect(2);
 
@@ -193,6 +204,7 @@ test('Select the entire page', (done) => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     datagridStore.selections = [1, 7];
     page.set(1);
     when(
@@ -221,6 +233,7 @@ test('Deselect the entire page', (done) => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     datagridStore.selections = [1, 2, 7];
     page.set(1);
     when(
@@ -239,6 +252,7 @@ test('Clear the selection', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
+    datagridStore.init('pagination');
     datagridStore.selections = [1, 4, 5];
     page.set(1);
     expect(datagridStore.selections).toHaveLength(3);
@@ -255,9 +269,10 @@ test('The data should be appended when the appendData flag is true', () => {
             page,
             locale,
         },
-        {},
-        true
+        {}
     );
+
+    datagridStore.init('infiniteScroll');
 
     datagridStore.handleResponse({
         _embedded: {
@@ -315,9 +330,9 @@ test('When appendRequest is set, changing the locale observable resets the data 
             page,
             locale,
         },
-        {},
-        true
+        {}
     );
+    datagridStore.init('infiniteScroll');
 
     page.set(3);
     locale.set(2);

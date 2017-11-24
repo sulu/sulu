@@ -10,6 +10,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.observableOptions = observableOptions;
     this.loading = false;
     this.pageCount = 3;
+    this.init = jest.fn();
     this.data = [
         {
             id: 1,
@@ -65,10 +66,7 @@ beforeEach(() => {
 
     const datagridAdapterRegistry = require('../../../containers/Datagrid/registries/DatagridAdapterRegistry');
     datagridAdapterRegistry.has.mockReturnValue(true);
-    datagridAdapterRegistry.get.mockReturnValue({
-        Adapter: TableAdapter,
-        paginationType: 'default',
-    });
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
 });
 
 test('Should render the datagrid with the correct resourceKey', () => {
@@ -78,6 +76,7 @@ test('Should render the datagrid with the correct resourceKey', () => {
         route: {
             options: {
                 resourceKey: 'snippets',
+                adapters: ['table'],
             },
         },
     };
@@ -95,6 +94,7 @@ test('Should render the list with a title', () => {
             options: {
                 resourceKey: 'snippets',
                 title: 'sulu_snippet.snippets',
+                adapters: ['table'],
             },
         },
     };
@@ -111,6 +111,7 @@ test('Should render the datagrid with the pencil icon if a editRoute has been pa
             options: {
                 resourceKey: 'snippets',
                 editRoute: 'editRoute',
+                adapters: ['table'],
             },
         },
     };
@@ -139,6 +140,7 @@ test('Should unbind the binding and destroy the store on unmount', () => {
             options: {
                 resourceKey: 'snippets',
                 locales: ['de', 'en'],
+                adapters: ['table'],
             },
         },
     };
@@ -165,6 +167,7 @@ test('Should unbind the binding and destroy the store on unmount without locale'
         route: {
             options: {
                 resourceKey: 'snippets',
+                adapters: ['table'],
             },
         },
     };
@@ -191,6 +194,7 @@ test('Should navigate when pencil button is clicked and locales have been passed
                 editRoute: 'editRoute',
                 resourceKey: 'test',
                 locales: ['de', 'en'],
+                adapters: ['table'],
             },
         },
     };
@@ -214,6 +218,7 @@ test('Should navigate without locale when pencil button is clicked', () => {
             options: {
                 editRoute: 'editRoute',
                 resourceKey: 'test',
+                adapters: ['table'],
             },
         },
     };
@@ -237,6 +242,7 @@ test('Should render the delete item enabled only if something is selected', () =
         route: {
             options: {
                 resourceKey: 'test',
+                adapters: ['table'],
             },
         },
     };
@@ -265,6 +271,7 @@ test('Should render the locale dropdown with the options from router', () => {
             options: {
                 resourceKey: 'test',
                 locales: ['en', 'de'],
+                adapters: ['table'],
             },
         },
     };
@@ -292,6 +299,7 @@ test('Should pass locale and page observables to the DatagridStore', () => {
             options: {
                 resourceKey: 'test',
                 locales: ['en', 'de'],
+                adapters: ['table'],
             },
         },
     };
@@ -310,6 +318,7 @@ test('Should not pass the locale observable to the DatagridStore if no locales a
         route: {
             options: {
                 resourceKey: 'test',
+                adapters: ['table'],
             },
         },
     };
@@ -335,6 +344,7 @@ test('Should delete selected items when click on delete button', () => {
         route: {
             options: {
                 resourceKey: 'test',
+                adapters: ['table'],
             },
         },
     };

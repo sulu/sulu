@@ -7,7 +7,7 @@ import AbstractAdapter from './AbstractAdapter';
 
 @observer
 export default class FolderAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => string = () => { return 'infiniteScroll'; };
+    static getLoadingStrategy: () => string = () => { return 'pagination'; };
     static getStorageStrategy: () => string = () => { return 'flat'; };
 
     static defaultProps = {

@@ -24,12 +24,17 @@ class List extends React.PureComponent<ViewProps> {
                 options: {
                     resourceKey,
                     locales,
+                    adapters,
                 },
             },
         } = router;
 
         if (!resourceKey) {
             throw new Error('The route does not define the mandatory resourceKey option');
+        }
+
+        if (!adapters) {
+            throw new Error('The route does not define the mandatory adapters option');
         }
 
         const observableOptions = {};

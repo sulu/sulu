@@ -31,6 +31,10 @@ const routes = [
         name: 'Tags',
         key: 'sulu_tag.list',
     },
+    {
+        name: 'Medias',
+        key: 'sulu_media.overview',
+    },
 ];
 
 type Props = {

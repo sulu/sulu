@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, intercept, observable, whyRun} from 'mobx';
+import {action, autorun, intercept, observable} from 'mobx';
 import type {ObservableOptions} from '../types';
 import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
@@ -10,46 +10,55 @@ export default class DatagridStore {
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
     @observable reset: boolean = false;
+    @observable appendRequestData: boolean = false;
     disposer: () => void;
     resourceKey: string;
     options: Object;
     observableOptions: ObservableOptions;
-    appendRequestData: boolean;
     localeInterceptDisposer: () => void;
+
+    static getAppendRequestData: (loadingStrategy: string) => boolean = (loadingStrategy: string) => {
+        switch (loadingStrategy) {
+            case 'infiniteScroll':
+                return true;
+            default:
+                return false;
+        }
+    };
 
     constructor(
         resourceKey: string,
         observableOptions: ObservableOptions,
-        options: Object = {},
-        appendRequestData: boolean = false
+        options: Object = {}
     ) {
         this.resourceKey = resourceKey;
         this.observableOptions = observableOptions;
         this.options = options;
-        this.disposer = autorun(this.sendRequest);
-        this.appendRequestData = appendRequestData;
-
-        if (this.appendRequestData) {
-            this.localeInterceptDisposer = intercept(this.observableOptions.locale, this.localeInterceptor);
-        }
     }
 
-    @action updateLoadingStrategy = (loadingStrategy: string) => {
-        switch (loadingStrategy) {
-            case 'infiniteScroll':
-                this.appendRequestData = true;
-                break;
-            default:
-                this.appendRequestData = false;
-                break;
-        }
+    @action init = (loadingStrategy: string) => {
+        this.disposer = autorun(this.sendRequest);
+        this.updateLoadingStrategy(loadingStrategy);
+    };
 
-        this.sendRequest(true);
+    @action updateLoadingStrategy = (loadingStrategy: string) => {
+        const newAppendRequestData = DatagridStore.getAppendRequestData(loadingStrategy);
+
+        if (newAppendRequestData !== this.appendRequestData) {
+            this.appendRequestData = newAppendRequestData;
+            this.data = [];
+            this.setPage(1);
+
+            if (this.appendRequestData && !this.localeInterceptDisposer) {
+                this.localeInterceptDisposer = intercept(this.observableOptions.locale, this.localeInterceptor);
+            }
+        }
     };
 
     localeInterceptor = (change: observable) => {
         if (this.observableOptions.locale !== change.newValue) {
-            this.sendRequest(true);
+            this.data = [];
+            this.observableOptions.page.set(1);
 
             return change;
         }
@@ -59,12 +68,8 @@ export default class DatagridStore {
         return metadataStore.getSchema(this.resourceKey);
     }
 
-    sendRequest = (reset: boolean = false) => {
-        if (reset === true) {
-            this.setPage(1);
-            this.data = [];
-        }
-
+    sendRequest = () => {
+        const appendRequestData = this.appendRequestData;
         const page = this.getPage();
 
         if (!page) {
@@ -83,10 +88,12 @@ export default class DatagridStore {
         ResourceRequester.getList(this.resourceKey, {
             ...observableOptions,
             ...this.options,
-        }).then(this.handleResponse);
+        }).then(action((response) => {
+            this.handleResponse(response, appendRequestData);
+        }));
     };
 
-    @action handleResponse = (response: Object) => {
+    @action handleResponse = (response: Object, appendRequestData: boolean) => {
         const data = response._embedded[this.resourceKey];
 
         if (this.appendRequestData) {
@@ -150,7 +157,9 @@ export default class DatagridStore {
     }
 
     destroy() {
-        this.disposer();
+        if (this.disposer) {
+            this.disposer();
+        }
 
         if (this.localeInterceptDisposer) {
             this.localeInterceptDisposer();

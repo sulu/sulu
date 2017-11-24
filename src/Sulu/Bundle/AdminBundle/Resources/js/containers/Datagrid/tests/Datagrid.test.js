@@ -3,11 +3,14 @@ import {mount, shallow} from 'enzyme';
 import React from 'react';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
-import TableAdapter from '../adapters/TableAdapter';
 import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
+import AbstractAdapter from '../adapters/AbstractAdapter';
+import TableAdapter from "../adapters/TableAdapter";
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
+    this.init = jest.fn();
+    this.appendRequestData = false;
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
     this.data = [{title: 'value', id: 1}];
@@ -37,11 +40,20 @@ jest.mock('../../../services/Translator', () => ({
     },
 }));
 
+class TestAdapter extends AbstractAdapter {
+    static getLoadingStrategy: () => string = () => { return 'pagination'; };
+    static getStorageStrategy: () => string = () => { return 'flat'; };
+
+    render() {
+        return (
+            <div>Test Adapter</div>
+        );
+    }
+}
+
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);
-    datagridAdapterRegistry.get.mockReturnValue({
-        Adapter: TableAdapter,
-    });
+    datagridAdapterRegistry.get.mockReturnValue(TestAdapter);
 });
 
 test('Change page in DatagridStore on pagination click', () => {
@@ -51,7 +63,7 @@ test('Change page in DatagridStore on pagination click', () => {
     expect(datagridStore.setPage).toBeCalledWith(datagridStore.getPage() + 1);
 });
 
-test ('Render Pagination with correct values', () => {
+test('Render Pagination with correct values', () => {
     const datagridStore = new DatagridStore('test', {page: null});
 
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
@@ -62,6 +74,8 @@ test ('Render Pagination with correct values', () => {
 });
 
 test('Render TableAdapter with correct values', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+
     const datagridStore = new DatagridStore('test', {page: null});
     datagridStore.selections.push(1);
     datagridStore.selections.push(3);
@@ -77,6 +91,7 @@ test('Render TableAdapter with correct values', () => {
 });
 
 test('Selecting and deselecting items should update store', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: null});
     datagridStore.data = [
         {id: 1},
@@ -98,6 +113,8 @@ test('Selecting and deselecting items should update store', () => {
 });
 
 test('Selecting and unselecting all items on current page should update store', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: null});
     datagridStore.data = [
         {id: 1},
