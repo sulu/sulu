@@ -10,7 +10,7 @@ const MEDIA_RESOURCE_KEY = 'media';
 export default class MediaSelectionStore {
     @observable selectedMedia: Array<MediaItem> = [];
 
-    constructor(selectedMediaIds: ?Array<string | number>, locale: string) {
+    constructor(selectedMediaIds: Array<string | number>, locale: string) {
         if (selectedMediaIds && selectedMediaIds.length) {
             this.loadSelectedMedia(selectedMediaIds, locale);
         }

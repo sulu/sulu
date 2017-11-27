@@ -4,3 +4,8 @@
     height: calc(100vh - $toolbarHeight);
     overflow-y: auto;
 }
+
+.header {
+    position: relative;
+    z-index: 1;
+}

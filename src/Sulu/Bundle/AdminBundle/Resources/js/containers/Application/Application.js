@@ -66,7 +66,9 @@ export default class Application extends React.PureComponent<Props> {
 
         return (
             <div>
-                <Toolbar onNavigationButtonClick={this.handleNavigationButtonClick} />
+                <header className={applicationStyles.header}>
+                    <Toolbar onNavigationButtonClick={this.handleNavigationButtonClick} />
+                </header>
                 <main className={applicationStyles.main}>
                     {router.route &&
                         <ViewRenderer
