@@ -6,6 +6,7 @@ import MediaCardOverviewAdapter from '../../../containers/Datagrid/adapters/Medi
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
         withToolbar: jest.fn((Component) => Component),
+        AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey) {
             const COLLECTIONS_RESOURCE_KEY = 'collections';
