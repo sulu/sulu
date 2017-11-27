@@ -13,6 +13,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
     return {
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey) {
+            const {extendObservable} = require.requireActual('mobx');
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
             const collectionData = [
@@ -53,13 +54,14 @@ jest.mock('sulu-admin-bundle/containers', () => {
                     thumbnails: thumbnails,
                 },
             ];
-
+            extendObservable(this, {
+                selections: [],
+            });
             this.loading = false;
             this.pageCount = 3;
             this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
                 ? collectionData
                 : mediaData;
-            this.selections = [];
             this.getPage = jest.fn().mockReturnValue(2);
             this.getFields = jest.fn().mockReturnValue({
                 title: {},

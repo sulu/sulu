@@ -11,7 +11,7 @@ import MediaSelectionItem from './MediaSelectionItem';
 const ADD_ICON = 'plus';
 
 type Props = {
-    locale: string,
+    locale: observable,
     value: Array<string | number>,
     onChange: (ids: Array<string | number>) => void,
 };

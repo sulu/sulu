@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, autorun, observable} from 'mobx';
+import {action, autorun, computed, observable, observe} from 'mobx';
 import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
@@ -14,7 +14,7 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
     open: boolean,
-    locale: string,
+    locale: observable,
     excludedIds: Array<string | number>,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
@@ -35,6 +35,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
     collectionStore: CollectionStore;
     selectedMedia: Array<Object> = [];
     overlayDisposer: () => void;
+    mediaSelectionsObservationDisposer: () => void;
 
     componentWillUnmount() {
         this.destroyStores();
@@ -57,13 +58,14 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         }
     }
 
-    @computed get locale(): string {
+    @computed get locale(): observable {
         return this.props.locale;
     }
 
     @action destroy() {
         this.destroyStores();
         this.overlayDisposer();
+        this.mediaSelectionsObservationDisposer();
 
         this.selectedMedia = [];
         this.collectionId = undefined;
@@ -163,14 +165,21 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
                 locale,
             },
             options,
-            true,
-            this.handleMediaSelectionChange
+            true
+        );
+
+        this.mediaSelectionsObservationDisposer = observe(
+            this.mediaDatagridStore.selections,
+            this.handleMediaSelectionChanges
         );
 
         this.selectedMedia.forEach((media) => this.mediaDatagridStore.select(media.id));
     }
 
-    handleMediaSelectionChange = (mediaId: string | number, selected: boolean) => {
+    handleMediaSelectionChanges = (change: observable) => {
+        const mediaId = (change.added.length) ? change.added[0] : change.removed[0];
+        const selected = !!change.added.length;
+
         if (selected) {
             const media = this.mediaDatagridStore.data.find((entry) => entry.id === mediaId);
 

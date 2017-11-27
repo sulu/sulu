@@ -1,4 +1,5 @@
 // @flow
+import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
@@ -11,7 +12,7 @@ type Props = {
     schema: Schema,
     onSubmit: () => void,
     onChange: (string, mixed) => void,
-    locale: string,
+    locale: observable,
 };
 
 @observer
@@ -41,8 +42,6 @@ export default class Renderer extends React.PureComponent<Props> {
         } = this.props;
         const schemaKeys = Object.keys(schema);
 
-
-        console.log(schemaKeys);
         return (
             <form onSubmit={this.handleSubmit} className={rendererStyles.form}>
                 {schemaKeys.map((schemaKey) => (

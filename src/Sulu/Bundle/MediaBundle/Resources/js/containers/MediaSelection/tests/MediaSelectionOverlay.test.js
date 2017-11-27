@@ -13,6 +13,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
     return {
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey) {
+            const {extendObservable} = require.requireActual('mobx');
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
             const collectionData = [
@@ -53,13 +54,14 @@ jest.mock('sulu-admin-bundle/containers', () => {
                     thumbnails: thumbnails,
                 },
             ];
-
+            extendObservable(this, {
+                selections: [],
+            });
             this.loading = false;
             this.pageCount = 3;
             this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
                 ? collectionData
                 : mediaData;
-            this.selections = [];
             this.getPage = jest.fn().mockReturnValue(2);
             this.getFields = jest.fn().mockReturnValue({
                 title: {},
@@ -204,7 +206,6 @@ test('Should instantiate the needed stores when the overlay opens', () => {
         'thumbnails',
     ].join(','));
     expect(DatagridStore.mock.calls[0][3]).toBe(true);
-    expect(typeof DatagridStore.mock.calls[0][4]).toBe('function');
 
     expect(DatagridStore.mock.calls[1][0]).toBe(collectionResourceKey);
     expect(DatagridStore.mock.calls[1][1].locale).toBe(locale);
@@ -229,8 +230,14 @@ test('Should add and remove media ids', () => {
 
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([]);
 
-    mediaSelectionOverlayInstance.handleMediaSelectionChange(1, true);
-    mediaSelectionOverlayInstance.handleMediaSelectionChange(2, true);
+    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
+        added: [1],
+        removed: [],
+    }));
+    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
+        added: [2],
+        removed: [],
+    }));
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
         {
             id: 1,
@@ -250,7 +257,10 @@ test('Should add and remove media ids', () => {
         },
     ]);
 
-    mediaSelectionOverlayInstance.handleMediaSelectionChange(2, false);
+    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
+        added: [],
+        removed: [2],
+    }));
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
         {
             id: 1,
@@ -279,8 +289,14 @@ test('Should reset the selection array when the "Reset Selection" button was cli
         />
     ).instance();
 
-    mediaSelectionOverlayInstance.handleMediaSelectionChange(1, true);
-    mediaSelectionOverlayInstance.handleMediaSelectionChange(2, true);
+    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
+        added: [1],
+        removed: [],
+    }));
+    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
+        added: [2],
+        removed: [],
+    }));
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
         {
             id: 1,
@@ -321,8 +337,14 @@ test('Should destroy the stores and cleanup all states when the overlay is close
         />
     ).instance();
 
-    mediaSelectionOverlayInstance.handleMediaSelectionChange(1, true);
-    mediaSelectionOverlayInstance.handleMediaSelectionChange(2, true);
+    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
+        added: [1],
+        removed: [],
+    }));
+    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
+        added: [2],
+        removed: [],
+    }));
     mediaSelectionOverlayInstance.setCollectionId(1);
 
     expect(mediaSelectionOverlayInstance.collectionId).toBe(1);

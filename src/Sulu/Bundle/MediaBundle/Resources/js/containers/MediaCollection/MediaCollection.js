@@ -14,7 +14,7 @@ type Props = {
     mediaDatagridStore: DatagridStore,
     collectionDatagridStore: DatagridStore,
     collectionStore: CollectionStore,
-    onCollectionNavigate: (collectionId?: string | number) => void,
+    onCollectionNavigate: (collectionId: ?string | number) => void,
 };
 
 @observer
