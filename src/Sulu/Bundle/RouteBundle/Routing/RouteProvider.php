@@ -95,15 +95,17 @@ class RouteProvider implements RouteProviderInterface
      */
     public function getRouteCollectionForRequest(Request $request)
     {
-        // server encodes the url and symfony does not encode it
-        // symfony decodes this data here https://github.com/symfony/symfony/blob/3.3/src/Symfony/Component/Routing/Matcher/UrlMatcher.php#L91
-        $path = rawurldecode($request->getPathInfo());
+        $path = $this->decodePathInfo($request->getPathInfo());
 
         $collection = new RouteCollection();
         $prefix = $this->requestAnalyzer->getResourceLocatorPrefix();
 
         if (!empty($prefix) && 0 === strpos($path, $prefix)) {
             $path = PathHelper::relativizePath($path, $prefix);
+        }
+
+        if ('html' !== $format = $request->getRequestFormat()) {
+            $path = substr($path, 0, strpos($path, $format) - 1);
         }
 
         $route = $this->findRouteByPath($path, $request->getLocale());
@@ -127,10 +129,7 @@ class RouteProvider implements RouteProviderInterface
             return $collection;
         }
 
-        $collection->add(
-            self::ROUTE_PREFIX . $route->getId(),
-            $this->createRoute($route, $request)
-        );
+        $collection->add(self::ROUTE_PREFIX . $route->getId(), $this->createRoute($route, $request));
 
         return $collection;
     }
@@ -202,7 +201,7 @@ class RouteProvider implements RouteProviderInterface
      */
     protected function createRoute(RouteInterface $route, Request $request)
     {
-        $routePath = $this->requestAnalyzer->getResourceLocatorPrefix() . $route->getPath();
+        $routePath = $this->decodePathInfo($request->getPathInfo());
 
         if ($route->isHistory()) {
             return new Route(
@@ -239,5 +238,22 @@ class RouteProvider implements RouteProviderInterface
         );
 
         return $this->symfonyRouteCache[$route->getId()] = $symfonyRoute;
+    }
+
+    /**
+     * Server encodes the url and symfony does not encode it
+     * Symfony decodes this data here https://github.com/symfony/symfony/blob/3.3/src/Symfony/Component/Routing/Matcher/UrlMatcher.php#L91.
+     *
+     * @param $pathInfo
+     *
+     * @return string
+     */
+    private function decodePathInfo($pathInfo)
+    {
+        if (null === $pathInfo || '' === $pathInfo) {
+            return '';
+        }
+
+        return '/' . ltrim(rawurldecode($pathInfo), '/');
     }
 }
