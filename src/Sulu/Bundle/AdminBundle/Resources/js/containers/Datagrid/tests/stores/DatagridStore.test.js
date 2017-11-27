@@ -262,6 +262,7 @@ test('Clear the selection', () => {
 });
 
 test('The data should be appended when the appendData flag is true', () => {
+    const loadingStrategy = 'infiniteScroll';
     const page = observable();
     const locale = observable();
     const datagridStore = new DatagridStore('tests',
@@ -272,7 +273,7 @@ test('The data should be appended when the appendData flag is true', () => {
         {}
     );
 
-    datagridStore.init('infiniteScroll');
+    datagridStore.init(loadingStrategy);
 
     datagridStore.handleResponse({
         _embedded: {
@@ -282,7 +283,7 @@ test('The data should be appended when the appendData flag is true', () => {
                 {id: 3},
             ],
         },
-    }, true);
+    }, loadingStrategy);
 
     expect(toJS(datagridStore.data)).toEqual([
         {id: 1},
@@ -298,7 +299,7 @@ test('The data should be appended when the appendData flag is true', () => {
                 {id: 6},
             ],
         },
-    }, true);
+    }, loadingStrategy);
 
     expect(toJS(datagridStore.data)).toEqual([
         {id: 1},
@@ -325,7 +326,8 @@ test('When appendRequest is set, changing the locale observable resets the data 
 
     const page = observable();
     const locale = observable();
-    const datagridStore = new DatagridStore('tests',
+    const datagridStore = new DatagridStore(
+        'tests',
         {
             page,
             locale,

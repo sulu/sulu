@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, intercept, observable} from 'mobx';
+import {action, autorun, intercept, observable, computed} from 'mobx';
 import type {ObservableOptions} from '../types';
 import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
@@ -10,22 +10,12 @@ export default class DatagridStore {
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
     @observable reset: boolean = false;
-    @observable appendRequestData: boolean = false;
+    @observable loadingStrategy: ?string;
     disposer: () => void;
     resourceKey: string;
     options: Object;
     observableOptions: ObservableOptions;
     localeInterceptDisposer: () => void;
-    initialized: boolean = false;
-
-    static getAppendRequestData: (loadingStrategy: string) => boolean = (loadingStrategy: string) => {
-        switch (loadingStrategy) {
-            case 'infiniteScroll':
-                return true;
-            default:
-                return false;
-        }
-    };
 
     constructor(
         resourceKey: string,
@@ -35,25 +25,28 @@ export default class DatagridStore {
         this.resourceKey = resourceKey;
         this.observableOptions = observableOptions;
         this.options = options;
+        this.disposer = autorun(this.sendRequest);
+    }
+
+    @computed get initialized(): boolean {
+        return !!this.loadingStrategy;
     }
 
     @action init = (loadingStrategy: string) => {
-        this.disposer = autorun(this.sendRequest);
         this.updateLoadingStrategy(loadingStrategy);
-        this.initialized = true;
     };
 
     @action updateLoadingStrategy = (loadingStrategy: string) => {
-        const newAppendRequestData = DatagridStore.getAppendRequestData(loadingStrategy);
+        if (this.loadingStrategy === loadingStrategy) {
+            return;
+        }
 
-        if (newAppendRequestData !== this.appendRequestData) {
-            this.appendRequestData = newAppendRequestData;
-            this.data = [];
-            this.setPage(1);
+        this.data = [];
+        this.setPage(1);
+        this.loadingStrategy = loadingStrategy;
 
-            if (this.appendRequestData && !this.localeInterceptDisposer) {
-                this.localeInterceptDisposer = intercept(this.observableOptions.locale, this.localeInterceptor);
-            }
+        if ('infiniteScroll' === this.loadingStrategy && !this.localeInterceptDisposer) {
+            this.localeInterceptDisposer = intercept(this.observableOptions.locale, this.localeInterceptor);
         }
     };
 
@@ -75,8 +68,8 @@ export default class DatagridStore {
             return;
         }
 
-        const appendRequestData = this.appendRequestData;
         const page = this.getPage();
+        const loadingStrategy = this.loadingStrategy;
 
         if (!page) {
             return;
@@ -95,14 +88,14 @@ export default class DatagridStore {
             ...observableOptions,
             ...this.options,
         }).then(action((response) => {
-            this.handleResponse(response, appendRequestData);
+            this.handleResponse(response, loadingStrategy);
         }));
     };
 
-    @action handleResponse = (response: Object, appendRequestData: boolean) => {
+    handleResponse = (response: Object, loadingStrategy: ?string) => {
         const data = response._embedded[this.resourceKey];
 
-        if (appendRequestData) {
+        if ('infiniteScroll' === loadingStrategy) {
             this.data = [...this.data, ...data];
         } else {
             this.data = data;
@@ -163,9 +156,7 @@ export default class DatagridStore {
     }
 
     destroy() {
-        if (this.disposer) {
-            this.disposer();
-        }
+        this.disposer();
 
         if (this.localeInterceptDisposer) {
             this.localeInterceptDisposer();

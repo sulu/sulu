@@ -114,7 +114,6 @@ test('Selecting and deselecting items should update store', () => {
 
 test('Selecting and unselecting all items on current page should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: null});
     datagridStore.data = [
         {id: 1},

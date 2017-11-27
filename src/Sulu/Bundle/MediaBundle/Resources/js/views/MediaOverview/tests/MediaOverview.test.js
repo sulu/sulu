@@ -65,7 +65,6 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
             this.init = jest.fn();
-            this.appendRequestData = false;
         }),
     };
 });

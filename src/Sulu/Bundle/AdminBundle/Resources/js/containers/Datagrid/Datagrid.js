@@ -1,6 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
-import {observable, action} from 'mobx';
+import {observable, action, computed} from 'mobx';
 import React from 'react';
 import equal from 'fast-deep-equal';
 import Loader from '../../components/Loader';
@@ -16,18 +16,21 @@ type Props = {
     adapters: Array<string>,
 };
 
-type CurrentAdapter = {
-    adapter: typeof AbstractAdapter,
-    key: string,
-}
-
 @observer
 export default class Datagrid extends React.PureComponent<Props> {
-    @observable currentAdapter: CurrentAdapter;
+    @observable currentAdapterKey: string;
+
+    @computed get currentAdapter(): typeof AbstractAdapter {
+        if (!this.currentAdapterKey) {
+            return datagridAdapterRegistry.get(this.props.adapters[0])
+        }
+
+        return datagridAdapterRegistry.get(this.currentAdapterKey);
+    }
 
     componentWillMount() {
         this.validateAdapters();
-        this.props.store.init(this.currentAdapter.adapter.getLoadingStrategy());
+        this.props.store.init(this.currentAdapter.getLoadingStrategy());
     }
 
     componentWillReceiveProps(nextProps: Props) {
@@ -47,17 +50,10 @@ export default class Datagrid extends React.PureComponent<Props> {
                 );
             }
         });
-
-        if (!this.currentAdapter) {
-            this.setCurrentAdapter(adapters[0]);
-        }
     }
 
-    @action setCurrentAdapter = (adapter: string) => {
-        this.currentAdapter = {
-            adapter: datagridAdapterRegistry.get(adapter),
-            key: adapter,
-        };
+    @action setCurrentAdapterKey = (adapter: string) => {
+        this.currentAdapterKey = adapter;
     };
 
     handlePageChange = (page: number) => {
@@ -75,8 +71,8 @@ export default class Datagrid extends React.PureComponent<Props> {
     };
 
     handleAdapterChange = (adapter: string) => {
-        this.setCurrentAdapter(adapter);
-        this.props.store.updateLoadingStrategy(this.currentAdapter.adapter.getLoadingStrategy());
+        this.setCurrentAdapterKey(adapter);
+        this.props.store.updateLoadingStrategy(this.currentAdapter.getLoadingStrategy());
     };
 
     render() {
@@ -87,16 +83,16 @@ export default class Datagrid extends React.PureComponent<Props> {
         } = this.props;
         const page = store.getPage();
         const pageCount = store.pageCount;
-        const Adapter = this.currentAdapter.adapter;
+        const Adapter = this.currentAdapter;
 
         return (
             <div>
                 <AdapterSwitch
                     adapters={adapters}
-                    currentAdapter={this.currentAdapter.key}
+                    currentAdapter={this.currentAdapterKey}
                     onAdapterChange={this.handleAdapterChange}
                 />
-                {this.props.store.loading && !this.props.store.appendRequestData
+                {this.props.store.loading && this.props.store.loadingStrategy !== 'infiniteScroll'
                     ? <Loader />
                     : <PaginationDecorator
                         type={Adapter.getLoadingStrategy()}

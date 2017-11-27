@@ -13,7 +13,7 @@ export default class TableAdapter extends AbstractAdapter {
         data: [],
     };
 
-    renderCells(item: {[*]: *}, schemaKeys: Array<string>) {
+    renderCells(item: Object, schemaKeys: Array<string>) {
         return schemaKeys.map((schemaKey) => {
             if (typeof item[schemaKey] === 'object') {
                 return <Table.Cell key={item.id + schemaKey}>Object!</Table.Cell>;
