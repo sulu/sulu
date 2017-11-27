@@ -7,7 +7,7 @@ type Props = {
     name?: string,
     icon?: string,
     type: string,
-    value?: string,
+    value: ?string,
     placeholder?: string,
     onChange: (value: string) => void,
 };

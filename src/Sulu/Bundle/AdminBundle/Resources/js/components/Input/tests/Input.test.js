@@ -1,26 +1,26 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
 import Input from '../Input';
 
 test('Input should render', () => {
     const onChange = jest.fn();
-    expect(render(<Input onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<Input value="My value" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Input should render with icon', () => {
     const onChange = jest.fn();
-    expect(render(<Input icon="my-icon" onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<Input icon="my-icon" value="My value" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Input should render with type', () => {
     const onChange = jest.fn();
-    expect(render(<Input type="password" onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<Input type="password" value="My value" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Input should render with placeholder', () => {
     const onChange = jest.fn();
-    expect(render(<Input placeholder="My placeholder" onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<Input placeholder="My placeholder" value="My value" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Input should render with value', () => {
