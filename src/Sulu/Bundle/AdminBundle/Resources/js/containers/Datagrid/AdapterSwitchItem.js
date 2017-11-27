@@ -24,7 +24,7 @@ export default class AdapterSwitchItem extends React.PureComponent<Props> {
         } = this.props;
 
         return (
-            <li key={adapter} onClick={this.handleClick}>
+            <li onClick={this.handleClick}>
                 {active ? (
                     <i>{adapter}</i>
                 ) : adapter}
