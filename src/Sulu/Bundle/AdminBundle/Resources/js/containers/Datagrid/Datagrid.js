@@ -21,10 +21,6 @@ export default class Datagrid extends React.PureComponent<Props> {
     @observable currentAdapterKey: string;
 
     @computed get currentAdapter(): typeof AbstractAdapter {
-        if (!this.currentAdapterKey) {
-            return datagridAdapterRegistry.get(this.props.adapters[0])
-        }
-
         return datagridAdapterRegistry.get(this.currentAdapterKey);
     }
 
@@ -50,6 +46,10 @@ export default class Datagrid extends React.PureComponent<Props> {
                 );
             }
         });
+
+        if (!this.currentAdapterKey) {
+            this.setCurrentAdapterKey(this.props.adapters[0]);
+        }
     }
 
     @action setCurrentAdapterKey = (adapter: string) => {
