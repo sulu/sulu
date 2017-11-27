@@ -15,6 +15,7 @@ export default class TableAdapter extends AbstractAdapter {
 
     renderCells(item: Object, schemaKeys: Array<string>) {
         return schemaKeys.map((schemaKey) => {
+            // TODO: Remove this when a datafield mapping is built
             if (typeof item[schemaKey] === 'object') {
                 return <Table.Cell key={item.id + schemaKey}>Object!</Table.Cell>;
             }
