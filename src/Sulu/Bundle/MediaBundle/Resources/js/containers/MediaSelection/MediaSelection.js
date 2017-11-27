@@ -12,7 +12,7 @@ const ADD_ICON = 'plus';
 
 type Props = {
     locale: observable,
-    value: Array<string | number>,
+    value: ?Array<string | number>,
     onChange: (ids: Array<string | number>) => void,
 };
 
