@@ -61,6 +61,38 @@ class ResourceMetadataStore {
                     type: 'text_line',
                     size: 6,
                 },
+                contactDetails: {
+                    label: 'Contact Details',
+                    type: 'section',
+                    items: {
+                        phone: {
+                            label: 'Phone',
+                            type: 'text_line',
+                            size: 6,
+                        },
+                        test: {
+                            type: 'section',
+                            label: 'Test',
+                            items: {
+                                test: {
+                                    label: 'Test',
+                                    type: 'text_line',
+                                },
+                            },
+                        },
+                    },
+                },
+                address: {
+                    label: 'Address',
+                    type: 'section',
+                    items: {
+                        street: {
+                            label: 'Street',
+                            type: 'text_line',
+                            size: 6,
+                        },
+                    },
+                },
             },
         },
         accounts: {

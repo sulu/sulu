@@ -74,10 +74,16 @@ export default class ResourceStore {
     }
 
     @action changeSchema(schema: Schema) {
-        const schemaFields = Object.keys(schema).reduce((object, key) => {
+        const addObjectProperty = (object, key) => {
+            if (schema[key].type === 'section' && schema[key].items) {
+                Object.keys(schema[key].items).reduce(addObjectProperty, {});
+            }
+
             object[key] = null;
             return object;
-        }, {});
+        };
+
+        const schemaFields = Object.keys(schema).reduce(addObjectProperty, {});
 
         this.data = {...schemaFields, ...this.data};
     }

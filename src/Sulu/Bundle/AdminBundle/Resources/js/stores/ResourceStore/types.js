@@ -7,6 +7,7 @@ export type SchemaEntry = {
     type: string,
     size?: Size,
     spaceAfter?: Size,
+    items?: Schema,
 };
 
 export type Schema = {
