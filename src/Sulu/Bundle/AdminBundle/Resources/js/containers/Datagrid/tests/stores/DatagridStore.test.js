@@ -282,7 +282,7 @@ test('The data should be appended when the appendData flag is true', () => {
                 {id: 3},
             ],
         },
-    });
+    }, true);
 
     expect(toJS(datagridStore.data)).toEqual([
         {id: 1},
@@ -298,7 +298,7 @@ test('The data should be appended when the appendData flag is true', () => {
                 {id: 6},
             ],
         },
-    });
+    }, true);
 
     expect(toJS(datagridStore.data)).toEqual([
         {id: 1},

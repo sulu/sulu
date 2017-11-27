@@ -5,7 +5,7 @@ import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
 import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
 import AbstractAdapter from '../adapters/AbstractAdapter';
-import TableAdapter from "../adapters/TableAdapter";
+import TableAdapter from '../adapters/TableAdapter';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();

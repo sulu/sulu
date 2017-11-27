@@ -11,6 +11,7 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
+        AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         DatagridStore: jest.fn(function(resourceKey) {
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
@@ -67,6 +68,8 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
+            this.init = jest.fn();
+            this.appendRequestData = false;
         }),
     };
 });
@@ -127,14 +130,8 @@ beforeEach(() => {
 
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        'folder': {
-            Adapter: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
-            paginationType: 'pagination',
-        },
-        'media_card_overview': {
-            Adapter: MediaCardOverviewAdapter,
-            paginationType: 'infiniteScroll',
-        },
+        'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
+        'media_card_overview': MediaCardOverviewAdapter,
     });
 });
 
@@ -158,7 +155,7 @@ test('Render the MediaCollection', () => {
         <MediaCollection
             page={page}
             locale={locale}
-            mediaViews={['media_card_overview']}
+            mediaDatagridAdapters={['media_card_overview']}
             mediaDatagridStore={mediaDatagridStore}
             collectionDatagridStore={collectionDatagridStore}
             collectionStore={collectionStore}

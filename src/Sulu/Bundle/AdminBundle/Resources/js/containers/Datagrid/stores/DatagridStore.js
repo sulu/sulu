@@ -16,6 +16,7 @@ export default class DatagridStore {
     options: Object;
     observableOptions: ObservableOptions;
     localeInterceptDisposer: () => void;
+    initialized: boolean = false;
 
     static getAppendRequestData: (loadingStrategy: string) => boolean = (loadingStrategy: string) => {
         switch (loadingStrategy) {
@@ -39,6 +40,7 @@ export default class DatagridStore {
     @action init = (loadingStrategy: string) => {
         this.disposer = autorun(this.sendRequest);
         this.updateLoadingStrategy(loadingStrategy);
+        this.initialized = true;
     };
 
     @action updateLoadingStrategy = (loadingStrategy: string) => {
@@ -69,6 +71,10 @@ export default class DatagridStore {
     }
 
     sendRequest = () => {
+        if (!this.initialized) {
+            return;
+        }
+
         const appendRequestData = this.appendRequestData;
         const page = this.getPage();
 
@@ -96,7 +102,7 @@ export default class DatagridStore {
     @action handleResponse = (response: Object, appendRequestData: boolean) => {
         const data = response._embedded[this.resourceKey];
 
-        if (this.appendRequestData) {
+        if (appendRequestData) {
             this.data = [...this.data, ...data];
         } else {
             this.data = data;
