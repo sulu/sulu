@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import {Icon, Checkbox, CroppedText} from 'sulu-admin-bundle/components';
+import MimeTypeIndicator from '../MimeTypeIndicator';
 import DownloadList from './DownloadList';
 import mediaCardStyles from './mediaCard.scss';
 
@@ -27,7 +28,9 @@ type Props = {
     /** The icon used inside the media overlay */
     icon?: string,
     /** The URL of the presented image */
-    image: string,
+    image: ?string,
+    /** Mime type to determine which icon to use if no thumbnail is present */
+    mimeType: string,
     /** List of available image sizes */
     imageSizes: Array<{url: string, label: string}>,
     /** For the `Item` in the "DownloadList" which will open the defined url to download the image */
@@ -115,6 +118,7 @@ export default class MediaCard extends React.PureComponent<Props> {
             title,
             image,
             selected,
+            mimeType,
             showCover,
             imageSizes,
             downloadUrl,
@@ -184,7 +188,10 @@ export default class MediaCard extends React.PureComponent<Props> {
                     className={mediaCardStyles.media}
                     onClick={this.handleClick}
                 >
-                    <img alt={title} src={image} />
+                    {(image)
+                        ? <img alt={title} src={image} />
+                        : <MimeTypeIndicator mimeType={mimeType} height={200} />
+                    }
                     <div className={mediaCardStyles.cover}>
                         {!!icon &&
                             <Icon name={icon} className={mediaCardStyles.mediaIcon} />

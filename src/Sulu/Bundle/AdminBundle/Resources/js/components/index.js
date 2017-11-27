@@ -11,6 +11,7 @@ import Masonry from './Masonry';
 import MultiItemSelection from './MultiItemSelection';
 import Overlay from './Overlay';
 import Popover from './Popover';
+import withContainerSize from './withContainerSize';
 
 export {
     arrayMove,
@@ -25,4 +26,5 @@ export {
     MultiItemSelection,
     Overlay,
     Popover,
+    withContainerSize,
 };
