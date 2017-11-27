@@ -6,7 +6,7 @@ However, the data returned by the selection component should be with respect to 
 This component loads an image, makes sure it takes up the maximum width and height provided by its container
 without distorting the image and renders a selection component on top of it.
 
-```
+```javascript
 <div style={{width: 500, height: 500, background: '#e8e8e8'}}>
     <ImageRectangleSelection
         initialSelection={{width: 1000, height: 800, top: 200, left: 300}}
@@ -17,7 +17,7 @@ without distorting the image and renders a selection component on top of it.
 Like with the `RectangleSelection`, if both the `minWidth` and `minHeight` properties are set,
 the ratio between these two is enforced on the selection.
 
-```
+```javascript
 initialState = {selection: {}};
 <div>
     <div style={{width: 800, height: 300, background: '#e8e8e8'}}>
