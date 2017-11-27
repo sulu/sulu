@@ -1,16 +1,16 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
 import TextArea from '../TextArea';
 
 test('TextArea should render', () => {
     const onChange = jest.fn();
-    expect(render(<TextArea onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<TextArea value="My value" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('TextArea should render with placeholder', () => {
     const onChange = jest.fn();
-    expect(render(<TextArea placeholder="My placeholder" onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<TextArea placeholder="My placeholder" value="My value" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('TextArea should render with value', () => {

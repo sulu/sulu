@@ -4,7 +4,7 @@ import textAreaStyles from './textArea.scss';
 
 type Props = {
     name?: string,
-    value?: string,
+    value: ?string,
     placeholder?: string,
     onChange: (value: string) => void,
 };
