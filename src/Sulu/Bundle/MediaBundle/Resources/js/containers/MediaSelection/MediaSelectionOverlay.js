@@ -37,11 +37,6 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
     overlayDisposer: () => void;
     mediaSelectionsObservationDisposer: () => void;
 
-    componentWillUnmount() {
-        this.destroyStores();
-        this.overlayDisposer();
-    }
-
     componentWillMount() {
         const {open} = this.props;
 
@@ -196,8 +191,8 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
     };
 
     handleClose = () => {
-        this.destroy();
         this.props.onClose();
+        this.destroy();
     };
 
     handleSelectionReset = () => {
