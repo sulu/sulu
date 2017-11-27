@@ -64,6 +64,8 @@ export default class Application extends React.PureComponent<Props> {
     render() {
         const {router} = this.props;
 
+        console.log(applicationStyles);
+
         return (
             <div>
                 <header className={applicationStyles.header}>
