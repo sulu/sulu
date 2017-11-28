@@ -10,7 +10,7 @@ import CollectionBreadcrumb from './CollectionBreadcrumb';
 type Props = {
     page: observable,
     locale: observable,
-    mediaViews: Array<string>,
+    mediaDatagridAdapters: Array<string>,
     mediaDatagridStore: DatagridStore,
     collectionDatagridStore: DatagridStore,
     collectionStore: CollectionStore,
@@ -33,9 +33,9 @@ export default class MediaCollection extends React.PureComponent<Props> {
 
     render() {
         const {
-            mediaViews,
-            collectionStore,
+            mediaDatagridAdapters,
             mediaDatagridStore,
+            collectionStore,
             collectionDatagridStore,
         } = this.props;
 
@@ -48,13 +48,13 @@ export default class MediaCollection extends React.PureComponent<Props> {
                     />
                 }
                 <Datagrid
-                    views={['folder']}
+                    adapters={['folder']}
                     store={collectionDatagridStore}
                     onItemClick={this.handleCollectionClick}
                 />
                 <Divider />
                 <Datagrid
-                    views={mediaViews}
+                    adapters={mediaDatagridAdapters}
                     store={mediaDatagridStore}
                 />
             </div>

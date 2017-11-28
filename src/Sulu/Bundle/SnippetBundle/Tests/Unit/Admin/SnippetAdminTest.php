@@ -68,6 +68,7 @@ class SnippetAdminTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame([
             'title' => 'sulu_snippet.snippets',
             'resourceKey' => 'snippets',
+            'adapters' => ['table'],
             'editRoute' => 'sulu_snippet.form.detail',
             'locales' => array_keys($locales),
         ], 'options', $listRoute);

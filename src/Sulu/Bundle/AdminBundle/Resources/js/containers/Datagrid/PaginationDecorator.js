@@ -4,10 +4,9 @@ import type {Element} from 'react';
 import Pagination from '../../components/Pagination';
 import InfiniteScroller from '../../components/InfiniteScroller';
 import {translate} from '../../services/Translator';
-import type {PaginationType} from './types';
 
 type Props = {
-    type: PaginationType,
+    type: string,
     total: number,
     current: ?number,
     loading: boolean,

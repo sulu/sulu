@@ -57,7 +57,8 @@ class TagAdmin extends Admin
         return [
             (new Route('sulu_tag.list', '/tags', 'sulu_admin.list'))
                 ->addOption('title', 'sulu_tag.tags')
-                ->addOption('resourceKey', 'tags'),
+                ->addOption('resourceKey', 'tags')
+                ->addOption('adapters', ['table']),
         ];
     }
 

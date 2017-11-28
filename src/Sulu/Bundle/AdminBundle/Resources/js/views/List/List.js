@@ -24,12 +24,17 @@ class List extends React.PureComponent<ViewProps> {
                 options: {
                     resourceKey,
                     locales,
+                    adapters,
                 },
             },
         } = router;
 
         if (!resourceKey) {
             throw new Error('The route does not define the mandatory resourceKey option');
+        }
+
+        if (!adapters) {
+            throw new Error('The route does not define the mandatory adapters option');
         }
 
         const observableOptions = {};
@@ -70,6 +75,7 @@ class List extends React.PureComponent<ViewProps> {
         const {
             route: {
                 options: {
+                    adapters,
                     title,
                     editRoute,
                 },
@@ -81,7 +87,7 @@ class List extends React.PureComponent<ViewProps> {
                 {title && <h1>{translate(title)}</h1>}
                 <Datagrid
                     store={this.datagridStore}
-                    views={['table']}
+                    adapters={adapters}
                     onItemClick={editRoute && this.handleEditClick}
                 />
             </div>

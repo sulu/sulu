@@ -118,6 +118,16 @@ exports[`Render a simple MediaOverview 1`] = `
       class="divider"
     />
     <div>
+      <ul>
+        <li>
+          <i>
+            media_card_overview
+          </i>
+        </li>
+        <li>
+          table
+        </li>
+      </ul>
       <section>
         <div>
           <div>

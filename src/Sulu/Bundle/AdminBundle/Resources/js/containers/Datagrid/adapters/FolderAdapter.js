@@ -2,11 +2,14 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import FolderList from '../../../components/FolderList';
-import type {DatagridAdapterProps} from '../types';
 import {translate} from '../../../services/Translator';
+import AbstractAdapter from './AbstractAdapter';
 
 @observer
-export default class FolderAdapter extends React.Component<DatagridAdapterProps> {
+export default class FolderAdapter extends AbstractAdapter {
+    static getLoadingStrategy: () => string = () => { return 'pagination'; };
+    static getStorageStrategy: () => string = () => { return 'flat'; };
+
     static defaultProps = {
         data: [],
     };

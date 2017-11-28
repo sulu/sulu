@@ -2,13 +2,29 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
-import type {DatagridAdapterProps} from '../types';
+import AbstractAdapter from './AbstractAdapter';
 
 @observer
-export default class TableAdapter extends React.Component<DatagridAdapterProps> {
+export default class TableAdapter extends AbstractAdapter {
+    static getLoadingStrategy: () => string = () => { return 'pagination'; };
+    static getStorageStrategy: () => string = () => { return 'flat'; };
+
     static defaultProps = {
         data: [],
     };
+
+    renderCells(item: Object, schemaKeys: Array<string>) {
+        return schemaKeys.map((schemaKey) => {
+            // TODO: Remove this when a datafield mapping is built
+            if (typeof item[schemaKey] === 'object') {
+                return <Table.Cell key={item.id + schemaKey}>Object!</Table.Cell>;
+            }
+
+            return (
+                <Table.Cell key={item.id + schemaKey}>{item[schemaKey]}</Table.Cell>
+            );
+        });
+    }
 
     render() {
         const {
@@ -44,9 +60,7 @@ export default class TableAdapter extends React.Component<DatagridAdapterProps> 
                 <Table.Body>
                     {data.map((item) => (
                         <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
-                            {schemaKeys.map((schemaKey) => (
-                                <Table.Cell key={item.id + schemaKey}>{item[schemaKey]}</Table.Cell>
-                            ))}
+                            {this.renderCells(item, schemaKeys)}
                         </Table.Row>
                     ))}
                 </Table.Body>

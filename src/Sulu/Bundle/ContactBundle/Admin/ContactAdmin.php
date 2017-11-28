@@ -66,6 +66,7 @@ class ContactAdmin extends Admin
         return [
             (new Route('sulu_contact.contacts_list', '/contacts', 'sulu_admin.list'))
                 ->addOption('title', 'sulu_contact.persons')
+                ->addOption('adapters', ['table'])
                 ->addOption('resourceKey', 'contacts')
                 ->addOption('editRoute', 'sulu_contact.form.detail'),
             (new Route('sulu_contact.form', '/contacts/:id', 'sulu_admin.resource_tabs'))
@@ -76,6 +77,7 @@ class ContactAdmin extends Admin
                 ->setParent('sulu_contact.form'),
             (new Route('sulu_contact.accounts_list', '/accounts', 'sulu_admin.list'))
                 ->addOption('title', 'sulu_contact.organizations')
+                ->addOption('adapters', ['table'])
                 ->addOption('resourceKey', 'accounts'),
         ];
     }

@@ -6,6 +6,7 @@ import MediaCardOverviewAdapter from '../../../containers/Datagrid/adapters/Medi
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
         withToolbar: jest.fn((Component) => Component),
+        AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey) {
             const COLLECTIONS_RESOURCE_KEY = 'collections';
@@ -63,6 +64,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
+            this.init = jest.fn();
         }),
     };
 });
@@ -126,14 +128,8 @@ beforeEach(() => {
 
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        'folder': {
-            Adapter: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
-            paginationType: 'pagination',
-        },
-        'media_card_overview': {
-            Adapter: MediaCardOverviewAdapter,
-            paginationType: 'infiniteScroll',
-        },
+        'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
+        'media_card_overview': MediaCardOverviewAdapter,
     });
 });
 
@@ -202,4 +198,31 @@ test('Should navigate to defined route on back button click', () => {
         'id': 1,
         'locale': 'de',
     });
+});
+
+test('Router navigate should be called when folder change is triggered', () => {
+    const MediaOverview = require('../MediaOverview').default;
+    const locale = 'de';
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: [locale],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+        navigate: jest.fn(),
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />);
+    mediaOverview.instance().collectionId = 4;
+    mediaOverview.instance().locale.set(locale);
+
+    mediaOverview.find('Folder').at(1).simulate('click');
+    expect(router.navigate).toBeCalledWith(
+        'sulu_media.overview',
+        {'collectionPage': '1', 'id': 2, 'locale': locale}
+    );
 });

@@ -1,5 +1,4 @@
 // @flow
-import type {ComponentType} from 'react';
 import {observable} from 'mobx';
 
 export type DataItem = {
@@ -18,19 +17,6 @@ export type DatagridAdapterProps = {
     onItemSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     onAllSelectionChange?: (selected?: boolean) => void,
 };
-
-export type PaginationType = 'pagination' | 'infiniteScroll';
-
-export type AdapterConfig = {
-    Adapter: DatagridAdapter,
-    paginationType: PaginationType,
-};
-
-export type AdapterConfigs = {
-    [string]: AdapterConfig,
-};
-
-export type DatagridAdapter = ComponentType<DatagridAdapterProps>;
 
 export type ObservableOptions = {
     page: observable,

@@ -4,16 +4,17 @@ import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import TableAdapter from './adapters/TableAdapter';
 import FolderAdapter from './adapters/FolderAdapter';
-import type {DatagridAdapter, DatagridAdapterProps} from './types';
+import AbstractAdapter from './adapters/AbstractAdapter';
+import type {DatagridAdapterProps} from './types';
 
 export default Datagrid;
 export {
+    AbstractAdapter,
     DatagridStore,
     datagridAdapterRegistry,
     TableAdapter,
     FolderAdapter,
 };
 export type {
-    DatagridAdapter,
     DatagridAdapterProps,
 };

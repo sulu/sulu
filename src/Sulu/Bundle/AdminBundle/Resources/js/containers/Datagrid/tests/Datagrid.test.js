@@ -3,11 +3,14 @@ import {mount, shallow} from 'enzyme';
 import React from 'react';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
-import TableAdapter from '../adapters/TableAdapter';
 import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
+import AbstractAdapter from '../adapters/AbstractAdapter';
+import TableAdapter from '../adapters/TableAdapter';
+import FolderAdapter from '../adapters/FolderAdapter';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
+    this.init = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
     this.data = [{title: 'value', id: 1}];
@@ -18,6 +21,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.deselect = jest.fn();
     this.selectEntirePage = jest.fn();
     this.deselectEntirePage = jest.fn();
+    this.updateLoadingStrategy = jest.fn();
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
@@ -37,25 +41,33 @@ jest.mock('../../../services/Translator', () => ({
     },
 }));
 
+class TestAdapter extends AbstractAdapter {
+    static getLoadingStrategy: () => string = jest.fn().mockReturnValue('pagination');
+    static getStorageStrategy: () => string = jest.fn().mockReturnValue('flat');
+
+    render() {
+        return (
+            <div>Test Adapter</div>
+        );
+    }
+}
+
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);
-    datagridAdapterRegistry.get.mockReturnValue({
-        Adapter: TableAdapter,
-        paginationType: 'default',
-    });
+    datagridAdapterRegistry.get.mockReturnValue(TestAdapter);
 });
 
 test('Change page in DatagridStore on pagination click', () => {
     const datagridStore = new DatagridStore('test', {page: null});
-    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
     datagrid.find('Pagination').find('.next').simulate('click');
     expect(datagridStore.setPage).toBeCalledWith(datagridStore.getPage() + 1);
 });
 
-test ('Render Pagination with correct values', () => {
+test('Render Pagination with correct values', () => {
     const datagridStore = new DatagridStore('test', {page: null});
 
-    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
     const pagination = datagrid.find('Pagination');
 
     expect(pagination.prop('current')).toEqual(4);
@@ -63,12 +75,14 @@ test ('Render Pagination with correct values', () => {
 });
 
 test('Render TableAdapter with correct values', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+
     const datagridStore = new DatagridStore('test', {page: null});
     datagridStore.selections.push(1);
     datagridStore.selections.push(3);
     const editClickSpy = jest.fn();
 
-    const datagrid = shallow(<Datagrid views={['table']} store={datagridStore} onItemClick={editClickSpy} />);
+    const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} onItemClick={editClickSpy} />);
     const tableAdapter = datagrid.find('TableAdapter');
 
     expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
@@ -78,13 +92,14 @@ test('Render TableAdapter with correct values', () => {
 });
 
 test('Selecting and deselecting items should update store', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: null});
     datagridStore.data = [
         {id: 1},
         {id: 2},
         {id: 3},
     ];
-    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
     const checkboxes = datagrid.find('input[type="checkbox"]');
     // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
@@ -99,13 +114,14 @@ test('Selecting and deselecting items should update store', () => {
 });
 
 test('Selecting and unselecting all items on current page should update store', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: null});
     datagridStore.data = [
         {id: 1},
         {id: 2},
         {id: 3},
     ];
-    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
     const headerCheckbox = datagrid.find('input[type="checkbox"]').at(0);
     // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
@@ -114,4 +130,47 @@ test('Selecting and unselecting all items on current page should update store', 
     expect(datagridStore.selectEntirePage).toBeCalledWith();
     headerCheckbox.simulate('change', {currentTarget: {checked: false}});
     expect(datagridStore.deselectEntirePage).toBeCalledWith();
+});
+
+test('Switching the adapter should render the correct adapter', () => {
+    const datagridStore = new DatagridStore('test', {page: null});
+
+    datagridAdapterRegistry.get.mockImplementation((adapter) => {
+        switch (adapter) {
+            case 'table':
+                return TableAdapter;
+            case 'folder':
+                return FolderAdapter;
+        }
+    });
+    const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
+
+    expect(datagrid.find('AdapterSwitch').length).toBe(1);
+    expect(datagrid.find('TableAdapter').length).toBe(1);
+
+    datagrid.find('AdapterSwitchItem').at(1).simulate('click');
+    expect(datagrid.find('TableAdapter').length).toBe(0);
+    expect(datagrid.find('FolderAdapter').length).toBe(1);
+});
+
+test('DatagridStore should be initialized correctly on init and update', () => {
+    const datagridStore = new DatagridStore('test', {page: null});
+    datagridStore.init = jest.fn();
+
+    datagridAdapterRegistry.get.mockImplementation((adapter) => {
+        switch (adapter) {
+            case 'table':
+                return TableAdapter;
+            case 'folder':
+                return FolderAdapter;
+        }
+    });
+    const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
+    expect(datagridStore.init).toBeCalledWith('pagination');
+
+    const newDatagridStore = new DatagridStore('test', {page: null});
+    newDatagridStore.init = jest.fn();
+
+    datagrid.setProps({ store: newDatagridStore });
+    expect(newDatagridStore.init).toBeCalledWith('pagination');
 });
