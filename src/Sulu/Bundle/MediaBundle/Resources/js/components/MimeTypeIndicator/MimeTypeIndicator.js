@@ -9,7 +9,6 @@ type Props = {
     height?: number,
     iconSize?: number,
     mimeType?: string,
-    inverted?: boolean,
 };
 
 export default class MimeTypeIndicator extends React.PureComponent<Props> {
@@ -23,18 +22,17 @@ export default class MimeTypeIndicator extends React.PureComponent<Props> {
             width,
             height,
             iconSize,
-            inverted,
             mimeType,
         } = this.props;
         const {
             icon,
-            mimeTypeColor,
+            backgroundColor,
         } = MimeTypeMapper.get(mimeType);
         const mimeTypeStyles = {};
 
         mimeTypeStyles.color = '#fff';
         mimeTypeStyles.fontSize = iconSize;
-        mimeTypeStyles.backgroundColor = mimeTypeColor;
+        mimeTypeStyles.backgroundColor = backgroundColor;
 
         if (width) {
             mimeTypeStyles.width = width;
@@ -42,11 +40,6 @@ export default class MimeTypeIndicator extends React.PureComponent<Props> {
 
         if (height) {
             mimeTypeStyles.height = height;
-        }
-
-        if (inverted) {
-            mimeTypeStyles.color = mimeTypeColor;
-            mimeTypeStyles.backgroundColor = '#fff';
         }
 
         return (

@@ -1,3 +1,5 @@
+The `MimeTypeIndicator` component serves as a replacement for uploaded files which does not offer a thumbnail. It offers predefined colors for common file-types.
+
 ```javascript
 const box = {
     display: 'inline-block',
@@ -14,9 +16,16 @@ const box = {
     </div>
     <div style={box}>
         <MimeTypeIndicator
-            mimeType="application/msword"
-            width={200}
-            height={150}
+            mimeType="application/random"
+            width={180}
+            height={120}
+        />
+    </div>
+    <div style={box}>
+        <MimeTypeIndicator
+            mimeType="audio"
+            width={120}
+            height={80}
         />
     </div>
     <div style={box}>

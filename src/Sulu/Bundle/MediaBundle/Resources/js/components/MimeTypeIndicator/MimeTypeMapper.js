@@ -4,91 +4,91 @@ const mapping = {
     // images
     'image': {
         icon: 'file-image-o',
-        mimeTypeColor: '#f67e00',
+        backgroundColor: '#f67e00',
     },
 
     // audio
     'audio': {
         icon: 'file-audio-o',
-        mimeTypeColor: '#f67e00',
+        backgroundColor: '#f67e00',
     },
 
     // video
     'video': {
         icon: 'file-video-o',
-        mimeTypeColor: '#f67e00',
+        backgroundColor: '#f67e00',
     },
 
     // text
     'text': {
         icon: 'file-text-o',
-        mimeTypeColor: '#585858',
+        backgroundColor: '#585858',
     },
 
     // documents
     'application/pdf': {
         icon: 'file-pdf-o',
-        mimeTypeColor: '#bb0806',
+        backgroundColor: '#bb0806',
     },
     'text/plain': {
         icon: 'file-text-o',
-        mimeTypeColor: '#585858',
+        backgroundColor: '#585858',
     },
     'text/rtf': {
         icon: 'file-text-o',
-        mimeTypeColor: '#585858',
+        backgroundColor: '#585858',
     },
     'application/rtf': {
         icon: 'file-text-o',
-        mimeTypeColor: '#585858',
+        backgroundColor: '#585858',
     },
     'text/html': {
         icon: 'file-code-o',
-        mimeTypeColor: '#67217a',
+        backgroundColor: '#67217a',
     },
     'application/json': {
         icon: 'file-code-o',
-        mimeTypeColor: '#585858',
+        backgroundColor: '#585858',
     },
     'application/msword': {
         icon: 'file-word-o',
-        mimeTypeColor: '#2c5897',
+        backgroundColor: '#2c5897',
     },
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': {
         icon: 'file-word-o',
-        mimeTypeColor: '#2c5897',
+        backgroundColor: '#2c5897',
     },
     'application/vnd.ms-excel': {
         icon: 'file-excel-o',
-        mimeTypeColor: '#00723a',
+        backgroundColor: '#00723a',
     },
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
         icon: 'file-excel-o',
-        mimeTypeColor: '#00723a',
+        backgroundColor: '#00723a',
     },
     'application/vnd.ms-powerpoint': {
         icon: 'file-powerpoint-o',
-        mimeTypeColor: '#d14628',
+        backgroundColor: '#d14628',
     },
     'application/vnd.openxmlformats-officedocument.presentationml.presentation': {
         icon: 'file-powerpoint-o',
-        mimeTypeColor: '#d14628',
+        backgroundColor: '#d14628',
     },
 
     // archives
     'application/gzip': {
         icon: 'file-archive-o',
-        mimeTypeColor: '#585858',
+        backgroundColor: '#585858',
     },
     'application/zip': {
         icon: 'file-archive-o',
-        mimeTypeColor: '#585858',
+        backgroundColor: '#585858',
     },
 
     // misc
     'application/octet-stream': {
         icon: 'file-o',
-        mimeTypeColor: '#585858',
+        backgroundColor: '#585858',
     },
 };
 
@@ -104,7 +104,7 @@ export default class MimeTypeMapper {
 
         return {
             icon: 'file-o',
-            mimeTypeColor: '#585858',
+            backgroundColor: '#585858',
         };
     }
 }
