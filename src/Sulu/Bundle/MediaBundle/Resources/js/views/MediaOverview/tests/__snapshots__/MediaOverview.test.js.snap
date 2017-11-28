@@ -216,7 +216,7 @@ exports[`Render a simple MediaOverview 1`] = `
                   >
                     <img
                       alt="Title 1"
-                      src="http://lorempixel.com/260/100"
+                      src="http://lorempixel.com/240/100"
                     />
                     <div
                       class="cover"
@@ -311,7 +311,7 @@ exports[`Render a simple MediaOverview 1`] = `
                   >
                     <img
                       alt="Title 1"
-                      src="http://lorempixel.com/260/100"
+                      src="http://lorempixel.com/240/100"
                     />
                     <div
                       class="cover"

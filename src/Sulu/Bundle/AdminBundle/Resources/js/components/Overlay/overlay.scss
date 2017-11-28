@@ -21,6 +21,7 @@ $transitionDuration: 300ms;
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 100;
     width: 100%;
     height: 100%;
     display: flex;
@@ -37,7 +38,6 @@ $transitionDuration: 300ms;
     top: -100%;
     opacity: 0;
     transition: top $transitionDuration, opacity $transitionDuration;
-    z-index: 1;
     pointer-events: none;
 
     & > * {

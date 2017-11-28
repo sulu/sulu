@@ -26,7 +26,11 @@ export default class Button extends React.PureComponent<Props> {
         );
 
         return (
-            <button className={buttonClass} onClick={this.handleClick}>
+            <button
+                type="button"
+                onClick={this.handleClick}
+                className={buttonClass}
+            >
                 <Icon name={icon} />
             </button>
         );

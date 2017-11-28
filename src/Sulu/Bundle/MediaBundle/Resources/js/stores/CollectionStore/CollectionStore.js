@@ -5,7 +5,7 @@ import type {BreadcrumbItem, BreadcrumbItems, Collection} from './types';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
-export default class CollectionInfoStore {
+export default class CollectionStore {
     @observable loading: boolean = false;
     @observable collection: Collection = {
         parentId: null,
@@ -13,7 +13,7 @@ export default class CollectionInfoStore {
     };
     disposer: () => void;
 
-    constructor(collectionId: ?number, locale: observable) {
+    constructor(collectionId: ?string | number, locale: observable) {
         this.disposer = autorun(() => {
             this.load(collectionId, locale.get());
         });
@@ -35,7 +35,7 @@ export default class CollectionInfoStore {
         this.loading = loading;
     }
 
-    @action load(collectionId: ?number, locale: string) {
+    @action load(collectionId: ?string | number, locale: string) {
         if (!collectionId) {
             this.collection.breadcrumb = null;
 

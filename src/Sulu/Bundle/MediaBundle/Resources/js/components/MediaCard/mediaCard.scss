@@ -98,13 +98,14 @@ $downloadButtonBorderColorActive: $shakespeare;
     cursor: pointer;
     background-image: url("./checkerBackground.gif");
     overflow: hidden;
+    transform: scale(1);
+    border-radius: 0 0 $mediaCardBorderRadius $mediaCardBorderRadius;
 
     img {
         margin: 0 auto;
         display: block;
         transform: scale(1);
         transition: transform .2s linear;
-        border-radius: 0 0 $mediaCardBorderRadius $mediaCardBorderRadius;
     }
 
     &:hover,

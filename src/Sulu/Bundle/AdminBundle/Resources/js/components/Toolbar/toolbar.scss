@@ -1,6 +1,8 @@
 @import './variables.scss';
 
 .toolbar {
+    display: flex;
+    justify-content: space-between;
     height: $toolbarHeight;
     margin: 0;
     background: $toolbarBackgroundColor;
@@ -20,11 +22,6 @@
     & > li {
         display: inline-block;
     }
-}
-
-.controls-container {
-    display: flex;
-    justify-content: space-between;
 }
 
 .controls {

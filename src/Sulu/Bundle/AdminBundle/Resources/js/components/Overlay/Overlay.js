@@ -97,33 +97,35 @@ export default class Overlay extends React.PureComponent<Props> {
         );
 
         return (
-            <Portal isOpened={open || this.openHasChanged}>
-                <div
-                    className={containerClass}
-                    onTransitionEnd={this.handleTransitionEnd}
-                >
-                    <div className={overlayStyles.overlay}>
-                        <section className={overlayStyles.content}>
-                            <header>
-                                {title}
-                                <Icon
-                                    name={CLOSE_ICON}
-                                    className={overlayStyles.icon}
-                                    onClick={this.handleIconClick}
-                                />
-                            </header>
-                            <article>{children}</article>
-                            <footer>
-                                <Actions actions={actions} />
-                                <Button skin="primary" onClick={onConfirm}>
-                                    {confirmText}
-                                </Button>
-                            </footer>
-                        </section>
+            <div>
+                <Backdrop open={open || this.openHasChanged} onClick={onClose} />
+                <Portal isOpened={open || this.openHasChanged}>
+                    <div
+                        className={containerClass}
+                        onTransitionEnd={this.handleTransitionEnd}
+                    >
+                        <div className={overlayStyles.overlay}>
+                            <section className={overlayStyles.content}>
+                                <header>
+                                    {title}
+                                    <Icon
+                                        name={CLOSE_ICON}
+                                        className={overlayStyles.icon}
+                                        onClick={this.handleIconClick}
+                                    />
+                                </header>
+                                <article>{children}</article>
+                                <footer>
+                                    <Actions actions={actions} />
+                                    <Button skin="primary" onClick={onConfirm}>
+                                        {confirmText}
+                                    </Button>
+                                </footer>
+                            </section>
+                        </div>
                     </div>
-                    <Backdrop local={true} onClick={onClose} />
-                </div>
-            </Portal>
+                </Portal>
+            </div>
         );
     }
 }

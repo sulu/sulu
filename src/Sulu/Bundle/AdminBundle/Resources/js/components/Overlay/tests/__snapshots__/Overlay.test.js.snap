@@ -1,11 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should not render in body when closed 1`] = `null`;
+exports[`The component should not render in body when closed 1`] = `<div />`;
 
-exports[`The component should render in body when open 1`] = `null`;
+exports[`The component should render in body when open 1`] = `<div />`;
 
 exports[`The component should render in body when open 2`] = `
 "<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop visible\\"></div>
+</div>
+<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
@@ -21,15 +24,17 @@ exports[`The component should render in body when open 2`] = `
         </footer>
       </section>
     </div>
-    <div class=\\"backdrop visible\\"></div>
   </div>
 </div>"
 `;
 
-exports[`The component should render in body with actions when open 1`] = `null`;
+exports[`The component should render in body with actions when open 1`] = `<div />`;
 
 exports[`The component should render in body with actions when open 2`] = `
 "<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop visible\\"></div>
+</div>
+<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
@@ -48,7 +53,6 @@ exports[`The component should render in body with actions when open 2`] = `
         </footer>
       </section>
     </div>
-    <div class=\\"backdrop visible\\"></div>
   </div>
 </div>"
 `;

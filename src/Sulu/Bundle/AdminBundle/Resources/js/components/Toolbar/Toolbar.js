@@ -29,11 +29,9 @@ export default class Toolbar extends React.PureComponent<Props> {
         } = this.props;
 
         return (
-            <header className={toolbarStyles.toolbar}>
-                <nav className={toolbarStyles.controlsContainer}>
-                    {children}
-                </nav>
-            </header>
+            <nav className={toolbarStyles.toolbar}>
+                {children}
+            </nav>
         );
     }
 }

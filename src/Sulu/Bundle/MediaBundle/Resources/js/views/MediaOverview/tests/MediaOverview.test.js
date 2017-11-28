@@ -27,7 +27,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             ];
 
             const thumbnails = {
-                'sulu-260x': 'http://lorempixel.com/260/100',
+                'sulu-240x': 'http://lorempixel.com/240/100',
                 'sulu-100x100': 'http://lorempixel.com/100/100',
             };
 

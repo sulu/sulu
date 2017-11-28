@@ -3,6 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
 
+    <!-- These image formats are deprecated -->
     <format key="sulu-400x400" internal="true">
         <meta>
             <title lang="en">Contact avatar (Sulu)</title>
@@ -65,5 +66,24 @@
             <title lang="nl">Kleine thumbnail (Sulu)</title>
         </meta>
         <scale x="50" y="50"/>
+    </format>
+    <!-- End of deprecated image formats -->
+    <format key="sulu-25x25" internal="true">
+        <meta>
+            <title lang="en">Micro thumbnail</title>
+            <title lang="de">Mikro Thumbnail</title>
+            <title lang="fr">Image micro</title>
+            <title lang="nl">Micro thumbnail</title>
+        </meta>
+        <scale x="25" y="25"/>
+    </format>
+    <format key="sulu-240x" internal="true">
+        <meta>
+            <title lang="en">Masonry preview (Sulu)</title>
+            <title lang="de">Masonry Vorschau (Sulu)</title>
+            <title lang="fr">Prévisualisation maçonnerie (Sulu)</title>
+            <title lang="nl">Masonry voorbeeld (Sulu)</title>
+        </meta>
+        <scale x="240"/>
     </format>
 </formats>

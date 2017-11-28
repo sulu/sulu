@@ -2,7 +2,7 @@
 The `MultiItemSelection` component is a list used for referencing different datasets in `Sulu`. Inside the 
 `MultiItemSelection` those references can be added, sorted and deleted. The sorting can be done by drag and drop.
 
-```
+```javascript
 const arrayMove = require('sulu-admin-bundle/components').arrayMove;
 const Item = MultiItemSelection.Item;
 

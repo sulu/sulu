@@ -1,38 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render controls 1`] = `
-<header
+<nav
   class="toolbar"
 >
-  <nav
-    class="controlsContainer"
+  <div
+    class="controls"
   >
-    <div
-      class="controls"
+    <button
+      class="button"
     >
-      <button
-        class="button"
+      <span
+        class="label"
       >
-        <span
-          class="label"
-        >
-          Test
-        </span>
-      </button>
-    </div>
-    <div
-      class="controls"
+        Test
+      </span>
+    </button>
+  </div>
+  <div
+    class="controls"
+  >
+    <button
+      class="button"
     >
-      <button
-        class="button"
+      <span
+        class="label"
       >
-        <span
-          class="label"
-        >
-          Test
-        </span>
-      </button>
-    </div>
-  </nav>
-</header>
+        Test
+      </span>
+    </button>
+  </div>
+</nav>
 `;

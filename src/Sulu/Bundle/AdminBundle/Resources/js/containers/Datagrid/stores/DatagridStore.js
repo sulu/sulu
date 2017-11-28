@@ -14,7 +14,7 @@ export default class DatagridStore {
     resourceKey: string;
     options: Object;
     observableOptions: ObservableOptions;
-    localeInterceptDisposer: () => void;
+    localeInterceptionDisposer: () => void;
 
     constructor(
         resourceKey: string,
@@ -44,12 +44,12 @@ export default class DatagridStore {
         this.setPage(1);
         this.loadingStrategy = loadingStrategy;
 
-        if ('infiniteScroll' === this.loadingStrategy && !this.localeInterceptDisposer) {
-            this.localeInterceptDisposer = intercept(this.observableOptions.locale, this.localeInterceptor);
+        if ('infiniteScroll' === this.loadingStrategy && !this.localeInterceptionDisposer) {
+            this.localeInterceptionDisposer = intercept(this.observableOptions.locale, this.handleLocaleChanges);
         }
     };
 
-    localeInterceptor = (change: observable) => {
+    handleLocaleChanges = (change: observable) => {
         if (this.observableOptions.locale !== change.newValue) {
             this.data = [];
             this.observableOptions.page.set(1);
@@ -157,8 +157,8 @@ export default class DatagridStore {
     destroy() {
         this.disposer();
 
-        if (this.localeInterceptDisposer) {
-            this.localeInterceptDisposer();
+        if (this.localeInterceptionDisposer) {
+            this.localeInterceptionDisposer();
         }
     }
 }

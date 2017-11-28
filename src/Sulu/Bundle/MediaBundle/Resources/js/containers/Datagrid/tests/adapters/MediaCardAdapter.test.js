@@ -16,7 +16,7 @@ jest.mock('sulu-admin-bundle/services', () => ({
 
 test('Render a basic Masonry view with MediaCards', () => {
     const thumbnails = {
-        'sulu-260x': 'http://lorempixel.com/260/100',
+        'sulu-240x': 'http://lorempixel.com/240/100',
         'sulu-100x100': 'http://lorempixel.com/100/100',
     };
     const data = [
@@ -43,7 +43,6 @@ test('Render a basic Masonry view with MediaCards', () => {
             icon="pencil"
             schema={{}}
             selections={[]}
-            showDownloadDropdown={true}
         />
     );
 
@@ -51,10 +50,9 @@ test('Render a basic Masonry view with MediaCards', () => {
 });
 
 test('MediaCard should call the the appropriate handler', () => {
-    const mediaCardClickSpy = jest.fn();
     const mediaCardSelectionChangeSpy = jest.fn();
     const thumbnails = {
-        'sulu-260x': 'http://lorempixel.com/260/100',
+        'sulu-240x': 'http://lorempixel.com/240/100',
         'sulu-100x100': 'http://lorempixel.com/100/100',
     };
     const data = [
@@ -81,11 +79,11 @@ test('MediaCard should call the the appropriate handler', () => {
             icon="pencil"
             schema={{}}
             selections={[]}
-            onItemClick={mediaCardClickSpy}
+            onItemClick={mediaCardSelectionChangeSpy}
             onItemSelectionChange={mediaCardSelectionChangeSpy}
         />
     );
 
-    expect(mediaCardAdapter.find('MediaCard').get(0).props.onClick).toBe(mediaCardClickSpy);
+    expect(mediaCardAdapter.find('MediaCard').get(0).props.onClick).toBe(mediaCardSelectionChangeSpy);
     expect(mediaCardAdapter.find('MediaCard').get(0).props.onSelectionChange).toBe(mediaCardSelectionChangeSpy);
 });

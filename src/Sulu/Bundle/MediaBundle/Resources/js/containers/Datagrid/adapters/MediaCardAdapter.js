@@ -6,10 +6,11 @@ import type {DatagridAdapterProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/services';
 import MediaCard from '../../../components/MediaCard';
 
-const THUMBNAIL_SIZE = 'sulu-260x';
+const THUMBNAIL_SIZE = 'sulu-240x';
 
 type Props = DatagridAdapterProps & {
     icon: string,
+    showCoverWhenSelected?: boolean,
 };
 
 @observer
@@ -55,6 +56,7 @@ export default class MediaCardAdapter extends React.Component<Props> {
             selections,
             onItemClick,
             onItemSelectionChange,
+            showCoverWhenSelected,
         } = this.props;
 
         return (
@@ -62,6 +64,7 @@ export default class MediaCardAdapter extends React.Component<Props> {
                 {data.map((item: Object) => {
                     const meta = `${item.mimeType} ${MediaCardAdapter.formatFileSize(item.size)}`;
                     const downloadDropdownProps = this.getDownloadDropdownProps(item);
+                    const selected = selections.includes(item.id);
 
                     return (
                         // TODO: Don't access properties like "title" directly.
@@ -74,8 +77,9 @@ export default class MediaCardAdapter extends React.Component<Props> {
                             title={item.title}
                             image={item.thumbnails[THUMBNAIL_SIZE]}
                             onClick={onItemClick}
-                            selected={selections.includes(item.id)}
+                            selected={selected}
                             onSelectionChange={onItemSelectionChange}
+                            showCover={showCoverWhenSelected && selected}
                         />
                     );
                 })}
