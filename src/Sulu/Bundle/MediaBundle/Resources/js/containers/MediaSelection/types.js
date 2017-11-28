@@ -4,3 +4,7 @@ export type MediaItem = {
     title: string,
     thumbnail: string,
 };
+
+export type Value = {
+    ids: Array<string | number>,
+};

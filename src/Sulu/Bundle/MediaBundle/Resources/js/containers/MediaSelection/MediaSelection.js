@@ -7,13 +7,14 @@ import {translate} from 'sulu-admin-bundle/services';
 import MediaSelectionStore from './stores/MediaSelectionStore';
 import MediaSelectionOverlay from './MediaSelectionOverlay';
 import MediaSelectionItem from './MediaSelectionItem';
+import type {Value} from './types';
 
 const ADD_ICON = 'plus';
 
 type Props = {
     locale: observable,
-    value: ?{ids: Array<string | number>},
-    onChange: (value: {ids: Array<string | number>}) => void,
+    value: ?Value,
+    onChange: (value: Value) => void,
 };
 
 @observer
@@ -26,11 +27,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
             value,
             locale,
         } = this.props;
-        let selectedMediaIds = null;
-
-        if (value && value.ids) {
-            selectedMediaIds = value.ids;
-        }
+        const selectedMediaIds = (value && value.ids) ? value.ids : null;
 
         this.mediaSelectionStore = new MediaSelectionStore(selectedMediaIds, locale);
     }
