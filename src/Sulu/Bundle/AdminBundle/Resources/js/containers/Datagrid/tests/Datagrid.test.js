@@ -42,8 +42,8 @@ jest.mock('../../../services/Translator', () => ({
 }));
 
 class TestAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => string = () => { return 'pagination'; };
-    static getStorageStrategy: () => string = () => { return 'flat'; };
+    static getLoadingStrategy: () => string = jest.fn().mockReturnValue('pagination');
+    static getStorageStrategy: () => string = jest.fn().mockReturnValue('flat');
 
     render() {
         return (
@@ -132,7 +132,7 @@ test('Selecting and unselecting all items on current page should update store', 
     expect(datagridStore.deselectEntirePage).toBeCalledWith();
 });
 
-test('Adapter switch', () => {
+test('Switching the adapter should render  Adapter switch', () => {
     const datagridStore = new DatagridStore('test', {page: null});
 
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
