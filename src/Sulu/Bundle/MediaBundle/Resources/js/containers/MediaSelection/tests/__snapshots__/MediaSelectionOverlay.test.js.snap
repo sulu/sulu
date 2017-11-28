@@ -77,7 +77,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                               </div>
                             </div>
                             <div class=\\"media\\">
-                              <img alt=\\"Title 1\\" src=\\"http://lorempixel.com/260/100\\">
+                              <img alt=\\"Title 1\\" src=\\"http://lorempixel.com/240/100\\">
                               <div class=\\"cover\\"><span class=\\"mediaIcon fa fa-check\\" aria-label=\\"check\\"></span></div>
                             </div>
                           </div>
@@ -103,7 +103,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                               </div>
                             </div>
                             <div class=\\"media\\">
-                              <img alt=\\"Title 2\\" src=\\"http://lorempixel.com/260/100\\">
+                              <img alt=\\"Title 2\\" src=\\"http://lorempixel.com/240/100\\">
                               <div class=\\"cover\\"><span class=\\"mediaIcon fa fa-check\\" aria-label=\\"check\\"></span></div>
                             </div>
                           </div>

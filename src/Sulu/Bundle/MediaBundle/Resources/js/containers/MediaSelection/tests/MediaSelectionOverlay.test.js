@@ -32,7 +32,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             ];
 
             const thumbnails = {
-                'sulu-260x': 'http://lorempixel.com/260/100',
+                'sulu-240x': 'http://lorempixel.com/240/100',
                 'sulu-25x25': 'http://lorempixel.com/25/25',
             };
 
@@ -214,7 +214,7 @@ test('Should instantiate the needed stores when the overlay opens', () => {
 
 test('Should add and remove media ids', () => {
     const thumbnails = {
-        'sulu-260x': 'http://lorempixel.com/260/100',
+        'sulu-240x': 'http://lorempixel.com/240/100',
         'sulu-25x25': 'http://lorempixel.com/25/25',
     };
     const locale = observable();
@@ -275,7 +275,7 @@ test('Should add and remove media ids', () => {
 
 test('Should reset the selection array when the "Reset Selection" button was clicked', () => {
     const thumbnails = {
-        'sulu-260x': 'http://lorempixel.com/260/100',
+        'sulu-240x': 'http://lorempixel.com/240/100',
         'sulu-25x25': 'http://lorempixel.com/25/25',
     };
     const locale = observable();
@@ -323,7 +323,7 @@ test('Should reset the selection array when the "Reset Selection" button was cli
 
 test('Should destroy the stores and cleanup all states when the overlay is closed', () => {
     const thumbnails = {
-        'sulu-260x': 'http://lorempixel.com/260/100',
+        'sulu-240x': 'http://lorempixel.com/240/100',
         'sulu-25x25': 'http://lorempixel.com/25/25',
     };
     const locale = observable();
