@@ -7,6 +7,7 @@ export type BreadcrumbItem = {
 export type BreadcrumbItems = Array<BreadcrumbItem>;
 
 export type Collection =  {
+    id: ?number,
     parentId: ?number,
     breadcrumb: ?BreadcrumbItems,
 };

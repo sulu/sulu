@@ -6,6 +6,7 @@ import {Divider} from 'sulu-admin-bundle/components';
 import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
 import CollectionStore from '../../stores/CollectionStore';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
+import MultiMediaDropzone from '../MultiMediaDropzone';
 
 type Props = {
     page: IObservableValue<number>,
@@ -50,6 +51,9 @@ export default class MediaCollection extends React.PureComponent<Props> {
 
         return (
             <div>
+                {!collectionStore.loading && !!collectionStore.id &&
+                    <MultiMediaDropzone />
+                }
                 {!collectionStore.loading &&
                     <CollectionBreadcrumb
                         breadcrumb={collectionStore.breadcrumb}

@@ -1,0 +1,66 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$dropzoneBorderColor: $white;
+$dropzoneBackgroundColor: rgba($black, .75);
+$dropAreaInfoColor: $white;
+
+.dropzone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: $dropzoneBackgroundColor;
+    padding: 30px;
+}
+
+.drop-area {
+    display: block;
+    height: 100%;
+    border: 2px dashed $dropzoneBorderColor;
+    padding: 30px;
+}
+
+.upload-info-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.upload-info {
+    color: $dropAreaInfoColor;
+    text-align: center;
+}
+
+.upload-info-headline {
+    margin: 0 0 10px;
+    font-size: 24px;
+}
+
+.upload-info-subline {
+    font-size: 16px;
+}
+
+.upload-icon {
+    margin-bottom: 10px;
+    font-size: 52px;
+}
+
+.media-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-right: -30px;
+
+    & > li {
+        margin: 0 30px 30px 0;
+        display: inline-block;
+    }
+}
