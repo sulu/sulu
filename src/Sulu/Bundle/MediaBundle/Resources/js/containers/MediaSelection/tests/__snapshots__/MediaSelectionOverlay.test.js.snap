@@ -20,6 +20,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                 </li>
               </ul>
               <div>
+                <!-- react-empty: 14 -->
                 <section>
                   <ul class=\\"folderList\\">
                     <li>
@@ -42,7 +43,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                     </li>
                   </ul>
                   <nav class=\\"pagination\\">
-                    <div class=\\"control\\"><span class=\\"display\\"><!-- react-text: 33 -->Page<!-- /react-text --><!-- react-text: 34 -->: <!-- /react-text --><!-- react-text: 35 -->2<!-- /react-text --><!-- react-text: 36 --> <!-- /react-text --><!-- react-text: 37 -->of<!-- /react-text --><!-- react-text: 38 --> <!-- /react-text --><!-- react-text: 39 -->3<!-- /react-text --></span>
+                    <div class=\\"control\\"><span class=\\"display\\"><!-- react-text: 34 -->Page<!-- /react-text --><!-- react-text: 35 -->: <!-- /react-text --><!-- react-text: 36 -->2<!-- /react-text --><!-- react-text: 37 --> <!-- /react-text --><!-- react-text: 38 -->of<!-- /react-text --><!-- react-text: 39 --> <!-- /react-text --><!-- react-text: 40 -->3<!-- /react-text --></span>
                       <button
                         class=\\"previous\\"><span class=\\"fa fa-angle-left\\" aria-label=\\"angle-left\\"></span></button>
                         <button class=\\"next\\"><span class=\\"fa fa-angle-right\\" aria-label=\\"angle-right\\"></span></button>
@@ -52,6 +53,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
               </div>
               <div class=\\"divider\\"></div>
               <div>
+                <!-- react-empty: 47 -->
                 <section>
                   <div>
                     <div>

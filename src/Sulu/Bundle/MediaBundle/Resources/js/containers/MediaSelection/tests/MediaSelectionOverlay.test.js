@@ -11,6 +11,7 @@ import MediaSelectionOverlay from '../MediaSelectionOverlay';
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
+        AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey) {
             const {extendObservable} = require.requireActual('mobx');
@@ -67,6 +68,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                 title: {},
                 description: {},
             });
+            this.init = jest.fn();
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
@@ -145,14 +147,8 @@ jest.mock('sulu-admin-bundle/services', () => ({
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        'folder': {
-            Adapter: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
-            paginationType: 'default',
-        },
-        'media_card_selection': {
-            Adapter: MediaCardSelectionAdapter,
-            paginationType: 'infiniteScroll',
-        },
+        'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
+        'media_card_selection': MediaCardSelectionAdapter,
     });
 });
 
@@ -205,7 +201,6 @@ test('Should instantiate the needed stores when the overlay opens', () => {
         'subVersion',
         'thumbnails',
     ].join(','));
-    expect(DatagridStore.mock.calls[0][3]).toBe(true);
 
     expect(DatagridStore.mock.calls[1][0]).toBe(collectionResourceKey);
     expect(DatagridStore.mock.calls[1][1].locale).toBe(locale);

@@ -159,8 +159,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
                 page,
                 locale,
             },
-            options,
-            true
+            options
         );
 
         this.mediaSelectionsObservationDisposer = observe(
@@ -230,7 +229,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
                     <MediaCollection
                         page={this.collectionPage}
                         locale={locale}
-                        mediaViews={['media_card_selection']}
+                        mediaDatagridAdapters={['media_card_selection']}
                         mediaDatagridStore={this.mediaDatagridStore}
                         collectionDatagridStore={this.collectionDatagridStore}
                         collectionStore={this.collectionStore}
