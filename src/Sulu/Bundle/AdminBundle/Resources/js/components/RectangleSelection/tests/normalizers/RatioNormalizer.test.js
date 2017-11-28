@@ -24,7 +24,7 @@ test('The RatioNormalizer should keep width and height in the same ratio', () =>
     expect(selection).toEqual({width: 25, height: 50, left: 0, top: 0});
 });
 
-test.only('The RatioNormalizer should not change an already valid selection', () => {
+test('The RatioNormalizer should not change an already valid selection', () => {
     const ratio = new RatioNormalizer(1000, 500, 3, 2);
 
     let selection = ratio.normalize({width: 300, height: 200, left: 0, top: 0});
