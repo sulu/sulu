@@ -6,7 +6,7 @@ import type {DatagridAdapterProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/services';
 import MediaCard from '../../../components/MediaCard';
 
-const THUMBNAIL_SIZE = 'sulu-260x';
+const THUMBNAIL_SIZE = 'sulu-240x';
 
 type Props = DatagridAdapterProps & {
     icon: string,

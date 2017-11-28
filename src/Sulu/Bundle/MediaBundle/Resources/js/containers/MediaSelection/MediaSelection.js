@@ -12,8 +12,8 @@ const ADD_ICON = 'plus';
 
 type Props = {
     locale: observable,
-    value: ?Array<string | number>,
-    onChange: (ids: Array<string | number>) => void,
+    value: ?{ids: Array<string | number>},
+    onChange: (value: {ids: Array<string | number>}) => void,
 };
 
 @observer
@@ -26,8 +26,13 @@ export default class MediaSelection extends React.PureComponent<Props> {
             value,
             locale,
         } = this.props;
+        let selectedMediaIds = null;
 
-        this.mediaSelectionStore = new MediaSelectionStore(value, locale);
+        if (value && value.ids) {
+            selectedMediaIds = value.ids;
+        }
+
+        this.mediaSelectionStore = new MediaSelectionStore(selectedMediaIds, locale);
     }
 
     @action openMediaOverlay() {
@@ -39,7 +44,9 @@ export default class MediaSelection extends React.PureComponent<Props> {
     }
 
     callChangeHandler() {
-        this.props.onChange(this.mediaSelectionStore.selectedMediaIds);
+        this.props.onChange({
+            ids: this.mediaSelectionStore.selectedMediaIds,
+        });
     }
 
     handleRemove = (mediaId: string | number) => {

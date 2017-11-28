@@ -77,4 +77,13 @@
         </meta>
         <scale x="25" y="25"/>
     </format>
+    <format key="sulu-240x" internal="true">
+        <meta>
+            <title lang="en">Masonry preview (Sulu)</title>
+            <title lang="de">Masonry Vorschau (Sulu)</title>
+            <title lang="fr">Prévisualisation maçonnerie (Sulu)</title>
+            <title lang="nl">Masonry voorbeeld (Sulu)</title>
+        </meta>
+        <scale x="240"/>
+    </format>
 </formats>
