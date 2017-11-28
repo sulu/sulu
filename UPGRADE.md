@@ -1,5 +1,18 @@
 # Upgrade
 
+## dev-master
+We have changed the behaviour of the `sulu_content_load()` twig extension. Instead of throwing an exception when the given parameter
+cannot be resolved to a valid document, it will now just log the exception and return null, so you can gracefully handle this case
+in your twig template.
+
+```
+{% set content = sulu_content_load(null) %}
+{# content is now null #}
+
+{% set content = sulu_content_load('not-existing-guid') %}
+{# content is now null #}
+```
+
 ## 1.6.7
 
 ### Custom Analytics

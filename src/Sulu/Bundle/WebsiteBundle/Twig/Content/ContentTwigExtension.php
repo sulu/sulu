@@ -11,9 +11,11 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
@@ -43,18 +45,25 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
     private $sessionManager;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Constructor.
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
         SessionManagerInterface $sessionManager,
-        RequestAnalyzerInterface $requestAnalyzer
+        RequestAnalyzerInterface $requestAnalyzer,
+        LoggerInterface $logger
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
         $this->sessionManager = $sessionManager;
         $this->requestAnalyzer = $requestAnalyzer;
+        $this->logger = $logger;
     }
 
     /**
@@ -73,13 +82,23 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
      */
     public function load($uuid)
     {
-        $contentStructure = $this->contentMapper->load(
-            $uuid,
-            $this->requestAnalyzer->getWebspace()->getKey(),
-            $this->requestAnalyzer->getCurrentLocalization()->getLocale()
-        );
+        if (!$uuid) {
+            return;
+        }
 
-        return $this->structureResolver->resolve($contentStructure);
+        try {
+            $contentStructure = $this->contentMapper->load(
+                $uuid,
+                $this->requestAnalyzer->getWebspace()->getKey(),
+                $this->requestAnalyzer->getCurrentLocalization()->getLocale()
+            );
+
+            return $this->structureResolver->resolve($contentStructure);
+        } catch (DocumentNotFoundException $e) {
+            $this->logger->error((string) $e);
+
+            return;
+        }
     }
 
     /**
