@@ -199,3 +199,30 @@ test('Should navigate to defined route on back button click', () => {
         'locale': 'de',
     });
 });
+
+test('Router navigate should be called when folder change is triggered', () => {
+    const MediaOverview = require('../MediaOverview').default;
+    const locale = 'de';
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: [locale],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+        navigate: jest.fn(),
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />);
+    mediaOverview.instance().collectionId = 4;
+    mediaOverview.instance().locale.set(locale);
+
+    mediaOverview.find('Folder').at(1).simulate('click');
+    expect(router.navigate).toBeCalledWith(
+        'sulu_media.overview',
+        {'collectionPage': '1', 'id': 2, 'locale': locale}
+    );
+});

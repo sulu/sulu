@@ -152,3 +152,25 @@ test('Switching the adapter should render the correct adapter', () => {
     expect(datagrid.find('TableAdapter').length).toBe(0);
     expect(datagrid.find('FolderAdapter').length).toBe(1);
 });
+
+test('DatagridStore should be initialized correctly on init and update', () => {
+    const datagridStore = new DatagridStore('test', {page: null});
+    datagridStore.init = jest.fn();
+
+    datagridAdapterRegistry.get.mockImplementation((adapter) => {
+        switch (adapter) {
+            case 'table':
+                return TableAdapter;
+            case 'folder':
+                return FolderAdapter;
+        }
+    });
+    const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
+    expect(datagridStore.init).toBeCalledWith('pagination');
+
+    const newDatagridStore = new DatagridStore('test', {page: null});
+    newDatagridStore.init = jest.fn();
+
+    datagrid.setProps({ store: newDatagridStore });
+    expect(newDatagridStore.init).toBeCalledWith('pagination');
+});
