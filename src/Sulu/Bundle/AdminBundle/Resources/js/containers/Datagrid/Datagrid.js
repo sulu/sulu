@@ -33,6 +33,7 @@ export default class Datagrid extends React.PureComponent<Props> {
         if (!equal(this.props.adapters, nextProps.adapters)) {
             this.validateAdapters();
         }
+        nextProps.store.init(this.currentAdapter.getLoadingStrategy());
     }
 
     validateAdapters() {
