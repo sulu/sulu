@@ -16,7 +16,7 @@ jest.mock('sulu-admin-bundle/services', () => ({
 
 test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
     const thumbnails = {
-        'sulu-240x': 'http://lorempixel.com/260/100',
+        'sulu-240x': 'http://lorempixel.com/240/100',
         'sulu-100x100': 'http://lorempixel.com/100/100',
     };
     const data = [

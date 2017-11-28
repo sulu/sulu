@@ -52,7 +52,7 @@ test('Render a basic Masonry view with MediaCards', () => {
 test('MediaCard should call the the appropriate handler', () => {
     const mediaCardSelectionChangeSpy = jest.fn();
     const thumbnails = {
-        'sulu-240x': 'http://lorempixel.com/260/100',
+        'sulu-240x': 'http://lorempixel.com/240/100',
         'sulu-100x100': 'http://lorempixel.com/100/100',
     };
     const data = [
