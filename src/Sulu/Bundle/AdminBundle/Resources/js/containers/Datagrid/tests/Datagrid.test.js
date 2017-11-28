@@ -132,16 +132,22 @@ test('Selecting and unselecting all items on current page should update store', 
     expect(datagridStore.deselectEntirePage).toBeCalledWith();
 });
 
-test('Switching the adapter should render  Adapter switch', () => {
+test('Switching the adapter should render the correct adapter', () => {
     const datagridStore = new DatagridStore('test', {page: null});
 
-    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    datagridAdapterRegistry.get.mockImplementation((adapter) => {
+        switch (adapter) {
+            case 'table':
+                return TableAdapter;
+            case 'folder':
+                return FolderAdapter;
+        }
+    });
     const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
 
     expect(datagrid.find('AdapterSwitch').length).toBe(1);
     expect(datagrid.find('TableAdapter').length).toBe(1);
 
-    datagridAdapterRegistry.get.mockReturnValue(FolderAdapter);
     datagrid.find('AdapterSwitchItem').at(1).simulate('click');
     expect(datagrid.find('TableAdapter').length).toBe(0);
     expect(datagrid.find('FolderAdapter').length).toBe(1);
