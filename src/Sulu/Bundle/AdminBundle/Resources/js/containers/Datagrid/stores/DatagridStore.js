@@ -9,7 +9,6 @@ export default class DatagridStore {
     @observable data: Array<Object> = [];
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
-    @observable reset: boolean = false;
     @observable loadingStrategy: ?string;
     disposer: () => void;
     resourceKey: string;

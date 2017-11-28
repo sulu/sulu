@@ -6,11 +6,11 @@ import DatagridStore from '../stores/DatagridStore';
 import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
 import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
+import FolderAdapter from '../adapters/FolderAdapter';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
     this.init = jest.fn();
-    this.appendRequestData = false;
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
     this.data = [{title: 'value', id: 1}];
@@ -21,6 +21,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.deselect = jest.fn();
     this.selectEntirePage = jest.fn();
     this.deselectEntirePage = jest.fn();
+    this.updateLoadingStrategy = jest.fn();
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
@@ -129,4 +130,19 @@ test('Selecting and unselecting all items on current page should update store', 
     expect(datagridStore.selectEntirePage).toBeCalledWith();
     headerCheckbox.simulate('change', {currentTarget: {checked: false}});
     expect(datagridStore.deselectEntirePage).toBeCalledWith();
+});
+
+test('Adapter switch', () => {
+    const datagridStore = new DatagridStore('test', {page: null});
+
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
+
+    expect(datagrid.find('AdapterSwitch').length).toBe(1);
+    expect(datagrid.find('TableAdapter').length).toBe(1);
+
+    datagridAdapterRegistry.get.mockReturnValue(FolderAdapter);
+    datagrid.find('AdapterSwitchItem').at(1).simulate('click');
+    expect(datagrid.find('TableAdapter').length).toBe(0);
+    expect(datagrid.find('FolderAdapter').length).toBe(1);
 });
