@@ -2,18 +2,10 @@
 
 $labelColor: $scorpion;
 
-.field {
-    margin-top: 30px;
-
-    &:first-child {
-        margin-top: 0;
-    }
-
-    .label {
-        display: block;
-        color: $labelColor;
-        font-size: 14px;
-        line-height: 19px;
-        margin-bottom: 10px;
-    }
+.label {
+    display: block;
+    color: $labelColor;
+    font-size: 14px;
+    line-height: 19px;
+    margin-bottom: 10px;
 }

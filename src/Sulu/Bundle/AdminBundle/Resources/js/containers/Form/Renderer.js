@@ -3,7 +3,9 @@ import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
-import type {Schema} from '../../stores/ResourceStore/types';
+import type {Schema, SchemaEntry} from '../../stores/ResourceStore/types';
+import Divider from '../../components/Divider';
+import Grid from '../../components/Grid';
 import Field from './Field';
 import rendererStyles from './renderer.scss';
 
@@ -12,7 +14,7 @@ type Props = {
     schema: Schema,
     onSubmit: () => void,
     onChange: (string, mixed) => void,
-    locale: observable,
+    locale?: observable,
 };
 
 @observer
@@ -33,27 +35,62 @@ export default class Renderer extends React.PureComponent<Props> {
         this.submitButton = submitButton;
     };
 
+    renderGridSection(schemaField: SchemaEntry, schemaKey: string) {
+        const {items} = schemaField;
+        return (
+            <Grid.Section key={schemaKey} className={rendererStyles.gridSection}>
+                <Grid.Item size={12}>
+                    <Divider>
+                        {schemaField.label}
+                    </Divider>
+                </Grid.Item>
+                {items &&
+                    Object.keys(items).map((key) => this.renderItem(items[key], key))
+                }
+            </Grid.Section>
+        );
+    }
+
+    renderGridItem(schemaField: SchemaEntry, schemaKey: string) {
+        const {data, locale, onChange} = this.props;
+
+        return (
+            <Grid.Item
+                className={rendererStyles.gridItem}
+                key={schemaKey}
+                size={schemaField.size}
+                spaceAfter={schemaField.spaceAfter}
+            >
+                <Field
+                    name={schemaKey}
+                    schema={schemaField}
+                    onChange={onChange}
+                    value={data[schemaKey]}
+                    locale={locale}
+                />
+            </Grid.Item>
+        );
+    }
+
+    renderItem(schemaField: SchemaEntry, schemaKey: string) {
+        if (schemaField.type === 'section') {
+            return this.renderGridSection(schemaField, schemaKey);
+        }
+
+        return this.renderGridItem(schemaField, schemaKey);
+    }
+
     render() {
         const {
-            data,
-            locale,
             schema,
-            onChange,
         } = this.props;
         const schemaKeys = Object.keys(schema);
 
         return (
             <form onSubmit={this.handleSubmit} className={rendererStyles.form}>
-                {schemaKeys.map((schemaKey) => (
-                    <Field
-                        key={schemaKey}
-                        name={schemaKey}
-                        schema={schema[schemaKey]}
-                        onChange={onChange}
-                        value={data[schemaKey]}
-                        locale={locale}
-                    />
-                ))}
+                <Grid>
+                    {schemaKeys.map((schemaKey) => this.renderItem(schema[schemaKey], schemaKey))}
+                </Grid>
                 <button ref={this.setSubmitButtonRef} type="submit" className={rendererStyles.submit}>Submit</button>
             </form>
         );

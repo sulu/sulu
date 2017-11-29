@@ -3,6 +3,23 @@ import {action, autorun, observable} from 'mobx';
 import ResourceRequester from '../../services/ResourceRequester';
 import type {ObservableOptions, Schema} from './types';
 
+function addObjectProperty(schema: Schema, key, object) {
+    const type = schema[key].type;
+
+    if (type !== 'section') {
+        object[key] = null;
+    }
+
+    const items = schema[key].items;
+
+    if (type === 'section' && items) {
+        Object.keys(items)
+            .reduce((object, childKey) => addObjectProperty(items, childKey, object), object);
+    }
+
+    return object;
+}
+
 export default class ResourceStore {
     resourceKey: string;
     id: string;
@@ -74,10 +91,7 @@ export default class ResourceStore {
     }
 
     @action changeSchema(schema: Schema) {
-        const schemaFields = Object.keys(schema).reduce((object, key) => {
-            object[key] = null;
-            return object;
-        }, {});
+        const schemaFields = Object.keys(schema).reduce((object, key) => addObjectProperty(schema, key, object), {});
 
         this.data = {...schemaFields, ...this.data};
     }

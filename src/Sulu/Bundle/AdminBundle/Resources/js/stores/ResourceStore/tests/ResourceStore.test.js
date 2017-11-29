@@ -36,6 +36,49 @@ test('Create data object for schema', () => {
     });
 });
 
+test('Create data object for schema with sections', () => {
+    ResourceRequester.get.mockReturnValue(Promise.resolve());
+    const resourceStore = new ResourceStore('snippets', '1');
+    resourceStore.changeSchema({
+        section1: {
+            label: 'Section 1',
+            type: 'section',
+            items: {
+                item11: {
+                    label: 'Item 1.1',
+                    type: 'text_line',
+                },
+                section11: {
+                    label: 'Section 1.1',
+                    type: 'section',
+                },
+            },
+        },
+        section2: {
+            label: 'Section 2',
+            type: 'section',
+            items: {
+                item21: {
+                    label: 'Item 2.1',
+                    type: 'text_line',
+                },
+            },
+        },
+    });
+
+    expect(resourceStore.data).toEqual({
+        item11: null,
+        item21: null,
+    });
+
+    resourceStore.changeSchema({
+        text: {
+            label: 'Text',
+            type: 'text_line',
+        },
+    });
+});
+
 test('Change schema should keep data', () => {
     ResourceRequester.get.mockReturnValue(Promise.resolve());
     const resourceStore = new ResourceStore('snippets', '1');

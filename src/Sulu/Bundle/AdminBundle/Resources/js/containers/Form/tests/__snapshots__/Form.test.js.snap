@@ -4,6 +4,9 @@ exports[`Should render form using renderer 1`] = `
 <form
   class="form"
 >
+  <div
+    class="grid"
+  />
   <button
     class="submit"
     type="submit"

@@ -134,3 +134,19 @@ exports[`Render a Grid with Sections 1`] = `
   </div>
 </div>
 `;
+
+exports[`Render a Grid with class names attached 1`] = `
+<div
+  class="grid"
+>
+  <div
+    class="section test-section"
+    style="width:100%;margin-left:0%;margin-right:0%;"
+  >
+    <div
+      class="item test-item"
+      style="width:100%;margin-left:0%;margin-right:0%;"
+    />
+  </div>
+</div>
+`;
