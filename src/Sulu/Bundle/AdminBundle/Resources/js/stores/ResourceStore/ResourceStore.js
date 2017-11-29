@@ -3,16 +3,18 @@ import {action, autorun, observable} from 'mobx';
 import ResourceRequester from '../../services/ResourceRequester';
 import type {ObservableOptions, Schema} from './types';
 
-function addObjectProperty(schema, key, object) {
+function addObjectProperty(schema: Schema, key, object) {
     const type = schema[key].type;
 
     if (type !== 'section') {
         object[key] = null;
     }
 
-    if (type === 'section' && schema[key].items) {
-        Object.keys(schema[key].items)
-            .reduce((object, childKey) => addObjectProperty(schema[key].items, childKey, object), object);
+    const items = schema[key].items;
+
+    if (type === 'section' && items) {
+        Object.keys(items)
+            .reduce((object, childKey) => addObjectProperty(items, childKey, object), object);
     }
 
     return object;

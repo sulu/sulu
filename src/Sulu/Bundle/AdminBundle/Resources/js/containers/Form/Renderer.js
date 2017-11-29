@@ -14,7 +14,7 @@ type Props = {
     schema: Schema,
     onSubmit: () => void,
     onChange: (string, mixed) => void,
-    locale: observable,
+    locale?: observable,
 };
 
 @observer

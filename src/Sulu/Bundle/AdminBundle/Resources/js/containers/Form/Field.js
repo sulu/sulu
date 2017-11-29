@@ -10,7 +10,7 @@ type Props = {
     value?: mixed,
     schema: SchemaEntry,
     onChange: (string, mixed) => void,
-    locale: observable,
+    locale?: observable,
 };
 
 export default class Field extends React.PureComponent<Props> {
