@@ -261,11 +261,12 @@ test('Clear the selection', () => {
     expect(datagridStore.selections).toHaveLength(0);
 });
 
-test('The data should be appended when the appendData flag is true', () => {
+test('The data should be appended when the loading strategy is infiniteScroll', () => {
     const loadingStrategy = 'infiniteScroll';
     const page = observable();
     const locale = observable();
-    const datagridStore = new DatagridStore('tests',
+    const datagridStore = new DatagridStore(
+        'tests',
         {
             page,
             locale,
@@ -313,7 +314,41 @@ test('The data should be appended when the appendData flag is true', () => {
     datagridStore.destroy();
 });
 
-test('When appendRequest is set, changing the locale observable resets the data property and sets page to 1', () => {
+test('When loading strategy is infiniteScroll, changing the locale resets the data property and sets page to 1', () => {
+    ResourceRequester.getList.mockReturnValue(
+        Promise.resolve({
+            _embedded: {
+                tests: [
+                    {id: 1},
+                    {id: 2},
+                    {id: 3},
+                ],
+            },
+        })
+    );
+
+    const page = observable();
+    const locale = observable();
+    const datagridStore = new DatagridStore(
+        'tests',
+        {
+            page,
+            locale,
+        },
+        {}
+    );
+    datagridStore.init('infiniteScroll');
+
+    page.set(3);
+    locale.set('en');
+
+    expect(page.get()).toBe(1);
+    expect(toJS(datagridStore.data)).toEqual([]);
+
+    datagridStore.destroy();
+});
+
+test('When loading strategy was changed to pagination, changing the locale should not reset page to 1', () => {
     ResourceRequester.getList.mockReturnValue(Promise.resolve({
         _embedded: {
             tests: [
@@ -335,11 +370,12 @@ test('When appendRequest is set, changing the locale observable resets the data 
         {}
     );
     datagridStore.init('infiniteScroll');
+    datagridStore.updateLoadingStrategy('pagination');
 
     page.set(3);
-    locale.set(2);
+    locale.set('en');
 
-    expect(page.get()).toBe(1);
+    expect(page.get()).toBe(3);
     expect(toJS(datagridStore.data)).toEqual([]);
 
     datagridStore.destroy();
