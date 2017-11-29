@@ -61,6 +61,56 @@ class ResourceMetadataStore {
                     type: 'text_line',
                     size: 6,
                 },
+                section1: {
+                    label: 'Section 1',
+                    type: 'section',
+                    items: {
+                        section11: {
+                            label: 'Section 1.1',
+                            type: 'section',
+                            items: {
+                                text11: {
+                                    label: 'Text 1.1',
+                                    type: 'text_line',
+                                },
+                            },
+                        },
+                        section12: {
+                            label: 'Section 1.2',
+                            type: 'section',
+                            items: {
+                                text12: {
+                                    label: 'Text 1.2',
+                                    type: 'text_line',
+                                },
+                            },
+                        },
+                        section13: {
+                            label: 'Section 1.3',
+                            type: 'section',
+                            items: {
+                                text13: {
+                                    label: 'Text 1.3',
+                                    type: 'text_line',
+                                },
+                            },
+                        },
+                    },
+                },
+                bla: {
+                    label: 'Bla',
+                    type: 'text_line',
+                },
+                section2: {
+                    label: 'Section 2',
+                    type: 'section',
+                    items: {
+                        text21: {
+                            label: 'Text 2.1',
+                            type: 'text_line',
+                        },
+                    },
+                },
             },
         },
         accounts: {
