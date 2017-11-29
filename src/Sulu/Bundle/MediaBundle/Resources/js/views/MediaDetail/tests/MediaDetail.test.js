@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import 'url-search-params-polyfill';
 import React from 'react';
+import {observable} from 'mobx';
 import {mount, render} from 'enzyme';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -55,7 +56,7 @@ test('Should change locale via locale chooser', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('test', '1');
+    const resourceStore = new ResourceStore('test', '1', {locale: observable()});
 
     const router = {
         navigate: jest.fn(),
@@ -80,7 +81,7 @@ test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('test', '1');
+    const resourceStore = new ResourceStore('test', '1', {locale: observable()});
 
     const router = {
         restore: jest.fn(),
@@ -106,7 +107,7 @@ test('Should show locales from router options in toolbar', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('test', 1);
+    const resourceStore = new ResourceStore('test', 1, {locale: observable()});
 
     const router = {
         navigate: jest.fn(),
