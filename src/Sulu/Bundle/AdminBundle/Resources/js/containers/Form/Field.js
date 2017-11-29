@@ -30,7 +30,7 @@ export default class Field extends React.PureComponent<Props> {
         const FieldType = fieldRegistry.get(type);
 
         return (
-            <div className={fieldStyles.field}>
+            <div>
                 <label className={fieldStyles.label}>{label}</label>
                 <FieldType
                     onChange={this.handleChange}

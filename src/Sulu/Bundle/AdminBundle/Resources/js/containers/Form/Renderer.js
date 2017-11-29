@@ -41,7 +41,7 @@ export default class Renderer extends React.PureComponent<Props> {
         if (schemaField.type === 'section') {
             const {items} = schemaField;
             return (
-                <Grid.Section key={schemaKey}>
+                <Grid.Section key={schemaKey} className={rendererStyles.gridSection}>
                     <Grid.Item size={12}>
                         <Divider>
                             {schemaField.label}
@@ -56,6 +56,7 @@ export default class Renderer extends React.PureComponent<Props> {
 
         return (
             <Grid.Item
+                className={rendererStyles.gridItem}
                 key={schemaKey}
                 size={schemaField.size}
                 spaceAfter={schemaField.spaceAfter}

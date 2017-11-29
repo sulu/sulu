@@ -53,3 +53,13 @@ test('Render a Grid with Items having spaces between them', () => {
         </Grid>
     )).toMatchSnapshot();
 });
+
+test('Render a Grid with class names attached', () => {
+    expect(render(
+        <Grid>
+            <Grid.Section className="test-section">
+                <Grid.Item className="test-item" />
+            </Grid.Section>
+        </Grid>
+    )).toMatchSnapshot();
+});

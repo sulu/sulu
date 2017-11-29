@@ -70,16 +70,6 @@ class ResourceMetadataStore {
                             type: 'text_line',
                             size: 6,
                         },
-                        test: {
-                            type: 'section',
-                            label: 'Test',
-                            items: {
-                                test: {
-                                    label: 'Test',
-                                    type: 'text_line',
-                                },
-                            },
-                        },
                     },
                 },
                 address: {

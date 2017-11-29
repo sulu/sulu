@@ -2,14 +2,10 @@
 
 $labelColor: $scorpion;
 
-.field {
-    margin-bottom: 30px;
-
-    .label {
-        display: block;
-        color: $labelColor;
-        font-size: 14px;
-        line-height: 19px;
-        margin-bottom: 10px;
-    }
+.label {
+    display: block;
+    color: $labelColor;
+    font-size: 14px;
+    line-height: 19px;
+    margin-bottom: 10px;
 }
