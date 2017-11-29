@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
+import Loader from '../Loader';
 import type {Button as ButtonConfig} from './types';
 import Button from './Button';
 import headerStyles from './header.scss';
 
+const LOADER_SIZE = 24;
+
 type Props = {
     label?: string,
+    loading: boolean,
     emptyList: boolean,
     leftButton?: ButtonConfig,
     rightButton?: ButtonConfig,
@@ -20,6 +24,7 @@ export default class Header extends React.PureComponent<Props> {
     render() {
         const {
             label,
+            loading,
             emptyList,
             leftButton,
             rightButton,
@@ -38,6 +43,11 @@ export default class Header extends React.PureComponent<Props> {
                 }
                 <div className={headerStyles.label}>
                     {label}
+                    {loading &&
+                        <div className={headerStyles.loader}>
+                            <Loader size={LOADER_SIZE} />
+                        </div>
+                    }
                 </div>
                 {rightButton &&
                     <Button {...rightButton} location="right" />

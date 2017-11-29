@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {render, mount} from 'enzyme';
 import MultiItemSelection from '../MultiItemSelection';
@@ -30,6 +30,10 @@ test('Render an MultiItemSelection with children', () => {
             </MultiItemSelection.Item>
         </MultiItemSelection>
     )).toMatchSnapshot();
+});
+
+test('Render an MultiItemSelection while loading', () => {
+    expect(render(<MultiItemSelection label="I have children" loading={true} />)).toMatchSnapshot();
 });
 
 test('Clicking the left and right button inside the header should call the right handler', () => {

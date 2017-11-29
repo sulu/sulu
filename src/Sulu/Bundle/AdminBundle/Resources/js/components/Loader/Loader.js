@@ -4,16 +4,31 @@ import classNames from 'classnames';
 import loaderStyles from './loader.scss';
 
 type Props = {
+    size: number,
     className?: string,
 };
 
 export default class Loader extends React.PureComponent<Props> {
+    static defaultProps = {
+        size: 40,
+    };
+
     render() {
-        const {className} = this.props;
-        const loaderClass = classNames(loaderStyles.spinner, className);
+        const {
+            size,
+            className,
+        } = this.props;
+        const dimensionStyle = {
+            width: size,
+            height: size,
+        };
+        const loaderClass = classNames(
+            loaderStyles.spinner,
+            className
+        );
 
         return (
-            <div className={loaderClass}>
+            <div style={dimensionStyle} className={loaderClass}>
                 <div className={loaderStyles.doubleBounce1} />
                 <div className={loaderStyles.doubleBounce2} />
             </div>

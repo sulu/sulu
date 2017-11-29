@@ -8,7 +8,7 @@ import Item from './Item';
 import multiItemSelectionStyles from './multiItemSelection.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Item>>,
+    children?: ChildrenArray<Element<typeof Item>>,
     /** The text inside the header bar of the `MultiItemSelection` */
     label?: string,
     /** Called when the remove button is clicked on an item */
@@ -19,9 +19,15 @@ type Props = {
     leftButton?: Button,
     /** The config of the button placed right side of the header */
     rightButton?: Button,
+    /** Show loading indicator or not */
+    loading: boolean,
 };
 
 export default class MultiItemSelection extends React.PureComponent<Props> {
+    static defaultProps = {
+        loading: false,
+    };
+
     static Item = Item;
 
     createItem(originalItem: Element<typeof Item>) {
@@ -77,6 +83,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
     render() {
         const {
             label,
+            loading,
             children,
             leftButton,
             rightButton,
@@ -88,6 +95,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
             <div>
                 <Header
                     label={label}
+                    loading={loading}
                     emptyList={emptyList}
                     leftButton={leftButton}
                     rightButton={rightButton}

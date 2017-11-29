@@ -114,6 +114,38 @@ exports[`Clicking the left and right button inside the header should call the ri
 </div>
 `;
 
+exports[`Render an MultiItemSelection while loading 1`] = `
+<div>
+  <div
+    class="header emptyList"
+  >
+    <div
+      class="label"
+    >
+      I have children
+      <div
+        class="loader"
+      >
+        <div
+          class="spinner"
+          style="width:24px;height:24px;"
+        >
+          <div
+            class="doubleBounce1"
+          />
+          <div
+            class="doubleBounce2"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul
+    class="list"
+  />
+</div>
+`;
+
 exports[`Render an MultiItemSelection with children 1`] = `
 <div>
   <div
