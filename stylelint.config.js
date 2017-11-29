@@ -6,5 +6,7 @@ module.exports = { // eslint-disable-line
     'rules': {
         'indentation': 4,
         'number-leading-zero': 'never',
+        'string-quotes': 'single',
+        'max-line-length': 120,
     },
 };

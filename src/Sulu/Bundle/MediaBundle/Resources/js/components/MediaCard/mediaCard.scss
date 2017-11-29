@@ -96,7 +96,7 @@ $downloadButtonBorderColorActive: $shakespeare;
 .media {
     position: relative;
     cursor: pointer;
-    background-image: url("./checkerBackground.gif");
+    background-image: url('./checkerBackground.gif');
     overflow: hidden;
     transform: scale(1);
     border-radius: 0 0 $mediaCardBorderRadius $mediaCardBorderRadius;
