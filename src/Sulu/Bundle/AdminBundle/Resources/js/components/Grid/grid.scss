@@ -6,7 +6,7 @@ $sectionMarginBottom: 30px;
     margin-bottom: -$sectionMarginBottom;
 
     &::after {
-        content: "";
+        content: '';
         clear: both;
         display: block;
     }

@@ -8,7 +8,7 @@ $buttonHorizontalPadding: 20px;
     position: relative;
 
     &::after {
-        content: "";
+        content: '';
         width: calc(100% - $buttonHorizontalPadding * 2);
         height: 2px;
         background-color: $tabUnderlineBackgroundColor;

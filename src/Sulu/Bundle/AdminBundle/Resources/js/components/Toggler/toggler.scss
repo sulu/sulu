@@ -24,7 +24,7 @@ $transitionDuration: 200ms;
         transition: background $transitionDuration, border-color $transitionDuration;
 
         &::after {
-            content: "";
+            content: '';
             position: absolute;
             top: -$borderWidth;
             left: -$borderWidth;
