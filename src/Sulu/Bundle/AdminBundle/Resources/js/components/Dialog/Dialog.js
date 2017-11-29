@@ -80,32 +80,34 @@ export default class Dialog extends React.PureComponent<Props> {
         );
 
         return (
-            <Portal isOpened={open || this.openHasChanged}>
-                <div
-                    className={containerClass}
-                    onTransitionEnd={this.handleTransitionEnd}
-                >
-                    <div className={dialogStyles.dialog}>
-                        <section className={dialogStyles.content}>
-                            <header>
-                                {title}
-                            </header>
-                            <article>
-                                {children}
-                            </article>
-                            <footer>
-                                <Button skin="secondary" onClick={onCancel}>
-                                    {cancelText}
-                                </Button>
-                                <Button skin="primary" onClick={onConfirm}>
-                                    {confirmText}
-                                </Button>
-                            </footer>
-                        </section>
+            <div>
+                <Backdrop open={open || this.openHasChanged} />
+                <Portal isOpened={open || this.openHasChanged}>
+                    <div
+                        className={containerClass}
+                        onTransitionEnd={this.handleTransitionEnd}
+                    >
+                        <div className={dialogStyles.dialog}>
+                            <section className={dialogStyles.content}>
+                                <header>
+                                    {title}
+                                </header>
+                                <article>
+                                    {children}
+                                </article>
+                                <footer>
+                                    <Button skin="secondary" onClick={onCancel}>
+                                        {cancelText}
+                                    </Button>
+                                    <Button skin="primary" onClick={onConfirm}>
+                                        {confirmText}
+                                    </Button>
+                                </footer>
+                            </section>
+                        </div>
                     </div>
-                    <Backdrop local={true} />
-                </div>
-            </Portal>
+                </Portal>
+            </div>
         );
     }
 }
