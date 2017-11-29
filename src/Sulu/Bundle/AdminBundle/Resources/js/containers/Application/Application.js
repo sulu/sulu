@@ -12,6 +12,10 @@ import applicationStyles from './application.scss';
 
 const routes = [
     {
+        name: 'Pages',
+        key: 'sulu_content.example.pages',
+    },
+    {
         name: 'Contacts',
         key: 'sulu_contact.contacts_list',
     },

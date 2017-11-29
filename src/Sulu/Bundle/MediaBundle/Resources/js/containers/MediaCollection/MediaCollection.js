@@ -47,11 +47,6 @@ export default class MediaCollection extends React.PureComponent<Props> {
                         onNavigate={this.handleBreadcrumbNavigate}
                     />
                 }
-                <Datagrid
-                    adapters={['folder']}
-                    store={collectionDatagridStore}
-                    onItemClick={this.handleCollectionClick}
-                />
                 <Divider />
                 <Datagrid
                     adapters={mediaDatagridAdapters}

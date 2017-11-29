@@ -12,7 +12,7 @@ type Props = {
     children: ChildrenArray<Element<typeof Column>>,
     buttons?: Array<ItemButtonConfig>,
     toolbarItems: Array<ToolbarItemConfig>,
-    onItemClick: (id: string | number, columnId: number) => void,
+    onItemClick: (id: string | number, columnId: number, hasChildren: boolean) => void,
 };
 
 @observer

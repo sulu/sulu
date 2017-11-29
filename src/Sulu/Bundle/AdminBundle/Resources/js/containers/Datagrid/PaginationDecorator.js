@@ -27,6 +27,8 @@ export default class PaginationDecorator extends React.PureComponent<Props> {
             children,
         } = this.props;
 
+        console.log(total);
+
         return (
             <section>
                 {!!current && !!total &&

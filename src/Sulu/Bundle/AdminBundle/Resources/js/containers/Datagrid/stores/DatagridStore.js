@@ -6,7 +6,7 @@ import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
     @observable pageCount: number = 0;
-    @observable data: Array<Object> = [];
+    @observable data: Array<*> = [];
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
     @observable loadingStrategy: ?string;
@@ -32,11 +32,11 @@ export default class DatagridStore {
         return !!this.loadingStrategy;
     }
 
-    @action init = (loadingStrategy: string) => {
+    @action init = (loadingStrategy: AbstractLoadingStrategy, storageStrategy: AbstractStorageStrategy) => {
         this.updateLoadingStrategy(loadingStrategy);
     };
 
-    @action updateLoadingStrategy = (loadingStrategy: string) => {
+    @action update = (loadingStrategy: AbstractLoadingStrategy, storageStrategy: AbstractStorageStrategy) => {
         if (this.loadingStrategy === loadingStrategy) {
             return;
         }
@@ -45,7 +45,11 @@ export default class DatagridStore {
         this.setPage(1);
         this.loadingStrategy = loadingStrategy;
 
-        if ('infiniteScroll' === this.loadingStrategy && !this.localeInterceptDisposer) {
+        if (this.localeInterceptDisposer) {
+            this.localeInterceptDisposer();
+        }
+
+        if ('infiniteScroll' === this.loadingStrategy) {
             this.localeInterceptDisposer = intercept(this.observableOptions.locale, this.localeInterceptor);
         }
     };
@@ -95,11 +99,20 @@ export default class DatagridStore {
     handleResponse = (response: Object, loadingStrategy: ?string) => {
         const data = response._embedded[this.resourceKey];
 
-        if ('infiniteScroll' === loadingStrategy) {
-            this.data = [...this.data, ...data];
-        } else {
-            this.data = data;
+        switch (loadingStrategy) {
+            case 'tree':
+                this.setTreeData(data, 1);
+                break;
+            case 'infiniteScroll':
+                this.data = [...this.data, ...data];
+                break;
+            default:
+                this.data = data;
+                break;
         }
+
+        this.pageCount = response.pages;
+        this.setLoading(false);
     };
 
     @action loadChildren = (hasChildren: boolean, id: number | string, depth: number) => {
@@ -142,7 +155,7 @@ export default class DatagridStore {
         this.setDepthLoading(null);
     };
 
-    @action setTreeData = (data: Array, depth: number) => {
+    @action setTreeData = (data: *, depth: number) => {
         let newData = this.data.slice(0, depth + 1);
 
         if (!this.data[depth]) {

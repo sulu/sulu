@@ -57,17 +57,17 @@ test('The ColumnList component should render', () => {
             toolbarItems={toolbarItems}
         >
             <Column>
-                <Item id="1" selected={true}>Item 1</Item>
-                <Item id="2" hasChildren={true}>Item 1</Item>
-                <Item id="3">Item 1</Item>
+                <Item id="1" columnIndex="1" selected={true}>Item 1</Item>
+                <Item id="2" columnIndex="1" hasChildren={true}>Item 1</Item>
+                <Item id="3" columnIndex="1">Item 1</Item>
             </Column>
             <Column>
-                <Item id="1-1">Item 1</Item>
-                <Item id="1-2" hasChildren={true}>Item 1</Item>
+                <Item id="1-1" columnIndex="2">Item 1</Item>
+                <Item id="1-2" columnIndex="2" hasChildren={true}>Item 1</Item>
             </Column>
             <Column>
-                <Item id="1-1-1">Item 1</Item>
-                <Item id="1-1-2">Item 1</Item>
+                <Item id="1-1-1" columnIndex="3">Item 1</Item>
+                <Item id="1-1-2" columnIndex="3">Item 1</Item>
             </Column>
         </ColumnList>
     );
@@ -125,13 +125,13 @@ test('The ColumnList component should trigger the item callback', () => {
             toolbarItems={toolbarItems}
         >
             <Column>
-                <Item id="1" selected={true}>Item 1</Item>
-                <Item id="2" hasChildren={true}>Item 1</Item>
-                <Item id="3">Item 1</Item>
+                <Item id="1" columnIndex="1" selected={true}>Item 1</Item>
+                <Item id="2" columnIndex="1" hasChildren={true}>Item 1</Item>
+                <Item id="3" columnIndex="1">Item 1</Item>
             </Column>
             <Column>
-                <Item id="1-1">Item 1</Item>
-                <Item id="1-2" hasChildren={true}>Item 1</Item>
+                <Item id="1-1" columnIndex="2">Item 1</Item>
+                <Item id="1-2" columnIndex="2" hasChildren={true}>Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1-1">Item 1</Item>

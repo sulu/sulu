@@ -3,10 +3,13 @@ import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import React from 'react';
 import ColumnList from '../../../components/ColumnList';
-import type {DatagridAdapterProps} from '../types';
+import AbstractAdapter from './AbstractAdapter';
 
 @observer
-export default class ColumnListAdapter extends React.Component<DatagridAdapterProps> {
+export default class ColumnListAdapter extends AbstractAdapter {
+    static getLoadingStrategy: () => string = () => { return 'pagination'; };
+    static getStorageStrategy: () => string = () => { return 'tree'; };
+
     @observable selectedItems: Array<String> = [];
 
     renderItems = (items: Object, columnIndex: number) => {
@@ -46,7 +49,10 @@ export default class ColumnListAdapter extends React.Component<DatagridAdapterPr
     handleItemClick = (id: string | number, columnIndex: number, hasChildren: boolean) => {
         const {onLoadChildren} = this.props;
         this.setSelectedItem(id, columnIndex);
-        onLoadChildren(id, columnIndex, hasChildren);
+
+        if (onLoadChildren) {
+            onLoadChildren(id, columnIndex, hasChildren);
+        }
     };
 
     @action setSelectedItem = (id: string | number, columnIndex: number) => {
@@ -54,22 +60,9 @@ export default class ColumnListAdapter extends React.Component<DatagridAdapterPr
     };
 
     render() {
-        const {
-            data,
-            schema,
-            selections,
-            onItemClick,
-            onAllSelectionChange,
-            onLoadChildren,
-        } = this.props;
-        const schemaKeys = Object.keys(schema);
-
         const buttons = [
             {
                 icon: 'pencil',
-                onClick: (id) => {
-                    alert('Clicked pencil button for item with id: ' + id);
-                },
             },
         ];
 
@@ -77,17 +70,11 @@ export default class ColumnListAdapter extends React.Component<DatagridAdapterPr
             {
                 icon: 'plus',
                 type: 'button',
-                onClick: (index) => {
-                    alert('Clicked plus button for item with index: ' + index);
-                },
             },
             {
                 icon: 'search',
                 type: 'button',
                 skin: 'secondary',
-                onClick: (index) => {
-                    alert('Clicked search button for column with index: ' + index);
-                },
             },
             {
                 icon: 'gear',
@@ -95,15 +82,9 @@ export default class ColumnListAdapter extends React.Component<DatagridAdapterPr
                 options: [
                     {
                         label: 'Option1 ',
-                        onClick: (index) => {
-                            alert('Clicked option1 for column with index: ' + index);
-                        },
                     },
                     {
                         label: 'Option2 ',
-                        onClick: (index) => {
-                            alert('Clicked option2 for column with index: ' + index);
-                        },
                     },
                 ],
             },

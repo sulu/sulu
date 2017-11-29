@@ -97,7 +97,7 @@ export default class Datagrid extends React.PureComponent<Props> {
                     currentAdapter={this.currentAdapterKey}
                     onAdapterChange={this.handleAdapterChange}
                 />
-                {this.props.store.loading && this.props.store.loadingStrategy !== 'infiniteScroll'
+                {this.props.store.loading && Adapter.getLoadingStrategy() !== 'infiniteScroll'
                     ? <Loader />
                     :
                     // TODO: Try to remove this Decorator
@@ -105,7 +105,7 @@ export default class Datagrid extends React.PureComponent<Props> {
                         type={Adapter.getLoadingStrategy()}
                         total={pageCount}
                         current={page}
-                        loading={this.props.store.loading}
+                        loading={store.loading}
                         onChange={this.handlePageChange}
                     >
                         <Adapter
