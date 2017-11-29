@@ -113,6 +113,7 @@ class SnippetAdmin extends Admin
             (new Route('sulu_snippet.form.taxonomies', '/taxonomies', 'sulu_admin.list'))
                 ->addOption('resourceKey', 'snippets')
                 ->addOption('tabTitle', 'sulu_snippet.taxonomies')
+                ->addOption('adapters', ['table'])
                 ->addOption('backRoute', 'sulu_snippet.list')
                 ->setParent('sulu_snippet.form'),
         ];

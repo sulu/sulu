@@ -7,6 +7,8 @@ $listElementDragBoxShadowColor: rgba($black, .1);
 .list {
     margin: 0;
     padding: 0;
+    max-height: 250px;
+    overflow: auto;
 }
 
 .list-element {
