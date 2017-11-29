@@ -35,24 +35,24 @@ export default class Renderer extends React.PureComponent<Props> {
         this.submitButton = submitButton;
     };
 
-    renderItem(schemaField: SchemaEntry, schemaKey: string) {
-        const {data, locale, onChange} = this.props;
+    renderGridSection(schemaField: SchemaEntry, schemaKey: string) {
+        const {items} = schemaField;
+        return (
+            <Grid.Section key={schemaKey} className={rendererStyles.gridSection}>
+                <Grid.Item size={12}>
+                    <Divider>
+                        {schemaField.label}
+                    </Divider>
+                </Grid.Item>
+                {items &&
+                    Object.keys(items).map((key) => this.renderItem(items[key], key))
+                }
+            </Grid.Section>
+        );
+    }
 
-        if (schemaField.type === 'section') {
-            const {items} = schemaField;
-            return (
-                <Grid.Section key={schemaKey} className={rendererStyles.gridSection}>
-                    <Grid.Item size={12}>
-                        <Divider>
-                            {schemaField.label}
-                        </Divider>
-                    </Grid.Item>
-                    {items &&
-                        Object.keys(items).map((key) => this.renderItem(items[key], key))
-                    }
-                </Grid.Section>
-            );
-        }
+    renderGridItem(schemaField: SchemaEntry, schemaKey: string) {
+        const {data, locale, onChange} = this.props;
 
         return (
             <Grid.Item
@@ -70,6 +70,14 @@ export default class Renderer extends React.PureComponent<Props> {
                 />
             </Grid.Item>
         );
+    }
+
+    renderItem(schemaField: SchemaEntry, schemaKey: string) {
+        if (schemaField.type === 'section') {
+            return this.renderGridSection(schemaField, schemaKey);
+        }
+
+        return this.renderGridItem(schemaField, schemaKey);
     }
 
     render() {

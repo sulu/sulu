@@ -4,6 +4,10 @@
 
 .grid-section {
     margin-bottom: -30px;
+
+    & .grid-section {
+        margin-bottom: 0;
+    }
 }
 
 .grid-item {
