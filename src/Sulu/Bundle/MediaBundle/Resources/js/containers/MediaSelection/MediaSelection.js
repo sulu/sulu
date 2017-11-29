@@ -77,6 +77,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
             <div>
                 <MultiItemSelection
                     label={translate('sulu_media.select_media')}
+                    loading={this.mediaSelectionStore.loading}
                     onItemRemove={this.handleRemove}
                     leftButton={{
                         icon: ADD_ICON,

@@ -9,6 +9,7 @@ const MEDIA_RESOURCE_KEY = 'media';
 
 export default class MediaSelectionStore {
     @observable selectedMedia: Array<MediaItem> = [];
+    @observable loading: boolean = false;
 
     constructor(selectedMediaIds: ?Array<string | number>, locale: string) {
         if (selectedMediaIds && selectedMediaIds.length) {
@@ -29,6 +30,10 @@ export default class MediaSelectionStore {
         this.selectedMedia = arrayMove(this.selectedMedia, oldItemIndex, newItemIndex);
     }
 
+    @action setLoading(loading: boolean) {
+        this.loading = loading;
+    }
+
     @computed get selectedMediaIds(): Array<string | number> {
         return this.selectedMedia.map((media) => media.id);
     }
@@ -43,9 +48,11 @@ export default class MediaSelectionStore {
     }
 
     loadSelectedMedia = (selectedMediaIds: Array<string | number>, locale: string) => {
+        this.setLoading(true);
         return ResourceRequester.getList(MEDIA_RESOURCE_KEY, {
             locale,
             ids: selectedMediaIds.join(','),
+            limit: 9999, // TODO: Should be replaced by pagination
         }).then((data) => {
             const {
                 _embedded: {
@@ -56,6 +63,7 @@ export default class MediaSelectionStore {
             media.forEach((mediaItem) => {
                 this.add(mediaItem);
             });
+            this.setLoading(false);
         });
     };
 }

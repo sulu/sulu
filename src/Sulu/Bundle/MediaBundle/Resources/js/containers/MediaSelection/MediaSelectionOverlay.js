@@ -134,6 +134,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         const {excludedIds} = this.props;
         const options = {};
 
+        options.limit = 50;
         options.fields = [
             'id',
             'type',

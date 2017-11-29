@@ -98,6 +98,8 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
     @action createMediaDatagridStore(collectionId, page, locale) {
         const options = {};
+
+        options.limit = 50;
         options.fields = [
             'id',
             'type',
