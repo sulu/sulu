@@ -1,15 +1,18 @@
 // @flow
 import React from 'react';
+import MimeTypeIndicator from '../../components/MimeTypeIndicator';
 import mediaSelectionItemStyle from './mediaSelectionItem.scss';
 
 type Props = {
+    mimeType: string,
     children: string,
-    thumbnail: string,
+    thumbnail: ?string,
 };
 
 export default class MediaSelectionItem extends React.PureComponent<Props> {
     render() {
         const {
+            mimeType,
             children,
             thumbnail,
         } = this.props;
@@ -17,7 +20,14 @@ export default class MediaSelectionItem extends React.PureComponent<Props> {
         return (
             <div className={mediaSelectionItemStyle.mediaSelectionItem}>
                 <div className={mediaSelectionItemStyle.thumbnail}>
-                    <img alt={thumbnail} src={thumbnail} />
+                    {thumbnail
+                        ? <img alt={thumbnail} src={thumbnail} />
+                        : <MimeTypeIndicator
+                            height={25}
+                            iconSize={16}
+                            mimeType={mimeType}
+                        />
+                    }
                 </div>
                 {children}
             </div>

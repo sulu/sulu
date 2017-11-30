@@ -188,7 +188,7 @@ export default class MediaCard extends React.PureComponent<Props> {
                     className={mediaCardStyles.media}
                     onClick={this.handleClick}
                 >
-                    {(image)
+                    {image
                         ? <img alt={title} src={image} />
                         : <MimeTypeIndicator mimeType={mimeType} height={200} />
                     }

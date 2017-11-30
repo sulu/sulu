@@ -29,17 +29,21 @@ export default class MediaCardAdapter extends React.Component<Props> {
     getDownloadDropdownProps(item: Object) {
         const baseURL = window.location.origin;
         const {thumbnails} = item;
-        const imageSizes = !thumbnails ? [] : Object.keys(thumbnails).map((itemKey) => {
-            return {
-                url: baseURL + item.thumbnails[itemKey],
-                label: itemKey,
-            };
-        });
+        const imageSizes = [];
 
         imageSizes.push({
             url: baseURL + item.url,
             label: translate('sulu_media.copy_masterfile_url'),
         });
+
+        if (thumbnails) {
+            imageSizes.push(...Object.keys(thumbnails).map((itemKey) => {
+                return {
+                    url: baseURL + item.thumbnails[itemKey],
+                    label: itemKey,
+                };
+            }));
+        }
 
         return {
             imageSizes,
