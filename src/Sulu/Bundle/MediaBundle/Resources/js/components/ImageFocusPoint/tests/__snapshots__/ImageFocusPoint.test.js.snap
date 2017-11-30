@@ -1,0 +1,829 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`] = `
+<div
+  class="imageFocusPoint"
+>
+  <div
+    class="focusPoints"
+  >
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(-45deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(0deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(45deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(-90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint active"
+      disabled=""
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+  </div>
+  <img
+    class="image"
+    src="http://lorempixel.com/300/300"
+  />
+</div>
+`;
+
+exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] = `
+<div
+  class="imageFocusPoint"
+>
+  <div
+    class="focusPoints"
+  >
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(0deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(45deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint active"
+      disabled=""
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+  </div>
+  <img
+    class="image"
+    src="http://lorempixel.com/300/300"
+  />
+</div>
+`;
+
+exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] = `
+<div
+  class="imageFocusPoint"
+>
+  <div
+    class="focusPoints"
+  >
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(-45deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(0deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(-90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint active"
+      disabled=""
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+  </div>
+  <img
+    class="image"
+    src="http://lorempixel.com/300/300"
+  />
+</div>
+`;
+
+exports[`Should render ImageFocusPoint with focusing the center-center point 1`] = `
+<div
+  class="imageFocusPoint"
+>
+  <div
+    class="focusPoints"
+  >
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(-45deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(0deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(45deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(-90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint active"
+      disabled=""
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(225deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(180deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(125deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+  </div>
+  <img
+    class="image"
+    src="http://lorempixel.com/300/300"
+  />
+</div>
+`;
+
+exports[`Should render ImageFocusPoint with focusing the center-left point 1`] = `
+<div
+  class="imageFocusPoint"
+>
+  <div
+    class="focusPoints"
+  >
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(0deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(45deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint active"
+      disabled=""
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(180deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(125deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+  </div>
+  <img
+    class="image"
+    src="http://lorempixel.com/300/300"
+  />
+</div>
+`;
+
+exports[`Should render ImageFocusPoint with focusing the center-right point 1`] = `
+<div
+  class="imageFocusPoint"
+>
+  <div
+    class="focusPoints"
+  >
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(-45deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(0deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(-90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint active"
+      disabled=""
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(225deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(180deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+  </div>
+  <img
+    class="image"
+    src="http://lorempixel.com/300/300"
+  />
+</div>
+`;
+
+exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = `
+<div
+  class="imageFocusPoint"
+>
+  <div
+    class="focusPoints"
+  >
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(-90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint active"
+      disabled=""
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(225deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(180deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(125deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+  </div>
+  <img
+    class="image"
+    src="http://lorempixel.com/300/300"
+  />
+</div>
+`;
+
+exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
+<div
+  class="imageFocusPoint"
+>
+  <div
+    class="focusPoints"
+  >
+    <button
+      class="focusPoint active"
+      disabled=""
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(180deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(125deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+  </div>
+  <img
+    class="image"
+    src="http://lorempixel.com/300/300"
+  />
+</div>
+`;
+
+exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
+<div
+  class="imageFocusPoint"
+>
+  <div
+    class="focusPoints"
+  >
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(-90deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint active"
+      disabled=""
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(225deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    >
+      <div
+        style="transform:rotate(180deg);"
+      >
+        <span
+          aria-label="arrow-up"
+          class="fa fa-arrow-up"
+        />
+      </div>
+    </button>
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+    <button
+      class="focusPoint"
+      style="width:33.333333333333336%;height:33.333333333333336%;"
+    />
+  </div>
+  <img
+    class="image"
+    src="http://lorempixel.com/300/300"
+  />
+</div>
+`;

@@ -1,67 +1,112 @@
 // @flow
 import React from 'react';
-import classNames from 'classnames';
-import {Icon} from 'sulu-admin-bundle/components';
-import type {FocusPoint} from './types';
+import type {Point} from './types';
+import FocusPoint from './FocusPoint';
 import imageFocusPointStyles from './imageFocusPoint.scss';
 
 const FOCUS_POINT_MATRIX_SIZE = 3;
-const ARROW_UP_ICON = 'arrow-up';
-const ARROW_DOWN_ICON = 'arrow-down';
-const ARROW_LEFT_ICON = 'arrow-left';
-const ARROW_RIGHT_ICON = 'arrow-right';
 
 type Props = {
     image: string,
-    value: FocusPoint,
-    onChange: (value: FocusPoint) => void,
+    value: Point,
+    onChange: (value: Point) => void,
 };
 
 export default class ImageFocusPoint extends React.PureComponent<Props> {
-    createFocusPoint(icon: ?string, active: boolean = false) {
-        const focusPointClass = classNames(
-            imageFocusPointStyles.focusPoint,
-            {
-                [imageFocusPointStyles.active]: active,
-            }
-        );
-
-        return (
-            <button className={focusPointClass}>
-                {icon &&
-                    <Icon name={icon} />
-                }
-            </button>
-        );
-    }
-
-    createFocusPoints(selectedPoint: FocusPoint) {
+    createFocusPoints(selectedPoint: Point) {
         const points = [];
 
-        for (let x = 0; x < FOCUS_POINT_MATRIX_SIZE; x++) {
-            for (let y = 0; y < FOCUS_POINT_MATRIX_SIZE; y++) {
-                if (selectedPoint.x === x && selectedPoint.y === y) {
-                    points.push(this.createFocusPoint(null, true));
-                } else if (this.isLeftOfSelectedPoint(selectedPoint, x, y)) {
-                    points.push(this.createFocusPoint(ARROW_LEFT_ICON));
-                } else if (this.isRightOfSelectedPoint(selectedPoint, x, y)) {
-                    points.push(this.createFocusPoint(ARROW_RIGHT_ICON));
-                } else {
-                    points.push(this.createFocusPoint(null));
-                }
+        for (let row = 0; row < FOCUS_POINT_MATRIX_SIZE; row++) {
+            for (let column = 0; column < FOCUS_POINT_MATRIX_SIZE; column++) {
+                points.push(this.createFocusPoint(selectedPoint, column, row));
             }
         }
 
         return points;
     }
 
-    isLeftOfSelectedPoint(selectedPoint: FocusPoint, x: number, y: number) {
-        return selectedPoint.x + 1 === x && selectedPoint.x + 1 <= FOCUS_POINT_MATRIX_SIZE && selectedPoint.y === y;
+    createFocusPoint(selectedPoint: Point, column: number, row: number) {
+        const key = `${column}-${row}`;
+        const props = {
+            size: 100 / FOCUS_POINT_MATRIX_SIZE,
+            value: {x: column, y: row},
+            onClick: this.handleFocusPointClick,
+        };
+
+        if (selectedPoint.x === column && selectedPoint.y === row) {
+            return (<FocusPoint key={key} {...props} active={true} />);
+        }
+
+        if (this.isLeftOfSelectedPoint(selectedPoint, row, column)) {
+            return (<FocusPoint key={key} {...props} arrowDirection={-90} />);
+        }
+
+        if (this.isRightOfSelectedPoint(selectedPoint, row, column)) {
+            return (<FocusPoint key={key} {...props} arrowDirection={90} />);
+        }
+
+        if (this.isAboveOfSelectedPoint(selectedPoint, row, column)) {
+            return (<FocusPoint key={key} {...props} arrowDirection={0} />);
+        }
+
+        if (this.isBeneathOfSelectedPoint(selectedPoint, row, column)) {
+            return (<FocusPoint key={key} {...props} arrowDirection={180} />);
+        }
+
+        if (this.isAboveRightOfSelectedPoint(selectedPoint, row, column)) {
+            return (<FocusPoint key={key} {...props} arrowDirection={45} />);
+        }
+
+        if (this.isAboveLeftOfSelectedPoint(selectedPoint, row, column)) {
+            return (<FocusPoint key={key} {...props} arrowDirection={-45} />);
+        }
+
+        if (this.isBeneathRightOfSelectedPoint(selectedPoint, row, column)) {
+            return (<FocusPoint key={key} {...props} arrowDirection={125} />);
+        }
+
+        if (this.isBeneathLeftOfSelectedPoint(selectedPoint, row, column)) {
+            return (<FocusPoint key={key} {...props} arrowDirection={225} />);
+        }
+
+        return <FocusPoint key={key} {...props} showArrow={false} />;
     }
 
-    isRightOfSelectedPoint(selectedPoint: FocusPoint, x: number, y: number) {
-        return selectedPoint.x + 1 === x && selectedPoint.x + 1 <= FOCUS_POINT_MATRIX_SIZE && selectedPoint.y === y;
+    isLeftOfSelectedPoint(selectedPoint: Point, row: number, column: number) {
+        return selectedPoint.x - 1 === column && selectedPoint.y === row;
     }
+
+    isRightOfSelectedPoint(selectedPoint: Point, row: number, column: number) {
+        return selectedPoint.x + 1 === column && selectedPoint.y === row;
+    }
+
+    isAboveOfSelectedPoint(selectedPoint: Point, row: number, column: number) {
+        return selectedPoint.x === column && selectedPoint.y - 1 === row;
+    }
+
+    isAboveLeftOfSelectedPoint(selectedPoint: Point, row: number, column: number) {
+        return selectedPoint.x - 1 === column && selectedPoint.y - 1 === row;
+    }
+
+    isAboveRightOfSelectedPoint(selectedPoint: Point, row: number, column: number) {
+        return selectedPoint.x + 1 === column && selectedPoint.y - 1 === row;
+    }
+
+    isBeneathOfSelectedPoint(selectedPoint: Point, row: number, column: number) {
+        return selectedPoint.x === column && selectedPoint.y + 1 === row;
+    }
+
+    isBeneathRightOfSelectedPoint(selectedPoint: Point, row: number, column: number) {
+        return selectedPoint.x + 1 === column && selectedPoint.y + 1 === row;
+    }
+
+    isBeneathLeftOfSelectedPoint(selectedPoint: Point, row: number, column: number) {
+        return selectedPoint.x - 1 === column && selectedPoint.y + 1 === row;
+    }
+
+    handleFocusPointClick = (selectedPoint: Point) => {
+        this.props.onChange(selectedPoint);
+    };
 
     render() {
         const {
