@@ -88,7 +88,6 @@ test('Should navigate to defined route on back button click', () => {
         bind: jest.fn(),
         route: {
             options: {
-                backRoute: 'test_route',
                 locales: [],
             },
         },
@@ -99,7 +98,7 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaDetail);
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('test_route', {locale: 'de'});
+    expect(router.restore).toBeCalledWith('sulu_media.overview', {locale: 'de'});
 });
 
 test('Should show locales from router options in toolbar', () => {

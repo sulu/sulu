@@ -9,7 +9,7 @@ import MediaCollection from '../../containers/MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaOverviewStyles from './mediaOverview.scss';
 
-const MEDIA_ROUTE = 'sulu_media.detail';
+const MEDIA_ROUTE = 'sulu_media.detail.detail';
 const COLLECTION_ROUTE = 'sulu_media.overview';
 const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
@@ -143,7 +143,6 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
     handleMediaNavigate = (mediaId) => {
         const {router} = this.props;
-
         router.navigate(
             MEDIA_ROUTE,
             {
