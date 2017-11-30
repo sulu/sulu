@@ -15,12 +15,21 @@ type Props = {
     collectionDatagridStore: DatagridStore,
     collectionStore: CollectionStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
+    onMediaNavigate?: (mediaId: string | number) => void,
 };
 
 @observer
 export default class MediaCollection extends React.PureComponent<Props> {
     static defaultProps = {
         mediaViews: [],
+    };
+
+    handleMediaClick = (mediaId: string | number) => {
+        const {onMediaNavigate} = this.props;
+
+        if (onMediaNavigate) {
+            onMediaNavigate(mediaId);
+        }
     };
 
     handleCollectionClick = (collectionId: string | number) => {
@@ -56,6 +65,7 @@ export default class MediaCollection extends React.PureComponent<Props> {
                 <Datagrid
                     adapters={mediaDatagridAdapters}
                     store={mediaDatagridStore}
+                    onItemClick={this.handleMediaClick}
                 />
             </div>
         );

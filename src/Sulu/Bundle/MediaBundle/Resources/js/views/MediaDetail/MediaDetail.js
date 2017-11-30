@@ -53,6 +53,7 @@ class MediaDetail extends React.PureComponent<Props> {
                         uploading={uploading}
                         progress={progress}
                         onDrop={this.handleMediaDrop}
+                        uploadText={translate('sulu_media.upload_or_replace')}
                     />
                 </section>
             </div>

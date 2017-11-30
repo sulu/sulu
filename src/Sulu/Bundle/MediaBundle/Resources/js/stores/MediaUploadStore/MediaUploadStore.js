@@ -4,7 +4,7 @@ import {ResourceStore, ResourceMetadataStore} from 'sulu-admin-bundle/stores';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 
 const RESOURCE_KEY = 'media';
-const THUMBNAIL_SIZE = 'sulu-400x400';
+const THUMBNAIL_SIZE = 'sulu-400x400-inset';
 
 export default class MediaUploadStore {
     resourceStore: ResourceStore;

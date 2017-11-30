@@ -9,6 +9,7 @@ import MediaCollection from '../../containers/MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaOverviewStyles from './mediaOverview.scss';
 
+const MEDIA_ROUTE = 'sulu_media.detail';
 const COLLECTION_ROUTE = 'sulu_media.overview';
 const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
@@ -130,7 +131,26 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
     handleCollectionOpen = (collectionId) => {
         const {router} = this.props;
-        router.navigate(COLLECTION_ROUTE, {id: collectionId, collectionPage: '1', locale: this.locale.get()});
+        router.navigate(
+            COLLECTION_ROUTE,
+            {
+                id: collectionId,
+                collectionPage: '1',
+                locale: this.locale.get(),
+            }
+        );
+    };
+
+    handleMediaNavigate = (mediaId) => {
+        const {router} = this.props;
+
+        router.navigate(
+            MEDIA_ROUTE,
+            {
+                id: mediaId,
+                locale: this.locale.get(),
+            }
+        );
     };
 
     render() {
@@ -144,6 +164,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
                     mediaDatagridStore={this.mediaDatagridStore}
                     collectionDatagridStore={this.collectionDatagridStore}
                     onCollectionNavigate={this.handleCollectionOpen}
+                    onMediaNavigate={this.handleMediaNavigate}
                 />
             </div>
         );

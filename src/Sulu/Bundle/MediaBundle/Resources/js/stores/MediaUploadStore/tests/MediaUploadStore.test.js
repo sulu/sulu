@@ -12,7 +12,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
         this.data = {
             id: 1,
             thumbnails: {
-                'sulu-400x400': '/admin/assets/400/400',
+                'sulu-400x400-inset': '/admin/assets/400/400',
             },
         };
     }),

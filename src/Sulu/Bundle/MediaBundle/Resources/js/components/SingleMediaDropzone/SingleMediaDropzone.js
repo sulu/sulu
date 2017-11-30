@@ -14,6 +14,7 @@ type Props = {
     uploading: boolean,
     progress: number,
     onDrop: (data: File) => void,
+    uploadText?: string,
 };
 
 @observer
@@ -49,6 +50,7 @@ export default class SingleMediaDropzone extends React.PureComponent<Props> {
             source,
             progress,
             uploading,
+            uploadText,
         } = this.props;
         const mediaContainerClass = classNames(
             singleMediaDropzoneStyles.mediaContainer,
@@ -69,14 +71,19 @@ export default class SingleMediaDropzone extends React.PureComponent<Props> {
                 {!uploading &&
                     <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
                         <div className={singleMediaDropzoneStyles.uploadIndicator}>
-                            <Icon name={UPLOAD_ICON} className={singleMediaDropzoneStyles.uploadIcon} />
+                            <div>
+                                <Icon name={UPLOAD_ICON} className={singleMediaDropzoneStyles.uploadIcon} />
+                                {uploadText &&
+                                    <div className={singleMediaDropzoneStyles.uploadInfoText}>{uploadText}</div>
+                                }
+                            </div>
                         </div>
                     </div>
                 }
                 {uploading &&
                     <div className={singleMediaDropzoneStyles.progressbar}>
                         <CircularProgressbar
-                            size={140}
+                            size={200}
                             percentage={progress}
                         />
                     </div>

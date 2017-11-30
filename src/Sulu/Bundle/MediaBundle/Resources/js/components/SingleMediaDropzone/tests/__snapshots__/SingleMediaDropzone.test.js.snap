@@ -11,10 +11,12 @@ exports[`Render a SingleMediaDropzone 1`] = `
     <div
       class="uploadIndicator"
     >
-      <span
-        aria-label="cloud-upload"
-        class="uploadIcon fa fa-cloud-upload"
-      />
+      <div>
+        <span
+          aria-label="cloud-upload"
+          class="uploadIcon fa fa-cloud-upload"
+        />
+      </div>
     </div>
   </div>
   <img
@@ -38,7 +40,7 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
     class="progressbar"
   >
     <div
-      style="width:140px;height:140px;"
+      style="width:200px;height:200px;"
     >
       <svg
         class="root  "
