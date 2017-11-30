@@ -2,7 +2,7 @@
 
 $progressbarTextColor: $shakespeare;
 $progressbarStrokeColor: $shakespeare;
-$progressbarBackgroundColor: rgba($nobel, .5);
+$progressbarBackgroundColor: rgba($nobel, .75);
 
 .root {
     width: 100%;
@@ -20,7 +20,7 @@ $progressbarBackgroundColor: rgba($nobel, .5);
 
 .text {
     fill: $progressbarTextColor;
-    font-size: 14px;
+    font-size: 12px;
     dominant-baseline: middle;
     text-anchor: middle;
 }

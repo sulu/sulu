@@ -1,9 +1,10 @@
 @import '../../containers/Application/colors.scss';
+@import './variables.scss';
 
 $tabsMenuBackgroundColor: $alto;
 
 .tabs-menu {
-    height: 40px;
+    height: $tabMenuHeight;
     list-style: none;
     margin: 0;
     padding: 0 40px;

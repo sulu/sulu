@@ -53,8 +53,7 @@ export default class SingleMediaDropzone extends React.PureComponent<Props> {
         const mediaContainerClass = classNames(
             singleMediaDropzoneStyles.mediaContainer,
             {
-                [singleMediaDropzoneStyles.showProgressbar]: uploading,
-                [singleMediaDropzoneStyles.showUploadIndicator]: !source || this.uploadIndicatorVisibility,
+                [singleMediaDropzoneStyles.showUploadIndicator]: (!source || this.uploadIndicatorVisibility),
             }
         );
 
@@ -67,17 +66,21 @@ export default class SingleMediaDropzone extends React.PureComponent<Props> {
                 disableClick={uploading}
                 className={mediaContainerClass}
             >
-                <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
-                    <div className={singleMediaDropzoneStyles.uploadIndicator}>
-                        <Icon name={UPLOAD_ICON} className={singleMediaDropzoneStyles.uploadIcon} />
+                {!uploading &&
+                    <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
+                        <div className={singleMediaDropzoneStyles.uploadIndicator}>
+                            <Icon name={UPLOAD_ICON} className={singleMediaDropzoneStyles.uploadIcon} />
+                        </div>
                     </div>
-                </div>
-                <div className={singleMediaDropzoneStyles.progressbar}>
-                    <CircularProgressbar
-                        size={140}
-                        percentage={progress}
-                    />
-                </div>
+                }
+                {uploading &&
+                    <div className={singleMediaDropzoneStyles.progressbar}>
+                        <CircularProgressbar
+                            size={140}
+                            percentage={progress}
+                        />
+                    </div>
+                }
                 {!!source &&
                     <img className={singleMediaDropzoneStyles.thumbnail} src={source} />
                 }

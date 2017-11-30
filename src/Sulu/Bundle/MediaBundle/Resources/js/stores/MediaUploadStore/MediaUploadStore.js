@@ -33,12 +33,6 @@ export default class MediaUploadStore {
 
     @action setUploading(uploading: boolean) {
         this.uploading = uploading;
-
-        if (!uploading) {
-            // Using timeout because mobx async behavior is messing up animations
-            // which are based on the upload progress
-            setTimeout(() => this.setProgress(0), 1000);
-        }
     }
 
     @action setProgress(progress: number) {
@@ -54,12 +48,14 @@ export default class MediaUploadStore {
         const url = baseUrl + '/' + mediaId + queryString;
 
         this.setUploading(true);
+
         this.upload(file, url)
             .then((data: Object) => {
                 for (const key of Object.keys(data)) {
                     this.resourceStore.set(key, data[key]);
                 }
                 this.setUploading(false);
+                this.setProgress(0);
             });
     }
 

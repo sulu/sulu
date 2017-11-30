@@ -105,8 +105,7 @@ class SnippetAdmin extends Admin
                 ->addAttributeDefault('locale', $snippetLocales[0]),
             (new Route('sulu_snippet.form', '/snippets/:locale/:id', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'snippets')
-                ->addOption('locales', $snippetLocales)
-                ->addAttributeDefault('locale', $snippetLocales[0]),
+                ->addOption('locales', $snippetLocales),
             (new Route('sulu_snippet.form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
                 ->addOption('backRoute', 'sulu_snippet.list')

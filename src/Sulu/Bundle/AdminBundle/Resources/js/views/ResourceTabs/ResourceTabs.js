@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {observer} from 'mobx-react';
 import {observable} from 'mobx';
 import Tabs from '../../components/Tabs';
 import Loader from '../../components/Loader';
@@ -8,6 +9,7 @@ import {translate} from '../../services/Translator';
 import ResourceStore from '../../stores/ResourceStore';
 import resourceTabsStyle from './resourceTabs.scss';
 
+@observer
 export default class ResourceTabs extends React.PureComponent<ViewProps> {
     resourceStore: ResourceStore;
 

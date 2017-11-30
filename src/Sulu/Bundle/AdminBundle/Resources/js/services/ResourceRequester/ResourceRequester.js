@@ -18,10 +18,14 @@ export default class ResourceRequester {
 
         const searchParameters = new URLSearchParams();
         Object.keys(options).forEach((key) => {
+            if (options[key] === undefined) {
+                return;
+            }
+
             searchParameters.set(key, options[key]);
         });
 
-        return '?' + searchParameters.toString();
+        return '?' + searchParameters.toString().replace(/%2C/gi, ',');
     }
 
     static get(resourceKey: string, id: number | string, queryOptions: ?Object) {
@@ -36,9 +40,9 @@ export default class ResourceRequester {
 
     static getList(resourceKey: string, options: ListOptions = listDefaults) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        const searchOptions = {...listDefaults, ...options};
+        const queryOptions = {...listDefaults, ...options};
 
-        return Requester.get(baseUrl + ResourceRequester.buildQueryString(searchOptions));
+        return Requester.get(baseUrl + ResourceRequester.buildQueryString(queryOptions));
     }
 
     static delete(resourceKey: string, id: number | string) {

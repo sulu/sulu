@@ -21,52 +21,6 @@ exports[`Render a MediaDetail view 1`] = `
           />
         </div>
       </div>
-      <div
-        class="progressbar"
-      >
-        <div
-          style="width:140px;height:140px;"
-        >
-          <svg
-            class="root  "
-            viewbox="0 0 100 100"
-          >
-            <circle
-              class="background"
-              cx="50"
-              cy="50"
-              r="50"
-            />
-            <path
-              d="
-      M 50,50 m 0,-38
-      a 38,38 0 1 1 0,76
-      a 38,38 0 1 1 0,-76
-    "
-              fill-opacity="0"
-              stroke-width="8"
-            />
-            <path
-              class="path"
-              d="
-      M 50,50 m 0,-38
-      a 38,38 0 1 1 0,76
-      a 38,38 0 1 1 0,-76
-    "
-              fill-opacity="0"
-              stroke-width="8"
-              style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:238.76104167282426px;"
-            />
-            <text
-              class="text"
-              x="50"
-              y="50"
-            >
-              0%
-            </text>
-          </svg>
-        </div>
-      </div>
       <input
         autocomplete="off"
         style="display:none;"

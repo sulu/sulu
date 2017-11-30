@@ -1,5 +1,6 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import 'url-search-params-polyfill';
+import {when} from 'mobx';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import MediaUploadStore from '../MediaUploadStore';
 
@@ -36,34 +37,44 @@ test('Calling the "update" method should make a "POST" request to the media upda
         this.send = jest.fn();
     });
 
-    const resourceStore = new ResourceStore();
+    const resourceStore = new ResourceStore('test', 'test');
     const mediaUploadStore = new MediaUploadStore(resourceStore);
     const testId = 1;
-    const fileData = {};
+    const fileData = new File([''], 'fileName');
 
     mediaUploadStore.update(testId, fileData);
     expect(openSpy).toBeCalledWith('POST', '/media/1?action=new-version&locale=en');
 });
 
-test('Calling "setUploading" with "false" will reset the progress', (done) => {
-    const resourceStore = new ResourceStore();
+test('After the request was successful the progress will be reset', (done) => {
+    window.XMLHttpRequest = jest.fn(function() {
+        this.open = jest.fn();
+        this.onerror = jest.fn();
+        this.upload = jest.fn();
+        this.send = jest.fn();
+    });
+
+    const resourceStore = new ResourceStore('test', 'test');
     const mediaUploadStore = new MediaUploadStore(resourceStore);
+    const testId = 1;
+    const fileData = new File([''], 'fileName');
 
-    mediaUploadStore.setUploading(true);
-    mediaUploadStore.setProgress(50);
-    expect(mediaUploadStore.uploading).toBe(true);
+    mediaUploadStore.update(testId, fileData);
 
-    mediaUploadStore.setUploading(false);
-    expect(mediaUploadStore.uploading).toBe(false);
+    when(
+        () => mediaUploadStore.progress === 0,
+        () => {
+            expect(mediaUploadStore.uploading).toBe(false);
+            expect(mediaUploadStore.progress).toBe(0);
+            done();
+        }
+    );
 
-    setTimeout(() => {
-        expect(mediaUploadStore.progress).toBe(0);
-        done();
-    }, 1001);
+    window.XMLHttpRequest.mock.instances[0].onload({ target: {response: '{}'} });
 });
 
 test('The "source" property of the MediaUploadStore should return the thumbnail url', () => {
-    const resourceStore = new ResourceStore();
+    const resourceStore = new ResourceStore('test', 'test');
     const mediaUploadStore = new MediaUploadStore(resourceStore);
 
     expect(mediaUploadStore.source).toBe(`${window.location.origin}/admin/assets/400/400`);

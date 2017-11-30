@@ -1,4 +1,4 @@
-The `SingleMediaDropzone` component enabels uploading media using drag and drop. The component doesn't handle the
+The `SingleMediaDropzone` component enables uploading media using drag and drop. The component doesn't handle the
 upload mechanism but provides the dropped file through the `onDrop` callback. By using the `source` prop you can show
 a thumbnail of the uploaded image.
 
