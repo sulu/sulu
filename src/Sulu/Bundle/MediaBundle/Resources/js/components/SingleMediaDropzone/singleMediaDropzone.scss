@@ -28,17 +28,6 @@ $uploadIndicatorBackgroundColor: rgba($nobel, .5);
             transform: scale(1);
         }
     }
-
-    &.show-progressbar {
-        .upload-indicator {
-            opacity: 0;
-        }
-
-        .progressbar {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
 }
 
 .progressbar,
@@ -53,7 +42,6 @@ $uploadIndicatorBackgroundColor: rgba($nobel, .5);
     align-items: center;
 }
 
-.progressbar,
 .upload-indicator {
     opacity: 0;
     transform: scale(.5);

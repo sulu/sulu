@@ -48,6 +48,7 @@ exports[`Render a MediaDetail view 1`] = `
           />
         </div>
       </div>
+<<<<<<< HEAD
       <div
         class="progressbar"
       >
@@ -95,6 +96,8 @@ exports[`Render a MediaDetail view 1`] = `
         </div>
 >>>>>>> added mediadetail view tests
       </div>
+=======
+>>>>>>> updated progress loader visibility, tests and readme
       <input
         autocomplete="off"
         style="display:none;"
