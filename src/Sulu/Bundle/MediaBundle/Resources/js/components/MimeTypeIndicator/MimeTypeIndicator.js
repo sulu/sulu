@@ -14,7 +14,6 @@ type Props = {
 export default class MimeTypeIndicator extends React.PureComponent<Props> {
     static defaultProps = {
         iconSize: 52,
-        inverted: false,
     };
 
     render() {
@@ -43,7 +42,7 @@ export default class MimeTypeIndicator extends React.PureComponent<Props> {
         }
 
         return (
-            <div style={mimeTypeStyles} className={mimeTypeIndicatorStyles.container}>
+            <div style={mimeTypeStyles} className={mimeTypeIndicatorStyles.mimeTypeIndicator}>
                 <Icon name={icon} />
             </div>
         );

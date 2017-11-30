@@ -29,16 +29,12 @@ export default class MediaCardAdapter extends React.Component<Props> {
     getDownloadDropdownProps(item: Object) {
         const baseURL = window.location.origin;
         const {thumbnails} = item;
-        let imageSizes = [];
-
-        if (thumbnails) {
-            imageSizes = Object.keys(thumbnails).map((itemKey) => {
-                return {
-                    url: baseURL + item.thumbnails[itemKey],
-                    label: itemKey,
-                };
-            });
-        }
+        const imageSizes = !thumbnails ? [] : Object.keys(thumbnails).map((itemKey) => {
+            return {
+                url: baseURL + item.thumbnails[itemKey],
+                label: itemKey,
+            };
+        });
 
         imageSizes.push({
             url: baseURL + item.url,
@@ -74,7 +70,7 @@ export default class MediaCardAdapter extends React.Component<Props> {
                     const meta = `${item.mimeType} ${MediaCardAdapter.formatFileSize(item.size)}`;
                     const downloadDropdownProps = this.getDownloadDropdownProps(item);
                     const selected = selections.includes(item.id);
-                    const thumbnail = (item.thumbnails) ? item.thumbnails[THUMBNAIL_SIZE] : null;
+                    const thumbnail = item.thumbnails ? item.thumbnails[THUMBNAIL_SIZE] : null;
 
                     return (
                         // TODO: Don't access properties like "title" directly.
