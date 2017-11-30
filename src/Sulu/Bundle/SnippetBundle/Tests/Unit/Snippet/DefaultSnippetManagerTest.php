@@ -63,10 +63,10 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
             ['sulu_io', 'de', 'test', 'test_homepage', '123-123-123', false],
             ['sulu_io', 'de', 'test', 'test_homepage', '123-123-123', true, false],
             ['sulu_io', 'de', 'test', 'test_homepage', '123-123-123', false, false],
-            ['sulu_io', 'de', 'test', 'testCase', '123-123-123'],
-            ['sulu_io', 'de', 'test', 'testCase', '123-123-123', false],
-            ['sulu_io', 'de', 'test', 'testCase', '123-123-123', true, false],
-            ['sulu_io', 'de', 'test', 'testCase', '123-123-123', false, false],
+            ['sulu_io', 'de', 'test', 'testcase', '123-123-123'],
+            ['sulu_io', 'de', 'test', 'testcase', '123-123-123', false],
+            ['sulu_io', 'de', 'test', 'testcase', '123-123-123', true, false],
+            ['sulu_io', 'de', 'test', 'testcase', '123-123-123', false, false],
         ];
     }
 
