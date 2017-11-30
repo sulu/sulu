@@ -12,17 +12,23 @@ exports[`Render a SingleMediaDropzone 1`] = `
       class="uploadIndicator"
     >
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> updated styling and tests
       <div>
         <span
           aria-label="cloud-upload"
           class="uploadIcon fa fa-cloud-upload"
         />
       </div>
+<<<<<<< HEAD
 =======
       <span
         aria-label="cloud-upload"
         class="uploadIcon fa fa-cloud-upload"
       />
+=======
+>>>>>>> updated styling and tests
     </div>
   </div>
 <<<<<<< HEAD
@@ -109,8 +115,12 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
     class="progressbar"
   >
     <div
+<<<<<<< HEAD
       style="width:140px;height:140px;"
 >>>>>>> added single media dropzone component, progress loader and upload logic
+=======
+      style="width:200px;height:200px;"
+>>>>>>> updated styling and tests
     >
       <svg
         class="root  "

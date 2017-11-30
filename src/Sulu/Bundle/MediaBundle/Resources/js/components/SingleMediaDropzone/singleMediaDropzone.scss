@@ -1,8 +1,9 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
 $dropzoneSize: 400px;
-$uploadIconColor: $white;
-$uploadIndicatorBackgroundColor: rgba($nobel, .5);
+$uploadIconColor: $scorpion;
+$uploadInfoTextColor: $scorpion;
+$uploadIndicatorBackgroundColor: rgba($alabaster, .8);
 
 .media-container {
     position: relative;
@@ -15,13 +16,7 @@ $uploadIndicatorBackgroundColor: rgba($nobel, .5);
     background-size: 10px;
     cursor: pointer;
 
-    &:hover {
-        .upload-indicator {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
+    &:hover,
     &.show-upload-indicator {
         .upload-indicator {
             opacity: 1;
@@ -43,22 +38,27 @@ $uploadIndicatorBackgroundColor: rgba($nobel, .5);
 }
 
 .upload-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    text-align: center;
+    background-color: $uploadIndicatorBackgroundColor;
     opacity: 0;
     transform: scale(.5);
     transition: all .25s cubic-bezier(.68, -.55, .265, 1.55);
 }
 
-.upload-indicator {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background-color: $uploadIndicatorBackgroundColor;
-}
-
 .upload-icon {
     font-size: 45px;
     color: $uploadIconColor;
+}
+
+.upload-info-text {
+    color: $uploadInfoTextColor;
+    font-size: 14px;
+    margin-top: 20px;
+    padding: 0 20px;
 }
