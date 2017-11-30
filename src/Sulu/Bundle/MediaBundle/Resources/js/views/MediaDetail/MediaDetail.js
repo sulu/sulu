@@ -9,6 +9,8 @@ import MediaUploadStore from '../../stores/MediaUploadStore';
 import SingleMediaDropzone from '../../components/SingleMediaDropzone';
 import mediaDetailStyles from './mediaDetail.scss';
 
+const COLLECTION_ROUTE = 'sulu_media.overview';
+
 type Props = ViewProps & {
     resourceStore: ResourceStore,
 };
@@ -66,15 +68,7 @@ export default withToolbar(MediaDetail, function() {
         router,
         resourceStore,
     } = this.props;
-    const {backRoute, locales} = router.route.options;
-
-    const backButton = backRoute
-        ? {
-            onClick: () => {
-                router.restore(backRoute, {locale: resourceStore.locale.get()});
-            },
-        }
-        : undefined;
+    const {locales} = router.route.options;
     const locale = locales
         ? {
             value: resourceStore.locale.get(),
@@ -89,8 +83,12 @@ export default withToolbar(MediaDetail, function() {
         : undefined;
 
     return {
-        backButton,
         locale,
+        backButton: {
+            onClick: () => {
+                router.restore(COLLECTION_ROUTE, {locale: resourceStore.locale.get()});
+            },
+        },
         items: [
             {
                 type: 'button',
