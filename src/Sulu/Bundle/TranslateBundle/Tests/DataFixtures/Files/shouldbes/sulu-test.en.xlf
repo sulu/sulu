@@ -5,19 +5,19 @@
       <tool tool-id="symfony" tool-name="Symfony"/>
     </header>
     <body>
-      <trans-unit id="gXQJloe" resname="key1">
+      <trans-unit resname="key1">
         <source>key1</source>
         <target>translation1</target>
       </trans-unit>
-      <trans-unit id="sQJTdky" resname="key2">
+      <trans-unit resname="key2">
         <source>key2</source>
         <target>translation2</target>
       </trans-unit>
-      <trans-unit id="9XYQTuv" resname="key3">
+      <trans-unit resname="key3">
         <source>key3</source>
         <target>translation3</target>
       </trans-unit>
-      <trans-unit id="pLNQTCd" resname="key4">
+      <trans-unit resname="key4">
         <source>key4</source>
         <target>translation4</target>
       </trans-unit>

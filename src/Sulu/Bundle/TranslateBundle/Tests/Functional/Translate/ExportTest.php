@@ -85,6 +85,7 @@ class ExportTest extends SuluTestCase
 
         $expectedHash = file_get_contents(self::$fixturePath . '/shouldbes/sulu-test.en.xlf');
         $actualHash = file_get_contents(self::$fixturePath . '/sulu-test.en.xlf');
+        $actualHash = $this->removeTranslationIds($actualHash);
 
         $this->assertSame($expectedHash, $actualHash);
     }
@@ -114,7 +115,13 @@ class ExportTest extends SuluTestCase
 
         $expectedHash = file_get_contents(self::$fixturePath . '/shouldbes/sulu-test.frontend.en.xlf');
         $actualHash = file_get_contents(self::$fixturePath . '/sulu-test.frontend.en.xlf');
+        $actualHash = $this->removeTranslationIds($actualHash);
 
         $this->assertSame($expectedHash, $actualHash);
+    }
+
+    private function removeTranslationIds($hash)
+    {
+        return preg_replace('/ id="(\w+)" /', ' ', $hash);
     }
 }
