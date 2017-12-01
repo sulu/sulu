@@ -228,7 +228,7 @@ test('Router navigate should be called when a collection or media was clicked', 
 
     mediaOverview.find('.media').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith(
-        'sulu_media.detail.detail',
+        'sulu_media.form.detail',
         {'id': 1, 'locale': locale}
     );
 });
