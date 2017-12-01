@@ -85,7 +85,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                               </div>
                               <div>
                                 <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"cloud-download\\"></span></button>
-                                <!-- react-empty: 72 -->
+                                <!-- react-empty: 77 -->
                               </div>
                             </div>
                             <div class=\\"media\\">
@@ -121,7 +121,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                               </div>
                               <div>
                                 <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"cloud-download\\"></span></button>
-                                <!-- react-empty: 97 -->
+                                <!-- react-empty: 107 -->
                               </div>
                             </div>
                             <div class=\\"media\\">
