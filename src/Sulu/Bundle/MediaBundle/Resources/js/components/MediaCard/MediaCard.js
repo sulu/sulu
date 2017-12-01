@@ -158,9 +158,11 @@ export default class MediaCard extends React.PureComponent<Props> {
                                 </div>
                             </Checkbox>
                         </div>
-                        <div className={mediaCardStyles.meta}>
-                            {meta}
-                        </div>
+                        {meta &&
+                            <div className={mediaCardStyles.meta}>
+                                <CroppedText>{meta}</CroppedText>
+                            </div>
+                        }
                     </div>
                     {(!!imageSizes.length && !!downloadUrl && !!downloadText) &&
                         <div>

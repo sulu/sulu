@@ -89,7 +89,31 @@ exports[`Render a simple MediaCard component 1`] = `
       <div
         class="meta"
       >
-        Test/Test
+        <div
+          aria-label="Test/Test"
+          class="croppedText"
+          title="Test/Test"
+        >
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            Test/
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              Test
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            Test/Test
+          </div>
+        </div>
       </div>
     </div>
   </div>
