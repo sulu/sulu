@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
+import type {Element} from 'react';
 import Icon from '../Icon';
 import {translate} from '../../services/Translator';
 import paginationStyles from './pagination.scss';
 
 type Props = {
+    children: Element<*>,
     current: number,
     total: number,
     onChange: (page: number) => void,
@@ -36,30 +38,33 @@ export default class Pagination extends React.PureComponent<Props> {
     };
 
     render() {
-        const {current, total} = this.props;
+        const {children, current, total} = this.props;
 
         return (
-            <nav className={paginationStyles.pagination}>
-                <div className={paginationStyles.control}>
-                    <span className={paginationStyles.display}>
-                        {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
-                    </span>
-                    <button
-                        className={paginationStyles.previous}
-                        disabled={!this.hasPreviousPage()}
-                        onClick={this.handlePreviousClick}
-                    >
-                        <Icon name="angle-left" />
-                    </button>
-                    <button
-                        className={paginationStyles.next}
-                        disabled={!this.hasNextPage()}
-                        onClick={this.handleNextClick}
-                    >
-                        <Icon name="angle-right" />
-                    </button>
-                </div>
-            </nav>
+            <section>
+                {children}
+                <nav className={paginationStyles.pagination}>
+                    <div className={paginationStyles.control}>
+                        <span className={paginationStyles.display}>
+                            {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
+                        </span>
+                        <button
+                            className={paginationStyles.previous}
+                            disabled={!this.hasPreviousPage()}
+                            onClick={this.handlePreviousClick}
+                        >
+                            <Icon name="angle-left" />
+                        </button>
+                        <button
+                            className={paginationStyles.next}
+                            disabled={!this.hasNextPage()}
+                            onClick={this.handleNextClick}
+                        >
+                            <Icon name="angle-right" />
+                        </button>
+                    </div>
+                </nav>
+            </section>
         );
     }
 }

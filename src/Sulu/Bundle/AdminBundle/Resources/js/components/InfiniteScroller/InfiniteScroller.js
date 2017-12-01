@@ -115,14 +115,14 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
         }
 
         return (
-            <div ref={this.setRef}>
+            <section ref={this.setRef}>
                 <div>
                     {children}
                 </div>
                 <div className={infiniteScrollerStyles.indicator}>
                     {indicator}
                 </div>
-            </div>
+            </section>
         );
     }
 }
