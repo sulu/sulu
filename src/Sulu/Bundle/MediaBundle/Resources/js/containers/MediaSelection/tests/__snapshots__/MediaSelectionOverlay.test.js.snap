@@ -13,14 +13,15 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
           <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-label=\\"times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <div class=\\"overlay\\">
-            <div>
+            <div class=\\"\\" aria-disabled=\\"false\\">
+              <!-- react-empty: 10 -->
               <ul class=\\"breadcrumb\\">
                 <li>
                   <button disabled=\\"\\" class=\\"item\\"></button>
                 </li>
               </ul>
               <div>
-                <!-- react-empty: 14 -->
+                <!-- react-empty: 15 -->
                 <section>
                   <ul class=\\"folderList\\">
                     <li>
@@ -43,7 +44,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                     </li>
                   </ul>
                   <nav class=\\"pagination\\">
-                    <div class=\\"loader\\"></div><span class=\\"display\\"><!-- react-text: 34 -->Page<!-- /react-text --><!-- react-text: 35 -->: <!-- /react-text --><!-- react-text: 36 -->2<!-- /react-text --><!-- react-text: 37 --> <!-- /react-text --><!-- react-text: 38 -->of<!-- /react-text --><!-- react-text: 39 --> <!-- /react-text --><!-- react-text: 40 -->3<!-- /react-text --></span>
+                    <div class=\\"loader\\"></div><span class=\\"display\\"><!-- react-text: 35 -->Page<!-- /react-text --><!-- react-text: 36 -->: <!-- /react-text --><!-- react-text: 37 -->2<!-- /react-text --><!-- react-text: 38 --> <!-- /react-text --><!-- react-text: 39 -->of<!-- /react-text --><!-- react-text: 40 --> <!-- /react-text --><!-- react-text: 41 -->3<!-- /react-text --></span>
                     <button
                       class=\\"previous\\"><span class=\\"fa fa-angle-left\\" aria-label=\\"angle-left\\"></span></button>
                       <button class=\\"next\\"><span class=\\"fa fa-angle-right\\" aria-label=\\"angle-right\\"></span></button>
@@ -52,7 +53,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
               </div>
               <div class=\\"divider\\"></div>
               <div>
-                <!-- react-empty: 47 -->
+                <!-- react-empty: 48 -->
                 <section>
                   <div>
                     <div class=\\"masonry\\" style=\\"position: relative; height: 0px;\\">
@@ -125,6 +126,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                   <div class=\\"indicator\\"></div>
                 </section>
               </div>
+              <input type=\\"file\\" multiple=\\"\\" autocomplete=\\"off\\" style=\\"display: none;\\">
             </div>
           </div>
         </article>

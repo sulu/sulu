@@ -4,7 +4,10 @@ exports[`Render a simple MediaOverview 1`] = `
 <div
   class="mediaOverview"
 >
-  <div>
+  <div
+    aria-disabled="false"
+    class=""
+  >
     <ul
       class="breadcrumb"
     >
@@ -377,6 +380,12 @@ exports[`Render a simple MediaOverview 1`] = `
         />
       </section>
     </div>
+    <input
+      autocomplete="off"
+      multiple=""
+      style="display:none;"
+      type="file"
+    />
   </div>
 </div>
 `;
