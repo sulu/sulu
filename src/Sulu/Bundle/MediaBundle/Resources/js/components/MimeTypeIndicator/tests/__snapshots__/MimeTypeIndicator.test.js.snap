@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render a MimeTypeIndicator 1`] = `
+<div
+  class="mimeTypeIndicator"
+  style="color:#fff;font-size:52px;background-color:#00723a;"
+>
+  <span
+    aria-label="file-excel-o"
+    class="fa fa-file-excel-o"
+  />
+</div>
+`;
+
+exports[`Should render a MimeTypeIndicator with different dimensions 1`] = `
+<div
+  class="mimeTypeIndicator"
+  style="color:#fff;font-size:32px;background-color:#00723a;width:200px;height:200px;"
+>
+  <span
+    aria-label="file-excel-o"
+    class="fa fa-file-excel-o"
+  />
+</div>
+`;

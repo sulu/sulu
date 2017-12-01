@@ -37,7 +37,8 @@ export default class MediaSelectionStore {
         return {
             id: media.id,
             title: media.title,
-            thumbnail: media.thumbnails[THUMBNAIL_SIZE],
+            mimeType: media.mimeType,
+            thumbnail: media.thumbnails ? media.thumbnails[THUMBNAIL_SIZE] : null,
         };
     }
 

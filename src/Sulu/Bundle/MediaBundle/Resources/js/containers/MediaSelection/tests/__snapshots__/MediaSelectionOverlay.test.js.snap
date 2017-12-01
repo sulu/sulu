@@ -75,7 +75,13 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                                     </div>
                                   </label>
                                 </div>
-                                <div class=\\"meta\\">image/png 12.35 KB</div>
+                                <div class=\\"meta\\">
+                                  <div title=\\"image/png 12.35 KB\\" aria-label=\\"image/png 12.35 KB\\" class=\\"croppedText\\">
+                                    <div class=\\"front\\" aria-hidden=\\"true\\">image/png</div>
+                                    <div class=\\"back\\" aria-hidden=\\"true\\"><span> 12.35 KB</span></div>
+                                    <div class=\\"whole\\">image/png 12.35 KB</div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                             <div class=\\"media\\">
@@ -101,7 +107,13 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                                     </div>
                                   </label>
                                 </div>
-                                <div class=\\"meta\\">image/jpeg 54.32 KB</div>
+                                <div class=\\"meta\\">
+                                  <div title=\\"image/jpeg 54.32 KB\\" aria-label=\\"image/jpeg 54.32 KB\\" class=\\"croppedText\\">
+                                    <div class=\\"front\\" aria-hidden=\\"true\\">image/jpeg</div>
+                                    <div class=\\"back\\" aria-hidden=\\"true\\"><span> 54.32 KB</span></div>
+                                    <div class=\\"whole\\">image/jpeg 54.32 KB</div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                             <div class=\\"media\\">

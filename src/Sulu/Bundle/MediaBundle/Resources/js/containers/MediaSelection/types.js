@@ -2,7 +2,8 @@
 export type MediaItem = {
     id: string | number,
     title: string,
-    thumbnail: string,
+    mimeType: string,
+    thumbnail: ?string,
 };
 
 export type Value = {

@@ -29,12 +29,21 @@ export default class MediaCardAdapter extends React.Component<Props> {
     getDownloadDropdownProps(item: Object) {
         const baseURL = window.location.origin;
         const {thumbnails} = item;
-        const imageSizes = Object.keys(thumbnails).map((itemKey) => {
-            return {
-                url: baseURL + item.thumbnails[itemKey],
-                label: itemKey,
-            };
+        const imageSizes = [];
+
+        imageSizes.push({
+            url: baseURL + item.url,
+            label: translate('sulu_media.copy_masterfile_url'),
         });
+
+        if (thumbnails) {
+            imageSizes.push(...Object.keys(thumbnails).map((itemKey) => {
+                return {
+                    url: baseURL + item.thumbnails[itemKey],
+                    label: itemKey,
+                };
+            }));
+        }
 
         return {
             imageSizes,
@@ -65,6 +74,7 @@ export default class MediaCardAdapter extends React.Component<Props> {
                     const meta = `${item.mimeType} ${MediaCardAdapter.formatFileSize(item.size)}`;
                     const downloadDropdownProps = this.getDownloadDropdownProps(item);
                     const selected = selections.includes(item.id);
+                    const thumbnail = item.thumbnails ? item.thumbnails[THUMBNAIL_SIZE] : null;
 
                     return (
                         // TODO: Don't access properties like "title" directly.
@@ -75,7 +85,8 @@ export default class MediaCardAdapter extends React.Component<Props> {
                             meta={meta}
                             icon={icon}
                             title={item.title}
-                            image={item.thumbnails[THUMBNAIL_SIZE]}
+                            image={thumbnail}
+                            mimeType={item.mimeType}
                             onClick={onItemClick}
                             selected={selected}
                             onSelectionChange={onItemSelectionChange}

@@ -88,6 +88,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
                         const {
                             id,
                             title,
+                            mimeType,
                             thumbnail,
                         } = selectedMedia;
 
@@ -97,7 +98,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
                                 id={id}
                                 index={index + 1}
                             >
-                                <MediaSelectionItem thumbnail={thumbnail}>
+                                <MediaSelectionItem thumbnail={thumbnail} mimeType={mimeType}>
                                     {title}
                                 </MediaSelectionItem>
                             </MultiItemSelection.Item>

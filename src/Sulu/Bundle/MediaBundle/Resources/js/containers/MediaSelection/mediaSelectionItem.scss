@@ -8,10 +8,10 @@ $thumbnailSize: 25px;
 
 .thumbnail {
     margin: 0 20px 0 10px;
+    width: $thumbnailSize;
+    height: $thumbnailSize;
 
     img {
         display: block;
-        width: $thumbnailSize;
-        height: $thumbnailSize;
     }
 }

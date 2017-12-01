@@ -67,7 +67,31 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
           <div
             class="meta"
           >
-            image/png 12.35 KB
+            <div
+              aria-label="image/png 12.35 KB"
+              class="croppedText"
+              title="image/png 12.35 KB"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                image/png
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                   12.35 KB
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                image/png 12.35 KB
+              </div>
+            </div>
           </div>
         </div>
         <div>
@@ -162,7 +186,31 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
           <div
             class="meta"
           >
-            image/jpeg 54.32 KB
+            <div
+              aria-label="image/jpeg 54.32 KB"
+              class="croppedText"
+              title="image/jpeg 54.32 KB"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                image/jpeg
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                   54.32 KB
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                image/jpeg 54.32 KB
+              </div>
+            </div>
           </div>
         </div>
         <div>
