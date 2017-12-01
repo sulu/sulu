@@ -33,7 +33,7 @@ export default class PaginationDecorator extends React.PureComponent<Props> {
                     <InfiniteScroller
                         total={total}
                         current={current}
-                        onLoad={this.handlePageChange}
+                        onChange={this.handlePageChange}
                         loading={loading}
                         lastPageReachedText={translate('sulu_admin.reached_end_of_list')}
                     >

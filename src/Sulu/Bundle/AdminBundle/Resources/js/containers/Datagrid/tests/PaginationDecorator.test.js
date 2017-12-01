@@ -82,6 +82,6 @@ test('The infinite scroll pagination calls the onChange callback if it wants to 
         </PaginationDecorator>
     );
 
-    paginationDecorator.find('InfiniteScroller').props().onLoad(testPage);
+    paginationDecorator.find('InfiniteScroller').props().onChange(testPage);
     expect(onChangeSpy).toBeCalledWith(testPage);
 });

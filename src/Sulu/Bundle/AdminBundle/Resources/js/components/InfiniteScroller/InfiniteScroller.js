@@ -9,7 +9,7 @@ const THRESHOLD = 100;
 
 type Props = {
     children: Element<*>,
-    onLoad: (loadedPage: number) => void,
+    onChange: (page: number) => void,
     current: number,
     total: number,
     loading: boolean,
@@ -80,7 +80,7 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
 
     scrollListener = debounce(() => {
         const {
-            onLoad,
+            onChange,
             current,
         } = this.props;
         const {
@@ -93,7 +93,7 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
         if ((elementOffsetBottom - scrollContainerOffsetBottom) < THRESHOLD)  {
             const nextPage = current + 1;
 
-            onLoad(nextPage);
+            onChange(nextPage);
             this.unbindScrollListener();
         }
     }, 200);
