@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * ENHANCEMENT #XXXX [CategoryBundle]          Added keywords to category serialization
+    * ENHANCEMENT #3665 [CategoryBundle]          Added keywords to category serialization
     * HOTFIX      #3647 [WebsiteBundle]           Fixed sulu_content_load throwing exception when reference was deleted
     * HOTFIX      #3646 [ContentBundle]           Fixed xss attack for seo description
     * HOTFIX      #3652 [RouteBundle]             Fixed bug with json routes for route-bundle
