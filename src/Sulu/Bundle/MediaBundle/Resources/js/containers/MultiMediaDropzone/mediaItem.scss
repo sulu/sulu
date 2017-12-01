@@ -1,14 +1,16 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
-$mediaItem: $white;
+$mediaItemBorderWidth: 3px;
+$mediaItemBorderColor: $white;
+$mediaItemBackgroundColor: $white;
 
 .media-item {
     position: relative;
-    width: 120px;
-    height: 120px;
-    padding: 10px;
+    width: calc(100px + $mediaItemBorderWidth * 2);
+    height: calc(100px + $mediaItemBorderWidth * 2);
     border-radius: 3px;
-    background-color: $mediaItem;
+    border: $mediaItemBorderWidth solid $mediaItemBorderColor;
+    background: $mediaItemBackgroundColor;
 }
 
 .progressbar-container {
