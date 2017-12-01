@@ -16,19 +16,21 @@ export default class MediaUploadStore {
     }
 
     @computed get source(): ?string {
-        if (!this.resourceStore.data.id) {
-            return;
-        }
-
         const {
             data: {
-                thumbnails: {
-                    [THUMBNAIL_SIZE]: thumbnailPath,
-                },
+                thumbnails,
             },
         } = this.resourceStore;
 
-        return `${window.location.origin}${thumbnailPath}`;
+        if (!thumbnails || !thumbnails[THUMBNAIL_SIZE]) {
+            return null;
+        }
+
+        return `${window.location.origin}${thumbnails[THUMBNAIL_SIZE]}`;
+    }
+
+    @computed get mimeType(): string {
+        return this.resourceStore.data.mimeType;
     }
 
     @action setUploading(uploading: boolean) {

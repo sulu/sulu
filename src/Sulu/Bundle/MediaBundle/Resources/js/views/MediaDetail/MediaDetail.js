@@ -43,6 +43,7 @@ class MediaDetail extends React.PureComponent<Props> {
     render() {
         const {
             source,
+            mimeType,
             progress,
             uploading,
         } = this.mediaUploadStore;
@@ -56,6 +57,7 @@ class MediaDetail extends React.PureComponent<Props> {
                         progress={progress}
                         onDrop={this.handleMediaDrop}
                         uploadText={translate('sulu_media.upload_or_replace')}
+                        mimeType={mimeType}
                     />
                 </section>
             </div>

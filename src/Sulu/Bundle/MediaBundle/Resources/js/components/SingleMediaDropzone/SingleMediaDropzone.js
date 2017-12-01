@@ -5,12 +5,14 @@ import {observable, action} from 'mobx';
 import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
 import {CircularProgressbar, Icon} from 'sulu-admin-bundle/components';
+import MimeTypeIndicator from '../MimeTypeIndicator';
 import singleMediaDropzoneStyles from './singleMediaDropzone.scss';
 
 const UPLOAD_ICON = 'cloud-upload';
 
 type Props = {
     source: ?string,
+    mimeType: string,
     uploading: boolean,
     progress: number,
     onDrop: (data: File) => void,
@@ -22,6 +24,7 @@ export default class SingleMediaDropzone extends React.PureComponent<Props> {
     static defaultProps = {
         progress: 0,
         uploading: false,
+        mimeType: '',
     };
 
     @observable uploadIndicatorVisibility: boolean;
@@ -48,6 +51,7 @@ export default class SingleMediaDropzone extends React.PureComponent<Props> {
     render() {
         const {
             source,
+            mimeType,
             progress,
             uploading,
             uploadText,
@@ -55,7 +59,7 @@ export default class SingleMediaDropzone extends React.PureComponent<Props> {
         const mediaContainerClass = classNames(
             singleMediaDropzoneStyles.mediaContainer,
             {
-                [singleMediaDropzoneStyles.showUploadIndicator]: (!source || this.uploadIndicatorVisibility),
+                [singleMediaDropzoneStyles.showUploadIndicator]: this.uploadIndicatorVisibility,
             }
         );
 
@@ -88,8 +92,9 @@ export default class SingleMediaDropzone extends React.PureComponent<Props> {
                         />
                     </div>
                 }
-                {!!source &&
-                    <img className={singleMediaDropzoneStyles.thumbnail} src={source} />
+                {source
+                    ? <img className={singleMediaDropzoneStyles.thumbnail} src={source} />
+                    : <MimeTypeIndicator mimeType={mimeType} iconSize={100} />
                 }
             </Dropzone>
         );

@@ -7,7 +7,7 @@ exports[`Render a MediaDetail view 1`] = `
   <section>
     <div
       aria-disabled="false"
-      class="mediaContainer showUploadIndicator"
+      class="mediaContainer"
     >
       <div
         class="uploadIndicatorContainer"
@@ -22,6 +22,15 @@ exports[`Render a MediaDetail view 1`] = `
             />
           </div>
         </div>
+      </div>
+      <div
+        class="mimeTypeIndicator"
+        style="color:#fff;font-size:100px;background-color:#585858;"
+      >
+        <span
+          aria-label="file-o"
+          class="fa fa-file-o"
+        />
       </div>
       <input
         autocomplete="off"
