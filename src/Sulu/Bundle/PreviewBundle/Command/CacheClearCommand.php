@@ -22,6 +22,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CacheClearCommand extends BaseCacheClearCommand
 {
+    protected static $defaultName = 'cache:clear';
+
     /**
      * {@inheritdoc}
      */
