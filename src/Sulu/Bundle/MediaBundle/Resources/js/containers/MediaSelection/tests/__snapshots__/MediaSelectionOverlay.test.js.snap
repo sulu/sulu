@@ -43,11 +43,10 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                     </li>
                   </ul>
                   <nav class=\\"pagination\\">
-                    <div class=\\"control\\"><span class=\\"display\\"><!-- react-text: 34 -->Page<!-- /react-text --><!-- react-text: 35 -->: <!-- /react-text --><!-- react-text: 36 -->2<!-- /react-text --><!-- react-text: 37 --> <!-- /react-text --><!-- react-text: 38 -->of<!-- /react-text --><!-- react-text: 39 --> <!-- /react-text --><!-- react-text: 40 -->3<!-- /react-text --></span>
-                      <button
-                        class=\\"previous\\"><span class=\\"fa fa-angle-left\\" aria-label=\\"angle-left\\"></span></button>
-                        <button class=\\"next\\"><span class=\\"fa fa-angle-right\\" aria-label=\\"angle-right\\"></span></button>
-                    </div>
+                    <div class=\\"loader\\"></div><span class=\\"display\\"><!-- react-text: 34 -->Page<!-- /react-text --><!-- react-text: 35 -->: <!-- /react-text --><!-- react-text: 36 -->2<!-- /react-text --><!-- react-text: 37 --> <!-- /react-text --><!-- react-text: 38 -->of<!-- /react-text --><!-- react-text: 39 --> <!-- /react-text --><!-- react-text: 40 -->3<!-- /react-text --></span>
+                    <button
+                      class=\\"previous\\"><span class=\\"fa fa-angle-left\\" aria-label=\\"angle-left\\"></span></button>
+                      <button class=\\"next\\"><span class=\\"fa fa-angle-right\\" aria-label=\\"angle-right\\"></span></button>
                   </nav>
                 </section>
               </div>

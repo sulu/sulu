@@ -79,6 +79,7 @@ exports[`Render only loader if no total is not passed yet 1`] = `
   <p />
   <div
     class="spinner"
+    style="width:40px;height:40px;"
   >
     <div
       class="doubleBounce1"
@@ -103,6 +104,7 @@ exports[`Render pagination with loader 1`] = `
     >
       <div
         class="spinner"
+        style="width:24px;height:24px;"
       >
         <div
           class="doubleBounce1"

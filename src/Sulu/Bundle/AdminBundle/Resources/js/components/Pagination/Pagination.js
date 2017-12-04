@@ -64,7 +64,7 @@ export default class Pagination extends React.PureComponent<Props> {
                 {total
                     ? <nav className={paginationStyles.pagination}>
                         <div className={paginationStyles.loader}>
-                            {loading && <Loader />}
+                            {loading && <Loader size={24} />}
                         </div>
                         <span className={paginationStyles.display}>
                             {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
