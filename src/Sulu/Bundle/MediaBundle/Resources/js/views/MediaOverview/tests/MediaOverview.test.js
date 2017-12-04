@@ -70,6 +70,9 @@ jest.mock('sulu-admin-bundle/containers', () => {
 });
 
 jest.mock('../../../stores/CollectionStore', () => jest.fn(function() {
+    this.collection = {
+        id: null,
+    };
     this.parentId = 1;
     this.destroy = jest.fn();
 }));

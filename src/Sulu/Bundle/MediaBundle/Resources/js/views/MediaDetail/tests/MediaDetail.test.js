@@ -27,7 +27,9 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 }));
 
 jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
-    this.update = jest.fn();
+    this.update = jest.fn().mockReturnValue({
+        then: jest.fn(),
+    });
 }));
 
 beforeEach(() => {

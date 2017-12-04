@@ -1,36 +1,17 @@
 // @flow
-import {action, computed, observable} from 'mobx';
-import {ResourceStore, ResourceMetadataStore} from 'sulu-admin-bundle/stores';
+import {action, observable} from 'mobx';
+import {ResourceMetadataStore} from 'sulu-admin-bundle/stores';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 
 const RESOURCE_KEY = 'media';
-const THUMBNAIL_SIZE = 'sulu-400x400-inset';
 
 export default class MediaUploadStore {
-    resourceStore: ResourceStore;
+    locale: observable;
     @observable uploading: boolean;
     @observable progress: number;
 
-    constructor(resourceStore: ResourceStore) {
-        this.resourceStore = resourceStore;
-    }
-
-    @computed get source(): ?string {
-        const {
-            data: {
-                thumbnails,
-            },
-        } = this.resourceStore;
-
-        if (!thumbnails || !thumbnails[THUMBNAIL_SIZE]) {
-            return null;
-        }
-
-        return `${window.location.origin}${thumbnails[THUMBNAIL_SIZE]}`;
-    }
-
-    @computed get mimeType(): string {
-        return this.resourceStore.data.mimeType;
+    constructor(locale: observable) {
+        this.locale = locale;
     }
 
     @action setUploading(uploading: boolean) {
@@ -41,23 +22,38 @@ export default class MediaUploadStore {
         this.progress = Math.ceil(progress);
     }
 
-    update(mediaId: string | number, file: File) {
+    update(mediaId: string | number, file: File): Promise<*> {
         const baseUrl = ResourceMetadataStore.getBaseUrl(RESOURCE_KEY);
         const queryString = ResourceRequester.buildQueryString({
             action: 'new-version',
-            locale: this.resourceStore.locale ? this.resourceStore.locale.get() : undefined,
+            locale: this.locale.get(),
         });
         const url = baseUrl + '/' + mediaId + queryString;
 
         this.setUploading(true);
 
-        this.upload(file, url)
+        return this.upload(file, url)
             .then((data: Object) => {
-                for (const key of Object.keys(data)) {
-                    this.resourceStore.set(key, data[key]);
-                }
                 this.setUploading(false);
                 this.setProgress(0);
+
+                return data;
+            });
+    }
+
+    create(collectionId: string | number, file: File): Promise<*> {
+        const baseUrl = ResourceMetadataStore.getBaseUrl(RESOURCE_KEY);
+        const queryString = ResourceRequester.buildQueryString({
+            locale: this.locale.get(),
+        });
+        const url = baseUrl + '/' + collectionId + queryString;
+
+        return this.upload(file, url)
+            .then((data: Object) => {
+                this.setUploading(false);
+                this.setProgress(0);
+
+                return data;
             });
     }
 

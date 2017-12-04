@@ -1,21 +1,9 @@
 // @flow
 import 'url-search-params-polyfill';
-import {when} from 'mobx';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {observable, when} from 'mobx';
 import MediaUploadStore from '../MediaUploadStore';
 
 jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(function() {
-        this.locale = {
-            get: jest.fn().mockReturnValue('en'),
-        };
-        this.data = {
-            id: 1,
-            thumbnails: {
-                'sulu-400x400-inset': '/admin/assets/400/400',
-            },
-        };
-    }),
     ResourceMetadataStore: {
         getBaseUrl: jest.fn().mockImplementation((resourceKey) => {
             switch (resourceKey) {
@@ -37,8 +25,8 @@ test('Calling the "update" method should make a "POST" request to the media upda
         this.send = jest.fn();
     });
 
-    const resourceStore = new ResourceStore('test', 'test');
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+    const locale = observable('en');
+    const mediaUploadStore = new MediaUploadStore(locale);
     const testId = 1;
     const fileData = new File([''], 'fileName');
 
@@ -54,8 +42,8 @@ test('After the request was successful the progress will be reset', (done) => {
         this.send = jest.fn();
     });
 
-    const resourceStore = new ResourceStore('test', 'test');
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+    const locale = observable('en');
+    const mediaUploadStore = new MediaUploadStore(locale);
     const testId = 1;
     const fileData = new File([''], 'fileName');
 
@@ -71,11 +59,4 @@ test('After the request was successful the progress will be reset', (done) => {
     );
 
     window.XMLHttpRequest.mock.instances[0].onload({ target: {response: '{}'} });
-});
-
-test('The "source" property of the MediaUploadStore should return the thumbnail url', () => {
-    const resourceStore = new ResourceStore('test', 'test');
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
-
-    expect(mediaUploadStore.source).toBe(`${window.location.origin}/admin/assets/400/400`);
 });
