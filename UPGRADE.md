@@ -14,6 +14,30 @@ Follow upgrade path of following libraries:
 
 The api endpoint for `/admin/api/nodes/filter` was removed and replaced by `/admin/api/items`.
 
+## 1.6.9
+
+### CacheBuilder
+
+The `CacheBuilder`, which was responsible for deleting the cache at the beginning of the `sulu:build` command has been
+removed, because after clearing the cache the container is not functional anymore starting with Symfony 3.4.
+
+So from now on the `cache:clear` command has to be executed manually before the `sulu:build` command.
+
+### sulu_content_load
+
+We have changed the behaviour of the `sulu_content_load()` twig extension. Instead of throwing an exception when the given parameter
+cannot be resolved to a valid document, it will now just log the exception and return null, so you can gracefully handle this case
+in your twig template.
+
+```
+{% set content = sulu_content_load(null) %}
+{# content is now null #}
+
+{% set content = sulu_content_load('not-existing-guid') %}
+{# content is now null #}
+```
+>>>>>>> master
+
 ## 1.6.7
 
 ### Custom Analytics

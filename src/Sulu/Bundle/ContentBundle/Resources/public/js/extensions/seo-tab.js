@@ -116,10 +116,10 @@ define(['jquery', 'config', 'text!/admin/content/template/content/seo.html'], fu
 
             updateExcerpt: function() {
                 // update title
-                this.sandbox.dom.html(this.$find('#seo-excerpt-title'), this.sandbox.dom.val(this.$find('#seo-title')));
+                this.sandbox.dom.text(this.$find('#seo-excerpt-title'), this.sandbox.dom.val(this.$find('#seo-title')));
 
                 // update description
-                this.sandbox.dom.html(
+                this.sandbox.dom.text(
                     this.$find('#seo-excerpt-description'),
                     this.sandbox.dom.val(this.$find('#seo-description'))
                 );
