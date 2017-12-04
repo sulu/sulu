@@ -1,6 +1,16 @@
 # Upgrade
 
 ## dev-master
+
+### CacheBuilder
+
+The `CacheBuilder`, which was responsible for deleting the cache at the beginning of the `sulu:build` command has been
+removed, because after clearing the cache the container is not functional anymore starting with Symfony 3.4.
+
+So from now on the `cache:clear` command has to be executed manually before the `sulu:build` command.
+
+### sulu_content_load
+
 We have changed the behaviour of the `sulu_content_load()` twig extension. Instead of throwing an exception when the given parameter
 cannot be resolved to a valid document, it will now just log the exception and return null, so you can gracefully handle this case
 in your twig template.
