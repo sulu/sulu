@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a CircularProgressbar 1`] = `
+<div
+  style="width:100px;height:100px;"
+>
+  <svg
+    class="root  "
+    viewbox="0 0 100 100"
+  >
+    <circle
+      class="background"
+      cx="50"
+      cy="50"
+      r="50"
+    />
+    <path
+      d="
+      M 50,50 m 0,-38
+      a 38,38 0 1 1 0,76
+      a 38,38 0 1 1 0,-76
+    "
+      fill-opacity="0"
+      stroke-width="8"
+    />
+    <path
+      class="path"
+      d="
+      M 50,50 m 0,-38
+      a 38,38 0 1 1 0,76
+      a 38,38 0 1 1 0,-76
+    "
+      fill-opacity="0"
+      stroke-width="8"
+      style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:95.50441666912971px;"
+    />
+    <text
+      class="text"
+      x="50"
+      y="50"
+    >
+      60%
+    </text>
+  </svg>
+</div>
+`;
+
+exports[`Render a CircularProgressbar in a different size 1`] = `
+<div
+  style="width:200px;height:200px;"
+>
+  <svg
+    class="root  "
+    viewbox="0 0 100 100"
+  >
+    <circle
+      class="background"
+      cx="50"
+      cy="50"
+      r="50"
+    />
+    <path
+      d="
+      M 50,50 m 0,-38
+      a 38,38 0 1 1 0,76
+      a 38,38 0 1 1 0,-76
+    "
+      fill-opacity="0"
+      stroke-width="8"
+    />
+    <path
+      class="path"
+      d="
+      M 50,50 m 0,-38
+      a 38,38 0 1 1 0,76
+      a 38,38 0 1 1 0,-76
+    "
+      fill-opacity="0"
+      stroke-width="8"
+      style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:95.50441666912971px;"
+    />
+    <text
+      class="text"
+      x="50"
+      y="50"
+    >
+      60%
+    </text>
+  </svg>
+</div>
+`;
+
+exports[`Render a CircularProgressbar without the progress info in the center 1`] = `
+<div
+  style="width:100px;height:100px;"
+>
+  <svg
+    class="root  "
+    viewbox="0 0 100 100"
+  >
+    <circle
+      class="background"
+      cx="50"
+      cy="50"
+      r="50"
+    />
+    <path
+      d="
+      M 50,50 m 0,-38
+      a 38,38 0 1 1 0,76
+      a 38,38 0 1 1 0,-76
+    "
+      fill-opacity="0"
+      stroke-width="8"
+    />
+    <path
+      class="path"
+      d="
+      M 50,50 m 0,-38
+      a 38,38 0 1 1 0,76
+      a 38,38 0 1 1 0,-76
+    "
+      fill-opacity="0"
+      stroke-width="8"
+      style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:95.50441666912971px;"
+    />
+  </svg>
+</div>
+`;

@@ -4,5 +4,7 @@
     "sulu_media.download_masterfile": "Download master file",
     "sulu_media.select_media": "Select media",
     "sulu_media.reset_selection": "Reset selection",
-    "sulu_media.copy_masterfile_url": "Copy master file URL"    
+    "sulu_media.copy_masterfile_url": "Copy master file URL",
+    "sulu_media.information_taxonomy": "Information and Taxonomy",
+    "sulu_media.upload_or_replace": "Upload / replace image"
 }

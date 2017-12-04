@@ -1,0 +1,64 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$dropzoneSize: 400px;
+$uploadIconColor: $scorpion;
+$uploadInfoTextColor: $scorpion;
+$uploadIndicatorBackgroundColor: rgba($alabaster, .8);
+
+.media-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: $dropzoneSize;
+    height: $dropzoneSize;
+    background-image: url('./checkerBackground.gif');
+    background-size: 10px;
+    cursor: pointer;
+
+    &:hover,
+    &.show-upload-indicator {
+        .upload-indicator {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+}
+
+.progressbar,
+.upload-indicator-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    text-align: center;
+    background-color: $uploadIndicatorBackgroundColor;
+    opacity: 0;
+    transform: scale(.5);
+    transition: all .25s cubic-bezier(.68, -.55, .265, 1.55);
+}
+
+.upload-icon {
+    font-size: 45px;
+    color: $uploadIconColor;
+}
+
+.upload-info-text {
+    color: $uploadInfoTextColor;
+    font-size: 14px;
+    margin-top: 20px;
+    padding: 0 20px;
+}

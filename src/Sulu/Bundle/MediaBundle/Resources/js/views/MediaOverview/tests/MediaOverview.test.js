@@ -200,7 +200,7 @@ test('Should navigate to defined route on back button click', () => {
     });
 });
 
-test('Router navigate should be called when folder change is triggered', () => {
+test('Router navigate should be called when a collection or media was clicked', () => {
     const MediaOverview = require('../MediaOverview').default;
     const locale = 'de';
     const router = {
@@ -224,5 +224,11 @@ test('Router navigate should be called when folder change is triggered', () => {
     expect(router.navigate).toBeCalledWith(
         'sulu_media.overview',
         {'collectionPage': '1', 'id': 2, 'locale': locale}
+    );
+
+    mediaOverview.find('.media').at(0).simulate('click');
+    expect(router.navigate).toBeCalledWith(
+        'sulu_media.form.detail',
+        {'id': 1, 'locale': locale}
     );
 });

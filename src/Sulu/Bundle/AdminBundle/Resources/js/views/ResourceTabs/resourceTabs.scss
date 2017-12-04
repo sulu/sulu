@@ -1,0 +1,6 @@
+@import '../../components/Toolbar/variables.scss';
+@import '../../components/Tabs/variables.scss';
+
+.loader {
+    margin-top: calc(50vh - ($toolbarHeight + $tabMenuHeight));
+}

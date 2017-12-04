@@ -82,6 +82,13 @@ class MediaAdmin extends Admin
             (new Route('sulu_media.overview', '/collections/:locale/:id?', 'sulu_media.overview'))
                 ->addOption('locales', $mediaLocales)
                 ->addAttributeDefault('locale', $mediaLocales[0]),
+            (new Route('sulu_media.form', '/media/:locale/:id', 'sulu_admin.resource_tabs'))
+                ->addOption('resourceKey', 'media')
+                ->addOption('locales', $mediaLocales),
+            (new Route('sulu_media.form.detail', '/details', 'sulu_media.detail'))
+                ->addOption('tabTitle', 'sulu_media.information_taxonomy')
+                ->addOption('locales', $mediaLocales)
+                ->setParent('sulu_media.form'),
         ];
     }
 

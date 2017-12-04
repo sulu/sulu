@@ -1,4 +1,5 @@
 @import '../../containers/Application/colors.scss';
+@import './variables.scss';
 
 $tabTextColor: $black;
 $tabUnderlineBackgroundColor: $black;
@@ -20,7 +21,7 @@ $buttonHorizontalPadding: 20px;
     }
 
     button {
-        height: 40px;
+        height: $tabMenuHeight;
         cursor: pointer;
         padding: 10px $buttonHorizontalPadding;
         color: $tabTextColor;

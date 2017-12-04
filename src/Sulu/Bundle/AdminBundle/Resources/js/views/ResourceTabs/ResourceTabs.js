@@ -1,11 +1,15 @@
 // @flow
 import React from 'react';
+import {observer} from 'mobx-react';
 import {observable} from 'mobx';
 import Tabs from '../../components/Tabs';
+import Loader from '../../components/Loader';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../services/Translator';
 import ResourceStore from '../../stores/ResourceStore';
+import resourceTabsStyle from './resourceTabs.scss';
 
+@observer
 export default class ResourceTabs extends React.PureComponent<ViewProps> {
     resourceStore: ResourceStore;
 
@@ -43,6 +47,11 @@ export default class ResourceTabs extends React.PureComponent<ViewProps> {
     render() {
         const {children, route} = this.props;
         const ChildComponent = children ? children({resourceStore: this.resourceStore}) : null;
+        const loader = (
+            <div className={resourceTabsStyle.loader}>
+                <Loader />
+            </div>
+        );
 
         const selectedRouteIndex = ChildComponent
             ? route.children.findIndex((childRoute) => childRoute === ChildComponent.props.route)
@@ -60,7 +69,10 @@ export default class ResourceTabs extends React.PureComponent<ViewProps> {
                         );
                     })}
                 </Tabs>
-                {ChildComponent}
+                {(this.resourceStore.loading)
+                    ? loader
+                    : ChildComponent
+                }
             </div>
         );
     }

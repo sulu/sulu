@@ -9,43 +9,40 @@ const listDefaults = {
     limit: 10,
 };
 
-function buildQueryString(queryOptions: ?Object) {
-    const options = queryOptions;
-    if (!options) {
-        return '';
+export default class ResourceRequester {
+    static buildQueryString(queryOptions: ?Object) {
+        const options = queryOptions;
+        if (!options) {
+            return '';
+        }
+
+        const searchParameters = new URLSearchParams();
+        Object.keys(options).forEach((key) => {
+            if (options[key] === undefined) {
+                return;
+            }
+
+            searchParameters.set(key, options[key]);
+        });
+
+        return '?' + searchParameters.toString().replace(/%2C/gi, ',');
     }
 
-    const searchParameters = new URLSearchParams();
-    Object.keys(options).forEach((key) => {
-        searchParameters.set(key, options[key]);
-    });
-
-    return '?' + searchParameters.toString();
-}
-
-export default class ResourceRequester {
     static get(resourceKey: string, id: number | string, queryOptions: ?Object) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        return Requester.get(baseUrl + '/' + id + buildQueryString(queryOptions));
+        return Requester.get(baseUrl + '/' + id + ResourceRequester.buildQueryString(queryOptions));
     }
 
     static put(resourceKey: string, id: number | string, data: Object, queryOptions: ?Object) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        return Requester.put(baseUrl + '/' + id + buildQueryString(queryOptions), data);
+        return Requester.put(baseUrl + '/' + id + ResourceRequester.buildQueryString(queryOptions), data);
     }
 
     static getList(resourceKey: string, options: ListOptions = listDefaults) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        const searchParameters = new URLSearchParams();
-        const searchOptions = {...listDefaults, ...options};
+        const queryOptions = {...listDefaults, ...options};
 
-        Object.keys(searchOptions).forEach((searchKey) => {
-            searchParameters.set(searchKey, searchOptions[searchKey]);
-        });
-
-        const queryString = searchParameters.toString().replace(/%2C/gi, ',');
-
-        return Requester.get(baseUrl + (queryString ? '?' + queryString : ''));
+        return Requester.get(baseUrl + ResourceRequester.buildQueryString(queryOptions));
     }
 
     static delete(resourceKey: string, id: number | string) {

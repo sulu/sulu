@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a MediaDetail view 1`] = `
+<div
+  class="mediaDetail"
+>
+  <section>
+    <div
+      aria-disabled="false"
+      class="mediaContainer"
+    >
+      <div
+        class="uploadIndicatorContainer"
+      >
+        <div
+          class="uploadIndicator"
+        >
+          <div>
+            <span
+              aria-label="cloud-upload"
+              class="uploadIcon fa fa-cloud-upload"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="mimeTypeIndicator"
+        style="color:#fff;font-size:100px;background-color:#585858;"
+      >
+        <span
+          aria-label="file-o"
+          class="fa fa-file-o"
+        />
+      </div>
+      <input
+        autocomplete="off"
+        style="display:none;"
+        type="file"
+      />
+    </div>
+  </section>
+</div>
+`;
