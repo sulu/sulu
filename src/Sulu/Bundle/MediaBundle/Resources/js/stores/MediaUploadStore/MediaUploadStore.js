@@ -9,6 +9,7 @@ export default class MediaUploadStore {
     locale: observable;
     @observable uploading: boolean;
     @observable progress: number;
+    @observable data: Object = {};
 
     constructor(locale: observable) {
         this.locale = locale;
@@ -20,6 +21,10 @@ export default class MediaUploadStore {
 
     @action setProgress(progress: number) {
         this.progress = Math.ceil(progress);
+    }
+
+    @action setData(data: Object) {
+        this.data = data;
     }
 
     update(mediaId: string | number, file: File): Promise<*> {
@@ -53,6 +58,7 @@ export default class MediaUploadStore {
     handleResponse = (data: Object) => {
         this.setUploading(false);
         this.setProgress(0);
+        this.setData(data);
 
         return data;
     };
