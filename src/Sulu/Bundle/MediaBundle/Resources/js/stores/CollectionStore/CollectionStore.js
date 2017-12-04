@@ -58,7 +58,7 @@ export default class CollectionStore {
                 locale: locale,
                 breadcrumb: true,
             }
-        ).then((collectionInfo) => {
+        ).then(action((collectionInfo) => {
             const {
                 _embedded: {
                     parent,
@@ -72,7 +72,7 @@ export default class CollectionStore {
             this.collection.breadcrumb = (breadcrumb) ? [...breadcrumb, currentCollection] : [currentCollection];
 
             this.setLoading(false);
-        });
+        }));
     }
 
     getCurrentCollectionItem(data: Object): BreadcrumbItem {
