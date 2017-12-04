@@ -22,12 +22,12 @@
             <tag name="sulu_document_manager.event_subscriber"/>
         </service>
 
-        <service id="sulu_http_cache.event_subscriber.flush" class="%sulu_http_cache.event_subscriber.flush_subscriber.class%">
+        <service id="sulu_http_cache.event_subscriber.flush" class="%sulu_http_cache.event_subscriber.flush_subscriber.class%" public="true">
             <argument type="service" id="sulu_http_cache.handler"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="sulu_http_cache.event_subscriber.update_response" class="%sulu_http_cache.event_subscriber.update_response_subscriber.class%">
+        <service id="sulu_http_cache.event_subscriber.update_response" class="%sulu_http_cache.event_subscriber.update_response_subscriber.class%" public="true">
             <argument type="service" id="sulu_http_cache.handler"/>
             <tag name="kernel.event_subscriber"/>
         </service>

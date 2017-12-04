@@ -22,6 +22,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CacheClearCommand extends BaseCacheClearCommand
 {
+    protected static $defaultName = 'cache:clear';
+
     /**
      * {@inheritdoc}
      */
@@ -42,20 +44,17 @@ class CacheClearCommand extends BaseCacheClearCommand
         $kernel = $this->getContainer()->get('kernel');
         $context = $this->getContainer()->getParameter('sulu.context');
 
-        $io->comment(sprintf('Clearing the <info>%s cache</info> for the <info>%s</info> environment with debug <info>%s</info>',
-            $context, $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
-
-        parent::execute($input, $nullOutput);
-
-        $io->success(sprintf('%s cache for the "%s" environment (debug=%s) was successfully cleared.',
-            ucfirst($context), $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
-
         if (SuluKernel::CONTEXT_ADMIN === $context) {
             /** @var KernelFactoryInterface $kernelFactory */
             $kernelFactory = $this->getContainer()->get('sulu_preview.preview.kernel_factory');
             $previewKernel = $kernelFactory->create($kernel->getEnvironment());
 
+            $applicationKernelReflection = new \ReflectionProperty(get_class($this->getApplication()), 'kernel');
+            $applicationKernelReflection->setAccessible(true);
+
             // set preview container
+            $container = $kernel->getContainer();
+            $applicationKernelReflection->setValue($this->getApplication(), $previewKernel);
             $this->setContainer($previewKernel->getContainer());
 
             $io->comment(sprintf('Clearing the <info>preview cache</info> for the <info>%s</info> environment with debug <info>%s</info>',
@@ -65,6 +64,18 @@ class CacheClearCommand extends BaseCacheClearCommand
 
             $io->success(sprintf('Preview cache for the "%s" environment (debug=%s) was successfully cleared.',
                 $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+
+            // set back to previous container
+            $applicationKernelReflection->setValue($this->getApplication(), $kernel);
+            $this->setContainer($container);
         }
+
+        $io->comment(sprintf('Clearing the <info>%s cache</info> for the <info>%s</info> environment with debug <info>%s</info>',
+            $context, $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+
+        parent::execute($input, $nullOutput);
+
+        $io->success(sprintf('%s cache for the "%s" environment (debug=%s) was successfully cleared.',
+            ucfirst($context), $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
     }
 }
