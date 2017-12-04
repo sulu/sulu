@@ -44,13 +44,13 @@ class CacheClearCommand extends BaseCacheClearCommand
         $kernel = $this->getContainer()->get('kernel');
         $context = $this->getContainer()->getParameter('sulu.context');
 
-        $applicationKernelReflection = new \ReflectionProperty(get_class($this->getApplication()), 'kernel');
-        $applicationKernelReflection->setAccessible(true);
-
         if (SuluKernel::CONTEXT_ADMIN === $context) {
             /** @var KernelFactoryInterface $kernelFactory */
             $kernelFactory = $this->getContainer()->get('sulu_preview.preview.kernel_factory');
             $previewKernel = $kernelFactory->create($kernel->getEnvironment());
+
+            $applicationKernelReflection = new \ReflectionProperty(get_class($this->getApplication()), 'kernel');
+            $applicationKernelReflection->setAccessible(true);
 
             // set preview container
             $container = $kernel->getContainer();
