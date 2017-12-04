@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {render, shallow} from 'enzyme';
 import MultiMediaDropzone from '../MultiMediaDropzone';
 
@@ -16,7 +17,11 @@ jest.mock('sulu-admin-bundle/services', () => ({
 
 test('Render an MultiMediaDropzone', () => {
     expect(render(
-        <MultiMediaDropzone>
+        <MultiMediaDropzone
+            collectionId={3}
+            locale={observable()}
+            onUpload={jest.fn()}
+        >
             <div />
         </MultiMediaDropzone>
     )).toMatchSnapshot();
@@ -24,7 +29,11 @@ test('Render an MultiMediaDropzone', () => {
 
 test('Render an MultiMediaDropzone while the overlay is visible', () => {
     const multiMediaDropzone = shallow(
-        <MultiMediaDropzone>
+        <MultiMediaDropzone
+            collectionId={3}
+            locale={observable()}
+            onUpload={jest.fn()}
+        >
             <div />
         </MultiMediaDropzone>
     );
