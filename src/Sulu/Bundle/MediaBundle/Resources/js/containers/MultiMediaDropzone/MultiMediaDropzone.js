@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import Dropzone from 'react-dropzone';
@@ -11,14 +12,20 @@ type Props = {
     children: any,
     locale: observable,
     collectionId: ?string | number,
-    onUploaded: (files: Array<File>) => void,
+    onUpload: (media: Array<Object>) => void,
 };
 
 @observer
 export default class MultiMediaDropzone extends React.PureComponent<Props> {
-    @observable overlayOpen: boolean;
+    dropzoneRef: ElementRef<Dropzone>;
+
+    @observable overlayOpen: boolean = false;
 
     @observable mediaUploadStores: Array<MediaUploadStore> = [];
+
+    setDropzoneRef = (ref: Dropzone) => {
+        this.dropzoneRef = ref;
+    };
 
     @action openOverlay() {
         this.overlayOpen = true;
@@ -37,7 +44,7 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
     }
 
     createMediaItems() {
-        return this.mediaUploadStores.map((mediaUploadStore, index) =>( 
+        return this.mediaUploadStores.map((mediaUploadStore, index) =>(
             <MediaItem key={index} store={mediaUploadStore} />
         ));
     }
@@ -77,10 +84,18 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
             this.addMediaUploadStore(mediaUploadStore);
         });
 
-        Promise.all(uploadPromises).then(() => {
-            this.closeOverlay();
-            this.destroyMediaUploadStores();
+        Promise.all(uploadPromises).then((...media) => {
+            this.props.onUpload(...media);
+
+            setTimeout(() => {
+                this.closeOverlay();
+                this.destroyMediaUploadStores();
+            }, 1000);
         });
+    };
+
+    handleOverlayClick = () => {
+        this.dropzoneRef.open();
     };
 
     render() {
@@ -88,6 +103,7 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
 
         return (
             <Dropzone
+                ref={this.setDropzoneRef}
                 style={{}} // to disable default style
                 disableClick={true}
                 onDragEnter={this.handleDragEnter}
@@ -97,6 +113,7 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
                 <DropzoneOverlay
                     open={this.overlayOpen}
                     onClose={this.handleOverlayClose}
+                    onClick={this.handleOverlayClick}
                 >
                     {this.createMediaItems()}
                 </DropzoneOverlay>

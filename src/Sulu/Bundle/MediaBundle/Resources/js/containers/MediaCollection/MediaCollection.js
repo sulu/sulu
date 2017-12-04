@@ -41,6 +41,13 @@ export default class MediaCollection extends React.PureComponent<Props> {
         this.props.onCollectionNavigate(collectionId);
     };
 
+    handleUpload = (media: Array<Object>) => {
+        const {mediaDatagridStore} = this.props;
+
+        media.forEach((mediaItem) => mediaDatagridStore.select(mediaItem.id));
+        mediaDatagridStore.reload();
+    };
+
     render() {
         const {
             locale,
@@ -54,6 +61,7 @@ export default class MediaCollection extends React.PureComponent<Props> {
             <MultiMediaDropzone
                 locale={locale}
                 collectionId={collectionStore.id}
+                onUpload={this.handleUpload}
             >
                 {!collectionStore.loading &&
                     <CollectionBreadcrumb

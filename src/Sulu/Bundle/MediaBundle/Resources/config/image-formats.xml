@@ -40,15 +40,6 @@
         </meta>
         <scale x="100" y="100"/>
     </format>
-    <format key="sulu-100x100-inset" internal="true">
-        <meta>
-            <title lang="en">Organization card (Sulu)</title>
-            <title lang="de">Organisationskarte (Sulu)</title>
-            <title lang="fr">Carte d'organisation (Sulu)</title>
-            <title lang="nl">Organisatie kaart (Sulu)</title>
-        </meta>
-        <scale x="100" y="100" mode="inset"/>
-    </format>
     <format key="sulu-50x50" internal="true">
         <meta>
             <title lang="en">Small thumbnail (Sulu)</title>
@@ -85,5 +76,14 @@
             <title lang="nl">Organisatie logo (Sulu)</title>
         </meta>
         <scale x="400" y="400" mode="inset"/>
+    </format>
+    <format key="sulu-100x100-inset" internal="true">
+        <meta>
+            <title lang="en">Organization card (Sulu)</title>
+            <title lang="de">Organisationskarte (Sulu)</title>
+            <title lang="fr">Carte d'organisation (Sulu)</title>
+            <title lang="nl">Organisatie kaart (Sulu)</title>
+        </meta>
+        <scale x="100" y="100" mode="inset"/>
     </format>
 </formats>

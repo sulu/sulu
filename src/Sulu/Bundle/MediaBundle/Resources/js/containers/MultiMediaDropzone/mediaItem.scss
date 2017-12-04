@@ -11,6 +11,8 @@ $mediaItemBackgroundColor: $white;
     border-radius: 3px;
     border: $mediaItemBorderWidth solid $mediaItemBorderColor;
     background: $mediaItemBackgroundColor;
+    text-align: center;
+    overflow: hidden;
 }
 
 .progressbar-container {
