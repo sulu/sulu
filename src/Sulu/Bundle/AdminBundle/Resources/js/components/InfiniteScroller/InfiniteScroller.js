@@ -10,13 +10,17 @@ const THRESHOLD = 100;
 type Props = {
     children: Element<*>,
     onChange: (page: number) => void,
-    current: number,
-    total: number,
+    current: ?number,
     loading: boolean,
     lastPageReachedText: string,
+    total: ?number,
 };
 
 export default class InfiniteScroller extends React.PureComponent<Props> {
+    static defaultProps = {
+        loading: false,
+    };
+
     elementRef: ElementRef<'div'>;
 
     scrollContainer: ElementRef<*>;
@@ -61,11 +65,11 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
 
     bindScrollListener() {
         const {
-            total,
             current,
+            total,
         } = this.props;
 
-        if (current >= total) {
+        if (!current || !total || current >= total) {
             return;
         }
 

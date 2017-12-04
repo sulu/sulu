@@ -96,27 +96,23 @@ export default class Datagrid extends React.PureComponent<Props> {
                     currentAdapter={this.currentAdapterKey}
                     onAdapterChange={this.handleAdapterChange}
                 />
-                {this.props.store.loading && this.props.store.loadingStrategy !== 'infiniteScroll'
-                    ? <Loader />
-                    : !!page && !!pageCount &&
-                        <PaginationAdapter
-                            type={Adapter.getLoadingStrategy()}
-                            total={pageCount}
-                            current={page}
-                            loading={this.props.store.loading}
-                            onChange={this.handlePageChange}
-                            lastPageReachedText={translate('sulu_admin.reached_end_of_list')}
-                        >
-                            <Adapter
-                                data={store.data}
-                                selections={store.selections}
-                                schema={store.getSchema()}
-                                onItemClick={onItemClick}
-                                onItemSelectionChange={this.handleItemSelectionChange}
-                                onAllSelectionChange={this.handleAllSelectionChange}
-                            />
-                        </PaginationAdapter>
-                }
+                <PaginationAdapter
+                    type={Adapter.getLoadingStrategy()}
+                    total={pageCount}
+                    current={page}
+                    loading={this.props.store.loading}
+                    onChange={this.handlePageChange}
+                    lastPageReachedText={translate('sulu_admin.reached_end_of_list')}
+                >
+                    <Adapter
+                        data={store.data}
+                        selections={store.selections}
+                        schema={store.getSchema()}
+                        onItemClick={onItemClick}
+                        onItemSelectionChange={this.handleItemSelectionChange}
+                        onAllSelectionChange={this.handleAllSelectionChange}
+                    />
+                </PaginationAdapter>
             </div>
         );
     }

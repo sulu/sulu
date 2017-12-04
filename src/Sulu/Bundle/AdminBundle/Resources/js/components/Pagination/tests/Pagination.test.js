@@ -14,8 +14,14 @@ jest.mock('../../../services/Translator', () => ({
     },
 }));
 
-test('Render pagination with children', () => {
-    expect(render(<Pagination current={5} total={10} onChange={jest.fn()}><p>Test</p></Pagination>)).toMatchSnapshot();
+test('Render pagination with loader', () => {
+    expect(
+        render(<Pagination current={5} total={10} loading={true} onChange={jest.fn()}><p>Test</p></Pagination>)
+    ).toMatchSnapshot();
+});
+
+test('Render only loader if no total is not passed yet', () => {
+    expect(render(<Pagination onChange={jest.fn()}><p></p></Pagination>)).toMatchSnapshot();
 });
 
 test('Render pagination with page numbers', () => {

@@ -2,49 +2,70 @@
 import React from 'react';
 import type {Element} from 'react';
 import Icon from '../Icon';
+import Loader from '../Loader';
 import {translate} from '../../services/Translator';
 import paginationStyles from './pagination.scss';
 
 type Props = {
     children: Element<*>,
-    current: number,
-    total: number,
+    current: ?number,
+    loading: boolean,
     onChange: (page: number) => void,
+    total: ?number,
 };
 
 export default class Pagination extends React.PureComponent<Props> {
+    static defaultProps = {
+        loading: false,
+    };
+
     hasNextPage = () => {
-        return this.props.current < this.props.total;
+        const {current, total} = this.props;
+        if (!current || !total) {
+            return false;
+        }
+
+        return current < total;
     };
 
     hasPreviousPage = () => {
-        return this.props.current > 1;
+        const {current} = this.props;
+        if (!current) {
+            return false;
+        }
+
+        return current > 1;
     };
 
     handlePreviousClick = () => {
-        if (!this.hasPreviousPage()) {
+        const {current, onChange} = this.props;
+        if (!this.hasPreviousPage() || !current) {
             return;
         }
 
-        this.props.onChange(this.props.current - 1);
+        onChange(current - 1);
     };
 
     handleNextClick = () => {
-        if (!this.hasNextPage()) {
+        const {current, onChange} = this.props;
+        if (!this.hasNextPage() || !current) {
             return;
         }
 
-        this.props.onChange(this.props.current + 1);
+        onChange(current + 1);
     };
 
     render() {
-        const {children, current, total} = this.props;
+        const {children, current, loading, total} = this.props;
 
         return (
             <section>
                 {children}
-                <nav className={paginationStyles.pagination}>
-                    <div className={paginationStyles.control}>
+                {total
+                    ? <nav className={paginationStyles.pagination}>
+                        <div className={paginationStyles.loader}>
+                            {loading && <Loader />}
+                        </div>
                         <span className={paginationStyles.display}>
                             {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
                         </span>
@@ -62,8 +83,9 @@ export default class Pagination extends React.PureComponent<Props> {
                         >
                             <Icon name="angle-right" />
                         </button>
-                    </div>
-                </nav>
+                    </nav>
+                    : <Loader />
+                }
             </section>
         );
     }

@@ -8,14 +8,12 @@ $buttonWidth: 33px;
     font-size: 12px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 30px;
 }
 
-.control {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    flex-flow: row;
+.loader {
+    flex-grow: 1;
 }
 
 .display {

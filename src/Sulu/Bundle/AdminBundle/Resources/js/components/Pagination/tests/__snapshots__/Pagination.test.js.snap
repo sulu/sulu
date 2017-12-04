@@ -9,31 +9,30 @@ exports[`Render disabled next link if current page is last page 1`] = `
     class="pagination"
   >
     <div
-      class="control"
+      class="loader"
+    />
+    <span
+      class="display"
+    >
+      Page: 5 of 5
+    </span>
+    <button
+      class="previous"
     >
       <span
-        class="display"
-      >
-        Page: 5 of 5
-      </span>
-      <button
-        class="previous"
-      >
-        <span
-          aria-label="angle-left"
-          class="fa fa-angle-left"
-        />
-      </button>
-      <button
-        class="next"
-        disabled=""
-      >
-        <span
-          aria-label="angle-right"
-          class="fa fa-angle-right"
-        />
-      </button>
-    </div>
+        aria-label="angle-left"
+        class="fa fa-angle-left"
+      />
+    </button>
+    <button
+      class="next"
+      disabled=""
+    >
+      <span
+        aria-label="angle-right"
+        class="fa fa-angle-right"
+      />
+    </button>
   </nav>
 </section>
 `;
@@ -47,36 +46,51 @@ exports[`Render disabled previous link current page is first page 1`] = `
     class="pagination"
   >
     <div
-      class="control"
+      class="loader"
+    />
+    <span
+      class="display"
+    >
+      Page: 1 of 5
+    </span>
+    <button
+      class="previous"
+      disabled=""
     >
       <span
-        class="display"
-      >
-        Page: 1 of 5
-      </span>
-      <button
-        class="previous"
-        disabled=""
-      >
-        <span
-          aria-label="angle-left"
-          class="fa fa-angle-left"
-        />
-      </button>
-      <button
-        class="next"
-      >
-        <span
-          aria-label="angle-right"
-          class="fa fa-angle-right"
-        />
-      </button>
-    </div>
+        aria-label="angle-left"
+        class="fa fa-angle-left"
+      />
+    </button>
+    <button
+      class="next"
+    >
+      <span
+        aria-label="angle-right"
+        class="fa fa-angle-right"
+      />
+    </button>
   </nav>
 </section>
 `;
 
-exports[`Render pagination with children 1`] = `
+exports[`Render only loader if no total is not passed yet 1`] = `
+<section>
+  <p />
+  <div
+    class="spinner"
+  >
+    <div
+      class="doubleBounce1"
+    />
+    <div
+      class="doubleBounce2"
+    />
+  </div>
+</section>
+`;
+
+exports[`Render pagination with loader 1`] = `
 <section>
   <p>
     Test
@@ -85,30 +99,40 @@ exports[`Render pagination with children 1`] = `
     class="pagination"
   >
     <div
-      class="control"
+      class="loader"
+    >
+      <div
+        class="spinner"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
+        />
+      </div>
+    </div>
+    <span
+      class="display"
+    >
+      Page: 5 of 10
+    </span>
+    <button
+      class="previous"
     >
       <span
-        class="display"
-      >
-        Page: 5 of 10
-      </span>
-      <button
-        class="previous"
-      >
-        <span
-          aria-label="angle-left"
-          class="fa fa-angle-left"
-        />
-      </button>
-      <button
-        class="next"
-      >
-        <span
-          aria-label="angle-right"
-          class="fa fa-angle-right"
-        />
-      </button>
-    </div>
+        aria-label="angle-left"
+        class="fa fa-angle-left"
+      />
+    </button>
+    <button
+      class="next"
+    >
+      <span
+        aria-label="angle-right"
+        class="fa fa-angle-right"
+      />
+    </button>
   </nav>
 </section>
 `;
@@ -122,30 +146,29 @@ exports[`Render pagination with page numbers 1`] = `
     class="pagination"
   >
     <div
-      class="control"
+      class="loader"
+    />
+    <span
+      class="display"
+    >
+      Page: 5 of 10
+    </span>
+    <button
+      class="previous"
     >
       <span
-        class="display"
-      >
-        Page: 5 of 10
-      </span>
-      <button
-        class="previous"
-      >
-        <span
-          aria-label="angle-left"
-          class="fa fa-angle-left"
-        />
-      </button>
-      <button
-        class="next"
-      >
-        <span
-          aria-label="angle-right"
-          class="fa fa-angle-right"
-        />
-      </button>
-    </div>
+        aria-label="angle-left"
+        class="fa fa-angle-left"
+      />
+    </button>
+    <button
+      class="next"
+    >
+      <span
+        aria-label="angle-right"
+        class="fa fa-angle-right"
+      />
+    </button>
   </nav>
 </section>
 `;
