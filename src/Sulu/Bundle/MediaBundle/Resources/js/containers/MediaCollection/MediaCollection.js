@@ -50,10 +50,7 @@ export default class MediaCollection extends React.PureComponent<Props> {
         } = this.props;
 
         return (
-            <div>
-                {!collectionStore.loading && !!collectionStore.id &&
-                    <MultiMediaDropzone />
-                }
+            <MultiMediaDropzone disabled={collectionStore.loading}>
                 {!collectionStore.loading &&
                     <CollectionBreadcrumb
                         breadcrumb={collectionStore.breadcrumb}
@@ -71,7 +68,7 @@ export default class MediaCollection extends React.PureComponent<Props> {
                     store={mediaDatagridStore}
                     onItemClick={this.handleMediaClick}
                 />
-            </div>
+            </MultiMediaDropzone>
         );
     }
 }

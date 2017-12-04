@@ -2,13 +2,11 @@
 import React from 'react';
 import type {ChildrenArray} from 'react';
 import {observer} from 'mobx-react';
+import {action, observable} from 'mobx';
 import Dropzone from 'react-dropzone';
-import {translate} from 'sulu-admin-bundle/services';
-import {Icon} from 'sulu-admin-bundle/components';
+import MediaUploadStore from '../../stores/MediaUploadStore';
 import MediaItem from './MediaItem';
-import multiMediaDropzoneStyles from './multiMediaDropzone.scss';
-
-const UPLOAD_ICON = 'cloud-upload';
+import DropzoneOverlay from './DropzoneOverlay';
 
 type Props = {
     children: ChildrenArray<*>,
@@ -22,38 +20,75 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
         disabled: false,
     };
 
-    createMediaItems() {
-        return (
-            <li>
-                <MediaItem store={{}} />
-            </li>
-        );
+    @observable overlayOpen: boolean;
+
+    @observable mediaUploadStores: Array<MediaUploadStore> = [];
+
+    @action openOverlay() {
+        this.overlayOpen = true;
     }
 
+    @action closeOverlay() {
+        this.overlayOpen = false;
+    }
+
+    @action destroyMediaUploadStores() {
+        this.mediaUploadStores = [];
+    }
+
+    createMediaItems() {
+        return this.mediaUploadStores.map((mediaUploadStore, index) =>( 
+            <MediaItem key={index} store={mediaUploadStore} />
+        ));
+    }
+
+    handleDragEnter = () => {
+        this.openOverlay();
+    };
+
+    handleDragLeave = () => {
+        this.closeOverlay();
+    };
+
+    handleOverlayClose = () => {
+        this.closeOverlay();
+    };
+
+    handleDrop = (files: Array<File>) => {
+        const uploadPromises = [];
+
+        files.forEach((file) => {
+            const mediaUploadStore = new MediaUploadStore();
+            const uploadPromise = mediaUploadStore.create(file);
+
+            uploadPromises.push(uploadPromise);
+            this.mediaUploadStores.push(mediaUploadStore);
+        });
+
+        Promise.all(uploadPromises).then(this.destroyMediaUploadStores);
+    };
+
     render() {
-        const {children} = this.props;
+        const {
+            children,
+            disabled,
+        } = this.props;
 
         return (
             <Dropzone
-                className={multiMediaDropzoneStyles.dropzone}
+                style={{}} // to disable default style
+                disabled={disabled}
                 disableClick={true}
+                onDragEnter={this.handleDragEnter}
+                onDragLeave={this.handleDragLeave}
+                onDrop={this.handleDrop}
             >
-                <div className={multiMediaDropzoneStyles.dropArea}>
-                    <div className={multiMediaDropzoneStyles.uploadInfoContainer}>
-                        <div className={multiMediaDropzoneStyles.uploadInfo}>
-                            <Icon name={UPLOAD_ICON} className={multiMediaDropzoneStyles.uploadIcon} />
-                            <h3 className={multiMediaDropzoneStyles.uploadInfoHeadline}>
-                                {translate('sulu_media.drop_files_to_upload')}
-                            </h3>
-                            <div className={multiMediaDropzoneStyles.uploadInfoSubline}>
-                                {translate('sulu_media.click_here_to_upload')}
-                            </div>
-                        </div>
-                    </div>
-                    <ul className={multiMediaDropzoneStyles.mediaItems}>
-                        {this.createMediaItems()}
-                    </ul>
-                </div>
+                <DropzoneOverlay
+                    open={this.overlayOpen}
+                    onClose={this.handleOverlayClose}
+                >
+                    {this.createMediaItems()}
+                </DropzoneOverlay>
                 {children}
             </Dropzone>
         );
