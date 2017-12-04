@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * ENHANCEMENT #3665 [CategoryBundle]          Added keywords to category serialization
     * HOTFIX      #3671 [CoreBundle]              Remove cache builder from sulu:build command
     * HOTFIX      #3669 [PreviewBundle]           Fix cache clear command for preview
     * HOTFIX      #3664 [All]                     Fix regressions in Symfony 3.4

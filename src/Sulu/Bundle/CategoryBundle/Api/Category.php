@@ -404,6 +404,28 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Returns the keywords of the category translations.
+     *
+     * @return string[]
+     */
+    public function getKeywords()
+    {
+        $keywords = [];
+
+        $translation = $this->getTranslation(true);
+
+        if (!$translation) {
+            return $keywords;
+        }
+
+        foreach ($translation->getKeywords() as $keyword) {
+            $keywords[] = $keyword->getKeyword();
+        }
+
+        return $keywords;
+    }
+
+    /**
      * Takes a user entity and returns the fullname.
      *
      * @param $user
@@ -451,6 +473,7 @@ class Category extends ApiEntityWrapper
             'key' => $this->getKey(),
             'name' => $this->getName(),
             'meta' => $this->getMeta(),
+            'keywords' => $this->getKeywords(),
             'defaultLocale' => $this->getDefaultLocale(),
             'creator' => $this->getCreator(),
             'changer' => $this->getChanger(),
