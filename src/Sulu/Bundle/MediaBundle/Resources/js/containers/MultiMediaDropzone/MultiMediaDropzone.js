@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import Dropzone from 'react-dropzone';
@@ -9,17 +8,14 @@ import MediaItem from './MediaItem';
 import DropzoneOverlay from './DropzoneOverlay';
 
 type Props = {
-    children: ChildrenArray<*>,
-    disabled?: boolean,
+    children: any,
+    locale: observable,
+    collectionId: ?string | number,
     onUploaded: (files: Array<File>) => void,
 };
 
 @observer
 export default class MultiMediaDropzone extends React.PureComponent<Props> {
-    static defaultProps = {
-        disabled: false,
-    };
-
     @observable overlayOpen: boolean;
 
     @observable mediaUploadStores: Array<MediaUploadStore> = [];
@@ -30,6 +26,10 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
 
     @action closeOverlay() {
         this.overlayOpen = false;
+    }
+
+    @action addMediaUploadStore(mediaUploadStore: MediaUploadStore) {
+        this.mediaUploadStores.push(mediaUploadStore);
     }
 
     @action destroyMediaUploadStores() {
@@ -43,7 +43,11 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
     }
 
     handleDragEnter = () => {
-        this.openOverlay();
+        const {collectionId} = this.props;
+
+        if (collectionId) {
+            this.openOverlay();
+        }
     };
 
     handleDragLeave = () => {
@@ -55,29 +59,36 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
     };
 
     handleDrop = (files: Array<File>) => {
+        const {
+            locale,
+            collectionId,
+        } = this.props;
         const uploadPromises = [];
 
+        if (!collectionId) {
+            return;
+        }
+
         files.forEach((file) => {
-            const mediaUploadStore = new MediaUploadStore();
-            const uploadPromise = mediaUploadStore.create(file);
+            const mediaUploadStore = new MediaUploadStore(locale);
+            const uploadPromise = mediaUploadStore.create(collectionId, file);
 
             uploadPromises.push(uploadPromise);
-            this.mediaUploadStores.push(mediaUploadStore);
+            this.addMediaUploadStore(mediaUploadStore);
         });
 
-        Promise.all(uploadPromises).then(this.destroyMediaUploadStores);
+        Promise.all(uploadPromises).then(() => {
+            this.closeOverlay();
+            this.destroyMediaUploadStores();
+        });
     };
 
     render() {
-        const {
-            children,
-            disabled,
-        } = this.props;
+        const {children} = this.props;
 
         return (
             <Dropzone
                 style={{}} // to disable default style
-                disabled={disabled}
                 disableClick={true}
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}

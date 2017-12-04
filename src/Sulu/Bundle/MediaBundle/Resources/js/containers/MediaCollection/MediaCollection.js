@@ -43,14 +43,18 @@ export default class MediaCollection extends React.PureComponent<Props> {
 
     render() {
         const {
-            mediaDatagridAdapters,
-            mediaDatagridStore,
+            locale,
             collectionStore,
+            mediaDatagridStore,
+            mediaDatagridAdapters,
             collectionDatagridStore,
         } = this.props;
 
         return (
-            <MultiMediaDropzone disabled={collectionStore.loading}>
+            <MultiMediaDropzone
+                locale={locale}
+                collectionId={collectionStore.id}
+            >
                 {!collectionStore.loading &&
                     <CollectionBreadcrumb
                         breadcrumb={collectionStore.breadcrumb}

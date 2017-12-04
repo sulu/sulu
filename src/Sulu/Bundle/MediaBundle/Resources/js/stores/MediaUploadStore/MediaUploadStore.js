@@ -33,29 +33,29 @@ export default class MediaUploadStore {
         this.setUploading(true);
 
         return this.upload(file, url)
-            .then((data: Object) => {
-                this.setUploading(false);
-                this.setProgress(0);
-
-                return data;
-            });
+            .then(this.handleResponse);
     }
 
     create(collectionId: string | number, file: File): Promise<*> {
         const baseUrl = ResourceMetadataStore.getBaseUrl(RESOURCE_KEY);
         const queryString = ResourceRequester.buildQueryString({
             locale: this.locale.get(),
+            collection: collectionId,
         });
-        const url = baseUrl + '/' + collectionId + queryString;
+        const url = baseUrl + queryString;
+
+        this.setUploading(true);
 
         return this.upload(file, url)
-            .then((data: Object) => {
-                this.setUploading(false);
-                this.setProgress(0);
-
-                return data;
-            });
+            .then(this.handleResponse);
     }
+
+    handleResponse = (data: Object) => {
+        this.setUploading(false);
+        this.setProgress(0);
+
+        return data;
+    };
 
     upload(file: File, url: string): Promise<*> {
         return new Promise((resolve, reject) => {

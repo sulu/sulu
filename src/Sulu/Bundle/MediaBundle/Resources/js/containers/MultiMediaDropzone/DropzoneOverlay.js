@@ -45,7 +45,7 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
             <div className={dropzoneOverlayStyles.dropzoneOverlay} onClick={this.handleClose}>
                 <div className={dropzoneOverlayStyles.dropArea}>
                     <div className={dropzoneOverlayStyles.uploadInfoContainer}>
-                        {!children &&
+                        {children &&
                             <div
                                 className={dropzoneOverlayStyles.uploadInfo}
                                 role="button"
