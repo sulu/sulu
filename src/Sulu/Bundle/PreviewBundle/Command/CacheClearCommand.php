@@ -44,14 +44,6 @@ class CacheClearCommand extends BaseCacheClearCommand
         $kernel = $this->getContainer()->get('kernel');
         $context = $this->getContainer()->getParameter('sulu.context');
 
-        $io->comment(sprintf('Clearing the <info>%s cache</info> for the <info>%s</info> environment with debug <info>%s</info>',
-            $context, $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
-
-        parent::execute($input, $nullOutput);
-
-        $io->success(sprintf('%s cache for the "%s" environment (debug=%s) was successfully cleared.',
-            ucfirst($context), $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
-
         if (SuluKernel::CONTEXT_ADMIN === $context) {
             /** @var KernelFactoryInterface $kernelFactory */
             $kernelFactory = $this->getContainer()->get('sulu_preview.preview.kernel_factory');
@@ -68,5 +60,13 @@ class CacheClearCommand extends BaseCacheClearCommand
             $io->success(sprintf('Preview cache for the "%s" environment (debug=%s) was successfully cleared.',
                 $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
         }
+
+        $io->comment(sprintf('Clearing the <info>%s cache</info> for the <info>%s</info> environment with debug <info>%s</info>',
+            $context, $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+
+        parent::execute($input, $nullOutput);
+
+        $io->success(sprintf('%s cache for the "%s" environment (debug=%s) was successfully cleared.',
+            ucfirst($context), $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
     }
 }
