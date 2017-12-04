@@ -110,6 +110,16 @@ jest.mock('sulu-admin-bundle/services', () => ({
                 return 'Object';
             case 'sulu_admin.objects':
                 return 'Objects';
+            case 'sulu_media.media_selected_singular':
+                return 'media element selected';
+            case 'sulu_media.media_selected_plural':
+                return 'media elements selected';
+            case 'sulu_media.reset_selection':
+                return 'Reset fields';
+            case 'sulu_media.select_media':
+                return 'Select media';
+            case 'sulu_admin.confirm':
+                return 'Confirm';
         }
     },
 }));
@@ -125,19 +135,6 @@ jest.mock('sulu-admin-bundle/services/Translator', () => ({
                 return 'Object';
             case 'sulu_admin.objects':
                 return 'Objects';
-        }
-    },
-}));
-
-jest.mock('sulu-admin-bundle/services', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_media.reset_selection':
-                return 'Reset fields';
-            case 'sulu_media.select_media':
-                return 'Select media';
-            case 'sulu_admin.confirm':
-                return 'Confirm';
         }
     },
 }));

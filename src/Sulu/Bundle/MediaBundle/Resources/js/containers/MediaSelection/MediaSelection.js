@@ -46,6 +46,16 @@ export default class MediaSelection extends React.PureComponent<Props> {
         });
     }
 
+    getLabel(itemCount: number) {
+        if (itemCount === 1) {
+            return `1 ${translate('sulu_media.media_selected_singular')}`;
+        } else if (itemCount > 1) {
+            return `${itemCount} ${translate('sulu_media.media_selected_plural')}`;
+        }
+
+        return translate('sulu_media.select_media');
+    }
+
     handleRemove = (mediaId: string | number) => {
         this.mediaSelectionStore.removeById(mediaId);
         this.callChangeHandler();
@@ -72,11 +82,18 @@ export default class MediaSelection extends React.PureComponent<Props> {
 
     render() {
         const {locale} = this.props;
+        const {
+            loading,
+            selectedMedia,
+            selectedMediaIds,
+        } = this.mediaSelectionStore;
+        const label = (loading) ? '' : this.getLabel(selectedMedia.length);
 
         return (
             <div>
                 <MultiItemSelection
-                    label={translate('sulu_media.select_media')}
+                    label={label}
+                    loading={loading}
                     onItemRemove={this.handleRemove}
                     leftButton={{
                         icon: ADD_ICON,
@@ -84,7 +101,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
                     }}
                     onItemsSorted={this.handleSorted}
                 >
-                    {this.mediaSelectionStore.selectedMedia.map((selectedMedia, index) => {
+                    {selectedMedia.map((selectedMedia, index) => {
                         const {
                             id,
                             title,
@@ -108,7 +125,7 @@ export default class MediaSelection extends React.PureComponent<Props> {
                 <MediaSelectionOverlay
                     open={this.overlayOpen}
                     locale={locale}
-                    excludedIds={this.mediaSelectionStore.selectedMediaIds}
+                    excludedIds={selectedMediaIds}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                 />

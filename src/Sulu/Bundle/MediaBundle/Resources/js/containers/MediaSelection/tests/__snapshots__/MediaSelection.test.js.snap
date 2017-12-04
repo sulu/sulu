@@ -16,7 +16,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
             <div>
               <ul class=\\"breadcrumb\\">
                 <li>
-                  <button disabled=\\"\\" class=\\"item\\"></button>
+                  <button disabled=\\"\\" class=\\"item\\">All Media</button>
                 </li>
               </ul>
               <div>
@@ -83,6 +83,10 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                                   </div>
                                 </div>
                               </div>
+                              <div>
+                                <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"cloud-download\\"></span></button>
+                                <!-- react-empty: 77 -->
+                              </div>
                             </div>
                             <div class=\\"media\\">
                               <img alt=\\"Title 1\\" src=\\"http://lorempixel.com/240/100\\">
@@ -114,6 +118,10 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                                     <div class=\\"whole\\">image/jpeg 54.32 KB</div>
                                   </div>
                                 </div>
+                              </div>
+                              <div>
+                                <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"cloud-download\\"></span></button>
+                                <!-- react-empty: 107 -->
                               </div>
                             </div>
                             <div class=\\"media\\">
@@ -161,7 +169,7 @@ exports[`Render a MediaSelection field 1`] = `
       <div
         class="label"
       >
-        Select media
+        3 media elements selected
       </div>
     </div>
     <ul

@@ -89,6 +89,7 @@ class SnippetAdminTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame([
             'resourceKey' => 'snippets',
             'tabTitle' => 'sulu_snippet.taxonomies',
+            'adapters' => ['table'],
             'backRoute' => 'sulu_snippet.list',
         ], 'options', $taxonomiesRoute);
     }

@@ -45,6 +45,10 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         }
     }
 
+    componentWillUnmount() {
+        this.destroy();
+    }
+
     componentWillReceiveProps(nextProps: Props) {
         const {open} = this.props;
 
@@ -58,9 +62,25 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
     }
 
     @action destroy() {
-        this.destroyStores();
-        this.overlayDisposer();
-        this.mediaSelectionsObservationDisposer();
+        if (this.collectionStore) {
+            this.collectionStore.destroy();
+        }
+
+        if (this.mediaDatagridStore) {
+            this.mediaDatagridStore.destroy();
+        }
+
+        if (this.collectionDatagridStore) {
+            this.collectionDatagridStore.destroy();
+        }
+
+        if (this.overlayDisposer) {
+            this.overlayDisposer();
+        }
+
+        if (this.mediaSelectionsObservationDisposer) {
+            this.mediaSelectionsObservationDisposer();
+        }
 
         this.selectedMedia = [];
         this.collectionId = undefined;
@@ -86,20 +106,6 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         this.createMediaDatagridStore(this.collectionId, this.mediaPage, this.locale);
         this.createCollectionDatagridStore(this.collectionId, this.collectionPage, this.locale);
     };
-
-    destroyStores() {
-        if (this.collectionStore) {
-            this.collectionStore.destroy();
-        }
-
-        if (this.mediaDatagridStore) {
-            this.mediaDatagridStore.destroy();
-        }
-
-        if (this.collectionDatagridStore) {
-            this.collectionDatagridStore.destroy();
-        }
-    }
 
     @action createCollectionDatagridStore(collectionId: ?string | number, page: observable, locale: string) {
         if (this.collectionDatagridStore) {
@@ -128,6 +134,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         const {excludedIds} = this.props;
         const options = {};
 
+        options.limit = 50;
         options.fields = [
             'id',
             'type',
@@ -190,8 +197,16 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
     };
 
     handleClose = () => {
-        this.props.onClose();
-        this.destroy();
+        const {
+            open,
+            onClose,
+        } = this.props;
+
+        if (open) {
+            this.destroy();
+        }
+
+        onClose();
     };
 
     handleSelectionReset = () => {

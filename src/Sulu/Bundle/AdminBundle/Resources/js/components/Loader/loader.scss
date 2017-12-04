@@ -1,11 +1,8 @@
 @import '../../containers/Application/colors.scss';
 
-$size: 40px;
 $color: $scorpion;
 
 .spinner {
-    width: $size;
-    height: $size;
     position: relative;
     margin: auto;
 }
