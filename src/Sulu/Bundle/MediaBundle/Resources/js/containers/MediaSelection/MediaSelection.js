@@ -4,7 +4,7 @@ import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
-import {translate} from 'sulu-admin-bundle/services';
+import {translate} from 'sulu-admin-bundle/utils';
 import MediaSelectionStore from './stores/MediaSelectionStore';
 import MediaSelectionOverlay from './MediaSelectionOverlay';
 import MediaSelectionItem from './MediaSelectionItem';

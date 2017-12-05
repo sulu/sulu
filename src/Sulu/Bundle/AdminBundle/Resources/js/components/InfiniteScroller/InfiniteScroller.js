@@ -2,7 +2,7 @@
 import React from 'react';
 import debounce from 'debounce';
 import type {Element, ElementRef} from 'react';
-import {translate} from '../../services/Translator';
+import {translate} from '../../utils/Translator';
 import Loader from '../Loader';
 import infiniteScrollerStyles from './infiniteScroller.scss';
 

@@ -3,7 +3,7 @@ import {shallow, render} from 'enzyme';
 import React from 'react';
 import MediaCardAdapter from '../../adapters/MediaCardAdapter';
 
-jest.mock('sulu-admin-bundle/services', () => ({
+jest.mock('sulu-admin-bundle/utils', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_media.copy_url':

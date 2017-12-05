@@ -4,7 +4,7 @@ import React from 'react';
 import ResourceTabs from '../ResourceTabs';
 import ResourceStore from '../../../stores/ResourceStore';
 
-jest.mock('../../../services/Translator', () => ({
+jest.mock('../../../utils/Translator', () => ({
     translate: function(key) {
         switch (key) {
             case 'tabTitle1':

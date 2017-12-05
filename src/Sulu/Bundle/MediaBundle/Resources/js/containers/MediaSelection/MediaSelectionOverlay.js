@@ -5,7 +5,7 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
-import {translate} from 'sulu-admin-bundle/services';
+import {translate} from 'sulu-admin-bundle/utils';
 import MediaCollection from '../../containers/MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaSelectionOverlayStyles from './mediaSelectionOverlay.scss';

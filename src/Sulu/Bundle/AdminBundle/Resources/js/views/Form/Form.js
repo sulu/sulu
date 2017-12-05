@@ -3,7 +3,7 @@ import React from 'react';
 import {default as FormContainer} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import {translate} from '../../services/Translator';
+import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
 import formStyles from './form.scss';
 

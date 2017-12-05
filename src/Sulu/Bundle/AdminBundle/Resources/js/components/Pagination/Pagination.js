@@ -3,7 +3,7 @@ import React from 'react';
 import type {Element} from 'react';
 import Icon from '../Icon';
 import Loader from '../Loader';
-import {translate} from '../../services/Translator';
+import {translate} from '../../utils/Translator';
 import paginationStyles from './pagination.scss';
 
 type Props = {

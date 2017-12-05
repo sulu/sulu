@@ -6,7 +6,7 @@ import React from 'react';
 import Datagrid from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import ResourceRequester from '../../services/ResourceRequester';
-import {translate} from '../../services/Translator';
+import {translate} from '../../utils/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import listStyles from './list.scss';

@@ -20,6 +20,11 @@ exports[`Render a MediaDetail view 1`] = `
               aria-label="cloud-upload"
               class="uploadIcon fa fa-cloud-upload"
             />
+            <div
+              class="uploadInfoText"
+            >
+              Upload or replace
+            </div>
           </div>
         </div>
       </div>

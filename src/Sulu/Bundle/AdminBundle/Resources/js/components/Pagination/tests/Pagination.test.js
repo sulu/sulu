@@ -3,7 +3,7 @@ import {mount, render} from 'enzyme';
 import React from 'react';
 import Pagination from '../Pagination';
 
-jest.mock('../../../services/Translator', () => ({
+jest.mock('../../../utils/Translator', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_admin.page':
@@ -21,7 +21,9 @@ test('Render pagination with loader', () => {
 });
 
 test('Render only loader if no total is not passed yet', () => {
-    expect(render(<Pagination current={0} total={undefined} onChange={jest.fn()}><p></p></Pagination>)).toMatchSnapshot();
+    expect(render(
+        <Pagination current={0} total={undefined} onChange={jest.fn()}><p></p></Pagination>
+    )).toMatchSnapshot();
 });
 
 test('Render pagination with page numbers', () => {

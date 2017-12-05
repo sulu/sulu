@@ -5,7 +5,7 @@ import InfiniteScroller from '../InfiniteScroller';
 
 window.getComputedStyle = jest.fn();
 
-jest.mock('../../../services/Translator', () => ({
+jest.mock('../../../utils/Translator', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_admin.reached_end_of_list':

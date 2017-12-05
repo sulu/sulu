@@ -95,28 +95,7 @@ jest.mock('../../../stores/CollectionStore', () => jest.fn(function() {
     this.destroy = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/services', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_media.all_media':
-                return 'All Media';
-            case 'sulu_media.copy_url':
-                return 'Copy URL';
-            case 'sulu_media.download_masterfile':
-                return 'Download master file';
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-            case 'sulu_admin.object':
-                return 'Object';
-            case 'sulu_admin.objects':
-                return 'Objects';
-        }
-    },
-}));
-
-jest.mock('sulu-admin-bundle/services/Translator', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_admin.page':
@@ -131,7 +110,7 @@ jest.mock('sulu-admin-bundle/services/Translator', () => ({
     },
 }));
 
-jest.mock('sulu-admin-bundle/services', () => ({
+jest.mock('sulu-admin-bundle/utils', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_media.reset_selection':

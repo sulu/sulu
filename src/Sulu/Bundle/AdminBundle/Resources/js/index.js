@@ -6,7 +6,7 @@ import {render} from 'react-dom';
 import {useStrict} from 'mobx';
 import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
-import {setTranslations} from './services/Translator';
+import {setTranslations} from './utils/Translator';
 import Input from './components/Input';
 import Application from './containers/Application';
 import {fieldRegistry} from './containers/Form';
