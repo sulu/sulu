@@ -1,6 +1,7 @@
 // @flow
 import {mount, shallow} from 'enzyme';
 import React from 'react';
+import {observable} from 'mobx';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
 import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
@@ -58,14 +59,14 @@ beforeEach(() => {
 });
 
 test('Change page in DatagridStore on pagination click', () => {
-    const datagridStore = new DatagridStore('test', {page: null});
+    const datagridStore = new DatagridStore('test', {page: observable(1)});
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
     datagrid.find('Pagination').find('.next').simulate('click');
     expect(datagridStore.setPage).toBeCalledWith(datagridStore.getPage() + 1);
 });
 
 test('Render Pagination with correct values', () => {
-    const datagridStore = new DatagridStore('test', {page: null});
+    const datagridStore = new DatagridStore('test', {page: observable(1)});
 
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
     const pagination = datagrid.find('Pagination');
@@ -77,7 +78,7 @@ test('Render Pagination with correct values', () => {
 test('Render TableAdapter with correct values', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
 
-    const datagridStore = new DatagridStore('test', {page: null});
+    const datagridStore = new DatagridStore('test', {page: observable(1)});
     datagridStore.selections.push(1);
     datagridStore.selections.push(3);
     const editClickSpy = jest.fn();
@@ -93,7 +94,7 @@ test('Render TableAdapter with correct values', () => {
 
 test('Selecting and deselecting items should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', {page: null});
+    const datagridStore = new DatagridStore('test', {page: observable(1)});
     datagridStore.data = [
         {id: 1},
         {id: 2},
@@ -115,7 +116,7 @@ test('Selecting and deselecting items should update store', () => {
 
 test('Selecting and unselecting all items on current page should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', {page: null});
+    const datagridStore = new DatagridStore('test', {page: observable(1)});
     datagridStore.data = [
         {id: 1},
         {id: 2},
@@ -133,7 +134,7 @@ test('Selecting and unselecting all items on current page should update store', 
 });
 
 test('Switching the adapter should render the correct adapter', () => {
-    const datagridStore = new DatagridStore('test', {page: null});
+    const datagridStore = new DatagridStore('test', {page: observable(1)});
 
     datagridAdapterRegistry.get.mockImplementation((adapter) => {
         switch (adapter) {
@@ -154,7 +155,7 @@ test('Switching the adapter should render the correct adapter', () => {
 });
 
 test('DatagridStore should be initialized correctly on init and update', () => {
-    const datagridStore = new DatagridStore('test', {page: null});
+    const datagridStore = new DatagridStore('test', {page: observable(1)});
     datagridStore.init = jest.fn();
 
     datagridAdapterRegistry.get.mockImplementation((adapter) => {
@@ -168,7 +169,7 @@ test('DatagridStore should be initialized correctly on init and update', () => {
     const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
     expect(datagridStore.init).toBeCalledWith('pagination');
 
-    const newDatagridStore = new DatagridStore('test', {page: null});
+    const newDatagridStore = new DatagridStore('test', {page: observable(1)});
     newDatagridStore.init = jest.fn();
 
     datagrid.setProps({ store: newDatagridStore });

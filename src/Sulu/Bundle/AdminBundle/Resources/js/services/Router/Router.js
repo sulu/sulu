@@ -1,5 +1,6 @@
 // @flow
 import {action, autorun, computed, observable, toJS} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import pathToRegexp, {compile} from 'path-to-regexp';
@@ -10,7 +11,7 @@ export default class Router {
     history: Object;
     @observable route: Route;
     @observable attributes: Object = {};
-    @observable bindings: Map<string, observable> = new Map();
+    @observable bindings: Map<string, IObservableValue<*>> = new Map();
     bindingDefaults: Map<string, ?string | number> = new Map();
     attributesHistory: {[string]: Array<AttributeMap>} = {};
 
@@ -35,7 +36,7 @@ export default class Router {
         });
     }
 
-    @action bind(key: string, value: observable, defaultValue: ?string | number = undefined) {
+    @action bind(key: string, value: IObservableValue<*>, defaultValue: ?string | number = undefined) {
         if (key in this.attributes) {
             // when the bound parameter is bound set the state of the passed observable to the current value once
             // required because otherwise the parameter will be overridden on the initial start of the application
@@ -51,7 +52,7 @@ export default class Router {
         this.bindingDefaults.set(key, defaultValue);
     }
 
-    @action unbind(key: string, value: observable) {
+    @action unbind(key: string, value: IObservableValue<*>) {
         if (this.bindings.get(key) !== value) {
             return;
         }
@@ -126,7 +127,7 @@ export default class Router {
         this.attributes = attributes;
 
         for (const [key, observableValue] of this.bindings.entries()) {
-            const value = this.attributes[key] || this.bindingDefaults.get(key);
+            const value: any = this.attributes[key] || this.bindingDefaults.get(key);
 
             // Type unsafe comparison to not trigger a new navigation when only data type changes
             if (value != observableValue.get()) {

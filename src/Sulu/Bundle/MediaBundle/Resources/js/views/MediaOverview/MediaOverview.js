@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {action, autorun, observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {translate} from 'sulu-admin-bundle/services';
 import {withToolbar, DatagridStore} from 'sulu-admin-bundle/containers';
@@ -16,9 +17,9 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 @observer
 class MediaOverview extends React.PureComponent<ViewProps> {
-    mediaPage: observable = observable();
-    collectionPage: observable = observable();
-    locale: observable = observable();
+    mediaPage: IObservableValue<number> = observable();
+    collectionPage: IObservableValue<number> = observable();
+    locale: IObservableValue<string> = observable();
     @observable collectionId: ?number;
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;

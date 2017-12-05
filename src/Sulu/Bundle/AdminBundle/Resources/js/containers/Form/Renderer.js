@@ -1,5 +1,5 @@
 // @flow
-import {observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
@@ -14,7 +14,7 @@ type Props = {
     schema: Schema,
     onSubmit: () => void,
     onChange: (string, mixed) => void,
-    locale?: observable,
+    locale: ?IObservableValue<string>,
 };
 
 @observer

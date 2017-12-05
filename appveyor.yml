@@ -30,7 +30,7 @@ install:
   # install SSL and php
   - ps: Set-Service wuauserv -StartupType Manual
   - cinst -y OpenSSL.Light
-  - cinst -y php
+  - cinst -y php -version 7.1.12
 
   # configure PHP and enable extensions.
   - cd c:\tools\php71

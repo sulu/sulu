@@ -1,5 +1,5 @@
 // @flow
-import {observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 
 export type DataItem = {
     id: string | number,
@@ -19,6 +19,6 @@ export type DatagridAdapterProps = {
 };
 
 export type ObservableOptions = {
-    page: observable,
-    locale?: observable,
+    page: IObservableValue<number>,
+    locale?: IObservableValue<string>,
 };

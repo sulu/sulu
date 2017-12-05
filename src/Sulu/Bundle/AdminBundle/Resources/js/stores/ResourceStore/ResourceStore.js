@@ -1,5 +1,6 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import ResourceRequester from '../../services/ResourceRequester';
 import type {ObservableOptions, Schema} from './types';
 
@@ -101,7 +102,7 @@ export default class ResourceStore {
         this.dirty = true;
     }
 
-    get locale(): observable {
+    get locale(): ?IObservableValue<string> {
         return this.observableOptions.locale;
     }
 

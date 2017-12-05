@@ -1,5 +1,6 @@
 // @flow
 import {action, autorun, intercept, observable, computed} from 'mobx';
+import type {IValueWillChange} from 'mobx'; // eslint-disable-line import/named
 import type {ObservableOptions} from '../types';
 import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
@@ -48,12 +49,12 @@ export default class DatagridStore {
             this.localeInterceptionDisposer();
         }
 
-        if ('infiniteScroll' === this.loadingStrategy) {
-            this.localeInterceptionDisposer = intercept(this.observableOptions.locale, this.handleLocaleChanges);
+        if ('infiniteScroll' === this.loadingStrategy && this.observableOptions.locale) {
+            this.localeInterceptionDisposer = intercept(this.observableOptions.locale, '', this.handleLocaleChanges);
         }
     };
 
-    handleLocaleChanges = (change: observable) => {
+    handleLocaleChanges = (change: IValueWillChange<number>) => {
         if (this.observableOptions.locale !== change.newValue) {
             this.data = [];
             this.observableOptions.page.set(1);

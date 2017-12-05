@@ -1,5 +1,6 @@
 // @flow
 import {action, autorun, computed, observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import type {BreadcrumbItem, BreadcrumbItems, Collection} from './types';
 
@@ -13,7 +14,7 @@ export default class CollectionStore {
     };
     disposer: () => void;
 
-    constructor(collectionId: ?string | number, locale: observable) {
+    constructor(collectionId: ?string | number, locale: IObservableValue<string>) {
         this.disposer = autorun(() => {
             this.load(collectionId, locale.get());
         });

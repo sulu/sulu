@@ -44,7 +44,7 @@ test('Render a MediaDetail view', () => {
             },
         },
     };
-    const resourceStore = new ResourceStore('media', '1');
+    const resourceStore = new ResourceStore('media', '1', {locale: observable()});
 
     expect(render(
         <MediaDetail router={router} resourceStore={resourceStore} />
@@ -132,7 +132,7 @@ test('Should call update method of MediaUploadStore if a file was dropped', () =
     const testFile = {name: 'test.jpg'};
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const resourceStore = new ResourceStore('test', testId);
+    const resourceStore = new ResourceStore('test', testId, {locale: observable()});
 
     const router = {
         navigate: jest.fn(),

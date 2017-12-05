@@ -1,5 +1,6 @@
 // @flow
 import {action, observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React from 'react';
 import Datagrid from '../../containers/Datagrid';
@@ -12,8 +13,8 @@ import listStyles from './list.scss';
 
 @observer
 class List extends React.PureComponent<ViewProps> {
-    page: observable = observable();
-    locale: observable = observable();
+    page: IObservableValue<number> = observable();
+    locale: IObservableValue<string> = observable();
     datagridStore: DatagridStore;
     @observable deleting = false;
 

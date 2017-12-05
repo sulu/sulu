@@ -1,5 +1,6 @@
 // @flow
 import {action, computed, observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line
 import {arrayMove} from 'sulu-admin-bundle/components';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import type {MediaItem} from '../types';
@@ -11,7 +12,7 @@ export default class MediaSelectionStore {
     @observable selectedMedia: Array<MediaItem> = [];
     @observable loading: boolean = false;
 
-    constructor(selectedMediaIds: ?Array<string | number>, locale: string) {
+    constructor(selectedMediaIds: ?Array<string | number>, locale: IObservableValue<string>) {
         if (selectedMediaIds && selectedMediaIds.length) {
             this.loadSelectedMedia(selectedMediaIds, locale);
         }
@@ -47,10 +48,10 @@ export default class MediaSelectionStore {
         };
     }
 
-    loadSelectedMedia = (selectedMediaIds: Array<string | number>, locale: string) => {
+    loadSelectedMedia = (selectedMediaIds: Array<string | number>, locale: IObservableValue<string>) => {
         this.setLoading(true);
         return ResourceRequester.getList(MEDIA_RESOURCE_KEY, {
-            locale,
+            locale: locale.get(),
             ids: selectedMediaIds.join(','),
             limit: 9999, // TODO: Should be replaced by pagination
         }).then((data) => {

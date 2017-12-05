@@ -45,7 +45,7 @@ export default class MediaUploadStore {
         const baseUrl = ResourceMetadataStore.getBaseUrl(RESOURCE_KEY);
         const queryString = ResourceRequester.buildQueryString({
             action: 'new-version',
-            locale: this.resourceStore.locale.get(),
+            locale: this.resourceStore.locale ? this.resourceStore.locale.get() : undefined,
         });
         const url = baseUrl + '/' + mediaId + queryString;
 

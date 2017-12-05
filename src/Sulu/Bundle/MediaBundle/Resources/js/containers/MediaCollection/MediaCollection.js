@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
 import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
@@ -8,8 +8,8 @@ import CollectionStore from '../../stores/CollectionStore';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
 
 type Props = {
-    page: observable,
-    locale: observable,
+    page: IObservableValue<number>,
+    locale: IObservableValue<string>,
     mediaDatagridAdapters: Array<string>,
     mediaDatagridStore: DatagridStore,
     collectionDatagridStore: DatagridStore,

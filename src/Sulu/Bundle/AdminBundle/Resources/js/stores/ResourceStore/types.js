@@ -1,5 +1,5 @@
 // @flow
-import {observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import type {Size} from '../../components/Grid';
 
 export type SchemaEntry = {
@@ -15,5 +15,5 @@ export type Schema = {
 };
 
 export type ObservableOptions = {
-    locale?: observable,
+    locale?: IObservableValue<string>,
 };
