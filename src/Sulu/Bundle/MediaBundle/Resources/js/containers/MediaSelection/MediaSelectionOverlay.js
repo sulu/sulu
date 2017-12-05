@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {action, autorun, computed, observable, observe} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IArraySplice, IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
@@ -186,7 +186,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         this.selectedMedia.forEach((media) => this.mediaDatagridStore.select(media.id));
     }
 
-    handleMediaSelectionChanges = (change: observable) => {
+    handleMediaSelectionChanges = (change: any) => {
         const mediaId = (change.added.length) ? change.added[0] : change.removed[0];
         const selected = !!change.added.length;
 
