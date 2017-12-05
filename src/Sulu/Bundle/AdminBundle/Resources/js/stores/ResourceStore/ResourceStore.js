@@ -1,6 +1,6 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import ResourceRequester from '../../services/ResourceRequester';
 import type {ObservableOptions, Schema} from './types';
 

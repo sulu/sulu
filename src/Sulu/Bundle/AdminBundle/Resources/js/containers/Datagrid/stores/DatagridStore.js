@@ -1,6 +1,6 @@
 // @flow
 import {action, autorun, intercept, observable, computed} from 'mobx';
-import type {IValueWillChange} from 'mobx';
+import type {IValueWillChange} from 'mobx'; // eslint-disable-line import/named
 import type {ObservableOptions} from '../types';
 import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';

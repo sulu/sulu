@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
 import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';

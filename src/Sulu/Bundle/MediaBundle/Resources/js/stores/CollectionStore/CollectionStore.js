@@ -1,6 +1,6 @@
 // @flow
 import {action, autorun, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import type {BreadcrumbItem, BreadcrumbItems, Collection} from './types';
 

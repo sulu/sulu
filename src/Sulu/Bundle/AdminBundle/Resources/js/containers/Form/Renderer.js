@@ -1,5 +1,5 @@
 // @flow
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
