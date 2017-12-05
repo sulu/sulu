@@ -101,7 +101,6 @@ export default class Datagrid extends React.PureComponent<Props> {
                     current={page}
                     loading={this.props.store.loading}
                     onChange={this.handlePageChange}
-                    lastPageReachedText={translate('sulu_admin.reached_end_of_list')}
                 >
                     <Adapter
                         data={store.data}

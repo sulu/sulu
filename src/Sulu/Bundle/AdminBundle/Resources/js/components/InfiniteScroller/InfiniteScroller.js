@@ -2,6 +2,7 @@
 import React from 'react';
 import debounce from 'debounce';
 import type {Element, ElementRef} from 'react';
+import {translate} from '../../services/Translator';
 import Loader from '../Loader';
 import infiniteScrollerStyles from './infiniteScroller.scss';
 
@@ -12,7 +13,6 @@ type Props = {
     onChange: (page: number) => void,
     current: ?number,
     loading: boolean,
-    lastPageReachedText: string,
     total: ?number,
 };
 
@@ -108,14 +108,13 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
             current,
             loading,
             children,
-            lastPageReachedText,
         } = this.props;
         let indicator = null;
 
         if (loading) {
             indicator = <Loader />;
         } else if (current === total && !loading) {
-            indicator = lastPageReachedText;
+            indicator = translate('sulu_admin.reached_end_of_list');
         }
 
         return (

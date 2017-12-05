@@ -5,6 +5,15 @@ import InfiniteScroller from '../InfiniteScroller';
 
 window.getComputedStyle = jest.fn();
 
+jest.mock('../../../services/Translator', () => ({
+    translate: function(key) {
+        switch (key) {
+            case 'sulu_admin.reached_end_of_list':
+                return 'Last page reached';
+        }
+    },
+}));
+
 test('InfiniteScroller traverses the dom upwards until it finds a scroll container', () => {
     window.getComputedStyle.mockReturnValue({
         'overflow-y': 'auto',
@@ -18,7 +27,6 @@ test('InfiniteScroller traverses the dom upwards until it finds a scroll contain
                 current={1}
                 total={10}
                 loading={false}
-                lastPageReachedText="Last page reached"
             >
                 <div />
             </InfiniteScroller>
@@ -41,7 +49,6 @@ test('InfiniteScroller should call onChange if the the bottom of the content is 
                 total={10}
                 current={1}
                 loading={false}
-                lastPageReachedText="Last page reached"
             >
                 <div />
             </InfiniteScroller>
@@ -82,7 +89,6 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
                 total={10}
                 current={1}
                 loading={false}
-                lastPageReachedText="Last page reached"
             >
                 <div />
             </InfiniteScroller>
@@ -113,7 +119,6 @@ test('InfiniteScroller should show a loader when the loading prop is set to true
                 total={10}
                 current={1}
                 loading={true}
-                lastPageReachedText="Last page reached"
             >
                 <div />
             </InfiniteScroller>
@@ -134,7 +139,6 @@ test('InfiniteScroller should show an info message when the last page has been r
                 total={10}
                 current={10}
                 loading={false}
-                lastPageReachedText="Last page reached"
             >
                 <div />
             </InfiniteScroller>
