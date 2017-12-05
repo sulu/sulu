@@ -58,34 +58,35 @@ export default class Pagination extends React.PureComponent<Props> {
     render() {
         const {children, current, loading, total} = this.props;
 
+        if (!total) {
+            return <Loader />;
+        }
+
         return (
             <section>
                 {children}
-                {total
-                    ? <nav className={paginationStyles.pagination}>
-                        <div className={paginationStyles.loader}>
-                            {loading && <Loader size={24} />}
-                        </div>
-                        <span className={paginationStyles.display}>
-                            {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
-                        </span>
-                        <button
-                            className={paginationStyles.previous}
-                            disabled={!this.hasPreviousPage()}
-                            onClick={this.handlePreviousClick}
-                        >
-                            <Icon name="angle-left" />
-                        </button>
-                        <button
-                            className={paginationStyles.next}
-                            disabled={!this.hasNextPage()}
-                            onClick={this.handleNextClick}
-                        >
-                            <Icon name="angle-right" />
-                        </button>
-                    </nav>
-                    : <Loader />
-                }
+                <nav className={paginationStyles.pagination}>
+                    <div className={paginationStyles.loader}>
+                        {loading && <Loader size={24} />}
+                    </div>
+                    <span className={paginationStyles.display}>
+                        {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
+                    </span>
+                    <button
+                        className={paginationStyles.previous}
+                        disabled={!this.hasPreviousPage()}
+                        onClick={this.handlePreviousClick}
+                    >
+                        <Icon name="angle-left" />
+                    </button>
+                    <button
+                        className={paginationStyles.next}
+                        disabled={!this.hasNextPage()}
+                        onClick={this.handleNextClick}
+                    >
+                        <Icon name="angle-right" />
+                    </button>
+                </nav>
             </section>
         );
     }
