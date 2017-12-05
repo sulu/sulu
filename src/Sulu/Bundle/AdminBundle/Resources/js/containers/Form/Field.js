@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import type {SchemaEntry} from '../../stores/ResourceStore/types';
 import fieldRegistry from './registries/FieldRegistry';
 import fieldStyles from './field.scss';
@@ -10,7 +10,7 @@ type Props = {
     value?: mixed,
     schema: SchemaEntry,
     onChange: (string, mixed) => void,
-    locale?: observable,
+    locale: ?IObservableValue<string>,
 };
 
 export default class Field extends React.PureComponent<Props> {
