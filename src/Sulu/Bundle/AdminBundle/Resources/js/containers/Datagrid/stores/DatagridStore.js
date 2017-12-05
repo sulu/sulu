@@ -48,8 +48,8 @@ export default class DatagridStore {
             this.localeInterceptionDisposer();
         }
 
-        if ('infiniteScroll' === this.loadingStrategy) {
-            this.localeInterceptionDisposer = intercept(this.observableOptions.locale, this.handleLocaleChanges);
+        if ('infiniteScroll' === this.loadingStrategy && this.observableOptions.locale) {
+            this.localeInterceptionDisposer = intercept(this.observableOptions.locale, '', this.handleLocaleChanges);
         }
     };
 
