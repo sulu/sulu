@@ -69,7 +69,7 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
             total,
         } = this.props;
 
-        if (!current || !total || current >= total) {
+        if (!current || !total || current >= total) {
             return;
         }
 

@@ -4,7 +4,6 @@ import {observable, action, computed} from 'mobx';
 import React from 'react';
 import equal from 'fast-deep-equal';
 import InfiniteScroller from '../../components/InfiniteScroller';
-import Loader from '../../components/Loader';
 import Pagination from '../../components/Pagination';
 import {translate} from '../../services/Translator';
 import DatagridStore from './stores/DatagridStore';
