@@ -28,8 +28,8 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         excludedIds: [],
     };
 
-    mediaPage: observable = observable();
-    collectionPage: observable = observable();
+    mediaPage: IObservableValue<number> = observable();
+    collectionPage: IObservableValue<number> = observable();
     @observable collectionId: ?string | number;
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;

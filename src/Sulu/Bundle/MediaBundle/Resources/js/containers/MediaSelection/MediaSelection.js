@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {action, observable} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/services';
@@ -12,7 +13,7 @@ import type {Value} from './types';
 const ADD_ICON = 'plus';
 
 type Props = {
-    locale: observable,
+    locale: IObservableValue<string>,
     value: ?Value,
     onChange: (value: Value) => void,
 };
