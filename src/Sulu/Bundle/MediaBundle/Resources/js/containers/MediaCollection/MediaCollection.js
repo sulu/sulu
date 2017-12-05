@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';

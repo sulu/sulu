@@ -21,7 +21,9 @@ jest.mock('../registries/FieldRegistry', () => ({
 test('Should render a form tag', () => {
     const submitSpy = jest.fn();
     const changeSpy = jest.fn();
-    const renderer = render(<Renderer data={{}} schema={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />);
+    const renderer = render(
+        <Renderer data={{}} schema={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />
+    );
     expect(renderer).toMatchSnapshot();
 });
 
@@ -29,7 +31,9 @@ test('Should prevent default submit handling', () => {
     const preventDefaultSpy = jest.fn();
     const submitSpy = jest.fn();
     const changeSpy = jest.fn();
-    const renderer = shallow(<Renderer data={{}} schema={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />);
+    const renderer = shallow(
+        <Renderer data={{}} schema={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />
+    );
 
     renderer.find('form').simulate('submit', {preventDefault: preventDefaultSpy});
     expect(preventDefaultSpy).toBeCalled();
@@ -38,7 +42,9 @@ test('Should prevent default submit handling', () => {
 test('Should call onSubmit callback when submitted', () => {
     const submitSpy = jest.fn();
     const changeSpy = jest.fn();
-    const renderer = mount(<Renderer data={{}} schema={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />);
+    const renderer = mount(
+        <Renderer data={{}} schema={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />
+    );
 
     renderer.instance().submit();
     expect(submitSpy).toBeCalled();
@@ -59,7 +65,9 @@ test('Should render field types based on schema', () => {
     const changeSpy = jest.fn();
     const submitSpy = jest.fn();
 
-    const renderer = render(<Renderer schema={schema} locale={undefined} data={{}} onChange={changeSpy} onSubmit={submitSpy} />);
+    const renderer = render(
+        <Renderer schema={schema} locale={undefined} data={{}} onChange={changeSpy} onSubmit={submitSpy} />
+    );
 
     expect(renderer).toMatchSnapshot();
 });
@@ -79,7 +87,9 @@ test('Should pass name and schema to fields', () => {
     const changeSpy = jest.fn();
     const submitSpy = jest.fn();
 
-    const renderer = shallow(<Renderer schema={schema} data={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />);
+    const renderer = shallow(
+        <Renderer schema={schema} data={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />
+    );
 
     const fields = renderer.find('Field');
 
@@ -120,5 +130,7 @@ test('Should render nested sections', () => {
         },
     };
 
-    expect(render(<Renderer data={{}} schema={schema} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />)).toMatchSnapshot();
+    expect(render(
+        <Renderer data={{}} schema={schema} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />
+    )).toMatchSnapshot();
 });
