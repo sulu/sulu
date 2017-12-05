@@ -497,7 +497,7 @@ test('Binding should update URL with fixed attributes as string if not a number'
         },
     });
 
-    const uuid = observable(1);
+    const uuid = observable('old-uuid');
 
     const history = createHistory();
     const router = new Router(history);
@@ -633,7 +633,7 @@ test('Bound query should omit URL parameter if set to default value', () => {
         },
     });
 
-    const value = observable(5);
+    const value = observable('5');
 
     const history = createHistory();
     const router = new Router(history);
@@ -698,6 +698,8 @@ test('Binding should not be updated if only data type changes', () => {
     const page = jest.fn(() => ({
         get: jest.fn(),
         set: jest.fn(),
+        observe: jest.fn(),
+        intercept: jest.fn(),
     }))();
 
     const history = createHistory();
