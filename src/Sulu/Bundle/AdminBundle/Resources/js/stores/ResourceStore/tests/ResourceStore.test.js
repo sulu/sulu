@@ -170,6 +170,11 @@ test('Loading flag should be set to false when loading has finished', () => {
 test('Save the store should send a PUT request', () => {
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     const resourceStore = new ResourceStore('snippets', '3', {locale: observable()});
+
+    if (!resourceStore.locale) {
+        throw new Error('The resourceStore should have a locale');
+    }
+
     resourceStore.locale.set('de');
     resourceStore.data = {title: 'Title'};
     resourceStore.dirty = false;
@@ -218,6 +223,11 @@ test('Saving and dirty flag should be set to false when saving has failed', (don
     ResourceRequester.get.mockReturnValue(Promise.resolve({title: 'Title to stay!'}));
     ResourceRequester.put.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable()});
+
+    if (!resourceStore.locale) {
+        throw new Error('The resourceStore should have a locale');
+    }
+
     resourceStore.locale.set('en');
     resourceStore.saving = true;
     resourceStore.dirty = true;
