@@ -380,3 +380,38 @@ test('When loading strategy was changed to pagination, changing the locale shoul
 
     datagridStore.destroy();
 });
+
+test('When loading strategy was changed to pagination, data and pageCount should be reset', () => {
+    const promise = Promise.resolve({
+        pages: 5,
+        _embedded: {
+            tests: [
+                {id: 1},
+                {id: 2},
+                {id: 3},
+            ],
+        },
+    });
+    ResourceRequester.getList.mockReturnValue(promise);
+
+    const page = observable();
+    const locale = observable();
+    const datagridStore = new DatagridStore(
+        'tests',
+        {
+            page,
+            locale,
+        },
+        {}
+    );
+
+    datagridStore.init('infiniteScroll');
+
+    return promise.then(() => {
+        expect(datagridStore.pageCount).toBe(5);
+        datagridStore.updateLoadingStrategy('pagination');
+
+        expect(datagridStore.pageCount).toBe(0);
+        datagridStore.destroy();
+    });
+});

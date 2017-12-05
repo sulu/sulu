@@ -42,6 +42,7 @@ export default class DatagridStore {
         }
 
         this.data = [];
+        this.pageCount = 0;
         this.setPage(1);
         this.loadingStrategy = loadingStrategy;
 
