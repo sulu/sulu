@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {action, autorun, computed, observable, observe} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
@@ -14,7 +15,7 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
     open: boolean,
-    locale: observable,
+    locale: IObservableValue<string>,
     excludedIds: Array<string | number>,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
@@ -57,7 +58,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         }
     }
 
-    @computed get locale(): observable {
+    @computed get locale(): IObservableValue<string> {
         return this.props.locale;
     }
 
@@ -107,7 +108,11 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         this.createCollectionDatagridStore(this.collectionId, this.collectionPage, this.locale);
     };
 
-    @action createCollectionDatagridStore(collectionId: ?string | number, page: observable, locale: string) {
+    @action createCollectionDatagridStore(
+        collectionId: ?string | number,
+        page: IObservableValue<number>,
+        locale: IObservableValue<string>
+    ) {
         if (this.collectionDatagridStore) {
             this.collectionDatagridStore.destroy();
         }
@@ -122,7 +127,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         );
     }
 
-    createCollectionStore = (collectionId: ?string | number, locale: string) => {
+    createCollectionStore = (collectionId: ?string | number, locale: IObservableValue<string>) => {
         if (this.collectionStore) {
             this.collectionStore.destroy();
         }
@@ -130,7 +135,11 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
         this.collectionStore = new CollectionStore(collectionId, locale);
     };
 
-    @action createMediaDatagridStore(collectionId: ?string | number, page: observable, locale: string) {
+    @action createMediaDatagridStore(
+        collectionId: ?string | number,
+        page: IObservableValue<number>,
+        locale: IObservableValue<string>
+    ) {
         const {excludedIds} = this.props;
         const options = {};
 
