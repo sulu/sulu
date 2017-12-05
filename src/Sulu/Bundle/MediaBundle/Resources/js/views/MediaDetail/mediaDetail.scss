@@ -2,4 +2,26 @@
 
 .media-detail {
     padding: $viewPadding;
+    display: flex;
+
+    @media (max-width: 720px) {
+        display: block;
+    }
+}
+
+.form-container {
+    flex: 1 1;
+}
+
+.preview-container {
+    margin-right: $viewPadding;
+    flex: 0 0 400px;
+
+    @media (max-width: 1024px) {
+        margin-right: 30px;
+    }
+
+    @media (max-width: 720px) {
+        margin-bottom: 30px;
+    }
 }

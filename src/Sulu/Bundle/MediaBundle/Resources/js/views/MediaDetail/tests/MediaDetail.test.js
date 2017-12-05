@@ -6,6 +6,17 @@ import {mount, render} from 'enzyme';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
+    Form: require.requireActual('sulu-admin-bundle/containers').Form,
+}));
+
+jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({
+    get: jest.fn().mockReturnValue(function() {
+        return null;
+    }),
+}));
+
+jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
+    getSchema: jest.fn().mockReturnValue({}),
 }));
 
 jest.mock('sulu-admin-bundle/utils', () => ({
@@ -58,7 +69,7 @@ test('Should change locale via locale chooser', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('test', '1', {locale: observable()});
+    const resourceStore = new ResourceStore('media', '1', {locale: observable()});
 
     const router = {
         navigate: jest.fn(),
@@ -83,7 +94,7 @@ test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('test', '1', {locale: observable()});
+    const resourceStore = new ResourceStore('media', '1', {locale: observable()});
 
     const router = {
         restore: jest.fn(),
@@ -108,7 +119,7 @@ test('Should show locales from router options in toolbar', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('test', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('media', 1, {locale: observable()});
 
     const router = {
         navigate: jest.fn(),
@@ -158,4 +169,115 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
         expect(resourceStore.data).toEqual({id: 1, name: 'test.jpg'});
         done();
     });
+});
+
+test('Should initialize the ResourceStore with a schema', () => {
+    const MediaDetail = require('../MediaDetail').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const resourceStore = new ResourceStore('media', 4);
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: [],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+
+    metadataStore.getSchema.mockReturnValue({
+        title: {},
+        description: {},
+    });
+    mount(<MediaDetail router={router} resourceStore={resourceStore} />).get(0);
+    expect(resourceStore.resourceKey).toBe('media');
+    expect(resourceStore.id).toBe(4);
+    expect(resourceStore.data).toEqual({
+        title: null,
+        description: null,
+    });
+});
+
+test('Should render save button disabled only if form is not dirty', () => {
+    function getSaveItem() {
+        return toolbarFunction.call(form).items.find((item) => item.value === 'Save');
+    }
+
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaDetail = require('../MediaDetail').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('snippets', 12);
+
+    const router = {
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route: {
+            options: {},
+        },
+        attributes: {},
+    };
+    const form = mount(<MediaDetail router={router} resourceStore={resourceStore} />).get(0);
+
+    expect(getSaveItem().disabled).toBe(true);
+
+    resourceStore.dirty = true;
+    expect(getSaveItem().disabled).toBe(false);
+});
+
+test('Should save form when submitted', () => {
+    const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    const MediaDetail = require('../MediaDetail').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const resourceStore = new ResourceStore('media', 4, {locale: observable()});
+
+    const router = {
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route: {
+            options: {
+                locales: [],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    mediaDetail.find('Form').simulate('submit');
+
+    expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
+});
+
+test('Should unbind the binding and destroy the store on unmount', () => {
+    const MediaDetail = require('../MediaDetail').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const resourceStore = new ResourceStore('media', 12, {locale: observable()});
+    const router = {
+        bind: jest.fn(),
+        unbind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                locales: [],
+            },
+        },
+        attributes: {},
+    };
+
+    const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
+    const locale = mediaDetail.find('Form').prop('store').locale;
+
+    expect(router.bind).toBeCalledWith('locale', locale);
+
+    mediaDetail.unmount();
+    expect(router.unbind).toBeCalledWith('locale', locale);
 });
