@@ -10,9 +10,9 @@ const THRESHOLD = 100;
 
 type Props = {
     children: Element<*>,
-    onChange: (page: number) => void,
     current: ?number,
     loading: boolean,
+    onChange: (page: number) => void,
     total: ?number,
 };
 
