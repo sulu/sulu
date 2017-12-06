@@ -8,19 +8,19 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
     class="focusPoints"
   >
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -33,7 +33,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -46,7 +46,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -59,7 +59,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -72,12 +72,12 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint active"
+      class="imageFocusPointCell active"
       disabled=""
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -105,19 +105,19 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
     class="focusPoints"
   >
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -130,7 +130,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -143,16 +143,16 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint active"
+      class="imageFocusPointCell active"
       disabled=""
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -165,7 +165,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
   </div>
@@ -184,23 +184,23 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
     class="focusPoints"
   >
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -213,7 +213,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -226,11 +226,11 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -243,7 +243,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
       </div>
     </button>
     <button
-      class="focusPoint active"
+      class="imageFocusPointCell active"
       disabled=""
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
@@ -263,7 +263,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     class="focusPoints"
   >
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -276,7 +276,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -289,7 +289,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -302,7 +302,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -315,12 +315,12 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint active"
+      class="imageFocusPointCell active"
       disabled=""
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -333,7 +333,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -346,7 +346,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -359,7 +359,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -387,7 +387,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     class="focusPoints"
   >
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -400,7 +400,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -413,16 +413,16 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint active"
+      class="imageFocusPointCell active"
       disabled=""
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -435,11 +435,11 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -452,7 +452,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -465,7 +465,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
   </div>
@@ -484,11 +484,11 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
     class="focusPoints"
   >
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -501,7 +501,7 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -514,11 +514,11 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -531,16 +531,16 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
       </div>
     </button>
     <button
-      class="focusPoint active"
+      class="imageFocusPointCell active"
       disabled=""
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -553,7 +553,7 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -581,7 +581,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     class="focusPoints"
   >
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -594,12 +594,12 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       </div>
     </button>
     <button
-      class="focusPoint active"
+      class="imageFocusPointCell active"
       disabled=""
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -612,7 +612,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -625,7 +625,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -638,7 +638,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -651,15 +651,15 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
   </div>
@@ -678,12 +678,12 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
     class="focusPoints"
   >
     <button
-      class="focusPoint active"
+      class="imageFocusPointCell active"
       disabled=""
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -696,11 +696,11 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -713,7 +713,7 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -726,19 +726,19 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
   </div>
@@ -757,11 +757,11 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
     class="focusPoints"
   >
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -774,16 +774,16 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
       </div>
     </button>
     <button
-      class="focusPoint active"
+      class="imageFocusPointCell active"
       disabled=""
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -796,7 +796,7 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     >
       <div
@@ -809,15 +809,15 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
       </div>
     </button>
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
     <button
-      class="focusPoint"
+      class="imageFocusPointCell"
       style="width:33.333333333333336%;height:33.333333333333336%;"
     />
   </div>

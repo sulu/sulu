@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {Icon} from 'sulu-admin-bundle/components';
 import type {Point} from './types';
-import focusPointStyles from './focusPoint.scss';
+import imageFocusPointCellStyles from './imageFocusPointCell.scss';
 
 const ARROW_UP_ICON = 'arrow-up';
 
@@ -12,15 +12,13 @@ type Props = {
     value: Point,
     active: boolean,
     onClick?: (value: Point) => void,
-    showArrow: boolean,
-    arrowDirection: number,
+    arrowDirection?: '-90deg' | '-45deg' | '0deg' | '45deg' | '90deg' | '125deg' | '180deg' | '225deg',
 };
 
-export default class FocusPoint extends React.PureComponent<Props> {
+export default class ImageFocusPointCell extends React.PureComponent<Props> {
     static defaultProps = {
         active: false,
         showArrow: true,
-        arrowDirection: 0,
     };
 
     handleClick = () => {
@@ -38,22 +36,19 @@ export default class FocusPoint extends React.PureComponent<Props> {
         const {
             size,
             active,
-            showArrow,
             arrowDirection,
         } = this.props;
         const buttonStyle = {
             width: `${size}%`,
             height: `${size}%`,
         };
-        const iconStyle = {
-            transform: `rotate(${arrowDirection}deg)`,
-        };
         const focusPointClass = classNames(
-            focusPointStyles.focusPoint,
+            imageFocusPointCellStyles.imageFocusPointCell,
             {
-                [focusPointStyles.active]: active,
+                [imageFocusPointCellStyles.active]: active,
             }
         );
+        const iconStyle = arrowDirection ? {transform: `rotate(${arrowDirection})`} : {};
 
         return (
             <button
@@ -62,7 +57,7 @@ export default class FocusPoint extends React.PureComponent<Props> {
                 disabled={active}
                 className={focusPointClass}
             >
-                {showArrow && !active &&
+                {!!arrowDirection && !active &&
                     <div style={iconStyle}>
                         <Icon name={ARROW_UP_ICON} />
                     </div>

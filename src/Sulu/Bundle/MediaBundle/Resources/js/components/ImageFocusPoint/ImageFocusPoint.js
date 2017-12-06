@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type {Point} from './types';
-import FocusPoint from './FocusPoint';
+import ImageFocusPointCell from './ImageFocusPointCell';
 import imageFocusPointStyles from './imageFocusPoint.scss';
 
 const FOCUS_POINT_MATRIX_SIZE = 3;
@@ -34,42 +34,42 @@ export default class ImageFocusPoint extends React.PureComponent<Props> {
         };
 
         if (selectedPoint.x === column && selectedPoint.y === row) {
-            return (<FocusPoint key={key} {...props} active={true} />);
+            return (<ImageFocusPointCell key={key} {...props} active={true} />);
         }
 
         if (this.isLeftOfSelectedPoint(selectedPoint, row, column)) {
-            return (<FocusPoint key={key} {...props} arrowDirection={-90} />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="-90deg" />);
         }
 
         if (this.isRightOfSelectedPoint(selectedPoint, row, column)) {
-            return (<FocusPoint key={key} {...props} arrowDirection={90} />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="90deg" />);
         }
 
         if (this.isAboveOfSelectedPoint(selectedPoint, row, column)) {
-            return (<FocusPoint key={key} {...props} arrowDirection={0} />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="0deg" />);
         }
 
         if (this.isBeneathOfSelectedPoint(selectedPoint, row, column)) {
-            return (<FocusPoint key={key} {...props} arrowDirection={180} />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="180deg" />);
         }
 
         if (this.isAboveRightOfSelectedPoint(selectedPoint, row, column)) {
-            return (<FocusPoint key={key} {...props} arrowDirection={45} />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="45deg" />);
         }
 
         if (this.isAboveLeftOfSelectedPoint(selectedPoint, row, column)) {
-            return (<FocusPoint key={key} {...props} arrowDirection={-45} />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="-45deg" />);
         }
 
         if (this.isBeneathRightOfSelectedPoint(selectedPoint, row, column)) {
-            return (<FocusPoint key={key} {...props} arrowDirection={125} />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="125deg" />);
         }
 
         if (this.isBeneathLeftOfSelectedPoint(selectedPoint, row, column)) {
-            return (<FocusPoint key={key} {...props} arrowDirection={225} />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="225deg" />);
         }
 
-        return <FocusPoint key={key} {...props} showArrow={false} />;
+        return <ImageFocusPointCell key={key} {...props} />;
     }
 
     isLeftOfSelectedPoint(selectedPoint: Point, row: number, column: number) {

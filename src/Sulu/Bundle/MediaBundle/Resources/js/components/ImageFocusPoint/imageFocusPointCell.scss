@@ -5,7 +5,7 @@ $focusPointBorderColor: $white;
 $focusPointBackgroundColor: rgba($black, .5);
 $focusPointBackgroundColorActive : rgba($white, .5);
 
-.focus-point {
+.image-focus-point-cell {
     cursor: pointer;
     font-size: 24px;
     color: $focusPointColor;
