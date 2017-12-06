@@ -13,6 +13,10 @@ $secondaryColor: $black;
 $linkFontSize: 14px;
 $linkColor: $black;
 
+.button {
+    position: relative;
+}
+
 .primary,
 .secondary {
     font-size: $fontSize;
@@ -46,4 +50,26 @@ $linkColor: $black;
     text-decoration: underline;
     font-size: $linkFontSize;
     color: $linkColor;
+}
+
+.loader {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.loading {
+    background-color: transparent;
+    border-color: transparent;
+
+    .text {
+        opacity: 0;
+    }
+
+    .loader {
+        display: block;
+    }
 }

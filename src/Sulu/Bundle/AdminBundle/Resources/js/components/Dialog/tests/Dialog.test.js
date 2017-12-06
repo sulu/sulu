@@ -1,10 +1,14 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {mount, shallow} from 'enzyme';
 import React from 'react';
 import pretty from 'pretty';
 import Dialog from '../Dialog';
 
-afterEach(() => document.body.innerHTML = '');
+afterEach(() => {
+    if (document.body) {
+        document.body.innerHTML = '';
+    }
+});
 
 test('The component should render in body when open', () => {
     const body = document.body;
@@ -19,12 +23,34 @@ test('The component should render in body when open', () => {
             confirmText="Confirm"
             open={true}
         >
-            My dialog content
+            <div>My dialog content</div>
         </Dialog>
     ).render();
 
     expect(view).toMatchSnapshot();
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+});
+
+test('The component should render in body with loader instead of confirm button', () => {
+    const body = document.body;
+    const onCancel = jest.fn();
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Dialog
+            title="My dialog title"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+            cancelText="Cancel"
+            confirmText="Confirm"
+            confirmLoading={true}
+            open={true}
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    ).render();
+
+    expect(view).toMatchSnapshot();
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
 test('The component should not render in body when closed', () => {
@@ -45,7 +71,7 @@ test('The component should not render in body when closed', () => {
     ).render();
 
     expect(view).toMatchSnapshot();
-    expect(body.innerHTML).toBe('');
+    expect(body ? body.innerHTML : '').toBe('');
 });
 
 test('The component should call the callback when the confirm button is clicked', () => {

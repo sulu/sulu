@@ -42,6 +42,35 @@ test('Should execute GET request and throw error if response contains error', ()
     });
 });
 
+test('Should execute POST request and return JSON', () => {
+    const response = {
+        json: jest.fn(),
+        ok: true,
+    };
+    response.json.mockReturnValue('test');
+    const promise = new Promise((resolve) => resolve(response));
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    const data = {
+        title: 'Titel',
+        description: 'Description',
+    };
+    const requestPromise = Requester.post('/some-url', data).then((response) => {
+        expect(response).toBe('test');
+    });
+
+    expect(window.fetch).toBeCalledWith('/some-url', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        credentials: 'same-origin',
+        headers: {'Content-Type': 'application/json'},
+    });
+
+    return requestPromise;
+});
+
 test('Should execute PUT request and return JSON', () => {
     const response = {
         json: jest.fn(),

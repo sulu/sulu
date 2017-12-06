@@ -11,6 +11,7 @@ jest.mock('../stores/MediaSelectionStore', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
+        Form: require('sulu-admin-bundle/containers/Form').default,
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey) {
@@ -95,8 +96,15 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
     };
 });
 
-jest.mock('../../../stores/CollectionStore', () => jest.fn(function() {
-    this.destroy = jest.fn();
+jest.mock('sulu-admin-bundle/stores', () => ({
+    ResourceStore: jest.fn(function() {
+        this.destroy = jest.fn();
+        this.loading = false;
+        this.id = 1;
+        this.data = {
+            id: 1,
+        };
+    }),
 }));
 
 jest.mock('sulu-admin-bundle/utils', () => ({

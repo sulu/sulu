@@ -4,10 +4,12 @@ import {when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
-import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
+import {DatagridStore} from 'sulu-admin-bundle/containers';
 import CollectionStore from '../../stores/CollectionStore';
 import MultiMediaDropzone from '../MultiMediaDropzone';
-import CollectionBreadcrumb from './CollectionBreadcrumb';
+import type {OverlayType} from './types';
+import CollectionSection from './CollectionSection';
+import MediaSection from './MediaSection';
 
 type Props = {
     locale: IObservableValue<string>,
@@ -17,12 +19,14 @@ type Props = {
     collectionStore: CollectionStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
+    overlayType: OverlayType,
 };
 
 @observer
 export default class MediaCollection extends React.PureComponent<Props> {
     static defaultProps = {
         mediaViews: [],
+        overlayType: 'overlay',
     };
 
     handleMediaClick = (mediaId: string | number) => {
@@ -33,11 +37,7 @@ export default class MediaCollection extends React.PureComponent<Props> {
         }
     };
 
-    handleCollectionClick = (collectionId: string | number) => {
-        this.props.onCollectionNavigate(collectionId);
-    };
-
-    handleBreadcrumbNavigate = (collectionId?: string | number) => {
+    handleCollectionNavigate = (collectionId: ?string | number) => {
         this.props.onCollectionNavigate(collectionId);
     };
 
@@ -54,6 +54,7 @@ export default class MediaCollection extends React.PureComponent<Props> {
     render() {
         const {
             locale,
+            overlayType,
             collectionStore,
             mediaDatagridStore,
             mediaDatagridAdapters,
@@ -66,22 +67,18 @@ export default class MediaCollection extends React.PureComponent<Props> {
                 collectionId={collectionStore.id}
                 onUpload={this.handleUpload}
             >
-                {!collectionStore.loading &&
-                    <CollectionBreadcrumb
-                        breadcrumb={collectionStore.breadcrumb}
-                        onNavigate={this.handleBreadcrumbNavigate}
-                    />
-                }
-                <Datagrid
-                    adapters={['folder']}
-                    store={collectionDatagridStore}
-                    onItemClick={this.handleCollectionClick}
+                <CollectionSection
+                    locale={locale}
+                    overlayType={overlayType}
+                    resourceStore={collectionStore.resourceStore}
+                    datagridStore={collectionDatagridStore}
+                    onCollectionNavigate={this.handleCollectionNavigate}
                 />
                 <Divider />
-                <Datagrid
+                <MediaSection
                     adapters={mediaDatagridAdapters}
-                    store={mediaDatagridStore}
-                    onItemClick={this.handleMediaClick}
+                    datagridStore={mediaDatagridStore}
+                    onMediaClick={this.handleMediaClick}
                 />
             </MultiMediaDropzone>
         );

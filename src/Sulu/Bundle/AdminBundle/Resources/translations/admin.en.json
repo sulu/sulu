@@ -7,5 +7,7 @@
     "sulu_admin.object": "Object",
     "sulu_admin.objects": "Objects",
     "sulu_admin.reached_end_of_list": "You reached the end of the list",
-    "sulu_admin.confirm": "Confirm"    
+    "sulu_admin.confirm": "Confirm",
+    "sulu_admin.ok": "Ok",
+    "sulu_admin.cancel": "Cancel"
 }

@@ -1,11 +1,15 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {mount, shallow} from 'enzyme';
 import Mousetrap from 'mousetrap';
 import React from 'react';
 import pretty from 'pretty';
 import Overlay from '../Overlay';
 
-afterEach(() => document.body.innerHTML = '');
+afterEach(() => {
+    if (document.body) {
+        document.body.innerHTML = '';
+    }
+});
 
 test('The component should render in body when open', () => {
     const body = document.body;
@@ -14,6 +18,7 @@ test('The component should render in body when open', () => {
         <Overlay
             title="My overlay title"
             onClose={onClose}
+            onConfirm={jest.fn()}
             confirmText="Apply"
             open={true}
         >
@@ -22,7 +27,27 @@ test('The component should render in body when open', () => {
     ).render();
 
     expect(view).toMatchSnapshot();
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+});
+
+test('The component should render in body with loader instead of confirm button', () => {
+    const body = document.body;
+    const onClose = jest.fn();
+    const view = mount(
+        <Overlay
+            title="My overlay title"
+            onClose={onClose}
+            onConfirm={jest.fn()}
+            confirmText="Apply"
+            confirmLoading={true}
+            open={true}
+        >
+            <p>My overlay content</p>
+        </Overlay>
+    ).render();
+
+    expect(view).toMatchSnapshot();
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
 test('The component should render in body with actions when open', () => {
@@ -37,6 +62,7 @@ test('The component should render in body with actions when open', () => {
             title="My overlay title"
             onClose={onClose}
             confirmText="Apply"
+            onConfirm={jest.fn()}
             actions={actions}
             open={true}
         >
@@ -45,7 +71,7 @@ test('The component should render in body with actions when open', () => {
     ).render();
 
     expect(view).toMatchSnapshot();
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
 test('The component should not render in body when closed', () => {
@@ -55,6 +81,7 @@ test('The component should not render in body when closed', () => {
         <Overlay
             title="My overlay title"
             onClose={onClose}
+            onConfirm={jest.fn()}
             confirmText="Apply"
             open={false}
         >
@@ -62,7 +89,7 @@ test('The component should not render in body when closed', () => {
         </Overlay>
     ).render();
     expect(view).toMatchSnapshot();
-    expect(body.innerHTML).toBe('');
+    expect(body ? body.innerHTML : '').toBe('');
 });
 
 test('The component should request to be closed on click on backdrop', () => {
@@ -71,6 +98,7 @@ test('The component should request to be closed on click on backdrop', () => {
         <Overlay
             title="My overlay title"
             onClose={closeSpy}
+            onConfirm={jest.fn()}
             confirmText="Apply"
             open={true}
         >
@@ -91,6 +119,7 @@ test('The component should request to be closed when the close icon is clicked',
         <Overlay
             title="My overlay title"
             onClose={closeSpy}
+            onConfirm={jest.fn()}
             confirmText="Apply"
             open={true}
         >
@@ -109,6 +138,7 @@ test('The component should request to be closed when the esc key is pressed', ()
         <Overlay
             title="My overlay title"
             onClose={closeSpy}
+            onConfirm={jest.fn()}
             confirmText="Apply"
             open={true}
         >

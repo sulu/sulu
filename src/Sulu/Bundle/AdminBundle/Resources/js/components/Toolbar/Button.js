@@ -39,7 +39,6 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 [buttonStyles[skin]]: skin,
             }
         );
-        const loaderClass = classNames(buttonStyles.loader);
         const buttonContent = this.props.children || value;
 
         return (
@@ -50,7 +49,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 value={value}
             >
                 {loading &&
-                    <Loader size={LOADER_SIZE} className={loaderClass} />
+                    <Loader size={LOADER_SIZE} className={buttonStyles.loader} />
                 }
                 {icon &&
                     <Icon name={icon} className={buttonStyles.icon} />

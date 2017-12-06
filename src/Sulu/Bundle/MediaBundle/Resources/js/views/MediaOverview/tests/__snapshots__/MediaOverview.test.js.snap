@@ -8,115 +8,152 @@ exports[`Render a simple MediaOverview 1`] = `
     aria-disabled="false"
     class="dropzone"
   >
-    <ul
-      class="breadcrumb"
-    >
-      <li>
-        <button
-          class="item"
-          disabled=""
-        >
-          All Media
-        </button>
-      </li>
-    </ul>
-    <div
-      class="datagrid"
-    >
-      <section>
+    <div>
+      <div
+        class="collectionSection"
+      >
         <ul
-          class="folderList"
+          class="breadcrumb"
         >
           <li>
-            <div
-              class="folder"
-              role="button"
-              tabindex="0"
+            <button
+              class="item"
             >
-              <div
-                class="iconContainer"
-              >
-                <span
-                  aria-label="folder-o"
-                  class="fa fa-folder-o"
-                />
-              </div>
-              <div
-                class="description"
-              >
-                <h5
-                  class="title"
-                >
-                  Title 1
-                </h5>
-                <div
-                  class="info"
-                >
-                  1 Object
-                </div>
-              </div>
-            </div>
+              All Media
+            </button>
+            <span
+              aria-label="chevron-right"
+              class="arrow fa fa-chevron-right"
+            />
           </li>
           <li>
-            <div
-              class="folder"
-              role="button"
-              tabindex="0"
-            >
-              <div
-                class="iconContainer"
-              >
-                <span
-                  aria-label="folder-o"
-                  class="fa fa-folder-o"
-                />
-              </div>
-              <div
-                class="description"
-              >
-                <h5
-                  class="title"
-                >
-                  Title 2
-                </h5>
-                <div
-                  class="info"
-                >
-                  0 Objects
-                </div>
-              </div>
-            </div>
+            <button
+              class="item"
+              disabled=""
+            />
           </li>
         </ul>
-        <nav
-          class="pagination"
-        >
-          <div
-            class="loader"
+        <div>
+          <span
+            aria-label="plus"
+            class="fa fa-plus"
+            role="button"
+            tabindex="0"
           />
           <span
-            class="display"
+            aria-label="pencil"
+            class="fa fa-pencil"
+            role="button"
+            tabindex="0"
+          />
+          <span
+            aria-label="trash"
+            class="fa fa-trash"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+      </div>
+      <div
+        class="datagrid"
+      >
+        <section>
+          <ul
+            class="folderList"
           >
-            Page: 2 of 3
-          </span>
-          <button
-            class="previous"
+            <li>
+              <div
+                class="folder"
+                role="button"
+                tabindex="0"
+              >
+                <div
+                  class="iconContainer"
+                >
+                  <span
+                    aria-label="folder-o"
+                    class="fa fa-folder-o"
+                  />
+                </div>
+                <div
+                  class="description"
+                >
+                  <h5
+                    class="title"
+                  >
+                    Title 1
+                  </h5>
+                  <div
+                    class="info"
+                  >
+                    1 Object
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div
+                class="folder"
+                role="button"
+                tabindex="0"
+              >
+                <div
+                  class="iconContainer"
+                >
+                  <span
+                    aria-label="folder-o"
+                    class="fa fa-folder-o"
+                  />
+                </div>
+                <div
+                  class="description"
+                >
+                  <h5
+                    class="title"
+                  >
+                    Title 2
+                  </h5>
+                  <div
+                    class="info"
+                  >
+                    0 Objects
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <nav
+            class="pagination"
           >
-            <span
-              aria-label="angle-left"
-              class="fa fa-angle-left"
+            <div
+              class="loader"
             />
-          </button>
-          <button
-            class="next"
-          >
             <span
-              aria-label="angle-right"
-              class="fa fa-angle-right"
-            />
-          </button>
-        </nav>
-      </section>
+              class="display"
+            >
+              Page: 2 of 3
+            </span>
+            <button
+              class="previous"
+            >
+              <span
+                aria-label="angle-left"
+                class="fa fa-angle-left"
+              />
+            </button>
+            <button
+              class="next"
+            >
+              <span
+                aria-label="angle-right"
+                class="fa fa-angle-right"
+              />
+            </button>
+          </nav>
+        </section>
+      </div>
+      <div />
+      <div />
     </div>
     <div
       class="divider"

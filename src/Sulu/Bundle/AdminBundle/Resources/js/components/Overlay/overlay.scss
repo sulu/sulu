@@ -83,6 +83,10 @@ $transitionDuration: 300ms;
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        button:only-child {
+            margin-left: auto;
+        }
     }
 
     .icon {

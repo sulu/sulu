@@ -19,6 +19,11 @@ export default class Requester {
             .then(handleResponse);
     }
 
+    static post(url: string, data: Object): Promise<Object> {
+        return fetch(url, {...defaultOptions, method: 'POST', body: JSON.stringify(data)})
+            .then(handleResponse);
+    }
+
     static put(url: string, data: Object): Promise<Object> {
         return fetch(url, {...defaultOptions, method: 'PUT', body: JSON.stringify(data)})
             .then(handleResponse);

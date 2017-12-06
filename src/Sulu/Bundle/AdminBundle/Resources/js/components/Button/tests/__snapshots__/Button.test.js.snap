@@ -2,18 +2,30 @@
 
 exports[`Button should render with skin link 1`] = `
 <button
-  class="link"
-/>
+  class="button link"
+>
+  <span
+    class="text"
+  />
+</button>
 `;
 
 exports[`Button should render with skin primary 1`] = `
 <button
-  class="primary"
-/>
+  class="button primary"
+>
+  <span
+    class="text"
+  />
+</button>
 `;
 
 exports[`Button should render with skin secondary 1`] = `
 <button
-  class="secondary"
-/>
+  class="button secondary"
+>
+  <span
+    class="text"
+  />
+</button>
 `;

@@ -10,5 +10,9 @@
     "sulu_media.media_selected_singular": "media element selected",
     "sulu_media.media_selected_plural": "media elements selected",
     "sulu_media.drop_files_to_upload": "Upload files per drag`n`drop",
-    "sulu_media.click_here_to_upload": "or click here to upload files"
+    "sulu_media.click_here_to_upload": "or click here to upload files",
+    "sulu_media.add_collection": "Add collection",
+    "sulu_media.remove_collection": "Delete collection",
+    "sulu_media.remove_collection_warning": "This operation deletes data and cannot be undone. Do you really wish to proceed?",
+    "sulu_media.edit_collection": "Edit collection"
 }
