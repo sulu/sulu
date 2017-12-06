@@ -8,11 +8,13 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
 }));
 
-jest.mock('sulu-admin-bundle/services', () => ({
+jest.mock('sulu-admin-bundle/utils', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_admin.save':
                 return 'Save';
+            case 'sulu_media.upload_or_replace':
+                return 'Upload or replace';
         }
     },
 }));

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {Breadcrumb} from 'sulu-admin-bundle/components';
-import {translate} from 'sulu-admin-bundle/services';
+import {translate} from 'sulu-admin-bundle/utils';
 import type {BreadcrumbItems} from '../../stores/CollectionStore';
 
 type Props = {

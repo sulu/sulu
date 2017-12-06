@@ -5,7 +5,7 @@ import {mount, shallow} from 'enzyme';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
-jest.mock('../../../services/Translator', () => ({
+jest.mock('../../../utils/Translator', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_admin.delete':
@@ -20,7 +20,7 @@ jest.mock('../../../containers/Form/registries/FieldRegistry', () => ({
     }),
 }));
 
-jest.mock('../../../services/Translator', () => ({
+jest.mock('../../../utils/Translator', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_admin.save':

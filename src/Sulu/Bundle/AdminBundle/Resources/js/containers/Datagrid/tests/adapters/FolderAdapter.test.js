@@ -3,7 +3,7 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import FolderAdapter from '../../adapters/FolderAdapter';
 
-jest.mock('../../../../services/Translator', () => ({
+jest.mock('../../../../utils/Translator', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_admin.object':

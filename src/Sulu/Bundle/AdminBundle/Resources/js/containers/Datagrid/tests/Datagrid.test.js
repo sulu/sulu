@@ -31,7 +31,7 @@ jest.mock('../registries/DatagridAdapterRegistry', () => ({
     has: jest.fn(),
 }));
 
-jest.mock('../../../services/Translator', () => ({
+jest.mock('../../../utils/Translator', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_admin.page':

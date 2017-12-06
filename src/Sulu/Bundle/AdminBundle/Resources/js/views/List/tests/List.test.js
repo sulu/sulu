@@ -44,7 +44,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
     delete: jest.fn().mockReturnValue(Promise.resolve(true)),
 }));
 
-jest.mock('../../../services/Translator', () => ({
+jest.mock('../../../utils/Translator', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_admin.page':

@@ -74,7 +74,7 @@ jest.mock('../../../stores/CollectionStore', () => jest.fn(function() {
     this.destroy = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/services', () => ({
+jest.mock('sulu-admin-bundle/utils', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_media.all_media':
@@ -95,7 +95,7 @@ jest.mock('sulu-admin-bundle/services', () => ({
     },
 }));
 
-jest.mock('sulu-admin-bundle/services/Translator', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_admin.page':

@@ -2,7 +2,7 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import FolderList from '../../../components/FolderList';
-import {translate} from '../../../services/Translator';
+import {translate} from '../../../utils/Translator';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer

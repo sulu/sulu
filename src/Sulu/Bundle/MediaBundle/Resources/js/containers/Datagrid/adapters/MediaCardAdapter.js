@@ -3,7 +3,7 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import {Masonry} from 'sulu-admin-bundle/components';
 import type {DatagridAdapterProps} from 'sulu-admin-bundle/containers';
-import {translate} from 'sulu-admin-bundle/services';
+import {translate} from 'sulu-admin-bundle/utils';
 import MediaCard from '../../../components/MediaCard';
 
 const THUMBNAIL_SIZE = 'sulu-240x';

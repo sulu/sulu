@@ -4,7 +4,7 @@ exports[`InfiniteScroller should show a loader when the loading prop is set to t
 <div
   id="scrollable"
 >
-  <div>
+  <section>
     <div>
       <div />
     </div>
@@ -23,7 +23,7 @@ exports[`InfiniteScroller should show a loader when the loading prop is set to t
         />
       </div>
     </div>
-  </div>
+  </section>
 </div>
 `;
 
@@ -31,7 +31,7 @@ exports[`InfiniteScroller should show an info message when the last page has bee
 <div
   id="scrollable"
 >
-  <div>
+  <section>
     <div>
       <div />
     </div>
@@ -40,6 +40,6 @@ exports[`InfiniteScroller should show an info message when the last page has bee
     >
       Last page reached
     </div>
-  </div>
+  </section>
 </div>
 `;

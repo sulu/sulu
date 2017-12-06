@@ -1,22 +1,19 @@
 // @flow
 import React from 'react';
 import debounce from 'debounce';
-import type {Element, ElementRef} from 'react';
+import type {ElementRef} from 'react';
+import {translate} from '../../utils/Translator';
+import type {PaginationProps} from '../../types.js';
 import Loader from '../Loader';
 import infiniteScrollerStyles from './infiniteScroller.scss';
 
 const THRESHOLD = 100;
 
-type Props = {
-    children: Element<*>,
-    onLoad: (loadedPage: number) => void,
-    current: number,
-    total: number,
-    loading: boolean,
-    lastPageReachedText: string,
-};
+export default class InfiniteScroller extends React.PureComponent<PaginationProps> {
+    static defaultProps = {
+        loading: false,
+    };
 
-export default class InfiniteScroller extends React.PureComponent<Props> {
     elementRef: ElementRef<'div'>;
 
     scrollContainer: ElementRef<*>;
@@ -61,11 +58,11 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
 
     bindScrollListener() {
         const {
-            total,
             current,
+            total,
         } = this.props;
 
-        if (current >= total) {
+        if (!current || !total || current >= total) {
             return;
         }
 
@@ -80,7 +77,7 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
 
     scrollListener = debounce(() => {
         const {
-            onLoad,
+            onChange,
             current,
         } = this.props;
         const {
@@ -93,7 +90,7 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
         if ((elementOffsetBottom - scrollContainerOffsetBottom) < THRESHOLD)  {
             const nextPage = current + 1;
 
-            onLoad(nextPage);
+            onChange(nextPage);
             this.unbindScrollListener();
         }
     }, 200);
@@ -104,25 +101,24 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
             current,
             loading,
             children,
-            lastPageReachedText,
         } = this.props;
         let indicator = null;
 
         if (loading) {
             indicator = <Loader />;
         } else if (current === total && !loading) {
-            indicator = lastPageReachedText;
+            indicator = translate('sulu_admin.reached_end_of_list');
         }
 
         return (
-            <div ref={this.setRef}>
+            <section ref={this.setRef}>
                 <div>
                     {children}
                 </div>
                 <div className={infiniteScrollerStyles.indicator}>
                     {indicator}
                 </div>
-            </div>
+            </section>
         );
     }
 }

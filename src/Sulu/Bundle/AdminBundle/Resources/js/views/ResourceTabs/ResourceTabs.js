@@ -5,7 +5,7 @@ import {observable} from 'mobx';
 import Tabs from '../../components/Tabs';
 import Loader from '../../components/Loader';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import {translate} from '../../services/Translator';
+import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
 import resourceTabsStyle from './resourceTabs.scss';
 

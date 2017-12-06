@@ -5,6 +5,15 @@ import InfiniteScroller from '../InfiniteScroller';
 
 window.getComputedStyle = jest.fn();
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: function(key) {
+        switch (key) {
+            case 'sulu_admin.reached_end_of_list':
+                return 'Last page reached';
+        }
+    },
+}));
+
 test('InfiniteScroller traverses the dom upwards until it finds a scroll container', () => {
     window.getComputedStyle.mockReturnValue({
         'overflow-y': 'auto',
@@ -14,11 +23,10 @@ test('InfiniteScroller traverses the dom upwards until it finds a scroll contain
     const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
-                onLoad={loadSpy}
+                onChange={loadSpy}
                 current={1}
                 total={10}
                 loading={false}
-                lastPageReachedText="Last page reached"
             >
                 <div />
             </InfiniteScroller>
@@ -28,7 +36,7 @@ test('InfiniteScroller traverses the dom upwards until it finds a scroll contain
     expect(infiniteScrollerWrapper.find('InfiniteScroller').get(0).scrollContainer.id).toBe('scrollable');
 });
 
-test('InfiniteScroller should call onLoad if the the bottom of the content is reached', (done) => {
+test('InfiniteScroller should call onChange if the the bottom of the content is reached', (done) => {
     window.getComputedStyle.mockReturnValue({
         'overflow-y': 'auto',
     });
@@ -37,11 +45,10 @@ test('InfiniteScroller should call onLoad if the the bottom of the content is re
     const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
-                onLoad={loadSpy}
+                onChange={loadSpy}
                 total={10}
                 current={1}
                 loading={false}
-                lastPageReachedText="Last page reached"
             >
                 <div />
             </InfiniteScroller>
@@ -78,11 +85,10 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
     const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
-                onLoad={loadSpy}
+                onChange={loadSpy}
                 total={10}
                 current={1}
                 loading={false}
-                lastPageReachedText="Last page reached"
             >
                 <div />
             </InfiniteScroller>
@@ -109,11 +115,10 @@ test('InfiniteScroller should show a loader when the loading prop is set to true
     expect(render(
         <div id="scrollable">
             <InfiniteScroller
-                onLoad={loadSpy}
+                onChange={loadSpy}
                 total={10}
                 current={1}
                 loading={true}
-                lastPageReachedText="Last page reached"
             >
                 <div />
             </InfiniteScroller>
@@ -130,11 +135,10 @@ test('InfiniteScroller should show an info message when the last page has been r
     expect(render(
         <div id="scrollable">
             <InfiniteScroller
-                onLoad={loadSpy}
+                onChange={loadSpy}
                 total={10}
                 current={10}
                 loading={false}
-                lastPageReachedText="Last page reached"
             >
                 <div />
             </InfiniteScroller>
