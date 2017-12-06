@@ -1,22 +1,15 @@
 // @flow
 import React from 'react';
 import debounce from 'debounce';
-import type {Element, ElementRef} from 'react';
+import type {ElementRef} from 'react';
 import {translate} from '../../utils/Translator';
+import type {PaginationProps} from '../../types.js';
 import Loader from '../Loader';
 import infiniteScrollerStyles from './infiniteScroller.scss';
 
 const THRESHOLD = 100;
 
-type Props = {
-    children: Element<*>,
-    current: ?number,
-    loading: boolean,
-    onChange: (page: number) => void,
-    total: ?number,
-};
-
-export default class InfiniteScroller extends React.PureComponent<Props> {
+export default class InfiniteScroller extends React.PureComponent<PaginationProps> {
     static defaultProps = {
         loading: false,
     };
