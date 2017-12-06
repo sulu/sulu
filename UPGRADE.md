@@ -14,6 +14,10 @@ Follow upgrade path of following libraries:
 
 The api endpoint for `/admin/api/nodes/filter` was removed and replaced by `/admin/api/items`.
 
+### ListBuilder
+
+The `ListBuilderInterface::execute` function will not longer return the whole result array instead for performance improvements it returns a ˚\Generator` this means a `count()` on the result is not longer possible. If you need to count the result items you need todo this in a loop on the generator object for the total result call the `$listBuilder->count()` function.
+
 ## 1.6.9
 
 ### CacheBuilder

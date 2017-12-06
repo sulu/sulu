@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -178,7 +179,15 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         $this->queryBuilder->distinct($this->distinct);
 
-        return $this->queryBuilder->getQuery()->getArrayResult();
+        $iterableResult = $this->queryBuilder->getQuery()->iterate(null, Query::HYDRATE_ARRAY);
+
+        foreach ($iterableResult as $rows) {
+            foreach ($rows as $row) {
+                if (false) {
+                    yield $row;
+                }
+            }
+        }
     }
 
     /**
