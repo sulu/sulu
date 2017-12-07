@@ -3,8 +3,6 @@ import {observer} from 'mobx-react';
 import {observable, action, computed} from 'mobx';
 import React from 'react';
 import equal from 'fast-deep-equal';
-import InfiniteScroller from '../../components/InfiniteScroller';
-import Pagination from '../../components/Pagination';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -85,9 +83,7 @@ export default class Datagrid extends React.PureComponent<Props> {
         const page = store.getPage();
         const pageCount = store.pageCount;
         const Adapter = this.currentAdapter;
-        const PaginationAdapter = Adapter.getLoadingStrategy() === 'infiniteScroll'
-            ? InfiniteScroller
-            : Pagination;
+        const PaginationAdapter = Adapter.getLoadingStrategy().paginationAdapter;
 
         return (
             <div>

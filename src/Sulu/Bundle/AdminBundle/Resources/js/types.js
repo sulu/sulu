@@ -1,5 +1,5 @@
 // @flow
-import type {Element} from 'react';
+import type {ComponentType, Element} from 'react';
 
 export type PaginationProps = {
     children: Element<*>,
@@ -8,3 +8,5 @@ export type PaginationProps = {
     onChange: (page: number) => void,
     total: ?number,
 };
+
+export type PaginationAdapter = ComponentType<PaginationProps>;

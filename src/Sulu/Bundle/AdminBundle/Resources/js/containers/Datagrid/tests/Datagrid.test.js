@@ -44,9 +44,14 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 class TestAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => LoadingStrategyInterface = jest.fn().mockReturnValue({
-        load: jest.fn(),
+    static getLoadingStrategy: () => LoadingStrategyInterface = () => (new class {
+        paginationAdapter = function PaginationAdapter() {
+            return null;
+        };
+
+        load = jest.fn();
     });
+
     static getStorageStrategy: () => string = jest.fn().mockReturnValue('flat');
 
     render() {
@@ -64,15 +69,15 @@ beforeEach(() => {
 test('Change page in DatagridStore on pagination click', () => {
     const datagridStore = new DatagridStore('test', {page: observable(1)});
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
-    datagrid.find('Pagination').find('.next').simulate('click');
-    expect(datagridStore.setPage).toBeCalledWith(datagridStore.getPage() + 1);
+    datagrid.find('PaginationAdapter').prop('onChange')(3);
+    expect(datagridStore.setPage).toBeCalledWith(3);
 });
 
 test('Render Pagination with correct values', () => {
     const datagridStore = new DatagridStore('test', {page: observable(1)});
 
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
-    const pagination = datagrid.find('Pagination');
+    const pagination = datagrid.find('PaginationAdapter');
 
     expect(pagination.prop('current')).toEqual(4);
     expect(pagination.prop('total')).toEqual(7);

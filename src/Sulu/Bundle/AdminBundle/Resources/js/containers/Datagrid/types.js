@@ -1,5 +1,6 @@
 // @flow
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {PaginationAdapter} from '../../types';
 
 export type DataItem = {
     id: string | number,
@@ -29,5 +30,6 @@ export type LoadOptions = {
 };
 
 export interface LoadingStrategyInterface {
+    paginationAdapter: PaginationAdapter,
     load(data: Array<Object>, resourceKey: string, options: LoadOptions): Promise<Object>,
 }

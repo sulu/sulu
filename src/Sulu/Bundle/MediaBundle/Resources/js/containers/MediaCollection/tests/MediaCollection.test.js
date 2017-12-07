@@ -70,7 +70,9 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.clearSelection = jest.fn();
             this.init = jest.fn();
         }),
-        InfiniteScrollingStrategy: jest.fn(),
+        InfiniteScrollingStrategy: require(
+            'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteScrollingStrategy'
+        ).default,
     };
 });
 
