@@ -4,7 +4,7 @@ import {observable} from 'mobx';
 import {render, shallow} from 'enzyme';
 import MultiMediaDropzone from '../MultiMediaDropzone';
 
-jest.mock('sulu-admin-bundle/services', () => ({
+jest.mock('sulu-admin-bundle/utils', () => ({
     translate: function(key) {
         switch (key) {
             case 'sulu_media.drop_files_to_upload':
@@ -15,7 +15,7 @@ jest.mock('sulu-admin-bundle/services', () => ({
     },
 }));
 
-test('Render an MultiMediaDropzone', () => {
+test('Render a MultiMediaDropzone', () => {
     expect(render(
         <MultiMediaDropzone
             collectionId={3}
@@ -27,7 +27,7 @@ test('Render an MultiMediaDropzone', () => {
     )).toMatchSnapshot();
 });
 
-test('Render an MultiMediaDropzone while the overlay is visible', () => {
+test('Render a MultiMediaDropzone while the overlay is visible', () => {
     const multiMediaDropzone = shallow(
         <MultiMediaDropzone
             collectionId={3}

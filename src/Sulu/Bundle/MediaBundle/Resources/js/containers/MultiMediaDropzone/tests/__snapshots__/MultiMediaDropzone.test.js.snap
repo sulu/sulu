@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render an MultiMediaDropzone 1`] = `
+exports[`Render a MultiMediaDropzone 1`] = `
 <div
   aria-disabled="false"
   class=""
@@ -15,7 +15,7 @@ exports[`Render an MultiMediaDropzone 1`] = `
 </div>
 `;
 
-exports[`Render an MultiMediaDropzone while the overlay is visible 1`] = `
+exports[`Render a MultiMediaDropzone while the overlay is visible 1`] = `
 <div
   aria-disabled="false"
   class=""
