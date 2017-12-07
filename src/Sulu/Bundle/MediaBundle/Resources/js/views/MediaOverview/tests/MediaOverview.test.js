@@ -66,6 +66,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.clearSelection = jest.fn();
             this.init = jest.fn();
         }),
+        InfiniteScrollingStrategy: jest.fn(),
     };
 });
 

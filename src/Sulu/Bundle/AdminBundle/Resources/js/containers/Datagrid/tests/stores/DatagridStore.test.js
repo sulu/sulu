@@ -3,109 +3,145 @@ import 'url-search-params-polyfill';
 import {observable, toJS, when} from 'mobx';
 import DatagridStore from '../../stores/DatagridStore';
 import metadataStore from '../../stores/MetadataStore';
-import ResourceRequester from '../../../../services/ResourceRequester';
-
-jest.mock('../../../../services/ResourceRequester', () => ({
-    getList: jest.fn(),
-}));
 
 jest.mock('../../stores/MetadataStore', () => ({
     getSchema: jest.fn(),
 }));
 
-test('Do not send request without defined page parameter', () => {
-    const page = observable();
-    new DatagridStore('tests', {
-        page,
-    });
-    expect(ResourceRequester.getList).not.toBeCalled();
-});
+function StructureStrategy() {
+    this.clear = jest.fn();
+}
 
-test('Send request with default parameters', (done) => {
-    const Promise = require.requireActual('promise');
-    ResourceRequester.getList.mockReturnValue(Promise.resolve({
-        pages: 3,
-        _embedded: {
-            tests: [{id: 1}],
-        },
-    }));
-    const page = observable();
-    const datagridStore = new DatagridStore('tests', {
-        page,
-    });
-    datagridStore.init('pagination');
-    page.set(1);
-    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
-    when(
-        () => !datagridStore.loading,
-        () => {
-            expect(toJS(datagridStore.data)).toEqual([{id: 1}]);
-            expect(datagridStore.pageCount).toEqual(3);
-            datagridStore.destroy();
-            done();
-        }
-    );
-});
+function LoadingStrategy() {
+    this.load = jest.fn().mockReturnValue({then: jest.fn()});
+}
 
-test('Send request to other base URL', () => {
-    const page = observable();
-    const datagridStore = new DatagridStore('tests', {
-        page,
-    });
-    datagridStore.init('pagination');
-    page.set(1);
-    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
-    datagridStore.destroy();
-});
-
-test('Send request to other page', () => {
-    const page = observable();
-    const datagridStore = new DatagridStore('tests', {
-        page,
-    });
-    datagridStore.init('pagination');
-    page.set(1);
-    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
-    page.set(2);
-    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 2});
-    datagridStore.destroy();
-});
-
-test('Send request to other locale', () => {
+test('The loading strategy should be called when a request is sent', () => {
+    const loadingStrategy = new LoadingStrategy();
     const page = observable();
     const locale = observable();
-    const datagridStore = new DatagridStore('tests', {
-        page,
-        locale,
+    const datagridStore = new DatagridStore(
+        'tests',
+        {
+            page,
+            locale,
+        },
+        {
+            test: 'value',
+        }
+    );
+
+    datagridStore.data = [{id: 1}];
+    datagridStore.init(loadingStrategy);
+
+    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'tests', {
+        locale: undefined,
+        page: 1,
+        test: 'value',
     });
-    datagridStore.init('pagination');
-    page.set(1);
-    locale.set('en');
-    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1, locale: 'en'});
-    locale.set('de');
-    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1, locale: 'de'});
+
     datagridStore.destroy();
 });
 
-test('Send not request without locale if undefined', () => {
+test('The loading strategy should be called with a different resourceKey when a request is sent', () => {
+    const loadingStrategy = new LoadingStrategy();
     const page = observable();
-    const datagridStore = new DatagridStore('tests', {
-        page,
+    const locale = observable();
+    const datagridStore = new DatagridStore(
+        'snippets',
+        {
+            page,
+            locale,
+        },
+        {
+            test: 'value',
+        }
+    );
+
+    datagridStore.data = [{id: 1}];
+    datagridStore.init(loadingStrategy);
+
+    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+        locale: undefined,
+        page: 1,
+        test: 'value',
     });
-    datagridStore.init('pagination');
-    page.set(1);
-    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
-    expect(ResourceRequester.getList.mock.calls[0][1]).not.toHaveProperty('locale');
-    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
+
+    datagridStore.destroy();
+});
+
+test('The loading strategy should be called with a different page when a request is sent', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const page = observable();
+    const locale = observable();
+    const datagridStore = new DatagridStore(
+        'snippets',
+        {
+            page,
+            locale,
+        },
+        {
+            test: 'value',
+        }
+    );
+
+    datagridStore.data = [{id: 1}];
+    datagridStore.init(loadingStrategy);
+
+    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+        locale: undefined,
+        page: 1,
+        test: 'value',
+    });
+
+    page.set(3);
+    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+        locale: undefined,
+        page: 3,
+        test: 'value',
+    });
+
+    datagridStore.destroy();
+});
+
+test('The loading strategy should be called with a different locale when a request is sent', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const page = observable();
+    const locale = observable('en');
+    const datagridStore = new DatagridStore(
+        'snippets',
+        {
+            page,
+            locale,
+        },
+        {
+            test: 'value',
+        }
+    );
+
+    datagridStore.data = [{id: 1}];
+    datagridStore.init(loadingStrategy);
+
+    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+        locale: 'en',
+        page: 1,
+        test: 'value',
+    });
+
+    locale.set('de');
+    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+        locale: 'de',
+        page: 1,
+        test: 'value',
+    });
+
     datagridStore.destroy();
 });
 
 test('Set loading flag to true before request', () => {
     const page = observable();
-    const datagridStore = new DatagridStore('tests', {
-        page,
-    });
-    datagridStore.init('pagination');
+    const datagridStore = new DatagridStore('tests', {page});
+    datagridStore.init(new LoadingStrategy());
     page.set(1);
     datagridStore.setLoading(false);
     datagridStore.sendRequest();
@@ -113,26 +149,21 @@ test('Set loading flag to true before request', () => {
     datagridStore.destroy();
 });
 
-test('Set loading flag to false after request', () => {
+test('Set loading flag to false after request', (done) => {
     const page = observable();
-    const datagridStore = new DatagridStore('tests', {
-        page,
+    const datagridStore = new DatagridStore('tests', {page});
+    const promise = Promise.resolve({
+        pages: 3,
     });
-    const Promise = require.requireActual('promise');
-    ResourceRequester.getList.mockReturnValue(Promise.resolve({
-        _embedded: {
-            tests: [],
-        },
-    }));
-    datagridStore.init('pagination');
+    const loadingStrategy = new LoadingStrategy();
+    loadingStrategy.load.mockReturnValue(promise);
+    datagridStore.init(loadingStrategy);
     datagridStore.sendRequest();
-    when(
-        () => !datagridStore.loading,
-        () => {
-            expect(datagridStore.loading).toEqual(false);
-            datagridStore.destroy();
-        }
-    );
+    return promise.then(() => {
+        expect(datagridStore.loading).toEqual(false);
+        datagridStore.destroy();
+        done();
+    });
 });
 
 test('Get fields from MetadataStore for correct resourceKey', () => {
@@ -145,7 +176,7 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init('pagination');
+    datagridStore.init(new LoadingStrategy());
     expect(datagridStore.getSchema()).toBe(fields);
     expect(metadataStore.getSchema).toBeCalledWith('tests');
     datagridStore.destroy();
@@ -156,7 +187,7 @@ test('After initialization no row should be selected', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init('pagination');
+    datagridStore.init(new LoadingStrategy());
     expect(datagridStore.selections.length).toBe(0);
     datagridStore.destroy();
 });
@@ -166,7 +197,7 @@ test('Select an item', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init('pagination');
+    datagridStore.init(new LoadingStrategy());
     datagridStore.select(1);
     datagridStore.select(2);
     expect(toJS(datagridStore.selections)).toEqual([1, 2]);
@@ -181,7 +212,7 @@ test('Deselect an item that has not been selected yet', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init('pagination');
+    datagridStore.init(new LoadingStrategy());
     datagridStore.select(1);
     datagridStore.deselect(2);
 
@@ -189,62 +220,28 @@ test('Deselect an item that has not been selected yet', () => {
     datagridStore.destroy();
 });
 
-test('Select the entire page', (done) => {
-    ResourceRequester.getList.mockReturnValue(Promise.resolve({
-        _embedded: {
-            tests: [
-                {id: 1},
-                {id: 2},
-                {id: 3},
-            ],
-        },
-    }));
-
+test('Select the entire page', () => {
     const page = observable();
-    const datagridStore = new DatagridStore('tests', {
-        page,
-    });
-    datagridStore.init('pagination');
+    const datagridStore = new DatagridStore('tests', {page});
+    datagridStore.init(new LoadingStrategy());
+    datagridStore.data = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [1, 7];
-    page.set(1);
-    when(
-        () => !datagridStore.loading,
-        () => {
-            datagridStore.selectEntirePage();
-            expect(toJS(datagridStore.selections)).toEqual([1, 7, 2, 3]);
-            datagridStore.destroy();
-            done();
-        }
-    );
+    datagridStore.selectEntirePage();
+    expect(toJS(datagridStore.selections)).toEqual([1, 7, 2, 3]);
+    datagridStore.destroy();
 });
 
-test('Deselect the entire page', (done) => {
-    ResourceRequester.getList.mockReturnValue(Promise.resolve({
-        _embedded: {
-            tests: [
-                {id: 1},
-                {id: 2},
-                {id: 3},
-            ],
-        },
-    }));
-
+test('Deselect the entire page', () => {
     const page = observable();
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init('pagination');
+    datagridStore.init(new LoadingStrategy());
+    datagridStore.data = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [1, 2, 7];
-    page.set(1);
-    when(
-        () => !datagridStore.loading,
-        () => {
-            datagridStore.deselectEntirePage();
-            expect(toJS(datagridStore.selections)).toEqual([7]);
-            datagridStore.destroy();
-            done();
-        }
-    );
+    datagridStore.deselectEntirePage();
+    expect(toJS(datagridStore.selections)).toEqual([7]);
+    datagridStore.destroy();
 });
 
 test('Clear the selection', () => {
@@ -252,7 +249,7 @@ test('Clear the selection', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init('pagination');
+    datagridStore.init(new LoadingStrategy());
     datagridStore.selections = [1, 4, 5];
     page.set(1);
     expect(datagridStore.selections).toHaveLength(3);
@@ -261,72 +258,7 @@ test('Clear the selection', () => {
     expect(datagridStore.selections).toHaveLength(0);
 });
 
-test('The data should be appended when the loading strategy is infiniteScroll', () => {
-    const loadingStrategy = 'infiniteScroll';
-    const page = observable();
-    const locale = observable();
-    const datagridStore = new DatagridStore(
-        'tests',
-        {
-            page,
-            locale,
-        },
-        {}
-    );
-
-    datagridStore.init(loadingStrategy);
-
-    datagridStore.handleResponse({
-        _embedded: {
-            tests: [
-                {id: 1},
-                {id: 2},
-                {id: 3},
-            ],
-        },
-    }, loadingStrategy);
-
-    expect(toJS(datagridStore.data)).toEqual([
-        {id: 1},
-        {id: 2},
-        {id: 3},
-    ]);
-
-    datagridStore.handleResponse({
-        _embedded: {
-            tests: [
-                {id: 4},
-                {id: 5},
-                {id: 6},
-            ],
-        },
-    }, loadingStrategy);
-
-    expect(toJS(datagridStore.data)).toEqual([
-        {id: 1},
-        {id: 2},
-        {id: 3},
-        {id: 4},
-        {id: 5},
-        {id: 6},
-    ]);
-
-    datagridStore.destroy();
-});
-
 test('When loading strategy is infiniteScroll, changing the locale resets the data property and sets page to 1', () => {
-    ResourceRequester.getList.mockReturnValue(
-        Promise.resolve({
-            _embedded: {
-                tests: [
-                    {id: 1},
-                    {id: 2},
-                    {id: 3},
-                ],
-            },
-        })
-    );
-
     const page = observable();
     const locale = observable();
     const datagridStore = new DatagridStore(
@@ -337,7 +269,12 @@ test('When loading strategy is infiniteScroll, changing the locale resets the da
         },
         {}
     );
-    datagridStore.init('infiniteScroll');
+
+    function InfiniteScrollingStrategy() {
+        this.load = jest.fn().mockReturnValue({then: jest.fn()});
+    }
+
+    datagridStore.init(new InfiniteScrollingStrategy());
 
     page.set(3);
     locale.set('en');
@@ -349,16 +286,6 @@ test('When loading strategy is infiniteScroll, changing the locale resets the da
 });
 
 test('When loading strategy was changed to pagination, changing the locale should not reset page to 1', () => {
-    ResourceRequester.getList.mockReturnValue(Promise.resolve({
-        _embedded: {
-            tests: [
-                {id: 1},
-                {id: 2},
-                {id: 3},
-            ],
-        },
-    }));
-
     const page = observable();
     const locale = observable();
     const datagridStore = new DatagridStore(
@@ -369,30 +296,20 @@ test('When loading strategy was changed to pagination, changing the locale shoul
         },
         {}
     );
-    datagridStore.init('infiniteScroll');
-    datagridStore.updateLoadingStrategy('pagination');
+    datagridStore.init(new LoadingStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
 
     page.set(3);
     locale.set('en');
 
     expect(page.get()).toBe(3);
-    expect(toJS(datagridStore.data)).toEqual([]);
 
     datagridStore.destroy();
 });
 
-test('When loading strategy was changed to pagination, data and pageCount should be reset', () => {
-    const promise = Promise.resolve({
-        pages: 5,
-        _embedded: {
-            tests: [
-                {id: 1},
-                {id: 2},
-                {id: 3},
-            ],
-        },
-    });
-    ResourceRequester.getList.mockReturnValue(promise);
+test('Page count should be reset when loading strategy changes', () => {
+    const loadingStrategy1 = new LoadingStrategy();
+    const loadingStrategy2 = new LoadingStrategy();
 
     const page = observable();
     const locale = observable();
@@ -404,25 +321,21 @@ test('When loading strategy was changed to pagination, data and pageCount should
         },
         {}
     );
-    datagridStore.init('infiniteScroll');
 
-    return promise.then(() => {
-        expect(datagridStore.pageCount).toBe(5);
-        datagridStore.updateLoadingStrategy('pagination');
+    datagridStore.init(loadingStrategy1);
+    datagridStore.pageCount = 5;
+    datagridStore.data = [{id: 1}];
 
-        expect(datagridStore.pageCount).toBe(0);
-        datagridStore.destroy();
-    });
+    expect(datagridStore.pageCount).toBe(5);
+    datagridStore.updateLoadingStrategy(loadingStrategy2);
+
+    expect(datagridStore.pageCount).toBe(0);
+    datagridStore.destroy();
 });
 
 test('Should reset the data array and set page to 1 when the reload method is called', (done) => {
-    ResourceRequester.getList.mockReturnValue(Promise.resolve({
-        _embedded: {
-            tests: [
-                {id: 1},
-            ],
-        },
-    }));
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
 
     const page = observable();
     const locale = observable();
@@ -434,10 +347,12 @@ test('Should reset the data array and set page to 1 when the reload method is ca
         },
         {}
     );
-    datagridStore.init('pagination');
+    datagridStore.init(loadingStrategy, structureStrategy);
 
     page.set(3);
     locale.set('en');
+
+    datagridStore.reload();
 
     when(
         () => !datagridStore.loading,
@@ -446,10 +361,11 @@ test('Should reset the data array and set page to 1 when the reload method is ca
             expect(datagridStore.data.toJS()).toEqual([{'id': 1}]);
 
             datagridStore.reload();
+            expect(structureStrategy.clear).toBeCalled();
 
             expect(page.get()).toBe(1);
             expect(datagridStore.data.toJS()).toEqual([]);
-            expect(ResourceRequester.getList).toBeCalled();
+            expect(loadingStrategy.load).toBeCalled();
 
             datagridStore.destroy();
             done();

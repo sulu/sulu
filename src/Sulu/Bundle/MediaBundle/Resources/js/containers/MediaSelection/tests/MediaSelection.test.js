@@ -75,6 +75,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.deselectEntirePage = jest.fn();
             this.getSchema = jest.fn().mockReturnValue({});
         }),
+        InfiniteScrollingStrategy: jest.fn(),
     };
 });
 

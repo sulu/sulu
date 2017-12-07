@@ -1,14 +1,15 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
-import {AbstractAdapter} from 'sulu-admin-bundle/containers';
+import {AbstractAdapter, InfiniteScrollingStrategy} from 'sulu-admin-bundle/containers';
+import type {LoadingStrategyInterface} from 'sulu-admin-bundle/containers';
 import MediaCardAdapter from './MediaCardAdapter';
 
 const SELECT_ICON = 'check';
 
 @observer
 export default class MediaCardSelectionAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => string = () => { return 'infiniteScroll'; };
+    static getLoadingStrategy: () => LoadingStrategyInterface = () => { return new InfiniteScrollingStrategy(); };
     static getStorageStrategy: () => string = () => { return 'flat'; };
 
     handleItemClick = (itemId: string | number, selected: boolean) => {

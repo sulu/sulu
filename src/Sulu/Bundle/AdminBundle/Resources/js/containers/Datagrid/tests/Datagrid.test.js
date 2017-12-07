@@ -8,6 +8,7 @@ import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
 import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
 import FolderAdapter from '../adapters/FolderAdapter';
+import type {LoadingStrategyInterface} from '../types';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
@@ -43,7 +44,9 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 class TestAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => string = jest.fn().mockReturnValue('pagination');
+    static getLoadingStrategy: () => LoadingStrategyInterface = jest.fn().mockReturnValue({
+        load: jest.fn(),
+    });
     static getStorageStrategy: () => string = jest.fn().mockReturnValue('flat');
 
     render() {
@@ -167,11 +170,11 @@ test('DatagridStore should be initialized correctly on init and update', () => {
         }
     });
     const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
-    expect(datagridStore.init).toBeCalledWith('pagination');
+    expect(datagridStore.init).toBeCalledWith(TableAdapter.getLoadingStrategy());
 
     const newDatagridStore = new DatagridStore('test', {page: observable(1)});
     newDatagridStore.init = jest.fn();
 
     datagrid.setProps({ store: newDatagridStore });
-    expect(newDatagridStore.init).toBeCalledWith('pagination');
+    expect(newDatagridStore.init).toBeCalledWith(FolderAdapter.getLoadingStrategy());
 });

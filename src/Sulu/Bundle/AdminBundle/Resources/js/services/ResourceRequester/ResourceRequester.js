@@ -3,12 +3,6 @@ import Requester from '../Requester';
 import resourceMetadataStore from '../../stores/ResourceMetadataStore';
 import type {ListOptions} from './types';
 
-const listDefaults = {
-    flat: true,
-    page: 1,
-    limit: 10,
-};
-
 export default class ResourceRequester {
     static buildQueryString(queryOptions: ?Object) {
         const options = queryOptions;
@@ -38,9 +32,9 @@ export default class ResourceRequester {
         return Requester.put(baseUrl + '/' + id + ResourceRequester.buildQueryString(queryOptions), data);
     }
 
-    static getList(resourceKey: string, options: ListOptions = listDefaults) {
+    static getList(resourceKey: string, options: ListOptions) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        const queryOptions = {...listDefaults, ...options};
+        const queryOptions = {...options, flat: true};
 
         return Requester.get(baseUrl + ResourceRequester.buildQueryString(queryOptions));
     }

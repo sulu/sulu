@@ -1,10 +1,11 @@
 // @flow
 import {action} from 'mobx';
 import ResourceRequester from '../../../services/ResourceRequester';
+import type {LoadOptions, LoadingStrategyInterface} from '../types';
 
-export default class InfiniteScrollingStrategy {
-    load(data: Array<Object>, resourceKey: string, options: {page: number, locale: string}) {
-        return ResourceRequester.getList(resourceKey, options).then(action((response) => {
+export default class InfiniteScrollingStrategy implements LoadingStrategyInterface {
+    load(data: Array<Object>, resourceKey: string, options: LoadOptions) {
+        return ResourceRequester.getList(resourceKey, {...options, limit: 10}).then(action((response) => {
             const responseData = response._embedded[resourceKey];
             data.push(...responseData);
 

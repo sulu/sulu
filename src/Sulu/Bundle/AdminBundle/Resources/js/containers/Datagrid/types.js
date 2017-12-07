@@ -22,3 +22,12 @@ export type ObservableOptions = {
     page: IObservableValue<number>,
     locale?: IObservableValue<string>,
 };
+
+export type LoadOptions = {
+    page: number,
+    locale?: ?string,
+};
+
+export interface LoadingStrategyInterface {
+    load(data: Array<Object>, resourceKey: string, options: LoadOptions): Promise<Object>,
+}

@@ -1,8 +1,7 @@
 // @flow
 import {action, autorun, intercept, observable, computed} from 'mobx';
 import type {IValueWillChange} from 'mobx'; // eslint-disable-line import/named
-import type {ObservableOptions} from '../types';
-import ResourceRequester from '../../../services/ResourceRequester';
+import type {LoadingStrategyInterface, ObservableOptions} from '../types';
 import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
@@ -10,7 +9,7 @@ export default class DatagridStore {
     @observable data: Array<Object> = [];
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
-    @observable loadingStrategy: ?string;
+    @observable loadingStrategy: LoadingStrategyInterface;
     disposer: () => void;
     resourceKey: string;
     options: Object;
@@ -32,11 +31,11 @@ export default class DatagridStore {
         return !!this.loadingStrategy;
     }
 
-    @action init = (loadingStrategy: string) => {
+    @action init = (loadingStrategy: LoadingStrategyInterface) => {
         this.updateLoadingStrategy(loadingStrategy);
     };
 
-    @action updateLoadingStrategy = (loadingStrategy: string) => {
+    @action updateLoadingStrategy = (loadingStrategy: LoadingStrategyInterface) => {
         if (this.loadingStrategy === loadingStrategy) {
             return;
         }
@@ -50,7 +49,7 @@ export default class DatagridStore {
             this.localeInterceptionDisposer();
         }
 
-        if ('infiniteScroll' === this.loadingStrategy && this.observableOptions.locale) {
+        if ('InfiniteScrollingStrategy' === this.loadingStrategy.constructor.name && this.observableOptions.locale) {
             this.localeInterceptionDisposer = intercept(this.observableOptions.locale, '', this.handleLocaleChanges);
         }
     };
@@ -70,7 +69,7 @@ export default class DatagridStore {
 
     @action reload() {
         const page = this.getPage();
-        this.data = [];
+        this.structureStrategy.clear();
 
         if (page && page > 1) {
             this.setPage(1);
@@ -85,11 +84,6 @@ export default class DatagridStore {
         }
 
         const page = this.getPage();
-        const loadingStrategy = this.loadingStrategy;
-
-        if (!page) {
-            return;
-        }
 
         const observableOptions = {};
         observableOptions.page = page;
@@ -100,23 +94,14 @@ export default class DatagridStore {
 
         this.setLoading(true);
 
-        ResourceRequester.getList(this.resourceKey, {
-            ...observableOptions,
-            ...this.options,
-        }).then(action((response) => {
-            this.handleResponse(response, loadingStrategy);
-        }));
+        this.loadingStrategy.load(this.data, this.resourceKey, {...observableOptions, ...this.options})
+            .then(action((response) => {
+                this.handleResponse(response);
+            }));
     };
 
-    handleResponse = (response: Object, loadingStrategy: ?string) => {
-        const data = response._embedded[this.resourceKey];
-
-        if ('infiniteScroll' === loadingStrategy) {
-            this.data = [...this.data, ...data];
-        } else {
-            this.data = data;
-        }
-
+    // TODO remove
+    handleResponse = (response: Object) => {
         this.pageCount = response.pages;
         this.setLoading(false);
     };

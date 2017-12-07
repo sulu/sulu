@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import 'url-search-params-polyfill';
 import ResourceRequester from '../ResourceRequester';
 import Requester from '../../Requester/Requester';
@@ -37,16 +37,8 @@ test('Should send a get request with passed options as query parameters', () => 
 test('Should send a list get request and return the promise', () => {
     const promise = {};
     Requester.get.mockReturnValue(promise);
-    const result = ResourceRequester.getList('snippets');
+    const result = ResourceRequester.getList('snippets', {page: 1, limit: 10});
     expect(result).toBe(promise);
-});
-
-test('Should send a list get request to the correct URL', () => {
-    ResourceRequester.getList('snippets');
-    expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=1&limit=10');
-
-    ResourceRequester.getList('contacts');
-    expect(Requester.get).toBeCalledWith('/contacts?flat=true&page=1&limit=10');
 });
 
 test('Should send a list get request to the correct URL with page and limit parameters', () => {
@@ -54,17 +46,19 @@ test('Should send a list get request to the correct URL with page and limit para
         page: 3,
         limit: 20,
     });
-    expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=3&limit=20');
+    expect(Requester.get).toBeCalledWith('/snippets?page=3&limit=20&flat=true');
 
     ResourceRequester.getList('snippets', {
         page: 5,
+        limit: 10,
     });
-    expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=5&limit=10');
+    expect(Requester.get).toBeCalledWith('/snippets?page=5&limit=10&flat=true');
 
     ResourceRequester.getList('snippets', {
+        page: 1,
         limit: 5,
     });
-    expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=1&limit=5');
+    expect(Requester.get).toBeCalledWith('/snippets?page=1&limit=5&flat=true');
 });
 
 test('Should send a put request and return the promise', () => {
@@ -87,7 +81,7 @@ test('Should send a put request with passed options as query parameters', () => 
 test('Should send a delete request and return the promise', () => {
     const promise = {};
     Requester.delete.mockReturnValue(promise);
-    const result = ResourceRequester.delete('snippets');
+    const result = ResourceRequester.delete('snippets', 1);
     expect(result).toBe(promise);
 });
 

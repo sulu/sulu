@@ -77,6 +77,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.select = jest.fn();
             this.getSchema = jest.fn().mockReturnValue({});
         }),
+        InfiniteScrollingStrategy: jest.fn(),
     };
 });
 

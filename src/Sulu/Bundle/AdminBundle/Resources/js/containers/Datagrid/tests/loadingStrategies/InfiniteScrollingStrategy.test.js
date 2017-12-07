@@ -21,7 +21,9 @@ test('Should load items and add to empty array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    infiniteScrollingStrategy.load(data, 'snippets');
+    infiniteScrollingStrategy.load(data, 'snippets', {
+        page: 2,
+    });
 
     return promise.then(() => {
         expect(data).toEqual([
@@ -48,7 +50,10 @@ test('Should load items and add to existing entries in array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    infiniteScrollingStrategy.load(data, 'snippets');
+    infiniteScrollingStrategy.load(data, 'snippets', {
+        page: 1,
+        locale: 'en',
+    });
 
     return promise.then(() => {
         expect(data).toEqual([
@@ -69,5 +74,5 @@ test('Should load items with correct options', () => {
         locale: 'en',
     });
 
-    expect(ResourceRequester.getList).toBeCalledWith('snippets', {page: 2, locale: 'en'});
+    expect(ResourceRequester.getList).toBeCalledWith('snippets', {limit: 10, page: 2, locale: 'en'});
 });
