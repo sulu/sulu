@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.10 (2017-12-07)
+    * HOTFIX      #3682 [CoreBundle]              Reintroduce cache builder for sulu:build command
+
 * 1.6.9 (2017-12-04)
     * ENHANCEMENT #3665 [CategoryBundle]          Added keywords to category serialization
     * HOTFIX      #3671 [CoreBundle]              Remove cache builder from sulu:build command
