@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.10 (2017-12-07)
     * HOTFIX      #3682 [CoreBundle]              Reintroduce cache builder for sulu:build command
 
 * 1.6.9 (2017-12-04)
