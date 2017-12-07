@@ -42,14 +42,15 @@ class CacheBuilder extends SuluBuilder
     public function build()
     {
         @trigger_error(
-            'CacheBuilder is deprecated since version 1.6.10 and will be removed in 2.0 use the default symfony command cache:clear instead.',
+            'CacheBuilder is deprecated since version 1.6.10 and will be removed in 2.0 use the default symfony command "cache:clear" instead.',
             E_USER_DEPRECATED
         );
 
         if (version_compare(Kernel::VERSION, '3.4.0') >= 0) {
-            @trigger_error(
-                'Skip clearing the cache with sulu:build as it is not longer supported with Symfony >=3.4 use cache:clear command instead.',
-                E_USER_DEPRECATED
+            $this->output->writeln(
+                '<comment>Skip clearing the cache.' . PHP_EOL
+                . 'This is not longer supported with Symfony >=3.4 use "cache:clear" command instead.</comment>'
+                . PHP_EOL
             );
 
             return;
