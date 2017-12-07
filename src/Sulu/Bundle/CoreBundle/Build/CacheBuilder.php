@@ -64,4 +64,3 @@ class CacheBuilder extends SuluBuilder
         $this->execCommand('Deleting symfony cache', 'cache:clear', $options);
     }
 }
-
