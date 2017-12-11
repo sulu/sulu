@@ -40,19 +40,33 @@ class SnippetDocument implements
     LocalizedTitleBehavior
 {
     private $created;
+
     private $changed;
+
     private $creator;
+
     private $changer;
+
     private $parent;
+
     private $title;
+
     private $workflowStage;
+
     private $published;
+
     private $uuid;
+
     private $structureType;
+
     private $structure;
+
     private $locale;
+
     private $originalLocale;
+
     private $path;
+
     private $nodeName;
 
     public function __construct()

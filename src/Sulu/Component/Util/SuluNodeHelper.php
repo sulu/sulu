@@ -184,7 +184,7 @@ class SuluNodeHelper
      */
     public function extractSnippetTypeFromPath($path)
     {
-        if (substr($path, 0, 1) !== '/') {
+        if ('/' !== substr($path, 0, 1)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Path must be absolute, got "%s"',

@@ -153,7 +153,7 @@ class Collection extends ApiWrapper
      *
      * @param Collection $child
      */
-    public function addChild(Collection $child)
+    public function addChild(self $child)
     {
         $this->children[] = $child;
     }
@@ -180,7 +180,7 @@ class Collection extends ApiWrapper
      */
     public function getHasSub()
     {
-        if (($children = $this->getEntity()->getChildren()) !== null) {
+        if (null !== ($children = $this->getEntity()->getChildren())) {
             return $children->count() > 0;
         }
 
@@ -233,7 +233,7 @@ class Collection extends ApiWrapper
      */
     public function setParent($parent)
     {
-        if ($parent !== null) {
+        if (null !== $parent) {
             $this->entity->setParent($parent->getEntity());
         } else {
             $this->entity->setParent(null);
@@ -558,7 +558,7 @@ class Collection extends ApiWrapper
     public function getLocked()
     {
         return !$this->entity->getType()
-            || $this->entity->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE;
+            || SystemCollectionManagerInterface::COLLECTION_TYPE === $this->entity->getType()->getKey();
     }
 
     /**

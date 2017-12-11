@@ -17,6 +17,7 @@ class StateTransitionException extends StateException
      * @var int
      */
     private $from;
+
     /**
      * @var int
      */

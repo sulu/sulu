@@ -29,6 +29,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 abstract class BaseContext extends RawMinkContext implements Context, KernelAwareContext
 {
     const LONG_WAIT_TIME = 30000;
+
     const MEDIUM_WAIT_TIME = 5000;
 
     /**
@@ -86,7 +87,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
         $output = new StreamOutput(fopen('php://memory', 'w', false));
         $exitCode = $application->run($input, $output);
 
-        if ($exitCode !== 0) {
+        if (0 !== $exitCode) {
             rewind($output->getStream());
             $output = stream_get_contents($output->getStream());
 

@@ -81,7 +81,7 @@ class StructureProvider implements LocalizedReindexProviderInterface
     {
         $document = $this->documentManager->find($this->inspector->getUuid($object), $locale);
 
-        if ($document instanceof WorkflowStageBehavior && $this->context === SuluKernel::CONTEXT_ADMIN) {
+        if ($document instanceof WorkflowStageBehavior && SuluKernel::CONTEXT_ADMIN === $this->context) {
             // set the workflowstage to test, so that the document will be indexed in the index for drafting
             // this change must not be persisted
             // is required because of the expression for the index name uses the workflowstage

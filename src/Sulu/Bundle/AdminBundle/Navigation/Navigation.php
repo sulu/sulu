@@ -20,7 +20,7 @@ class Navigation
 
     public function __construct(NavigationItem $root = null)
     {
-        if ($root == null) {
+        if (null == $root) {
             $root = new NavigationItem('');
         }
         $this->root = $root;
@@ -42,7 +42,7 @@ class Navigation
      *
      * @return Navigation
      */
-    public function merge(Navigation $navigation)
+    public function merge(self $navigation)
     {
         return new self($this->getRoot()->merge($navigation->getRoot()));
     }

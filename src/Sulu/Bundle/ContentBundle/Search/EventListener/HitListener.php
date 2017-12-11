@@ -43,7 +43,7 @@ class HitListener
         }
 
         $document = $event->getHit()->getDocument();
-        if ($document->getUrl()[0] !== '/') {
+        if ('/' !== $document->getUrl()[0]) {
             // is absolute URL
 
             return;

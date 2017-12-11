@@ -64,14 +64,14 @@ class KeywordManager implements KeywordManagerInterface
             throw new KeywordIsMultipleReferencedException($keyword);
         }
 
-        if ($keyword->getId() !== null
-            && $force !== self::FORCE_MERGE
-            && $this->keywordRepository->findByKeyword($keyword->getKeyword(), $keyword->getLocale()) !== null
+        if (null !== $keyword->getId()
+            && self::FORCE_MERGE !== $force
+            && null !== $this->keywordRepository->findByKeyword($keyword->getKeyword(), $keyword->getLocale())
         ) {
             throw new KeywordNotUniqueException($keyword);
         }
 
-        if ($force === self::FORCE_DETACH || $force === self::FORCE_MERGE) {
+        if (self::FORCE_DETACH === $force || self::FORCE_MERGE === $force) {
             return $this->handleDetach($keyword, $category);
         }
 

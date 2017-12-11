@@ -53,6 +53,7 @@ class DataCache implements CacheInterface
         $umask = umask();
         $filesystem = new Filesystem();
         $filesystem->dumpFile($this->file, serialize($data), null);
+
         try {
             $filesystem->chmod($this->file, $mode, $umask);
         } catch (IOException $e) {

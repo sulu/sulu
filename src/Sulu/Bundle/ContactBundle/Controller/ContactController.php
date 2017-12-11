@@ -41,7 +41,9 @@ class ContactController extends RestController implements ClassResourceInterface
      * {@inheritdoc}
      */
     protected static $entityKey = 'contacts';
+
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
+
     protected static $positionEntityName = 'SuluContactBundle:Position';
 
     // serialization groups for contact
@@ -64,6 +66,7 @@ class ContactController extends RestController implements ClassResourceInterface
     protected $bundlePrefix = 'contact.contacts.';
 
     // TODO: move the field descriptors to a manager
+
     /**
      * @var DoctrineFieldDescriptor[]
      */
@@ -81,7 +84,7 @@ class ContactController extends RestController implements ClassResourceInterface
 
     protected function getFieldDescriptors()
     {
-        if ($this->fieldDescriptors === null) {
+        if (null === $this->fieldDescriptors) {
             $this->initFieldDescriptors();
         }
 
@@ -90,7 +93,7 @@ class ContactController extends RestController implements ClassResourceInterface
 
     protected function getAccountContactFieldDescriptors()
     {
-        if ($this->accountContactFieldDescriptors === null) {
+        if (null === $this->accountContactFieldDescriptors) {
             $this->initFieldDescriptors();
         }
 
@@ -203,10 +206,10 @@ class ContactController extends RestController implements ClassResourceInterface
         $serializationGroups = [];
         $locale = $this->getLocale($request);
 
-        if ($request->get('flat') == 'true') {
+        if ('true' == $request->get('flat')) {
             $list = $this->getList($request, $locale);
         } else {
-            if ($request->get('bySystem') == true) {
+            if (true == $request->get('bySystem')) {
                 $contacts = $this->getContactsByUserSystem();
                 $serializationGroups[] = 'select';
             } else {
@@ -291,18 +294,18 @@ class ContactController extends RestController implements ClassResourceInterface
     {
         $idsParameter = $request->get('ids');
         $ids = array_filter(explode(',', $idsParameter));
-        if ($idsParameter !== null && count($ids) === 0) {
+        if (null !== $idsParameter && 0 === count($ids)) {
             return [];
         }
 
-        if ($idsParameter !== null) {
+        if (null !== $idsParameter) {
             $listBuilder->in($this->fieldDescriptors['id'], $ids);
         }
 
         $listResponse = $listBuilder->execute();
         $listResponse = $this->addAvatars($listResponse, $locale);
 
-        if ($idsParameter !== null) {
+        if (null !== $idsParameter) {
             $comparator = $this->getComparator();
             // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
             @usort(
@@ -527,13 +530,13 @@ class ContactController extends RestController implements ClassResourceInterface
 
     private function checkArguments(Request $request)
     {
-        if ($request->get('firstName') == null) {
+        if (null == $request->get('firstName')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'username');
         }
-        if ($request->get('lastName') === null) {
+        if (null === $request->get('lastName')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'password');
         }
-        if ($request->get('formOfAddress') == null) {
+        if (null == $request->get('formOfAddress')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'contact');
         }
     }

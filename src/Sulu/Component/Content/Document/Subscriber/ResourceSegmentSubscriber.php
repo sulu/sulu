@@ -199,7 +199,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($document instanceof RedirectTypeBehavior && $document->getRedirectType() !== RedirectType::NONE) {
+        if ($document instanceof RedirectTypeBehavior && RedirectType::NONE !== $document->getRedirectType()) {
             return;
         }
 
@@ -224,7 +224,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         }
 
         $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
-        if ($resourceLocatorStrategy->getInputType() !== ResourceLocatorStrategyInterface::INPUT_TYPE_LEAF) {
+        if (ResourceLocatorStrategyInterface::INPUT_TYPE_LEAF !== $resourceLocatorStrategy->getInputType()) {
             return;
         }
 
@@ -332,7 +332,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         foreach ($locales as $locale) {
             $localizedDocument = $this->documentManager->find($uuid, $locale);
 
-            if ($localizedDocument->getRedirectType() !== RedirectType::NONE) {
+            if (RedirectType::NONE !== $localizedDocument->getRedirectType()) {
                 continue;
             }
 

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
-use Doctrine\Entity;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;

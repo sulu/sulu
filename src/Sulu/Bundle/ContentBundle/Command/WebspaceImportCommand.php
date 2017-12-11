@@ -41,7 +41,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
     {
         $webspaceKey = $input->getArgument('webspace');
         $filePath = $input->getArgument('file');
-        if (!strpos($filePath, '/') === 0) {
+        if (0 === !strpos($filePath, '/')) {
             $filePath = getcwd() . '/' . $filePath;
         }
         $locale = $input->getArgument('locale');

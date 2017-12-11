@@ -22,6 +22,7 @@ use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
 class HtmlMarkupParserTest extends \PHPUnit_Framework_TestCase
 {
     const VALIDATE_UNPUBLISHED = 'unpublished';
+
     const VALIDATE_REMOVED = 'removed';
 
     /**

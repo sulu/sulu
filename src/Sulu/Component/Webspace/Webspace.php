@@ -436,8 +436,8 @@ class Webspace implements ArrayableInterface
         foreach ($this->getPortals() as $portal) {
             foreach ($portal->getEnvironment($environment)->getUrls() as $url) {
                 $host = parse_url('//' . $url->getUrl())['host'];
-                if (($locale === null || $url->isValidLocale($language, $country))
-                    && ($host === $domain || $host === '{host}')
+                if ((null === $locale || $url->isValidLocale($language, $country))
+                    && ($host === $domain || '{host}' === $host)
                 ) {
                     return true;
                 }
@@ -559,7 +559,7 @@ class Webspace implements ArrayableInterface
         }
 
         $thisSecurity = $this->getSecurity();
-        if ($thisSecurity != null) {
+        if (null != $thisSecurity) {
             $res['security']['system'] = $thisSecurity->getSystem();
         }
 

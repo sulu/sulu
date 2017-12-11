@@ -105,7 +105,7 @@ class RedirectController extends Controller
             && (
                 // if requested url not starting with redirectUrl it need to be added
                 !isset($requestInfo['path'])
-                || strpos($requestInfo['path'], $redirectInfo['path'] . '/') !== 0
+                || 0 !== strpos($requestInfo['path'], $redirectInfo['path'] . '/')
             )
         ) {
             $url .= $redirectInfo['path'];

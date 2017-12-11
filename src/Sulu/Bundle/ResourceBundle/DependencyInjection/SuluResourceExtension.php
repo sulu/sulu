@@ -78,7 +78,7 @@ class SuluResourceExtension extends Extension
     {
         if (!array_key_exists('filters', $config) ||
             !array_key_exists('conjunctions', $config['filters']) ||
-            count($config['filters']['conjunctions']) === 0
+            0 === count($config['filters']['conjunctions'])
         ) {
             $config['filters'] = [];
             $config['filters']['conjunctions'] = [

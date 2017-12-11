@@ -75,6 +75,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     ];
 
     private static $entityName = 'SuluCoreBundle:Example';
+
     private static $translationEntityName = 'SuluCoreBundle:ExampleTranslation';
 
     public function setUp()

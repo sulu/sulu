@@ -72,10 +72,10 @@ class TranslatedProperty implements PropertyInterface
         if ($this->property->getMultilingual()) {
             return $this->languageNamespace .
             ':' . $this->localization .
-            '-' . ($this->additionalPrefix !== null ? $this->additionalPrefix . '-' : '') .
+            '-' . (null !== $this->additionalPrefix ? $this->additionalPrefix . '-' : '') .
             $this->property->getName();
         } else {
-            return ($this->additionalPrefix !== null ? $this->additionalPrefix . '-' : '') . $this->property->getName();
+            return (null !== $this->additionalPrefix ? $this->additionalPrefix . '-' : '') . $this->property->getName();
         }
     }
 

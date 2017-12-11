@@ -135,7 +135,7 @@ class XmlLegacyLoader implements LoaderInterface
             // check all section properties as well
             foreach ($result['properties'] as $property) {
                 if (!$requiredPropertyNameFound
-                    && $property['type'] == 'section'
+                    && 'section' == $property['type']
                     && array_key_exists($requiredPropertyName, $property['properties'])
                 ) {
                     $requiredPropertyNameFound = true;
@@ -167,7 +167,7 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadTemplateAttributes($resource, \DOMXPath $xpath, $type)
     {
-        if ($type === 'page' || $type === 'home') {
+        if ('page' === $type || 'home' === $type) {
             $result = [
                 'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
                 'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
@@ -181,7 +181,7 @@ class XmlLegacyLoader implements LoaderInterface
             $result = array_filter(
                 $result,
                 function ($value) {
-                    return $value !== null;
+                    return null !== $value;
                 }
             );
 
@@ -226,13 +226,13 @@ class XmlLegacyLoader implements LoaderInterface
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
-            if ($node->tagName === 'property') {
+            if ('property' === $node->tagName) {
                 $value = $this->loadProperty($templateKey, $xpath, $node, $tags);
                 $result[$value['name']] = $value;
-            } elseif ($node->tagName === 'block') {
+            } elseif ('block' === $node->tagName) {
                 $value = $this->loadBlock($templateKey, $xpath, $node, $tags);
                 $result[$value['name']] = $value;
-            } elseif ($node->tagName === 'section') {
+            } elseif ('section' === $node->tagName) {
                 $value = $this->loadSection($templateKey, $xpath, $node, $tags);
                 $result[$value['name']] = $value;
             }
@@ -545,12 +545,12 @@ class XmlLegacyLoader implements LoaderInterface
     {
         try {
             $result = $xpath->query($path, $context);
-            if ($result->length === 0) {
+            if (0 === $result->length) {
                 return $default;
             }
 
             $item = $result->item(0);
-            if ($item === null) {
+            if (null === $item) {
                 return $default;
             }
 

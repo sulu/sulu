@@ -261,7 +261,7 @@ abstract class RestController extends FOSRestController
                 'disabled' => in_array($field, $fieldsHidden) ? true : false,
                 'default' => in_array($field, $this->fieldsDefault) ? true : null,
                 'editable' => in_array($field, $this->fieldsEditable) ? true : null,
-                'width' => ($fieldWidth != null) ? $fieldWidth : null,
+                'width' => (null != $fieldWidth) ? $fieldWidth : null,
                 'minWidth' => array_key_exists($field, $this->fieldsMinWidth) ? $this->fieldsMinWidth[$field] : null,
                 'type' => $type,
                 'validation' => array_key_exists($field, $this->fieldsValidation) ?
@@ -291,7 +291,7 @@ abstract class RestController extends FOSRestController
                 return preg_replace('/(.*' . $key . ')([\,|\w]*)(\&*.*)/', '${1}' . $value . '${3}', $url);
             } else {
                 if ($add) {
-                    $and = (strpos($url, '?') === false) ? '?' : '&';
+                    $and = (false === strpos($url, '?')) ? '?' : '&';
 
                     return $url . $and . $key . $value;
                 }
@@ -382,7 +382,7 @@ abstract class RestController extends FOSRestController
     {
         $success = true;
         // default for entityIdCallback
-        if ($entityIdCallback === null) {
+        if (null === $entityIdCallback) {
             $entityIdCallback = function ($entity) {
                 return $entity->getId();
             };
@@ -392,7 +392,7 @@ abstract class RestController extends FOSRestController
             foreach ($entities as $entity) {
                 $this->findMatch($requestEntities, $entityIdCallback($entity), $matchedEntry, $matchedKey);
 
-                if ($matchedEntry == null) {
+                if (null == $matchedEntry) {
                     // delete entity if it is not listed anymore
                     $deleteCallback($entity);
                 } else {
@@ -404,7 +404,7 @@ abstract class RestController extends FOSRestController
                 }
 
                 // Remove done element from array
-                if ($matchedKey !== null) {
+                if (null !== $matchedKey) {
                     unset($requestEntities[$matchedKey]);
                 }
             }

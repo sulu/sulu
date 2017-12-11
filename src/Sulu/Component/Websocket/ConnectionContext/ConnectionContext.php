@@ -15,7 +15,6 @@ use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\QueryString;
 use Ratchet\ConnectionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -99,7 +98,7 @@ class ConnectionContext implements ConnectionContextInterface
      */
     public function getToken($firewall)
     {
-        if ($this->session !== null) {
+        if (null !== $this->session) {
             return unserialize($this->session->get('_security_' . $firewall));
         }
 

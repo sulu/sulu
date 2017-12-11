@@ -37,9 +37,6 @@ class RequestListener
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onRequest(GetResponseEvent $event)
     {
         $context = $this->router->getContext();

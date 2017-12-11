@@ -26,7 +26,7 @@ class AccountListener
         if ($entity instanceof AccountInterface) {
             $entityManager = $args->getEntityManager();
             // after saving account check if number is set, else set a new one
-            if ($entity->getNumber() === null) {
+            if (null === $entity->getNumber()) {
                 $entity->setNumber(sprintf('%05d', $entity->getId()));
                 $entityManager->flush();
             }

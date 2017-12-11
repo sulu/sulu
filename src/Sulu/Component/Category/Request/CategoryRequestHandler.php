@@ -33,7 +33,7 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
      */
     public function getCategories($categoriesParameter = 'categories')
     {
-        if ($this->requestStack->getCurrentRequest() !== null) {
+        if (null !== $this->requestStack->getCurrentRequest()) {
             $categories = $this->requestStack->getCurrentRequest()->get($categoriesParameter, '');
         } else {
             $categories = '';

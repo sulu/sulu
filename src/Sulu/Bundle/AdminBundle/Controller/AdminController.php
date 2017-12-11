@@ -153,7 +153,7 @@ class AdminController
         $jsConfig = $this->jsConfigPool->getConfigParams();
 
         // render template
-        if ($this->environment === 'dev') {
+        if ('dev' === $this->environment) {
             $template = 'SuluAdminBundle:Admin:index.html.twig';
         } else {
             $template = 'SuluAdminBundle:Admin:index.html.dist.twig';
@@ -189,7 +189,7 @@ class AdminController
 
         foreach ($this->adminPool->getAdmins() as $admin) {
             $name = $admin->getJsBundleName();
-            if ($name !== null) {
+            if (null !== $name) {
                 $admins[] = $name;
             }
         }

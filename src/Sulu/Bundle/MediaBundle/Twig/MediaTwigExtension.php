@@ -81,7 +81,7 @@ class MediaTwigExtension extends \Twig_Extension
      */
     public function resolveMediasFunction($medias, $locale)
     {
-        if (count($medias) === 0) {
+        if (0 === count($medias)) {
             return [];
         }
 

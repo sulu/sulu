@@ -75,7 +75,7 @@ class MetaTwigExtension extends \Twig_Extension
         $currentPortal = $this->requestAnalyzer->getPortal();
 
         $defaultLocale = null;
-        if ($currentPortal !== null && ($defaultLocale = $currentPortal->getXDefaultLocalization()) !== null) {
+        if (null !== $currentPortal && null !== ($defaultLocale = $currentPortal->getXDefaultLocalization())) {
             $defaultLocale = $defaultLocale->getLocalization();
         }
 
@@ -83,7 +83,7 @@ class MetaTwigExtension extends \Twig_Extension
         foreach ($urls as $locale => $url) {
             // url = '/' means that there is no translation for this page
             // the only exception is the homepage where the requested resource-locator is '/'
-            if ($url !== '/' || $this->requestAnalyzer->getResourceLocator() === '/') {
+            if ('/' !== $url || '/' === $this->requestAnalyzer->getResourceLocator()) {
                 if ($locale === $defaultLocale) {
                     $result[] = $this->getAlternate($url, $webspaceKey, $locale, true);
                 }
@@ -117,8 +117,8 @@ class MetaTwigExtension extends \Twig_Extension
 
         // fallback for seo description
         if (
-            (!array_key_exists('description', $seo) || $seo['description'] === '') &&
-            array_key_exists('description', $excerpt) && $excerpt['description'] !== ''
+            (!array_key_exists('description', $seo) || '' === $seo['description']) &&
+            array_key_exists('description', $excerpt) && '' !== $excerpt['description']
         ) {
             $seo['description'] = strip_tags($excerpt['description']);
         }
@@ -127,8 +127,8 @@ class MetaTwigExtension extends \Twig_Extension
 
         // generate robots content
         $robots = [];
-        $robots[] = (array_key_exists('noIndex', $seo) && $seo['noIndex'] === true) ? 'noIndex' : 'index';
-        $robots[] = (array_key_exists('noFollow', $seo) && $seo['noFollow'] === true) ? 'noFollow' : 'follow';
+        $robots[] = (array_key_exists('noIndex', $seo) && true === $seo['noIndex']) ? 'noIndex' : 'index';
+        $robots[] = (array_key_exists('noFollow', $seo) && true === $seo['noFollow']) ? 'noFollow' : 'follow';
 
         // build meta tags
         $result = [];

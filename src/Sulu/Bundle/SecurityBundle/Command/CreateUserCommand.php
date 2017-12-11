@@ -225,7 +225,7 @@ class CreateUserCommand extends ContainerAwareCommand
                     if (empty($email)) {
                         $email = null;
                     }
-                    if ($email !== null) {
+                    if (null !== $email) {
                         $users = $userRepository->findBy(['email' => $email]);
                         if (count($users) > 0) {
                             throw new \InvalidArgumentException(sprintf('Email "%s" is not unique', $email));

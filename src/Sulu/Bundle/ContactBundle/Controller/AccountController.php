@@ -44,11 +44,17 @@ class AccountController extends RestController implements ClassResourceInterface
      * {@inheritdoc}
      */
     protected static $entityKey = 'accounts';
+
     protected static $positionEntityName = 'SuluContactBundle:Position';
+
     protected static $contactEntityKey = 'contacts';
+
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
+
     protected static $addressEntityName = 'SuluContactBundle:Address';
+
     protected static $accountAddressEntityName = 'SuluContactBundle:AccountAddress';
+
     protected static $countryEntityName = 'SuluContactBundle:Country';
 
     protected static $accountSerializationGroups = [
@@ -68,15 +74,19 @@ class AccountController extends RestController implements ClassResourceInterface
      * @var AccountManager
      */
     protected $accountManager;
+
     protected $locale;
 
     // TODO: Move the field descriptors to a manager -
     // or better -> refactor the whole file!
+
     /**
      * @var DoctrineFieldDescriptor[]
      */
     protected $fieldDescriptors;
+
     protected $accountContactFieldDescriptors;
+
     protected $accountAddressesFieldDescriptors;
 
     /**
@@ -133,7 +143,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function getContactsAction($id, Request $request)
     {
-        if ($request->get('flat') == 'true') {
+        if ('true' == $request->get('flat')) {
             /* @var AccountInterface $account */
             $account = $this->getDoctrine()
                 ->getRepository($this->getAccountEntityName())
@@ -162,7 +172,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $value['id'] = $value['contactId'];
                 unset($value['contactId']);
 
-                if ($account->getMainContact() != null && $value['id'] === $account->getMainContact()->getId()) {
+                if (null != $account->getMainContact() && $value['id'] === $account->getMainContact()->getId()) {
                     $value['isMainContact'] = true;
                 } else {
                     $value['isMainContact'] = false;
@@ -200,7 +210,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function getAddressesAction($id, Request $request)
     {
-        if ($request->get('flat') == 'true') {
+        if ('true' == $request->get('flat')) {
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->getRestHelper();
 
@@ -372,7 +382,7 @@ class AccountController extends RestController implements ClassResourceInterface
         $locale = $this->getUser()->getLocale();
         $filter = $this->retrieveFilter($request, $numberIdsFilter);
 
-        if ($request->get('flat') == 'true') {
+        if ('true' == $request->get('flat')) {
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -486,7 +496,7 @@ class AccountController extends RestController implements ClassResourceInterface
         $name = $request->get('name');
 
         try {
-            if ($name == null) {
+            if (null == $name) {
                 throw new RestException('There is no name for the account given');
             }
 
@@ -527,7 +537,7 @@ class AccountController extends RestController implements ClassResourceInterface
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
 
-        if ($request->get('uid') !== null) {
+        if (null !== $request->get('uid')) {
             $account->setUid($request->get('uid'));
         }
 
@@ -609,7 +619,7 @@ class AccountController extends RestController implements ClassResourceInterface
         $account->setCorporation($request->get('corporation'));
         $accountManager = $this->getAccountManager();
 
-        if ($request->get('uid') !== null) {
+        if (null !== $request->get('uid')) {
             $account->setUid($request->get('uid'));
         }
 
@@ -647,7 +657,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     private function setParent($parentData, AccountInterface $account)
     {
-        if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
+        if (null != $parentData && isset($parentData['id']) && 'null' != $parentData['id'] && '' != $parentData['id']) {
             $parent = $this->getDoctrine()
                 ->getRepository($this->getAccountEntityName())
                 ->findAccountById($parentData['id']);
@@ -713,27 +723,27 @@ class AccountController extends RestController implements ClassResourceInterface
     protected function doPatch(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
         $accountManager = $this->getAccountManager();
-        if ($request->get('uid') !== null) {
+        if (null !== $request->get('uid')) {
             $account->setUid($request->get('uid'));
         }
-        if ($request->get('registerNumber') !== null) {
+        if (null !== $request->get('registerNumber')) {
             $account->setRegisterNumber($request->get('registerNumber'));
         }
-        if ($request->get('number') !== null) {
+        if (null !== $request->get('number')) {
             $account->setNumber($request->get('number'));
         }
-        if ($request->get('placeOfJurisdiction') !== null) {
+        if (null !== $request->get('placeOfJurisdiction')) {
             $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
         }
         if (array_key_exists('id', $request->get('logo', []))) {
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
-        if ($request->get('medias') !== null) {
+        if (null !== $request->get('medias')) {
             $accountManager->setMedias($account, $request->get('medias'));
         }
 
         // Check if mainContact is set
-        if (($mainContactRequest = $request->get('mainContact')) !== null) {
+        if (null !== ($mainContactRequest = $request->get('mainContact'))) {
             $mainContact = $entityManager->getRepository(
                 $this->container->getParameter('sulu.model.contact.class')
             )->find($mainContactRequest['id']);
@@ -743,7 +753,7 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         // Process details
-        if ($request->get('bankAccounts') !== null) {
+        if (null !== $request->get('bankAccounts')) {
             $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
         }
     }
@@ -779,8 +789,8 @@ class AccountController extends RestController implements ClassResourceInterface
             }
 
             // Remove related contacts if removeContacts is true.
-            if ($request->get('removeContacts') !== null &&
-                $request->get('removeContacts') == 'true'
+            if (null !== $request->get('removeContacts') &&
+                'true' == $request->get('removeContacts')
             ) {
                 foreach ($account->getAccountContacts() as $accountContact) {
                     $em->remove($accountContact->getContact());
@@ -851,12 +861,12 @@ class AccountController extends RestController implements ClassResourceInterface
             ->getRepository($this->getAccountEntityName())
             ->findChildrenAndContacts($id);
 
-        if ($account != null) {
+        if (null != $account) {
             // Return a maximum of 3 accounts.
             $slicedContacts = [];
             $accountContacts = $account->getAccountContacts();
             $numContacts = 0;
-            if ($accountContacts !== null) {
+            if (null !== $accountContacts) {
                 foreach ($accountContacts as $accountContact) {
                     /* @var AccountContactEntity $accountContact */
                     $contactId = $accountContact->getContact()->getId();
@@ -924,7 +934,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
     protected function getFieldDescriptors()
     {
-        if ($this->fieldDescriptors === null) {
+        if (null === $this->fieldDescriptors) {
             $this->initFieldDescriptors();
         }
 
@@ -936,7 +946,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function getAccountContactFieldDescriptors()
     {
-        if ($this->accountContactFieldDescriptors === null) {
+        if (null === $this->accountContactFieldDescriptors) {
             $this->initAccountContactFieldDescriptors();
         }
 
@@ -948,7 +958,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function getAccountAddressesFieldDescriptors()
     {
-        if ($this->accountAddressesFieldDescriptors === null) {
+        if (null === $this->accountAddressesFieldDescriptors) {
             $this->initAccountAddressesFieldDescriptors();
         }
 

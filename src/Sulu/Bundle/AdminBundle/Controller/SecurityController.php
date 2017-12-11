@@ -74,7 +74,7 @@ class SecurityController extends Controller
      */
     protected function getTemplate()
     {
-        if ($this->get('kernel')->getEnvironment() === 'dev') {
+        if ('dev' === $this->get('kernel')->getEnvironment()) {
             return 'SuluAdminBundle:Security:login.html.twig';
         }
 

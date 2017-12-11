@@ -43,6 +43,6 @@ class AuthenticatedConnectionContext extends ConnectionContext implements Authen
      */
     public function isValid()
     {
-        return $this->getUser($this->firewall) !== null;
+        return null !== $this->getUser($this->firewall);
     }
 }

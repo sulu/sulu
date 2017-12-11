@@ -21,9 +21,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Version201507231648 implements VersionInterface, ContainerAwareInterface
 {
     const SHADOW_ON_PROPERTY = 'i18n:%s-shadow-on';
+
     const SHADOW_BASE_PROPERTY = 'i18n:%s-shadow-base';
+
     const TAGS_PROPERTY = 'i18n:%s-excerpt-tags';
+
     const CATEGORIES_PROPERTY = 'i18n:%s-excerpt-categories';
+
     const NAVIGATION_CONTEXT_PROPERTY = 'i18n:%s-navContexts';
 
     /**

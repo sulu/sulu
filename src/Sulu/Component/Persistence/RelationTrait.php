@@ -134,10 +134,10 @@ trait RelationTrait
                 // find match callback
                 $compare($entity, $requestEntities, $matchedEntry, $matchedKey);
 
-                if ($matchedEntry == null && $delete != null) {
+                if (null == $matchedEntry && null != $delete) {
                     // delete entity if it is not listed anymore
                     $delete($entity);
-                } elseif ($update != null) {
+                } elseif (null != $update) {
                     // update entity if it is matched
                     $success = $update($entity, $matchedEntry);
                     if (!$success) {
@@ -146,14 +146,14 @@ trait RelationTrait
                 }
 
                 // Remove done element from array
-                if ($matchedKey !== null) {
+                if (null !== $matchedKey) {
                     unset($requestEntities[$matchedKey]);
                 }
             }
         }
 
         // The entity which have not been delete or updated have to be added
-        if (!empty($requestEntities) && $add != null) {
+        if (!empty($requestEntities) && null != $add) {
             foreach ($requestEntities as $entity) {
                 if (!$success) {
                     break;

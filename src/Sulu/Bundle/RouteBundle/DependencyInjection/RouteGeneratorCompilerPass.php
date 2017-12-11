@@ -21,7 +21,9 @@ use Symfony\Component\DependencyInjection\Reference;
 class RouteGeneratorCompilerPass implements CompilerPassInterface
 {
     const TAG_NAME = 'sulu.route_generator';
+
     const SERVICE_ID = 'sulu_route.manager.route_manager';
+
     const PARAMETER_NAME = 'sulu_route.mappings';
 
     /**

@@ -20,8 +20,11 @@ use Sulu\Component\Util\ArrayableInterface;
 class Localization implements \JsonSerializable, ArrayableInterface
 {
     const UNDERSCORE = 'de_at';
+
     const DASH = 'de-at';
+
     const ISO6391 = 'de-AT';
+
     const LCID = 'de_AT';
 
     /**
@@ -171,7 +174,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @param Localization $child
      */
-    public function addChild(Localization $child)
+    public function addChild(self $child)
     {
         $this->children[] = $child;
     }
@@ -208,10 +211,10 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function getLocalization($delimiter = '_')
     {
-        @trigger_error(__method__ . '() is deprecated since version 1.2 and will be removed in 2.0. Use getLocale() instead.', E_USER_DEPRECATED);
+        @trigger_error(__METHOD__ . '() is deprecated since version 1.2 and will be removed in 2.0. Use getLocale() instead.', E_USER_DEPRECATED);
 
         $localization = $this->getLanguage();
-        if ($this->getCountry() != null) {
+        if (null != $this->getCountry()) {
             $localization .= $delimiter . $this->getCountry();
         }
 
@@ -258,7 +261,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @param Localization $parent
      */
-    public function setParent(Localization $parent)
+    public function setParent(self $parent)
     {
         $this->parent = $parent;
     }
@@ -345,7 +348,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public function getAllLocalizations()
     {
         $localizations = [];
-        if ($this->getChildren() !== null && count($this->getChildren()) > 0) {
+        if (null !== $this->getChildren() && count($this->getChildren()) > 0) {
             foreach ($this->getChildren() as $child) {
                 $localizations[] = $child;
                 $localizations = array_merge($localizations, $child->getAllLocalizations());

@@ -146,7 +146,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $generator = new Generator(new Replacer());
         $result = $generator->generate($baseDomain, $domainParts, $locales);
 
-        if ($expected === null) {
+        if (null === $expected) {
             return;
         }
 

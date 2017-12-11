@@ -98,7 +98,7 @@ class WebspaceCollection implements \IteratorAggregate
                 'Unknown portal environment "%s"', $environment
             ));
         }
-        if ($types === null) {
+        if (null === $types) {
             return $this->portalInformations[$environment];
         }
 

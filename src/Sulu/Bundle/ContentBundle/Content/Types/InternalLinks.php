@@ -32,6 +32,7 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
      * @var ContentQueryExecutorInterface
      */
     private $contentQueryExecutor;
+
     /**
      * @var ContentQueryBuilderInterface
      */

@@ -36,10 +36,10 @@ class NavigationQueryBuilder extends ContentQueryBuilder
     protected function buildWhere($webspaceKey, $locale)
     {
         $where = [];
-        if ($this->context !== null) {
+        if (null !== $this->context) {
             $where[] = sprintf("page.[i18n:%s-navContexts] = '%s'", $locale, $this->context);
         }
-        if ($this->parent !== null) {
+        if (null !== $this->parent) {
             $where[] = sprintf("ISDESCENDANTNODE(page, '%s')", $this->parent);
         } else {
             $where[] = sprintf("ISDESCENDANTNODE(page, '%s')", '/cmf/' . $webspaceKey . '/contents');

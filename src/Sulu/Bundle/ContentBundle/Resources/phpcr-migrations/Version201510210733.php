@@ -173,7 +173,7 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
     {
         $structureName = $structureMetadata->getName();
         foreach ($structureMetadata->getProperties() as $property) {
-            if ($property->getType() === 'url') {
+            if ('url' === $property->getType()) {
                 $properties[$structureName][] = $property->getName();
             } elseif ($property instanceof BlockMetadata) {
                 $this->findUrlBlockProperties($property, $structureName, $properties);
@@ -192,7 +192,7 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
     {
         foreach ($property->getComponents() as $component) {
             foreach ($component->getChildren() as $childProperty) {
-                if ($childProperty->getType() === 'url') {
+                if ('url' === $childProperty->getType()) {
                     $properties[$structureName][] = $property->getName();
                 }
             }
@@ -262,7 +262,7 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
         $value = $property->getValue();
         if (is_array($value)) {
             foreach ($value as $key => $entry) {
-                if ($entry['type'] !== 'url') {
+                if ('url' !== $entry['type']) {
                     continue;
                 }
 
@@ -302,7 +302,7 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
      */
     private function downgradeUrl(&$value)
     {
-        if (strpos($value, 'http://') === 0) {
+        if (0 === strpos($value, 'http://')) {
             $value = substr($value, 7);
         }
     }

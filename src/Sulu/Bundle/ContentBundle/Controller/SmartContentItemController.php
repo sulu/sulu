@@ -85,7 +85,7 @@ class SmartContentItemController extends RestController
         $result = [];
         foreach ($params as $name => $item) {
             $value = $item['value'];
-            if ($item['type'] === 'collection') {
+            if ('collection' === $item['type']) {
                 $value = $this->getParams($value);
             }
 

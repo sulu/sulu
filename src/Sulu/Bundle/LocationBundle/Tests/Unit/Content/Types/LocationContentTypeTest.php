@@ -17,7 +17,9 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
 {
     protected $nodeRepository;
+
     protected $locationContent;
+
     protected $mapManager;
 
     public function setUp()

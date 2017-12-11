@@ -120,7 +120,7 @@ class WebsocketApp
             $decorated = $controller;
         }
 
-        if ($httpHost === null) {
+        if (null === $httpHost) {
             $httpHost = $this->httpHost;
         }
 

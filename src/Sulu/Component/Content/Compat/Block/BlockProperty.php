@@ -217,7 +217,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
             $items = $value->getValue();
         }
 
-        if ($items == null) {
+        if (null == $items) {
             return;
         }
 

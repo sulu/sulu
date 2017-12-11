@@ -41,7 +41,9 @@ class FilterController extends RestController implements ClassResourceInterface
     use RequestParametersTrait;
 
     protected static $groupConditionEntityName = 'SuluResourceBundle:GroupCondition';
+
     protected static $entityName = 'SuluResourceBundle:Filter';
+
     protected static $entityKey = 'filters';
 
     /**
@@ -86,7 +88,7 @@ class FilterController extends RestController implements ClassResourceInterface
                 throw new MissingFeatureException($context, 'filters');
             }
 
-            if ($request->get('flat') == 'true') {
+            if ('true' == $request->get('flat')) {
                 $list = $this->getListRepresentation($request);
             } else {
                 $list = new CollectionRepresentation(

@@ -53,7 +53,7 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
 
     protected function prepareWebspaceManager()
     {
-        if ($this->webspaceManager === null) {
+        if (null === $this->webspaceManager) {
             $webspace = new Webspace();
             $en = new Localization();
             $en->setLanguage('en');

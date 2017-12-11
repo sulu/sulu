@@ -168,12 +168,12 @@ class NodeRepository implements NodeRepositoryInterface
         $result['_links'] = [
             'self' => [
                 'href' => $this->apiBasePath . '/' . $structure->getUuid() .
-                    ($extension !== null ? '/' . $extension : ''),
+                    (null !== $extension ? '/' . $extension : ''),
             ],
             'children' => [
                 'href' => $this->apiBasePath . '?parent=' . $structure->getUuid() . '&depth=' . $depth .
                     '&webspace=' . $webspaceKey . '&language=' . $languageCode .
-                    ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
+                    (true === $excludeGhosts ? '&exclude-ghosts=true' : ''),
             ],
         ];
 
@@ -350,7 +350,7 @@ class NodeRepository implements NodeRepositoryInterface
         $data['_links'] = [
             'self' => [
                 'href' => $this->apiBasePath . '/entry?depth=' . $depth . '&webspace=' . $webspaceKey .
-                    '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
+                    '&language=' . $languageCode . (true === $excludeGhosts ? '&exclude-ghosts=true' : ''),
             ],
         ];
 
@@ -416,7 +416,7 @@ class NodeRepository implements NodeRepositoryInterface
             '_links' => [
                 'children' => [
                     'href' => $this->apiBasePath . '?depth=' . $depth . '&webspace=' . $webspaceKey .
-                        '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
+                        '&language=' . $languageCode . (true === $excludeGhosts ? '&exclude-ghosts=true' : ''),
                 ],
             ],
         ];
@@ -451,7 +451,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         if ($api) {
             if (isset($filterConfig['dataSource'])) {
-                if ($this->webspaceManager->findWebspaceByKey($filterConfig['dataSource']) !== null) {
+                if (null !== $this->webspaceManager->findWebspaceByKey($filterConfig['dataSource'])) {
                     $node = $this->sessionManager->getContentNode($filterConfig['dataSource']);
                 } else {
                     $node = $this->sessionManager->getSession()->getNodeByIdentifier($filterConfig['dataSource']);
@@ -483,7 +483,7 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private function getParentNode($parent, $webspaceKey, $languageCode)
     {
-        if ($parent != null) {
+        if (null != $parent) {
             return $this->getMapper()->load($parent, $webspaceKey, $languageCode);
         } else {
             return $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
@@ -513,10 +513,10 @@ class NodeRepository implements NodeRepositoryInterface
         $results = [];
         foreach ($nodes as $node) {
             $result = $this->prepareNode($node, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
-            if ($maxDepth !== null &&
+            if (null !== $maxDepth &&
                 $currentDepth < $maxDepth &&
                 $node->getHasChildren() &&
-                $node->getChildren() != null
+                null != $node->getChildren()
             ) {
                 $result['_embedded']['nodes'] = $this->prepareNodesTree(
                     $node->getChildren(),
@@ -565,7 +565,7 @@ class NodeRepository implements NodeRepositoryInterface
         $result['_links'] = [
             'self' => [
                 'href' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' .
-                    $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
+                    $languageCode . (true === $excludeGhosts ? '&exclude-ghosts=true' : ''),
             ],
         ];
 
@@ -600,11 +600,11 @@ class NodeRepository implements NodeRepositoryInterface
             foreach ($descendant->getChildren() as $child) {
                 $type = $child->getType();
 
-                if ($excludeShadows && $type !== null && $type->getName() === 'shadow') {
+                if ($excludeShadows && null !== $type && 'shadow' === $type->getName()) {
                     continue;
                 }
 
-                if ($excludeGhosts && $type !== null && $type->getName() === 'ghost') {
+                if ($excludeGhosts && null !== $type && 'ghost' === $type->getName()) {
                     continue;
                 }
 

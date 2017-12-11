@@ -57,7 +57,7 @@ class PathCleanup implements PathCleanupInterface
     {
         $replacers = $this->replacers['default'];
 
-        if ($languageCode !== null) {
+        if (null !== $languageCode) {
             $replacers = array_merge(
                 $replacers,
                 (isset($this->replacers[$languageCode]) ? $this->replacers[$languageCode] : [])
@@ -101,6 +101,6 @@ class PathCleanup implements PathCleanupInterface
      */
     public function validate($path)
     {
-        return $path === '/' || preg_match($this->pattern, $path) === 1;
+        return '/' === $path || 1 === preg_match($this->pattern, $path);
     }
 }

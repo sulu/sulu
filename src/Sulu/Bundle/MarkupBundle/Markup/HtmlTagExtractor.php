@@ -17,7 +17,9 @@ namespace Sulu\Bundle\MarkupBundle\Markup;
 class HtmlTagExtractor implements TagExtractorInterface
 {
     const COUNT_REGEX = '/<%1$s:[a-z]+/';
+
     const ATTRIBUTE_REGEX = '/(?<name>\b[\w-]+\b)\s*=\s*"(?<value>[^"]*)"/';
+
     const TAG_REGEX = '/(?<tag><%1$s:(?<name>[a-z]+)(?<attributes>(?:(?!>|\/>).)*)(?:\/>|>(?<content>(?:(?!<\/%1$s:\2>).)*)<\/%1$s:\2>))/s';
 
     /**
@@ -84,7 +86,7 @@ class HtmlTagExtractor implements TagExtractorInterface
         for ($i = 0, $length = count($matches['name']); $i < $length; ++$i) {
             $value = $matches['value'][$i];
 
-            if ($value === 'true' || $value === 'false') {
+            if ('true' === $value || 'false' === $value) {
                 $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
             }
 

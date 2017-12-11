@@ -90,6 +90,6 @@ class ExtensionContainer implements \ArrayAccess, \Iterator
 
     public function valid()
     {
-        return isset($this->data) !== null;
+        return null !== isset($this->data);
     }
 }

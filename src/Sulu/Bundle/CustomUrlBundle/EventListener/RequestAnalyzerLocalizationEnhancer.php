@@ -28,7 +28,7 @@ class RequestAnalyzerLocalizationEnhancer implements EnhancerInterface
      */
     public function enhance(Request $request, RequestAnalyzerInterface $requestAnalyzer)
     {
-        if ($request->get('_custom_url') === null) {
+        if (null === $request->get('_custom_url')) {
             return;
         }
 

@@ -47,7 +47,7 @@ class RequestHashChecker implements RequestHashCheckerInterface
     public function checkHash(Request $request, $object, $identifier)
     {
         if (!$request->request->has($this->hashParameter)
-            || $request->query->get('force', false) === 'true'
+            || 'true' === $request->query->get('force', false)
             || $request->request->get($this->hashParameter) == $this->hasher->hash($object)
         ) {
             return true;

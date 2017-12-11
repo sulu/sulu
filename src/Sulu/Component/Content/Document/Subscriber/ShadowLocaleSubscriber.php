@@ -26,6 +26,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ShadowLocaleSubscriber implements EventSubscriberInterface
 {
     const SHADOW_ENABLED_FIELD = 'shadow-on';
+
     const SHADOW_LOCALE_FIELD = 'shadow-base';
 
     /**
@@ -247,6 +248,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         $locales = $this->inspector->getConcreteLocales($document);
         if (!in_array($document->getShadowLocale(), $locales)) {
             $this->inspector->getNode($document)->revert();
+
             throw new \RuntimeException(sprintf(
                 'Attempting to create shadow for "%s" on a non-concrete locale "%s" for document at "%s". Concrete languages are "%s"',
                 $document->getLocale(),

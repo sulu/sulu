@@ -90,7 +90,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
-        if ($level !== null) {
+        if (null !== $level) {
             $breadcrumb = $this->contentMapper->loadBreadcrumb(
                 $uuid,
                 $locale,
@@ -116,7 +116,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
-        if ($level !== null) {
+        if (null !== $level) {
             $breadcrumb = $this->contentMapper->loadBreadcrumb(
                 $uuid,
                 $locale,

@@ -134,7 +134,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      */
     private function getUserId()
     {
-        if (!$this->tokenProvider || ($token = $this->tokenProvider->getToken()) === null) {
+        if (!$this->tokenProvider || null === ($token = $this->tokenProvider->getToken())) {
             return;
         }
 
@@ -177,7 +177,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      */
     private function iterateOverCollections($children, $userId, $parent = null, $namespace = '')
     {
-        $format = ($namespace !== '' ? '%s.%s' : '%s%s');
+        $format = ('' !== $namespace ? '%s.%s' : '%s%s');
         $collections = [];
         foreach ($children as $collectionKey => $collectionItem) {
             $key = sprintf($format, $namespace, $collectionKey);
@@ -215,7 +215,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      */
     private function getOrCreateRoot($namespace, $title, $locale, $userId, $parent = null)
     {
-        if (($collection = $this->collectionManager->getByKey($namespace, $locale)) !== null) {
+        if (null !== ($collection = $this->collectionManager->getByKey($namespace, $locale))) {
             $collection->setTitle($title);
 
             return $collection;
@@ -240,7 +240,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
         $firstLocale = array_shift($locales);
 
         $collection = $this->collectionManager->getByKey($key, $firstLocale);
-        if ($collection === null) {
+        if (null === $collection) {
             $collection = $this->createCollection($localizedTitles[$firstLocale], $key, $firstLocale, $userId, $parent);
         } else {
             $collection->setTitle($localizedTitles[$firstLocale]);
@@ -274,11 +274,11 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
             'locale' => $locale,
         ];
 
-        if ($parent !== null) {
+        if (null !== $parent) {
             $data['parent'] = $parent;
         }
 
-        if ($id !== null) {
+        if (null !== $id) {
             $data['id'] = $id;
         }
 

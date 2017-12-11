@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ContentExportCompilerPass implements CompilerPassInterface
 {
     const CONTENT_EXPORT_SERVICE_ID = 'sulu_content.export.manager';
+
     const STRUCTURE_EXTENSION_TAG = 'sulu.content.export';
 
     /**

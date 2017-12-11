@@ -380,7 +380,7 @@ class PortalInformation implements ArrayableInterface
     private function getHostLength()
     {
         $hostLength = strpos($this->url, '/');
-        $hostLength = ($hostLength === false) ? strlen($this->url) : $hostLength;
+        $hostLength = (false === $hostLength) ? strlen($this->url) : $hostLength;
 
         return $hostLength;
     }

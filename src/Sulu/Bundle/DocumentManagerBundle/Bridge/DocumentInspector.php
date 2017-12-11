@@ -41,9 +41,13 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 class DocumentInspector extends BaseDocumentInspector
 {
     private $metadataFactory;
+
     private $structureFactory;
+
     private $namespaceRegistry;
+
     private $encoder;
+
     private $webspaceManager;
 
     public function __construct(

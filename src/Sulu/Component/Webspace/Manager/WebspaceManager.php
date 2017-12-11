@@ -155,7 +155,7 @@ class WebspaceManager implements WebspaceManagerInterface
         );
         foreach ($portals as $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
-            $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
+            $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             $url = rtrim(sprintf('%s://%s%s', $scheme, $portalInformation->getUrl(), $resourceLocator), '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 $urls[] = $url;
@@ -187,10 +187,10 @@ class WebspaceManager implements WebspaceManagerInterface
         );
         foreach ($portals as $portalInformation) {
             $sameLocalization = (
-                $portalInformation->getLocalization() === null
+                null === $portalInformation->getLocalization()
                 || $portalInformation->getLocalization()->getLocalization() === $languageCode
             );
-            $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
+            $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             $url = rtrim(sprintf('%s://%s%s', $scheme, $portalInformation->getUrl(), $resourceLocator), '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 if ($portalInformation->isMain()) {
@@ -293,7 +293,7 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     public function getWebspaceCollection()
     {
-        if ($this->webspaceCollection === null) {
+        if (null === $this->webspaceCollection) {
             $class = $this->options['cache_class'];
             $cache = new ConfigCache(
                 $this->options['cache_dir'] . '/' . $class . '.php',

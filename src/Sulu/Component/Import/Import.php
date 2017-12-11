@@ -15,7 +15,6 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Import\Exception\FormatImporterNotFoundException;
-use Sulu\Component\Import\Manager\ImportManager;
 use Sulu\Component\Import\Manager\ImportManagerInterface;
 
 /**
@@ -43,9 +42,6 @@ class Import
      */
     protected $exceptionStore = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function add($service, $format)
     {
         $this->formatFilePaths[$format] = $service;

@@ -17,6 +17,7 @@ use Doctrine\ORM\Query\Lexer;
 class Cast extends FunctionNode
 {
     public $firstDateExpression = null;
+
     public $unit = null;
 
     public function parse(\Doctrine\ORM\Query\Parser $parser)

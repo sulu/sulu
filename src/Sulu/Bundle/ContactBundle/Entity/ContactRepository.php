@@ -100,7 +100,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
      */
     public function findByIds($ids)
     {
-        if (count($ids) === 0) {
+        if (0 === count($ids)) {
             return [];
         }
 
@@ -361,7 +361,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
      */
     private function addWhere($qb, $where, $prefix = '')
     {
-        $prefix = $prefix !== '' ? $prefix . '.' : '';
+        $prefix = '' !== $prefix ? $prefix . '.' : '';
         $and = $qb->expr()->andX();
         foreach ($where as $k => $v) {
             $and->add($qb->expr()->eq($prefix . $k, "'" . $v . "'"));

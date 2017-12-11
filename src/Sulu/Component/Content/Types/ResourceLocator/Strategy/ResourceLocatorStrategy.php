@@ -234,7 +234,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
      */
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        return $path !== '/' && $this->cleaner->validate($path);
+        return '/' !== $path && $this->cleaner->validate($path);
     }
 
     /**

@@ -20,6 +20,7 @@ class MissingParameterException extends RestException
      * @var string
      */
     private $name;
+
     /**
      * @var string
      */

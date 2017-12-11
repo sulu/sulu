@@ -112,7 +112,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
                 /** @var PropertyMetadata $propertyMetadata */
                 $propertyMetadata = $fieldDescriptor->getMetadata()->get(PropertyMetadata::class);
 
-                return $propertyMetadata->getDisplay() !== PropertyMetadata::DISPLAY_NEVER;
+                return PropertyMetadata::DISPLAY_NEVER !== $propertyMetadata->getDisplay();
             }
         );
     }
@@ -218,7 +218,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     {
         $existingIndex = $this->retrieveIndexOfFieldDescriptor($fieldDescriptor, $this->sortFields);
 
-        if ($existingIndex !== false) {
+        if (false !== $existingIndex) {
             $this->sortOrders[$existingIndex] = $order;
         } else {
             // Else add to list of sort-fields.

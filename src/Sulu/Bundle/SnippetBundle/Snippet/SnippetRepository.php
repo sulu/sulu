@@ -277,12 +277,12 @@ class SnippetRepository
         // Title is a mandatory property for snippets
         // NOTE: Prefixing the language code and namespace here is bad. But the solution is
         //       refactoring (i.e. a node property name translator service).
-        $sortOrder = ($sortOrder !== null ? strtoupper($sortOrder) : 'ASC');
-        $sortBy = ($sortBy !== null ? $sortBy : 'title');
+        $sortOrder = (null !== $sortOrder ? strtoupper($sortOrder) : 'ASC');
+        $sortBy = (null !== $sortBy ? $sortBy : 'title');
 
         $qb->orderBy(
             $qb->qomf()->propertyValue('a', 'i18n:' . $locale . '-' . $sortBy),
-            $sortOrder !== null ? strtoupper($sortOrder) : 'ASC'
+            null !== $sortOrder ? strtoupper($sortOrder) : 'ASC'
         );
 
         return $qb->getQuery();

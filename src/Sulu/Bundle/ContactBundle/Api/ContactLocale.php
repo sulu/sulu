@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
-use Doctrine\Entity;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
@@ -27,7 +26,7 @@ class ContactLocale extends ApiWrapper
     /**
      * @param ContactLocale $contactLocale
      */
-    public function __construct(ContactLocale $contactLocale)
+    public function __construct(self $contactLocale)
     {
         $this->entity = $contactLocale;
     }

@@ -99,6 +99,7 @@ class BlockPropertyType
                 return $child;
             }
         }
+
         throw new NoSuchPropertyException();
     }
 

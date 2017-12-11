@@ -83,13 +83,13 @@ class RdfaExtractor
                     // check if one parent is property exclude it
                     $parents->each(
                         function ($node) use (&$count) {
-                            if (null !== $node->attr('property') && $node->attr('typeof') === 'collection') {
+                            if (null !== $node->attr('property') && 'collection' === $node->attr('typeof')) {
                                 ++$count;
                             }
                         }
                     );
 
-                    return $count === 0;
+                    return 0 === $count;
                 }
             );
         }

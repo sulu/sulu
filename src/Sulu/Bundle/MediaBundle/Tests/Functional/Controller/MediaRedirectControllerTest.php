@@ -113,7 +113,7 @@ class MediaRedirectControllerTest extends SuluTestCase
             }
         }
 
-        if ($counter != 0) {
+        if (0 != $counter) {
             rmdir($directory);
         }
     }

@@ -25,13 +25,18 @@ class WebspaceImportTest extends SuluTestCase
      * @var DocumentManagerInterface
      */
     private $documentManager;
+
     /**
      * @var object
      */
     private $parent;
+
     private $pages = [];
+
     private $webspaceImporter;
+
     protected $distPath = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff.dist';
+
     protected $path = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff';
 
     /**

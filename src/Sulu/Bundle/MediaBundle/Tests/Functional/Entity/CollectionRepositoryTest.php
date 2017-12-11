@@ -120,7 +120,7 @@ class CollectionRepositoryTest extends SuluTestCase
         $collectionMeta->setCollection($collection);
         $collection->addMeta($collectionMeta);
 
-        if ($parent !== null) {
+        if (null !== $parent) {
             $collection->setParent($this->collections[$parent]);
             $this->collections[$parent]->addChildren($collection);
         }

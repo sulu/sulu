@@ -31,7 +31,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class TagManager implements TagManagerInterface
 {
     protected static $tagEntityName = 'SuluTagBundle:Tag';
+
     protected static $userEntityName = 'Sulu\Component\Security\Authentication\UserInterface';
+
     protected static $contactEntityName = 'Sulu\Component\Contact\Model\ContactInterface';
 
     /**
@@ -254,7 +256,7 @@ class TagManager implements TagManagerInterface
 
         foreach ($tagIds as $tagId) {
             $tag = $this->findById($tagId);
-            if ($tag !== null) {
+            if (null !== $tag) {
                 $resolvedTags[] = $tag->getName();
             }
         }
@@ -275,7 +277,7 @@ class TagManager implements TagManagerInterface
 
         foreach ($tagNames as $tagName) {
             $tag = $this->findByName($tagName);
-            if ($tag !== null) {
+            if (null !== $tag) {
                 $resolvedTags[] = $tag->getId();
             }
         }

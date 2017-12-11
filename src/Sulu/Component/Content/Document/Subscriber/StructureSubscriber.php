@@ -189,7 +189,7 @@ class StructureSubscriber implements EventSubscriberInterface
         $document->setStructureType($structureType);
 
         if (false === $event->getOption('load_ghost_content', false)) {
-            if ($this->inspector->getLocalizationState($document) === LocalizationState::GHOST) {
+            if (LocalizationState::GHOST === $this->inspector->getLocalizationState($document)) {
                 $structureType = null;
             }
         }
@@ -317,7 +317,7 @@ class StructureSubscriber implements EventSubscriberInterface
         $metadata = $this->inspector->getStructureMetadata($document);
 
         foreach ($metadata->getProperties() as $propertyName => $structureProperty) {
-            if ($propertyName === TitleSubscriber::PROPERTY_NAME) {
+            if (TitleSubscriber::PROPERTY_NAME === $propertyName) {
                 continue;
             }
 

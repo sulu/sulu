@@ -37,7 +37,7 @@ class SnippetImportCommand extends ContainerAwareCommand
     {
         $filePath = $input->getArgument('file');
 
-        if (!strpos($filePath, '/') === 0) {
+        if (0 === !strpos($filePath, '/')) {
             $filePath = getcwd() . '/' . $filePath;
         }
 

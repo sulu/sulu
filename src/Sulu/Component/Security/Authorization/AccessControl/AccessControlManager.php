@@ -235,7 +235,7 @@ class AccessControlManager implements AccessControlManagerInterface
                 continue;
             }
 
-            $hasLocale = $locale == null || in_array($locale, $userRole->getLocales());
+            $hasLocale = null == $locale || in_array($locale, $userRole->getLocales());
 
             if (!$hasLocale) {
                 continue;

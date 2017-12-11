@@ -17,6 +17,7 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
 class DisplayCondition implements \JsonSerializable
 {
     const OPERATOR_EQUAL = 'eq';
+
     const OPERATOR_NOT_EQUAL = 'neq';
 
     /**

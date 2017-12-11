@@ -40,7 +40,7 @@ class InvalidArgumentException extends RestException
         $this->entity = $entity;
         $this->argument = $argument;
         $message = 'The "' . $entity . '"-entity requires a valid "' . $argument . '"-argument. ';
-        if ($customMessage != null) {
+        if (null != $customMessage) {
             $message .= $customMessage;
         }
         parent::__construct($message, 0);

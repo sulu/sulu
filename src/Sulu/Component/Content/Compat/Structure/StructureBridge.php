@@ -314,7 +314,7 @@ class StructureBridge implements StructureInterface
      */
     public function getPublishedState()
     {
-        return $this->getWorkflowDocument(__METHOD__)->getWorkflowStage() === WorkflowStage::PUBLISHED;
+        return WorkflowStage::PUBLISHED === $this->getWorkflowDocument(__METHOD__)->getWorkflowStage();
     }
 
     /**
@@ -365,11 +365,11 @@ class StructureBridge implements StructureInterface
         $document = $this->getDocument();
         $localizationState = $this->inspector->getLocalizationState($document);
 
-        if ($localizationState === LocalizationState::GHOST) {
+        if (LocalizationState::GHOST === $localizationState) {
             return StructureType::getGhost($this->getDocument()->getLocale());
         }
 
-        if ($this->inspector->getLocalizationState($document) === LocalizationState::SHADOW) {
+        if (LocalizationState::SHADOW === $this->inspector->getLocalizationState($document)) {
             return StructureType::getShadow($this->getDocument()->getLocale());
         }
     }
@@ -431,17 +431,17 @@ class StructureBridge implements StructureInterface
         if ($document instanceof RedirectTypeBehavior) {
             $redirectType = $document->getRedirectType();
             $result['linked'] = null;
-            if ($redirectType == RedirectType::INTERNAL && $document->getRedirectTarget() !== null) {
+            if (RedirectType::INTERNAL == $redirectType && null !== $document->getRedirectTarget()) {
                 $result['linked'] = 'internal';
                 $result['internal_link'] = $document->getRedirectTarget()->getUuid();
-            } elseif ($redirectType == RedirectType::EXTERNAL) {
+            } elseif (RedirectType::EXTERNAL == $redirectType) {
                 $result['linked'] = 'external';
                 $result['external'] = $document->getRedirectExternal();
             }
         }
 
         if ($document instanceof WorkflowStageBehavior) {
-            $result['publishedState'] = $document->getWorkflowStage() === WorkflowStage::PUBLISHED;
+            $result['publishedState'] = WorkflowStage::PUBLISHED === $document->getWorkflowStage();
             $result['published'] = $document->getPublished();
         }
 
@@ -558,8 +558,8 @@ class StructureBridge implements StructureInterface
     public function getNodeName()
     {
         if ($this->document instanceof RedirectTypeBehavior &&
-            $this->document->getRedirectType() == RedirectType::INTERNAL &&
-            $this->document->getRedirectTarget() !== null
+            RedirectType::INTERNAL == $this->document->getRedirectType() &&
+            null !== $this->document->getRedirectTarget()
         ) {
             return $this->getDocument()->getRedirectTarget()->getTitle();
         }
@@ -656,11 +656,11 @@ class StructureBridge implements StructureInterface
     public function getResourceLocator()
     {
         $document = $this->getDocument();
-        if ($document->getRedirectType() == RedirectType::EXTERNAL) {
+        if (RedirectType::EXTERNAL == $document->getRedirectType()) {
             return $document->getRedirectExternal();
         }
 
-        if ($document->getRedirectType() === RedirectType::INTERNAL) {
+        if (RedirectType::INTERNAL === $document->getRedirectType()) {
             $target = $document->getRedirectTarget();
 
             if (!$target) {

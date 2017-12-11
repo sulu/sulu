@@ -130,7 +130,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $request = [];
         $cookies = [];
         $currentRequest = $this->requestStack->getCurrentRequest();
-        if ($currentRequest !== null) {
+        if (null !== $currentRequest) {
             $query = $currentRequest->query->all();
             $request = $currentRequest->request->all();
             $cookies = $currentRequest->cookies->all();

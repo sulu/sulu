@@ -167,7 +167,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
-        if ($config['adapter'] === 'auto') {
+        if ('auto' === $config['adapter']) {
             $container->setAlias(
                 'sulu_media.adapter',
                 'sulu_media.adapter.' . (class_exists('Imagick') ? 'imagick' : 'gd')

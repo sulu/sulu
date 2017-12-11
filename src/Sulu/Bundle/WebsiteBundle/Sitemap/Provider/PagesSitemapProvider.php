@@ -56,7 +56,7 @@ class PagesSitemapProvider implements SitemapProviderInterface
         foreach ($pages as $contentPage) {
             if (!$contentPage->getUrl()
                 || true === $contentPage['seo-hideInSitemap']
-                || $contentPage->getNodeType() !== RedirectType::NONE
+                || RedirectType::NONE !== $contentPage->getNodeType()
             ) {
                 continue;
             }

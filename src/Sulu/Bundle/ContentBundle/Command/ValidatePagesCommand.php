@@ -92,12 +92,12 @@ class ValidatePagesCommand extends ContainerAwareCommand
             foreach ($headers as $header) {
                 $template = $row->getValue($header);
                 $tableRow[] = $template;
-                if ($template !== '' && !in_array($template, $structures)) {
+                if ('' !== $template && !in_array($template, $structures)) {
                     $tableRow[0] = 'X';
                     $descriptions[] = sprintf('Language "%s" contains a not existing xml-template', $header);
                     ++$result;
                 }
-                if ($template !== '' && !in_array($template, $availableStructureKeys)) {
+                if ('' !== $template && !in_array($template, $availableStructureKeys)) {
                     $tableRow[0] = 'X';
                     $descriptions[] = sprintf(
                         'Language "%s" contains a not implemented xml-template in webspace "%s"',

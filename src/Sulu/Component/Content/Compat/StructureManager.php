@@ -27,8 +27,11 @@ class StructureManager implements StructureManagerInterface
     use ContainerAwareTrait;
 
     private $structureFactory;
+
     private $inspector;
+
     private $propertyFactory;
+
     private $typeMap;
 
     /**
