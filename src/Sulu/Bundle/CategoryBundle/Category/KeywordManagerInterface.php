@@ -20,7 +20,9 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 interface KeywordManagerInterface
 {
     const FORCE_OVERWRITE = 'overwrite';
+
     const FORCE_DETACH = 'detach';
+
     const FORCE_MERGE = 'merge';
 
     /**

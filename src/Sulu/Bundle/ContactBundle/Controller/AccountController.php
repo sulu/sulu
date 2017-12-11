@@ -44,11 +44,17 @@ class AccountController extends RestController implements ClassResourceInterface
      * {@inheritdoc}
      */
     protected static $entityKey = 'accounts';
+
     protected static $positionEntityName = 'SuluContactBundle:Position';
+
     protected static $contactEntityKey = 'contacts';
+
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
+
     protected static $addressEntityName = 'SuluContactBundle:Address';
+
     protected static $accountAddressEntityName = 'SuluContactBundle:AccountAddress';
+
     protected static $countryEntityName = 'SuluContactBundle:Country';
 
     protected static $accountSerializationGroups = [
@@ -68,15 +74,19 @@ class AccountController extends RestController implements ClassResourceInterface
      * @var AccountManager
      */
     protected $accountManager;
+
     protected $locale;
 
     // TODO: Move the field descriptors to a manager -
     // or better -> refactor the whole file!
+
     /**
      * @var DoctrineFieldDescriptor[]
      */
     protected $fieldDescriptors;
+
     protected $accountContactFieldDescriptors;
+
     protected $accountAddressesFieldDescriptors;
 
     /**

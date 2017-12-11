@@ -37,9 +37,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class CollectionManager implements CollectionManagerInterface
 {
     private static $entityName = 'SuluMediaBundle:Collection';
+
     private static $entityCollectionType = 'SuluMediaBundle:Collection';
+
     private static $entityCollectionMeta = 'SuluMediaBUndle:CollectionMeta';
+
     private static $entityUser = 'Sulu\Component\Security\Authentication\UserInterface';
+
     private static $entityContact = 'Sulu\Component\Contact\Model\ContactInterface';
 
     /**

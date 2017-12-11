@@ -17,9 +17,11 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 class DoctrineJoinDescriptor
 {
     const JOIN_METHOD_LEFT = 'LEFT';
+
     const JOIN_METHOD_INNER = 'INNER';
 
     const JOIN_CONDITION_METHOD_ON = 'ON';
+
     const JOIN_CONDITION_METHOD_WITH = 'WITH';
 
     /**

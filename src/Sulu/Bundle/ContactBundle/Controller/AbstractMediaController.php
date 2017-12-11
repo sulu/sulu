@@ -30,10 +30,15 @@ use Sulu\Component\Rest\RestHelperInterface;
 abstract class AbstractMediaController extends RestController
 {
     protected static $collectionEntityName = 'SuluMediaBundle:Collection';
+
     protected static $fileVersionEntityName = 'SuluMediaBundle:FileVersion';
+
     protected static $fileEntityName = 'SuluMediaBundle:File';
+
     protected static $fileVersionMetaEntityName = 'SuluMediaBundle:FileVersionMeta';
+
     protected static $mediaEntityKey = 'media';
+
     protected $fieldDescriptors = null;
 
     /**

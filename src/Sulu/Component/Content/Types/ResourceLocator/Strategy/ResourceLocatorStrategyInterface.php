@@ -20,6 +20,7 @@ use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
 interface ResourceLocatorStrategyInterface
 {
     const INPUT_TYPE_LEAF = 'leaf';
+
     const INPUT_TYPE_FULL = 'full';
 
     /**

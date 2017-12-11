@@ -17,7 +17,9 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 class RouteControllerTest extends SuluTestCase
 {
     const TEST_ENTITY = 'AppBundle\\Entity\\Test';
+
     const TEST_ID = 1;
+
     const TEST_LOCALE = 'de';
 
     public function testCGetAction()

@@ -36,7 +36,9 @@ use Symfony\Component\HttpFoundation\Response;
 class KeywordController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     const FORCE_OVERWRITE = 'overwrite';
+
     const FORCE_DETACH = 'detach';
+
     const FORCE_MERGE = 'merge';
 
     /**

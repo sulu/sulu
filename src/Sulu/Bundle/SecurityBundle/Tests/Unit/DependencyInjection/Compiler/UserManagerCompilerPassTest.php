@@ -22,6 +22,7 @@ class UserManagerCompilerPassTest extends \PHPUnit_Framework_TestCase
      * @var ContainerBuilder
      */
     private $containerBuilder;
+
     /**
      * @var UserManagerCompilerPass
      */

@@ -17,7 +17,9 @@ namespace Sulu\Bundle\ResourceBundle\Entity;
 class Condition
 {
     const TYPE_STRING = 1;
+
     const TYPE_NUMBER = 2;
+
     const TYPE_DATETIME = 3;
 
     /**

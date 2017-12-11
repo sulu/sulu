@@ -41,7 +41,9 @@ class ContactController extends RestController implements ClassResourceInterface
      * {@inheritdoc}
      */
     protected static $entityKey = 'contacts';
+
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
+
     protected static $positionEntityName = 'SuluContactBundle:Position';
 
     // serialization groups for contact
@@ -64,6 +66,7 @@ class ContactController extends RestController implements ClassResourceInterface
     protected $bundlePrefix = 'contact.contacts.';
 
     // TODO: move the field descriptors to a manager
+
     /**
      * @var DoctrineFieldDescriptor[]
      */

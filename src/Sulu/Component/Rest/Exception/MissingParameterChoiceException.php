@@ -20,6 +20,7 @@ class MissingParameterChoiceException extends RestException
      * @var string
      */
     private $names;
+
     /**
      * @var string
      */
