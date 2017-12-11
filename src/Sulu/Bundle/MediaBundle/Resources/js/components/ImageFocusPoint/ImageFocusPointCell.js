@@ -1,0 +1,92 @@
+// @flow
+import React from 'react';
+import classNames from 'classnames';
+import {Icon} from 'sulu-admin-bundle/components';
+import type {Point} from './types';
+import imageFocusPointCellStyles from './imageFocusPointCell.scss';
+
+const ARROW_UP_ICON = 'arrow-up';
+
+type Props = {
+    size: number,
+    value: Point,
+    active: boolean,
+    onClick?: (value: Point) => void,
+    arrowDirection?: 'left' | 'top-left' | 'top' | 'top-right' | 'right' | 'bottom-right' | 'bottom' | 'bottom-left',
+};
+
+export default class ImageFocusPointCell extends React.PureComponent<Props> {
+    static defaultProps = {
+        active: false,
+    };
+
+    static getDirectionInDegrees(direction) {
+        switch (direction) {
+            case 'left':
+                return -90;
+            case 'top-left':
+                return -45;
+            case 'top':
+                return 0;
+            case 'top-right':
+                return 45;
+            case 'right':
+                return 90;
+            case 'bottom-right':
+                return 125;
+            case 'bottom':
+                return 180;
+            case 'bottom-left':
+                return 225;
+        }
+
+        throw new Error(`Direction with the name "${direction}" is undefined.`);
+    }
+
+    handleClick = () => {
+        const {
+            value,
+            onClick,
+        } = this.props;
+
+        if (onClick) {
+            onClick(value);
+        }
+    };
+
+    render() {
+        const {
+            size,
+            active,
+            arrowDirection,
+        } = this.props;
+        const buttonStyle = {
+            width: `${size}%`,
+            height: `${size}%`,
+        };
+        const focusPointClass = classNames(
+            imageFocusPointCellStyles.imageFocusPointCell,
+            {
+                [imageFocusPointCellStyles.active]: active,
+            }
+        );
+        const iconStyle = arrowDirection
+            ? {transform: `rotate(${ImageFocusPointCell.getDirectionInDegrees(arrowDirection)}deg)`}
+            : {};
+
+        return (
+            <button
+                style={buttonStyle}
+                onClick={this.handleClick}
+                disabled={active}
+                className={focusPointClass}
+            >
+                {!!arrowDirection && !active &&
+                    <div style={iconStyle}>
+                        <Icon name={ARROW_UP_ICON} />
+                    </div>
+                }
+            </button>
+        );
+    }
+}
