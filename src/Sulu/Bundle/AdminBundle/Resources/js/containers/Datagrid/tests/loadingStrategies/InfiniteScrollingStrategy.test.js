@@ -74,5 +74,5 @@ test('Should load items with correct options', () => {
         locale: 'en',
     });
 
-    expect(ResourceRequester.getList).toBeCalledWith('snippets', {limit: 10, page: 2, locale: 'en'});
+    expect(ResourceRequester.getList).toBeCalledWith('snippets', {limit: 50, page: 2, locale: 'en'});
 });

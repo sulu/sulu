@@ -8,7 +8,7 @@ export default class InfiniteScrollingStrategy implements LoadingStrategyInterfa
     paginationAdapter = InfiniteScroller;
 
     load(data: Array<Object>, resourceKey: string, options: LoadOptions) {
-        return ResourceRequester.getList(resourceKey, {...options, limit: 10}).then(action((response) => {
+        return ResourceRequester.getList(resourceKey, {...options, limit: 50}).then(action((response) => {
             const responseData = response._embedded[resourceKey];
             data.push(...responseData);
 
