@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 1.5.8 (unreleased)
+    * HOTFIX      #3684 [SecurityBundle]        Fixed conflict between admin and website session cookie
     * HOTFIX      #3585 [PersistanceBundle]     Fixed exception of blame for none sulu users
 
 * 1.5.7 (2017-10-12)
