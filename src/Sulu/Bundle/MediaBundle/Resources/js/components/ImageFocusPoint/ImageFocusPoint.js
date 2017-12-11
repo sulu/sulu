@@ -38,35 +38,35 @@ export default class ImageFocusPoint extends React.PureComponent<Props> {
         }
 
         if (this.isLeftOfSelectedPoint(selectedPoint, row, column)) {
-            return (<ImageFocusPointCell key={key} {...props} arrowDirection="-90deg" />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="left" />);
         }
 
         if (this.isRightOfSelectedPoint(selectedPoint, row, column)) {
-            return (<ImageFocusPointCell key={key} {...props} arrowDirection="90deg" />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="right" />);
         }
 
         if (this.isAboveOfSelectedPoint(selectedPoint, row, column)) {
-            return (<ImageFocusPointCell key={key} {...props} arrowDirection="0deg" />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="top" />);
         }
 
         if (this.isBeneathOfSelectedPoint(selectedPoint, row, column)) {
-            return (<ImageFocusPointCell key={key} {...props} arrowDirection="180deg" />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="bottom" />);
         }
 
         if (this.isAboveRightOfSelectedPoint(selectedPoint, row, column)) {
-            return (<ImageFocusPointCell key={key} {...props} arrowDirection="45deg" />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="top-right" />);
         }
 
         if (this.isAboveLeftOfSelectedPoint(selectedPoint, row, column)) {
-            return (<ImageFocusPointCell key={key} {...props} arrowDirection="-45deg" />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="top-left" />);
         }
 
         if (this.isBeneathRightOfSelectedPoint(selectedPoint, row, column)) {
-            return (<ImageFocusPointCell key={key} {...props} arrowDirection="125deg" />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="bottom-right" />);
         }
 
         if (this.isBeneathLeftOfSelectedPoint(selectedPoint, row, column)) {
-            return (<ImageFocusPointCell key={key} {...props} arrowDirection="225deg" />);
+            return (<ImageFocusPointCell key={key} {...props} arrowDirection="bottom-left" />);
         }
 
         return <ImageFocusPointCell key={key} {...props} />;

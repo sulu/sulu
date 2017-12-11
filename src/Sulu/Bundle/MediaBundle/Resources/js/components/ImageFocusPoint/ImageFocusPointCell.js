@@ -12,14 +12,36 @@ type Props = {
     value: Point,
     active: boolean,
     onClick?: (value: Point) => void,
-    arrowDirection?: '-90deg' | '-45deg' | '0deg' | '45deg' | '90deg' | '125deg' | '180deg' | '225deg',
+    arrowDirection?: 'left' | 'top-left' | 'top' | 'top-right' | 'right' | 'bottom-right' | 'bottom' | 'bottom-left',
 };
 
 export default class ImageFocusPointCell extends React.PureComponent<Props> {
     static defaultProps = {
         active: false,
-        showArrow: true,
     };
+
+    static getDirectionInDegrees(direction) {
+        switch (direction) {
+            case 'left':
+                return -90;
+            case 'top-left':
+                return -45;
+            case 'top':
+                return 0;
+            case 'top-right':
+                return 45;
+            case 'right':
+                return 90;
+            case 'bottom-right':
+                return 125;
+            case 'bottom':
+                return 180;
+            case 'bottom-left':
+                return 225;
+        }
+
+        throw new Error(`Direction with the name "${direction}" is undefined.`);
+    }
 
     handleClick = () => {
         const {
@@ -48,7 +70,9 @@ export default class ImageFocusPointCell extends React.PureComponent<Props> {
                 [imageFocusPointCellStyles.active]: active,
             }
         );
-        const iconStyle = arrowDirection ? {transform: `rotate(${arrowDirection})`} : {};
+        const iconStyle = arrowDirection
+            ? {transform: `rotate(${ImageFocusPointCell.getDirectionInDegrees(arrowDirection)}deg)`}
+            : {};
 
         return (
             <button
