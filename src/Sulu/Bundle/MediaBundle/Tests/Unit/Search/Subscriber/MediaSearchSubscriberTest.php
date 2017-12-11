@@ -30,16 +30,27 @@ use Sulu\Bundle\SearchBundle\Search\Document;
 class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     private $mediaManager;
+
     private $subscriber;
+
     private $metadata;
+
     private $indexMetadata;
+
     private $fileVersionMeta;
+
     private $fileVersion;
+
     private $file;
+
     private $media;
+
     private $event;
+
     private $document;
+
     private $reflection;
+
     private $factory;
 
     public function setUp()

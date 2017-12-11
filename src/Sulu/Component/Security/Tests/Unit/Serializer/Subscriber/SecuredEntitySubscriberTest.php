@@ -47,6 +47,7 @@ class SecuredEntitySubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @var UserInterface
      */
+
     /**
      * @var ObjectEvent
      */

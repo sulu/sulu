@@ -41,7 +41,9 @@ class FilterController extends RestController implements ClassResourceInterface
     use RequestParametersTrait;
 
     protected static $groupConditionEntityName = 'SuluResourceBundle:GroupCondition';
+
     protected static $entityName = 'SuluResourceBundle:Filter';
+
     protected static $entityKey = 'filters';
 
     /**

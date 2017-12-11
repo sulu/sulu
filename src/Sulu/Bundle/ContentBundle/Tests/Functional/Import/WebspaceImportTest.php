@@ -31,9 +31,13 @@ class WebspaceImportTest extends SuluTestCase
      * @var object
      */
     private $parent;
+
     private $pages = [];
+
     private $webspaceImporter;
+
     protected $distPath = '/../../app/Resources/import/export.xliff.dist';
+
     protected $path = '/../../app/Resources/import/export.xliff';
 
     /**

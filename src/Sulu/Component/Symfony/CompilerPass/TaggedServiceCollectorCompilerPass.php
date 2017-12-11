@@ -34,6 +34,7 @@ class TaggedServiceCollectorCompilerPass implements CompilerPassInterface
      * @var int
      */
     private $argumentNumber;
+
     /**
      * @var string
      */

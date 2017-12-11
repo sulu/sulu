@@ -22,6 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SnippetInitializer implements InitializerInterface
 {
     private $nodeManager;
+
     private $pathBuilder;
 
     public function __construct(

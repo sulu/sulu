@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DocumentFixtureLoaderTest extends \PHPUnit_Framework_TestCase
 {
     private $container;
+
     private $loader;
 
     public function setUp()

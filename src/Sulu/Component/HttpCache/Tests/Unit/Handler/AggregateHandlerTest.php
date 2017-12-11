@@ -22,6 +22,7 @@ class AggregateHandlerTest extends \PHPUnit_Framework_TestCase
      * @var HandlerInterface
      */
     private $handler;
+
     /**
      * @var HandlerInterface
      */

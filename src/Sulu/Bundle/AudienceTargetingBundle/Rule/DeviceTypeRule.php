@@ -21,8 +21,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 class DeviceTypeRule implements RuleInterface
 {
     const DEVICE_TYPE = 'device_type';
+
     const SMARTPHONE = 'smartphone';
+
     const TABLET = 'tablet';
+
     const DESKTOP = 'desktop';
 
     private static $deviceTypes = [self::SMARTPHONE, self::TABLET, self::DESKTOP];

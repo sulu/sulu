@@ -24,6 +24,7 @@ use Sulu\Component\Persistence\Model\TimestampableInterface;
 class TimestampableSubscriber implements EventSubscriber
 {
     const CREATED_FIELD = 'created';
+
     const CHANGED_FIELD = 'changed';
 
     /**

@@ -25,9 +25,13 @@ use Symfony\Component\Translation\Translator;
 class Export
 {
     const XLIFF = 0;
+
     const JSON = 1;
+
     const BACKEND_DOMAIN = 'backend';
+
     const FRONTEND_DOMAIN = 'frontend';
+
     const DEFAULT_LOCALE = 'en';
 
     /**

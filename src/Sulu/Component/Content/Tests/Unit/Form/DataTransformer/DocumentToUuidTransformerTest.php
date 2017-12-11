@@ -18,7 +18,9 @@ use Sulu\Component\DocumentManager\DocumentManager;
 class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
 {
     private $documentManager;
+
     private $node;
+
     private $document;
 
     public function setUp()

@@ -20,8 +20,11 @@ use Sulu\Component\Util\ArrayableInterface;
 class Localization implements \JsonSerializable, ArrayableInterface
 {
     const UNDERSCORE = 'de_at';
+
     const DASH = 'de-at';
+
     const ISO6391 = 'de-AT';
+
     const LCID = 'de_AT';
 
     /**

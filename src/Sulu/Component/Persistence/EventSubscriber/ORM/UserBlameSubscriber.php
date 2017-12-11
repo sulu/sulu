@@ -31,6 +31,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class UserBlameSubscriber implements EventSubscriber
 {
     const CHANGER_FIELD = 'changer';
+
     const CREATOR_FIELD = 'creator';
 
     /**

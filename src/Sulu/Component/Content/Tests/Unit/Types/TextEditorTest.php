@@ -19,6 +19,7 @@ use Sulu\Component\Content\Types\TextEditor;
 class TextEditorTest extends \PHPUnit_Framework_TestCase
 {
     const VALIDATE_REMOVED = 'removed';
+
     const VALIDATE_UNPUBLISHED = 'unpublished';
 
     /**

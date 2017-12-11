@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class ListBuilderMetadataProviderCompilerPass implements CompilerPassInterface
 {
     const CHAIN_PROVIDER_ID = 'sulu_core.list_builder.metadata.provider.chain';
+
     const PROVIDER_TAG_ID = 'sulu.list-builder.metadata.provider';
 
     /**

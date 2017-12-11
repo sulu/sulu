@@ -21,7 +21,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RedirectTypeSubscriber implements EventSubscriberInterface
 {
     const REDIRECT_TYPE_FIELD = 'nodeType';
+
     const INTERNAL_FIELD = 'internal_link';
+
     const EXTERNAL_FIELD = 'external';
 
     public static function getSubscribedEvents()
