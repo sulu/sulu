@@ -39,9 +39,13 @@ class FilterManager implements FilterManagerInterface
     use RelationTrait;
 
     protected static $filterEntityName = 'SuluResourceBundle:Filter';
+
     protected static $userEntityName = 'SuluSecurityBundle:User';
+
     protected static $conditionGroupEntityName = 'SuluResourceBundle:ConditionGroup';
+
     protected static $conditionEntityName = 'SuluResourceBundle:Condition';
+
     protected static $filterTranslationEntityName = 'SuluResourceBundle:FilterTranslation';
 
     /**

@@ -20,6 +20,7 @@ class ParameterDataTypeException extends RestException
      * @var string
      */
     private $name;
+
     /**
      * @var string
      */

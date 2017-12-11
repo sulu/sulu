@@ -36,6 +36,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
     protected static $entityKey = 'groups';
 
     // TODO: Create a Manager and move the field descriptors to the manager
+
     /**
      * @var array - Holds the field descriptors for the list response
      */

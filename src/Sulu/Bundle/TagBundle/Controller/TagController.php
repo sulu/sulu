@@ -64,9 +64,11 @@ class TagController extends RestController implements ClassResourceInterface, Se
         'creator_contact_lastName',
         'changed',
     ];
+
     protected $fieldsRelations = [
         'creator_contact_lastName',
     ];
+
     protected $fieldsSortOrder = [
         '0' => 'name',
         '1' => 'creator_contact_lastName',

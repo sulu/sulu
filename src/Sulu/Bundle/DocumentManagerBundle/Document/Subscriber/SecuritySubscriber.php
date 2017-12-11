@@ -24,6 +24,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class SecuritySubscriber implements EventSubscriberInterface
 {
     const USER_OPTION = 'user';
+
     /**
      * @var TokenStorageInterface
      */

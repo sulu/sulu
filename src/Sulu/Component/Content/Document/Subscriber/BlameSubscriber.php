@@ -29,6 +29,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class BlameSubscriber implements EventSubscriberInterface
 {
     const CREATOR = 'creator';
+
     const CHANGER = 'changer';
 
     /**

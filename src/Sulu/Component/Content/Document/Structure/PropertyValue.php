@@ -21,6 +21,7 @@ namespace Sulu\Component\Content\Document\Structure;
 class PropertyValue implements \ArrayAccess
 {
     private $value;
+
     private $name;
 
     public function __construct($name, $value = null)

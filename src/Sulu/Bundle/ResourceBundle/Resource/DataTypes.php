@@ -19,11 +19,17 @@ final class DataTypes
 {
     /** Types used by operators and conditions */
     const UNDEFINED_TYPE = 0;
+
     const STRING_TYPE = 1;
+
     const NUMBER_TYPE = 2;
+
     const DATETIME_TYPE = 3;
+
     const BOOLEAN_TYPE = 4;
+
     const TAGS_TYPE = 5;
+
     const AUTO_COMPLETE_TYPE = 6;
 
     /**

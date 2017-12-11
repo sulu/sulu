@@ -39,6 +39,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class CategoryManager implements CategoryManagerInterface
 {
     public static $categoryEntityName = CategoryInterface::class;
+
     public static $catTranslationEntityName = CategoryTranslationInterface::class;
 
     /**

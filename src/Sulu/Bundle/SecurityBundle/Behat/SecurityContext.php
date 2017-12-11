@@ -24,6 +24,7 @@ use Sulu\Bundle\TestBundle\Behat\BaseContext;
 class SecurityContext extends BaseContext implements SnippetAcceptingContext
 {
     const ADMIN_USERNAME = 'admin';
+
     const ADMIN_PASSWORD = 'admin';
 
     /**

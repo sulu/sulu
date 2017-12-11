@@ -17,9 +17,13 @@ namespace Sulu\Component\Webspace\Url;
 interface ReplacerInterface
 {
     const REPLACER_LANGUAGE = '{language}';
+
     const REPLACER_COUNTRY = '{country}';
+
     const REPLACER_LOCALIZATION = '{localization}';
+
     const REPLACER_SEGMENT = '{segment}';
+
     const REPLACER_HOST = '{host}';
 
     /**

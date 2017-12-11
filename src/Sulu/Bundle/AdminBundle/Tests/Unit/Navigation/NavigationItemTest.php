@@ -19,10 +19,12 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
      * @var NavigationItem
      */
     protected $navigationItem;
+
     /**
      * @var NavigationItem
      */
     protected $item1;
+
     /**
      * @var NavigationItem
      */

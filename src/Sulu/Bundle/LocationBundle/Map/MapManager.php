@@ -17,7 +17,9 @@ namespace Sulu\Bundle\LocationBundle\Map;
 class MapManager
 {
     protected $providers;
+
     protected $geoLocators;
+
     protected $defaultProviderName;
 
     public function registerProvider($name, $options)

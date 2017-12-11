@@ -41,11 +41,17 @@ class RoleController extends RestController implements ClassResourceInterface, S
     const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
 
     protected $fieldsDefault = ['name'];
+
     protected $fieldsExcluded = [];
+
     protected $fieldsHidden = ['changed', 'created'];
+
     protected $fieldsRelations = [];
+
     protected $fieldsSortOrder = [0 => 'id', 1 => 'name'];
+
     protected $fieldsTranslationKeys = [];
+
     protected $bundlePrefix = 'security.roles.';
 
     /**

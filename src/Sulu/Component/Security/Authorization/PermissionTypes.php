@@ -17,10 +17,16 @@ namespace Sulu\Component\Security\Authorization;
 final class PermissionTypes
 {
     const VIEW = 'view';
+
     const ADD = 'add';
+
     const EDIT = 'edit';
+
     const DELETE = 'delete';
+
     const ARCHIVE = 'archive';
+
     const LIVE = 'live';
+
     const SECURITY = 'security';
 }
