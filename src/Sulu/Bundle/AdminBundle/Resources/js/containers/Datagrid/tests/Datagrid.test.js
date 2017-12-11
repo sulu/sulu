@@ -8,7 +8,7 @@ import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
 import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
 import FolderAdapter from '../adapters/FolderAdapter';
-import type {LoadingStrategyInterface} from '../types';
+import type {LoadingStrategyInterface, StructureStrategyInterface} from '../types';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
@@ -44,15 +44,21 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 class TestAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => LoadingStrategyInterface = () => (new class {
-        paginationAdapter = function PaginationAdapter() {
-            return null;
+    static getLoadingStrategy(): LoadingStrategyInterface {
+        return new class {
+            paginationAdapter = function PaginationAdapter() {
+                return null;
+            };
+
+            load = jest.fn();
         };
+    }
 
-        load = jest.fn();
-    });
-
-    static getStorageStrategy: () => string = jest.fn().mockReturnValue('flat');
+    static getStructureStrategy(): StructureStrategyInterface {
+        return new class {
+            data: Array<Object>;
+        };
+    }
 
     render() {
         return (
@@ -175,11 +181,14 @@ test('DatagridStore should be initialized correctly on init and update', () => {
         }
     });
     const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
-    expect(datagridStore.init).toBeCalledWith(TableAdapter.getLoadingStrategy());
+    expect(datagridStore.init).toBeCalledWith(TableAdapter.getLoadingStrategy(), TableAdapter.getStructureStrategy());
 
     const newDatagridStore = new DatagridStore('test', {page: observable(1)});
     newDatagridStore.init = jest.fn();
 
     datagrid.setProps({ store: newDatagridStore });
-    expect(newDatagridStore.init).toBeCalledWith(FolderAdapter.getLoadingStrategy());
+    expect(newDatagridStore.init).toBeCalledWith(
+        FolderAdapter.getLoadingStrategy(),
+        TableAdapter.getStructureStrategy()
+    );
 });

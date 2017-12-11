@@ -4,7 +4,8 @@ import React from 'react';
 import FolderList from '../../../components/FolderList';
 import {translate} from '../../../utils/Translator';
 import PaginationStrategy from '../loadingStrategies/PaginationStrategy';
-import type {LoadingStrategyInterface} from '../types';
+import FlatStrategy from '../structureStrategies/FlatStrategy';
+import type {LoadingStrategyInterface, StructureStrategyInterface} from '../types';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
@@ -13,8 +14,8 @@ export default class FolderAdapter extends AbstractAdapter {
         return new PaginationStrategy();
     }
 
-    static getStorageStrategy(): string {
-        return 'flat';
+    static getStructureStrategy(): StructureStrategyInterface {
+        return new FlatStrategy();
     }
 
     static defaultProps = {

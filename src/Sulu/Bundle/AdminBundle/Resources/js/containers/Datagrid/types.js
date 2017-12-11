@@ -33,3 +33,7 @@ export interface LoadingStrategyInterface {
     paginationAdapter: PaginationAdapter,
     load(data: Array<Object>, resourceKey: string, options: LoadOptions): Promise<Object>,
 }
+
+export interface StructureStrategyInterface {
+    data: Array<*>,
+}

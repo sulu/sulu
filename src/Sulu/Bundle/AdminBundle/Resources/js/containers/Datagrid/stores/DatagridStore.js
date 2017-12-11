@@ -1,7 +1,7 @@
 // @flow
 import {action, autorun, intercept, observable, computed} from 'mobx';
 import type {IValueWillChange} from 'mobx'; // eslint-disable-line import/named
-import type {LoadingStrategyInterface, ObservableOptions} from '../types';
+import type {LoadingStrategyInterface, ObservableOptions, StructureStrategyInterface} from '../types';
 import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
@@ -10,6 +10,7 @@ export default class DatagridStore {
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
+    @observable structureStrategy: StructureStrategyInterface;
     disposer: () => void;
     resourceKey: string;
     options: Object;
@@ -28,11 +29,12 @@ export default class DatagridStore {
     }
 
     @computed get initialized(): boolean {
-        return !!this.loadingStrategy;
+        return !!this.loadingStrategy && !!this.structureStrategy;
     }
 
-    @action init = (loadingStrategy: LoadingStrategyInterface) => {
+    @action init = (loadingStrategy: LoadingStrategyInterface, structureStrategy: StructureStrategyInterface) => {
         this.updateLoadingStrategy(loadingStrategy);
+        this.updateStructureStrategy(structureStrategy);
     };
 
     @action updateLoadingStrategy = (loadingStrategy: LoadingStrategyInterface) => {
@@ -52,6 +54,14 @@ export default class DatagridStore {
         if ('InfiniteScrollingStrategy' === this.loadingStrategy.constructor.name && this.observableOptions.locale) {
             this.localeInterceptionDisposer = intercept(this.observableOptions.locale, '', this.handleLocaleChanges);
         }
+    };
+
+    @action updateStructureStrategy = (structureStrategy: StructureStrategyInterface) => {
+        if (this.structureStrategy === structureStrategy) {
+            return;
+        }
+
+        this.structureStrategy = structureStrategy;
     };
 
     handleLocaleChanges = (change: IValueWillChange<number>) => {

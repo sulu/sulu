@@ -16,8 +16,12 @@ function LoadingStrategy() {
     this.load = jest.fn().mockReturnValue({then: jest.fn()});
 }
 
+function StructureStrategy() {
+}
+
 test('The loading strategy should be called when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
     const page = observable();
     const locale = observable();
     const datagridStore = new DatagridStore(
@@ -32,7 +36,7 @@ test('The loading strategy should be called when a request is sent', () => {
     );
 
     datagridStore.data = [{id: 1}];
-    datagridStore.init(loadingStrategy);
+    datagridStore.init(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'tests', {
         locale: undefined,
@@ -45,6 +49,7 @@ test('The loading strategy should be called when a request is sent', () => {
 
 test('The loading strategy should be called with a different resourceKey when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
     const page = observable();
     const locale = observable();
     const datagridStore = new DatagridStore(
@@ -59,7 +64,7 @@ test('The loading strategy should be called with a different resourceKey when a 
     );
 
     datagridStore.data = [{id: 1}];
-    datagridStore.init(loadingStrategy);
+    datagridStore.init(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
         locale: undefined,
@@ -72,6 +77,7 @@ test('The loading strategy should be called with a different resourceKey when a 
 
 test('The loading strategy should be called with a different page when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
     const page = observable();
     const locale = observable();
     const datagridStore = new DatagridStore(
@@ -86,7 +92,7 @@ test('The loading strategy should be called with a different page when a request
     );
 
     datagridStore.data = [{id: 1}];
-    datagridStore.init(loadingStrategy);
+    datagridStore.init(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
         locale: undefined,
@@ -106,6 +112,7 @@ test('The loading strategy should be called with a different page when a request
 
 test('The loading strategy should be called with a different locale when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
     const page = observable();
     const locale = observable('en');
     const datagridStore = new DatagridStore(
@@ -120,7 +127,7 @@ test('The loading strategy should be called with a different locale when a reque
     );
 
     datagridStore.data = [{id: 1}];
-    datagridStore.init(loadingStrategy);
+    datagridStore.init(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
         locale: 'en',
@@ -141,7 +148,7 @@ test('The loading strategy should be called with a different locale when a reque
 test('Set loading flag to true before request', () => {
     const page = observable();
     const datagridStore = new DatagridStore('tests', {page});
-    datagridStore.init(new LoadingStrategy());
+    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
     page.set(1);
     datagridStore.setLoading(false);
     datagridStore.sendRequest();
@@ -156,8 +163,9 @@ test('Set loading flag to false after request', (done) => {
         pages: 3,
     });
     const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
     loadingStrategy.load.mockReturnValue(promise);
-    datagridStore.init(loadingStrategy);
+    datagridStore.init(loadingStrategy, structureStrategy);
     datagridStore.sendRequest();
     return promise.then(() => {
         expect(datagridStore.loading).toEqual(false);
@@ -176,7 +184,7 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy());
+    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
     expect(datagridStore.getSchema()).toBe(fields);
     expect(metadataStore.getSchema).toBeCalledWith('tests');
     datagridStore.destroy();
@@ -187,7 +195,7 @@ test('After initialization no row should be selected', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy());
+    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
     expect(datagridStore.selections.length).toBe(0);
     datagridStore.destroy();
 });
@@ -197,7 +205,7 @@ test('Select an item', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy());
+    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
     datagridStore.select(1);
     datagridStore.select(2);
     expect(toJS(datagridStore.selections)).toEqual([1, 2]);
@@ -212,7 +220,7 @@ test('Deselect an item that has not been selected yet', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy());
+    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
     datagridStore.select(1);
     datagridStore.deselect(2);
 
@@ -223,7 +231,7 @@ test('Deselect an item that has not been selected yet', () => {
 test('Select the entire page', () => {
     const page = observable();
     const datagridStore = new DatagridStore('tests', {page});
-    datagridStore.init(new LoadingStrategy());
+    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
     datagridStore.data = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [1, 7];
     datagridStore.selectEntirePage();
@@ -236,7 +244,7 @@ test('Deselect the entire page', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy());
+    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
     datagridStore.data = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [1, 2, 7];
     datagridStore.deselectEntirePage();
@@ -249,7 +257,7 @@ test('Clear the selection', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy());
+    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
     datagridStore.selections = [1, 4, 5];
     page.set(1);
     expect(datagridStore.selections).toHaveLength(3);
@@ -274,7 +282,7 @@ test('When loading strategy is infiniteScroll, changing the locale resets the da
         this.load = jest.fn().mockReturnValue({then: jest.fn()});
     }
 
-    datagridStore.init(new InfiniteScrollingStrategy());
+    datagridStore.init(new InfiniteScrollingStrategy(), new StructureStrategy());
 
     page.set(3);
     locale.set('en');
@@ -296,7 +304,7 @@ test('When loading strategy was changed to pagination, changing the locale shoul
         },
         {}
     );
-    datagridStore.init(new LoadingStrategy());
+    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
 
     page.set(3);
@@ -322,7 +330,7 @@ test('Page count should be reset when loading strategy changes', () => {
         {}
     );
 
-    datagridStore.init(loadingStrategy1);
+    datagridStore.init(loadingStrategy1, new StructureStrategy());
     datagridStore.pageCount = 5;
     datagridStore.data = [{id: 1}];
 

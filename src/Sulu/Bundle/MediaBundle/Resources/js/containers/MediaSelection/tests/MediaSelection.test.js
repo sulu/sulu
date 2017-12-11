@@ -75,6 +75,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.deselectEntirePage = jest.fn();
             this.getSchema = jest.fn().mockReturnValue({});
         }),
+        FlatStrategy: require('sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStrategy').default,
         InfiniteScrollingStrategy: require(
             'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteScrollingStrategy'
         ).default,
