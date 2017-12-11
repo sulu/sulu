@@ -9,8 +9,13 @@ const SELECT_ICON = 'check';
 
 @observer
 export default class MediaCardSelectionAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => LoadingStrategyInterface = () => { return new InfiniteScrollingStrategy(); };
-    static getStorageStrategy: () => string = () => { return 'flat'; };
+    static getLoadingStrategy(): LoadingStrategyInterface {
+        return new InfiniteScrollingStrategy();
+    }
+
+    static getStorageStrategy(): string {
+        return 'flat';
+    }
 
     handleItemClick = (itemId: string | number, selected: boolean) => {
         const {onItemSelectionChange} = this.props;

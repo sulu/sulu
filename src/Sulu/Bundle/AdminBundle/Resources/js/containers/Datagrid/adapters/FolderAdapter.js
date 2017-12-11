@@ -9,8 +9,13 @@ import AbstractAdapter from './AbstractAdapter';
 
 @observer
 export default class FolderAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => LoadingStrategyInterface = () => { return new PaginationStrategy(); };
-    static getStorageStrategy: () => string = () => { return 'flat'; };
+    static getLoadingStrategy(): LoadingStrategyInterface {
+        return new PaginationStrategy();
+    }
+
+    static getStorageStrategy(): string {
+        return 'flat';
+    }
 
     static defaultProps = {
         data: [],

@@ -9,8 +9,13 @@ const EDIT_ICON = 'pencil';
 
 @observer
 export default class MediaCardOverviewAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => LoadingStrategyInterface = () => { return new InfiniteScrollingStrategy(); };
-    static getStorageStrategy: () => string = () => { return 'flat'; };
+    static getLoadingStrategy(): LoadingStrategyInterface {
+        return new InfiniteScrollingStrategy();
+    }
+
+    static getStorageStrategy(): string {
+        return 'flat';
+    }
 
     render() {
         return (
