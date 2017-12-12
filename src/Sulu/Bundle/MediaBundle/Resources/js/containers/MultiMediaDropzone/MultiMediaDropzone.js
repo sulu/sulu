@@ -32,7 +32,7 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
     }
 
     @action closeOverlay() {
-        this.overlayOpen = false;
+        // this.overlayOpen = false;
     }
 
     @action addMediaUploadStore(mediaUploadStore: MediaUploadStore) {

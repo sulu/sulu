@@ -9,7 +9,6 @@ import MultiMediaDropzone from '../MultiMediaDropzone';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
 
 type Props = {
-    page: IObservableValue<number>,
     locale: IObservableValue<string>,
     mediaDatagridAdapters: Array<string>,
     mediaDatagridStore: DatagridStore,

@@ -159,7 +159,6 @@ class MediaOverview extends React.PureComponent<ViewProps> {
         return (
             <div className={mediaOverviewStyles.mediaOverview}>
                 <MediaCollection
-                    page={this.collectionPage}
                     locale={this.locale}
                     collectionStore={this.collectionStore}
                     mediaDatagridAdapters={['media_card_overview', 'table']}
