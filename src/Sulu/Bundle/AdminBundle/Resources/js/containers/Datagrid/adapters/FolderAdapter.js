@@ -3,7 +3,7 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import FolderList from '../../../components/FolderList';
 import {translate} from '../../../utils/Translator';
-import PaginationStrategy from '../loadingStrategies/PaginationStrategy';
+import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
 import FlatStrategy from '../structureStrategies/FlatStrategy';
 import type {LoadingStrategyInterface, StructureStrategyInterface} from '../types';
 import AbstractAdapter from './AbstractAdapter';
@@ -11,7 +11,7 @@ import AbstractAdapter from './AbstractAdapter';
 @observer
 export default class FolderAdapter extends AbstractAdapter {
     static getLoadingStrategy(): LoadingStrategyInterface {
-        return new PaginationStrategy();
+        return new PaginatedLoadingStrategy();
     }
 
     static getStructureStrategy(): StructureStrategyInterface {

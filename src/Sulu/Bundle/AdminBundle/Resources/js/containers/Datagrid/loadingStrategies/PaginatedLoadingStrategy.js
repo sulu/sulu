@@ -4,7 +4,7 @@ import Pagination from '../../../components/Pagination';
 import ResourceRequester from '../../../services/ResourceRequester';
 import type {LoadOptions, LoadingStrategyInterface} from '../types';
 
-export default class PaginationStrategy implements LoadingStrategyInterface {
+export default class PaginatedLoadingStrategy implements LoadingStrategyInterface {
     paginationAdapter = Pagination;
 
     load(data: Array<Object>, resourceKey: string, options: LoadOptions) {

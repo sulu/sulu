@@ -1,6 +1,6 @@
 // @flow
 import 'url-search-params-polyfill';
-import PaginationStrategy from '../../loadingStrategies/PaginationStrategy';
+import PaginatedLoadingStrategy from '../../loadingStrategies/PaginatedLoadingStrategy';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
 jest.mock('../../../../services/ResourceRequester', () => ({
@@ -8,7 +8,7 @@ jest.mock('../../../../services/ResourceRequester', () => ({
 }));
 
 test('Should load items and add to empty array', () => {
-    const paginationStrategy = new PaginationStrategy();
+    const paginatedLoadingStrategy = new PaginatedLoadingStrategy();
     const data = [];
 
     const promise = Promise.resolve({
@@ -21,7 +21,7 @@ test('Should load items and add to empty array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    paginationStrategy.load(data, 'snippets', {
+    paginatedLoadingStrategy.load(data, 'snippets', {
         page: 2,
     });
 
@@ -34,7 +34,7 @@ test('Should load items and add to empty array', () => {
 });
 
 test('Should load items and replace existing entries in array', () => {
-    const paginationStrategy = new PaginationStrategy();
+    const paginatedLoadingStrategy = new PaginatedLoadingStrategy();
     const data = [
         {id: 3},
         {id: 5},
@@ -50,7 +50,7 @@ test('Should load items and replace existing entries in array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    paginationStrategy.load(data, 'snippets', {
+    paginatedLoadingStrategy.load(data, 'snippets', {
         page: 1,
         locale: 'en',
     });
@@ -64,10 +64,10 @@ test('Should load items and replace existing entries in array', () => {
 });
 
 test('Should load items with correct options', () => {
-    const paginationStrategy = new PaginationStrategy();
+    const paginatedLoadingStrategy = new PaginatedLoadingStrategy();
     const data = [];
 
-    paginationStrategy.load(data, 'snippets', {
+    paginatedLoadingStrategy.load(data, 'snippets', {
         page: 2,
         locale: 'en',
     });
