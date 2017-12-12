@@ -22,10 +22,10 @@
         "doctrine/doctrine-bundle": "~1.0",
         "doctrine/doctrine-cache-bundle": "~1.1",
         "friendsofsymfony/http-cache": "~1.4",
-        "jms/serializer-bundle": "^1.1",
+        "jms/serializer-bundle": "^1.2",
         "friendsofsymfony/rest-bundle": "~1.5",
         "guzzlehttp/guzzle": "^6.2",
-        "imagine/imagine": "~0.6.1",
+        "imagine/imagine": "~0.6.1 || ~0.7.0",
         "massive/search-bundle": "0.16.*",
         "sulu/document-manager": "~0.9.1",
         "sensio/framework-extra-bundle": "3.0.*",
@@ -54,15 +54,17 @@
         "matthiasnoback/symfony-dependency-injection-test": "^0.7.3",
         "phpunit/phpunit": "^4.8.31",
         "phpspec/prophecy": "^1.4",
-        "symfony/phpunit-bridge": "~2.8.7, !=2.8.10",
-        "sensio/framework-extra-bundle": "~3.0",
-        "symfony/monolog-bundle": "~2.8 || ~3.0",
+        "symfony/phpunit-bridge": "~2.8.7",
+        "symfony/monolog-bundle": "~2.8.7 || ~3.0",
         "zendframework/zend-stdlib": "~2.3",
         "zendframework/zendsearch": "@dev",
         "doctrine/doctrine-fixtures-bundle": "~2.2"
     },
     "conflict": {
-        "jackalope/jackalope": "1.2.8"
+        "symfony/symfony": "2.8.10",
+        "symfony/phpunit-bridge": "2.8.10",
+        "symfony/monolog-bundle": "2.8.10",
+        "jackalope/jackalope": "1.2.8 || 1.3.0 || 1.3.1"
     },
     "replace": {
         "sulu/media-bundle": "self.version",
@@ -79,9 +81,6 @@
         "sulu/location-bundle": "self.version",
         "sulu/translate-bundle": "self.version",
         "sulu/content-bundle": "self.version"
-    },
-    "conflict": {
-        "jackalope/jackalope": "1.2.8"
     },
     "suggest": {
         "sensio/framework-extra-bundle": "~3.0",
