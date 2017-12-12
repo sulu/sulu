@@ -5,7 +5,7 @@ import Datagrid, {
     AbstractAdapter,
     FlatStrategy,
     PaginationStrategy,
-    InfiniteScrollingStrategy,
+    InfiniteLoadingStrategy,
 } from './Datagrid';
 import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './Datagrid';
 import {viewRegistry} from './ViewRenderer';
@@ -28,7 +28,7 @@ export {
     fieldRegistry,
     FlatStrategy,
     Form,
-    InfiniteScrollingStrategy,
+    InfiniteLoadingStrategy,
     PaginationStrategy,
     viewRegistry,
     withToolbar,

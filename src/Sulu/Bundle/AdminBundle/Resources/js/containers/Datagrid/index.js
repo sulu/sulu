@@ -7,7 +7,7 @@ import FolderAdapter from './adapters/FolderAdapter';
 import AbstractAdapter from './adapters/AbstractAdapter';
 import FlatStrategy from './structureStrategies/FlatStrategy';
 import PaginationStrategy from './loadingStrategies/PaginationStrategy';
-import InfiniteScrollingStrategy from './loadingStrategies/InfiniteScrollingStrategy';
+import InfiniteLoadingStrategy from './loadingStrategies/InfiniteLoadingStrategy';
 import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './types';
 
 export default Datagrid;
@@ -19,7 +19,7 @@ export {
     FolderAdapter,
     FlatStrategy,
     PaginationStrategy,
-    InfiniteScrollingStrategy,
+    InfiniteLoadingStrategy,
 };
 export type {
     DatagridAdapterProps,

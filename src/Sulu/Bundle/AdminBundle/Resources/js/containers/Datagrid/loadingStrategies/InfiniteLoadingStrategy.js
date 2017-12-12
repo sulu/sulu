@@ -4,7 +4,7 @@ import InfiniteScroller from '../../../components/InfiniteScroller';
 import ResourceRequester from '../../../services/ResourceRequester';
 import type {LoadOptions, LoadingStrategyInterface} from '../types';
 
-export default class InfiniteScrollingStrategy implements LoadingStrategyInterface {
+export default class InfiniteLoadingStrategy implements LoadingStrategyInterface {
     paginationAdapter = InfiniteScroller;
 
     load(data: Array<Object>, resourceKey: string, options: LoadOptions) {

@@ -71,8 +71,8 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.init = jest.fn();
         }),
         FlatStrategy: require('sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStrategy').default,
-        InfiniteScrollingStrategy: require(
-            'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteScrollingStrategy'
+        InfiniteLoadingStrategy: require(
+            'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteLoadingStrategy'
         ).default,
     };
 });

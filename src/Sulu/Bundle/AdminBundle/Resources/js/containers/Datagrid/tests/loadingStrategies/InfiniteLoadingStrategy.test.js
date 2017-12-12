@@ -1,6 +1,6 @@
 // @flow
 import 'url-search-params-polyfill';
-import InfiniteScrollingStrategy from '../../loadingStrategies/InfiniteScrollingStrategy';
+import InfiniteLoadingStrategy from '../../loadingStrategies/InfiniteLoadingStrategy';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
 jest.mock('../../../../services/ResourceRequester', () => ({
@@ -8,7 +8,7 @@ jest.mock('../../../../services/ResourceRequester', () => ({
 }));
 
 test('Should load items and add to empty array', () => {
-    const infiniteScrollingStrategy = new InfiniteScrollingStrategy();
+    const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
     const data = [];
 
     const promise = Promise.resolve({
@@ -21,7 +21,7 @@ test('Should load items and add to empty array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    infiniteScrollingStrategy.load(data, 'snippets', {
+    infiniteLoadingStrategy.load(data, 'snippets', {
         page: 2,
     });
 
@@ -34,7 +34,7 @@ test('Should load items and add to empty array', () => {
 });
 
 test('Should load items and add to existing entries in array', () => {
-    const infiniteScrollingStrategy = new InfiniteScrollingStrategy();
+    const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
     const data = [
         {id: 3},
         {id: 5},
@@ -50,7 +50,7 @@ test('Should load items and add to existing entries in array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    infiniteScrollingStrategy.load(data, 'snippets', {
+    infiniteLoadingStrategy.load(data, 'snippets', {
         page: 1,
         locale: 'en',
     });
@@ -66,10 +66,10 @@ test('Should load items and add to existing entries in array', () => {
 });
 
 test('Should load items with correct options', () => {
-    const infiniteScrollingStrategy = new InfiniteScrollingStrategy();
+    const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
     const data = [];
 
-    infiniteScrollingStrategy.load(data, 'snippets', {
+    infiniteLoadingStrategy.load(data, 'snippets', {
         page: 2,
         locale: 'en',
     });
