@@ -55,7 +55,7 @@ class FileValidator implements FileValidatorInterface
             throw new InvalidFileException(sprintf('The file upload had an error("%s: %s")', $file->getError(), $file->getErrorMessage()));
         }
 
-        if (in_array(self::VALIDATOR_FILE_SET, $methods) && $file->getFilename() == '') {
+        if (in_array(self::VALIDATOR_FILE_SET, $methods) && '' == $file->getFilename()) {
             throw new UploadFileNotSetException(sprintf('No file "%s" was set', $file->getFilename()));
         }
 
@@ -63,7 +63,7 @@ class FileValidator implements FileValidatorInterface
             throw new InvalidFileTypeException(sprintf('The file type "%s" was blocked', $file->getMimeType()));
         }
 
-        if (in_array(self::VALIDATOR_MAX_FILE_SIZE, $methods) && $this->maxFileSize !== null && $file->getSize() >= $this->maxFileSize) {
+        if (in_array(self::VALIDATOR_MAX_FILE_SIZE, $methods) && null !== $this->maxFileSize && $file->getSize() >= $this->maxFileSize) {
             throw new MaxFileSizeExceededException(sprintf('File "%s" exceeds the configured maximum filesize of "%s"', $file->getFilename(), $this->maxFilesize));
         }
     }

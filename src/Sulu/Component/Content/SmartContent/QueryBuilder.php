@@ -83,7 +83,7 @@ class QueryBuilder extends ContentQueryBuilder
         // build where clause for datasource
         if ($this->hasConfig('dataSource')) {
             $sql2Where[] = $this->buildDatasourceWhere();
-        } elseif (count($this->ids) === 0) {
+        } elseif (0 === count($this->ids)) {
             $sql2Where[] = sprintf(
                 'ISDESCENDANTNODE(page, "/cmf/%s/contents")',
                 $webspaceKey
@@ -158,7 +158,7 @@ class QueryBuilder extends ContentQueryBuilder
      */
     protected function buildOrder($webspaceKey, $locale)
     {
-        $sortOrder = (isset($this->config['sortMethod']) && strtolower($this->config['sortMethod']) === 'desc')
+        $sortOrder = (isset($this->config['sortMethod']) && 'desc' === strtolower($this->config['sortMethod']))
             ? 'DESC' : 'ASC';
 
         $sql2Order = [];
@@ -202,7 +202,7 @@ class QueryBuilder extends ContentQueryBuilder
             $alias = $parameter->getName();
             $propertyName = $parameter->getValue();
 
-            if (strpos($propertyName, '.') !== false) {
+            if (false !== strpos($propertyName, '.')) {
                 $parts = explode('.', $propertyName);
 
                 $this->buildExtensionSelect($alias, $parts[0], $parts[1], $locale, $additionalFields);
@@ -249,7 +249,7 @@ class QueryBuilder extends ContentQueryBuilder
     {
         $dataSource = $this->getConfig('dataSource');
         $includeSubFolders = $this->getConfig('includeSubFolders', false);
-        $sqlFunction = $includeSubFolders !== false && $includeSubFolders !== 'false' ?
+        $sqlFunction = false !== $includeSubFolders && 'false' !== $includeSubFolders ?
             'ISDESCENDANTNODE' : 'ISCHILDNODE';
 
         $node = $this->sessionManager->getSession()->getNodeByIdentifier($dataSource);

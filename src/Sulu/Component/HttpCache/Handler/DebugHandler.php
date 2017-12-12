@@ -24,9 +24,13 @@ use Symfony\Component\HttpFoundation\Response;
 class DebugHandler implements HandlerUpdateResponseInterface
 {
     const HEADER_HANDLERS = 'X-Sulu-Handlers';
+
     const HEADER_CLIENT_NAME = 'X-Sulu-Proxy-Client';
+
     const HEADER_STRUCTURE_TYPE = 'X-Sulu-Structure-Type';
+
     const HEADER_STRUCTURE_UUID = 'X-Sulu-Structure-UUID';
+
     const HEADER_STRUCTURE_TTL = 'X-Sulu-Page-TTL';
 
     /**

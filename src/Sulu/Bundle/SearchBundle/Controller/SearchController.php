@@ -205,13 +205,14 @@ class SearchController
             $indexConfiguration = $this->indexConfigurationProvider->getIndexConfiguration($indexName);
             if (!$indexConfiguration) {
                 $allowedIndexNames[] = $indexName;
+
                 continue;
             }
 
             $contexts = $indexConfiguration->getContexts();
 
             if ($this->securityChecker->hasPermission($indexConfiguration->getSecurityContext(), PermissionTypes::VIEW)
-                && (empty($contexts) || array_search('admin', $contexts) !== false)
+                && (empty($contexts) || false !== array_search('admin', $contexts))
             ) {
                 $allowedIndexNames[] = $indexName;
             }

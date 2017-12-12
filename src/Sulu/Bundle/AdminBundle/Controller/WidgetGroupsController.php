@@ -47,7 +47,7 @@ class WidgetGroupsController extends Controller
                 $request->query->all()
             );
 
-            return new Response($content, $content !== '' ? 200 : 204);
+            return new Response($content, '' !== $content ? 200 : 204);
         } catch (WidgetException $ex) {
             return new Response($ex->getMessage(), 400);
         }
@@ -60,7 +60,7 @@ class WidgetGroupsController extends Controller
      */
     private function getWidgetsHandler()
     {
-        if ($this->widgetsHandler === null) {
+        if (null === $this->widgetsHandler) {
             $this->widgetsHandler = $this->get('sulu_admin.widgets_handler');
         }
 

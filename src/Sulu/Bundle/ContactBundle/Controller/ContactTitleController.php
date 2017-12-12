@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -92,7 +91,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
         $name = $request->get('title');
 
         try {
-            if ($name == null) {
+            if (null == $name) {
                 throw new RestException(
                     'There is no title-name for the given title'
                 );
@@ -242,7 +241,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
                 ->getRepository(self::$entityName)
                 ->find($item['id']);
 
-            if ($title == null) {
+            if (null == $title) {
                 throw new EntityNotFoundException(self::$entityName, $item['id']);
             } else {
                 $title->setTitle($item['title']);

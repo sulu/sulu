@@ -99,7 +99,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
     public function testHandler($handler)
     {
         $config = [];
-        if ($handler !== 'aggregate') {
+        if ('aggregate' !== $handler) {
             $config = [
                 'handlers' => [
                     $handler => [

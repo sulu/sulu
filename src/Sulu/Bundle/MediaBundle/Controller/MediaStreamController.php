@@ -163,7 +163,7 @@ class MediaStreamController extends Controller
         }
 
         $currentFileVersion = null;
-        $version = $version === null ? $mediaEntity->getFiles()[0]->getVersion() : $version;
+        $version = null === $version ? $mediaEntity->getFiles()[0]->getVersion() : $version;
 
         $file = $mediaEntity->getFiles()[0];
 
@@ -190,7 +190,7 @@ class MediaStreamController extends Controller
      */
     protected function getCacheManager()
     {
-        if ($this->cacheManager === null) {
+        if (null === $this->cacheManager) {
             $this->cacheManager = $this->get('sulu_media.format_manager');
         }
 
@@ -204,7 +204,7 @@ class MediaStreamController extends Controller
      */
     protected function getMediaManager()
     {
-        if ($this->mediaManager === null) {
+        if (null === $this->mediaManager) {
             $this->mediaManager = $this->get('sulu_media.media_manager');
         }
 
@@ -218,7 +218,7 @@ class MediaStreamController extends Controller
      */
     protected function getStorage()
     {
-        if ($this->storage === null) {
+        if (null === $this->storage) {
             $this->storage = $this->get('sulu_media.storage');
         }
 

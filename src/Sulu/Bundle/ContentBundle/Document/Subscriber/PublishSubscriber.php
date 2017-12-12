@@ -254,6 +254,7 @@ class PublishSubscriber implements EventSubscriberInterface
 
             if ($currentLiveNode->hasNode($pathSegment)) {
                 $currentLiveNode = $currentLiveNode->getNode($pathSegment);
+
                 continue;
             }
 

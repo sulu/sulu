@@ -68,9 +68,9 @@ class StructureBridgeTest extends \PHPUnit_Framework_TestCase
             Argument::type(StructureBridge::class)
         )->will(
             function ($args) use ($title, $images) {
-                if ($args[0]->getName() === 'title') {
+                if ('title' === $args[0]->getName()) {
                     return $title->reveal();
-                } elseif ($args[0]->getName() === 'images') {
+                } elseif ('images' === $args[0]->getName()) {
                     return $images->reveal();
                 }
             }

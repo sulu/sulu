@@ -18,7 +18,6 @@ use Sulu\Component\HttpCache\HandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
 {

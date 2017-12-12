@@ -334,10 +334,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $t1 = 0;
         $t2 = 0;
         for ($i = 0; $i < $max; ++$i) {
-            if ($i % 3 === 2) {
+            if (2 === $i % 3) {
                 $tags = [$this->tag1->getName()];
                 ++$t1;
-            } elseif ($i % 3 === 1) {
+            } elseif (1 === $i % 3) {
                 $tags = [$this->tag1->getName(), $this->tag2->getName()];
                 ++$t1t2;
             } else {
@@ -1063,7 +1063,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->documentManager->persist($document, $locale);
         }
 
-        if ($state === WorkflowStage::PUBLISHED) {
+        if (WorkflowStage::PUBLISHED === $state) {
             $this->documentManager->publish($document, $locale);
         }
 

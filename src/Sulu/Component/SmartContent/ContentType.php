@@ -386,7 +386,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
      */
     private function getCurrentPage($pageParameter)
     {
-        if ($this->requestStack->getCurrentRequest() !== null) {
+        if (null !== $this->requestStack->getCurrentRequest()) {
             $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
         } else {
             $page = 1;

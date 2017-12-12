@@ -26,6 +26,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class AuthorSubscriber implements EventSubscriberInterface
 {
     const AUTHORED_PROPERTY_NAME = 'authored';
+
     const AUTHOR_PROPERTY_NAME = 'author';
 
     /**
@@ -107,7 +108,7 @@ class AuthorSubscriber implements EventSubscriberInterface
         }
 
         // Set default value if authored is not set.
-        if ($document->getAuthored() === null) {
+        if (null === $document->getAuthored()) {
             $document->setAuthored(new \DateTime());
         }
 

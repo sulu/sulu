@@ -19,8 +19,11 @@ use Metadata\PropertyMetadata as BasePropertyMetadata;
 class PropertyMetadata extends BasePropertyMetadata
 {
     const DISPLAY_ALWAYS = 'always';
+
     const DISPLAY_NEVER = 'never';
+
     const DISPLAY_YES = 'yes';
+
     const DISPLAY_NO = 'no';
 
     /**

@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 interface TypeManagerInterface
 {
     const ENTITY_CLASS_MEDIATYPE = 'Sulu\Bundle\MediaBundle\Entity\MediaType';
+
     const ENTITY_NAME_MEDIATYPE = 'SuluMediaBundle:MediaType';
 
     /**

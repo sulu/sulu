@@ -114,7 +114,7 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $collection = $provider->getRouteCollectionForRequest($request->reveal());
 
-        if (!$exists || !$published || $workflowStage === WorkflowStage::TEST) {
+        if (!$exists || !$published || WorkflowStage::TEST === $workflowStage) {
             $this->assertCount(0, $collection);
 
             return;

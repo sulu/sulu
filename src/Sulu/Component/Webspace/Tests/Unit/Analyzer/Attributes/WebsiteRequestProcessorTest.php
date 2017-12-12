@@ -252,7 +252,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidate($attributes, $exception = null, $message = '')
     {
-        if ($exception !== null) {
+        if (null !== $exception) {
             $this->setExpectedException($exception, $message);
         }
 

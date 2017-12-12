@@ -41,7 +41,7 @@ class RedirectEnhancer extends AbstractEnhancer
         Request $request
     ) {
         $resourceSegment = '/';
-        if ($customUrl->getTargetDocument() !== null) {
+        if (null !== $customUrl->getTargetDocument()) {
             $resourceSegment = $customUrl->getTargetDocument()->getResourceSegment();
         }
 
@@ -63,6 +63,6 @@ class RedirectEnhancer extends AbstractEnhancer
      */
     protected function supports(CustomUrlBehavior $customUrl)
     {
-        return $customUrl->isRedirect() || $customUrl->getTargetDocument() === null;
+        return $customUrl->isRedirect() || null === $customUrl->getTargetDocument();
     }
 }

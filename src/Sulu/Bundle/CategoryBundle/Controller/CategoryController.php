@@ -107,7 +107,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
 
-        if ($request->get('flat') == 'true') {
+        if ('true' == $request->get('flat')) {
             // check if parent exists
             $this->getCategoryManager()->findById($parentId);
             $list = $this->getListRepresentation($request, $locale, $parentId);
@@ -135,7 +135,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $locale = $this->getRequestParameter($request, 'locale', true);
         $rootKey = $request->get('rootKey');
 
-        if ($request->get('flat') == 'true') {
+        if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey)->getId() : null;
             $expandIds = array_filter(explode(',', $request->get('expandIds')));
             $list = $this->getListRepresentation($request, $locale, $rootId, $expandIds);

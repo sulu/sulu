@@ -31,6 +31,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class WorkflowStageSubscriber implements EventSubscriberInterface
 {
     const WORKFLOW_STAGE_FIELD = 'state';
+
     const PUBLISHED_FIELD = 'published';
 
     /**
@@ -250,7 +251,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
         $path = $this->documentInspector->getPath($document);
         $document->setWorkflowStage($workflowStage);
 
-        $updatePublished = !$document->getPublished() && $workflowStage === WorkflowStage::PUBLISHED;
+        $updatePublished = !$document->getPublished() && WorkflowStage::PUBLISHED === $workflowStage;
         if ($updatePublished) {
             $accessor->set(self::PUBLISHED_FIELD, new \DateTime());
         }

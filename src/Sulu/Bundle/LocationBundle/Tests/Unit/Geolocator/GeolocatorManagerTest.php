@@ -16,6 +16,7 @@ use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorManager;
 class GeolocatorManagerTest extends \PHPUnit_Framework_TestCase
 {
     protected $container;
+
     protected $manager;
 
     public function setUp()

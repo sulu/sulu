@@ -41,11 +41,17 @@ class RoleController extends RestController implements ClassResourceInterface, S
     const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
 
     protected $fieldsDefault = ['name'];
+
     protected $fieldsExcluded = [];
+
     protected $fieldsHidden = ['changed', 'created'];
+
     protected $fieldsRelations = [];
+
     protected $fieldsSortOrder = [0 => 'id', 1 => 'name'];
+
     protected $fieldsTranslationKeys = [];
+
     protected $bundlePrefix = 'security.roles.';
 
     /**
@@ -138,7 +144,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
      */
     public function cgetAction(Request $request)
     {
-        if ($request->get('flat') == 'true') {
+        if ('true' == $request->get('flat')) {
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -161,7 +167,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
         } else {
             $roles = $this->getRoleRepository()->findAllRoles();
             $convertedRoles = [];
-            if ($roles != null) {
+            if (null != $roles) {
                 foreach ($roles as $role) {
                     array_push($convertedRoles, $this->convertRole($role));
                 }
@@ -210,10 +216,10 @@ class RoleController extends RestController implements ClassResourceInterface, S
         $system = $request->get('system');
 
         try {
-            if ($name === null) {
+            if (null === $name) {
                 throw new InvalidArgumentException('Role', 'name');
             }
-            if ($system === null) {
+            if (null === $system) {
                 throw new InvalidArgumentException('Role', 'name');
             }
 
@@ -390,7 +396,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
                     ->convertPermissionsToNumber($permissionData['permissions'])
             );
         }
-        if ($alreadyContains === false) {
+        if (false === $alreadyContains) {
             $permission->setRole($role);
             $em->persist($permission);
             $role->addPermission($permission);
@@ -468,7 +474,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
      */
     private function checkSecurityTypeData($securityTypeData)
     {
-        return $securityTypeData != null && $securityTypeData['id'] != null && $securityTypeData['id'] != '';
+        return null != $securityTypeData && null != $securityTypeData['id'] && '' != $securityTypeData['id'];
     }
 
     /**

@@ -36,6 +36,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
     protected static $entityKey = 'groups';
 
     // TODO: Create a Manager and move the field descriptors to the manager
+
     /**
      * @var array - Holds the field descriptors for the list response
      */
@@ -63,7 +64,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
      */
     public function cgetAction(Request $request)
     {
-        if ($request->get('flat') == 'true') {
+        if ('true' == $request->get('flat')) {
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -130,7 +131,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
     {
         $name = $request->get('name');
 
-        if ($name != null) {
+        if (null != $name) {
             $em = $this->getDoctrine()->getManager();
 
             $group = new Group();
@@ -310,7 +311,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
     public function setParent($group, Request $request)
     {
         $parentData = $request->get('parent');
-        if ($parentData != null && isset($parentData['id'])) {
+        if (null != $parentData && isset($parentData['id'])) {
             $parent = $this->getDoctrine()
                 ->getRepository(static::$entityName)
                 ->findGroupById($parentData['id']);

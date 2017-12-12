@@ -23,6 +23,7 @@ class FilterDependencyNotFoundException extends FilterException
      * @var string
      */
     private $entityName;
+
     /**
      * The id of the object not found.
      *

@@ -24,6 +24,7 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
      * @var DoctrineDescriptor
      */
     private $case1;
+
     /**
      * @var DoctrineDescriptor
      */

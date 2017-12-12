@@ -175,7 +175,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
     {
         $structureName = $structureMetadata->getName();
         foreach ($structureMetadata->getProperties() as $property) {
-            if ($property->getType() === 'url') {
+            if ('url' === $property->getType()) {
                 $properties[$structureName][] = ['property' => $property];
             } elseif ($property instanceof BlockMetadata) {
                 $this->findUrlBlockProperties($property, $structureName, $properties);
@@ -196,7 +196,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
         foreach ($property->getComponents() as $component) {
             $componentResult = ['component' => $component, 'children' => []];
             foreach ($component->getChildren() as $childProperty) {
-                if ($childProperty->getType() === 'url') {
+                if ('url' === $childProperty->getType()) {
                     $componentResult['children'][$childProperty->getName()] = $childProperty;
                 }
             }
@@ -340,12 +340,12 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
     private function upgradeUrl(&$value)
     {
         if (!empty($value)
-            && strpos($value, 'http://') === false
-            && strpos($value, 'https://') === false
-            && strpos($value, 'ftp://') === false
-            && strpos($value, 'ftps://') === false
-            && strpos($value, 'mailto:') === false
-            && strpos($value, '//') === false
+            && false === strpos($value, 'http://')
+            && false === strpos($value, 'https://')
+            && false === strpos($value, 'ftp://')
+            && false === strpos($value, 'ftps://')
+            && false === strpos($value, 'mailto:')
+            && false === strpos($value, '//')
         ) {
             $value = 'http://' . $value;
         }
@@ -362,7 +362,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
      */
     private function downgradeUrl(&$value)
     {
-        if (strpos($value, 'http://') === 0) {
+        if (0 === strpos($value, 'http://')) {
             $value = substr($value, 7);
         }
 

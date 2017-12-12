@@ -176,7 +176,7 @@ interface CategoryInterface extends AuditableInterface
      *
      * @deprecated use Category::addChild instead
      */
-    public function addChildren(CategoryInterface $child);
+    public function addChildren(self $child);
 
     /**
      * Add children.
@@ -185,21 +185,21 @@ interface CategoryInterface extends AuditableInterface
      *
      * @return CategoryInterface
      */
-    public function addChild(CategoryInterface $child);
+    public function addChild(self $child);
 
     /**
      * {@see Category::removeChild}.
      *
      * @deprecated use Category::removeChild instead
      */
-    public function removeChildren(CategoryInterface $child);
+    public function removeChildren(self $child);
 
     /**
      * Remove children.
      *
      * @param CategoryInterface $child
      */
-    public function removeChild(CategoryInterface $child);
+    public function removeChild(self $child);
 
     /**
      * Get children.
@@ -215,7 +215,7 @@ interface CategoryInterface extends AuditableInterface
      *
      * @return CategoryInterface
      */
-    public function setParent(CategoryInterface $parent = null);
+    public function setParent(self $parent = null);
 
     /**
      * Get parent.

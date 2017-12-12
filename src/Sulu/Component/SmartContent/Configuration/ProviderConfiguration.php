@@ -63,7 +63,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
      */
     public function hasDatasource()
     {
-        return $this->datasource !== null && $this->datasource !== false;
+        return null !== $this->datasource && false !== $this->datasource;
     }
 
     /**

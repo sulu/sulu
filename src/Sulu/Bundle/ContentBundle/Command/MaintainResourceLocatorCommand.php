@@ -153,18 +153,18 @@ class MaintainResourceLocatorCommand extends Command
         }
 
         $nodeType = $node->getPropertyValue($this->propertyEncoder->localizedSystemName('nodeType', $locale));
-        if ($property->getContentTypeName() !== 'resource_locator' && $nodeType !== Structure::NODE_TYPE_CONTENT) {
+        if ('resource_locator' !== $property->getContentTypeName() && Structure::NODE_TYPE_CONTENT !== $nodeType) {
             return;
         }
 
         $baseRoutePath = $this->sessionManager->getRoutePath($webspace->getKey(), $localization->getLocale());
         foreach ($node->getReferences('sulu:content') as $routeProperty) {
-            if (strpos($routeProperty->getPath(), $baseRoutePath) !== 0) {
+            if (0 !== strpos($routeProperty->getPath(), $baseRoutePath)) {
                 continue;
             }
 
             $routeNode = $routeProperty->getParent();
-            if ($routeNode->getPropertyValue('sulu:history') === true) {
+            if (true === $routeNode->getPropertyValue('sulu:history')) {
                 continue;
             }
 

@@ -90,7 +90,7 @@ class PositionController extends RestController implements ClassResourceInterfac
         $name = $request->get('position');
 
         try {
-            if ($name == null) {
+            if (null == $name) {
                 throw new RestException(
                     'There is no position-name for the given name'
                 );
@@ -240,7 +240,7 @@ class PositionController extends RestController implements ClassResourceInterfac
                 ->getRepository(self::$entityName)
                 ->find($item['id']);
 
-            if ($position == null) {
+            if (null == $position) {
                 throw new EntityNotFoundException(self::$entityName, $item['id']);
             } else {
                 $position->setPosition($item['position']);

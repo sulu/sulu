@@ -68,12 +68,12 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
         ];
 
-        if ($this->getContext() === self::CONTEXT_WEBSITE) {
+        if (self::CONTEXT_WEBSITE === $this->getContext()) {
             // smyfony-cmf
             $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
         }
 
-        if ($this->getContext() === self::CONTEXT_ADMIN) {
+        if (self::CONTEXT_ADMIN === $this->getContext()) {
             // rest
             $bundles[] = new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle();
             $bundles[] = new \FOS\RestBundle\FOSRestBundle();

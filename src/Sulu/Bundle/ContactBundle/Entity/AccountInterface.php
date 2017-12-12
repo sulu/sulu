@@ -325,7 +325,7 @@ interface AccountInterface
      *
      * @return Account
      */
-    public function setParent(AccountInterface $parent = null);
+    public function setParent(self $parent = null);
 
     /**
      * Get parent.
@@ -592,14 +592,14 @@ interface AccountInterface
      *
      * @return Account
      */
-    public function addChild(AccountInterface $child);
+    public function addChild(self $child);
 
     /**
      * Remove children.
      *
      * @param AccountInterface $child
      */
-    public function removeChild(AccountInterface $child);
+    public function removeChild(self $child);
 
     /**
      * Add categories.

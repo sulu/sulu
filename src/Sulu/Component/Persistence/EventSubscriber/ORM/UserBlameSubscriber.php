@@ -30,6 +30,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class UserBlameSubscriber implements EventSubscriber
 {
     const CHANGER_FIELD = 'changer';
+
     const CREATOR_FIELD = 'creator';
 
     /**
@@ -75,7 +76,7 @@ class UserBlameSubscriber implements EventSubscriber
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 
-        if ($reflection !== null && $reflection->implementsInterface('Sulu\Component\Persistence\Model\UserBlameInterface')) {
+        if (null !== $reflection && $reflection->implementsInterface('Sulu\Component\Persistence\Model\UserBlameInterface')) {
             if (!$metadata->hasAssociation(self::CREATOR_FIELD)) {
                 $metadata->mapManyToOne([
                     'fieldName' => self::CREATOR_FIELD,

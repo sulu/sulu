@@ -132,7 +132,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
             foreach ($portalInformations as $portalInformation) {
                 if (
                     $portalInformation->getPortalKey() === $this->requestAnalyzer->getPortal()->getKey()
-                    && $portalInformation->getType() === RequestAnalyzerInterface::MATCH_TYPE_FULL
+                    && RequestAnalyzerInterface::MATCH_TYPE_FULL === $portalInformation->getType()
                 ) {
                     if (isset($routeParams['prefix'])) {
                         $routeParams['prefix'] = $portalInformation->getPrefix();

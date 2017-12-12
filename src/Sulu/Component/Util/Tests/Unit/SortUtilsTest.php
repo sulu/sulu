@@ -162,6 +162,7 @@ class SortUtilsTest extends \PHPUnit_Framework_TestCase
 class FoobarTestClass
 {
     public $field1;
+
     public $field2;
 
     public function __construct($value1, $value2)

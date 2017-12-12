@@ -74,7 +74,7 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
         // get default
         $proxyClientName = null;
         foreach ($config as $name => $proxyClient) {
-            if ($proxyClient['enabled'] === false) {
+            if (false === $proxyClient['enabled']) {
                 continue;
             }
 
@@ -129,6 +129,7 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
         foreach ($config as $handlerName => $handlerConfig) {
             if (false === $handlerConfig['enabled']) {
                 $container->removeDefinition('sulu_http_cache.handler.' . $handlerName);
+
                 continue;
             }
 

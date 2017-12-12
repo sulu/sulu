@@ -176,7 +176,7 @@ class Document extends BaseDocument
 
         foreach ($properties as $key => $field) {
             // remove system fields
-            if (substr($key, 0, 2) == '__') {
+            if ('__' == substr($key, 0, 2)) {
                 continue;
             }
 

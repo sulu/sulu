@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -57,6 +58,22 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                         'codes' => [
                             RoleNameAlreadyExistsException::class => 409,
                         ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('framework')
+            && SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')
+        ) {
+            $container->prependExtensionConfig(
+                'framework',
+                [
+                    'session' => [
+                        'cookie_path' => '/admin',
+                    ],
+                    'fragments' => [
+                        'path' => '/admin/_fragments',
                     ],
                 ]
             );

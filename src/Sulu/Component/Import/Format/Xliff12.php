@@ -155,13 +155,14 @@ class Xliff12 implements FormatImportInterface
             $name = (string) $attributes['resname'];
             $value = $this->utf8ToCharset((string) $translation->target, $encoding);
 
-            if (strpos($name, '#') === false) {
+            if (false === strpos($name, '#')) {
                 $property = [
                     'name' => $name,
                     'value' => $value,
                 ];
 
                 $data[$name] = $property;
+
                 continue;
             }
 

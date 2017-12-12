@@ -112,9 +112,9 @@ class ContentRouteProvider implements RouteProviderInterface
         $collection = new RouteCollection();
 
         // no portal information without localization supported
-        if ($this->requestAnalyzer->getCurrentLocalization() === null
-            && $this->requestAnalyzer->getMatchType() !== RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
-            && $this->requestAnalyzer->getMatchType() !== RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
+        if (null === $this->requestAnalyzer->getCurrentLocalization()
+            && RequestAnalyzerInterface::MATCH_TYPE_PARTIAL !== $this->requestAnalyzer->getMatchType()
+            && RequestAnalyzerInterface::MATCH_TYPE_REDIRECT !== $this->requestAnalyzer->getMatchType()
         ) {
             return $collection;
         }
@@ -123,8 +123,8 @@ class ContentRouteProvider implements RouteProviderInterface
         $resourceLocator = $this->requestAnalyzer->getResourceLocator();
 
         if (
-            $this->requestAnalyzer->getMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
-            || $this->requestAnalyzer->getMatchType() == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
+            RequestAnalyzerInterface::MATCH_TYPE_REDIRECT == $this->requestAnalyzer->getMatchType()
+            || RequestAnalyzerInterface::MATCH_TYPE_PARTIAL == $this->requestAnalyzer->getMatchType()
         ) {
             // redirect webspace correctly with locale
             $collection->add(
@@ -132,7 +132,7 @@ class ContentRouteProvider implements RouteProviderInterface
                 $this->getRedirectWebSpaceRoute()
             );
         } elseif (
-            $request->getRequestFormat() === 'html' &&
+            'html' === $request->getRequestFormat() &&
             substr($request->getPathInfo(), -strlen($htmlExtension)) === $htmlExtension
         ) {
             // redirect *.html to * (without url)
@@ -182,7 +182,7 @@ class ContentRouteProvider implements RouteProviderInterface
                             $this->requestAnalyzer->getResourceLocatorPrefix() . rtrim($resourceLocator, '/')
                         )
                     );
-                } elseif ($document->getRedirectType() === RedirectType::INTERNAL) {
+                } elseif (RedirectType::INTERNAL === $document->getRedirectType()) {
                     // redirect internal link
                     $redirectUrl = $this->requestAnalyzer->getResourceLocatorPrefix()
                         . $document->getRedirectTarget()->getResourceSegment();
@@ -198,7 +198,7 @@ class ContentRouteProvider implements RouteProviderInterface
                             $redirectUrl
                         )
                     );
-                } elseif ($document->getRedirectType() === RedirectType::EXTERNAL) {
+                } elseif (RedirectType::EXTERNAL === $document->getRedirectType()) {
                     $collection->add(
                         $document->getStructureType() . '_' . $document->getUuid(),
                         $this->getRedirectRoute($request, $document->getRedirectExternal())
@@ -295,7 +295,7 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private function checkResourceLocator()
     {
-        return !($this->requestAnalyzer->getResourceLocator() === '/'
+        return !('/' === $this->requestAnalyzer->getResourceLocator()
             && $this->requestAnalyzer->getResourceLocatorPrefix());
     }
 
@@ -355,7 +355,7 @@ class ContentRouteProvider implements RouteProviderInterface
             $request->getPathInfo(), [
                 '_controller' => $content->getController(),
                 'structure' => $content,
-                'partial' => $request->get('partial', 'false') === 'true',
+                'partial' => 'true' === $request->get('partial', 'false'),
             ]
         );
     }

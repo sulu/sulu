@@ -53,7 +53,7 @@ class ParameterResolver implements ParameterResolverInterface
         StructureInterface $structure = null,
         $preview = false
     ) {
-        if ($structure !== null) {
+        if (null !== $structure) {
             $structureData = $this->structureResolver->resolve($structure);
         } else {
             $structureData = [];

@@ -256,7 +256,7 @@ class Media implements MediaInterface
      *
      * @return Media
      */
-    public function setPreviewImage(Media $previewImage = null)
+    public function setPreviewImage(self $previewImage = null)
     {
         $this->previewImage = $previewImage;
 

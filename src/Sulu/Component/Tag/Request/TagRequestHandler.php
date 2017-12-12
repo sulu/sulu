@@ -33,7 +33,7 @@ class TagRequestHandler implements TagRequestHandlerInterface
      */
     public function getTags($tagsParameter = 'tags')
     {
-        if ($this->requestStack->getCurrentRequest() !== null) {
+        if (null !== $this->requestStack->getCurrentRequest()) {
             $tags = $this->requestStack->getCurrentRequest()->get($tagsParameter, '');
         } else {
             $tags = '';

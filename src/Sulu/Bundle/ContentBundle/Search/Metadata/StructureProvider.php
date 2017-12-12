@@ -42,7 +42,9 @@ use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
 class StructureProvider implements ProviderInterface
 {
     const FIELD_STRUCTURE_TYPE = '_structure_type';
+
     const FIELD_TEASER_DESCRIPTION = '_teaser_description';
+
     const FIELD_TEASER_MEDIA = '_teaser_media';
 
     /**
@@ -136,7 +138,7 @@ class StructureProvider implements ProviderInterface
             $indexName = $mapping['index'];
         }
 
-        if ($indexName === 'page') {
+        if ('page' === $indexName) {
             $indexMeta->setIndexName(
                 new Expression(
                     sprintf(
@@ -161,7 +163,7 @@ class StructureProvider implements ProviderInterface
                         $tag = $componentProperty->getTag('sulu.search.field');
                         $tagAttributes = $tag['attributes'];
 
-                        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+                        if (!isset($tagAttributes['index']) || 'false' !== $tagAttributes['index']) {
                             $propertyMapping->addFieldMapping(
                                 $property->getName() . '.' . $componentProperty->getName(),
                                 [
@@ -384,7 +386,7 @@ EOT;
             return;
         }
 
-        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+        if (!isset($tagAttributes['index']) || 'false' !== $tagAttributes['index']) {
             $metadata->addFieldMapping(
                 $property->getName(),
                 [

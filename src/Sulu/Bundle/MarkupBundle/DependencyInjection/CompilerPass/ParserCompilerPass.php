@@ -21,7 +21,9 @@ use Symfony\Component\DependencyInjection\Reference;
 class ParserCompilerPass implements CompilerPassInterface
 {
     const SERVICE_ID = 'sulu_markup.response_listener';
+
     const TAG_NAME = 'sulu_markup.parser';
+
     const TYPE_ATTRIBUTE = 'type';
 
     /**

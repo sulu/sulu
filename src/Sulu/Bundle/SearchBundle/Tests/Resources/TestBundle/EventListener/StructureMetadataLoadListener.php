@@ -16,6 +16,7 @@ use Sulu\Bundle\SearchBundle\Search\Event\StructureMetadataLoadEvent;
 class StructureMetadataLoadListener
 {
     public $structure;
+
     public $indexMetadata;
 
     public function handleStructureLoadMetadata(StructureMetadataLoadEvent $event)

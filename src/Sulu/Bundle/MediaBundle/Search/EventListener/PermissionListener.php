@@ -46,7 +46,7 @@ class PermissionListener
      */
     public function onPermissionUpdate(PermissionUpdateEvent $event)
     {
-        if ($event->getType() !== Collection::class) {
+        if (Collection::class !== $event->getType()) {
             return;
         }
 

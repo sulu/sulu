@@ -17,15 +17,25 @@ use Sulu\Component\Persistence\Model\UserBlameInterface;
 class Product implements TimestampableInterface, UserBlameInterface
 {
     public $id;
+
     public $title;
+
     public $body;
+
     public $date;
+
     public $url;
+
     public $locale;
+
     public $image;
+
     public $changed;
+
     public $created;
+
     public $creator;
+
     public $changer;
 
     public function getChanged()

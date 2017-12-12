@@ -168,7 +168,7 @@ class AnalyticsManagerTest extends BaseFunctional
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($data as $key => $value) {
-            if ($key === 'domains') {
+            if ('domains' === $key) {
                 continue;
             }
             $this->assertEquals($value, $accessor->getValue($result, $key));
@@ -200,7 +200,7 @@ class AnalyticsManagerTest extends BaseFunctional
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($data as $key => $value) {
-            if ($key === 'domains') {
+            if ('domains' === $key) {
                 continue;
             }
             $this->assertEquals($value, $accessor->getValue($result, $key));

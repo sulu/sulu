@@ -35,9 +35,13 @@ use Symfony\Component\Translation\Translator;
 class ResettingController extends Controller
 {
     protected static $emailSubjectKey = 'security.reset.mail-subject';
+
     protected static $emailMessageKey = 'security.reset.mail-message';
+
     protected static $translationDomain = 'backend';
+
     protected static $resetRouteId = 'sulu_admin.reset';
+
     const MAX_NUMBER_EMAILS = 3;
 
     /**
@@ -74,7 +78,7 @@ class ResettingController extends Controller
         try {
             /** @var UserInterface $user */
             $user = $this->findUser($request->get('user'));
-            if ($generateNewKey === true) {
+            if (true === $generateNewKey) {
                 $this->generateTokenForUser($user);
             }
             $email = $this->getEmail($user);
@@ -186,7 +190,7 @@ class ResettingController extends Controller
      */
     private function getEmail(UserInterface $user)
     {
-        if ($user->getEmail() !== null) {
+        if (null !== $user->getEmail()) {
             return $user->getEmail();
         }
 
@@ -293,10 +297,10 @@ class ResettingController extends Controller
      */
     private function sendTokenEmail(UserInterface $user, $from, $to)
     {
-        if ($user->getPasswordResetToken() === null) {
+        if (null === $user->getPasswordResetToken()) {
             throw new NoTokenFoundException($user);
         }
-        if ($user->getPasswordResetTokenEmailsSent() === self::MAX_NUMBER_EMAILS) {
+        if (self::MAX_NUMBER_EMAILS === $user->getPasswordResetTokenEmailsSent()) {
             throw new TokenEmailsLimitReachedException(self::MAX_NUMBER_EMAILS, $user);
         }
         $mailer = $this->get('mailer');
@@ -326,7 +330,7 @@ class ResettingController extends Controller
      */
     private function changePassword(UserInterface $user, $password)
     {
-        if ($password === '') {
+        if ('' === $password) {
             throw new MissingPasswordException();
         }
         $em = $this->getDoctrine()->getManager();
@@ -345,7 +349,7 @@ class ResettingController extends Controller
     private function generateTokenForUser(UserInterface $user)
     {
         // if a token was already requested within the request interval time frame
-        if ($user->getPasswordResetToken() !== null &&
+        if (null !== $user->getPasswordResetToken() &&
             $this->dateIsInRequestFrame($user->getPasswordResetTokenExpiresAt())
         ) {
             throw new TokenAlreadyRequestedException(self::getRequestInterval());
@@ -371,7 +375,7 @@ class ResettingController extends Controller
      */
     private function dateIsInRequestFrame(\DateTime $date)
     {
-        if ($date === null) {
+        if (null === $date) {
             return false;
         }
 

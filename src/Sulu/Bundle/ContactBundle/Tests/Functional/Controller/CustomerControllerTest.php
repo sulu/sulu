@@ -18,6 +18,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 class CustomerControllerTest extends SuluTestCase
 {
     private $contacts = [];
+
     private $accounts = [];
 
     public function setUp()

@@ -43,7 +43,7 @@ class PageBridge extends StructureBridge implements PageInterface
         }
 
         // return original locale for shadow or ghost pages
-        if ($this->getIsShadow() || ($this->getType() && $this->getType()->getName() === 'ghost')) {
+        if ($this->getIsShadow() || ($this->getType() && 'ghost' === $this->getType()->getName())) {
             return $this->inspector->getOriginalLocale($this->getDocument());
         }
 

@@ -63,6 +63,6 @@ class PortalLoader extends Loader
      */
     public function supports($resource, $type = null)
     {
-        return $type === 'portal';
+        return 'portal' === $type;
     }
 }

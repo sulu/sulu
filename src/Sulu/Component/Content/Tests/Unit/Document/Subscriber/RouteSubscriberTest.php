@@ -41,6 +41,7 @@ class RouteSubscriberTest extends \PHPUnit_Framework_TestCase
      * @var SessionManagerInterface
      */
     private $sessionManager;
+
     /**
      * @var RouteSubscriber
      */

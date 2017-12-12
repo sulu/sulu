@@ -81,7 +81,7 @@ class MediaSelectionContainer implements ArrayableInterface
      */
     public function getData()
     {
-        if ($this->data === null) {
+        if (null === $this->data) {
             $this->data = $this->loadData($this->locale);
         }
 
@@ -156,7 +156,7 @@ class MediaSelectionContainer implements ArrayableInterface
 
     public function __isset($name)
     {
-        return $name == 'data' || $name == 'config' || $name == 'ids' || $name == 'displayOption' || $name == 'types';
+        return 'data' == $name || 'config' == $name || 'ids' == $name || 'displayOption' == $name || 'types' == $name;
     }
 
     /**

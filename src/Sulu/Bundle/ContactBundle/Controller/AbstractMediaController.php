@@ -30,10 +30,15 @@ use Sulu\Component\Rest\RestHelperInterface;
 abstract class AbstractMediaController extends RestController
 {
     protected static $collectionEntityName = 'SuluMediaBundle:Collection';
+
     protected static $fileVersionEntityName = 'SuluMediaBundle:FileVersion';
+
     protected static $fileEntityName = 'SuluMediaBundle:File';
+
     protected static $fileVersionMetaEntityName = 'SuluMediaBundle:FileVersionMeta';
+
     protected static $mediaEntityKey = 'media';
+
     protected $fieldDescriptors = null;
 
     /**
@@ -152,7 +157,7 @@ abstract class AbstractMediaController extends RestController
         try {
             $locale = $this->getUser()->getLocale();
 
-            if ($request->get('flat') === 'true') {
+            if ('true' === $request->get('flat')) {
                 /** @var RestHelperInterface $restHelper */
                 $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -210,7 +215,7 @@ abstract class AbstractMediaController extends RestController
      */
     private function getFieldDescriptors($entityName, $id)
     {
-        if ($this->fieldDescriptors === null) {
+        if (null === $this->fieldDescriptors) {
             $this->initFieldDescriptors($entityName, $id);
         }
 

@@ -80,11 +80,11 @@ class CustomUrlRouteProvider implements RouteProviderInterface
             $customUrlDocument = $routeDocument->getTargetDocument();
         }
 
-        if ($customUrlDocument === null
-            || $customUrlDocument->isPublished() === false
+        if (null === $customUrlDocument
+            || false === $customUrlDocument->isPublished()
             || (
-                $customUrlDocument->getTargetDocument() !== null
-                && $customUrlDocument->getTargetDocument()->getWorkflowStage() !== WorkflowStage::PUBLISHED
+                null !== $customUrlDocument->getTargetDocument()
+                && WorkflowStage::PUBLISHED !== $customUrlDocument->getTargetDocument()->getWorkflowStage()
             )
         ) {
             return $collection;

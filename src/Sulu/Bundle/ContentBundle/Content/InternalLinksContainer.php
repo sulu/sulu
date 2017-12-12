@@ -15,7 +15,6 @@ use JMS\Serializer\Annotation\Exclude;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
-use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
@@ -120,7 +119,7 @@ class InternalLinksContainer implements ArrayableInterface
      */
     public function getData()
     {
-        if ($this->data === null) {
+        if (null === $this->data) {
             $this->data = $this->loadData();
         }
 
@@ -133,7 +132,7 @@ class InternalLinksContainer implements ArrayableInterface
     private function loadData()
     {
         $result = [];
-        if ($this->ids !== null && count($this->ids) > 0) {
+        if (null !== $this->ids && count($this->ids) > 0) {
             $this->contentQueryBuilder->init(
                 [
                     'ids' => $this->ids,
@@ -183,7 +182,7 @@ class InternalLinksContainer implements ArrayableInterface
      */
     public function __isset($name)
     {
-        return $name == 'data';
+        return 'data' == $name;
     }
 
     /**

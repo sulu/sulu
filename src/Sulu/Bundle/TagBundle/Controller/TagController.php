@@ -64,9 +64,11 @@ class TagController extends RestController implements ClassResourceInterface, Se
         'creator_contact_lastName',
         'changed',
     ];
+
     protected $fieldsRelations = [
         'creator_contact_lastName',
     ];
+
     protected $fieldsSortOrder = [
         '0' => 'name',
         '1' => 'creator_contact_lastName',
@@ -130,7 +132,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
      */
     public function cgetAction(Request $request)
     {
-        if ($request->get('flat') == 'true') {
+        if ('true' == $request->get('flat')) {
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -187,7 +189,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
         $name = $request->get('name');
 
         try {
-            if ($name == null) {
+            if (null == $name) {
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
 
@@ -225,7 +227,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
         $name = $request->get('name');
 
         try {
-            if ($name == null) {
+            if (null == $name) {
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
 

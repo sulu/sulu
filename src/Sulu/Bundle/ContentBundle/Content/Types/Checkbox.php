@@ -47,7 +47,7 @@ class Checkbox extends SimpleContentType
     ) {
         $value = $property->getValue();
 
-        if ($value !== null && $value !== false && $value !== 'false' && $value !== '') {
+        if (null !== $value && false !== $value && 'false' !== $value && '' !== $value) {
             $node->setProperty($property->getName(), true);
         } else {
             $node->setProperty($property->getName(), false);
@@ -88,7 +88,7 @@ class Checkbox extends SimpleContentType
     ) {
         $preparedValue = true;
 
-        if ($value === '0') {
+        if ('0' === $value) {
             $preparedValue = false;
         }
 

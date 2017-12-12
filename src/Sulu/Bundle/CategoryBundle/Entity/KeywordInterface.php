@@ -121,5 +121,5 @@ interface KeywordInterface extends AuditableInterface
      *
      * @return bool
      */
-    public function equals(KeywordInterface $keyword);
+    public function equals(self $keyword);
 }

@@ -187,7 +187,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             foreach ($iterator as $file) {
                 $ext = $file->getExtension();
 
-                if ($ext !== 'xml') {
+                if ('xml' !== $ext) {
                     continue;
                 }
 

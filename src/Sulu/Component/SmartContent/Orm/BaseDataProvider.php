@@ -143,7 +143,7 @@ abstract class BaseDataProvider implements DataProviderInterface
         $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         $hasNextPage = false;
-        if ($pageSize !== null && count($result) > $pageSize) {
+        if (null !== $pageSize && count($result) > $pageSize) {
             $hasNextPage = true;
             $result = array_splice($result, 0, $pageSize);
         }

@@ -26,14 +26,17 @@ class SnippetTest extends SuluTestCase
      * @var SnippetExportInterface
      */
     private $snippetExporter;
+
     /**
      * @var DocumentManagerInterface
      */
     private $documentManager;
+
     /**
      * @var ExtensionManagerInterface
      */
     private $extensionManager;
+
     /**
      * @var int
      */

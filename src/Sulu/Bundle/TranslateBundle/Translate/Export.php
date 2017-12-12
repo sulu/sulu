@@ -25,9 +25,13 @@ use Symfony\Component\Translation\Translator;
 class Export
 {
     const XLIFF = 0;
+
     const JSON = 1;
+
     const BACKEND_DOMAIN = 'backend';
+
     const FRONTEND_DOMAIN = 'frontend';
+
     const DEFAULT_LOCALE = 'en';
 
     /**
@@ -210,7 +214,7 @@ class Export
      */
     public function getPath()
     {
-        return ($this->path != null) ? $this->path : getcwd();
+        return (null != $this->path) ? $this->path : getcwd();
     }
 
     /**
@@ -290,7 +294,7 @@ class Export
      */
     private function newFileDumper()
     {
-        if ($this->getFormat() === self::XLIFF) {
+        if (self::XLIFF === $this->getFormat()) {
             return new XliffFileDumper();
         }
 

@@ -117,7 +117,7 @@ class NavigationItem implements \Iterator
         $this->name = $name;
         $this->disabled = false;
 
-        if ($parent != null) {
+        if (null != $parent) {
             $parent->addChild($this);
         }
     }
@@ -239,7 +239,7 @@ class NavigationItem implements \Iterator
      *
      * @param NavigationItem $child
      */
-    public function addChild(NavigationItem $child)
+    public function addChild(self $child)
     {
         $this->children[] = $child;
     }
@@ -390,7 +390,7 @@ class NavigationItem implements \Iterator
      *
      * @return bool True if the NavigationItems are equal, otherwise false
      */
-    public function equalsChildless(NavigationItem $other)
+    public function equalsChildless(self $other)
     {
         return $this->getName() == $other->getName();
     }
@@ -427,7 +427,7 @@ class NavigationItem implements \Iterator
      *
      * @return NavigationItem|null Null if the NavigationItem is not found, otherwise the found NavigationItem
      */
-    public function findChildren(NavigationItem $navigationItem)
+    public function findChildren(self $navigationItem)
     {
         foreach ($this->getChildren() as $child) {
             /** @var NavigationItem $child */
@@ -447,7 +447,7 @@ class NavigationItem implements \Iterator
      *
      * @return NavigationItem
      */
-    public function merge(NavigationItem $other = null)
+    public function merge(self $other = null)
     {
         // Create new item
         $new = $this->copyChildless();
@@ -455,11 +455,11 @@ class NavigationItem implements \Iterator
         // Add all children from this item
         foreach ($this->getChildren() as $child) {
             /* @var NavigationItem $child */
-            $new->addChild($child->merge(($other != null) ? $other->findChildren($child) : null));
+            $new->addChild($child->merge((null != $other) ? $other->findChildren($child) : null));
         }
 
         // Add all children from the other item
-        if ($other != null) {
+        if (null != $other) {
             foreach ($other->getChildren() as $child) {
                 /** @var NavigationItem $child */
                 if (!$new->find($child)) {
@@ -543,10 +543,10 @@ class NavigationItem implements \Iterator
             'eventArguments' => $this->getEventArguments(),
             'hasSettings' => $this->getHasSettings(),
             'disabled' => $this->getDisabled(),
-            'id' => ($this->getId() != null) ? $this->getId() : str_replace('.', '', uniqid('', true)), //FIXME don't use uniqid()
+            'id' => (null != $this->getId()) ? $this->getId() : str_replace('.', '', uniqid('', true)), //FIXME don't use uniqid()
         ];
 
-        if ($this->getHeaderIcon() != null || $this->getHeaderTitle() != null) {
+        if (null != $this->getHeaderIcon() || null != $this->getHeaderTitle()) {
             $array['header'] = [
                 'title' => $this->getHeaderTitle(),
                 'logo' => $this->getHeaderIcon(),

@@ -24,8 +24,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
 {
     protected $container;
+
     protected $output;
+
     protected $input;
+
     protected $application;
 
     /**

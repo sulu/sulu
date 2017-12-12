@@ -24,6 +24,7 @@ use Sulu\Component\Persistence\Model\TimestampableInterface;
 class TimestampableSubscriber implements EventSubscriber
 {
     const CREATED_FIELD = 'created';
+
     const CHANGED_FIELD = 'changed';
 
     /**
@@ -49,7 +50,7 @@ class TimestampableSubscriber implements EventSubscriber
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 
-        if ($reflection !== null && $reflection->implementsInterface('Sulu\Component\Persistence\Model\TimestampableInterface')) {
+        if (null !== $reflection && $reflection->implementsInterface('Sulu\Component\Persistence\Model\TimestampableInterface')) {
             if (!$metadata->hasField(self::CREATED_FIELD)) {
                 $metadata->mapField([
                     'fieldName' => self::CREATED_FIELD,

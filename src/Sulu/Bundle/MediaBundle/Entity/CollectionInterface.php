@@ -159,7 +159,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
      *
      * @return CollectionInterface
      */
-    public function setParent(CollectionInterface $parent = null);
+    public function setParent(self $parent = null);
 
     /**
      * Get parent.

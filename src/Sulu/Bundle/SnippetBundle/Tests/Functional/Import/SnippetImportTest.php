@@ -25,13 +25,18 @@ class SnippetImportTest extends SuluTestCase
      * @var DocumentManagerInterface
      */
     private $documentManager;
+
     /**
      * @var object
      */
     private $parent;
+
     private $snippetImporter;
+
     private $snippets = [];
+
     protected $distPath = './src/Sulu/Bundle/SnippetBundle/Tests/app/Resources/import/export.xliff.dist';
+
     protected $path = './src/Sulu/Bundle/SnippetBundle/Tests/app/Resources/import/export.xliff';
 
     /**

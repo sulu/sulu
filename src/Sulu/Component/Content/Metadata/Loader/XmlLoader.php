@@ -36,7 +36,7 @@ class XmlLoader extends XmlLegacyLoader
         $structure->name = $data['key'];
         $structure->cacheLifetime = $data['cacheLifetime'];
         $structure->controller = $data['controller'];
-        $structure->internal = $data['internal'] === 'true';
+        $structure->internal = 'true' === $data['internal'];
         $structure->view = $data['view'];
         $structure->tags = $data['tags'];
         $structure->parameters = $data['params'];
@@ -54,11 +54,11 @@ class XmlLoader extends XmlLegacyLoader
 
     private function createProperty($propertyName, $propertyData)
     {
-        if ($propertyData['type'] === 'block') {
+        if ('block' === $propertyData['type']) {
             return $this->createBlock($propertyName, $propertyData);
         }
 
-        if ($propertyData['type'] === 'section') {
+        if ('section' === $propertyData['type']) {
             return $this->createSection($propertyName, $propertyData);
         }
 
@@ -134,7 +134,7 @@ class XmlLoader extends XmlLegacyLoader
         $property->colSpan = $data['colspan'];
         $property->cssClass = $data['cssClass'];
         $property->tags = $data['tags'];
-        $property->minOccurs = $data['minOccurs'] !== null ? intval($data['minOccurs']) : null;
+        $property->minOccurs = null !== $data['minOccurs'] ? intval($data['minOccurs']) : null;
         $property->maxOccurs = $data['maxOccurs'] ? intval($data['maxOccurs']) : null;
         $property->parameters = $data['params'];
         $this->mapMeta($property, $data['meta']);

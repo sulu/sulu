@@ -25,6 +25,7 @@ class SnippetControllerTest extends SuluTestCase
      * @var Client
      */
     protected $client;
+
     /**
      * @var SnippetDocument
      */

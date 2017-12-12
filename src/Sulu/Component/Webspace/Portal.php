@@ -254,9 +254,6 @@ class Portal
         return $this->webspace;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         $res = [];

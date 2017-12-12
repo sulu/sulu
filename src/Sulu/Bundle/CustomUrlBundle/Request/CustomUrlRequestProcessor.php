@@ -65,12 +65,12 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $url = rtrim(sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/');
-        if (substr($url, -5, 5) === '.html') {
+        if ('.html' === substr($url, -5, 5)) {
             $url = substr($url, 0, -5);
         }
         $portalInformations = $this->webspaceManager->findPortalInformationsByUrl($url, $this->environment);
 
-        if (count($portalInformations) === 0) {
+        if (0 === count($portalInformations)) {
             return new RequestAttributes();
         }
 
@@ -78,7 +78,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         $portalInformations = array_filter(
             $portalInformations,
             function (PortalInformation $portalInformation) {
-                return $portalInformation->getType() === RequestAnalyzer::MATCH_TYPE_WILDCARD;
+                return RequestAnalyzer::MATCH_TYPE_WILDCARD === $portalInformation->getType();
             }
         );
 
@@ -133,10 +133,10 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
             $routeDocument->getTargetDocument()->getTargetLocale()
         );
 
-        if ($customUrlDocument === null
-            || $customUrlDocument->isPublished() === false
-            || $customUrlDocument->getTargetDocument() === null
-            || $customUrlDocument->getTargetDocument()->getWorkflowStage() !== WorkflowStage::PUBLISHED
+        if (null === $customUrlDocument
+            || false === $customUrlDocument->isPublished()
+            || null === $customUrlDocument->getTargetDocument()
+            || WorkflowStage::PUBLISHED !== $customUrlDocument->getTargetDocument()->getWorkflowStage()
         ) {
             // error happen because this custom-url is not published => no portal is needed
             return ['customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument];

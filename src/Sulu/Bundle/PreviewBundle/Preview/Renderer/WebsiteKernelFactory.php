@@ -21,7 +21,7 @@ class WebsiteKernelFactory implements KernelFactoryInterface
      */
     public function create($environment)
     {
-        $kernel = new PreviewKernel($environment, $environment === 'dev');
+        $kernel = new PreviewKernel($environment, 'dev' === $environment);
         $kernel->boot();
 
         return $kernel;

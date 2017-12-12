@@ -106,7 +106,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      */
     public function getByIds($ids, $locale)
     {
-        if (!is_array($ids) || count($ids) === 0) {
+        if (!is_array($ids) || 0 === count($ids)) {
             return [];
         }
 
@@ -152,14 +152,14 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             $phones = $contact->getPhones()->toArray();
             /** @var Phone $phone */
             foreach ($phones as $phone) {
-                if ($phone->getAccounts()->count() == 0 && $phone->getContacts()->count() == 1) {
+                if (0 == $phone->getAccounts()->count() && 1 == $phone->getContacts()->count()) {
                     $this->em->remove($phone);
                 }
             }
             $emails = $contact->getEmails()->toArray();
             /** @var Email $email */
             foreach ($emails as $email) {
-                if ($email->getAccounts()->count() == 0 && $email->getContacts()->count() == 1) {
+                if (0 == $email->getAccounts()->count() && 1 == $email->getContacts()->count()) {
                     $this->em->remove($email);
                 }
             }
@@ -167,7 +167,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             $urls = $contact->getUrls()->toArray();
             /** @var Url $url */
             foreach ($urls as $url) {
-                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
+                if (0 == $url->getAccounts()->count() && 1 == $url->getContacts()->count()) {
                     $this->em->remove($url);
                 }
             }
@@ -175,7 +175,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             $faxes = $contact->getFaxes()->toArray();
             /** @var Fax $fax */
             foreach ($faxes as $fax) {
-                if ($fax->getAccounts()->count() == 0 && $fax->getContacts()->count() == 1) {
+                if (0 == $fax->getAccounts()->count() && 1 == $fax->getContacts()->count()) {
                     $this->em->remove($fax);
                 }
             }
@@ -183,7 +183,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             $notes = $contact->getNotes()->toArray();
             /** @var Note $note */
             foreach ($notes as $note) {
-                if ($note->getAccounts()->count() == 0 && $note->getContacts()->count() == 1) {
+                if (0 == $note->getAccounts()->count() && 1 == $note->getContacts()->count()) {
                     $this->em->remove($note);
                 }
             }
@@ -261,16 +261,16 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             $contact = $this->contactRepository->createNew();
         }
 
-        if (!$patch || $this->getProperty($data, 'firstName') !== null) {
+        if (!$patch || null !== $this->getProperty($data, 'firstName')) {
             $contact->setFirstName($this->getProperty($data, 'firstName'));
         }
-        if (!$patch || $this->getProperty($data, 'lastName') !== null) {
+        if (!$patch || null !== $this->getProperty($data, 'lastName')) {
             $contact->setLastName($this->getProperty($data, 'lastName'));
         }
-        if (!$patch || $this->getProperty($data, 'avatar') !== null) {
+        if (!$patch || null !== $this->getProperty($data, 'avatar')) {
             $this->setAvatar($contact, $this->getProperty($data, 'avatar'));
         }
-        if (!$patch || $this->getProperty($data, 'medias') !== null) {
+        if (!$patch || null !== $this->getProperty($data, 'medias')) {
             $this->setMedias($contact, $this->getProperty($data, 'medias', []));
         }
 
@@ -301,10 +301,10 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
         if (!$id) {
             $parentData = $this->getProperty($data, 'account');
-            if ($parentData != null &&
-                $parentData['id'] != null &&
-                $parentData['id'] != 'null' &&
-                $parentData['id'] != ''
+            if (null != $parentData &&
+                null != $parentData['id'] &&
+                'null' != $parentData['id'] &&
+                '' != $parentData['id']
             ) {
                 /** @var AccountInterface $parent */
                 $parent = $this->accountRepository->findAccountById($parentData['id']);
