@@ -1,8 +1,9 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {observable} from 'mobx';
 import {render, shallow} from 'enzyme';
 import MultiMediaDropzone from '../MultiMediaDropzone';
+import MediaUploadStore from '../../../stores/MediaUploadStore';
 
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: function(key) {
@@ -13,6 +14,18 @@ jest.mock('sulu-admin-bundle/utils', () => ({
                 return 'or click here to upload';
         }
     },
+}));
+
+jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
+    this.create = jest.fn().mockReturnValue(Promise.resolve({
+        id: 123,
+    }));
+    this.progress = 45;
+    this.data = {
+        thumbnails: {
+            'sulu-400x-inset': 'http://lorempixel.com/400/250',
+        },
+    };
 }));
 
 test('Render a MultiMediaDropzone', () => {
@@ -41,4 +54,65 @@ test('Render a MultiMediaDropzone while the overlay is visible', () => {
     multiMediaDropzone.instance().openOverlay();
 
     expect(multiMediaDropzone.render()).toMatchSnapshot();
+});
+
+test('Render a MultiMediaDropzone while media is uploaded', () => {
+    const locale = observable('en');
+    const uploadSpy = jest.fn();
+    const multiMediaDropzone = shallow(
+        <MultiMediaDropzone
+            collectionId={3}
+            locale={locale}
+            onUpload={uploadSpy}
+        >
+            <div />
+        </MultiMediaDropzone>
+    );
+    const multiMediaDropzoneInstance = multiMediaDropzone.instance();
+    const files = [
+        new File([''], 'fileA'),
+        new File([''], 'fileB'),
+    ];
+
+    multiMediaDropzoneInstance.openOverlay();
+    multiMediaDropzoneInstance.handleDrop(files);
+
+    expect(multiMediaDropzone.render()).toMatchSnapshot();
+});
+
+test('Should upload media when it is dropped on the dropzone', (done) => {
+    const locale = observable('en');
+    const uploadSpy = jest.fn();
+    const multiMediaDropzone = shallow(
+        <MultiMediaDropzone
+            collectionId={3}
+            locale={locale}
+            onUpload={uploadSpy}
+        >
+            <div />
+        </MultiMediaDropzone>
+    );
+    const multiMediaDropzoneInstance = multiMediaDropzone.instance();
+    const files = [
+        new File([''], 'fileA'),
+        new File([''], 'fileB'),
+    ];
+
+    multiMediaDropzoneInstance.openOverlay();
+    multiMediaDropzoneInstance.handleDrop(files);
+
+    expect(MediaUploadStore.mock.calls[0][0]).toBe(locale);
+    expect(MediaUploadStore.mock.calls[1][0]).toBe(locale);
+    expect(MediaUploadStore.mock.instances[0].create).toBeCalledWith(3, files[0]);
+    expect(MediaUploadStore.mock.instances[1].create).toBeCalledWith(3, files[1]);
+    expect(multiMediaDropzoneInstance.mediaUploadStores.length).toBe(2);
+
+    setTimeout(() => {
+        expect(uploadSpy).toBeCalledWith([
+            {id: 123},
+            {id: 123},
+        ]);
+        expect(multiMediaDropzoneInstance.mediaUploadStores.length).toBe(0);
+        done();
+    }, 1100);
 });

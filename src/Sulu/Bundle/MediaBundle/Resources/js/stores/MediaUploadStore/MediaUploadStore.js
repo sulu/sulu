@@ -1,17 +1,18 @@
 // @flow
 import {action, observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {ResourceMetadataStore} from 'sulu-admin-bundle/stores';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 
 const RESOURCE_KEY = 'media';
 
 export default class MediaUploadStore {
-    locale: observable;
+    locale: IObservableValue;
     @observable uploading: boolean;
     @observable progress: number;
     @observable data: Object = {};
 
-    constructor(locale: observable) {
+    constructor(locale: IObservableValue) {
         this.locale = locale;
     }
 
