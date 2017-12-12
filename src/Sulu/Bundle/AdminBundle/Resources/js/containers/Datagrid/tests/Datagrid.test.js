@@ -15,7 +15,6 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.init = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
-    this.data = [{title: 'value', id: 1}];
     this.selections = [];
     this.loading = false;
     this.getSchema = jest.fn().mockReturnValue({test: {}});
@@ -24,6 +23,15 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.selectEntirePage = jest.fn();
     this.deselectEntirePage = jest.fn();
     this.updateLoadingStrategy = jest.fn();
+    this.structureStrategy = {
+        data: [
+            {
+                title: 'value',
+                id: 1,
+            },
+        ],
+    };
+    this.data = this.structureStrategy.data;
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
@@ -43,21 +51,27 @@ jest.mock('../../../utils/Translator', () => ({
     },
 }));
 
+class LoadingStrategy {
+    paginationAdapter = function PaginationAdapter() {
+        return null;
+    };
+
+    load = jest.fn();
+}
+
+class StructureStrategy {
+    data: Array<Object>;
+
+    clear = jest.fn();
+}
+
 class TestAdapter extends AbstractAdapter {
     static getLoadingStrategy(): LoadingStrategyInterface {
-        return new class {
-            paginationAdapter = function PaginationAdapter() {
-                return null;
-            };
-
-            load = jest.fn();
-        };
+        return new LoadingStrategy();
     }
 
     static getStructureStrategy(): StructureStrategyInterface {
-        return new class {
-            data: Array<Object>;
-        };
+        return new StructureStrategy();
     }
 
     render() {
@@ -109,11 +123,12 @@ test('Render TableAdapter with correct values', () => {
 test('Selecting and deselecting items should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable(1)});
-    datagridStore.data = [
+    datagridStore.structureStrategy.data.splice(0, datagridStore.structureStrategy.data.length);
+    datagridStore.structureStrategy.data.push(
         {id: 1},
         {id: 2},
-        {id: 3},
-    ];
+        {id: 3}
+    );
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
     const checkboxes = datagrid.find('input[type="checkbox"]');
@@ -131,7 +146,7 @@ test('Selecting and deselecting items should update store', () => {
 test('Selecting and unselecting all items on current page should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable(1)});
-    datagridStore.data = [
+    datagridStore.structureStrategy.data = [
         {id: 1},
         {id: 2},
         {id: 3},

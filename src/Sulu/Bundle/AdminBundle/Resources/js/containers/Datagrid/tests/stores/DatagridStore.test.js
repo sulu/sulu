@@ -16,7 +16,9 @@ function LoadingStrategy() {
     this.load = jest.fn().mockReturnValue({then: jest.fn()});
 }
 
-function StructureStrategy() {
+class StructureStrategy {
+    @observable data = [];
+    clear = jest.fn();
 }
 
 test('The loading strategy should be called when a request is sent', () => {
@@ -35,7 +37,6 @@ test('The loading strategy should be called when a request is sent', () => {
         }
     );
 
-    datagridStore.data = [{id: 1}];
     datagridStore.init(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'tests', {
@@ -63,8 +64,8 @@ test('The loading strategy should be called with a different resourceKey when a 
         }
     );
 
-    datagridStore.data = [{id: 1}];
     datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.structureStrategy.data = [{id: 1}];
 
     expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
         locale: undefined,
@@ -91,8 +92,8 @@ test('The loading strategy should be called with a different page when a request
         }
     );
 
-    datagridStore.data = [{id: 1}];
     datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.structureStrategy.data = [{id: 1}];
 
     expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
         locale: undefined,
@@ -126,8 +127,8 @@ test('The loading strategy should be called with a different locale when a reque
         }
     );
 
-    datagridStore.data = [{id: 1}];
     datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.structureStrategy.data = [{id: 1}];
 
     expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
         locale: 'en',
@@ -232,7 +233,7 @@ test('Select the entire page', () => {
     const page = observable();
     const datagridStore = new DatagridStore('tests', {page});
     datagridStore.init(new LoadingStrategy(), new StructureStrategy());
-    datagridStore.data = [{id: 1}, {id: 2}, {id: 3}];
+    datagridStore.structureStrategy.data = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [1, 7];
     datagridStore.selectEntirePage();
     expect(toJS(datagridStore.selections)).toEqual([1, 7, 2, 3]);
@@ -245,7 +246,7 @@ test('Deselect the entire page', () => {
         page,
     });
     datagridStore.init(new LoadingStrategy(), new StructureStrategy());
-    datagridStore.data = [{id: 1}, {id: 2}, {id: 3}];
+    datagridStore.structureStrategy.data = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [1, 2, 7];
     datagridStore.deselectEntirePage();
     expect(toJS(datagridStore.selections)).toEqual([7]);
@@ -332,7 +333,7 @@ test('Page count should be reset when loading strategy changes', () => {
 
     datagridStore.init(loadingStrategy1, new StructureStrategy());
     datagridStore.pageCount = 5;
-    datagridStore.data = [{id: 1}];
+    datagridStore.structureStrategy.data = [{id: 1}];
 
     expect(datagridStore.pageCount).toBe(5);
     datagridStore.updateLoadingStrategy(loadingStrategy2);

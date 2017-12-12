@@ -6,7 +6,6 @@ import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
     @observable pageCount: number = 0;
-    @observable data: Array<Object> = [];
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
@@ -32,6 +31,10 @@ export default class DatagridStore {
         return !!this.loadingStrategy && !!this.structureStrategy;
     }
 
+    @computed get data(): Array<*> {
+        return this.structureStrategy.data;
+    }
+
     @action init = (loadingStrategy: LoadingStrategyInterface, structureStrategy: StructureStrategyInterface) => {
         this.updateLoadingStrategy(loadingStrategy);
         this.updateStructureStrategy(structureStrategy);
@@ -42,7 +45,9 @@ export default class DatagridStore {
             return;
         }
 
-        this.data = [];
+        if (this.structureStrategy) {
+            this.structureStrategy.clear();
+        }
         this.pageCount = 0;
         this.setPage(1);
         this.loadingStrategy = loadingStrategy;
@@ -66,7 +71,7 @@ export default class DatagridStore {
 
     handleLocaleChanges = (change: IValueWillChange<number>) => {
         if (this.observableOptions.locale !== change.newValue) {
-            this.data = [];
+            this.structureStrategy.clear();
             this.observableOptions.page.set(1);
 
             return change;

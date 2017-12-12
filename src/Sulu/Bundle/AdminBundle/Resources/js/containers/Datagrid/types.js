@@ -36,4 +36,5 @@ export interface LoadingStrategyInterface {
 
 export interface StructureStrategyInterface {
     data: Array<*>,
+    clear(): void,
 }
