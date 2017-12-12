@@ -4,7 +4,7 @@ import React from 'react';
 import FolderList from '../../../components/FolderList';
 import {translate} from '../../../utils/Translator';
 import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
-import FlatStrategy from '../structureStrategies/FlatStrategy';
+import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
 import type {LoadingStrategyInterface, StructureStrategyInterface} from '../types';
 import AbstractAdapter from './AbstractAdapter';
 
@@ -15,7 +15,7 @@ export default class FolderAdapter extends AbstractAdapter {
     }
 
     static getStructureStrategy(): StructureStrategyInterface {
-        return new FlatStrategy();
+        return new FlatStructureStrategy();
     }
 
     static defaultProps = {

@@ -3,7 +3,7 @@ import Datagrid, {
     DatagridStore,
     datagridAdapterRegistry,
     AbstractAdapter,
-    FlatStrategy,
+    FlatStructureStrategy,
     PaginatedLoadingStrategy,
     InfiniteLoadingStrategy,
 } from './Datagrid';
@@ -26,7 +26,7 @@ export {
     DatagridStore,
     datagridAdapterRegistry,
     fieldRegistry,
-    FlatStrategy,
+    FlatStructureStrategy,
     Form,
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,

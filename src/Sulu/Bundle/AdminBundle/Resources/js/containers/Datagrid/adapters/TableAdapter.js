@@ -3,7 +3,7 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
 import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
-import FlatStrategy from '../structureStrategies/FlatStrategy';
+import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
 import type {LoadingStrategyInterface, StructureStrategyInterface} from '../types';
 import AbstractAdapter from './AbstractAdapter';
 
@@ -14,7 +14,7 @@ export default class TableAdapter extends AbstractAdapter {
     }
 
     static getStructureStrategy(): StructureStrategyInterface {
-        return new FlatStrategy();
+        return new FlatStructureStrategy();
     }
 
     static defaultProps = {

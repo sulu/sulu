@@ -2,7 +2,7 @@
 import {observable} from 'mobx';
 import type {StructureStrategyInterface} from '../types';
 
-export default class FlatStrategy implements StructureStrategyInterface {
+export default class FlatStructureStrategy implements StructureStrategyInterface {
     @observable data: Array<Object>;
 
     constructor() {

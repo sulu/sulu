@@ -5,7 +5,7 @@ import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import TableAdapter from './adapters/TableAdapter';
 import FolderAdapter from './adapters/FolderAdapter';
 import AbstractAdapter from './adapters/AbstractAdapter';
-import FlatStrategy from './structureStrategies/FlatStrategy';
+import FlatStructureStrategy from './structureStrategies/FlatStructureStrategy';
 import PaginatedLoadingStrategy from './loadingStrategies/PaginatedLoadingStrategy';
 import InfiniteLoadingStrategy from './loadingStrategies/InfiniteLoadingStrategy';
 import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './types';
@@ -17,7 +17,7 @@ export {
     datagridAdapterRegistry,
     TableAdapter,
     FolderAdapter,
-    FlatStrategy,
+    FlatStructureStrategy,
     PaginatedLoadingStrategy,
     InfiniteLoadingStrategy,
 };

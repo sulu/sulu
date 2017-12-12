@@ -1,7 +1,7 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
-import {AbstractAdapter, FlatStrategy, InfiniteLoadingStrategy} from 'sulu-admin-bundle/containers';
+import {AbstractAdapter, FlatStructureStrategy, InfiniteLoadingStrategy} from 'sulu-admin-bundle/containers';
 import type {LoadingStrategyInterface, StructureStrategyInterface} from 'sulu-admin-bundle/containers';
 import MediaCardAdapter from './MediaCardAdapter';
 
@@ -14,7 +14,7 @@ export default class MediaCardSelectionAdapter extends AbstractAdapter {
     }
 
     static getStructureStrategy(): StructureStrategyInterface {
-        return new FlatStrategy();
+        return new FlatStructureStrategy();
     }
 
     handleItemClick = (itemId: string | number, selected: boolean) => {
