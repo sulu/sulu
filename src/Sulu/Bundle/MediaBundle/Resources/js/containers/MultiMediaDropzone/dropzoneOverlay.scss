@@ -58,9 +58,10 @@ $dropAreaInfoColor: $white;
     padding: 0;
     list-style: none;
     margin-right: -20px;
+    display: flex;
+    flex-wrap: wrap;
 
     & > li {
         margin: 0 20px 20px 0;
-        display: inline-block;
     }
 }
