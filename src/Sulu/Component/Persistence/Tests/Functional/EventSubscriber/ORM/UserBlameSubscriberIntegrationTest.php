@@ -75,13 +75,11 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $contact->setPosition('CEO');
         $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
 
-        $this->setExpectedExceptionRegExp(
-            'RuntimeException',
-            '/Expected user object to be an instance of \(Sulu\) UserInterface\./'
-        );
-
         $this->getEntityManager()->persist($contact);
         $this->getEntityManager()->flush();
+
+        $this->assertNull($contact->getCreator());
+        $this->assertNull($contact->getChanger());
     }
 
     public function testExternalUserNoBlame()

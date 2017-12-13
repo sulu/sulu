@@ -12,7 +12,6 @@
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
@@ -43,11 +42,6 @@ class UserBlameSubscriber implements EventSubscriber
      * @var string
      */
     private $userClass;
-
-    /**
-     * @var object[]
-     */
-    private $blameQueue = [];
 
     /**
      * @param TokenStorage $tokenStorage
@@ -144,6 +138,11 @@ class UserBlameSubscriber implements EventSubscriber
 
             if (null === $user) {
                 $user = $this->getUser($token);
+
+                if (!$user instanceof UserInterface) {
+                    // if no sulu user is available avoid looping through all entities
+                    return;
+                }
             }
 
             $meta = $manager->getClassMetadata(get_class($blameEntity));
@@ -179,28 +178,6 @@ class UserBlameSubscriber implements EventSubscriber
                 $unitOfWork->recomputeSingleEntityChangeSet($meta, $blameEntity);
             }
         }
-
-        $this->blameQueue = [];
-    }
-
-    /**
-     * Record the creating and changing user on the
-     * entity based on the logged-in user.
-     *
-     * If the creator is null, then the creator will be
-     * set. The changer will always be overwritten.
-     *
-     * @param LifecycleEventArgs $event
-     */
-    private function handleUserBlame(LifecycleEventArgs $event)
-    {
-        $entity = $event->getObject();
-
-        if (!$entity instanceof UserBlameInterface) {
-            return;
-        }
-
-        $this->blameQueue[] = $entity;
     }
 
     /**
@@ -215,10 +192,7 @@ class UserBlameSubscriber implements EventSubscriber
         $user = $token->getUser();
 
         if (!$user instanceof UserInterface) {
-            throw new \RuntimeException(sprintf(
-                'Expected user object to be an instance of (Sulu) UserInterface. Got "%s"',
-                is_object($user) ? get_class($user) : gettype($user)
-            ));
+            return;
         }
 
         return $user;

@@ -1,6 +1,12 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.11 (2017-12-13)
+    * HOTFIX      #3684 [SecurityBundle]          Fixed conflict between admin and website session cookie
+    * HOTFIX      #3686 [ContentBundle]           Validate if ckeditor instances are not in source mode
+    * HOTFIX      #3585 [PersistanceBundle]       Fixed exception of blame for none sulu users
+    * HOTFIX      #3676 [PreviewBundle]           Fixed preview update for property names with underscore
+
 * 1.6.10 (2017-12-07)
     * HOTFIX      #3682 [CoreBundle]              Reintroduce cache builder for sulu:build command
 
@@ -132,6 +138,12 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.8 (2017-12-13)
+    * HOTFIX      #3684 [SecurityBundle]        Fixed conflict between admin and website session cookie
+    * HOTFIX      #3686 [ContentBundle]         Validate if ckeditor instances are not in source mode
+    * HOTFIX      #3585 [PersistanceBundle]     Fixed exception of blame for none sulu users
+    * HOTFIX      #3676 [PreviewBundle]         Fixed preview update for property names with underscore
 
 * 1.5.7 (2017-10-12)
     * HOTFIX      #3551 [SecurityBundle]        Fixed permissions for user with no role
