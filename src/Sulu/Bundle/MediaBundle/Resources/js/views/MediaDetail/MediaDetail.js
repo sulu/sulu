@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
+import {computed} from 'mobx';
 import {translate} from 'sulu-admin-bundle/utils';
 import {withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
@@ -10,6 +11,7 @@ import SingleMediaDropzone from '../../components/SingleMediaDropzone';
 import mediaDetailStyles from './mediaDetail.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
+const THUMBNAIL_SIZE = 'sulu-400x400-inset';
 
 type Props = ViewProps & {
     resourceStore: ResourceStore,
@@ -25,12 +27,34 @@ class MediaDetail extends React.PureComponent<Props> {
             resourceStore,
         } = this.props;
 
-        if (!resourceStore.locale) {
+        const locale = resourceStore.locale;
+
+        if (!locale) {
             throw new Error('The resourceStore for the MediaDetail must have a locale');
         }
 
-        router.bind('locale', resourceStore.locale);
-        this.mediaUploadStore = new MediaUploadStore(resourceStore);
+        router.bind('locale', locale);
+        this.mediaUploadStore = new MediaUploadStore(locale);
+    }
+
+    @computed get thumbnail(): ?string {
+        const {resourceStore} = this.props;
+        const {
+            data: {
+                thumbnails,
+            },
+        } = resourceStore;
+
+        if (!thumbnails || !thumbnails[THUMBNAIL_SIZE]) {
+            return null;
+        }
+
+        return `${window.location.origin}${thumbnails[THUMBNAIL_SIZE]}`;
+    }
+
+    @computed get mimeType(): string {
+        const {resourceStore} = this.props;
+        return resourceStore.data.mimeType;
     }
 
     handleMediaDrop = (file: File) => {
@@ -41,13 +65,16 @@ class MediaDetail extends React.PureComponent<Props> {
             },
         } = resourceStore;
 
-        this.mediaUploadStore.update(mediaId, file);
+        this.mediaUploadStore.update(mediaId, file)
+            .then((data) => {
+                for (const key of Object.keys(data)) {
+                    resourceStore.set(key, data[key]);
+                }
+            });
     };
 
     render() {
         const {
-            source,
-            mimeType,
             progress,
             uploading,
         } = this.mediaUploadStore;
@@ -56,12 +83,12 @@ class MediaDetail extends React.PureComponent<Props> {
             <div className={mediaDetailStyles.mediaDetail}>
                 <section>
                     <SingleMediaDropzone
-                        source={source}
+                        image={this.thumbnail}
                         uploading={uploading}
                         progress={progress}
                         onDrop={this.handleMediaDrop}
                         uploadText={translate('sulu_media.upload_or_replace')}
-                        mimeType={mimeType}
+                        mimeType={this.mimeType}
                     />
                 </section>
             </div>

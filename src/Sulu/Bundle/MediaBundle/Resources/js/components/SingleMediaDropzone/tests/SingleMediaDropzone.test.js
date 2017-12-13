@@ -6,7 +6,7 @@ import SingleMediaDropzone from '../SingleMediaDropzone';
 test('Render a SingleMediaDropzone', () => {
     expect(render(
         <SingleMediaDropzone
-            source="http://lorempixel.com/400/400"
+            image="http://lorempixel.com/400/400"
             uploading={false}
             progress={0}
             onDrop={jest.fn()}
@@ -17,7 +17,7 @@ test('Render a SingleMediaDropzone', () => {
 test('Render a SingleMediaDropzone while uploading', () => {
     expect(render(
         <SingleMediaDropzone
-            source="http://lorempixel.com/400/400"
+            image="http://lorempixel.com/400/400"
             uploading={true}
             progress={50}
             onDrop={jest.fn()}
@@ -28,7 +28,7 @@ test('Render a SingleMediaDropzone while uploading', () => {
 test('Dragging a file over the area will show the upload indicator', () => {
     const singleMediaDropzone = shallow(
         <SingleMediaDropzone
-            source="http://lorempixel.com/400/400"
+            image="http://lorempixel.com/400/400"
             uploading={false}
             progress={0}
             onDrop={jest.fn()}
@@ -42,7 +42,7 @@ test('Dragging a file over the area will show the upload indicator', () => {
 test('Dragging a file outside of the area will hide the upload indicator', () => {
     const singleMediaDropzone = shallow(
         <SingleMediaDropzone
-            source="http://lorempixel.com/400/400"
+            image="http://lorempixel.com/400/400"
             uploading={false}
             progress={0}
             onDrop={jest.fn()}
@@ -58,7 +58,7 @@ test('Dropping a file on the area will hide the upload indicator and call the "o
     const testFileData = { name: 'test-file' };
     const singleMediaDropzone = shallow(
         <SingleMediaDropzone
-            source="http://lorempixel.com/400/400"
+            image="http://lorempixel.com/400/400"
             uploading={false}
             progress={0}
             onDrop={dropSpy}

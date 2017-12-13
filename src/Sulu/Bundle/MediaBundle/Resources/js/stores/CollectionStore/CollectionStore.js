@@ -9,6 +9,7 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 export default class CollectionStore {
     @observable loading: boolean = false;
     @observable collection: Collection = {
+        id: null,
         parentId: null,
         breadcrumb: null,
     };
@@ -22,6 +23,10 @@ export default class CollectionStore {
 
     destroy() {
         this.disposer();
+    }
+
+    @computed get id(): ?number {
+        return this.collection.id;
     }
 
     @computed get parentId(): ?number {
@@ -53,7 +58,7 @@ export default class CollectionStore {
                 locale: locale,
                 breadcrumb: true,
             }
-        ).then((collectionInfo) => {
+        ).then(action((collectionInfo) => {
             const {
                 _embedded: {
                     parent,
@@ -62,11 +67,12 @@ export default class CollectionStore {
             } = collectionInfo;
             const currentCollection = this.getCurrentCollectionItem(collectionInfo);
 
+            this.collection.id = currentCollection.id;
             this.collection.parentId = (parent) ? parent.id : null;
             this.collection.breadcrumb = (breadcrumb) ? [...breadcrumb, currentCollection] : [currentCollection];
 
             this.setLoading(false);
-        });
+        }));
     }
 
     getCurrentCollectionItem(data: Object): BreadcrumbItem {

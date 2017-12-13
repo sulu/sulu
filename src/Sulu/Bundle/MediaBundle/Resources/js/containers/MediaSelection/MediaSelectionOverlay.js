@@ -251,7 +251,6 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
             >
                 <div className={mediaSelectionOverlayStyles.overlay}>
                     <MediaCollection
-                        page={this.collectionPage}
                         locale={locale}
                         mediaDatagridAdapters={['media_card_selection']}
                         mediaDatagridStore={this.mediaDatagridStore}

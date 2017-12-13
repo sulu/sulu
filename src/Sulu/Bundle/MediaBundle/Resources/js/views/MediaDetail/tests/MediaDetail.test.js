@@ -129,12 +129,13 @@ test('Should show locales from router options in toolbar', () => {
     ]);
 });
 
-test('Should call update method of MediaUploadStore if a file was dropped', () => {
+test('Should call update method of MediaUploadStore if a file was dropped', (done) => {
     const testId = 1;
     const testFile = {name: 'test.jpg'};
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const resourceStore = new ResourceStore('test', testId, {locale: observable()});
+    const promise = Promise.resolve({name: 'test.jpg'});
 
     const router = {
         navigate: jest.fn(),
@@ -148,7 +149,13 @@ test('Should call update method of MediaUploadStore if a file was dropped', () =
     };
     const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />).get(0);
 
+    mediaDetail.mediaUploadStore.update.mockReturnValue(promise);
     resourceStore.set('id', testId);
     mediaDetail.handleMediaDrop(testFile);
     expect(mediaDetail.mediaUploadStore.update).toHaveBeenCalledWith(testId, testFile);
+
+    promise.then(() => {
+        expect(resourceStore.data).toEqual({id: 1, name: 'test.jpg'});
+        done();
+    });
 });

@@ -11,7 +11,7 @@ import singleMediaDropzoneStyles from './singleMediaDropzone.scss';
 const UPLOAD_ICON = 'cloud-upload';
 
 type Props = {
-    source: ?string,
+    image: ?string,
     mimeType: string,
     uploading: boolean,
     progress: number,
@@ -50,7 +50,7 @@ export default class SingleMediaDropzone extends React.PureComponent<Props> {
 
     render() {
         const {
-            source,
+            image,
             mimeType,
             progress,
             uploading,
@@ -92,8 +92,8 @@ export default class SingleMediaDropzone extends React.PureComponent<Props> {
                         />
                     </div>
                 }
-                {source
-                    ? <img className={singleMediaDropzoneStyles.thumbnail} src={source} />
+                {image
+                    ? <img className={singleMediaDropzoneStyles.thumbnail} src={image} />
                     : <MimeTypeIndicator mimeType={mimeType} iconSize={100} />
                 }
             </Dropzone>

@@ -8,5 +8,7 @@
     "sulu_media.information_taxonomy": "Information and Taxonomy",
     "sulu_media.upload_or_replace": "Upload / replace image",
     "sulu_media.media_selected_singular": "media element selected",
-    "sulu_media.media_selected_plural": "media elements selected"
+    "sulu_media.media_selected_plural": "media elements selected",
+    "sulu_media.drop_files_to_upload": "Upload files per drag`n`drop",
+    "sulu_media.click_here_to_upload": "or click here to upload files"
 }

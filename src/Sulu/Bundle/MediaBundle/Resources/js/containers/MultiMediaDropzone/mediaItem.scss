@@ -1,0 +1,30 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$mediaItemBorderWidth: 3px;
+$mediaItemBorderColor: $white;
+$mediaItemBackgroundColor: $white;
+
+.media-item {
+    position: relative;
+    width: calc(100px + $mediaItemBorderWidth * 2);
+    height: calc(100px + $mediaItemBorderWidth * 2);
+    border-radius: 3px;
+    border: $mediaItemBorderWidth solid $mediaItemBorderColor;
+    background: $mediaItemBackgroundColor;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.progressbar-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

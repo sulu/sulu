@@ -1,36 +1,19 @@
 // @flow
-import {action, computed, observable} from 'mobx';
-import {ResourceStore, ResourceMetadataStore} from 'sulu-admin-bundle/stores';
+import {action, observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import {ResourceMetadataStore} from 'sulu-admin-bundle/stores';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 
 const RESOURCE_KEY = 'media';
-const THUMBNAIL_SIZE = 'sulu-400x400-inset';
 
 export default class MediaUploadStore {
-    resourceStore: ResourceStore;
+    locale: IObservableValue<string>;
     @observable uploading: boolean;
     @observable progress: number;
+    @observable data: Object = {};
 
-    constructor(resourceStore: ResourceStore) {
-        this.resourceStore = resourceStore;
-    }
-
-    @computed get source(): ?string {
-        const {
-            data: {
-                thumbnails,
-            },
-        } = this.resourceStore;
-
-        if (!thumbnails || !thumbnails[THUMBNAIL_SIZE]) {
-            return null;
-        }
-
-        return `${window.location.origin}${thumbnails[THUMBNAIL_SIZE]}`;
-    }
-
-    @computed get mimeType(): string {
-        return this.resourceStore.data.mimeType;
+    constructor(locale: IObservableValue<string>) {
+        this.locale = locale;
     }
 
     @action setUploading(uploading: boolean) {
@@ -41,25 +24,45 @@ export default class MediaUploadStore {
         this.progress = Math.ceil(progress);
     }
 
-    update(mediaId: string | number, file: File) {
+    @action setData(data: Object) {
+        this.data = data;
+    }
+
+    update(mediaId: string | number, file: File): Promise<*> {
         const baseUrl = ResourceMetadataStore.getBaseUrl(RESOURCE_KEY);
         const queryString = ResourceRequester.buildQueryString({
             action: 'new-version',
-            locale: this.resourceStore.locale ? this.resourceStore.locale.get() : undefined,
+            locale: this.locale.get(),
         });
         const url = baseUrl + '/' + mediaId + queryString;
 
         this.setUploading(true);
 
-        this.upload(file, url)
-            .then((data: Object) => {
-                for (const key of Object.keys(data)) {
-                    this.resourceStore.set(key, data[key]);
-                }
-                this.setUploading(false);
-                this.setProgress(0);
-            });
+        return this.upload(file, url)
+            .then(this.handleResponse);
     }
+
+    create(collectionId: string | number, file: File): Promise<*> {
+        const baseUrl = ResourceMetadataStore.getBaseUrl(RESOURCE_KEY);
+        const queryString = ResourceRequester.buildQueryString({
+            locale: this.locale.get(),
+            collection: collectionId,
+        });
+        const url = baseUrl + queryString;
+
+        this.setUploading(true);
+
+        return this.upload(file, url)
+            .then(this.handleResponse);
+    }
+
+    handleResponse = (data: Object) => {
+        this.setUploading(false);
+        this.setProgress(0);
+        this.setData(data);
+
+        return data;
+    };
 
     upload(file: File, url: string): Promise<*> {
         return new Promise((resolve, reject) => {

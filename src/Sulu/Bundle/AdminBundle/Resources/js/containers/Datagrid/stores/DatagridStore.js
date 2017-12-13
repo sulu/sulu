@@ -68,6 +68,17 @@ export default class DatagridStore {
         return metadataStore.getSchema(this.resourceKey);
     }
 
+    @action reload() {
+        const page = this.getPage();
+        this.data = [];
+
+        if (page && page > 1) {
+            this.setPage(1);
+        } else {
+            this.sendRequest();
+        }
+    }
+
     sendRequest = () => {
         if (!this.initialized) {
             return;

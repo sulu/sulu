@@ -1,7 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render the MediaCollection 1`] = `
-<div>
+<div
+  aria-disabled="false"
+  class="dropzone"
+>
   <ul
     class="breadcrumb"
   >
@@ -364,5 +367,11 @@ exports[`Render the MediaCollection 1`] = `
       />
     </section>
   </div>
+  <input
+    autocomplete="off"
+    multiple=""
+    style="display:none;"
+    type="file"
+  />
 </div>
 `;

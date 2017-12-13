@@ -404,7 +404,6 @@ test('When loading strategy was changed to pagination, data and pageCount should
         },
         {}
     );
-
     datagridStore.init('infiniteScroll');
 
     return promise.then(() => {
@@ -414,4 +413,46 @@ test('When loading strategy was changed to pagination, data and pageCount should
         expect(datagridStore.pageCount).toBe(0);
         datagridStore.destroy();
     });
+});
+
+test('Should reset the data array and set page to 1 when the reload method is called', (done) => {
+    ResourceRequester.getList.mockReturnValue(Promise.resolve({
+        _embedded: {
+            tests: [
+                {id: 1},
+            ],
+        },
+    }));
+
+    const page = observable();
+    const locale = observable();
+    const datagridStore = new DatagridStore(
+        'tests',
+        {
+            page,
+            locale,
+        },
+        {}
+    );
+    datagridStore.init('pagination');
+
+    page.set(3);
+    locale.set('en');
+
+    when(
+        () => !datagridStore.loading,
+        () => {
+            expect(page.get()).toBe(3);
+            expect(datagridStore.data.toJS()).toEqual([{'id': 1}]);
+
+            datagridStore.reload();
+
+            expect(page.get()).toBe(1);
+            expect(datagridStore.data.toJS()).toEqual([]);
+            expect(ResourceRequester.getList).toBeCalled();
+
+            datagridStore.destroy();
+            done();
+        }
+    );
 });
