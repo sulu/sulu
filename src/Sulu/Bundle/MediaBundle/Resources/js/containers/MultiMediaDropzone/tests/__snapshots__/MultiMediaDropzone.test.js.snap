@@ -3,7 +3,7 @@
 exports[`Render a MultiMediaDropzone 1`] = `
 <div
   aria-disabled="false"
-  class=""
+  class="dropzone"
 >
   <div />
   <input
@@ -18,7 +18,7 @@ exports[`Render a MultiMediaDropzone 1`] = `
 exports[`Render a MultiMediaDropzone while media is uploaded 1`] = `
 <div
   aria-disabled="false"
-  class=""
+  class="dropzone"
 >
   <div
     class="dropzoneOverlay"
@@ -83,7 +83,7 @@ exports[`Render a MultiMediaDropzone while media is uploaded 1`] = `
 exports[`Render a MultiMediaDropzone while the overlay is visible 1`] = `
 <div
   aria-disabled="false"
-  class=""
+  class="dropzone"
 >
   <div
     class="dropzoneOverlay"

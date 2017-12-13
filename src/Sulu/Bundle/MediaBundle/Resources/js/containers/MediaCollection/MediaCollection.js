@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
@@ -43,8 +44,11 @@ export default class MediaCollection extends React.PureComponent<Props> {
     handleUpload = (media: Array<Object>) => {
         const {mediaDatagridStore} = this.props;
 
-        media.forEach((mediaItem) => mediaDatagridStore.select(mediaItem.id));
         mediaDatagridStore.reload();
+        when(
+            () => !mediaDatagridStore.loading,
+            () => media.forEach((mediaItem) => mediaDatagridStore.select(mediaItem.id))
+        );
     };
 
     render() {

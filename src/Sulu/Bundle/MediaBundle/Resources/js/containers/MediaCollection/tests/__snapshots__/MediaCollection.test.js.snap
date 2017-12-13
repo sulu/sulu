@@ -3,7 +3,7 @@
 exports[`Render the MediaCollection 1`] = `
 <div
   aria-disabled="false"
-  class=""
+  class="dropzone"
 >
   <ul
     class="breadcrumb"

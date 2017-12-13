@@ -8,6 +8,7 @@ import Dropzone from 'react-dropzone';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import MediaItem from './MediaItem';
 import DropzoneOverlay from './DropzoneOverlay';
+import dropzoneStyles from './dropzone.scss';
 
 type Props = {
     children: any,
@@ -110,6 +111,7 @@ export default class MultiMediaDropzone extends React.PureComponent<Props> {
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
+                className={dropzoneStyles.dropzone}
             >
                 <DropzoneOverlay
                     open={this.overlayOpen}

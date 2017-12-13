@@ -6,7 +6,7 @@ exports[`Render a simple MediaOverview 1`] = `
 >
   <div
     aria-disabled="false"
-    class=""
+    class="dropzone"
   >
     <ul
       class="breadcrumb"

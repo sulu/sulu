@@ -13,6 +13,9 @@ $mediaItemBackgroundColor: $white;
     background: $mediaItemBackgroundColor;
     text-align: center;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .progressbar-container {

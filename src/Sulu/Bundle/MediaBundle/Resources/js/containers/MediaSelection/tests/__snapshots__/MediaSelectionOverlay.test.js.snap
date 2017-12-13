@@ -13,7 +13,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
           <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-label=\\"times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <div class=\\"overlay\\">
-            <div class=\\"\\" aria-disabled=\\"false\\">
+            <div class=\\"dropzone\\" aria-disabled=\\"false\\">
               <!-- react-empty: 10 -->
               <ul class=\\"breadcrumb\\">
                 <li>
