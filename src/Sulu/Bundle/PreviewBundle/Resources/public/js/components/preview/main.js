@@ -343,7 +343,7 @@ define([
          * @param {Object} content
          */
         handleSequence: function(propertyName, content) {
-            var sequence = propertyName.split(/([a-zA-Z0-9]+|\[[a-zA-Z0-9]+\])/).filter(Boolean),
+            var sequence = propertyName.split(/([a-zA-Z0-9_]+|\[[a-zA-Z0-9_]+\])/).filter(Boolean),
                 filter = '',
                 item, before = 0,
                 isInt = /^\d*$/, // regex for integer
