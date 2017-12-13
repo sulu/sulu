@@ -7,12 +7,12 @@ import {ResourceRequester} from 'sulu-admin-bundle/services';
 const RESOURCE_KEY = 'media';
 
 export default class MediaUploadStore {
-    locale: IObservableValue;
+    locale: IObservableValue<string>;
     @observable uploading: boolean;
     @observable progress: number;
     @observable data: Object = {};
 
-    constructor(locale: IObservableValue) {
+    constructor(locale: IObservableValue<string>) {
         this.locale = locale;
     }
 

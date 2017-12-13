@@ -3,6 +3,7 @@ import React from 'react';
 import type {ElementRef} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Dropzone from 'react-dropzone';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import MediaItem from './MediaItem';
@@ -10,7 +11,7 @@ import DropzoneOverlay from './DropzoneOverlay';
 
 type Props = {
     children: any,
-    locale: observable,
+    locale: IObservableValue<string>,
     collectionId: ?string | number,
     onUpload: (media: Array<Object>) => void,
 };
