@@ -27,12 +27,14 @@ class MediaDetail extends React.PureComponent<Props> {
             resourceStore,
         } = this.props;
 
-        if (!resourceStore.locale) {
+        const locale = resourceStore.locale;
+
+        if (!locale) {
             throw new Error('The resourceStore for the MediaDetail must have a locale');
         }
 
-        router.bind('locale', resourceStore.locale);
-        this.mediaUploadStore = new MediaUploadStore(resourceStore.locale);
+        router.bind('locale', locale);
+        this.mediaUploadStore = new MediaUploadStore(locale);
     }
 
     @computed get thumbnail(): ?string {
