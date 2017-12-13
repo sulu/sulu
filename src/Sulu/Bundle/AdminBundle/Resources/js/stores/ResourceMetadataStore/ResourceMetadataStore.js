@@ -91,6 +91,30 @@ class ResourceMetadataStore {
             },
         },
         media: {
+            form: {
+                title: {
+                    label: 'Titel',
+                    type: 'text_line',
+                },
+                description: {
+                    label: 'Description',
+                    type: 'text_area',
+                },
+                taxonomies: {
+                    type: 'section',
+                    label: 'Taxonomien',
+                    properties: {
+                        tags: {
+                            label: 'Tags',
+                            type: 'tag_selection',
+                        },
+                        categories: {
+                            label: 'Categories',
+                            type: 'category_selection',
+                        },
+                    },
+                },
+            },
             list: {
                 id: {},
                 size: {},
