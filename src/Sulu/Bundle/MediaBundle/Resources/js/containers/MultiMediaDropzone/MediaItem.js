@@ -6,7 +6,7 @@ import {CircularProgressbar} from 'sulu-admin-bundle/components';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import mediaItemStyles from './mediaItem.scss';
 
-const THUMBNAIL_SIZE = 'sulu-100x100-inset';
+const THUMBNAIL_SIZE = 'sulu-100x100';
 
 type Props = {
     store: MediaUploadStore,
