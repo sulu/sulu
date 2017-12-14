@@ -61,7 +61,9 @@ class MediaDetail extends React.PureComponent<Props> {
     componentWillUnmount() {
         const {resourceStore, router} = this.props;
 
-        router.unbind('locale', resourceStore.locale);
+        if (resourceStore.locale) {
+            router.unbind('locale', resourceStore.locale);
+        }
     }
 
     setFormRef = (form) => {

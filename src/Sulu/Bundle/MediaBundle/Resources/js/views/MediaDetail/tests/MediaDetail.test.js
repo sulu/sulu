@@ -174,7 +174,7 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
 test('Should initialize the ResourceStore with a schema', () => {
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const resourceStore = new ResourceStore('media', 4);
+    const resourceStore = new ResourceStore('media', 4, {locale: observable()});
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
 
     const router = {
@@ -211,7 +211,7 @@ test('Should render save button disabled only if form is not dirty', () => {
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('snippets', 12);
+    const resourceStore = new ResourceStore('snippets', 12, {locale: observable()});
 
     const router = {
         bind: jest.fn(),

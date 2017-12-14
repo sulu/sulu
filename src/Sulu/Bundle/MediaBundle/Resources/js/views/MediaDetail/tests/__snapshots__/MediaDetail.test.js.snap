@@ -49,17 +49,19 @@ exports[`Render a MediaDetail view 1`] = `
   <section
     class="formContainer"
   >
-    <div
-      class="spinner"
-      style="width:40px;height:40px;"
+    <form
+      class="form"
     >
       <div
-        class="doubleBounce1"
+        class="grid"
       />
-      <div
-        class="doubleBounce2"
-      />
-    </div>
+      <button
+        class="submit"
+        type="submit"
+      >
+        Submit
+      </button>
+    </form>
   </section>
 </div>
 `;
