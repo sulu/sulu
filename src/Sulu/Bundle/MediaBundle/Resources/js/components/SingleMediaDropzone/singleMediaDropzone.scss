@@ -4,6 +4,7 @@ $dropzoneSize: 400px;
 $uploadIconColor: $scorpion;
 $uploadInfoTextColor: $scorpion;
 $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
+$mediaContainerBreakpoint: 520px; /* dropzoneSize + 2 * $zviewPadding */
 
 .media-container {
     position: relative;
@@ -22,6 +23,11 @@ $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
             opacity: 1;
             transform: scale(1);
         }
+    }
+
+    @media (max-width: $mediaContainerBreakpoint) {
+        width: 100%;
+        height: auto;
     }
 }
 
@@ -61,4 +67,8 @@ $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
     font-size: 14px;
     margin-top: 20px;
     padding: 0 20px;
+}
+
+.thumbnail {
+    width: 100%;
 }

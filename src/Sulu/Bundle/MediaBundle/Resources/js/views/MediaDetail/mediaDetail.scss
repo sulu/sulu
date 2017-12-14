@@ -1,10 +1,12 @@
 @import 'sulu-admin-bundle/containers/Application/variables.scss';
 
+$breakpoint: 900px;
+
 .media-detail {
     padding: $viewPadding;
     display: flex;
 
-    @media (max-width: 720px) {
+    @media (max-width: $breakpoint) {
         display: block;
     }
 }
@@ -15,13 +17,11 @@
 
 .preview-container {
     margin-right: $viewPadding;
-    flex: 0 0 400px;
+    flex: 0 0;
+    margin-bottom: 30px;
 
-    @media (max-width: 1024px) {
-        margin-right: 30px;
-    }
-
-    @media (max-width: 720px) {
-        margin-bottom: 30px;
+    @media (max-width: $breakpoint) {
+        display: block;
+        margin-right: 0;
     }
 }
