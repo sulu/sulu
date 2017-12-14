@@ -25,6 +25,12 @@ $mediaContainerBreakpoint: 520px; /* dropzoneSize + 2 * $zviewPadding */
         }
     }
 
+    &::before{
+        content: '';
+        display: block;
+        padding-top: 100%;
+    }
+
     @media (max-width: $mediaContainerBreakpoint) {
         width: 100%;
         height: auto;
@@ -70,5 +76,5 @@ $mediaContainerBreakpoint: 520px; /* dropzoneSize + 2 * $zviewPadding */
 }
 
 .thumbnail {
-    width: 100%;
+    max-width: 100%;
 }
