@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 1.6.11 (2017-12-13)
+    * HOTFIX      #3690 [ContentBundle]         Fix saving of not yet started text editor
     * HOTFIX      #3684 [SecurityBundle]          Fixed conflict between admin and website session cookie
     * HOTFIX      #3686 [ContentBundle]           Validate if ckeditor instances are not in source mode
     * HOTFIX      #3585 [PersistanceBundle]       Fixed exception of blame for none sulu users
@@ -140,6 +141,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
 * 1.5.8 (2017-12-13)
+    * HOTFIX      #3690 [ContentBundle]         Fix saving of not yet started text editor
     * HOTFIX      #3684 [SecurityBundle]        Fixed conflict between admin and website session cookie
     * HOTFIX      #3686 [ContentBundle]         Validate if ckeditor instances are not in source mode
     * HOTFIX      #3585 [PersistanceBundle]     Fixed exception of blame for none sulu users
