@@ -78,6 +78,10 @@ define([
                 },
 
                 validate: function() {
+                    if (!CKEDITOR.instances[this.options.instanceName]) {
+                        return true;
+                    }
+
                     return 'wysiwyg' === CKEDITOR.instances[this.options.instanceName].mode;
                 },
 
