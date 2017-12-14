@@ -2,6 +2,7 @@
 import Datagrid from './Datagrid';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
+import ColumnListAdapter from './adapters/ColumnListAdapter';
 import TableAdapter from './adapters/TableAdapter';
 import FolderAdapter from './adapters/FolderAdapter';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -15,6 +16,7 @@ export {
     AbstractAdapter,
     DatagridStore,
     datagridAdapterRegistry,
+    ColumnListAdapter,
     TableAdapter,
     FolderAdapter,
     FlatStructureStrategy,

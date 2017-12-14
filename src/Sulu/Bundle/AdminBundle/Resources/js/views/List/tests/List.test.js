@@ -5,9 +5,10 @@ import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
-jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey, observableOptions) {
+jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey, observableOptions, options) {
     this.resourceKey = resourceKey;
     this.observableOptions = observableOptions;
+    this.options = options;
     this.loading = false;
     this.pageCount = 3;
     this.init = jest.fn();
@@ -289,6 +290,28 @@ test('Should render the locale dropdown with the options from router', () => {
         {value: 'en', label: 'en'},
         {value: 'de', label: 'de'},
     ]);
+});
+
+test('Should pass options from router to the DatagridStore', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+                locales: ['en', 'de'],
+                adapters: ['table'],
+                apiOptions: {
+                    webspace: 'example',
+                },
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />).get(0);
+    const datagridStore = list.datagridStore;
+
+    expect(datagridStore.options.webspace).toEqual('example');
 });
 
 test('Should pass locale and page observables to the DatagridStore', () => {

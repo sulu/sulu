@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -109,6 +110,22 @@ class ContentAdmin extends Admin
     public function getJsBundleName()
     {
         return 'sulucontent';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoutes(): array
+    {
+        // TODO write correctly for all webspaces
+        return [
+            (new Route('sulu_content.pages', '/pages/:locale', 'sulu_admin.list'))
+                ->addOption('resourceKey', 'nodes')
+                ->addOption('adapters', ['column_list', 'table'])
+                ->addOption('locales', ['en'])
+                ->addOption('apiOptions', ['webspace' => 'example'])
+                ->addAttributeDefault('locale', 'en'),
+        ];
     }
 
     /**

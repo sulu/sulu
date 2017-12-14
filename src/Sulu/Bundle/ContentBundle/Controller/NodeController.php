@@ -64,6 +64,12 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     private function getLanguage(Request $request)
     {
+        $locale = $this->getRequestParameter($request, 'locale', false, null);
+
+        if ($locale) {
+            return $locale;
+        }
+
         return $this->getRequestParameter($request, 'language', true);
     }
 

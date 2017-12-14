@@ -83,6 +83,16 @@ export default class Datagrid extends React.PureComponent<Props> {
         const page = store.getPage();
         const pageCount = store.pageCount;
         const Adapter = this.currentAdapter;
+        const adapter = (
+            <Adapter
+                data={store.data}
+                selections={store.selections}
+                schema={store.getSchema()}
+                onItemClick={onItemClick}
+                onItemSelectionChange={this.handleItemSelectionChange}
+                onAllSelectionChange={this.handleAllSelectionChange}
+            />
+        );
         const PaginationAdapter = Adapter.getLoadingStrategy().paginationAdapter;
 
         return (
@@ -92,21 +102,17 @@ export default class Datagrid extends React.PureComponent<Props> {
                     currentAdapter={this.currentAdapterKey}
                     onAdapterChange={this.handleAdapterChange}
                 />
-                <PaginationAdapter
-                    total={pageCount}
-                    current={page}
-                    loading={this.props.store.loading}
-                    onChange={this.handlePageChange}
-                >
-                    <Adapter
-                        data={store.data}
-                        selections={store.selections}
-                        schema={store.getSchema()}
-                        onItemClick={onItemClick}
-                        onItemSelectionChange={this.handleItemSelectionChange}
-                        onAllSelectionChange={this.handleAllSelectionChange}
-                    />
-                </PaginationAdapter>
+                {PaginationAdapter
+                    ? <PaginationAdapter
+                        total={pageCount}
+                        current={page}
+                        loading={this.props.store.loading}
+                        onChange={this.handlePageChange}
+                    >
+                        {adapter}
+                    </PaginationAdapter>
+                    : adapter
+                }
             </div>
         );
     }

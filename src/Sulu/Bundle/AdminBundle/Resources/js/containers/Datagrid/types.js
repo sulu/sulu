@@ -25,12 +25,12 @@ export type ObservableOptions = {
 };
 
 export type LoadOptions = {
-    page: number,
+    page?: number,
     locale?: ?string,
 };
 
 export interface LoadingStrategyInterface {
-    paginationAdapter: PaginationAdapter,
+    paginationAdapter: ?PaginationAdapter,
     load(data: Array<Object>, resourceKey: string, options: LoadOptions): Promise<Object>,
 }
 
