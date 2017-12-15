@@ -4,7 +4,7 @@ $dropzoneSize: 400px;
 $uploadIconColor: $scorpion;
 $uploadInfoTextColor: $scorpion;
 $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
-$mediaContainerBreakpoint: 520px; /* dropzoneSize + 2 * $zviewPadding */
+$mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because calc doesn't work for media-queries */
 
 .media-container {
     position: relative;
@@ -12,7 +12,7 @@ $mediaContainerBreakpoint: 520px; /* dropzoneSize + 2 * $zviewPadding */
     justify-content: center;
     align-items: center;
     width: $dropzoneSize;
-    height: $dropzoneSize;
+    height: auto;
     background-image: url('./checkerBackground.gif');
     background-size: 10px;
     cursor: pointer;
@@ -25,7 +25,7 @@ $mediaContainerBreakpoint: 520px; /* dropzoneSize + 2 * $zviewPadding */
         }
     }
 
-    &::before{
+    &::after {
         content: '';
         display: block;
         padding-top: 100%;
@@ -33,7 +33,6 @@ $mediaContainerBreakpoint: 520px; /* dropzoneSize + 2 * $zviewPadding */
 
     @media (max-width: $mediaContainerBreakpoint) {
         width: 100%;
-        height: auto;
     }
 }
 

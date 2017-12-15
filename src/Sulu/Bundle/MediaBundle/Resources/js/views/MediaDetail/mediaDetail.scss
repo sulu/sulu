@@ -17,11 +17,12 @@ $breakpoint: 900px;
 
 .preview-container {
     margin-right: $viewPadding;
-    flex: 0 0;
+    flex: 0 0 400px;
     margin-bottom: 30px;
 
     @media (max-width: $breakpoint) {
         display: block;
         margin-right: 0;
+        flex: 0 0 auto;
     }
 }
