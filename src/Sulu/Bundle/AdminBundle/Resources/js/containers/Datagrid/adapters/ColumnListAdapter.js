@@ -21,7 +21,12 @@ export default class ColumnListAdapter extends AbstractAdapter {
         data: [],
     };
 
-    handleItemClick = () => {};
+    handleItemClick = (id: string | number) => {
+        const {onItemActivation} = this.props;
+        if (onItemActivation) {
+            onItemActivation(id);
+        }
+    };
 
     render() {
         const {data} = this.props;

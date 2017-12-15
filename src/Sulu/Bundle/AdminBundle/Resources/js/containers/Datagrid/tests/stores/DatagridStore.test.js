@@ -146,6 +146,29 @@ test('The loading strategy should be called with a different locale when a reque
     datagridStore.destroy();
 });
 
+test('The loading strategy should be called with the active item as parent', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable();
+    const datagridStore = new DatagridStore(
+        'snippets',
+        {
+            page,
+        }
+    );
+
+    datagridStore.setActive('some-uuid');
+    datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.structureStrategy.data = [{id: 1}];
+
+    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+        page: 1,
+        parent: 'some-uuid',
+    });
+
+    datagridStore.destroy();
+});
+
 test('Set loading flag to true before request', () => {
     const page = observable();
     const datagridStore = new DatagridStore('tests', {page});

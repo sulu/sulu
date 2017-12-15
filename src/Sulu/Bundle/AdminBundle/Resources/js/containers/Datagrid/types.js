@@ -15,6 +15,7 @@ export type DatagridAdapterProps = {
     schema: Schema,
     selections: Array<number | string>,
     onItemClick?: (itemId: string | number) => void,
+    onItemActivation?: (itemId: string | number) => void,
     onItemSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     onAllSelectionChange?: (selected?: boolean) => void,
 };

@@ -6,6 +6,7 @@ import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
     @observable pageCount: number = 0;
+    @observable active: ?string | number = undefined;
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
@@ -109,7 +110,7 @@ export default class DatagridStore {
 
         this.setLoading(true);
 
-        this.loadingStrategy.load(this.data, this.resourceKey, {...observableOptions, ...this.options})
+        this.loadingStrategy.load(this.data, this.resourceKey, {...observableOptions, ...this.options, parent: this.active})
             .then(action((response) => {
                 this.handleResponse(response);
             }));
@@ -136,6 +137,10 @@ export default class DatagridStore {
 
     @action setPage(page: number) {
         this.observableOptions.page.set(page);
+    }
+
+    @action setActive(active: string | number) {
+        this.active = active;
     }
 
     @action select(id: string | number) {

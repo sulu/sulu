@@ -12,6 +12,7 @@ import type {LoadingStrategyInterface, StructureStrategyInterface} from '../type
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
+    this.setActive = jest.fn();
     this.init = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
@@ -206,4 +207,27 @@ test('DatagridStore should be initialized correctly on init and update', () => {
         FolderAdapter.getLoadingStrategy(),
         TableAdapter.getStructureStrategy()
     );
+});
+
+test('DatagridStore should be updated with current active element', () => {
+    datagridAdapterRegistry.get.mockReturnValue(class TestAdapter extends AbstractAdapter {
+        static getLoadingStrategy = jest.fn().mockReturnValue({paginationAdapter: undefined, load: jest.fn()});
+        static getStructureStrategy = jest.fn().mockReturnValue({data: [], clear: jest.fn()});
+
+        componentWillMount() {
+            const {onItemActivation} = this.props;
+            if (onItemActivation) {
+                onItemActivation('some-uuid');
+            }
+        }
+
+        render() {
+            return null;
+        }
+    });
+    const datagridStore = new DatagridStore('test', {page: observable(1)});
+    expect(datagridStore.active).toBe(undefined);
+    mount(<Datagrid adapters={['test']} store={datagridStore} />);
+
+    expect(datagridStore.setActive).toBeCalledWith('some-uuid');
 });

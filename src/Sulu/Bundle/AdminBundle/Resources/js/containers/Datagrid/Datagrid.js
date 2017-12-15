@@ -74,6 +74,10 @@ export default class Datagrid extends React.PureComponent<Props> {
         this.props.store.init(this.currentAdapter.getLoadingStrategy(), this.currentAdapter.getStructureStrategy());
     };
 
+    handleItemActivation = (id: string | number) => {
+        this.props.store.setActive(id);
+    };
+
     render() {
         const {
             store,
@@ -89,6 +93,7 @@ export default class Datagrid extends React.PureComponent<Props> {
                 selections={store.selections}
                 schema={store.getSchema()}
                 onItemClick={onItemClick}
+                onItemActivation={this.handleItemActivation}
                 onItemSelectionChange={this.handleItemSelectionChange}
                 onAllSelectionChange={this.handleAllSelectionChange}
             />
