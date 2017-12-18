@@ -8,10 +8,6 @@ jest.mock('../../stores/MetadataStore', () => ({
     getSchema: jest.fn(),
 }));
 
-function StructureStrategy() {
-    this.clear = jest.fn();
-}
-
 function LoadingStrategy() {
     this.load = jest.fn().mockReturnValue({then: jest.fn()});
 }
@@ -19,6 +15,7 @@ function LoadingStrategy() {
 class StructureStrategy {
     @observable data = [];
     clear = jest.fn();
+    getData = jest.fn();
 }
 
 test('The loading strategy should be called when a request is sent', () => {
@@ -37,9 +34,10 @@ test('The loading strategy should be called when a request is sent', () => {
         }
     );
 
+    structureStrategy.getData.mockReturnValue([]);
     datagridStore.init(loadingStrategy, structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'tests', {
+    expect(loadingStrategy.load).toBeCalledWith(toJS(datagridStore.data), 'tests', {
         locale: undefined,
         page: 1,
         test: 'value',
@@ -64,10 +62,11 @@ test('The loading strategy should be called with a different resourceKey when a 
         }
     );
 
+    const data = [{id: 1}];
+    structureStrategy.getData.mockReturnValue(data);
     datagridStore.init(loadingStrategy, structureStrategy);
-    datagridStore.structureStrategy.data = [{id: 1}];
 
-    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
         locale: undefined,
         page: 1,
         test: 'value',
@@ -92,17 +91,18 @@ test('The loading strategy should be called with a different page when a request
         }
     );
 
+    const data = [{id: 1}];
+    structureStrategy.getData.mockReturnValue(data);
     datagridStore.init(loadingStrategy, structureStrategy);
-    datagridStore.structureStrategy.data = [{id: 1}];
 
-    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
         locale: undefined,
         page: 1,
         test: 'value',
     });
 
     page.set(3);
-    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
         locale: undefined,
         page: 3,
         test: 'value',
@@ -127,17 +127,18 @@ test('The loading strategy should be called with a different locale when a reque
         }
     );
 
+    const data = [{id: 1}];
+    structureStrategy.getData.mockReturnValue(data);
     datagridStore.init(loadingStrategy, structureStrategy);
-    datagridStore.structureStrategy.data = [{id: 1}];
 
-    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
         locale: 'en',
         page: 1,
         test: 'value',
     });
 
     locale.set('de');
-    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
         locale: 'de',
         page: 1,
         test: 'value',
@@ -157,11 +158,12 @@ test('The loading strategy should be called with the active item as parent', () 
         }
     );
 
+    const data = [{id: 1}];
+    structureStrategy.getData.mockReturnValue(data);
     datagridStore.setActive('some-uuid');
     datagridStore.init(loadingStrategy, structureStrategy);
-    datagridStore.structureStrategy.data = [{id: 1}];
 
-    expect(loadingStrategy.load).toBeCalledWith(datagridStore.data, 'snippets', {
+    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
         page: 1,
         parent: 'some-uuid',
     });
@@ -369,6 +371,9 @@ test('Should reset the data array and set page to 1 when the reload method is ca
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
 
+    const promise = Promise.resolve({});
+    loadingStrategy.load.mockReturnValue(promise);
+
     const page = observable();
     const locale = observable();
     const datagridStore = new DatagridStore(
@@ -384,19 +389,15 @@ test('Should reset the data array and set page to 1 when the reload method is ca
     page.set(3);
     locale.set('en');
 
-    datagridStore.reload();
-
     when(
         () => !datagridStore.loading,
         () => {
             expect(page.get()).toBe(3);
-            expect(datagridStore.data.toJS()).toEqual([{'id': 1}]);
 
             datagridStore.reload();
             expect(structureStrategy.clear).toBeCalled();
 
             expect(page.get()).toBe(1);
-            expect(datagridStore.data.toJS()).toEqual([]);
             expect(loadingStrategy.load).toBeCalled();
 
             datagridStore.destroy();

@@ -9,6 +9,10 @@ export default class FlatStructureStrategy implements StructureStrategyInterface
         this.data = [];
     }
 
+    getData() {
+        return this.data;
+    }
+
     clear() {
         this.data.splice(0, this.data.length);
     }

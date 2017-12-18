@@ -64,6 +64,7 @@ class StructureStrategy {
     data: Array<Object>;
 
     clear = jest.fn();
+    getData = jest.fn();
 }
 
 class TestAdapter extends AbstractAdapter {
@@ -212,7 +213,7 @@ test('DatagridStore should be initialized correctly on init and update', () => {
 test('DatagridStore should be updated with current active element', () => {
     datagridAdapterRegistry.get.mockReturnValue(class TestAdapter extends AbstractAdapter {
         static getLoadingStrategy = jest.fn().mockReturnValue({paginationAdapter: undefined, load: jest.fn()});
-        static getStructureStrategy = jest.fn().mockReturnValue({data: [], clear: jest.fn()});
+        static getStructureStrategy = jest.fn().mockReturnValue({data: [], clear: jest.fn(), getData: jest.fn()});
 
         componentWillMount() {
             const {onItemActivation} = this.props;

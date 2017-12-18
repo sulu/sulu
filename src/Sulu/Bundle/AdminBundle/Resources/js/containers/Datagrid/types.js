@@ -37,5 +37,6 @@ export interface LoadingStrategyInterface {
 
 export interface StructureStrategyInterface {
     data: Array<*>,
+    getData(parent: ?string | number | boolean): Array<*>,
     clear(): void,
 }

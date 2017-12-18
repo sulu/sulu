@@ -7,6 +7,12 @@ test('Should be empty after intialization', () => {
     expect(toJS(flatStructureStrategy.data)).toEqual([]);
 });
 
+test('Should return the array on a getData call', () => {
+    const flatStructureStrategy = new FlatStructureStrategy();
+    flatStructureStrategy.data = [{id: 1}];
+    expect(flatStructureStrategy.getData()).toBe(flatStructureStrategy.data);
+});
+
 test('Should be empty after clear was called', () => {
     const flatStructureStrategy = new FlatStructureStrategy();
     flatStructureStrategy.data = [{id: 1}];

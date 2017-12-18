@@ -110,10 +110,13 @@ export default class DatagridStore {
 
         this.setLoading(true);
 
-        this.loadingStrategy.load(this.data, this.resourceKey, {...observableOptions, ...this.options, parent: this.active})
-            .then(action((response) => {
-                this.handleResponse(response);
-            }));
+        this.loadingStrategy.load(
+            this.structureStrategy.getData(this.active),
+            this.resourceKey,
+            {...observableOptions, ...this.options, parent: this.active}
+        ).then(action((response) => {
+            this.handleResponse(response);
+        }));
     };
 
     // TODO remove

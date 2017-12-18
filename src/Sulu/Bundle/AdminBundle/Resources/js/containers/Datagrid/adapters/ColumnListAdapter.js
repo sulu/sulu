@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import type {LoadingStrategyInterface, StructureStrategyInterface} from '../types';
 import ColumnList from '../../../components/ColumnList';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
-import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
+import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
@@ -14,7 +14,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
     }
 
     static getStructureStrategy(): StructureStrategyInterface {
-        return new FlatStructureStrategy();
+        return new TreeStructureStrategy();
     }
 
     static defaultProps = {
@@ -33,14 +33,16 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
         return (
             <ColumnList onItemClick={this.handleItemClick} toolbarItems={[]}>
-                <ColumnList.Column>
-                    {data.map((item: Object) => (
-                        // TODO: Don't access properties like "hasSub" or "title" directly.
-                        <ColumnList.Item id={item.id} key={item.id} hasChildren={item.hasSub}>
-                            {item.title}
-                        </ColumnList.Item>
-                    ))}
-                </ColumnList.Column>
+                {data.values().map((items, index) => (
+                    <ColumnList.Column key={index}>
+                        {items.map((item: Object) => (
+                            // TODO: Don't access properties like "hasSub" or "title" directly.
+                            <ColumnList.Item id={item.id} key={item.id} hasChildren={item.hasSub}>
+                                {item.title}
+                            </ColumnList.Item>
+                        ))}
+                    </ColumnList.Column>
+                ))}
             </ColumnList>
         );
     }
