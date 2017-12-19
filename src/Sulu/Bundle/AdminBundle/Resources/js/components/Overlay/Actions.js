@@ -23,7 +23,7 @@ export default class Actions extends React.PureComponent<Props> {
                         <Button
                             key={index}
                             onClick={handleButtonClick}
-                            skin="link"
+                            skin="underlined"
                         >
                             {action.title}
                         </Button>
