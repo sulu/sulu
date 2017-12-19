@@ -15,6 +15,14 @@ test('Button should render with skin link', () => {
     expect(render(<Button skin="link" />)).toMatchSnapshot();
 });
 
+test('Button should render with skin underlined', () => {
+    expect(render(<Button skin="underlined" />)).toMatchSnapshot();
+});
+
+test('Button should render with an icon', () => {
+    expect(render(<Button skin="link" icon="gear" />)).toMatchSnapshot();
+});
+
 test('Button should call the callback on click', () => {
     const onClick = jest.fn();
     const button = shallow(<Button skin="primary" onClick={onClick} />);
