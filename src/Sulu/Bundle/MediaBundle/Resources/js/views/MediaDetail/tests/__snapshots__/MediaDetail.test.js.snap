@@ -45,7 +45,19 @@ exports[`Render a MediaDetail view 1`] = `
         type="file"
       />
     </div>
+    <button
+      class="link"
+    >
+      <span
+        aria-label="crosshairs"
+        class="icon fa fa-crosshairs"
+      />
+      <span
+        class="text"
+      />
+    </button>
   </section>
+<<<<<<< HEAD
   <section
     class="formContainer"
   >
@@ -63,5 +75,8 @@ exports[`Render a MediaDetail view 1`] = `
       </button>
     </form>
   </section>
+=======
+  <div />
+>>>>>>> created ImageFocusPointverlay
 </div>
 `;

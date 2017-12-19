@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -102,6 +103,10 @@ class MediaController extends AbstractMediaController implements
         } catch (MediaException $e) {
             $view = $this->view($e->toArray(), 400);
         }
+
+        $context = new Context();
+        $context->setSerializeNull(true);
+        $view->setContext($context);
 
         return $this->handleView($view);
     }

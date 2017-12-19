@@ -1,17 +1,20 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {computed} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {translate} from 'sulu-admin-bundle/utils';
+import {Button} from 'sulu-admin-bundle/components';
 import {Form, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import SingleMediaDropzone from '../../components/SingleMediaDropzone';
+import ImageFocusPointOverlay from './ImageFocusPointOverlay';
 import mediaDetailStyles from './mediaDetail.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 const THUMBNAIL_SIZE = 'sulu-400x400-inset';
+const SET_FOCUS_POINT_ICON = 'crosshairs';
 
 type Props = ViewProps & {
     resourceStore: ResourceStore,
@@ -21,6 +24,7 @@ type Props = ViewProps & {
 class MediaDetail extends React.PureComponent<Props> {
     mediaUploadStore: MediaUploadStore;
     form: ?Form;
+    @observable imageFocusPointOverlayOpen: boolean = false;
 
     componentWillMount() {
         const {
@@ -70,6 +74,14 @@ class MediaDetail extends React.PureComponent<Props> {
         this.form = form;
     };
 
+    @action openImageFocusPointOverlay() {
+        this.imageFocusPointOverlayOpen = true;
+    }
+
+    @action closeImageFocusPointOverlay() {
+        this.imageFocusPointOverlayOpen = false;
+    }
+
     handleMediaDrop = (file: File) => {
         const {resourceStore} = this.props;
         const {
@@ -90,6 +102,14 @@ class MediaDetail extends React.PureComponent<Props> {
         this.props.resourceStore.save();
     };
 
+    handleOpenImageFocusPointOverlay = () => {
+        this.openImageFocusPointOverlay();
+    };
+
+    handleCloseImageFocusPointOverlay = () => {
+        this.closeImageFocusPointOverlay();
+    };
+
     render() {
         const {resourceStore} = this.props;
         const {
@@ -108,6 +128,13 @@ class MediaDetail extends React.PureComponent<Props> {
                         uploadText={translate('sulu_media.upload_or_replace')}
                         mimeType={this.mimeType}
                     />
+                    <Button
+                        skin="link"
+                        icon={SET_FOCUS_POINT_ICON}
+                        onClick={this.handleOpenImageFocusPointOverlay}
+                    >
+                        {translate('sulu_media.set_focus_point')}
+                    </Button>
                 </section>
                 <section className={mediaDetailStyles.formContainer}>
                     <Form
@@ -116,6 +143,11 @@ class MediaDetail extends React.PureComponent<Props> {
                         onSubmit={this.handleSubmit}
                     />
                 </section>
+                <ImageFocusPointOverlay
+                    resourceStore={resourceStore}
+                    open={this.imageFocusPointOverlayOpen}
+                    onClose={this.handleCloseImageFocusPointOverlay}
+                />
             </div>
         );
     }

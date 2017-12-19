@@ -1,0 +1,19 @@
+@import 'sulu-admin-bundle/containers/Application/variables.scss';
+
+.overlay {
+    width: 1170px;
+    padding: 30px $viewPadding $viewPadding;
+
+    @media (max-width: 1200px) {
+        width: 900px;
+    }
+
+    @media (max-width: 900px) {
+        width: 600px;
+    }
+}
+
+.image-focus-point {
+    text-align: center;
+    max-height: 600px;
+}
