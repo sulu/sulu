@@ -6,7 +6,7 @@ of the `Suggestion`. In that case you have to use the `highlight` function to hi
 
 Here a basic example (Pssh, look for your favourite Harry Potter character):
 
-```
+```javascript
 const Suggestion = AutoComplete.Suggestion;
 
 initialState = {

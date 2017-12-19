@@ -41,6 +41,6 @@ test('Input should call the callback when the input changes', () => {
 });
 
 test('Input should render with a loader', () => {
-    const onChange = () => {};
-    expect(render(<Input loader={true} onChange={onChange} />)).toMatchSnapshot();
+    const onChange = jest.fn();
+    expect(render(<Input value={null} loader={true} onChange={onChange} />)).toMatchSnapshot();
 });

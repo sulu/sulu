@@ -58,10 +58,7 @@ export default class Input extends React.PureComponent<Props> {
                 }
                 {loading &&
                     <div className={inputStyles.prependedContainer}>
-                        <Loader
-                            size={LOADER_SIZE}
-                            className={inputStyles.loader}
-                        />
+                        <Loader size={LOADER_SIZE} />
                     </div>
                 }
                 <input

@@ -6,7 +6,7 @@ exports[`Input should render 1`] = `
 >
   <input
     type="text"
-    value=""
+    value="My value"
   />
 </label>
 `;
@@ -17,7 +17,7 @@ exports[`Input should render null value as empty string 1`] = `
 >
   <input
     type="text"
-    value="My value"
+    value=""
   />
 </label>
 `;

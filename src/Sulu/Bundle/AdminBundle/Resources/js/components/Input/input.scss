@@ -39,17 +39,13 @@ $placeholderColor: $dustyGray;
     position: relative;
     width: 34px;
     height: calc($inputHeight - 2 * $iconBorderPadding);
-    border-right: $inputBorderWidth solid $inputBorderColor;
-}
-
-.loader {
-    position: absolute;
-    top: 0;
-    left: 7px;
+    box-shadow: $inputBorderWidth 0 0 $inputBorderColor;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .icon {
     font-size: 14px;
-    padding: 0 10px;
     color: $iconColor;
 }

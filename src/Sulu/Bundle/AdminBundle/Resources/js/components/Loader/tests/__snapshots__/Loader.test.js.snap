@@ -18,23 +18,6 @@ exports[`Render loader with additional classname 1`] = `
 <div
   class="spinner test"
   style="width:40px;height:40px;"
-<<<<<<< HEAD
->
-  <div
-    class="doubleBounce1"
-  />
-  <div
-    class="doubleBounce2"
-  />
-</div>
-`;
-
-exports[`Render loader with other dimensions 1`] = `
-<div
-  class="spinner"
-  style="width:50px;height:50px;"
-=======
->>>>>>> updated loader size in toolbar
 >
   <div
     class="doubleBounce1"
