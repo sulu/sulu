@@ -79,13 +79,13 @@ class PropertiesXmlParser
         $propertyData = $this->loadProperties($templateKey, $path, $tags, $xpath, $context);
 
         if ($checkForRequiredProperties) {
-            $this->checkForRequiredProperties($propertyData);
+            $this->checkForRequiredProperties($propertyData, $templateKey);
         }
 
         return $this->mapProperties($propertyData);
     }
 
-    private function checkForRequiredProperties(array $propertyData): void
+    private function checkForRequiredProperties(array $propertyData, string $templateKey): void
     {
         // check if required properties are existing
         foreach ($this->requiredPropertyNames as $requiredPropertyName) {

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Rule;
 
 use Sulu\Bundle\ContentBundle\Rule\PageRule;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Localization\Localization;
@@ -63,6 +64,7 @@ class PageRuleTest extends \PHPUnit_Framework_TestCase
         $webspaceKey,
         $locale,
         $uuidRule,
+        $urlExists,
         $result
     ) {
         $pageRule = new PageRule(
@@ -91,11 +93,20 @@ class PageRuleTest extends \PHPUnit_Framework_TestCase
             $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
             $resourceLocatorStrategy = $this->prophesize(ResourceLocatorStrategyInterface::class);
-            $resourceLocatorStrategy->loadByResourceLocator(
-                $urlValue,
-                $webspaceKey,
-                $locale
-            )->willReturn($urlUuidValue);
+
+            if (true === $urlExists) {
+                $resourceLocatorStrategy->loadByResourceLocator(
+                    $urlValue,
+                    $webspaceKey,
+                    $locale
+                )->willReturn($urlUuidValue);
+            } else {
+                $resourceLocatorStrategy->loadByResourceLocator(
+                    $urlValue,
+                    $webspaceKey,
+                    $locale
+                )->willThrow(ResourceLocatorNotFoundException::class);
+            }
 
             $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey)
                 ->willReturn($resourceLocatorStrategy->reveal());
@@ -115,18 +126,19 @@ class PageRuleTest extends \PHPUnit_Framework_TestCase
     public function provideEvaluate()
     {
         return [
-            ['X-Forwarded-UUID', 'some-uuid', 'X-Forwarded-URL', null, null, null, null, 'some-uuid', true],
-            ['X-UUID', 'some-uuid', 'X-URL', null, null, null, null, 'some-uuid', true],
-            ['X-Forwarded-UUID', 'some-uuid', 'X-Forwarded-URL', null, null, null, null, 'some-other-uuid', false],
-            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', null, null, null, null, 'some-other-uuid', false],
-            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', '/test', 'some-uuid', 'sulu_io', 'en', 'some-uuid', true],
-            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', '/other-test', 'uuid', 'sulu', 'de', 'uuid', true],
-            ['X-Forwarded-UUID', null, 'X-URL', '/test', 'some-uuid', 'sulu_io', 'en', 'some-uuid', true],
-            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', '/test', 'some-uuid', 'sulu_io', 'en', 'some-other-uuid', false],
-            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', '/test', 'some-uuid', 'sulu_io', null, 'some-uuid', false],
-            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', '/test', 'some-uuid', null, 'en', 'some-uuid', false],
-            ['X-UUID', 'some-uuid', 'X-URL', '/test', 'some-other-uuid', 'sulu_io', 'en', 'some-uuid', true],
-            ['X-UUID', 'some-uuid', 'X-URL', '/test', 'some-other-uuid', 'sulu_io', 'en', 'some-other-uuid', false],
+            ['X-Forwarded-UUID', 'some-uuid', 'X-Forwarded-URL', null, null, null, null, 'some-uuid', true, true],
+            ['X-UUID', 'some-uuid', 'X-URL', null, null, null, null, 'some-uuid', true, true],
+            ['X-Forwarded-UUID', 'some-uuid', 'X-Forwarded-URL', null, null, null, null, 'some-other-uuid', true, false],
+            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', null, null, null, null, 'some-other-uuid', true, false],
+            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', '/test', 'some-uuid', 'sulu_io', 'en', 'some-uuid', true, true],
+            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', '/other-test', 'uuid', 'sulu', 'de', 'uuid', true, true],
+            ['X-Forwarded-UUID', null, 'X-URL', '/test', 'some-uuid', 'sulu_io', 'en', 'some-uuid', true, true],
+            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', '/test', 'some-uuid', 'sulu_io', 'en', 'some-other-uuid', true, false],
+            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', '/test', 'some-uuid', 'sulu_io', null, 'some-uuid', true, false],
+            ['X-Forwarded-UUID', null, 'X-Forwarded-URL', '/test', 'some-uuid', null, 'en', 'some-uuid', true, false],
+            ['X-UUID', 'some-uuid', 'X-URL', '/test', 'some-other-uuid', 'sulu_io', 'en', 'some-uuid', true, true],
+            ['X-UUID', 'some-uuid', 'X-URL', '/test', 'some-other-uuid', 'sulu_io', 'en', 'some-other-uuid', true, false],
+            ['X-UUID', 'some-uuid', 'X-URL', '/test', 'some-other-uuid', 'sulu_io', 'en', 'not-existing-uuid', false, false],
         ];
     }
 }

@@ -89,8 +89,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $this->documentManager->reveal(),
             $this->documentInspector->reveal(),
             $this->resourceLocatorStrategyPool->reveal(),
-            $this->structureManager->reveal(),
-            $this->requestAnalyzer->reveal()
+            $this->structureManager->reveal()
         );
     }
 

@@ -56,6 +56,8 @@ class CachingTest extends SuluTestCase
         $this->assertEquals($targetGroup->getId(), $visitorTargetGroupCookie->getValue());
         $visitorSessionCookie = $response->headers->getCookies()[1];
         $this->assertEquals('_svs', $visitorSessionCookie->getName());
+        $this->assertEquals(0, $response->headers->getCacheControlDirective('max-age'));
+        $this->assertEquals(0, $response->headers->getCacheControlDirective('s-maxage'));
 
         return [$client, $cookieJar];
     }

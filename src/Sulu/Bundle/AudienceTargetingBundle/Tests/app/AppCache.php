@@ -9,14 +9,20 @@
  * with this source code in the file LICENSE.
  */
 
-use Sulu\Component\HttpCache\HttpCache;
+use Sulu\Bundle\AudienceTargetingBundle\EventListener\AudienceTargetingCacheListener;
+use Sulu\Bundle\HttpCacheBundle\Cache\AbstractHttpCache;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class AppCache extends HttpCache implements KernelInterface
+class AppCache extends AbstractHttpCache implements KernelInterface
 {
-    public function __construct(KernelInterface $kernel, $hasAudienceTargeting = false, $cacheDir = null)
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(KernelInterface $kernel, $cacheDir = null)
     {
-        parent::__construct($kernel, $hasAudienceTargeting, $cacheDir);
+        parent::__construct($kernel, $cacheDir);
+
+        $this->addSubscriber(new AudienceTargetingCacheListener());
     }
 
     /**

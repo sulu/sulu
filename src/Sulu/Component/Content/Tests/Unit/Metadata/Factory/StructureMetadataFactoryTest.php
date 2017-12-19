@@ -12,12 +12,12 @@
 namespace Sulu\Component\Content\Tests\Unit\Metadata\Factory;
 
 use Prophecy\Argument;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 

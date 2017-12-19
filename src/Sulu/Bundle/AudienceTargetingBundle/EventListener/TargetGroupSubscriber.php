@@ -15,7 +15,6 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
-use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -228,7 +227,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
             new Cookie(
                 $this->targetGroupCookie,
                 $this->targetGroupStore->getTargetGroupId(true),
-                HttpCache::TARGET_GROUP_COOKIE_LIFETIME
+                AudienceTargetingCacheListener::TARGET_GROUP_COOKIE_LIFETIME
             )
         );
 

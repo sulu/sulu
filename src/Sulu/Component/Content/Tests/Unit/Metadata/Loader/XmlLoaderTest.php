@@ -12,10 +12,10 @@
 namespace Sulu\Component\Content\Tests\Unit\Metadata\Loader;
 
 use Prophecy\Argument;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
-use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 
 class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 {

@@ -15,7 +15,7 @@ use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 
 /**
  * Reads a template xml and returns a StructureMetadata.
