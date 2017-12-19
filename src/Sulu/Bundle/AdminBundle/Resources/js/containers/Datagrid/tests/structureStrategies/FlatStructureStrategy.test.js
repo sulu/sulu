@@ -20,3 +20,8 @@ test('Should be empty after clear was called', () => {
     flatStructureStrategy.clear();
     expect(toJS(flatStructureStrategy.data)).toEqual([]);
 });
+
+test('Should not enhance the items', () => {
+    const flatStructureStrategy = new FlatStructureStrategy();
+    expect(flatStructureStrategy.enhanceItem({id: 1})).toEqual({id: 1});
+});

@@ -16,4 +16,8 @@ export default class FlatStructureStrategy implements StructureStrategyInterface
     clear() {
         this.data.splice(0, this.data.length);
     }
+
+    enhanceItem(item: Object): Object {
+        return item;
+    }
 }

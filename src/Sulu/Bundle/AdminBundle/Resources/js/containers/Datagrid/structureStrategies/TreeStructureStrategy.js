@@ -1,27 +1,41 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {StructureStrategyInterface} from '../types';
+import type {StructureStrategyInterface, TreeItem} from '../types';
 
 export default class TreeStructureStrategy implements StructureStrategyInterface {
-    @observable data: Map<string | number | boolean, Array<Object>>;
+    @observable data: Array<TreeItem> = [];
 
-    constructor() {
-        this.data = new Map();
+    findChildrenForParentId(tree: Array<TreeItem>, parent: ?string | number): ?Array<TreeItem> {
+        for (let i = 0; i < tree.length; i++) {
+            const item = tree[i];
+            const {data, children} = item;
+            if (parent === data.id) {
+                return children;
+            }
+
+            const childResult = this.findChildrenForParentId(children, parent);
+            if (childResult) {
+                return childResult;
+            }
+        }
     }
 
-    @action getData(parent: ?string | number | boolean) {
-        if (!parent) {
-            parent = false;
+    @action getData(parent: ?string | number) {
+        if (parent === undefined) {
+            return this.data;
         }
 
-        if (!this.data.get(parent)) {
-            this.data.set(parent, []);
-        }
+        return this.findChildrenForParentId(this.data, parent);
+    }
 
-        return this.data.get(parent);
+    enhanceItem(item: Object): Object {
+        return {
+            data: item,
+            children: [],
+        };
     }
 
     clear() {
-        this.data.clear();
+        this.data.splice(0, this.data.length);
     }
 }

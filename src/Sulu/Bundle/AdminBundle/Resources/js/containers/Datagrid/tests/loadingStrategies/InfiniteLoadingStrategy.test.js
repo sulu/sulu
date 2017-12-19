@@ -9,6 +9,7 @@ jest.mock('../../../../services/ResourceRequester', () => ({
 
 test('Should load items and add to empty array', () => {
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
+    const enhanceItem = jest.fn((item) => item);
     const data = [];
 
     const promise = Promise.resolve({
@@ -21,9 +22,14 @@ test('Should load items and add to empty array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    infiniteLoadingStrategy.load(data, 'snippets', {
-        page: 2,
-    });
+    infiniteLoadingStrategy.load(
+        data,
+        'snippets',
+        {
+            page: 2,
+        },
+        enhanceItem
+    );
 
     return promise.then(() => {
         expect(data).toEqual([
@@ -35,6 +41,7 @@ test('Should load items and add to empty array', () => {
 
 test('Should load items and add to existing entries in array', () => {
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
+    const enhanceItem = jest.fn((item) => item);
     const data = [
         {id: 3},
         {id: 5},
@@ -50,12 +57,20 @@ test('Should load items and add to existing entries in array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    infiniteLoadingStrategy.load(data, 'snippets', {
-        page: 1,
-        locale: 'en',
-    });
+    infiniteLoadingStrategy.load(
+        data,
+        'snippets',
+        {
+            page: 1,
+            locale: 'en',
+        },
+        enhanceItem
+    );
 
     return promise.then(() => {
+        expect(enhanceItem.mock.calls[0][0]).toEqual({id: 1});
+        expect(enhanceItem.mock.calls[1][0]).toEqual({id: 2});
+
         expect(data).toEqual([
             {id: 3},
             {id: 5},
@@ -67,12 +82,18 @@ test('Should load items and add to existing entries in array', () => {
 
 test('Should load items with correct options', () => {
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
+    const enhanceItem = jest.fn();
     const data = [];
 
-    infiniteLoadingStrategy.load(data, 'snippets', {
-        page: 2,
-        locale: 'en',
-    });
+    infiniteLoadingStrategy.load(
+        data,
+        'snippets',
+        {
+            page: 2,
+            locale: 'en',
+        },
+        enhanceItem
+    );
 
     expect(ResourceRequester.getList).toBeCalledWith('snippets', {limit: 50, page: 2, locale: 'en'});
 });

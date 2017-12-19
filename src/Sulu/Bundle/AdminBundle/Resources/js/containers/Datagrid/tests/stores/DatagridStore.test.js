@@ -15,7 +15,8 @@ function LoadingStrategy() {
 class StructureStrategy {
     @observable data = [];
     clear = jest.fn();
-    getData = jest.fn();
+    getData = jest.fn().mockReturnValue(this.data);
+    enhanceItem = jest.fn((item) => item);
 }
 
 test('The loading strategy should be called when a request is sent', () => {
@@ -37,11 +38,16 @@ test('The loading strategy should be called when a request is sent', () => {
     structureStrategy.getData.mockReturnValue([]);
     datagridStore.init(loadingStrategy, structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(toJS(datagridStore.data), 'tests', {
-        locale: undefined,
-        page: 1,
-        test: 'value',
-    });
+    expect(loadingStrategy.load).toBeCalledWith(
+        toJS(datagridStore.data),
+        'tests',
+        {
+            locale: undefined,
+            page: 1,
+            test: 'value',
+        },
+        structureStrategy.enhanceItem
+    );
 
     datagridStore.destroy();
 });
@@ -66,11 +72,16 @@ test('The loading strategy should be called with a different resourceKey when a 
     structureStrategy.getData.mockReturnValue(data);
     datagridStore.init(loadingStrategy, structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
-        locale: undefined,
-        page: 1,
-        test: 'value',
-    });
+    expect(loadingStrategy.load).toBeCalledWith(
+        data,
+        'snippets',
+        {
+            locale: undefined,
+            page: 1,
+            test: 'value',
+        },
+        structureStrategy.enhanceItem
+    );
 
     datagridStore.destroy();
 });
@@ -95,18 +106,28 @@ test('The loading strategy should be called with a different page when a request
     structureStrategy.getData.mockReturnValue(data);
     datagridStore.init(loadingStrategy, structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
-        locale: undefined,
-        page: 1,
-        test: 'value',
-    });
+    expect(loadingStrategy.load).toBeCalledWith(
+        data,
+        'snippets',
+        {
+            locale: undefined,
+            page: 1,
+            test: 'value',
+        },
+        structureStrategy.enhanceItem
+    );
 
     page.set(3);
-    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
-        locale: undefined,
-        page: 3,
-        test: 'value',
-    });
+    expect(loadingStrategy.load).toBeCalledWith(
+        data,
+        'snippets',
+        {
+            locale: undefined,
+            page: 3,
+            test: 'value',
+        },
+        structureStrategy.enhanceItem
+    );
 
     datagridStore.destroy();
 });
@@ -131,18 +152,27 @@ test('The loading strategy should be called with a different locale when a reque
     structureStrategy.getData.mockReturnValue(data);
     datagridStore.init(loadingStrategy, structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
-        locale: 'en',
-        page: 1,
-        test: 'value',
-    });
+    expect(loadingStrategy.load).toBeCalledWith(
+        data, 'snippets',
+        {
+            locale: 'en',
+            page: 1,
+            test: 'value',
+        },
+        structureStrategy.enhanceItem
+    );
 
     locale.set('de');
-    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
-        locale: 'de',
-        page: 1,
-        test: 'value',
-    });
+    expect(loadingStrategy.load).toBeCalledWith(
+        data,
+        'snippets',
+        {
+            locale: 'de',
+            page: 1,
+            test: 'value',
+        },
+        structureStrategy.enhanceItem
+    );
 
     datagridStore.destroy();
 });
@@ -163,10 +193,14 @@ test('The loading strategy should be called with the active item as parent', () 
     datagridStore.setActive('some-uuid');
     datagridStore.init(loadingStrategy, structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(data, 'snippets', {
-        page: 1,
-        parent: 'some-uuid',
-    });
+    expect(loadingStrategy.load).toBeCalledWith(
+        data, 'snippets',
+        {
+            page: 1,
+            parent: 'some-uuid',
+        },
+        structureStrategy.enhanceItem
+    );
 
     datagridStore.destroy();
 });

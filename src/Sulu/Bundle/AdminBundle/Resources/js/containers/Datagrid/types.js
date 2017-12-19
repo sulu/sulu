@@ -12,6 +12,7 @@ export type Schema = {
 
 export type DatagridAdapterProps = {
     data: Array<DataItem>,
+    active?: ?string | number,
     schema: Schema,
     selections: Array<number | string>,
     onItemClick?: (itemId: string | number) => void,
@@ -30,13 +31,21 @@ export type LoadOptions = {
     locale?: ?string,
 };
 
+export type ItemEnhancer = (item: Object) => Object;
+
 export interface LoadingStrategyInterface {
     paginationAdapter: ?PaginationAdapter,
-    load(data: Array<Object>, resourceKey: string, options: LoadOptions): Promise<Object>,
+    load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer): Promise<Object>,
 }
 
 export interface StructureStrategyInterface {
     data: Array<*>,
-    getData(parent: ?string | number | boolean): Array<*>,
+    getData(parent: ?string | number): ?Array<*>,
+    enhanceItem(item: Object): Object,
     clear(): void,
 }
+
+export type TreeItem = {
+    data: DataItem,
+    children: Array<TreeItem>,
+};

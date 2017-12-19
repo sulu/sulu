@@ -65,6 +65,7 @@ class StructureStrategy {
 
     clear = jest.fn();
     getData = jest.fn();
+    enhanceItem = jest.fn();
 }
 
 class TestAdapter extends AbstractAdapter {
@@ -109,6 +110,7 @@ test('Render TableAdapter with correct values', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
 
     const datagridStore = new DatagridStore('test', {page: observable(1)});
+    datagridStore.active = 3;
     datagridStore.selections.push(1);
     datagridStore.selections.push(3);
     const editClickSpy = jest.fn();
@@ -117,6 +119,7 @@ test('Render TableAdapter with correct values', () => {
     const tableAdapter = datagrid.find('TableAdapter');
 
     expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
+    expect(tableAdapter.prop('active')).toEqual(3);
     expect(tableAdapter.prop('selections')).toEqual([1, 3]);
     expect(tableAdapter.prop('schema')).toEqual({test: {}});
     expect(tableAdapter.prop('onItemClick')).toBe(editClickSpy);
@@ -213,7 +216,12 @@ test('DatagridStore should be initialized correctly on init and update', () => {
 test('DatagridStore should be updated with current active element', () => {
     datagridAdapterRegistry.get.mockReturnValue(class TestAdapter extends AbstractAdapter {
         static getLoadingStrategy = jest.fn().mockReturnValue({paginationAdapter: undefined, load: jest.fn()});
-        static getStructureStrategy = jest.fn().mockReturnValue({data: [], clear: jest.fn(), getData: jest.fn()});
+        static getStructureStrategy = jest.fn().mockReturnValue({
+            data: [],
+            clear: jest.fn(),
+            getData: jest.fn(),
+            enhanceItem: jest.fn(),
+        });
 
         componentWillMount() {
             const {onItemActivation} = this.props;

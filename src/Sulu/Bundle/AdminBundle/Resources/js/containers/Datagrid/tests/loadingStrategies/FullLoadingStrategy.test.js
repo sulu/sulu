@@ -9,6 +9,7 @@ jest.mock('../../../../services/ResourceRequester', () => ({
 
 test('Should load items and add to empty array', () => {
     const fullLoadingStrategy = new FullLoadingStrategy();
+    const enhanceItem = jest.fn((item) => item);
     const data = [];
 
     const promise = Promise.resolve({
@@ -21,7 +22,12 @@ test('Should load items and add to empty array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    fullLoadingStrategy.load(data, 'snippets', {});
+    fullLoadingStrategy.load(
+        data,
+        'snippets',
+        {},
+        enhanceItem
+    );
 
     return promise.then(() => {
         expect(data).toEqual([
@@ -33,6 +39,7 @@ test('Should load items and add to empty array', () => {
 
 test('Should load items and replace existing entries in array', () => {
     const fullLoadingStrategy = new FullLoadingStrategy();
+    const enhanceItem = jest.fn((item) => item);
     const data = [
         {id: 3},
         {id: 5},
@@ -48,11 +55,19 @@ test('Should load items and replace existing entries in array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    fullLoadingStrategy.load(data, 'snippets', {
-        locale: 'en',
-    });
+    fullLoadingStrategy.load(
+        data,
+        'snippets',
+        {
+            locale: 'en',
+        },
+        enhanceItem
+    );
 
     return promise.then(() => {
+        expect(enhanceItem.mock.calls[0][0]).toEqual({id: 1});
+        expect(enhanceItem.mock.calls[1][0]).toEqual({id: 2});
+
         expect(data).toEqual([
             {id: 1},
             {id: 2},
@@ -62,11 +77,17 @@ test('Should load items and replace existing entries in array', () => {
 
 test('Should load items with correct options', () => {
     const fullLoadingStrategy = new FullLoadingStrategy();
+    const enhanceItem = jest.fn();
     const data = [];
 
-    fullLoadingStrategy.load(data, 'snippets', {
-        locale: 'en',
-    });
+    fullLoadingStrategy.load(
+        data,
+        'snippets',
+        {
+            locale: 'en',
+        },
+        enhanceItem
+    );
 
     expect(ResourceRequester.getList).toBeCalledWith('snippets', {limit: undefined, page: undefined, locale: 'en'});
 });

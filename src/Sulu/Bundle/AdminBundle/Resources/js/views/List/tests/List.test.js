@@ -5,35 +5,38 @@ import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
-jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey, observableOptions, options) {
-    this.resourceKey = resourceKey;
-    this.observableOptions = observableOptions;
-    this.options = options;
-    this.loading = false;
-    this.pageCount = 3;
-    this.init = jest.fn();
-    this.data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
-    ];
-    this.selections = [];
-    this.getPage = jest.fn().mockReturnValue(2);
-    this.getSchema = jest.fn().mockReturnValue({
-        title: {},
-        description: {},
-    });
-    this.destroy = jest.fn();
-    this.sendRequest = jest.fn();
-    this.clearSelection = jest.fn();
-}));
+jest.mock(
+    '../../../containers/Datagrid/stores/DatagridStore',
+    () => jest.fn(function(resourceKey, observableOptions, options) {
+        this.resourceKey = resourceKey;
+        this.observableOptions = observableOptions;
+        this.options = options;
+        this.loading = false;
+        this.pageCount = 3;
+        this.init = jest.fn();
+        this.data = [
+            {
+                id: 1,
+                title: 'Title 1',
+                description: 'Description 1',
+            },
+            {
+                id: 2,
+                title: 'Title 2',
+                description: 'Description 2',
+            },
+        ];
+        this.selections = [];
+        this.getPage = jest.fn().mockReturnValue(2);
+        this.getSchema = jest.fn().mockReturnValue({
+            title: {},
+            description: {},
+        });
+        this.destroy = jest.fn();
+        this.sendRequest = jest.fn();
+        this.clearSelection = jest.fn();
+    })
+);
 
 jest.mock('../../../containers/Datagrid/registries/DatagridAdapterRegistry', () => ({
     add: jest.fn(),
