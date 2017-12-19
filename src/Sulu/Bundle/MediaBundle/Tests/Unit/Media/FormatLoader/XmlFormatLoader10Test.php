@@ -52,7 +52,7 @@ class XmlFormatLoader10Test extends WebspaceTestCase
     {
         $result = $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/version10.xml');
 
-        $this->assertEquals(2, count($result));
+        $this->assertEquals(3, count($result));
 
         $this->assertArrayHasKey('640x480', $result);
         $this->assertEquals(
@@ -108,6 +108,28 @@ class XmlFormatLoader10Test extends WebspaceTestCase
             $result['300x']
         );
         $this->assertNotNull($result['300x']['internal']);
+
+        $this->assertArrayHasKey('3840x2160-retina', $result);
+        $this->assertEquals(
+            [
+                'key' => '3840x2160-retina',
+                'internal' => false,
+                'meta' => [
+                    'title' => [],
+                ],
+                'scale' => [
+                    'x' => '3840',
+                    'y' => '2160',
+                    'mode' => 'outbound',
+                    'forceRatio' => true,
+                    'retina' => true,
+                ],
+                'transformations' => [],
+                'options' => [],
+            ],
+            $result['3840x2160-retina']
+        );
+        $this->assertNotNull($result['3840x2160-retina']['internal']);
     }
 
     /**

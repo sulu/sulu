@@ -39,4 +39,18 @@
             </command>
         </commands>
     </format>
+
+    <format>
+        <name>3840x2160-retina</name>
+        <commands>
+            <command>
+                <action>resize</action>
+                <parameters>
+                    <parameter name="x">3840</parameter>
+                    <parameter name="y">2160</parameter>
+                    <parameter name="retina">true</parameter>
+                </parameters>
+            </command>
+        </commands>
+    </format>
 </formats>
