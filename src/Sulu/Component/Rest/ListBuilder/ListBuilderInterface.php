@@ -235,7 +235,7 @@ interface ListBuilderInterface
     /**
      * Returns the objects for the built query.
      *
-     * @return mixed
+     * @return \Generator
      */
     public function execute();
 
