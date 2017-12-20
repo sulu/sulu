@@ -11,10 +11,36 @@
 
 namespace Functional\Controller;
 
+use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class SecurityControllerTest extends SuluTestCase
 {
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    public function setUp()
+    {
+        $this->purgeDatabase();
+        $this->em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+        $collectionType1 = new CollectionType();
+        $collectionType1->setId(1);
+        $collectionType1->setName('default');
+        $collectionType1->setKey('default');
+        $this->em->persist($collectionType1);
+
+        $collectionType2 = new CollectionType();
+        $collectionType2->setId(1);
+        $collectionType2->setName('system');
+        $collectionType2->setKey('system');
+        $this->em->persist($collectionType2);
+
+        $this->em->flush();
+    }
+
     public function testLoginAction()
     {
         $client = $this->createClient();
