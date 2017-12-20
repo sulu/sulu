@@ -379,9 +379,10 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
 
     $kernelDirectory = $bundleDir . DIRECTORY_SEPARATOR . get_kernel_dir($phpunitFile->getPathname());
     putenv('KERNEL_DIR=' . $kernelDirectory);
+    $_SERVER['KERNEL_DIR'] = $kernelDirectory; // TODO remove when we only test with PHP >=7.1
     $flags = $input->getOption('flags');
     $process = exec_cmd(sprintf(
-        ' vendor%sbin%sphpunit --configuration %s %s',
+        'vendor%sbin%sphpunit --configuration %s %s',
         DIRECTORY_SEPARATOR,
         DIRECTORY_SEPARATOR,
         $phpunitFile->getPathname(),
