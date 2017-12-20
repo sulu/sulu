@@ -1,3 +1,9 @@
+@import '../../containers/Application/colors.scss';
+
+$loginTextColor: $white;
+$formContainerBackgroundColor: rgba($black, .7);
+$loginButtonBackgroundColor: $shakespeare;
+
 .login {
     height: 100vh;
     background-image: url('./background.jpg');
@@ -5,4 +11,57 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    color: $loginTextColor;
+    border-radius: 3px;
+}
+
+.logo {
+    display: block;
+    margin: 100px auto 120px;
+}
+
+.back-link {
+    color: $loginTextColor;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.back-link-icon {
+    margin-right: 10px;
+}
+
+.form-container {
+    background-color: $formContainerBackgroundColor;
+    padding: 40px;
+    width: 500px;
+    height: 680px;
+}
+
+.form {
+    width: 260px;
+    margin: 0 auto;
+}
+
+.input-field {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.label-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.login-button {
+    width: 100%;
+    height: 30px;
+    font-size: 14px;
+    color: $loginTextColor;
+    background-color: $loginButtonBackgroundColor;
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 10px;
 }
