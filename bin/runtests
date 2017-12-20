@@ -378,9 +378,10 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     write_info('Running tests');
 
     $kernelDirectory = $bundleDir . DIRECTORY_SEPARATOR . get_kernel_dir($phpunitFile->getPathname());
+    putenv('KERNEL_DIR=' . $kernelDirectory);
     $flags = $input->getOption('flags');
     $process = exec_cmd(sprintf(
-        'KERNEL_DIR=' . $kernelDirectory . ' vendor%sbin%sphpunit --configuration %s %s',
+        ' vendor%sbin%sphpunit --configuration %s %s',
         DIRECTORY_SEPARATOR,
         DIRECTORY_SEPARATOR,
         $phpunitFile->getPathname(),
