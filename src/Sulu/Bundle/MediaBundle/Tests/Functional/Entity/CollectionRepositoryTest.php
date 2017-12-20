@@ -186,7 +186,7 @@ class CollectionRepositoryTest extends SuluTestCase
 
     public function testCount()
     {
-        $this->assertEquals(16, $this->collectionRepository->count(5, ['systemCollections' => false]));
+        $this->assertEquals(16, $this->collectionRepository->countCollections(5, ['systemCollections' => false]));
     }
 
     public function testCountMedia()
@@ -201,6 +201,6 @@ class CollectionRepositoryTest extends SuluTestCase
 
     public function testCountWithoutFilters()
     {
-        $this->assertEquals(21, $this->collectionRepository->count(5));
+        $this->assertEquals(21, $this->collectionRepository->countCollections(5));
     }
 }

@@ -233,7 +233,7 @@ class CollectionManager implements CollectionManagerInterface
 
         unset($filter['limit']);
         unset($filter['offset']);
-        $this->count = $this->collectionRepository->count($depth, $filter);
+        $this->count = $this->collectionRepository->countCollections($depth, $filter);
 
         return $collections;
     }
