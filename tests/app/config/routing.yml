@@ -1,7 +1,3 @@
-sulu_admin:
-    resource: "@SuluAdminBundle/Resources/config/routing.yml"
-    prefix: /admin
-
 sulu_media_website:
     resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
 

@@ -371,17 +371,16 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
         $filesystem->remove($cacheDir);
     }
 
-    putenv('KERNEL_DIR=' . $bundleDir . DIRECTORY_SEPARATOR . get_kernel_dir($phpunitFile->getPathname()));
-
     // see if this bundle uses doctrine orm, and update the schema if so..
     // (we assume that the bundle will purge the fixtures etc.)
     init_bundle($phpunitFile->getPathname());
 
     write_info('Running tests');
 
+    $kernelDirectory = $bundleDir . DIRECTORY_SEPARATOR . get_kernel_dir($phpunitFile->getPathname());
     $flags = $input->getOption('flags');
     $process = exec_cmd(sprintf(
-        'vendor%sbin%sphpunit --configuration %s %s',
+        'KERNEL_DIR=' . $kernelDirectory . ' vendor%sbin%sphpunit --configuration %s %s',
         DIRECTORY_SEPARATOR,
         DIRECTORY_SEPARATOR,
         $phpunitFile->getPathname(),
