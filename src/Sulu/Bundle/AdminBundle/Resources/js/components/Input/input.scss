@@ -9,6 +9,7 @@ $inputFontSize: 12px;
 $iconColor: $dustyGray;
 $iconBorderPadding: 5px;
 $placeholderColor: $dustyGray;
+$backgroundColor: $white;
 
 .input {
     border: $inputBorderWidth solid $inputBorderColor;
@@ -17,6 +18,7 @@ $placeholderColor: $dustyGray;
     align-items: center;
     height: $inputHeight;
     width: 100%;
+    background-color: $backgroundColor;
 
     input {
         width: 100%;
@@ -37,7 +39,7 @@ $placeholderColor: $dustyGray;
 
 .prepended-container {
     position: relative;
-    width: 34px;
+    flex: 0 0 34px;
     height: calc($inputHeight - 2 * $iconBorderPadding);
     box-shadow: $inputBorderWidth 0 0 $inputBorderColor;
     display: flex;
