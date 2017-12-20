@@ -17,7 +17,7 @@ exports[`AutoComplete should render 1`] = `
     </div>
     <input
       type="text"
-      value=""
+      value="Test"
     />
   </label>
 </div>

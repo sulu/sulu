@@ -12,8 +12,14 @@ afterEach(() => {
 });
 
 test('AutoComplete should render', () => {
+    const changeSpy = jest.fn();
+    const searchSpy = jest.fn();
     expect(render(
-        <AutoComplete>
+        <AutoComplete
+            value="Test"
+            onChange={changeSpy}
+            onSearch={searchSpy}
+        >
             <Suggestion
                 icon="ticket"
                 value="suggestion-1"
@@ -37,9 +43,13 @@ test('AutoComplete should render', () => {
 });
 
 test('Render the AutoComplete with open suggestions list', () => {
+    const searchSpy = jest.fn();
+    const changeSpy = jest.fn();
     const autoComplete = mount(
         <AutoComplete
             value="Test"
+            onChange={changeSpy}
+            onSearch={searchSpy}
         >
             <Suggestion
                 icon="ticket"
@@ -67,12 +77,14 @@ test('Render the AutoComplete with open suggestions list', () => {
 });
 
 test('Clicking on a suggestion should call the onChange handler with the value of the selected Suggestion', () => {
-    const onChangeSpy = jest.fn();
+    const changeSpy = jest.fn();
+    const searchSpy = jest.fn();
     const testValue = 'suggestion-1';
     mount(
         <AutoComplete
             value="Test"
-            onChange={onChangeSpy}
+            onChange={changeSpy}
+            onSearch={searchSpy}
         >
             <Suggestion
                 icon="ticket"
@@ -95,6 +107,11 @@ test('Clicking on a suggestion should call the onChange handler with the value o
         </AutoComplete>
     );
 
-    document.body.querySelector('.suggestion:first-child').click();
-    expect(onChangeSpy).toHaveBeenCalledWith(testValue);
+    const suggestion = document.body ? document.body.querySelector('.suggestion:first-child') : null;
+
+    if (suggestion) {
+        suggestion.click();
+    }
+
+    expect(changeSpy).toHaveBeenCalledWith(testValue);
 });
