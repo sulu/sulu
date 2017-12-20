@@ -4,6 +4,7 @@ $dropzoneSize: 400px;
 $uploadIconColor: $scorpion;
 $uploadInfoTextColor: $scorpion;
 $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
+$mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because calc doesn't work for media-queries */
 
 .media-container {
     position: relative;
@@ -11,7 +12,7 @@ $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
     justify-content: center;
     align-items: center;
     width: $dropzoneSize;
-    height: $dropzoneSize;
+    height: auto;
     background-image: url('./checkerBackground.gif');
     background-size: 10px;
     cursor: pointer;
@@ -22,6 +23,16 @@ $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
             opacity: 1;
             transform: scale(1);
         }
+    }
+
+    &::after {
+        content: '';
+        display: block;
+        padding-top: 100%;
+    }
+
+    @media (max-width: $mediaContainerBreakpoint) {
+        width: 100%;
     }
 }
 
@@ -61,4 +72,8 @@ $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
     font-size: 14px;
     margin-top: 20px;
     padding: 0 20px;
+}
+
+.thumbnail {
+    max-width: 100%;
 }

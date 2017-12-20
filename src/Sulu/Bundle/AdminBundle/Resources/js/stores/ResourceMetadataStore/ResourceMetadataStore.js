@@ -98,6 +98,26 @@ class ResourceMetadataStore {
                 mimeType: {},
                 thumbnails: {},
             },
+            form: {
+                title: {
+                    label: 'Title',
+                    type: 'text_line',
+                },
+                description: {
+                    label: 'Description',
+                    type: 'text_area',
+                },
+                license: {
+                    label: 'License',
+                    type: 'section',
+                    items: {
+                        copyright: {
+                            label: 'Copyright information',
+                            type: 'text_area',
+                        },
+                    },
+                },
+            },
         },
     };
 

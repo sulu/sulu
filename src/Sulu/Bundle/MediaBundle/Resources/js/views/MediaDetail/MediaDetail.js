@@ -3,7 +3,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import {computed} from 'mobx';
 import {translate} from 'sulu-admin-bundle/utils';
-import {withToolbar} from 'sulu-admin-bundle/containers';
+import {Form, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import MediaUploadStore from '../../stores/MediaUploadStore';
@@ -20,6 +20,7 @@ type Props = ViewProps & {
 @observer
 class MediaDetail extends React.PureComponent<Props> {
     mediaUploadStore: MediaUploadStore;
+    form: ?Form;
 
     componentWillMount() {
         const {
@@ -57,6 +58,18 @@ class MediaDetail extends React.PureComponent<Props> {
         return resourceStore.data.mimeType;
     }
 
+    componentWillUnmount() {
+        const {resourceStore, router} = this.props;
+
+        if (resourceStore.locale) {
+            router.unbind('locale', resourceStore.locale);
+        }
+    }
+
+    setFormRef = (form) => {
+        this.form = form;
+    };
+
     handleMediaDrop = (file: File) => {
         const {resourceStore} = this.props;
         const {
@@ -73,7 +86,12 @@ class MediaDetail extends React.PureComponent<Props> {
             });
     };
 
+    handleSubmit = () => {
+        this.props.resourceStore.save();
+    };
+
     render() {
+        const {resourceStore} = this.props;
         const {
             progress,
             uploading,
@@ -81,7 +99,7 @@ class MediaDetail extends React.PureComponent<Props> {
 
         return (
             <div className={mediaDetailStyles.mediaDetail}>
-                <section>
+                <section className={mediaDetailStyles.previewContainer}>
                     <SingleMediaDropzone
                         image={this.thumbnail}
                         uploading={uploading}
@@ -89,6 +107,13 @@ class MediaDetail extends React.PureComponent<Props> {
                         onDrop={this.handleMediaDrop}
                         uploadText={translate('sulu_media.upload_or_replace')}
                         mimeType={this.mimeType}
+                    />
+                </section>
+                <section className={mediaDetailStyles.formContainer}>
+                    <Form
+                        ref={this.setFormRef}
+                        store={resourceStore}
+                        onSubmit={this.handleSubmit}
                     />
                 </section>
             </div>
@@ -130,7 +155,7 @@ export default withToolbar(MediaDetail, function() {
                 disabled: !resourceStore.dirty,
                 loading: resourceStore.saving,
                 onClick: () => {
-                    resourceStore.save();
+                    this.form.submit();
                 },
             },
         ],

@@ -4,7 +4,9 @@ exports[`Render a MediaDetail view 1`] = `
 <div
   class="mediaDetail"
 >
-  <section>
+  <section
+    class="previewContainer"
+  >
     <div
       aria-disabled="false"
       class="mediaContainer"
@@ -43,6 +45,23 @@ exports[`Render a MediaDetail view 1`] = `
         type="file"
       />
     </div>
+  </section>
+  <section
+    class="formContainer"
+  >
+    <form
+      class="form"
+    >
+      <div
+        class="grid"
+      />
+      <button
+        class="submit"
+        type="submit"
+      >
+        Submit
+      </button>
+    </form>
   </section>
 </div>
 `;

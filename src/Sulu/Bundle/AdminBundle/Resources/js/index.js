@@ -8,6 +8,7 @@ import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
 import {setTranslations} from './utils/Translator';
 import Input from './components/Input';
+import TextArea from './components/TextArea';
 import Application from './containers/Application';
 import {fieldRegistry} from './containers/Form';
 import {viewRegistry} from './containers/ViewRenderer';
@@ -29,6 +30,7 @@ datagridAdapterRegistry.add('table', TableAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
 
 fieldRegistry.add('text_line', Input);
+fieldRegistry.add('text_area', TextArea);
 
 function startApplication() {
     const router = new Router(createHistory());
