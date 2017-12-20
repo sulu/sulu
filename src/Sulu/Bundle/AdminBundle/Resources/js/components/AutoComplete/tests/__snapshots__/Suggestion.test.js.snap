@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Should highlight the part of the suggestion text which matches the query prop 1`] = `
+<button
+  class="suggestion"
+>
+  <span
+    aria-label="ticket"
+    class="icon fa fa-ticket"
+  />
+  <div>
+    <span>
+      <strong>
+        Sug
+      </strong>
+      gestion 3
+    </span>
+  </div>
+</button>
+`;
+
 exports[`Suggestion should render 1`] = `
 <button
   class="suggestion"

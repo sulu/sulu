@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
 import Suggestion from '../Suggestion';
@@ -43,4 +43,22 @@ test('Clicking on a suggestion should call the onClick handler', () => {
 
     suggestion.simulate('click');
     expect(onClickSpy).toHaveBeenCalledTimes(1);
+});
+
+test('Should highlight the part of the suggestion text which matches the query prop', () => {
+    const onClickSpy = jest.fn();
+    const suggestion = shallow(
+        <Suggestion
+            query="sug"
+            icon="ticket"
+            value="suggestion-1"
+            onSelection={onClickSpy}
+        >
+            {(highlight) => (
+                <div>{highlight('Suggestion 3')}</div>
+            )}
+        </Suggestion>
+    );
+
+    expect(suggestion.render()).toMatchSnapshot();
 });

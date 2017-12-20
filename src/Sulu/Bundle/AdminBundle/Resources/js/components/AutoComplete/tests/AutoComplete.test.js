@@ -1,11 +1,15 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {render, mount} from 'enzyme';
 import pretty from 'pretty';
 import AutoComplete from '../AutoComplete';
 import Suggestion from '../Suggestion';
 
-afterEach(() => document.body.innerHTML = '');
+afterEach(() => {
+    if (document.body) {
+        document.body.innerHTML = '';
+    }
+});
 
 test('AutoComplete should render', () => {
     expect(render(
@@ -59,7 +63,7 @@ test('Render the AutoComplete with open suggestions list', () => {
     );
 
     expect(autoComplete.render()).toMatchSnapshot();
-    expect(pretty(document.body.innerHTML)).toMatchSnapshot();
+    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
 
 test('Clicking on a suggestion should call the onChange handler with the value of the selected Suggestion', () => {

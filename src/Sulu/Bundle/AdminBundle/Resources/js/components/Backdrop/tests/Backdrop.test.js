@@ -1,16 +1,20 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {mount, shallow} from 'enzyme';
 import React from 'react';
 import pretty from 'pretty';
 import Backdrop from '../Backdrop';
 
-afterEach(() => document.body.innerHTML = '');
+afterEach(() => {
+    if (document.body) {
+        document.body.innerHTML = '';
+    }
+});
 
 test('The component should render in body when open', () => {
     const body = document.body;
     const view = mount(<Backdrop open={true} />).render();
     expect(view.html()).toBe(null);
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
 test('The component should not render in body when local property is set', () => {
@@ -22,7 +26,7 @@ test('The component should not render in the body when closed', () => {
     const body = document.body;
     const view = mount(<Backdrop open={false} />).render();
     expect(view.html()).toBe(null);
-    expect(body.innerHTML).toBe('');
+    expect(body ? body.innerHTML : '').toBe('');
 });
 
 test('The component should call a function when clicked', () => {

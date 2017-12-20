@@ -31,9 +31,7 @@ export default class Input extends React.PureComponent<Props> {
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        if (this.props.onChange) {
-            this.props.onChange(event.currentTarget.value);
-        }
+        this.props.onChange(event.currentTarget.value);
     };
 
     render() {
