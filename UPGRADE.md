@@ -14,6 +14,11 @@ Follow upgrade path of following libraries:
 
 The api endpoint for `/admin/api/nodes/filter` was removed and replaced by `/admin/api/items`.
 
+### CollectionRepository
+
+The `CollectionRepository` had a `count` method, whose interface conflicts with the one the `EntityRepository` is
+exposing starting with Doctrine 2.6. So we had to rename that method to `countCollections`.
+
 ## 1.6.9
 
 ### CacheBuilder
