@@ -33,7 +33,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('max_title_length')->defaultValue(55)->end()
-                        ->scalarNode('max_description_length')->defaultValue(155)->end()
+                        ->scalarNode('max_description_length')->defaultValue(320)->end()
                         ->scalarNode('max_keywords')->defaultValue(5)->end()
                         ->scalarNode('keywords_separator')->defaultValue(',')->end()
                         ->scalarNode('url_prefix')->defaultValue('www.yoursite.com/{locale}')->end()

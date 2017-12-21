@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * ENHANCEMENT #3698 [ContentBundle]           SEO description length changed from 155 to 320
     * HOTFIX      #3695 [MediaBundle]             Keep doctrine 2.5
 
 * 1.6.11 (2017-12-13)
