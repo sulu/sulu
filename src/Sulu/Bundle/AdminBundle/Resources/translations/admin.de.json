@@ -15,5 +15,12 @@
     "sulu_admin.cancel": "Abbrechen",
     "sulu_admin.error_required": "Dieses Feld muss ausgefüllt werden",
     "sulu_admin.error_minlength": "Die minimale Länge dieses Feldes wurde unterschritten",
-    "sulu_admin.error_minitems": "Dieses Feld hat zu wenig Zuweisungen"
+    "sulu_admin.error_minitems": "Dieses Feld hat zu wenig Zuweisungen",
+    "sulu_admin.back_to_website": "Zurück zur Website",
+    "sulu_admin.username_or_email": "Username oder Email",
+    "sulu_admin.password": "Passwort",
+    "sulu_admin.login": "Login",
+    "sulu_admin.to_login": "Zum Login",
+    "sulu_admin.reset": "Zurücksetzen",
+    "sulu_admin.forgot_password": "Passwort vergessen"
 }
