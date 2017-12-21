@@ -1,8 +1,14 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.12 (2017-12-21)
+    * ENHANCEMENT #3698 [ContentBundle]           SEO description length changed from 155 to 320
+    * HOTFIX      #3695 [RouteBundle]             Added check for empty request format
+    * HOTFIX      #3695 [WebsiteBundle]           Added check for empty request format
+    * HOTFIX      #3696 [MediaBundle]             Keep doctrine 2.5
+
 * 1.6.11 (2017-12-13)
-    * HOTFIX      #3690 [ContentBundle]         Fix saving of not yet started text editor
+    * HOTFIX      #3690 [ContentBundle]           Fix saving of not yet started text editor
     * HOTFIX      #3684 [SecurityBundle]          Fixed conflict between admin and website session cookie
     * HOTFIX      #3686 [ContentBundle]           Validate if ckeditor instances are not in source mode
     * HOTFIX      #3585 [PersistanceBundle]       Fixed exception of blame for none sulu users

@@ -14,6 +14,19 @@ Follow upgrade path of following libraries:
 
 The api endpoint for `/admin/api/nodes/filter` was removed and replaced by `/admin/api/items`.
 
+## 1.6.11
+
+### SEO Description
+
+The default length for the description field in the SEO tab has changed from 155 to 320, because Google has expanded
+the max length. If you want to have a different length for some reason you can change it in the configuration:
+
+```yaml
+sulu_content:
+    seo:
+        max_description_length: 155
+```
+
 ## 1.6.9
 
 ### CacheBuilder

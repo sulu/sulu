@@ -342,4 +342,16 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/test', $routes[0]->getPath());
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
     }
+
+    public function testGetRouteCollectionForRequestEndingDot()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getPathInfo()->willReturn('/test.');
+        $request->getLocale()->willReturn('de');
+        $request->getRequestFormat()->willReturn('');
+
+        $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
+
+        $this->assertCount(0, $collection);
+    }
 }
