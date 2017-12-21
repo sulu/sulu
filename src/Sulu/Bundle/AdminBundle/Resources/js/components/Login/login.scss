@@ -2,7 +2,6 @@
 
 $loginTextColor: $white;
 $formContainerBackgroundColor: rgba($black, .7);
-$loginButtonBackgroundColor: $shakespeare;
 
 .login {
     height: 100vh;
@@ -13,6 +12,7 @@ $loginButtonBackgroundColor: $shakespeare;
     align-items: center;
     color: $loginTextColor;
     border-radius: 3px;
+    font-size: 14px;
 }
 
 .logo {
@@ -23,7 +23,6 @@ $loginButtonBackgroundColor: $shakespeare;
 .back-link {
     color: $loginTextColor;
     text-decoration: none;
-    font-size: 14px;
     display: flex;
     align-items: center;
 }
@@ -37,31 +36,4 @@ $loginButtonBackgroundColor: $shakespeare;
     padding: 40px;
     width: 500px;
     height: 680px;
-}
-
-.form {
-    width: 260px;
-    margin: 0 auto;
-}
-
-.input-field {
-    display: block;
-    margin-bottom: 20px;
-}
-
-.label-text {
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-.login-button {
-    width: 100%;
-    height: 30px;
-    font-size: 14px;
-    color: $loginTextColor;
-    background-color: $loginButtonBackgroundColor;
-    border: 0;
-    border-radius: 3px;
-    cursor: pointer;
-    margin-top: 10px;
 }
