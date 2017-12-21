@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render the Login component 1`] = `
+<div
+  class="login"
+>
+  <div
+    class="formContainer"
+  >
+    <a
+      class="backLink"
+      href="/"
+    >
+      <span
+        aria-label="chevron-left"
+        class="backLinkIcon fa fa-chevron-left"
+      />
+      Back to website
+    </a>
+    <img
+      class="logo"
+      src="test-file-stub"
+    />
+    <div>
+      <form
+        class="form loginForm visible"
+      >
+        <fieldset>
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            />
+            <label
+              class="input"
+            >
+              <input
+                type="text"
+                value=""
+              />
+            </label>
+          </label>
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            />
+            <label
+              class="input"
+            >
+              <input
+                type="password"
+                value=""
+              />
+            </label>
+            <button
+              class="changeFormButton"
+              type="button"
+            />
+          </label>
+          <button
+            class="submit"
+          />
+        </fieldset>
+      </form>
+      <form
+        class="form resetForm"
+      >
+        <fieldset
+          disabled=""
+        >
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            />
+            <label
+              class="input"
+            >
+              <input
+                type="text"
+                value=""
+              />
+            </label>
+            <button
+              class="changeFormButton"
+              type="button"
+            />
+          </label>
+          <button
+            class="submit"
+          />
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+`;

@@ -47,60 +47,66 @@ export default class LoginForm extends React.PureComponent<Props> {
     };
 
     render() {
+        const loginFormVisible = this.visibleForm === 'login';
+        const resetFormVisible = this.visibleForm === 'reset';
         const loginFormClass = classNames(
             loginFormStyles.form,
             loginFormStyles.loginForm,
             {
-                [loginFormStyles.visible]: this.visibleForm === 'login',
+                [loginFormStyles.visible]: loginFormVisible,
             }
         );
         const resetFormClass = classNames(
             loginFormStyles.form,
             loginFormStyles.resetForm,
             {
-                [loginFormStyles.visible]: this.visibleForm === 'reset',
+                [loginFormStyles.visible]: resetFormVisible,
             }
         );
 
         return (
             <div>
                 <form className={loginFormClass} onSubmit={this.handleLoginFormSubmit}>
-                    <label className={loginFormStyles.inputField}>
-                        <div className={loginFormStyles.labelText}>
-                            {translate('sulu_admin.username_or_email')}
-                        </div>
-                        <Input value={this.user} onChange={this.handleUserChange} />
-                    </label>
-                    <label className={loginFormStyles.inputField}>
-                        <div className={loginFormStyles.labelText}>
-                            {translate('sulu_admin.password')}
-                        </div>
-                        <Input value={this.password} onChange={this.handlePasswordChange} />
-                        <button
-                            type="button"
-                            className={loginFormStyles.changeFormButton}
-                            onClick={this.handleChangeToResetForm}
-                        >
-                            {translate('sulu_admin.forgot_password')}
-                        </button>
-                    </label>
-                    <button className={loginFormStyles.submit}>{translate('sulu_admin.login')}</button>
+                    <fieldset disabled={!loginFormVisible}>
+                        <label className={loginFormStyles.inputField}>
+                            <div className={loginFormStyles.labelText}>
+                                {translate('sulu_admin.username_or_email')}
+                            </div>
+                            <Input value={this.user} onChange={this.handleUserChange} />
+                        </label>
+                        <label className={loginFormStyles.inputField}>
+                            <div className={loginFormStyles.labelText}>
+                                {translate('sulu_admin.password')}
+                            </div>
+                            <Input type="password" value={this.password} onChange={this.handlePasswordChange} />
+                            <button
+                                type="button"
+                                className={loginFormStyles.changeFormButton}
+                                onClick={this.handleChangeToResetForm}
+                            >
+                                {translate('sulu_admin.forgot_password')}
+                            </button>
+                        </label>
+                        <button className={loginFormStyles.submit}>{translate('sulu_admin.login')}</button>
+                    </fieldset>
                 </form>
                 <form className={resetFormClass} onSubmit={this.handleResetFormSubmit}>
-                    <label className={loginFormStyles.inputField}>
-                        <div className={loginFormStyles.labelText}>
-                            {translate('sulu_admin.username_or_email')}
-                        </div>
-                        <Input value={this.user} onChange={this.handleUserChange} />
-                        <button
-                            type="button"
-                            className={loginFormStyles.changeFormButton}
-                            onClick={this.handleChangeToLoginForm}
-                        >
-                            {translate('sulu_admin.to_login')}
-                        </button>
-                    </label>
-                    <button className={loginFormStyles.submit}>{translate('sulu_admin.reset')}</button>
+                    <fieldset disabled={!resetFormVisible}>
+                        <label className={loginFormStyles.inputField}>
+                            <div className={loginFormStyles.labelText}>
+                                {translate('sulu_admin.username_or_email')}
+                            </div>
+                            <Input value={this.user} onChange={this.handleUserChange} />
+                            <button
+                                type="button"
+                                className={loginFormStyles.changeFormButton}
+                                onClick={this.handleChangeToLoginForm}
+                            >
+                                {translate('sulu_admin.to_login')}
+                            </button>
+                        </label>
+                        <button className={loginFormStyles.submit}>{translate('sulu_admin.reset')}</button>
+                    </fieldset>
                 </form>
             </div>
         );
