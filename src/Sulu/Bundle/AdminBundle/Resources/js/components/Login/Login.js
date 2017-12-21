@@ -14,15 +14,9 @@ type Props = {
 };
 
 export default class Login extends React.PureComponent<Props> {
-    handleLogin = (user: string, password: string) => {
-        this.props.onLogin(user, password);
-    };
-
-    handleResetPassword = (user: string) => {
-        this.props.onResetPassword(user);
-    };
-
     render() {
+        const {onLogin, onResetPassword} = this.props;
+
         return (
             <div className={loginStyles.login}>
                 <div className={loginStyles.formContainer}>
@@ -31,7 +25,7 @@ export default class Login extends React.PureComponent<Props> {
                         {translate('sulu_admin.back_to_website')}
                     </a>
                     <img className={loginStyles.logo} src={logo} />
-                    <LoginForm onLogin={this.handleLogin} onResetPassword={this.handleResetPassword} />
+                    <LoginForm onLogin={onLogin} onResetPassword={onResetPassword} />
                 </div>
             </div>
         );
