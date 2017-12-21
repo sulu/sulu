@@ -86,6 +86,10 @@ class ContentRouteProvider implements RouteProviderInterface
     {
         $collection = new RouteCollection();
 
+        if ('' === $request->getRequestFormat()) {
+            return $collection;
+        }
+
         /** @var RequestAttributes $attributes */
         $attributes = $request->attributes->get('_sulu');
         if (!$attributes) {
