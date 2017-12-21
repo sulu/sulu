@@ -104,7 +104,12 @@ class RouteProvider implements RouteProviderInterface
             $path = PathHelper::relativizePath($path, $prefix);
         }
 
-        if ('html' !== $format = $request->getRequestFormat()) {
+        // when the URI ends with a dot - symfony returns empty request-format
+        if ('' === $format = $request->getRequestFormat()) {
+            return $collection;
+        }
+
+        if ('html' !== $format) {
             $path = substr($path, 0, strpos($path, $format) - 1);
         }
 

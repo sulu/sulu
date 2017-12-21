@@ -13,7 +13,6 @@ namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
@@ -34,7 +33,6 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -72,16 +70,6 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     private $requestAnalyzer;
 
     /**
-     * @var DefaultLocaleProviderInterface
-     */
-    private $defaultLocaleProvider;
-
-    /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
-
-    /**
      * @var ContentRouteProvider
      */
     private $contentRouteProvider;
@@ -94,8 +82,6 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
-        $this->urlReplacer = $this->prophesize(ReplacerInterface::class);
 
         $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())->willReturn($this->resourceLocatorStrategy->reveal());
 
@@ -104,9 +90,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $this->documentInspector->reveal(),
             $this->resourceLocatorStrategyPool->reveal(),
             $this->structureManager->reveal(),
-            $this->requestAnalyzer->reveal(),
-            $this->defaultLocaleProvider->reveal(),
-            $this->urlReplacer->reveal()
+            $this->requestAnalyzer->reveal()
         );
     }
 
@@ -685,8 +669,6 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $document->reveal()
         );
 
-        $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
-
         $request = new Request(
             [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/qwertz/')]
         );
@@ -726,8 +708,6 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->documentManager->find('some-uuid', 'de_at', ['load_ghost_content' => false])->willReturn(
             $document->reveal()
         );
-
-        $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
 
         $request = new Request(
             [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/')]
@@ -778,8 +758,6 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->documentManager->find('some-uuid', 'de_at', ['load_ghost_content' => false])
             ->willReturn($document->reveal());
 
-        $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
-
         $metadata = new Metadata();
         $metadata->setAlias('page');
         $structureMetadata = new StructureMetadata();
@@ -799,5 +777,16 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
         $this->assertEquals($pageBridge->reveal(), $route->getDefaults()['structure']);
+    }
+
+    public function testGetCollectionForEmptyFormat()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getRequestFormat()->willReturn('');
+
+        // Test the route provider
+        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request->reveal());
+
+        $this->assertCount(0, $routes);
     }
 }
