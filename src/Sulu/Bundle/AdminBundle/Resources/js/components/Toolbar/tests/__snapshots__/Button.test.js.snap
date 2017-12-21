@@ -72,7 +72,7 @@ exports[`Render loading button 1`] = `
 >
   <div
     class="spinner loader"
-    style="width:40px;height:40px;"
+    style="width:20px;height:20px;"
   >
     <div
       class="doubleBounce1"

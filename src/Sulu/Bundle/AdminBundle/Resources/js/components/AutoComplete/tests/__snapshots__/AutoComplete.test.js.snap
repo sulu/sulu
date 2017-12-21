@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AutoComplete should render 1`] = `
+<div
+  class="autoComplete"
+>
+  <label
+    class="input"
+  >
+    <div
+      class="prependedContainer"
+    >
+      <span
+        aria-label="search"
+        class="icon fa fa-search"
+      />
+    </div>
+    <input
+      type="text"
+      value="Test"
+    />
+  </label>
+</div>
+`;
+
+exports[`Render the AutoComplete with open suggestions list 1`] = `
+<div
+  class="autoComplete"
+>
+  <label
+    class="input"
+  >
+    <div
+      class="prependedContainer"
+    >
+      <span
+        aria-label="search"
+        class="icon fa fa-search"
+      />
+    </div>
+    <input
+      type="text"
+      value="Test"
+    />
+  </label>
+  <div />
+</div>
+`;
+
+exports[`Render the AutoComplete with open suggestions list 2`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop\\"></div>
+</div>
+<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <ul class=\\"menu\\" style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\">
+      <li class=\\"suggestionItem\\" style=\\"min-width: 0;\\">
+        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-label=\\"ticket\\"></span>
+          <!-- react-text: 6 -->Suggestion 1
+          <!-- /react-text -->
+        </button>
+      </li>
+      <li class=\\"suggestionItem\\" style=\\"min-width: 0;\\">
+        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-label=\\"ticket\\"></span>
+          <!-- react-text: 10 -->Suggestion 2
+          <!-- /react-text -->
+        </button>
+      </li>
+      <li class=\\"suggestionItem\\" style=\\"min-width: 0;\\">
+        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-label=\\"ticket\\"></span>
+          <!-- react-text: 14 -->Suggestion 3
+          <!-- /react-text -->
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>"
+`;

@@ -3,7 +3,7 @@ import React from 'react';
 import Portal from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
-import type {Node, ElementRef} from 'react';
+import type {ElementRef, Node} from 'react';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
 import type {PopoverDimensions} from './types';
@@ -12,7 +12,10 @@ import popoverStyles from './popover.scss';
 
 type Props = {
     open: boolean,
-    children?: (setPopoverElementRef: (ref: ElementRef<*>) => void, style: Object) => Node,
+    children?: (
+        setPopoverElementRef: (ref: ElementRef<*>) => void,
+        style: Object,
+    ) => Node,
     onClose?: () => void,
     /** This element will be used to position the popover */
     anchorElement: ElementRef<*>,
@@ -45,8 +48,8 @@ export default class Popover extends React.PureComponent<Props> {
         window.removeEventListener('resize', this.close);
     }
 
-    componentDidUpdate(prevProps: Props) {
-        if (this.popoverChildRef && !prevProps.open && this.props.open) {
+    componentDidUpdate() {
+        if (this.popoverChildRef) {
             afterElementsRendered(() => {
                 this.popoverChildRef.scrollTop = this.dimensions.scrollTop;
             });
@@ -89,7 +92,11 @@ export default class Popover extends React.PureComponent<Props> {
         );
     }
 
-    updateDimensions() {
+    updateDimensions = () => {
+        if (!this.popoverChildRef) {
+            return;
+        }
+
         const {
             offsetWidth,
             offsetHeight,
@@ -107,7 +114,7 @@ export default class Popover extends React.PureComponent<Props> {
             outerWidth,
             outerHeight
         );
-    }
+    };
 
     @action setPopoverSize(width: number, height: number) {
         this.popoverWidth = width;

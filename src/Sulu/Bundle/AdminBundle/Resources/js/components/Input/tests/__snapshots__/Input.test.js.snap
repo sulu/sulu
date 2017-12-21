@@ -22,14 +22,29 @@ exports[`Input should render null value as empty string 1`] = `
 </label>
 `;
 
+exports[`Input should render with a loader 1`] = `
+<label
+  class="input"
+>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
 exports[`Input should render with icon 1`] = `
 <label
   class="input"
 >
-  <span
-    aria-label="my-icon"
-    class="icon fa fa-my-icon"
-  />
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="my-icon"
+      class="icon fa fa-my-icon"
+    />
+  </div>
   <input
     type="text"
     value="My value"

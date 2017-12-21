@@ -8,7 +8,7 @@ const Menu = require('../Menu').default;
 const Option = require('../Select').default.Option;
 
 initialState = {
-    open: true,
+    open: false,
     anchorElement: null,
 };
 
