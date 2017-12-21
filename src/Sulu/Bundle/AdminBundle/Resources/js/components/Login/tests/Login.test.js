@@ -15,3 +15,7 @@ jest.mock('../../../utils', () => ({
 test('Should render the Login component', () => {
     expect(render(<Login onLogin={jest.fn()} onResetPassword={jest.fn()} />)).toMatchSnapshot();
 });
+
+test('Should render the Login component with a backLink different than the default one', () => {
+    expect(render(<Login backLink="/abc" onLogin={jest.fn()} onResetPassword={jest.fn()} />)).toMatchSnapshot();
+});
