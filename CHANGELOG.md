@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.12 (2017-12-21)
     * ENHANCEMENT #3698 [ContentBundle]           SEO description length changed from 155 to 320
     * HOTFIX      #3695 [RouteBundle]             Added check for empty request format
     * HOTFIX      #3695 [WebsiteBundle]           Added check for empty request format
