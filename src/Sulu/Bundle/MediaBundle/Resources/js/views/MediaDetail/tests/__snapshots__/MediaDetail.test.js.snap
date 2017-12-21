@@ -57,7 +57,6 @@ exports[`Render a MediaDetail view 1`] = `
       />
     </button>
   </section>
-<<<<<<< HEAD
   <section
     class="formContainer"
   >
@@ -75,8 +74,6 @@ exports[`Render a MediaDetail view 1`] = `
       </button>
     </form>
   </section>
-=======
   <div />
->>>>>>> created ImageFocusPointverlay
 </div>
 `;
