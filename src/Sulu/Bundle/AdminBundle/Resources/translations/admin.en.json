@@ -16,7 +16,7 @@
     "sulu_admin.error_required": "This field must have a value",
     "sulu_admin.error_minlength": "The minimal length of this field was undershot",
     "sulu_admin.error_minitems": "This field has too few assignments",
-    "sulu_admin.back_to_website": "Back to Website",
+    "sulu_admin.back_to_website": "Back to website",
     "sulu_admin.username_or_email": "Username or Email",
     "sulu_admin.password": "Password",
     "sulu_admin.login": "Login",

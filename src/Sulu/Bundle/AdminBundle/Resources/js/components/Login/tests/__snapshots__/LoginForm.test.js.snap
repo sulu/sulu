@@ -1,0 +1,185 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render the LoginForm component 1`] = `
+<div>
+  <form
+    class="form loginForm visible"
+  >
+    <fieldset>
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          Username or Email
+        </div>
+        <label
+          class="input"
+        >
+          <input
+            type="text"
+            value=""
+          />
+        </label>
+      </label>
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          password
+        </div>
+        <label
+          class="input"
+        >
+          <input
+            type="password"
+            value=""
+          />
+        </label>
+        <button
+          class="changeFormButton"
+          type="button"
+        >
+          Forgot password
+        </button>
+      </label>
+      <button
+        class="submit"
+      >
+        Login
+      </button>
+    </fieldset>
+  </form>
+  <form
+    class="form resetForm"
+  >
+    <fieldset
+      disabled=""
+    >
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          Username or Email
+        </div>
+        <label
+          class="input"
+        >
+          <input
+            type="text"
+            value=""
+          />
+        </label>
+        <button
+          class="changeFormButton"
+          type="button"
+        >
+          To login
+        </button>
+      </label>
+      <button
+        class="submit"
+      >
+        Reset
+      </button>
+    </fieldset>
+  </form>
+</div>
+`;
+
+exports[`Should render the LoginForm with reset password view 1`] = `
+<div>
+  <form
+    class="form loginForm"
+  >
+    <fieldset
+      disabled=""
+    >
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          Username or Email
+        </div>
+        <label
+          class="input"
+        >
+          <input
+            type="text"
+            value=""
+          />
+        </label>
+      </label>
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          password
+        </div>
+        <label
+          class="input"
+        >
+          <input
+            type="password"
+            value=""
+          />
+        </label>
+        <button
+          class="changeFormButton"
+          type="button"
+        >
+          Forgot password
+        </button>
+      </label>
+      <button
+        class="submit"
+      >
+        Login
+      </button>
+    </fieldset>
+  </form>
+  <form
+    class="form resetForm visible"
+  >
+    <fieldset>
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          Username or Email
+        </div>
+        <label
+          class="input"
+        >
+          <input
+            type="text"
+            value=""
+          />
+        </label>
+        <button
+          class="changeFormButton"
+          type="button"
+        >
+          To login
+        </button>
+      </label>
+      <button
+        class="submit"
+      >
+        Reset
+      </button>
+    </fieldset>
+  </form>
+</div>
+`;
