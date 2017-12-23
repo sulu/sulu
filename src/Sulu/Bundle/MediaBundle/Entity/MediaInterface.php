@@ -38,7 +38,7 @@ interface MediaInterface extends AuditableInterface
      *
      * @param \DateTime $changed
      *
-     * @return $this
+     * @return self
      */
     public function setChanged(\DateTime $changed);
 
@@ -54,7 +54,7 @@ interface MediaInterface extends AuditableInterface
      *
      * @param File $files
      *
-     * @return Media
+     * @return self
      */
     public function addFile(File $files);
 
@@ -73,16 +73,26 @@ interface MediaInterface extends AuditableInterface
     public function getFiles();
 
     /**
+     * Get file.
+     *
+     * @param string $locale
+     * @param string $defaultLocale
+     *
+     * @return File
+     */
+    public function getFile($locale, $defaultLocale = null);
+
+    /**
      * Set collection.
      *
      * @param CollectionInterface $collection
      *
-     * @return Media
+     * @return self
      */
     public function setCollection(CollectionInterface $collection);
 
     /**
-     * Get collectionInterface.
+     * Get collection.
      *
      * @return CollectionInterface
      */
@@ -93,7 +103,7 @@ interface MediaInterface extends AuditableInterface
      *
      * @param MediaType $type
      *
-     * @return Media
+     * @return self
      */
     public function setType(MediaType $type);
 
@@ -109,7 +119,7 @@ interface MediaInterface extends AuditableInterface
      *
      * @param UserInterface $changer
      *
-     * @return Media
+     * @return self
      */
     public function setChanger(UserInterface $changer = null);
 
@@ -125,7 +135,7 @@ interface MediaInterface extends AuditableInterface
      *
      * @param UserInterface $creator
      *
-     * @return Media
+     * @return self
      */
     public function setCreator(UserInterface $creator = null);
 
@@ -139,16 +149,16 @@ interface MediaInterface extends AuditableInterface
     /**
      * Set preview image.
      *
-     * @param Media $previewImage
+     * @param self $previewImage
      *
-     * @return Media
+     * @return self
      */
-    public function setPreviewImage(Media $previewImage = null);
+    public function setPreviewImage(self $previewImage = null);
 
     /**
      * Get preview image.
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function getPreviewImage();
 }

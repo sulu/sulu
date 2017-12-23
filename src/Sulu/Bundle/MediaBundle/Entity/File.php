@@ -42,7 +42,7 @@ class File implements AuditableInterface
     private $id;
 
     /**
-     * @var DoctrineCollection
+     * @var DoctrineCollection|FileVersion[]
      */
     private $fileVersions;
 
@@ -174,18 +174,29 @@ class File implements AuditableInterface
     /**
      * Get latest file version.
      *
-     * @return FileVersion
+     * @return FileVersion|null
      */
     public function getLatestFileVersion()
     {
-        /** @var FileVersion $fileVersion */
+        return $this->getFileVersion($this->getVersion());
+    }
+
+    /**
+     * Get latest file version.
+     *
+     * @param int $version
+     *
+     * @return FileVersion|null
+     */
+    public function getFileVersion($version)
+    {
         foreach ($this->fileVersions as $fileVersion) {
-            if ($fileVersion->getVersion() === $this->getVersion()) {
+            if ($fileVersion->getVersion() === $version) {
                 return $fileVersion;
             }
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -205,7 +216,7 @@ class File implements AuditableInterface
     /**
      * Get media.
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function getMedia()
     {

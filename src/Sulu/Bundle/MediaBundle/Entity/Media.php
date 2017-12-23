@@ -14,30 +14,22 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
-use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 
 /**
- * Media.
+ * Media entity.
  */
 class Media implements MediaInterface
 {
+    use AuditableTrait;
+
     /**
      * @var int
      */
     protected $id;
 
     /**
-     * @var \DateTime
-     */
-    protected $created;
-
-    /**
-     * @var \DateTime
-     */
-    protected $changed;
-
-    /**
-     * @var DoctrineCollection
+     * @var DoctrineCollection|File[]
      */
     protected $files;
 
@@ -53,16 +45,6 @@ class Media implements MediaInterface
     protected $type;
 
     /**
-     * @var UserInterface
-     */
-    protected $changer;
-
-    /**
-     * @var UserInterface
-     */
-    protected $creator;
-
-    /**
      * @var Media
      */
     protected $previewImage;
@@ -76,9 +58,7 @@ class Media implements MediaInterface
     }
 
     /**
-     * Get id.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -86,45 +66,7 @@ class Media implements MediaInterface
     }
 
     /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set changed.
-     *
-     * @param \DateTime $changed
-     *
-     * @return $this
-     */
-    public function setChanged(\DateTime $changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
-    }
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
-    /**
-     * Add files.
-     *
-     * @param File $files
-     *
-     * @return Media
+     * {@inheritdoc}
      */
     public function addFile(File $files)
     {
@@ -134,9 +76,7 @@ class Media implements MediaInterface
     }
 
     /**
-     * Remove files.
-     *
-     * @param File $files
+     * {@inheritdoc}
      */
     public function removeFile(File $files)
     {
@@ -144,9 +84,7 @@ class Media implements MediaInterface
     }
 
     /**
-     * Get files.
-     *
-     * @return File[]
+     * {@inheritdoc}
      */
     public function getFiles()
     {
@@ -154,11 +92,33 @@ class Media implements MediaInterface
     }
 
     /**
-     * Set collection.
-     *
-     * @param CollectionInterface $collection
-     *
-     * @return Media
+     * {@inheritdoc}
+     */
+    public function getFile($locale, $defaultLocale = null)
+    {
+        if (1 === count($this->files)) {
+            return $this->files[0];
+        }
+
+        $defaultFile = $this->files[0];
+
+        foreach ($this->files as $file) {
+            foreach ($file->getLatestFileVersion()->getContentLanguages() as $contentLocale) {
+                if ($locale === $contentLocale) {
+                    return $file;
+                }
+
+                if ($defaultLocale === $contentLocale) {
+                    $defaultFile = $file;
+                }
+            }
+        }
+
+        return $defaultFile;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setCollection(CollectionInterface $collection)
     {
@@ -168,9 +128,7 @@ class Media implements MediaInterface
     }
 
     /**
-     * Get collectionInterface.
-     *
-     * @return CollectionInterface
+     * {@inheritdoc}
      */
     public function getCollection()
     {
@@ -178,11 +136,7 @@ class Media implements MediaInterface
     }
 
     /**
-     * Set type.
-     *
-     * @param MediaType $type
-     *
-     * @return Media
+     * {@inheritdoc}
      */
     public function setType(MediaType $type)
     {
@@ -192,9 +146,7 @@ class Media implements MediaInterface
     }
 
     /**
-     * Get type.
-     *
-     * @return MediaType
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -202,59 +154,7 @@ class Media implements MediaInterface
     }
 
     /**
-     * Set changer.
-     *
-     * @param UserInterface $changer
-     *
-     * @return Media
-     */
-    public function setChanger(UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    /**
-     * Get changer.
-     *
-     * @return UserInterface
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * Set creator.
-     *
-     * @param UserInterface $creator
-     *
-     * @return Media
-     */
-    public function setCreator(UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    /**
-     * Get creator.
-     *
-     * @return UserInterface
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * Set preview image.
-     *
-     * @param Media $previewImage
-     *
-     * @return Media
+     * {@inheritdoc}
      */
     public function setPreviewImage(self $previewImage = null)
     {
@@ -264,9 +164,7 @@ class Media implements MediaInterface
     }
 
     /**
-     * Get preview image.
-     *
-     * @return Media
+     * {@inheritdoc}
      */
     public function getPreviewImage()
     {

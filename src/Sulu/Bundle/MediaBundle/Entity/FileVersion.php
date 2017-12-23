@@ -11,11 +11,14 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * FileVersion.
@@ -78,48 +81,48 @@ class FileVersion implements AuditableInterface
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection|FileVersionContentLanguage[]
      */
     private $contentLanguages = [];
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection|FileVersionPublishLanguage[]
      */
     private $publishLanguages = [];
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection|FileVersionMeta[]
      */
     private $meta = [];
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection|FormatOptions[]
      */
     private $formatOptions = [];
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\File
+     * @var File
      * @Exclude
      */
     private $file;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection|TagInterface[]
      */
     private $tags = [];
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var UserInterface
      */
     private $creator;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta
+     * @var FileVersionMeta
      */
     private $defaultMeta;
 
@@ -129,12 +132,12 @@ class FileVersion implements AuditableInterface
     private $properties = '{}';
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection|CategoryInterface[]
      */
     private $categories = [];
 
     /**
-     * @var TargetGroupInterface[]
+     * @var DoctrineCollection|TargetGroupInterface[]
      */
     private $targetGroups;
 
@@ -153,13 +156,13 @@ class FileVersion implements AuditableInterface
      */
     public function __construct()
     {
-        $this->contentLanguages = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->publishLanguages = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->formatOptions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->targetGroups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contentLanguages = new ArrayCollection();
+        $this->publishLanguages = new ArrayCollection();
+        $this->meta = new ArrayCollection();
+        $this->formatOptions = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->targetGroups = new ArrayCollection();
     }
 
     /**
@@ -213,8 +216,6 @@ class FileVersion implements AuditableInterface
     /**
      * Increases the subversion. Required for cache busting on certain operations which change the image without
      * creating a new file version.
-     *
-     * @param int $subVersion
      *
      * @return FileVersion
      */
@@ -392,11 +393,11 @@ class FileVersion implements AuditableInterface
     /**
      * Add contentLanguages.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages
+     * @param FileVersionContentLanguage $contentLanguages
      *
      * @return FileVersion
      */
-    public function addContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages)
+    public function addContentLanguage(FileVersionContentLanguage $contentLanguages)
     {
         $this->contentLanguages[] = $contentLanguages;
 
@@ -406,17 +407,35 @@ class FileVersion implements AuditableInterface
     /**
      * Remove contentLanguages.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages
+     * @param FileVersionContentLanguage $contentLanguages
      */
-    public function removeContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages)
+    public function removeContentLanguage(FileVersionContentLanguage $contentLanguages)
     {
         $this->contentLanguages->removeElement($contentLanguages);
     }
 
     /**
+     * Has content language.
+     *
+     * @param string $locale
+     *
+     * @return bool
+     */
+    public function hasContentLanguage($locale)
+    {
+        foreach ($this->contentLanguages as $contentLanguage) {
+            if ($locale === $contentLanguage->getLocale()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get contentLanguages.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return DoctrineCollection|FileVersionContentLanguage[]
      */
     public function getContentLanguages()
     {
@@ -426,11 +445,11 @@ class FileVersion implements AuditableInterface
     /**
      * Add publishLanguages.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages
+     * @param FileVersionPublishLanguage $publishLanguages
      *
      * @return FileVersion
      */
-    public function addPublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages)
+    public function addPublishLanguage(FileVersionPublishLanguage $publishLanguages)
     {
         $this->publishLanguages[] = $publishLanguages;
 
@@ -440,9 +459,9 @@ class FileVersion implements AuditableInterface
     /**
      * Remove publishLanguages.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages
+     * @param FileVersionPublishLanguage $publishLanguages
      */
-    public function removePublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages)
+    public function removePublishLanguage(FileVersionPublishLanguage $publishLanguages)
     {
         $this->publishLanguages->removeElement($publishLanguages);
     }
@@ -450,7 +469,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get publishLanguages.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return DoctrineCollection|FileVersionPublishLanguage[]
      */
     public function getPublishLanguages()
     {
@@ -460,11 +479,11 @@ class FileVersion implements AuditableInterface
     /**
      * Add meta.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta
+     * @param FileVersionMeta $meta
      *
      * @return FileVersion
      */
-    public function addMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta)
+    public function addMeta(FileVersionMeta $meta)
     {
         $this->meta[] = $meta;
 
@@ -474,9 +493,9 @@ class FileVersion implements AuditableInterface
     /**
      * Remove meta.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta
+     * @param FileVersionMeta $meta
      */
-    public function removeMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta)
+    public function removeMeta(FileVersionMeta $meta)
     {
         $this->meta->removeElement($meta);
     }
@@ -489,6 +508,29 @@ class FileVersion implements AuditableInterface
     public function getMeta()
     {
         return $this->meta;
+    }
+
+    /**
+     * Get meta by locale.
+     *
+     * @param string $locale
+     * @param bool $default
+     *
+     * @return FileVersionMeta|null
+     */
+    public function getMetaByLocale($locale, $default = false)
+    {
+        foreach ($this->meta as $meta) {
+            if ($locale === $meta->getLocale()) {
+                return $meta;
+            }
+        }
+
+        if ($default) {
+            return $this->defaultMeta;
+        }
+
+        return null;
     }
 
     /**
@@ -508,7 +550,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get formatOptions.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return DoctrineCollection|FormatOptions[]
      */
     public function getFormatOptions()
     {
@@ -518,11 +560,11 @@ class FileVersion implements AuditableInterface
     /**
      * Set file.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\File $file
+     * @param File $file
      *
      * @return FileVersion
      */
-    public function setFile(\Sulu\Bundle\MediaBundle\Entity\File $file = null)
+    public function setFile(File $file = null)
     {
         $this->file = $file;
 
@@ -532,7 +574,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get file.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\File
+     * @return File
      */
     public function getFile()
     {
@@ -574,7 +616,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get tags.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return DoctrineCollection|TagInterface[]
      */
     public function getTags()
     {
@@ -584,11 +626,11 @@ class FileVersion implements AuditableInterface
     /**
      * Set changer.
      *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     * @param UserInterface $changer
      *
      * @return FileVersion
      */
-    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
+    public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -598,7 +640,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get changer.
      *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
+     * @return UserInterface
      */
     public function getChanger()
     {
@@ -608,11 +650,11 @@ class FileVersion implements AuditableInterface
     /**
      * Set creator.
      *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     * @param UserInterface $creator
      *
      * @return FileVersion
      */
-    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
+    public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -632,11 +674,11 @@ class FileVersion implements AuditableInterface
     /**
      * Set defaultMeta.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta
+     * @param FileVersionMeta $defaultMeta
      *
      * @return FileVersion
      */
-    public function setDefaultMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta = null)
+    public function setDefaultMeta(FileVersionMeta $defaultMeta = null)
     {
         $this->defaultMeta = $defaultMeta;
 
@@ -646,7 +688,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get defaultMeta.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta
+     * @return FileVersionMeta
      */
     public function getDefaultMeta()
     {
@@ -768,7 +810,7 @@ class FileVersion implements AuditableInterface
     /**
      * Add categories.
      *
-     * @param CategoryInterface $categories´
+     * @param CategoryInterface $categories
      *
      * @return self
      */
@@ -790,7 +832,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get categories.
      *
-     * @return Collection
+     * @return DoctrineCollection|CategoryInterface[]
      */
     public function getCategories()
     {
@@ -816,7 +858,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * @return TargetGroupInterface[]
+     * @return DoctrineCollection|TargetGroupInterface[]
      */
     public function getTargetGroups()
     {

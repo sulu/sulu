@@ -11,17 +11,24 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
+
         <field name="version" type="integer" column="version"/>
+
         <one-to-many field="fileVersions" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" mapped-by="file">
             <cascade>
                 <cascade-persist />
             </cascade>
+
+            <order-by>
+                <!-- For performance in PHP the latest version should be the first in the doctrine collection -->
+                <order-by-field name="version" direction="DESC"/>
+            </order-by>
         </one-to-many>
+
         <many-to-one field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface" inversed-by="files">
             <join-columns>
                 <join-column name="idMedia" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
             </join-columns>
         </many-to-one>
-
     </entity>
 </doctrine-mapping>
