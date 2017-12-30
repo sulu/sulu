@@ -39,7 +39,7 @@ class TemplateControllerTest extends SuluTestCase
     public function testGetActionSorting()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/content/template');
+        $client->request('GET', '/content/template?webspace=sulu_io');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
