@@ -19,7 +19,7 @@ matrix:
     - php: 5.5
       env:
         - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
-    - php: 7.0
+    - php: 7.2
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction
         - SYMFONY__DATABASE__DRIVER=pdo_pgsql
