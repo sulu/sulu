@@ -286,7 +286,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAnalyzeNotExisting()
     {
-        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())->willReturn(null);
+        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())->willReturn([]);
         $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
