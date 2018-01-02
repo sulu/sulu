@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.5
+    * BUGFIX      #3693 [MediaBundle]           Fix retina flag in XmlFormatLoader11 & add tests for retina flag
+
 * 1.5.8 (2017-12-13)
     * HOTFIX      #3690 [ContentBundle]         Fix saving of not yet started text editor
     * HOTFIX      #3684 [SecurityBundle]        Fixed conflict between admin and website session cookie
