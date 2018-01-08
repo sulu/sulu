@@ -2,9 +2,10 @@
 import {action} from 'mobx';
 import Pagination from '../../../components/Pagination';
 import ResourceRequester from '../../../services/ResourceRequester';
-import type {ItemEnhancer, LoadOptions, LoadingStrategyInterface} from '../types';
+import type {ItemEnhancer, LoadOptions} from '../types';
+import AbstractLoadingStrategy from './AbstractLoadingStrategy';
 
-export default class PaginatedLoadingStrategy implements LoadingStrategyInterface {
+export default class PaginatedLoadingStrategy extends AbstractLoadingStrategy {
     paginationAdapter = Pagination;
 
     load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer) {

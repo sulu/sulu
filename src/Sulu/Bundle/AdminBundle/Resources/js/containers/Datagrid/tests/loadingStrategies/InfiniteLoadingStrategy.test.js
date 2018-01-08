@@ -1,11 +1,49 @@
 // @flow
 import 'url-search-params-polyfill';
+import {observable} from 'mobx';
+import DatagridStore from '../../stores/DatagridStore';
 import InfiniteLoadingStrategy from '../../loadingStrategies/InfiniteLoadingStrategy';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
 jest.mock('../../../../services/ResourceRequester', () => ({
-    getList: jest.fn(),
+    getList: jest.fn().mockReturnValue({then: jest.fn().mockReturnValue({then: jest.fn()})}),
 }));
+
+test('Should initialize page count to 0 and page to 1', () => {
+    const page = observable(3);
+    const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.pageCount = 7;
+
+    const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
+    infiniteLoadingStrategy.initialize(datagridStore);
+
+    expect(page.get()).toEqual(1);
+    expect(datagridStore.pageCount).toEqual(0);
+});
+
+test('Should reset page count to 0 and page to 1 when locale is changed', () => {
+    const page = observable(3);
+    const locale = observable('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale});
+
+    const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
+
+    const structureStrategy = {
+        data: [],
+        clear: jest.fn(),
+        getData: jest.fn().mockReturnValue([]),
+        enhanceItem: jest.fn(),
+    };
+    datagridStore.init(infiniteLoadingStrategy, structureStrategy);
+
+    datagridStore.setPage(2);
+    datagridStore.pageCount = 7;
+    locale.set('de');
+
+    expect(structureStrategy.clear).toBeCalled();
+    expect(page.get()).toEqual(1);
+    expect(datagridStore.pageCount).toEqual(7);
+});
 
 test('Should load items and add to empty array', () => {
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();

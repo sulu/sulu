@@ -1,9 +1,10 @@
 // @flow
 import {action} from 'mobx';
 import ResourceRequester from '../../../services/ResourceRequester';
-import type {ItemEnhancer, LoadOptions, LoadingStrategyInterface} from '../types';
+import type {ItemEnhancer, LoadOptions} from '../types';
+import AbstractLoadingStrategy from './AbstractLoadingStrategy';
 
-export default class FullLoadingStrategy implements LoadingStrategyInterface {
+export default class FullLoadingStrategy extends AbstractLoadingStrategy {
     paginationAdapter = null;
 
     load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer) {

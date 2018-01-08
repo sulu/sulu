@@ -1,11 +1,25 @@
 // @flow
 import 'url-search-params-polyfill';
+import {observable} from 'mobx';
+import DatagridStore from '../../stores/DatagridStore';
 import FullLoadingStrategy from '../../loadingStrategies/FullLoadingStrategy';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
 jest.mock('../../../../services/ResourceRequester', () => ({
     getList: jest.fn(),
 }));
+
+test('Should initialize page count to 0 and page to 1', () => {
+    const page = observable(3);
+    const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.pageCount = 7;
+
+    const fullLoadingStrategy = new FullLoadingStrategy();
+    fullLoadingStrategy.initialize(datagridStore);
+
+    expect(page.get()).toEqual(1);
+    expect(datagridStore.pageCount).toEqual(0);
+});
 
 test('Should load items and add to empty array', () => {
     const fullLoadingStrategy = new FullLoadingStrategy();

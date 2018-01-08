@@ -1,6 +1,5 @@
 // @flow
-import {action, autorun, intercept, observable, computed} from 'mobx';
-import type {IValueWillChange} from 'mobx'; // eslint-disable-line import/named
+import {action, autorun, observable, computed} from 'mobx';
 import type {LoadingStrategyInterface, ObservableOptions, StructureStrategyInterface} from '../types';
 import metadataStore from './MetadataStore';
 
@@ -42,24 +41,24 @@ export default class DatagridStore {
     };
 
     @action updateLoadingStrategy = (loadingStrategy: LoadingStrategyInterface) => {
-        if (this.loadingStrategy === loadingStrategy) {
+        // do not update if the loading strategy was already defined and it tries to use the same one again
+        if (this.loadingStrategy && this.loadingStrategy === loadingStrategy) {
             return;
+        }
+
+        if (this.loadingStrategy) {
+            this.loadingStrategy.destroy();
         }
 
         if (this.structureStrategy) {
             this.structureStrategy.clear();
         }
-        this.pageCount = 0;
-        this.setPage(1);
+
+        if (loadingStrategy) {
+            loadingStrategy.initialize(this);
+        }
+
         this.loadingStrategy = loadingStrategy;
-
-        if (this.localeInterceptionDisposer) {
-            this.localeInterceptionDisposer();
-        }
-
-        if ('InfiniteScrollingStrategy' === this.loadingStrategy.constructor.name && this.observableOptions.locale) {
-            this.localeInterceptionDisposer = intercept(this.observableOptions.locale, '', this.handleLocaleChanges);
-        }
     };
 
     @action updateStructureStrategy = (structureStrategy: StructureStrategyInterface) => {
@@ -68,15 +67,6 @@ export default class DatagridStore {
         }
 
         this.structureStrategy = structureStrategy;
-    };
-
-    handleLocaleChanges = (change: IValueWillChange<number>) => {
-        if (this.observableOptions.locale !== change.newValue) {
-            this.structureStrategy.clear();
-            this.observableOptions.page.set(1);
-
-            return change;
-        }
     };
 
     getSchema() {
