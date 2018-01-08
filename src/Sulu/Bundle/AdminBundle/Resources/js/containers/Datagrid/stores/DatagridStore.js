@@ -115,10 +115,15 @@ export default class DatagridStore {
             throw new Error('The active item does not exist in the Datagrid');
         }
 
+        const options = {...observableOptions, ...this.options};
+        if (this.active) {
+            options.parent = this.active;
+        }
+
         this.loadingStrategy.load(
             data,
             this.resourceKey,
-            {...observableOptions, ...this.options, parent: this.active},
+            options,
             this.structureStrategy.enhanceItem
         ).then(action((response) => {
             this.handleResponse(response);

@@ -194,10 +194,42 @@ test('The loading strategy should be called with the active item as parent', () 
     datagridStore.init(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
-        data, 'snippets',
+        data,
+        'snippets',
         {
             page: 1,
             parent: 'some-uuid',
+        },
+        structureStrategy.enhanceItem
+    );
+
+    datagridStore.destroy();
+});
+
+test('The active item should not be passed as parent if undefined', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable();
+    const datagridStore = new DatagridStore(
+        'snippets',
+        {
+            page,
+        },
+        {
+            parent: 9,
+        }
+    );
+
+    const data = [{id: 1}];
+    structureStrategy.getData.mockReturnValue(data);
+    datagridStore.init(loadingStrategy, structureStrategy);
+
+    expect(loadingStrategy.load).toBeCalledWith(
+        data,
+        'snippets',
+        {
+            page: 1,
+            parent: 9,
         },
         structureStrategy.enhanceItem
     );
