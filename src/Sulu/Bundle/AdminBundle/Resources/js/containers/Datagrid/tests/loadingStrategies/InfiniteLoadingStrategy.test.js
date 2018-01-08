@@ -38,7 +38,7 @@ test('Should reset page count and page when strategy changes', () => {
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
 
     const structureStrategy = new StructureStrategy();
-    datagridStore.init(new OtherLoadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(new OtherLoadingStrategy, structureStrategy);
     datagridStore.setPage(5);
     datagridStore.pageCount = 7;
     datagridStore.updateLoadingStrategy(infiniteLoadingStrategy);
@@ -72,7 +72,7 @@ test('Should reset page count to 0 and page to 1 when locale is changed', () => 
         getData: jest.fn().mockReturnValue([]),
         enhanceItem: jest.fn(),
     };
-    datagridStore.init(infiniteLoadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(infiniteLoadingStrategy, structureStrategy);
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;

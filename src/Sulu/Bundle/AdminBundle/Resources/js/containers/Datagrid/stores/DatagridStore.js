@@ -35,7 +35,10 @@ export default class DatagridStore {
         return this.structureStrategy.data;
     }
 
-    @action init = (loadingStrategy: LoadingStrategyInterface, structureStrategy: StructureStrategyInterface) => {
+    @action updateStrategies = (
+        loadingStrategy: LoadingStrategyInterface,
+        structureStrategy: StructureStrategyInterface
+    ) => {
         this.updateLoadingStrategy(loadingStrategy);
         this.updateStructureStrategy(structureStrategy);
     };

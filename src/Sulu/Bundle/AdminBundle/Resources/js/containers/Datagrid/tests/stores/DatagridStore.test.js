@@ -38,7 +38,7 @@ test('The loading strategy should be called when a request is sent', () => {
     );
 
     structureStrategy.getData.mockReturnValue([]);
-    datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         toJS(datagridStore.data),
@@ -72,7 +72,7 @@ test('The loading strategy should be called with a different resourceKey when a 
 
     const data = [{id: 1}];
     structureStrategy.getData.mockReturnValue(data);
-    datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         data,
@@ -106,7 +106,7 @@ test('The loading strategy should be called with a different page when a request
 
     const data = [{id: 1}];
     structureStrategy.getData.mockReturnValue(data);
-    datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         data,
@@ -152,7 +152,7 @@ test('The loading strategy should be called with a different locale when a reque
 
     const data = [{id: 1}];
     structureStrategy.getData.mockReturnValue(data);
-    datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         data, 'snippets',
@@ -193,7 +193,7 @@ test('The loading strategy should be called with the active item as parent', () 
     const data = [{id: 1}];
     structureStrategy.getData.mockReturnValue(data);
     datagridStore.setActive('some-uuid');
-    datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         data,
@@ -224,7 +224,7 @@ test('The active item should not be passed as parent if undefined', () => {
 
     const data = [{id: 1}];
     structureStrategy.getData.mockReturnValue(data);
-    datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         data,
@@ -242,7 +242,7 @@ test('The active item should not be passed as parent if undefined', () => {
 test('Set loading flag to true before request', () => {
     const page = observable();
     const datagridStore = new DatagridStore('tests', {page});
-    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     page.set(1);
     datagridStore.setLoading(false);
     datagridStore.sendRequest();
@@ -259,7 +259,7 @@ test('Set loading flag to false after request', (done) => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
     loadingStrategy.load.mockReturnValue(promise);
-    datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
     datagridStore.sendRequest();
     return promise.then(() => {
         expect(datagridStore.loading).toEqual(false);
@@ -278,7 +278,7 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     expect(datagridStore.getSchema()).toBe(fields);
     expect(metadataStore.getSchema).toBeCalledWith('tests');
     datagridStore.destroy();
@@ -289,7 +289,7 @@ test('After initialization no row should be selected', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     expect(datagridStore.selections.length).toBe(0);
     datagridStore.destroy();
 });
@@ -299,7 +299,7 @@ test('Select an item', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     datagridStore.select(1);
     datagridStore.select(2);
     expect(toJS(datagridStore.selections)).toEqual([1, 2]);
@@ -314,7 +314,7 @@ test('Deselect an item that has not been selected yet', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     datagridStore.select(1);
     datagridStore.deselect(2);
 
@@ -325,7 +325,7 @@ test('Deselect an item that has not been selected yet', () => {
 test('Select the entire page', () => {
     const page = observable();
     const datagridStore = new DatagridStore('tests', {page});
-    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     datagridStore.structureStrategy.data = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [1, 7];
     datagridStore.selectEntirePage();
@@ -338,7 +338,7 @@ test('Deselect the entire page', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     datagridStore.structureStrategy.data = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [1, 2, 7];
     datagridStore.deselectEntirePage();
@@ -351,7 +351,7 @@ test('Clear the selection', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.init(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     datagridStore.selections = [1, 4, 5];
     page.set(1);
     expect(datagridStore.selections).toHaveLength(3);
@@ -374,7 +374,7 @@ test('Nothing should happen when to the same loading strategy is changed', () =>
         {}
     );
 
-    datagridStore.init(loadingStrategy, new StructureStrategy());
+    datagridStore.updateStrategies(loadingStrategy, new StructureStrategy());
     datagridStore.updateLoadingStrategy(loadingStrategy);
 
     expect(loadingStrategy.initialize).toBeCalled();
@@ -398,7 +398,7 @@ test('The initialize and destroy method of the loading strategies should be call
         {}
     );
 
-    datagridStore.init(loadingStrategy1, new StructureStrategy());
+    datagridStore.updateStrategies(loadingStrategy1, new StructureStrategy());
     datagridStore.updateLoadingStrategy(loadingStrategy2);
 
     expect(loadingStrategy1.destroy).toBeCalled();
@@ -424,7 +424,7 @@ test('Should reset the data array and set page to 1 when the reload method is ca
         },
         {}
     );
-    datagridStore.init(loadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     page.set(3);
     locale.set('en');

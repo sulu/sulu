@@ -38,7 +38,7 @@ test('Should reset page count and page when strategy changes', () => {
     const fullLoadingStrategy = new FullLoadingStrategy();
 
     const structureStrategy = new StructureStrategy();
-    datagridStore.init(new OtherLoadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(new OtherLoadingStrategy, structureStrategy);
     datagridStore.setPage(5);
     datagridStore.pageCount = 7;
     datagridStore.updateLoadingStrategy(fullLoadingStrategy);

@@ -13,7 +13,7 @@ jest.mock(
         this.options = options;
         this.loading = false;
         this.pageCount = 3;
-        this.init = jest.fn();
+        this.updateStrategies = jest.fn();
         this.data = [
             {
                 id: 1,
