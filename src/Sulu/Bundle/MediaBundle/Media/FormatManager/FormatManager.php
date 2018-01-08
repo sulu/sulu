@@ -74,6 +74,11 @@ class FormatManager implements FormatManagerInterface
     private $supportedMimeTypes;
 
     /**
+     * @bool
+     */
+    private $debug = false;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -96,6 +101,7 @@ class FormatManager implements FormatManagerInterface
         $responseHeaders,
         $formats,
         array $supportedMimeTypes,
+        bool $debug = false,
         LoggerInterface $logger = null
     ) {
         $this->mediaRepository = $mediaRepository;
@@ -106,6 +112,7 @@ class FormatManager implements FormatManagerInterface
         $this->fileSystem = new Filesystem();
         $this->formats = $formats;
         $this->supportedMimeTypes = $supportedMimeTypes;
+        $this->debug = $debug;
         $this->logger = $logger ?: new NullLogger();
     }
 
@@ -151,9 +158,14 @@ class FormatManager implements FormatManagerInterface
             }
         } catch (MediaException $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
-            $responseContent = null;
             $status = 404;
             $mimeType = null;
+            $responseContent = null;
+
+            if ($this->debug) {
+                $mimeType = 'image/svg+xml';
+                $responseContent = $this->getNotFoundImage($formatKey, $e);
+            }
         }
 
         // Set header.
@@ -352,5 +364,49 @@ class FormatManager implements FormatManagerInterface
         }
 
         return false;
+    }
+
+    /**
+     * Get not found image.
+     *
+     * @param string $formatKey
+     *
+     * @return string
+     */
+    private function getNotFoundImage($formatKey, \Exception $e)
+    {
+        $x = 600;
+        $y = 350;
+
+        if (isset($this->formats[$formatKey])) {
+            $format = $this->formats[$formatKey];
+            $x = $format['scale']['x'];
+            $y = $format['scale']['y'];
+
+            // Render square image when only height or only width is given.
+            $x = $x ?: $y; // if x is empty use y as x
+            $y = $y ?: $x; // if y is empty use x as y
+
+            if ($format['scale']['retina']) {
+                $x = $x * 2;
+                $y = $y * 2;
+            }
+        }
+
+        return sprintf(
+            '<?xml version="1.0" encoding="utf-8"?>'
+            . '<svg xmlns="http://www.w3.org/2000/svg" width="%s" height="%s">' . PHP_EOL
+            . '    <rect height="100%%" width="100%%" fill="silver"/>' . PHP_EOL
+            . '    <text x="%s" y="%s" fill="white" text-anchor="middle" font-family="Monospace" font-size="%s" alignment-baseline="central">' . PHP_EOL
+            . '        ERROR CODE: %s' . PHP_EOL
+            . '    </text>' . PHP_EOL
+            . '</svg>',
+            $x,
+            $y,
+            ceil($x / 2),
+            ceil($y / 2),
+            ($x / 20),
+            $e->getCode()
+        );
     }
 }

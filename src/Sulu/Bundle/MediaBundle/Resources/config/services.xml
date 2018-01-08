@@ -163,6 +163,7 @@
             <argument type="string">%sulu_media.format_manager.response_headers%</argument>
             <argument>%sulu_media.image.formats%</argument>
             <argument>%sulu_media.format_manager.mime_types%</argument>
+            <argument>%kernel.debug%</argument>
             <argument type="service" id="logger" on-invalid="null"/>
         </service>
 
