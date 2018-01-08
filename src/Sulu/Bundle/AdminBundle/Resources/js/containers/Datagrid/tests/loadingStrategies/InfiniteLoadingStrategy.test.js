@@ -6,8 +6,46 @@ import InfiniteLoadingStrategy from '../../loadingStrategies/InfiniteLoadingStra
 import ResourceRequester from '../../../../services/ResourceRequester';
 
 jest.mock('../../../../services/ResourceRequester', () => ({
-    getList: jest.fn().mockReturnValue({then: jest.fn().mockReturnValue({then: jest.fn()})}),
+    getList: jest.fn().mockReturnValue(Promise.resolve({
+        _embedded: {
+            snippets: [],
+        },
+    })),
 }));
+
+function StructureStrategy() {
+    this.data = [];
+    this.getData = jest.fn().mockReturnValue(this.data);
+    this.clear = jest.fn();
+    this.enhanceItem = jest.fn();
+}
+
+function OtherLoadingStrategy() {
+    this.paginationAdapter = undefined;
+    this.initialize = jest.fn();
+    this.load = jest.fn().mockReturnValue(Promise.resolve({
+        _embedded: {
+            snippets: [],
+        },
+    }));
+    this.destroy = jest.fn();
+}
+
+test('Should reset page count and page when strategy changes', () => {
+    const page = observable();
+    const datagridStore = new DatagridStore('snippets', {page});
+
+    const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
+
+    const structureStrategy = new StructureStrategy();
+    datagridStore.init(new OtherLoadingStrategy, structureStrategy);
+    datagridStore.setPage(5);
+    datagridStore.pageCount = 7;
+    datagridStore.updateLoadingStrategy(infiniteLoadingStrategy);
+
+    expect(page.get()).toEqual(1);
+    expect(datagridStore.pageCount).toEqual(0);
+});
 
 test('Should initialize page count to 0 and page to 1', () => {
     const page = observable(3);
@@ -17,8 +55,8 @@ test('Should initialize page count to 0 and page to 1', () => {
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
     infiniteLoadingStrategy.initialize(datagridStore);
 
-    expect(page.get()).toEqual(1);
-    expect(datagridStore.pageCount).toEqual(0);
+    expect(page.get()).toEqual(3);
+    expect(datagridStore.pageCount).toEqual(7);
 });
 
 test('Should reset page count to 0 and page to 1 when locale is changed', () => {

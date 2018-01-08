@@ -6,8 +6,10 @@ export default class AbstractLoadingStrategy implements LoadingStrategyInterface
     paginationAdapter = undefined;
 
     initialize(datagridStore: DatagridStore) {
-        datagridStore.pageCount = 0;
-        datagridStore.setPage(1);
+        if (datagridStore.loadingStrategy) {
+            datagridStore.pageCount = 0;
+            datagridStore.setPage(1);
+        }
     }
 
     destroy() {}

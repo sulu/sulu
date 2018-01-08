@@ -6,10 +6,48 @@ import FullLoadingStrategy from '../../loadingStrategies/FullLoadingStrategy';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
 jest.mock('../../../../services/ResourceRequester', () => ({
-    getList: jest.fn(),
+    getList: jest.fn().mockReturnValue(Promise.resolve({
+        _embedded: {
+            snippets: [],
+        },
+    })),
 }));
 
-test('Should initialize page count to 0 and page to 1', () => {
+function StructureStrategy() {
+    this.data = [];
+    this.getData = jest.fn().mockReturnValue(this.data);
+    this.clear = jest.fn();
+    this.enhanceItem = jest.fn();
+}
+
+function OtherLoadingStrategy() {
+    this.paginationAdapter = undefined;
+    this.initialize = jest.fn();
+    this.load = jest.fn().mockReturnValue(Promise.resolve({
+        _embedded: {
+            snippets: [],
+        },
+    }));
+    this.destroy = jest.fn();
+}
+
+test('Should reset page count and page when strategy changes', () => {
+    const page = observable();
+    const datagridStore = new DatagridStore('snippets', {page});
+
+    const fullLoadingStrategy = new FullLoadingStrategy();
+
+    const structureStrategy = new StructureStrategy();
+    datagridStore.init(new OtherLoadingStrategy, structureStrategy);
+    datagridStore.setPage(5);
+    datagridStore.pageCount = 7;
+    datagridStore.updateLoadingStrategy(fullLoadingStrategy);
+
+    expect(page.get()).toEqual(1);
+    expect(datagridStore.pageCount).toEqual(0);
+});
+
+test('Should leave page count and page to its original value on first load', () => {
     const page = observable(3);
     const datagridStore = new DatagridStore('snippets', {page});
     datagridStore.pageCount = 7;
@@ -17,8 +55,8 @@ test('Should initialize page count to 0 and page to 1', () => {
     const fullLoadingStrategy = new FullLoadingStrategy();
     fullLoadingStrategy.initialize(datagridStore);
 
-    expect(page.get()).toEqual(1);
-    expect(datagridStore.pageCount).toEqual(0);
+    expect(page.get()).toEqual(3);
+    expect(datagridStore.pageCount).toEqual(7);
 });
 
 test('Should load items and add to empty array', () => {
