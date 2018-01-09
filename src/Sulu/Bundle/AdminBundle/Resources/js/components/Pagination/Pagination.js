@@ -50,7 +50,7 @@ export default class Pagination extends React.PureComponent<PaginationProps> {
     render() {
         const {children, current, loading, total} = this.props;
 
-        if (!total) {
+        if (loading && !total) {
             return <Loader />;
         }
 

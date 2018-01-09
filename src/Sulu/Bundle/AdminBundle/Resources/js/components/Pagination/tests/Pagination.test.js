@@ -20,9 +20,9 @@ test('Render pagination with loader', () => {
     ).toMatchSnapshot();
 });
 
-test('Render only loader if no total is not passed yet', () => {
+test('Render only loader if total is not passed initially', () => {
     expect(render(
-        <Pagination current={0} total={undefined} onChange={jest.fn()}><p></p></Pagination>
+        <Pagination current={0} total={undefined} loading={true} onChange={jest.fn()}><p></p></Pagination>
     )).toMatchSnapshot();
 });
 
