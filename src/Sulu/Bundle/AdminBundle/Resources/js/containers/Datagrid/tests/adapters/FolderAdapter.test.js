@@ -59,3 +59,15 @@ test('Click on a Folder should call the onItemEdit callback', () => {
     const folderAdapter = shallow(<FolderAdapter data={data} onItemClick={itemClickSpy} />);
     expect(folderAdapter.find('FolderList').get(0).props.onFolderClick).toBe(itemClickSpy);
 });
+
+test('Pagination should be passed correct props', () => {
+    const pageChangeSpy = jest.fn();
+    const folderAdapter = shallow(<FolderAdapter onPageChange={pageChangeSpy} page={2} pageCount={7} />);
+    expect(folderAdapter.find('Pagination').get(0).props).toEqual({
+        total: 7,
+        current: 2,
+        loading: false,
+        onChange: pageChangeSpy,
+        children: expect.anything(),
+    });
+});

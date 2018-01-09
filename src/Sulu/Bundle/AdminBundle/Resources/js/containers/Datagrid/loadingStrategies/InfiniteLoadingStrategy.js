@@ -2,13 +2,11 @@
 import {action, intercept} from 'mobx';
 import type {IValueWillChange} from 'mobx'; // eslint-disable-line import/named
 import DatagridStore from '../stores/DatagridStore';
-import InfiniteScroller from '../../../components/InfiniteScroller';
 import ResourceRequester from '../../../services/ResourceRequester';
 import type {ItemEnhancer, LoadOptions} from '../types';
 import AbstractLoadingStrategy from './AbstractLoadingStrategy';
 
 export default class InfiniteLoadingStrategy extends AbstractLoadingStrategy {
-    paginationAdapter = InfiniteScroller;
     localeInterceptionDisposer: () => void;
 
     initialize(datagridStore: DatagridStore) {

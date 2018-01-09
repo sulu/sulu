@@ -5,8 +5,6 @@ import type {ItemEnhancer, LoadOptions} from '../types';
 import AbstractLoadingStrategy from './AbstractLoadingStrategy';
 
 export default class FullLoadingStrategy extends AbstractLoadingStrategy {
-    paginationAdapter = null;
-
     load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer) {
         return ResourceRequester
             .getList(resourceKey, {...options, page: undefined, limit: undefined}).then(action((response) => {

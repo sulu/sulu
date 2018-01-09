@@ -41,6 +41,10 @@ test('Render a basic Masonry view with MediaCards', () => {
         <MediaCardAdapter
             data={data}
             icon="pencil"
+            loading={false}
+            onPageChange={jest.fn()}
+            page={1}
+            pageCount={7}
             schema={{}}
             selections={[]}
         />
@@ -77,13 +81,40 @@ test('MediaCard should call the the appropriate handler', () => {
         <MediaCardAdapter
             data={data}
             icon="pencil"
-            schema={{}}
-            selections={[]}
+            loading={false}
             onItemClick={mediaCardSelectionChangeSpy}
             onItemSelectionChange={mediaCardSelectionChangeSpy}
+            onPageChange={jest.fn()}
+            page={3}
+            pageCount={9}
+            schema={{}}
+            selections={[]}
         />
     );
 
     expect(mediaCardAdapter.find('MediaCard').get(0).props.onClick).toBe(mediaCardSelectionChangeSpy);
     expect(mediaCardAdapter.find('MediaCard').get(0).props.onSelectionChange).toBe(mediaCardSelectionChangeSpy);
+});
+
+test('InfiniteScroller should be passed correct props', () => {
+    const pageChangeSpy = jest.fn();
+    const tableAdapter = shallow(
+        <MediaCardAdapter
+            data={[]}
+            icon="pencil"
+            loading={false}
+            onPageChange={pageChangeSpy}
+            page={2}
+            pageCount={7}
+            schema={{}}
+            selections={[]}
+        />
+    );
+    expect(tableAdapter.find('InfiniteScroller').get(0).props).toEqual({
+        total: 7,
+        current: 2,
+        loading: false,
+        onChange: pageChangeSpy,
+        children: expect.anything(),
+    });
 });

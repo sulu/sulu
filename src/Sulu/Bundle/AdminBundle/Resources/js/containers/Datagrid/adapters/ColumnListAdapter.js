@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import type {LoadingStrategyInterface, StructureStrategyInterface, TreeItem} from '../types';
+import type {TreeItem} from '../types';
 import ColumnList from '../../../components/ColumnList';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
@@ -9,13 +9,9 @@ import AbstractAdapter from './AbstractAdapter';
 
 @observer
 export default class ColumnListAdapter extends AbstractAdapter {
-    static getLoadingStrategy(): LoadingStrategyInterface {
-        return new FullLoadingStrategy();
-    }
+    static LoadingStrategy = FullLoadingStrategy;
 
-    static getStructureStrategy(): StructureStrategyInterface {
-        return new TreeStructureStrategy();
-    }
+    static StructureStrategy = TreeStructureStrategy;
 
     static defaultProps = {
         data: [],

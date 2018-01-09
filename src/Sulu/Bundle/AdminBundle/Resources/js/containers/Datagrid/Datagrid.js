@@ -25,8 +25,8 @@ export default class Datagrid extends React.PureComponent<Props> {
     componentWillMount() {
         this.validateAdapters();
         this.props.store.updateStrategies(
-            this.currentAdapter.getLoadingStrategy(),
-            this.currentAdapter.getStructureStrategy()
+            new this.currentAdapter.LoadingStrategy(),
+            new this.currentAdapter.StructureStrategy()
         );
     }
 
@@ -35,8 +35,8 @@ export default class Datagrid extends React.PureComponent<Props> {
             this.validateAdapters();
         }
         nextProps.store.updateStrategies(
-            this.currentAdapter.getLoadingStrategy(),
-            this.currentAdapter.getStructureStrategy()
+            new this.currentAdapter.LoadingStrategy(),
+            new this.currentAdapter.StructureStrategy()
         );
     }
 
@@ -78,8 +78,8 @@ export default class Datagrid extends React.PureComponent<Props> {
     handleAdapterChange = (adapter: string) => {
         this.setCurrentAdapterKey(adapter);
         this.props.store.updateStrategies(
-            this.currentAdapter.getLoadingStrategy(),
-            this.currentAdapter.getStructureStrategy()
+            new this.currentAdapter.LoadingStrategy(),
+            new this.currentAdapter.StructureStrategy()
         );
     };
 
@@ -93,22 +93,7 @@ export default class Datagrid extends React.PureComponent<Props> {
             onItemClick,
             adapters,
         } = this.props;
-        const page = store.getPage();
-        const pageCount = store.pageCount;
         const Adapter = this.currentAdapter;
-        const adapter = (
-            <Adapter
-                data={store.data}
-                active={store.active}
-                selections={store.selections}
-                schema={store.getSchema()}
-                onItemClick={onItemClick}
-                onItemActivation={this.handleItemActivation}
-                onItemSelectionChange={this.handleItemSelectionChange}
-                onAllSelectionChange={this.handleAllSelectionChange}
-            />
-        );
-        const PaginationAdapter = Adapter.getLoadingStrategy().paginationAdapter;
 
         return (
             <div>
@@ -117,17 +102,20 @@ export default class Datagrid extends React.PureComponent<Props> {
                     currentAdapter={this.currentAdapterKey}
                     onAdapterChange={this.handleAdapterChange}
                 />
-                {PaginationAdapter
-                    ? <PaginationAdapter
-                        total={pageCount}
-                        current={page}
-                        loading={this.props.store.loading}
-                        onChange={this.handlePageChange}
-                    >
-                        {adapter}
-                    </PaginationAdapter>
-                    : adapter
-                }
+                <Adapter
+                    active={store.active}
+                    data={store.data}
+                    loading={store.loading}
+                    onAllSelectionChange={this.handleAllSelectionChange}
+                    onItemActivation={this.handleItemActivation}
+                    onItemClick={onItemClick}
+                    onItemSelectionChange={this.handleItemSelectionChange}
+                    onPageChange={this.handlePageChange}
+                    page={store.getPage()}
+                    pageCount={store.pageCount}
+                    schema={store.getSchema()}
+                    selections={store.selections}
+                />
             </div>
         );
     }

@@ -1,7 +1,7 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
-import {Masonry} from 'sulu-admin-bundle/components';
+import {Masonry, InfiniteScroller} from 'sulu-admin-bundle/components';
 import type {DatagridAdapterProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaCard from '../../../components/MediaCard';
@@ -62,39 +62,50 @@ export default class MediaCardAdapter extends React.Component<Props> {
         const {
             data,
             icon,
-            selections,
+            loading,
             onItemClick,
             onItemSelectionChange,
+            onPageChange,
+            page,
+            pageCount,
+            selections,
             showCoverWhenSelected,
         } = this.props;
 
         return (
-            <Masonry>
-                {data.map((item: Object) => {
-                    const meta = `${item.mimeType} ${MediaCardAdapter.formatFileSize(item.size)}`;
-                    const downloadDropdownProps = this.getDownloadDropdownProps(item);
-                    const selected = selections.includes(item.id);
-                    const thumbnail = item.thumbnails ? item.thumbnails[THUMBNAIL_SIZE] : null;
+            <InfiniteScroller
+                total={pageCount}
+                current={page}
+                loading={loading}
+                onChange={onPageChange}
+            >
+                <Masonry>
+                    {data.map((item: Object) => {
+                        const meta = `${item.mimeType} ${MediaCardAdapter.formatFileSize(item.size)}`;
+                        const downloadDropdownProps = this.getDownloadDropdownProps(item);
+                        const selected = selections.includes(item.id);
+                        const thumbnail = item.thumbnails ? item.thumbnails[THUMBNAIL_SIZE] : null;
 
-                    return (
-                        // TODO: Don't access properties like "title" directly.
-                        <MediaCard
-                            {...downloadDropdownProps}
-                            key={item.id}
-                            id={item.id}
-                            meta={meta}
-                            icon={icon}
-                            title={item.title}
-                            image={thumbnail}
-                            mimeType={item.mimeType}
-                            onClick={onItemClick}
-                            selected={selected}
-                            onSelectionChange={onItemSelectionChange}
-                            showCover={showCoverWhenSelected && selected}
-                        />
-                    );
-                })}
-            </Masonry>
+                        return (
+                            // TODO: Don't access properties like "title" directly.
+                            <MediaCard
+                                {...downloadDropdownProps}
+                                key={item.id}
+                                id={item.id}
+                                meta={meta}
+                                icon={icon}
+                                title={item.title}
+                                image={thumbnail}
+                                mimeType={item.mimeType}
+                                onClick={onItemClick}
+                                selected={selected}
+                                onSelectionChange={onItemSelectionChange}
+                                showCover={showCoverWhenSelected && selected}
+                            />
+                        );
+                    })}
+                </Masonry>
+            </InfiniteScroller>
         );
     }
 }

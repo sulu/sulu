@@ -8,7 +8,6 @@ import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
 import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
 import FolderAdapter from '../adapters/FolderAdapter';
-import type {LoadingStrategyInterface, StructureStrategyInterface} from '../types';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
@@ -53,10 +52,6 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 class LoadingStrategy {
-    paginationAdapter = function PaginationAdapter() {
-        return null;
-    };
-
     load = jest.fn();
 
     destroy = jest.fn();
@@ -73,13 +68,9 @@ class StructureStrategy {
 }
 
 class TestAdapter extends AbstractAdapter {
-    static getLoadingStrategy(): LoadingStrategyInterface {
-        return new LoadingStrategy();
-    }
+    static LoadingStrategy = LoadingStrategy;
 
-    static getStructureStrategy(): StructureStrategyInterface {
-        return new StructureStrategy();
-    }
+    static StructureStrategy = StructureStrategy;
 
     render() {
         return (
@@ -91,23 +82,6 @@ class TestAdapter extends AbstractAdapter {
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.get.mockReturnValue(TestAdapter);
-});
-
-test('Change page in DatagridStore on pagination click', () => {
-    const datagridStore = new DatagridStore('test', {page: observable(1)});
-    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
-    datagrid.find('PaginationAdapter').prop('onChange')(3);
-    expect(datagridStore.setPage).toBeCalledWith(3);
-});
-
-test('Render Pagination with correct values', () => {
-    const datagridStore = new DatagridStore('test', {page: observable(1)});
-
-    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
-    const pagination = datagrid.find('PaginationAdapter');
-
-    expect(pagination.prop('current')).toEqual(4);
-    expect(pagination.prop('total')).toEqual(7);
 });
 
 test('Render TableAdapter with correct values', () => {
@@ -206,32 +180,33 @@ test('DatagridStore should be initialized correctly on init and update', () => {
     });
     const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
     expect(datagridStore.updateStrategies)
-        .toBeCalledWith(TableAdapter.getLoadingStrategy(), TableAdapter.getStructureStrategy());
+        .toBeCalledWith(expect.any(TableAdapter.LoadingStrategy), expect.any(TableAdapter.StructureStrategy));
 
     const newDatagridStore = new DatagridStore('test', {page: observable(1)});
     newDatagridStore.updateStrategies = jest.fn();
 
     datagrid.setProps({ store: newDatagridStore });
     expect(newDatagridStore.updateStrategies).toBeCalledWith(
-        FolderAdapter.getLoadingStrategy(),
-        TableAdapter.getStructureStrategy()
+        expect.any(FolderAdapter.LoadingStrategy),
+        expect.any(TableAdapter.StructureStrategy)
     );
 });
 
 test('DatagridStore should be updated with current active element', () => {
     datagridAdapterRegistry.get.mockReturnValue(class TestAdapter extends AbstractAdapter {
-        static getLoadingStrategy = jest.fn().mockReturnValue({
-            paginationAdapter: undefined,
-            load: jest.fn(),
-            destroy: jest.fn(),
-            initialize: jest.fn(),
-        });
-        static getStructureStrategy = jest.fn().mockReturnValue({
-            data: [],
-            clear: jest.fn(),
-            getData: jest.fn(),
-            enhanceItem: jest.fn(),
-        });
+        static LoadingStrategy = class {
+            paginationAdapter = undefined;
+            load = jest.fn();
+            destroy = jest.fn();
+            initialize = jest.fn();
+        };
+
+        static StructureStrategy = class {
+            data = [];
+            clear = jest.fn();
+            getData = jest.fn();
+            enhanceItem = jest.fn();
+        };
 
         componentWillMount() {
             const {onItemActivation} = this.props;
