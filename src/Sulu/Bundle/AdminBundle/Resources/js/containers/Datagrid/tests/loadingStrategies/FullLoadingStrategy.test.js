@@ -23,6 +23,7 @@ function StructureStrategy() {
 function OtherLoadingStrategy() {
     this.paginationAdapter = undefined;
     this.initialize = jest.fn();
+    this.reset = jest.fn();
     this.load = jest.fn().mockReturnValue(Promise.resolve({
         _embedded: {
             snippets: [],
@@ -45,18 +46,6 @@ test('Should reset page count and page when strategy changes', () => {
 
     expect(page.get()).toEqual(1);
     expect(datagridStore.pageCount).toEqual(0);
-});
-
-test('Should leave page count and page to its original value on first load', () => {
-    const page = observable(3);
-    const datagridStore = new DatagridStore('snippets', {page});
-    datagridStore.pageCount = 7;
-
-    const fullLoadingStrategy = new FullLoadingStrategy();
-    fullLoadingStrategy.initialize(datagridStore);
-
-    expect(page.get()).toEqual(3);
-    expect(datagridStore.pageCount).toEqual(7);
 });
 
 test('Should load items and add to empty array', () => {

@@ -11,6 +11,7 @@ jest.mock('../../stores/MetadataStore', () => ({
 function LoadingStrategy() {
     this.load = jest.fn().mockReturnValue({then: jest.fn()});
     this.initialize = jest.fn();
+    this.reset = jest.fn();
     this.destroy = jest.fn();
 }
 
@@ -378,6 +379,7 @@ test('Nothing should happen when to the same loading strategy is changed', () =>
     datagridStore.updateLoadingStrategy(loadingStrategy);
 
     expect(loadingStrategy.initialize).toBeCalled();
+    expect(loadingStrategy.reset).not.toBeCalled();
     expect(loadingStrategy.destroy).not.toBeCalled();
 
     datagridStore.destroy();
@@ -402,6 +404,7 @@ test('The initialize and destroy method of the loading strategies should be call
     datagridStore.updateLoadingStrategy(loadingStrategy2);
 
     expect(loadingStrategy1.destroy).toBeCalled();
+    expect(loadingStrategy2.reset).toBeCalledWith(datagridStore);
     expect(loadingStrategy2.initialize).toBeCalledWith(datagridStore);
 
     datagridStore.destroy();

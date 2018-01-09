@@ -53,10 +53,9 @@ jest.mock('../../../utils/Translator', () => ({
 
 class LoadingStrategy {
     load = jest.fn();
-
     destroy = jest.fn();
-
     initialize = jest.fn();
+    reset = jest.fn();
 }
 
 class StructureStrategy {
@@ -199,6 +198,7 @@ test('DatagridStore should be updated with current active element', () => {
             load = jest.fn();
             destroy = jest.fn();
             initialize = jest.fn();
+            reset = jest.fn();
         };
 
         static StructureStrategy = class {

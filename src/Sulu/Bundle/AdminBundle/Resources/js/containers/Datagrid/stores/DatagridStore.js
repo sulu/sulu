@@ -51,15 +51,14 @@ export default class DatagridStore {
 
         if (this.loadingStrategy) {
             this.loadingStrategy.destroy();
+            loadingStrategy.reset(this);
         }
 
         if (this.structureStrategy) {
             this.structureStrategy.clear();
         }
 
-        if (loadingStrategy) {
-            loadingStrategy.initialize(this);
-        }
+        loadingStrategy.initialize(this);
 
         this.loadingStrategy = loadingStrategy;
     };

@@ -10,8 +10,6 @@ export default class InfiniteLoadingStrategy extends AbstractLoadingStrategy {
     localeInterceptionDisposer: () => void;
 
     initialize(datagridStore: DatagridStore) {
-        super.initialize(datagridStore);
-
         if (datagridStore.observableOptions.locale) {
             this.localeInterceptionDisposer = intercept(
                 datagridStore.observableOptions.locale,

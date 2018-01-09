@@ -40,6 +40,7 @@ export type ItemEnhancer = (item: Object) => Object;
 export interface LoadingStrategyInterface {
     constructor(): LoadingStrategyInterface,
     initialize(datagridStore: DatagridStore): void,
+    reset(datagridStore: DatagridStore): void,
     destroy(): void,
     load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer): Promise<Object>,
 }

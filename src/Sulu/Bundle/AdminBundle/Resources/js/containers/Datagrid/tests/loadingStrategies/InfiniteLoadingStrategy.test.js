@@ -23,6 +23,7 @@ function StructureStrategy() {
 function OtherLoadingStrategy() {
     this.paginationAdapter = undefined;
     this.initialize = jest.fn();
+    this.reset = jest.fn();
     this.load = jest.fn().mockReturnValue(Promise.resolve({
         _embedded: {
             snippets: [],
@@ -45,18 +46,6 @@ test('Should reset page count and page when strategy changes', () => {
 
     expect(page.get()).toEqual(1);
     expect(datagridStore.pageCount).toEqual(0);
-});
-
-test('Should initialize page count to 0 and page to 1', () => {
-    const page = observable(3);
-    const datagridStore = new DatagridStore('snippets', {page});
-    datagridStore.pageCount = 7;
-
-    const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
-    infiniteLoadingStrategy.initialize(datagridStore);
-
-    expect(page.get()).toEqual(3);
-    expect(datagridStore.pageCount).toEqual(7);
 });
 
 test('Should reset page count to 0 and page to 1 when locale is changed', () => {
