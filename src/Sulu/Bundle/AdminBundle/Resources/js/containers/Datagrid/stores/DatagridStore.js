@@ -122,7 +122,6 @@ export default class DatagridStore {
         }));
     };
 
-    // TODO remove
     handleResponse = (response: Object) => {
         this.pageCount = response.pages;
         this.setLoading(false);

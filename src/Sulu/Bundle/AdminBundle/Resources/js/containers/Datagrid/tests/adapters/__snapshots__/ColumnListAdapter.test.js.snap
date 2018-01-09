@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render data 1`] = `
+<div
+  class="columnListContainer"
+>
+  <div
+    class="columnList"
+  >
+    <div
+      class="columnContainer active"
+    >
+      <div
+        class="toolbar active"
+      />
+      <div
+        class="column"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            Page 1
+          </span>
+          <span
+            aria-label="chevron-right"
+            class="children fa fa-chevron-right"
+          />
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            Page 2
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="columnContainer"
+    >
+      <div
+        class="toolbar"
+      />
+      <div
+        class="column"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            Page 1.1
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="columnContainer"
+    >
+      <div
+        class="toolbar"
+      />
+      <div
+        class="column"
+      />
+    </div>
+  </div>
+</div>
+`;
