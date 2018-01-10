@@ -7,6 +7,7 @@ import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
 import AdapterSwitch from './AdapterSwitch';
+import datagridStyles from './datagrid.scss';
 
 type Props = {
     onItemClick?: (itemId: string | number) => void,
@@ -96,7 +97,7 @@ export default class Datagrid extends React.PureComponent<Props> {
         const Adapter = this.currentAdapter;
 
         return (
-            <div>
+            <div className={datagridStyles.datagrid}>
                 <AdapterSwitch
                     adapters={adapters}
                     currentAdapter={this.currentAdapterKey}

@@ -1,0 +1,8 @@
+.column-list-adapter {
+    flex-grow: 1;
+    position: relative;
+
+    > :only-child {
+        position: absolute;
+    }
+}

@@ -6,6 +6,7 @@ import ColumnList from '../../../components/ColumnList';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
 import AbstractAdapter from './AbstractAdapter';
+import columnListAdapterStyles from './columnListAdapter.scss';
 
 @observer
 export default class ColumnListAdapter extends AbstractAdapter {
@@ -61,18 +62,20 @@ export default class ColumnListAdapter extends AbstractAdapter {
         const columnData = this.prepareColumnData();
 
         return (
-            <ColumnList onItemClick={this.handleItemClick} toolbarItems={[]}>
-                {columnData.map((items, index) => (
-                    <ColumnList.Column key={index}>
-                        {items.map((item: Object) => (
-                            // TODO: Don't access properties like "hasSub" or "title" directly
-                            <ColumnList.Item id={item.id} key={item.id} hasChildren={item.hasSub}>
-                                {item.title}
-                            </ColumnList.Item>
-                        ))}
-                    </ColumnList.Column>
-                ))}
-            </ColumnList>
+            <div className={columnListAdapterStyles.columnListAdapter}>
+                <ColumnList onItemClick={this.handleItemClick} toolbarItems={[]}>
+                    {columnData.map((items, index) => (
+                        <ColumnList.Column key={index}>
+                            {items.map((item: Object) => (
+                                // TODO: Don't access properties like "hasSub" or "title" directly
+                                <ColumnList.Item id={item.id} key={item.id} hasChildren={item.hasSub}>
+                                    {item.title}
+                                </ColumnList.Item>
+                            ))}
+                        </ColumnList.Column>
+                    ))}
+                </ColumnList>
+            </div>
         );
     }
 }
