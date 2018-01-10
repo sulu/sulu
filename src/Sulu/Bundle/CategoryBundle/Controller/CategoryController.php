@@ -283,13 +283,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
             );
         }
 
-        // expand collected parents if search is not set, else search all categories
-        if (!$request->get('search')) {
-            if (count($parentExpressions) >= 2) {
-                $listBuilder->addExpression($listBuilder->createOrExpression($parentExpressions));
-            } elseif (count($parentExpressions) >= 1) {
-                $listBuilder->addExpression($parentExpressions[0]);
-            }
+        // expand collected parents
+        if (count($parentExpressions) >= 2) {
+            $listBuilder->addExpression($listBuilder->createOrExpression($parentExpressions));
+        } elseif (count($parentExpressions) >= 1) {
+            $listBuilder->addExpression($parentExpressions[0]);
         }
 
         $results = $listBuilder->execute();
