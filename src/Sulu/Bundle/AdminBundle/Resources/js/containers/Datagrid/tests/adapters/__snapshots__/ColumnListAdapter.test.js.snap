@@ -36,7 +36,7 @@ exports[`Render data 1`] = `
             />
           </div>
           <div
-            class="item"
+            class="item active"
           >
             <span
               class="buttons"
@@ -59,7 +59,7 @@ exports[`Render data 1`] = `
           class="column"
         >
           <div
-            class="item"
+            class="item active"
           >
             <span
               class="buttons"
@@ -67,8 +67,12 @@ exports[`Render data 1`] = `
             <span
               class="text"
             >
-              Page 1.1
+              Page 2.1
             </span>
+            <span
+              aria-label="chevron-right"
+              class="children fa fa-chevron-right"
+            />
           </div>
         </div>
       </div>
@@ -87,7 +91,7 @@ exports[`Render data 1`] = `
 </div>
 `;
 
-exports[`Render data 2`] = `
+exports[`Render data with loading column 1`] = `
 <div
   class="columnListAdapter"
 >
@@ -107,7 +111,7 @@ exports[`Render data 2`] = `
           class="column"
         >
           <div
-            class="item"
+            class="item active"
           >
             <span
               class="buttons"

@@ -45,7 +45,7 @@ test('Render data', () => {
 
     const columnListAdapter = render(
         <ColumnListAdapter
-            active={3}
+            active={4}
             data={data}
             loading={false}
             onPageChange={jest.fn()}
@@ -59,7 +59,7 @@ test('Render data', () => {
     expect(columnListAdapter).toMatchSnapshot();
 });
 
-test('Render data', () => {
+test('Render data with loading column', () => {
     const data = [
         {
             id: 1,

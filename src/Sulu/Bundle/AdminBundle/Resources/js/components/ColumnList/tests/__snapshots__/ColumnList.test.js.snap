@@ -234,6 +234,7 @@ exports[`The ColumnList component should render 1`] = `
             className="column"
           >
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -252,7 +253,7 @@ exports[`The ColumnList component should render 1`] = `
               selected={true}
             >
               <div
-                className="item selected"
+                className="item"
                 onClick={[Function]}
               >
                 <span
@@ -313,6 +314,7 @@ exports[`The ColumnList component should render 1`] = `
               </div>
             </Item>
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -328,7 +330,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={true}
               id="2"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -401,6 +402,7 @@ exports[`The ColumnList component should render 1`] = `
               </div>
             </Item>
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -416,7 +418,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={false}
               id="3"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -663,6 +664,7 @@ exports[`The ColumnList component should render 1`] = `
             className="column"
           >
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -678,7 +680,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={false}
               id="1-1"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -742,6 +743,7 @@ exports[`The ColumnList component should render 1`] = `
               </div>
             </Item>
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -757,7 +759,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={true}
               id="1-2"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -1013,6 +1014,7 @@ exports[`The ColumnList component should render 1`] = `
             className="column"
           >
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -1028,7 +1030,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={false}
               id="1-1-1"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -1092,6 +1093,7 @@ exports[`The ColumnList component should render 1`] = `
               </div>
             </Item>
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -1107,7 +1109,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={false}
               id="1-1-2"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"

@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import type {TreeItem} from '../types';
 import ColumnList from '../../../components/ColumnList';
@@ -25,9 +26,40 @@ export default class ColumnListAdapter extends AbstractAdapter {
         }
     };
 
-    prepareColumnData() {
+    @computed get activeItemPath(): Array<string | number> {
+        const {data} = this.props;
+        const tree = ((data: any): Array<TreeItem>);
+
+        const activeItemPath = [];
+
+        this.prepareActiveItemPath(activeItemPath, tree);
+
+        return activeItemPath;
+    }
+
+    prepareActiveItemPath(activeItemPath: Array<string | number>, tree: Array<TreeItem>) {
+        for (let i = 0; i < tree.length; i++) {
+            const item = tree[i];
+            const {data, children} = item;
+
+            if (data.id === this.props.active) {
+                activeItemPath.unshift(data.id);
+                return true;
+            }
+
+            const activeParent = this.prepareActiveItemPath(activeItemPath, children);
+
+            if (activeParent) {
+                activeItemPath.unshift(data.id);
+                return true;
+            }
+        }
+    }
+
+    @computed get columnData(): Array<Array<Object>> {
+        const {data} = this.props;
         const columns = [];
-        const tree = ((this.props.data: any): Array<TreeItem>);
+        const tree = ((data: any): Array<TreeItem>);
 
         this.prepareColumnLevel(columns, tree);
         this.prepareColumnChildren(columns, tree);
@@ -59,17 +91,21 @@ export default class ColumnListAdapter extends AbstractAdapter {
     }
 
     render() {
-        const columnData = this.prepareColumnData();
         const {loading} = this.props;
 
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
                 <ColumnList onItemClick={this.handleItemClick} toolbarItems={[]}>
-                    {columnData.map((items, index) => (
-                        <ColumnList.Column key={index} loading={index >= columnData.length - 1 && loading}>
+                    {this.columnData.map((items, index) => (
+                        <ColumnList.Column key={index} loading={index >= this.columnData.length - 1 && loading}>
                             {items.map((item: Object) => (
                                 // TODO: Don't access properties like "hasSub" or "title" directly
-                                <ColumnList.Item id={item.id} key={item.id} hasChildren={item.hasSub}>
+                                <ColumnList.Item
+                                    id={item.id}
+                                    key={item.id}
+                                    hasChildren={item.hasSub}
+                                    active={this.activeItemPath.includes(item.id)}
+                                >
                                     {item.title}
                                 </ColumnList.Item>
                             ))}

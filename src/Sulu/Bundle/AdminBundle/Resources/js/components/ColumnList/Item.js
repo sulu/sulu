@@ -9,7 +9,7 @@ import itemStyles from './item.scss';
 type Props = {
     id: string | number,
     children: string,
-    selected: boolean,
+    active: boolean,
     hasChildren: boolean,
     buttons?: Array<ItemButtonConfig>,
     onClick?: (id: string | number) => void,
@@ -17,7 +17,7 @@ type Props = {
 
 export default class Item extends React.Component<Props> {
     static defaultProps = {
-        selected: false,
+        active: false,
         hasChildren: false,
     };
 
@@ -44,12 +44,12 @@ export default class Item extends React.Component<Props> {
     };
 
     render() {
-        const {children, selected, hasChildren} = this.props;
+        const {children, active, hasChildren} = this.props;
 
         const itemClass = classNames(
             itemStyles.item,
             {
-                [itemStyles.selected]: selected,
+                [itemStyles.active]: active,
             }
         );
 

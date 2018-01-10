@@ -16,7 +16,7 @@ $itemColorHover: $white;
         font-size: 12px;
     }
 
-    &.selected {
+    &.active {
         background: $itemBackgroundColorSelected;
         font-weight: bold;
     }
