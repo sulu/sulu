@@ -284,9 +284,13 @@ class CategoryController extends RestController implements ClassResourceInterfac
         }
 
         // expand collected parents
-        if (count($parentExpressions) >= 2) {
-            $listBuilder->addExpression($listBuilder->createOrExpression($parentExpressions));
-        } elseif (count($parentExpressions) >= 1) {
+        if (!$request->get('search')) {
+            if (count($parentExpressions) >= 2) {
+                $listBuilder->addExpression($listBuilder->createOrExpression($parentExpressions));
+            } elseif (count($parentExpressions) >= 1) {
+                $listBuilder->addExpression($parentExpressions[0]);
+            }
+        } else if ($request->get('search') && $parentId) {
             $listBuilder->addExpression($parentExpressions[0]);
         }
 
