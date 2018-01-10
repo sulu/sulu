@@ -556,12 +556,12 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals($this->category3->getId(), $categories[0]->id);
         $this->assertTrue($categories[0]->hasChildren);
 
-        // search for not root category => should be excluded also!
+        // search for the root category => should be excluded also!
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories?locale=en&flat=true&searchFields=name&search=' .
-            $this->category1->findTranslationByLocale('en')->getTranslation()
+            '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey() .
+            '&searchFields=name&search=' . $this->category1->findTranslationByLocale('en')->getTranslation()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -576,7 +576,8 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories?locale=en&flat=true&searchFields=name&search=XXX'
+            '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey() .
+            '&searchFields=name&search=XXX'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
