@@ -556,6 +556,22 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals($this->category3->getId(), $categories[0]->id);
         $this->assertTrue($categories[0]->hasChildren);
 
+        // search for not root category => should be excluded also!
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories?locale=en&flat=true&searchFields=name&search=' .
+            $this->category1->findTranslationByLocale('en')->getTranslation()
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $categories = $response->_embedded->categories;
+
+        $this->assertEquals(0, count($categories));
+
         // search for not existing category
         $client = $this->createAuthenticatedClient();
         $client->request(
