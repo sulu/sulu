@@ -60,12 +60,13 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
     render() {
         const columnData = this.prepareColumnData();
+        const {loading} = this.props;
 
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
                 <ColumnList onItemClick={this.handleItemClick} toolbarItems={[]}>
                     {columnData.map((items, index) => (
-                        <ColumnList.Column key={index}>
+                        <ColumnList.Column key={index} loading={index >= columnData.length - 1 && loading}>
                             {items.map((item: Object) => (
                                 // TODO: Don't access properties like "hasSub" or "title" directly
                                 <ColumnList.Item id={item.id} key={item.id} hasChildren={item.hasSub}>

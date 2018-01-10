@@ -59,6 +59,44 @@ test('Render data', () => {
     expect(columnListAdapter).toMatchSnapshot();
 });
 
+test('Render data', () => {
+    const data = [
+        {
+            id: 1,
+            children: [],
+            data: {
+                id: 1,
+                title: 'Page 1',
+                hasSub: true,
+            },
+        },
+        {
+            id: 2,
+            children: [],
+            data: {
+                id: 2,
+                title: 'Page 2',
+                hasSub: false,
+            },
+        },
+    ];
+
+    const columnListAdapter = render(
+        <ColumnListAdapter
+            active={1}
+            data={data}
+            loading={true}
+            onPageChange={jest.fn()}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+        />
+    );
+
+    expect(columnListAdapter).toMatchSnapshot();
+});
+
 test('Execute onItemActivation callback when an item is clicked with the correct parameter', () => {
     const onItemActivationSpy = jest.fn();
 

@@ -2,16 +2,18 @@
 import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import classNames from 'classnames';
+import Loader from '../Loader';
 import Item from './Item';
 import Toolbar from './Toolbar';
 import type {ItemButtonConfig, ToolbarItemConfig} from './types';
-import columnListStyles from './columnList.scss';
+import columnStyles from './column.scss';
 
 type Props = {
-    index?: number,
-    children?: ChildrenArray<Element<typeof Item>>,
-    buttons?: Array<ItemButtonConfig>,
     active: boolean,
+    buttons?: Array<ItemButtonConfig>,
+    children?: ChildrenArray<Element<typeof Item>>,
+    index?: number,
+    loading: boolean,
     onActive?: (index?: number) => void,
     onItemClick?: (id: string | number) => void,
     toolbarItems: Array<ToolbarItemConfig>,
@@ -20,6 +22,7 @@ type Props = {
 export default class Column extends React.Component<Props> {
     static defaultProps = {
         active: false,
+        loading: false,
         toolbarItems: [],
     };
 
@@ -52,20 +55,27 @@ export default class Column extends React.Component<Props> {
     };
 
     render() {
-        const {children, active, index, toolbarItems} = this.props;
+        const {children, active, index, loading, toolbarItems} = this.props;
 
         const columnContainerClass = classNames(
-            columnListStyles.columnContainer,
+            columnStyles.columnContainer,
             {
-                [columnListStyles.active]: active,
+                [columnStyles.active]: active,
+            }
+        );
+
+        const columnClass = classNames(
+            columnStyles.column,
+            {
+                [columnStyles.loading]: loading,
             }
         );
 
         return (
             <div onMouseEnter={this.handleMouseEnter} className={columnContainerClass}>
                 <Toolbar active={active} columnIndex={index} toolbarItems={toolbarItems} />
-                <div className={columnListStyles.column}>
-                    {this.cloneItems(children)}
+                <div className={columnClass}>
+                    {loading ? <Loader /> : this.cloneItems(children)}
                 </div>
             </div>
         );
