@@ -2,82 +2,86 @@
 
 exports[`Render data 1`] = `
 <div
-  class="columnListContainer"
+  class="columnListAdapter"
 >
   <div
-    class="columnList"
+    class="columnListContainer"
   >
     <div
-      class="columnContainer active"
+      class="columnList"
     >
       <div
-        class="toolbar active"
-      />
-      <div
-        class="column"
+        class="columnContainer active"
       >
         <div
-          class="item"
-        >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
-          >
-            Page 1
-          </span>
-          <span
-            aria-label="chevron-right"
-            class="children fa fa-chevron-right"
-          />
-        </div>
+          class="toolbar active"
+        />
         <div
-          class="item"
+          class="column"
         >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
+          <div
+            class="item"
           >
-            Page 2
-          </span>
+            <span
+              class="buttons"
+            />
+            <span
+              class="text"
+            >
+              Page 1
+            </span>
+            <span
+              aria-label="chevron-right"
+              class="children fa fa-chevron-right"
+            />
+          </div>
+          <div
+            class="item"
+          >
+            <span
+              class="buttons"
+            />
+            <span
+              class="text"
+            >
+              Page 2
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      class="columnContainer"
-    >
       <div
-        class="toolbar"
-      />
-      <div
-        class="column"
+        class="columnContainer"
       >
         <div
-          class="item"
+          class="toolbar"
+        />
+        <div
+          class="column"
         >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
+          <div
+            class="item"
           >
-            Page 1.1
-          </span>
+            <span
+              class="buttons"
+            />
+            <span
+              class="text"
+            >
+              Page 1.1
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      class="columnContainer"
-    >
       <div
-        class="toolbar"
-      />
-      <div
-        class="column"
-      />
+        class="columnContainer"
+      >
+        <div
+          class="toolbar"
+        />
+        <div
+          class="column"
+        />
+      </div>
     </div>
   </div>
 </div>

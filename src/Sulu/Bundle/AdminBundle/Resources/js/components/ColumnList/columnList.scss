@@ -6,9 +6,9 @@ $columnHeight: 30px;
 
 $columnBackgroundColor: $white;
 $columnBorderColor: $silver;
+$columnBorder: 1px solid $columnBorderColor;
 
 .column-list-container {
-    overflow: scroll;
     height: 100%;
 }
 
@@ -20,7 +20,9 @@ $columnBorderColor: $silver;
 
 .column {
     background: $columnBackgroundColor;
-    border-right: 1px solid $columnBorderColor;
+    border-bottom: $columnBorder;
+    border-top: $columnBorder;
+    border-right: $columnBorder;
     vertical-align: top;
     width: $columnWidth;
     height: calc(100% - $columnHeight);
@@ -29,6 +31,7 @@ $columnBorderColor: $silver;
 
 .column-container:first-child {
     .column {
+        border-left: $columnBorder;
         border-radius: $columnContainerBorderRadius 0 0 $columnContainerBorderRadius;
     }
 
@@ -42,7 +45,6 @@ $columnBorderColor: $silver;
 .column-container:last-child {
     .column {
         border-radius: 0 $columnContainerBorderRadius $columnContainerBorderRadius 0;
-        border-right: none;
     }
 
     &.active {
