@@ -83,6 +83,7 @@ export default class CollectionSection extends React.PureComponent<Props> {
 
     handleCollectionOverlayConfirm = (resourceStore: ResourceStore) => {
         const options = {};
+        options.breadcrumb = true;
 
         if (this.collectionId && this.openedCollectionOperationOverlayType === 'create') {
             options.parent = this.collectionId;

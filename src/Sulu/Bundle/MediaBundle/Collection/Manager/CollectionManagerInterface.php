@@ -95,12 +95,9 @@ interface CollectionManagerInterface
     /**
      * Creates a new collection or overrides an existing one.
      *
-     * @param array $data The data of the category to save
-     * @param int $userId The id of the user, who is doing this change
-     *
      * @return Collection
      */
-    public function save($data, $userId);
+    public function save(array $data, int $userId, bool $breadcrumb = false);
 
     /**
      * Deletes a collection with a given id.

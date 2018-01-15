@@ -351,6 +351,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         $systemCollectionManager = $this->get('sulu_media.system_collections.manager');
         $parent = $request->get('parent');
+        $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
 
         if ((null !== $id && $systemCollectionManager->isSystemCollection(intval($id))) ||
             (null !== $parent && $systemCollectionManager->isSystemCollection(intval($parent)))
@@ -362,8 +363,10 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collectionManager = $this->getCollectionManager();
             $data = $this->getData($request);
             $data['id'] = $id;
+
             $data['locale'] = $this->getRequestParameter($request, 'locale', true);
-            $collection = $collectionManager->save($data, $this->getUser()->getId());
+
+            $collection = $collectionManager->save($data, $this->getUser()->getId(), $breadcrumb);
 
             $view = $this->view($collection, 200);
         } catch (CollectionNotFoundException $e) {

@@ -79,7 +79,7 @@ class MediaStreamControllerTest extends SuluTestCase
                 'locale' => 'en',
                 'type' => ['id' => 1],
             ],
-            null
+            1
         );
 
         return $collection->getId();

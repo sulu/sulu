@@ -299,7 +299,7 @@ test('Should send a request to update the collection via the overlay', () => {
 
     return promise.then(() => {
         expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
-        expect(collectionStore.resourceStore.save).toBeCalled();
+        expect(collectionStore.resourceStore.save).toBeCalledWith({breadcrumb: true});
     });
 });
 
