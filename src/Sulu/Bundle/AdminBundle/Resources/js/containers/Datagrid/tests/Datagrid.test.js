@@ -177,18 +177,9 @@ test('DatagridStore should be initialized correctly on init and update', () => {
                 return FolderAdapter;
         }
     });
-    const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
+    mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
     expect(datagridStore.updateStrategies)
         .toBeCalledWith(expect.any(TableAdapter.LoadingStrategy), expect.any(TableAdapter.StructureStrategy));
-
-    const newDatagridStore = new DatagridStore('test', {page: observable(1)});
-    newDatagridStore.updateStrategies = jest.fn();
-
-    datagrid.setProps({ store: newDatagridStore });
-    expect(newDatagridStore.updateStrategies).toBeCalledWith(
-        expect.any(FolderAdapter.LoadingStrategy),
-        expect.any(TableAdapter.StructureStrategy)
-    );
 });
 
 test('DatagridStore should be updated with current active element', () => {
