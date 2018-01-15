@@ -99,6 +99,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $locale = $this->getRequestParameter($request, 'locale', true);
             $depth = intval($request->get('depth', 0));
             $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
+            $children = $this->getBooleanRequestParameter($request, 'children', false, false);
             $collectionManager = $this->getCollectionManager();
 
             // filter children
@@ -117,14 +118,15 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder) {
+                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder, $children) {
                     $collection = $collectionManager->getById(
                         $id,
                         $locale,
                         $depth,
                         $breadcrumb,
                         $filter,
-                        null !== $sortBy ? [$sortBy => $sortOrder] : []
+                        null !== $sortBy ? [$sortBy => $sortOrder] : [],
+                        $children
                     );
 
                     if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collection->getType()->getKey()) {

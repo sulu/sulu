@@ -636,7 +636,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/collections/' . $this->collection1->getId() . '?depth=1',
+            '/api/collections/' . $this->collection1->getId() . '?depth=1&children=true',
             [
                 'locale' => 'en-gb',
             ]
@@ -1428,7 +1428,7 @@ class CollectionControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/collections/' . $ids[3] . '?depth=1',
+            '/api/collections/' . $ids[3] . '?depth=1&children=true',
             [
                 'locale' => 'en-gb',
             ]
@@ -1449,7 +1449,7 @@ class CollectionControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/collections/' . $ids[3] . '?depth=2',
+            '/api/collections/' . $ids[3] . '?depth=2&children=true',
             [
                 'locale' => 'en-gb',
             ]

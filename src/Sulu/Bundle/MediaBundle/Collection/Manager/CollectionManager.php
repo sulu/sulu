@@ -119,21 +119,24 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = [], $sortBy = [])
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = [], $sortBy = [], $children = false)
     {
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
         if (null === $collectionEntity) {
             throw new CollectionNotFoundException($id);
         }
         $filter['locale'] = $locale;
-        $collectionChildren = $this->collectionRepository->findCollectionSet(
-            $depth,
-            $filter,
-            $collectionEntity,
-            $sortBy,
-            $this->getCurrentUser(),
-            $this->permissions[PermissionTypes::VIEW]
-        );
+        $collectionChildren = null;
+        if($children) { // TODO remove this flag before the 2.0 release (is only necessary because of the old UI)
+            $collectionChildren = $this->collectionRepository->findCollectionSet(
+                $depth,
+                $filter,
+                $collectionEntity,
+                $sortBy,
+                $this->getCurrentUser(),
+                $this->permissions[PermissionTypes::VIEW]
+            );
+        }
 
         $breadcrumbEntities = null;
         if ($breadcrumb) {
@@ -452,7 +455,7 @@ class CollectionManager implements CollectionManagerInterface
         // set parent
         if (!empty($data['parent'])) {
             $collectionEntity = $this->collectionRepository->findCollectionById($data['parent']);
-            $collection->setParent($this->getApiEntity($collectionEntity, $data['locale'])); // set parent
+            $collection->setParent($this->getApiEntity($collectionEntity, $data['locale']));
         }
 
         // set other data
