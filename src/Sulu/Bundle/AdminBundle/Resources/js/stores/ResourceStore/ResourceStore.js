@@ -31,20 +31,20 @@ export default class ResourceStore {
     @observable data: Object = {};
     @observable dirty: boolean = false;
     loadOptions: Object = {};
-    loadOnInit: boolean;
+    preventLoadingOnce: boolean;
 
     constructor(
         resourceKey: string,
         id: ?string | number,
         observableOptions: ObservableOptions = {},
         loadOptions: Object = {},
-        loadOnInit: boolean = true
+        preventLoadingOnce: boolean = true
     ) {
         this.resourceKey = resourceKey;
         this.id = id;
         this.observableOptions = observableOptions;
         this.loadOptions = loadOptions;
-        this.loadOnInit = loadOnInit;
+        this.preventLoadingOnce = preventLoadingOnce;
         this.disposer = autorun(this.load);
     }
 
@@ -52,8 +52,8 @@ export default class ResourceStore {
         const id = this.id;
         const options = {};
 
-        if (!this.loadOnInit) {
-            this.loadOnInit = true;
+        if (!this.preventLoadingOnce) {
+            this.preventLoadingOnce = true;
             return;
         }
 
