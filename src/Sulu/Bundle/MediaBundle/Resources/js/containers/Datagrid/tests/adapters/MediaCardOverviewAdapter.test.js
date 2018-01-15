@@ -41,6 +41,10 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
         <MediaCardOverviewAdapter
             data={data}
             icon="pencil"
+            loading={false}
+            onPageChange={jest.fn()}
+            page={2}
+            pageCount={5}
             schema={{}}
             selections={[]}
         />

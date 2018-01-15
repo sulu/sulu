@@ -64,8 +64,14 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
-            this.init = jest.fn();
+            this.updateStrategies = jest.fn();
         }),
+        FlatStructureStrategy: require(
+            'sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStructureStrategy'
+        ).default,
+        InfiniteLoadingStrategy: require(
+            'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteLoadingStrategy'
+        ).default,
     };
 });
 

@@ -1,13 +1,17 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
+import Pagination from '../../../components/Pagination';
 import Table from '../../../components/Table';
+import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
+import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
 export default class TableAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => string = () => { return 'pagination'; };
-    static getStorageStrategy: () => string = () => { return 'flat'; };
+    static LoadingStrategy = PaginatedLoadingStrategy;
+
+    static StructureStrategy = FlatStructureStrategy;
 
     static defaultProps = {
         data: [],
@@ -29,11 +33,15 @@ export default class TableAdapter extends AbstractAdapter {
     render() {
         const {
             data,
-            schema,
-            selections,
+            loading,
             onItemClick,
             onAllSelectionChange,
             onItemSelectionChange,
+            onPageChange,
+            page,
+            pageCount,
+            schema,
+            selections,
         } = this.props;
         const schemaKeys = Object.keys(schema);
         const buttons = [];
@@ -46,25 +54,32 @@ export default class TableAdapter extends AbstractAdapter {
         }
 
         return (
-            <Table
-                buttons={buttons}
-                selectMode="multiple"
-                onRowSelectionChange={onItemSelectionChange}
-                onAllSelectionChange={onAllSelectionChange}
+            <Pagination
+                total={pageCount}
+                current={page}
+                loading={loading}
+                onChange={onPageChange}
             >
-                <Table.Header>
-                    {schemaKeys.map((schemaKey) => (
-                        <Table.HeaderCell key={schemaKey}>{schemaKey}</Table.HeaderCell>
-                    ))}
-                </Table.Header>
-                <Table.Body>
-                    {data.map((item) => (
-                        <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
-                            {this.renderCells(item, schemaKeys)}
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-            </Table>
+                <Table
+                    buttons={buttons}
+                    selectMode="multiple"
+                    onRowSelectionChange={onItemSelectionChange}
+                    onAllSelectionChange={onAllSelectionChange}
+                >
+                    <Table.Header>
+                        {schemaKeys.map((schemaKey) => (
+                            <Table.HeaderCell key={schemaKey}>{schemaKey}</Table.HeaderCell>
+                        ))}
+                    </Table.Header>
+                    <Table.Body>
+                        {data.map((item) => (
+                            <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
+                                {this.renderCells(item, schemaKeys)}
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                </Table>
+            </Pagination>
         );
     }
 }

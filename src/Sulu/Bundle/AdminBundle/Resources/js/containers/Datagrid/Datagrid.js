@@ -3,12 +3,11 @@ import {observer} from 'mobx-react';
 import {observable, action, computed} from 'mobx';
 import React from 'react';
 import equal from 'fast-deep-equal';
-import InfiniteScroller from '../../components/InfiniteScroller';
-import Pagination from '../../components/Pagination';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
 import AdapterSwitch from './AdapterSwitch';
+import datagridStyles from './datagrid.scss';
 
 type Props = {
     onItemClick?: (itemId: string | number) => void,
@@ -26,14 +25,20 @@ export default class Datagrid extends React.PureComponent<Props> {
 
     componentWillMount() {
         this.validateAdapters();
-        this.props.store.init(this.currentAdapter.getLoadingStrategy());
+        this.props.store.updateStrategies(
+            new this.currentAdapter.LoadingStrategy(),
+            new this.currentAdapter.StructureStrategy()
+        );
     }
 
     componentWillReceiveProps(nextProps: Props) {
         if (!equal(this.props.adapters, nextProps.adapters)) {
             this.validateAdapters();
         }
-        nextProps.store.init(this.currentAdapter.getLoadingStrategy());
+        nextProps.store.updateStrategies(
+            new this.currentAdapter.LoadingStrategy(),
+            new this.currentAdapter.StructureStrategy()
+        );
     }
 
     validateAdapters() {
@@ -73,7 +78,14 @@ export default class Datagrid extends React.PureComponent<Props> {
 
     handleAdapterChange = (adapter: string) => {
         this.setCurrentAdapterKey(adapter);
-        this.props.store.updateLoadingStrategy(this.currentAdapter.getLoadingStrategy());
+        this.props.store.updateStrategies(
+            new this.currentAdapter.LoadingStrategy(),
+            new this.currentAdapter.StructureStrategy()
+        );
+    };
+
+    handleItemActivation = (id: string | number) => {
+        this.props.store.setActive(id);
     };
 
     render() {
@@ -82,35 +94,29 @@ export default class Datagrid extends React.PureComponent<Props> {
             onItemClick,
             adapters,
         } = this.props;
-        const page = store.getPage();
-        const pageCount = store.pageCount;
         const Adapter = this.currentAdapter;
-        const PaginationAdapter = Adapter.getLoadingStrategy() === 'infiniteScroll'
-            ? InfiniteScroller
-            : Pagination;
 
         return (
-            <div>
+            <div className={datagridStyles.datagrid}>
                 <AdapterSwitch
                     adapters={adapters}
                     currentAdapter={this.currentAdapterKey}
                     onAdapterChange={this.handleAdapterChange}
                 />
-                <PaginationAdapter
-                    total={pageCount}
-                    current={page}
-                    loading={this.props.store.loading}
-                    onChange={this.handlePageChange}
-                >
-                    <Adapter
-                        data={store.data}
-                        selections={store.selections}
-                        schema={store.getSchema()}
-                        onItemClick={onItemClick}
-                        onItemSelectionChange={this.handleItemSelectionChange}
-                        onAllSelectionChange={this.handleAllSelectionChange}
-                    />
-                </PaginationAdapter>
+                <Adapter
+                    active={store.active}
+                    data={store.data}
+                    loading={store.loading}
+                    onAllSelectionChange={this.handleAllSelectionChange}
+                    onItemActivation={this.handleItemActivation}
+                    onItemClick={onItemClick}
+                    onItemSelectionChange={this.handleItemSelectionChange}
+                    onPageChange={this.handlePageChange}
+                    page={store.getPage()}
+                    pageCount={store.pageCount}
+                    schema={store.getSchema()}
+                    selections={store.selections}
+                />
             </div>
         );
     }

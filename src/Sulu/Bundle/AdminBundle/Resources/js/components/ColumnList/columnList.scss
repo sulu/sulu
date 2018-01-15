@@ -1,57 +1,9 @@
-@import '../../containers/Application/colors.scss';
-
-$columnWidth: 270px;
-$columnContainerBorderRadius: 3px;
-$columnHeight: 30px;
-
-$columnBackgroundColor: $white;
-$columnBorderColor: $silver;
-
 .column-list-container {
-    overflow: scroll;
     height: 100%;
 }
 
 .column-list {
     align-items: baseline;
     display: inline-flex;
-    height: inherit;
-}
-
-.column {
-    background: $columnBackgroundColor;
-    border-right: 1px solid $columnBorderColor;
-    vertical-align: top;
-    width: $columnWidth;
-    height: calc(100% - $columnHeight);
-    overflow: hidden;
-}
-
-.column-container:first-child {
-    .column {
-        border-radius: $columnContainerBorderRadius 0 0 $columnContainerBorderRadius;
-    }
-
-    &.active {
-        .column {
-            border-radius: 0 0 0 $columnContainerBorderRadius;
-        }
-    }
-}
-
-.column-container:last-child {
-    .column {
-        border-radius: 0 $columnContainerBorderRadius $columnContainerBorderRadius 0;
-        border-right: none;
-    }
-
-    &.active {
-        .column {
-            border-radius: 0 0 $columnContainerBorderRadius 0;
-        }
-    }
-}
-
-.column-container {
     height: inherit;
 }

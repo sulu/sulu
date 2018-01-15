@@ -20,7 +20,9 @@ exports[`Render a simple MediaOverview 1`] = `
         </button>
       </li>
     </ul>
-    <div>
+    <div
+      class="datagrid"
+    >
       <section>
         <ul
           class="folderList"
@@ -119,7 +121,9 @@ exports[`Render a simple MediaOverview 1`] = `
     <div
       class="divider"
     />
-    <div>
+    <div
+      class="datagrid"
+    >
       <ul>
         <li>
           <i>

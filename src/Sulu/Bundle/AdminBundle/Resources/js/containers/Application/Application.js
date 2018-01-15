@@ -12,12 +12,20 @@ import applicationStyles from './application.scss';
 
 const routes = [
     {
+        name: 'Accounts',
+        key: 'sulu_contact.accounts_list',
+    },
+    {
         name: 'Contacts',
         key: 'sulu_contact.contacts_list',
     },
     {
-        name: 'Accounts',
-        key: 'sulu_contact.accounts_list',
+        name: 'Medias',
+        key: 'sulu_media.overview',
+    },
+    {
+        name: 'Pages',
+        key: 'sulu_content.pages',
     },
     {
         name: 'Roles',
@@ -30,10 +38,6 @@ const routes = [
     {
         name: 'Tags',
         key: 'sulu_tag.list',
-    },
-    {
-        name: 'Medias',
-        key: 'sulu_media.overview',
     },
 ];
 

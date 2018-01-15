@@ -1,6 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
-import {observable} from 'mobx';
+import {action, observable} from 'mobx';
 import React from 'react';
 import type {ChildrenArray, Element} from 'react';
 import Column from './Column';
@@ -23,7 +23,7 @@ export default class ColumnList extends React.Component<Props> {
 
     @observable activeColumnIndex: number = 0;
 
-    handleActive = (index?: number) => {
+    @action handleActive = (index?: number) => {
         if (index === undefined) {
             return;
         }

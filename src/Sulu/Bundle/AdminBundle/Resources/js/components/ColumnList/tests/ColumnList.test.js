@@ -69,6 +69,7 @@ test('The ColumnList component should render', () => {
                 <Item id="1-1-1">Item 1</Item>
                 <Item id="1-1-2">Item 1</Item>
             </Column>
+            <Column loading={true} />
         </ColumnList>
     );
     expect(columnList).toMatchSnapshot();

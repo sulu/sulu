@@ -1,5 +1,12 @@
 @import '../../containers/Application/variables.scss';
 
 .list {
+    height: 100%;
     padding: $viewPadding;
+    display: flex;
+    flex-direction: column;
+
+    > :not(h1) {
+        flex-grow: 1;
+    }
 }

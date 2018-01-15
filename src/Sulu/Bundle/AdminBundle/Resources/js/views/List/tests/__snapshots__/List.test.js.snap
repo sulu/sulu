@@ -4,7 +4,9 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
 <div
   class="list"
 >
-  <div>
+  <div
+    class="datagrid"
+  >
     <section>
       <div
         class="tableContainer"
@@ -153,7 +155,9 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
 <div
   class="list"
 >
-  <div>
+  <div
+    class="datagrid"
+  >
     <section>
       <div
         class="tableContainer"
@@ -335,7 +339,9 @@ exports[`Should render the list with a title 1`] = `
   <h1>
     Snippets
   </h1>
-  <div>
+  <div
+    class="datagrid"
+  >
     <section>
       <div
         class="tableContainer"

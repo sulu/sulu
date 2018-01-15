@@ -1,7 +1,18 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
 import TableAdapter from '../../adapters/TableAdapter';
+
+jest.mock('../../../../utils/Translator', () => ({
+    translate: function(key) {
+        switch (key) {
+            case 'sulu_admin.page':
+                return 'Page';
+            case 'sulu_admin.of':
+                return 'of';
+        }
+    },
+}));
 
 test('Render data with schema', () => {
     const data = [
@@ -20,7 +31,17 @@ test('Render data with schema', () => {
         title: {},
         description: {},
     };
-    const tableAdapter = render(<TableAdapter data={data} schema={schema} selections={[]} />);
+    const tableAdapter = render(
+        <TableAdapter
+            data={data}
+            loading={false}
+            page={2}
+            pageCount={5}
+            onPageChange={jest.fn()}
+            schema={schema}
+            selections={[]}
+        />
+    );
 
     expect(tableAdapter).toMatchSnapshot();
 });
@@ -47,7 +68,17 @@ test('Render data with schema and selections', () => {
         title: {},
         description: {},
     };
-    const tableAdapter = render(<TableAdapter data={data} schema={schema} selections={[1, 3]} />);
+    const tableAdapter = render(
+        <TableAdapter
+            data={data}
+            loading={false}
+            onPageChange={jest.fn()}
+            page={1}
+            pageCount={3}
+            schema={schema}
+            selections={[1, 3]}
+        />
+    );
 
     expect(tableAdapter).toMatchSnapshot();
 });
@@ -69,7 +100,17 @@ test('Render data with schema in different order', () => {
         description: {},
         title: {},
     };
-    const tableAdapter = render(<TableAdapter data={data} schema={schema} selections={[]} />);
+    const tableAdapter = render(
+        <TableAdapter
+            data={data}
+            loading={false}
+            onPageChange={jest.fn()}
+            page={2}
+            pageCount={3}
+            schema={schema}
+            selections={[]}
+        />
+    );
 
     expect(tableAdapter).toMatchSnapshot();
 });
@@ -90,7 +131,17 @@ test('Render data with schema not containing all fields', () => {
     const schema = {
         title: {},
     };
-    const tableAdapter = render(<TableAdapter data={data} schema={schema} selections={[]} />);
+    const tableAdapter = render(
+        <TableAdapter
+            data={data}
+            loading={false}
+            onPageChange={jest.fn()}
+            page={1}
+            pageCount={3}
+            schema={schema}
+            selections={[]}
+        />
+    );
 
     expect(tableAdapter).toMatchSnapshot();
 });
@@ -113,7 +164,16 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         title: {},
     };
     const tableAdapter = render(
-        <TableAdapter data={data} schema={schema} onItemClick={rowEditClickSpy} selections={[]} />
+        <TableAdapter
+            data={data}
+            loading={false}
+            onItemClick={rowEditClickSpy}
+            onPageChange={jest.fn()}
+            page={1}
+            pageCount={3}
+            schema={schema}
+            selections={[]}
+        />
     );
 
     expect(tableAdapter).toMatchSnapshot();
@@ -137,7 +197,16 @@ test('Click on pencil should execute onItemEdit callback', () => {
         title: {},
     };
     const tableAdapter = shallow(
-        <TableAdapter data={data} schema={schema} onItemClick={rowEditClickSpy} selections={[]} />
+        <TableAdapter
+            data={data}
+            loading={false}
+            onItemClick={rowEditClickSpy}
+            onPageChange={jest.fn()}
+            page={1}
+            pageCount={3}
+            schema={schema}
+            selections={[]}
+        />
     );
     const buttons = tableAdapter.find('Table').prop('buttons');
     expect(buttons).toHaveLength(1);
@@ -165,7 +234,16 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
         title: {},
     };
     const tableAdapter = shallow(
-        <TableAdapter data={data} schema={schema} onItemSelectionChange={rowSelectionChangeSpy} selections={[]} />
+        <TableAdapter
+            data={data}
+            loading={false}
+            onItemSelectionChange={rowSelectionChangeSpy}
+            onPageChange={jest.fn()}
+            page={1}
+            pageCount={3}
+            schema={schema}
+            selections={[]}
+        />
     );
 
     expect(tableAdapter.find('Table').get(0).props.onRowSelectionChange).toBe(rowSelectionChangeSpy);
@@ -178,8 +256,31 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
         title: {},
     };
     const tableAdapter = shallow(
-        <TableAdapter data={data} schema={schema} onAllSelectionChange={allSelectionChangeSpy} selections={[]} />
+        <TableAdapter
+            data={data}
+            loading={false}
+            onAllSelectionChange={allSelectionChangeSpy}
+            onPageChange={jest.fn()}
+            page={1}
+            pageCount={3}
+            schema={schema}
+            selections={[]}
+        />
     );
 
     expect(tableAdapter.find('Table').get(0).props.onAllSelectionChange).toBe(allSelectionChangeSpy);
+});
+
+test('Pagination should be passed correct props', () => {
+    const pageChangeSpy = jest.fn();
+    const tableAdapter = shallow(
+        <TableAdapter loading={false} onPageChange={pageChangeSpy} page={2} pageCount={7} schema={{}} selections={[]} />
+    );
+    expect(tableAdapter.find('Pagination').get(0).props).toEqual({
+        total: 7,
+        current: 2,
+        loading: false,
+        onChange: pageChangeSpy,
+        children: expect.anything(),
+    });
 });

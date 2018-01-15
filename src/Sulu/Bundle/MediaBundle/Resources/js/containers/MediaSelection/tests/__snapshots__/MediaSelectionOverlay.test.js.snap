@@ -20,7 +20,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                   <button disabled=\\"\\" class=\\"item\\"></button>
                 </li>
               </ul>
-              <div>
+              <div class=\\"datagrid\\">
                 <!-- react-empty: 15 -->
                 <section>
                   <ul class=\\"folderList\\">
@@ -52,7 +52,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                 </section>
               </div>
               <div class=\\"divider\\"></div>
-              <div>
+              <div class=\\"datagrid\\">
                 <!-- react-empty: 48 -->
                 <section>
                   <div>

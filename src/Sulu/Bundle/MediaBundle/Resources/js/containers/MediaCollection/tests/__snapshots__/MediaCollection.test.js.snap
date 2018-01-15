@@ -17,7 +17,9 @@ exports[`Render the MediaCollection 1`] = `
       </button>
     </li>
   </ul>
-  <div>
+  <div
+    class="datagrid"
+  >
     <section>
       <ul
         class="folderList"
@@ -116,7 +118,9 @@ exports[`Render the MediaCollection 1`] = `
   <div
     class="divider"
   />
-  <div>
+  <div
+    class="datagrid"
+  >
     <section>
       <div>
         <div

@@ -12,7 +12,7 @@ import TextArea from './components/TextArea';
 import Application from './containers/Application';
 import {fieldRegistry} from './containers/Form';
 import {viewRegistry} from './containers/ViewRenderer';
-import {datagridAdapterRegistry, TableAdapter, FolderAdapter} from './containers/Datagrid';
+import {datagridAdapterRegistry, ColumnListAdapter, FolderAdapter, TableAdapter} from './containers/Datagrid';
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
 import List from './views/List';
@@ -26,8 +26,10 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 viewRegistry.add('sulu_admin.form', Form);
 viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
 viewRegistry.add('sulu_admin.list', List);
-datagridAdapterRegistry.add('table', TableAdapter);
+
+datagridAdapterRegistry.add('column_list', ColumnListAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
+datagridAdapterRegistry.add('table', TableAdapter);
 
 fieldRegistry.add('text_line', Input);
 fieldRegistry.add('text_area', TextArea);

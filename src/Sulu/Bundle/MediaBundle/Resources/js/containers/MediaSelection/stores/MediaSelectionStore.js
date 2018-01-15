@@ -53,7 +53,8 @@ export default class MediaSelectionStore {
         return ResourceRequester.getList(MEDIA_RESOURCE_KEY, {
             locale: locale.get(),
             ids: selectedMediaIds.join(','),
-            limit: 9999, // TODO: Should be replaced by pagination
+            limit: undefined, // TODO: Should be replaced by pagination
+            page: 1,
         }).then((data) => {
             const {
                 _embedded: {

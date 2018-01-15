@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
+import CroppedText from '../CroppedText';
 import Icon from '../Icon';
 import ItemButton from './ItemButton';
 import type {ItemButtonConfig} from './types';
@@ -9,7 +10,7 @@ import itemStyles from './item.scss';
 type Props = {
     id: string | number,
     children: string,
-    selected: boolean,
+    active: boolean,
     hasChildren: boolean,
     buttons?: Array<ItemButtonConfig>,
     onClick?: (id: string | number) => void,
@@ -17,7 +18,7 @@ type Props = {
 
 export default class Item extends React.Component<Props> {
     static defaultProps = {
-        selected: false,
+        active: false,
         hasChildren: false,
     };
 
@@ -44,12 +45,12 @@ export default class Item extends React.Component<Props> {
     };
 
     render() {
-        const {children, selected, hasChildren} = this.props;
+        const {children, active, hasChildren} = this.props;
 
         const itemClass = classNames(
             itemStyles.item,
             {
-                [itemStyles.selected]: selected,
+                [itemStyles.active]: active,
             }
         );
 
@@ -58,7 +59,9 @@ export default class Item extends React.Component<Props> {
                 <span className={itemStyles.buttons}>
                     {this.createButtons()}
                 </span>
-                <span className={itemStyles.text}>{children}</span>
+                <span className={itemStyles.text}>
+                    <CroppedText>{children}</CroppedText>
+                </span>
                 {hasChildren &&
                     <Icon className={itemStyles.children} name="chevron-right" />
                 }

@@ -68,6 +68,7 @@ exports[`The ColumnList component should render 1`] = `
           ]
         }
         index={0}
+        loading={false}
         onActive={[Function]}
         onItemClick={[Function]}
         toolbarItems={
@@ -233,6 +234,7 @@ exports[`The ColumnList component should render 1`] = `
             className="column"
           >
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -251,7 +253,7 @@ exports[`The ColumnList component should render 1`] = `
               selected={true}
             >
               <div
-                className="item selected"
+                className="item"
                 onClick={[Function]}
               >
                 <span
@@ -307,11 +309,38 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
               </div>
             </Item>
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -327,7 +356,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={true}
               id="2"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -386,7 +414,33 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
                 <Icon
                   className="children"
@@ -400,6 +454,7 @@ exports[`The ColumnList component should render 1`] = `
               </div>
             </Item>
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -415,7 +470,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={false}
               id="3"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -474,7 +528,33 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
               </div>
             </Item>
@@ -496,6 +576,7 @@ exports[`The ColumnList component should render 1`] = `
           ]
         }
         index={1}
+        loading={false}
         onActive={[Function]}
         onItemClick={[Function]}
         toolbarItems={
@@ -661,6 +742,7 @@ exports[`The ColumnList component should render 1`] = `
             className="column"
           >
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -676,7 +758,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={false}
               id="1-1"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -735,11 +816,38 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
               </div>
             </Item>
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -755,7 +863,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={true}
               id="1-2"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -814,7 +921,33 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
                 <Icon
                   className="children"
@@ -845,6 +978,7 @@ exports[`The ColumnList component should render 1`] = `
           ]
         }
         index={2}
+        loading={false}
         onActive={[Function]}
         onItemClick={[Function]}
         toolbarItems={
@@ -1010,6 +1144,7 @@ exports[`The ColumnList component should render 1`] = `
             className="column"
           >
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -1025,7 +1160,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={false}
               id="1-1-1"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -1084,11 +1218,38 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
               </div>
             </Item>
             <Item
+              active={false}
               buttons={
                 Array [
                   Object {
@@ -1104,7 +1265,6 @@ exports[`The ColumnList component should render 1`] = `
               hasChildren={false}
               id="1-1-2"
               onClick={[Function]}
-              selected={false}
             >
               <div
                 className="item"
@@ -1163,10 +1323,239 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
               </div>
             </Item>
+          </div>
+        </div>
+      </Column>
+      <Column
+        active={false}
+        buttons={
+          Array [
+            Object {
+              "icon": "heart",
+              "onClick": [Function],
+            },
+            Object {
+              "icon": "pencil",
+              "onClick": [Function],
+            },
+          ]
+        }
+        index={3}
+        loading={true}
+        onActive={[Function]}
+        onItemClick={[Function]}
+        toolbarItems={
+          Array [
+            Object {
+              "icon": "plus",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "search",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "gear",
+              "index": 0,
+              "options": Array [
+                Object {
+                  "label": "Option1 ",
+                  "onClick": [Function],
+                },
+                Object {
+                  "label": "Option2 ",
+                  "onClick": [Function],
+                },
+              ],
+              "type": "dropdown",
+            },
+          ]
+        }
+      >
+        <div
+          className="columnContainer"
+          onMouseEnter={[Function]}
+        >
+          <Toolbar
+            active={false}
+            columnIndex={3}
+            toolbarItems={
+              Array [
+                Object {
+                  "icon": "plus",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "search",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "gear",
+                  "index": 0,
+                  "options": Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ],
+                  "type": "dropdown",
+                },
+              ]
+            }
+          >
+            <div
+              className="toolbar"
+            >
+              <ToolbarButton
+                columnIndex={3}
+                icon="plus"
+                index={0}
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="plus"
+                  >
+                    <span
+                      aria-label="plus"
+                      className="fa fa-plus"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarButton
+                columnIndex={3}
+                icon="search"
+                index={0}
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="search"
+                  >
+                    <span
+                      aria-label="search"
+                      className="fa fa-search"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarDropdown
+                columnIndex={3}
+                icon="gear"
+                index={0}
+                options={
+                  Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ]
+                }
+                skin="primary"
+                type="dropdown"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="gear"
+                  >
+                    <span
+                      aria-label="gear"
+                      className="fa fa-gear"
+                    />
+                  </Icon>
+                  <Popover
+                    horizontalOffset={0}
+                    onClose={[Function]}
+                    open={false}
+                    verticalOffset={0}
+                  />
+                </div>
+              </ToolbarDropdown>
+            </div>
+          </Toolbar>
+          <div
+            className="column loading"
+          >
+            <Loader
+              size={40}
+            >
+              <div
+                className="spinner"
+                style={
+                  Object {
+                    "height": 40,
+                    "width": 40,
+                  }
+                }
+              >
+                <div
+                  className="doubleBounce1"
+                />
+                <div
+                  className="doubleBounce2"
+                />
+              </div>
+            </Loader>
           </div>
         </div>
       </Column>

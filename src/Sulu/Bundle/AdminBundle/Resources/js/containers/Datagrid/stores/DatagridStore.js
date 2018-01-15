@@ -1,16 +1,15 @@
 // @flow
-import {action, autorun, intercept, observable, computed} from 'mobx';
-import type {IValueWillChange} from 'mobx'; // eslint-disable-line import/named
-import type {ObservableOptions} from '../types';
-import ResourceRequester from '../../../services/ResourceRequester';
+import {action, autorun, observable, computed} from 'mobx';
+import type {LoadingStrategyInterface, ObservableOptions, StructureStrategyInterface} from '../types';
 import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
     @observable pageCount: number = 0;
-    @observable data: Array<Object> = [];
+    @observable active: ?string | number = undefined;
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
-    @observable loadingStrategy: ?string;
+    @observable loadingStrategy: LoadingStrategyInterface;
+    @observable structureStrategy: StructureStrategyInterface;
     disposer: () => void;
     resourceKey: string;
     options: Object;
@@ -29,39 +28,47 @@ export default class DatagridStore {
     }
 
     @computed get initialized(): boolean {
-        return !!this.loadingStrategy;
+        return !!this.loadingStrategy && !!this.structureStrategy;
     }
 
-    @action init = (loadingStrategy: string) => {
+    @computed get data(): Array<*> {
+        return this.structureStrategy.data;
+    }
+
+    @action updateStrategies = (
+        loadingStrategy: LoadingStrategyInterface,
+        structureStrategy: StructureStrategyInterface
+    ) => {
         this.updateLoadingStrategy(loadingStrategy);
+        this.updateStructureStrategy(structureStrategy);
     };
 
-    @action updateLoadingStrategy = (loadingStrategy: string) => {
-        if (this.loadingStrategy === loadingStrategy) {
+    @action updateLoadingStrategy = (loadingStrategy: LoadingStrategyInterface) => {
+        // do not update if the loading strategy was already defined and it tries to use the same one again
+        if (this.loadingStrategy && this.loadingStrategy === loadingStrategy) {
             return;
         }
 
-        this.data = [];
-        this.pageCount = 0;
-        this.setPage(1);
+        if (this.loadingStrategy) {
+            this.loadingStrategy.destroy();
+            loadingStrategy.reset(this);
+        }
+
+        if (this.structureStrategy) {
+            this.structureStrategy.clear();
+        }
+
+        loadingStrategy.initialize(this);
+
         this.loadingStrategy = loadingStrategy;
-
-        if (this.localeInterceptionDisposer) {
-            this.localeInterceptionDisposer();
-        }
-
-        if ('infiniteScroll' === this.loadingStrategy && this.observableOptions.locale) {
-            this.localeInterceptionDisposer = intercept(this.observableOptions.locale, '', this.handleLocaleChanges);
-        }
     };
 
-    handleLocaleChanges = (change: IValueWillChange<number>) => {
-        if (this.observableOptions.locale !== change.newValue) {
-            this.data = [];
-            this.observableOptions.page.set(1);
-
-            return change;
+    @action updateStructureStrategy = (structureStrategy: StructureStrategyInterface) => {
+        if (this.structureStrategy === structureStrategy) {
+            return;
         }
+
+        this.structureStrategy = structureStrategy;
     };
 
     getSchema() {
@@ -70,7 +77,7 @@ export default class DatagridStore {
 
     @action reload() {
         const page = this.getPage();
-        this.data = [];
+        this.structureStrategy.clear();
 
         if (page && page > 1) {
             this.setPage(1);
@@ -85,11 +92,6 @@ export default class DatagridStore {
         }
 
         const page = this.getPage();
-        const loadingStrategy = this.loadingStrategy;
-
-        if (!page) {
-            return;
-        }
 
         const observableOptions = {};
         observableOptions.page = page;
@@ -100,23 +102,27 @@ export default class DatagridStore {
 
         this.setLoading(true);
 
-        ResourceRequester.getList(this.resourceKey, {
-            ...observableOptions,
-            ...this.options,
-        }).then(action((response) => {
-            this.handleResponse(response, loadingStrategy);
+        const data = this.structureStrategy.getData(this.active);
+        if (!data) {
+            throw new Error('The active item does not exist in the Datagrid');
+        }
+
+        const options = {...observableOptions, ...this.options};
+        if (this.active) {
+            options.parent = this.active;
+        }
+
+        this.loadingStrategy.load(
+            data,
+            this.resourceKey,
+            options,
+            this.structureStrategy.enhanceItem
+        ).then(action((response) => {
+            this.handleResponse(response);
         }));
     };
 
-    handleResponse = (response: Object, loadingStrategy: ?string) => {
-        const data = response._embedded[this.resourceKey];
-
-        if ('infiniteScroll' === loadingStrategy) {
-            this.data = [...this.data, ...data];
-        } else {
-            this.data = data;
-        }
-
+    handleResponse = (response: Object) => {
         this.pageCount = response.pages;
         this.setLoading(false);
     };
@@ -136,6 +142,10 @@ export default class DatagridStore {
 
     @action setPage(page: number) {
         this.observableOptions.page.set(page);
+    }
+
+    @action setActive(active: string | number) {
+        this.active = active;
     }
 
     @action select(id: string | number) {

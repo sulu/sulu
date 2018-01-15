@@ -11,10 +11,10 @@ import FolderAdapter from '../adapters/FolderAdapter';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
-    this.init = jest.fn();
+    this.setActive = jest.fn();
+    this.updateStrategies = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
-    this.data = [{title: 'value', id: 1}];
     this.selections = [];
     this.loading = false;
     this.getSchema = jest.fn().mockReturnValue({test: {}});
@@ -23,6 +23,15 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.selectEntirePage = jest.fn();
     this.deselectEntirePage = jest.fn();
     this.updateLoadingStrategy = jest.fn();
+    this.structureStrategy = {
+        data: [
+            {
+                title: 'value',
+                id: 1,
+            },
+        ],
+    };
+    this.data = this.structureStrategy.data;
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
@@ -42,9 +51,25 @@ jest.mock('../../../utils/Translator', () => ({
     },
 }));
 
+class LoadingStrategy {
+    load = jest.fn();
+    destroy = jest.fn();
+    initialize = jest.fn();
+    reset = jest.fn();
+}
+
+class StructureStrategy {
+    data: Array<Object>;
+
+    clear = jest.fn();
+    getData = jest.fn();
+    enhanceItem = jest.fn();
+}
+
 class TestAdapter extends AbstractAdapter {
-    static getLoadingStrategy: () => string = jest.fn().mockReturnValue('pagination');
-    static getStorageStrategy: () => string = jest.fn().mockReturnValue('flat');
+    static LoadingStrategy = LoadingStrategy;
+
+    static StructureStrategy = StructureStrategy;
 
     render() {
         return (
@@ -58,27 +83,11 @@ beforeEach(() => {
     datagridAdapterRegistry.get.mockReturnValue(TestAdapter);
 });
 
-test('Change page in DatagridStore on pagination click', () => {
-    const datagridStore = new DatagridStore('test', {page: observable(1)});
-    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
-    datagrid.find('Pagination').find('.next').simulate('click');
-    expect(datagridStore.setPage).toBeCalledWith(datagridStore.getPage() + 1);
-});
-
-test('Render Pagination with correct values', () => {
-    const datagridStore = new DatagridStore('test', {page: observable(1)});
-
-    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
-    const pagination = datagrid.find('Pagination');
-
-    expect(pagination.prop('current')).toEqual(4);
-    expect(pagination.prop('total')).toEqual(7);
-});
-
 test('Render TableAdapter with correct values', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
 
     const datagridStore = new DatagridStore('test', {page: observable(1)});
+    datagridStore.active = 3;
     datagridStore.selections.push(1);
     datagridStore.selections.push(3);
     const editClickSpy = jest.fn();
@@ -87,6 +96,7 @@ test('Render TableAdapter with correct values', () => {
     const tableAdapter = datagrid.find('TableAdapter');
 
     expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
+    expect(tableAdapter.prop('active')).toEqual(3);
     expect(tableAdapter.prop('selections')).toEqual([1, 3]);
     expect(tableAdapter.prop('schema')).toEqual({test: {}});
     expect(tableAdapter.prop('onItemClick')).toBe(editClickSpy);
@@ -95,11 +105,12 @@ test('Render TableAdapter with correct values', () => {
 test('Selecting and deselecting items should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable(1)});
-    datagridStore.data = [
+    datagridStore.structureStrategy.data.splice(0, datagridStore.structureStrategy.data.length);
+    datagridStore.structureStrategy.data.push(
         {id: 1},
         {id: 2},
-        {id: 3},
-    ];
+        {id: 3}
+    );
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
     const checkboxes = datagrid.find('input[type="checkbox"]');
@@ -117,7 +128,7 @@ test('Selecting and deselecting items should update store', () => {
 test('Selecting and unselecting all items on current page should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable(1)});
-    datagridStore.data = [
+    datagridStore.structureStrategy.data = [
         {id: 1},
         {id: 2},
         {id: 3},
@@ -156,7 +167,7 @@ test('Switching the adapter should render the correct adapter', () => {
 
 test('DatagridStore should be initialized correctly on init and update', () => {
     const datagridStore = new DatagridStore('test', {page: observable(1)});
-    datagridStore.init = jest.fn();
+    datagridStore.updateStrategies = jest.fn();
 
     datagridAdapterRegistry.get.mockImplementation((adapter) => {
         switch (adapter) {
@@ -167,11 +178,50 @@ test('DatagridStore should be initialized correctly on init and update', () => {
         }
     });
     const datagrid = mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
-    expect(datagridStore.init).toBeCalledWith('pagination');
+    expect(datagridStore.updateStrategies)
+        .toBeCalledWith(expect.any(TableAdapter.LoadingStrategy), expect.any(TableAdapter.StructureStrategy));
 
     const newDatagridStore = new DatagridStore('test', {page: observable(1)});
-    newDatagridStore.init = jest.fn();
+    newDatagridStore.updateStrategies = jest.fn();
 
     datagrid.setProps({ store: newDatagridStore });
-    expect(newDatagridStore.init).toBeCalledWith('pagination');
+    expect(newDatagridStore.updateStrategies).toBeCalledWith(
+        expect.any(FolderAdapter.LoadingStrategy),
+        expect.any(TableAdapter.StructureStrategy)
+    );
+});
+
+test('DatagridStore should be updated with current active element', () => {
+    datagridAdapterRegistry.get.mockReturnValue(class TestAdapter extends AbstractAdapter {
+        static LoadingStrategy = class {
+            paginationAdapter = undefined;
+            load = jest.fn();
+            destroy = jest.fn();
+            initialize = jest.fn();
+            reset = jest.fn();
+        };
+
+        static StructureStrategy = class {
+            data = [];
+            clear = jest.fn();
+            getData = jest.fn();
+            enhanceItem = jest.fn();
+        };
+
+        componentWillMount() {
+            const {onItemActivation} = this.props;
+            if (onItemActivation) {
+                onItemActivation('some-uuid');
+            }
+        }
+
+        render() {
+            return null;
+        }
+    });
+    const datagridStore = new DatagridStore('test', {page: observable(1)});
+    expect(datagridStore.active).toBe(undefined);
+    mount(<Datagrid adapters={['test']} store={datagridStore} />);
+
+    expect(datagridStore.setActive).toBeCalledWith('some-uuid');
 });

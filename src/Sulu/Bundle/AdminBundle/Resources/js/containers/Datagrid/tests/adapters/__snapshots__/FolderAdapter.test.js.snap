@@ -1,68 +1,99 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a basic Folder list with data 1`] = `
-<ul
-  class="folderList"
->
-  <li>
-    <div
-      class="folder"
-      role="button"
-      tabindex="0"
-    >
+<section>
+  <ul
+    class="folderList"
+  >
+    <li>
       <div
-        class="iconContainer"
+        class="folder"
+        role="button"
+        tabindex="0"
       >
-        <span
-          aria-label="folder-o"
-          class="fa fa-folder-o"
-        />
-      </div>
-      <div
-        class="description"
-      >
-        <h5
-          class="title"
-        >
-          Title 1
-        </h5>
         <div
-          class="info"
+          class="iconContainer"
         >
-          1 Object
+          <span
+            aria-label="folder-o"
+            class="fa fa-folder-o"
+          />
+        </div>
+        <div
+          class="description"
+        >
+          <h5
+            class="title"
+          >
+            Title 1
+          </h5>
+          <div
+            class="info"
+          >
+            1 Object
+          </div>
         </div>
       </div>
-    </div>
-  </li>
-  <li>
-    <div
-      class="folder"
-      role="button"
-      tabindex="0"
-    >
+    </li>
+    <li>
       <div
-        class="iconContainer"
+        class="folder"
+        role="button"
+        tabindex="0"
       >
-        <span
-          aria-label="folder-o"
-          class="fa fa-folder-o"
-        />
-      </div>
-      <div
-        class="description"
-      >
-        <h5
-          class="title"
-        >
-          Title 2
-        </h5>
         <div
-          class="info"
+          class="iconContainer"
         >
-          0 Objects
+          <span
+            aria-label="folder-o"
+            class="fa fa-folder-o"
+          />
+        </div>
+        <div
+          class="description"
+        >
+          <h5
+            class="title"
+          >
+            Title 2
+          </h5>
+          <div
+            class="info"
+          >
+            0 Objects
+          </div>
         </div>
       </div>
-    </div>
-  </li>
-</ul>
+    </li>
+  </ul>
+  <nav
+    class="pagination"
+  >
+    <div
+      class="loader"
+    />
+    <span
+      class="display"
+    >
+      : 1  2
+    </span>
+    <button
+      class="previous"
+      disabled=""
+    >
+      <span
+        aria-label="angle-left"
+        class="fa fa-angle-left"
+      />
+    </button>
+    <button
+      class="next"
+    >
+      <span
+        aria-label="angle-right"
+        class="fa fa-angle-right"
+      />
+    </button>
+  </nav>
+</section>
 `;
