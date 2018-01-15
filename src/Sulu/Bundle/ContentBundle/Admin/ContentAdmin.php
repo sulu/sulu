@@ -121,7 +121,7 @@ class ContentAdmin extends Admin
         return [
             (new Route('sulu_content.pages', '/pages/:locale', 'sulu_admin.list'))
                 ->addOption('resourceKey', 'nodes')
-                ->addOption('adapters', ['column_list', 'table'])
+                ->addOption('adapters', ['column_list'])
                 ->addOption('locales', ['en'])
                 ->addOption('apiOptions', ['webspace' => 'example'])
                 ->addAttributeDefault('locale', 'en'),
