@@ -6,7 +6,6 @@ import ColumnListAdapter from '../../adapters/ColumnListAdapter';
 test('Render data', () => {
     const data = [
         {
-            id: 1,
             children: [
                 {
                     children: [],
@@ -24,7 +23,6 @@ test('Render data', () => {
             },
         },
         {
-            id: 2,
             children: [
                 {
                     children: [],
@@ -62,7 +60,6 @@ test('Render data', () => {
 test('Render data with loading column', () => {
     const data = [
         {
-            id: 1,
             children: [],
             data: {
                 id: 1,
@@ -71,7 +68,6 @@ test('Render data with loading column', () => {
             },
         },
         {
-            id: 2,
             children: [],
             data: {
                 id: 2,
@@ -102,7 +98,6 @@ test('Execute onItemActivation callback when an item is clicked with the correct
 
     const data = [
         {
-            id: 1,
             children: [
                 {
                     children: [],
@@ -120,7 +115,6 @@ test('Execute onItemActivation callback when an item is clicked with the correct
             },
         },
         {
-            id: 2,
             children: [
                 {
                     children: [],

@@ -28,7 +28,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
     @computed get activeItemPath(): Array<string | number> {
         const {data} = this.props;
-        const tree = ((data: any): Array<TreeItem>);
+        const tree: Array<TreeItem> = data;
 
         const activeItemPath = [];
 

@@ -12,7 +12,7 @@ export type Schema = {
 
 export type DatagridAdapterProps = {
     active?: ?string | number,
-    data: Array<DataItem>,
+    data: Array<*>,
     loading: boolean,
     onAllSelectionChange?: (selected?: boolean) => void,
     onItemClick?: (itemId: string | number) => void,
