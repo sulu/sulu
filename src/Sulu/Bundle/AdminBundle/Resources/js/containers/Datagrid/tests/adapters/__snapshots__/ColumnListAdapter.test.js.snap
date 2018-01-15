@@ -28,7 +28,31 @@ exports[`Render data 1`] = `
             <span
               class="text"
             >
-              Page 1
+              <div
+                aria-label="Page 1"
+                class="croppedText"
+                title="Page 1"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 1
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 1
+                </div>
+              </div>
             </span>
             <span
               aria-label="chevron-right"
@@ -44,7 +68,31 @@ exports[`Render data 1`] = `
             <span
               class="text"
             >
-              Page 2
+              <div
+                aria-label="Page 2"
+                class="croppedText"
+                title="Page 2"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 2
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2
+                </div>
+              </div>
             </span>
           </div>
         </div>
@@ -67,7 +115,31 @@ exports[`Render data 1`] = `
             <span
               class="text"
             >
-              Page 2.1
+              <div
+                aria-label="Page 2.1"
+                class="croppedText"
+                title="Page 2.1"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Page
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                     2.1
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2.1
+                </div>
+              </div>
             </span>
             <span
               aria-label="chevron-right"
@@ -119,7 +191,31 @@ exports[`Render data with loading column 1`] = `
             <span
               class="text"
             >
-              Page 1
+              <div
+                aria-label="Page 1"
+                class="croppedText"
+                title="Page 1"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 1
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 1
+                </div>
+              </div>
             </span>
             <span
               aria-label="chevron-right"
@@ -135,7 +231,31 @@ exports[`Render data with loading column 1`] = `
             <span
               class="text"
             >
-              Page 2
+              <div
+                aria-label="Page 2"
+                class="croppedText"
+                title="Page 2"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 2
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2
+                </div>
+              </div>
             </span>
           </div>
         </div>

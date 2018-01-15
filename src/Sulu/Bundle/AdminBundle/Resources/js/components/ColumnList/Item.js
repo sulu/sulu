@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
+import CroppedText from '../CroppedText';
 import Icon from '../Icon';
 import ItemButton from './ItemButton';
 import type {ItemButtonConfig} from './types';
@@ -58,7 +59,9 @@ export default class Item extends React.Component<Props> {
                 <span className={itemStyles.buttons}>
                     {this.createButtons()}
                 </span>
-                <span className={itemStyles.text}>{children}</span>
+                <span className={itemStyles.text}>
+                    <CroppedText>{children}</CroppedText>
+                </span>
                 {hasChildren &&
                     <Icon className={itemStyles.children} name="chevron-right" />
                 }

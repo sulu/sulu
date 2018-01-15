@@ -309,7 +309,33 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
               </div>
             </Item>
@@ -388,7 +414,33 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
                 <Icon
                   className="children"
@@ -476,7 +528,33 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
               </div>
             </Item>
@@ -738,7 +816,33 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
               </div>
             </Item>
@@ -817,7 +921,33 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
                 <Icon
                   className="children"
@@ -1088,7 +1218,33 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
               </div>
             </Item>
@@ -1167,7 +1323,33 @@ exports[`The ColumnList component should render 1`] = `
                 <span
                   className="text"
                 >
-                  Item 1
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
                 </span>
               </div>
             </Item>
