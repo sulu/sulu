@@ -636,7 +636,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/collections/' . $this->collection1->getId() . '?depth=1',
+            '/api/collections/' . $this->collection1->getId() . '?depth=1&children=true',
             [
                 'locale' => 'en-gb',
             ]
@@ -949,6 +949,73 @@ class CollectionControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(400, $client->getResponse());
+    }
+
+    public function testPutWithChildCollection()
+    {
+        $client = $this->createAuthenticatedClient();
+        $childCollection = $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Child Collection', 'de' => 'Test Kind Kollektion'],
+            $this->collection1,
+            null,
+            5
+        );
+
+        $client->request(
+            'PUT',
+            '/api/collections/' . $childCollection->getId() . '?breadcrumb=true',
+            [
+                'style' => [
+                    'type' => 'circle',
+                    'color' => '#00ccff',
+                ],
+                'type' => $this->collectionType1->getId(),
+                'title' => 'Test Child Collection changed',
+                'description' => 'This Description is only for testing changed',
+                'locale' => 'en-gb',
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($this->collection1->getId(), $response->_embedded->parent->id);
+        $this->assertEquals($this->collection1->getId(), $response->_embedded->breadcrumb[0]->id);
+    }
+
+    public function testPutWithoutBreadcrumb()
+    {
+        $client = $this->createAuthenticatedClient();
+        $childCollection = $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Child Collection', 'de' => 'Test Kind Kollektion'],
+            $this->collection1,
+            null,
+            5
+        );
+
+        $client->request(
+            'PUT',
+            '/api/collections/' . $childCollection->getId(),
+            [
+                'style' => [
+                    'type' => 'circle',
+                    'color' => '#00ccff',
+                ],
+                'type' => $this->collectionType1->getId(),
+                'title' => 'Test Child Collection changed',
+                'description' => 'This Description is only for testing changed',
+                'locale' => 'en-gb',
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertNull($response['_embedded']['breadcrumb']);
     }
 
     /**
@@ -1361,7 +1428,7 @@ class CollectionControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/collections/' . $ids[3] . '?depth=1',
+            '/api/collections/' . $ids[3] . '?depth=1&children=true',
             [
                 'locale' => 'en-gb',
             ]
@@ -1382,7 +1449,7 @@ class CollectionControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/collections/' . $ids[3] . '?depth=2',
+            '/api/collections/' . $ids[3] . '?depth=2&children=true',
             [
                 'locale' => 'en-gb',
             ]

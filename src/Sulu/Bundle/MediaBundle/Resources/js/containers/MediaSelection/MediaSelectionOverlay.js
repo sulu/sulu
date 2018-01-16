@@ -257,6 +257,7 @@ export default class MediaSelectionOverlay extends React.PureComponent<Props> {
                         collectionDatagridStore={this.collectionDatagridStore}
                         collectionStore={this.collectionStore}
                         onCollectionNavigate={this.handleCollectionNavigate}
+                        overlayType="dialog"
                     />
                 </div>
             </Overlay>

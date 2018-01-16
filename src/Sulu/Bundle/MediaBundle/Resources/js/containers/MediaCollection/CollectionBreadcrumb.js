@@ -1,22 +1,51 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
+import {observer} from 'mobx-react';
 import {Breadcrumb} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
-import type {BreadcrumbItems} from '../../stores/CollectionStore';
+import {ResourceStore} from 'sulu-admin-bundle/stores';
+import type {BreadcrumbItem, BreadcrumbItems} from './types';
 
 type Props = {
-    breadcrumb: ?BreadcrumbItems,
+    resourceStore: ResourceStore,
     onNavigate: (collectionId?: string | number) => void,
 };
 
+@observer
 export default class CollectionBreadcrumb extends React.PureComponent<Props> {
+    static getCurrentCollectionItem(data: Object): BreadcrumbItem {
+        return {
+            id: data.id,
+            title: data.title,
+        };
+    }
+
+    @computed get breadcrumb(): ?BreadcrumbItems {
+        const {resourceStore} = this.props;
+        const {data} = resourceStore;
+
+        if (!data._embedded) {
+            return null;
+        }
+
+        const {
+            _embedded: {
+                breadcrumb,
+            },
+        } = data;
+        const currentCollection = CollectionBreadcrumb.getCurrentCollectionItem(data);
+
+        return breadcrumb ? [...breadcrumb, currentCollection] : [currentCollection];
+    }
+
     handleNavigate = (collectionId?: string | number) => {
         this.props.onNavigate(collectionId);
     };
 
     render() {
-        const {breadcrumb} = this.props;
         const Item = Breadcrumb.Item;
+        const breadcrumb = this.breadcrumb;
         const rootItemTitle = translate('sulu_media.all_media');
 
         if (!breadcrumb || !breadcrumb.length) {

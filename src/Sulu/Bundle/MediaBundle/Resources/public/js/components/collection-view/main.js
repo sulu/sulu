@@ -81,7 +81,7 @@ define([
             },
             templates: {
                 skeleton: skeletonTemplate,
-                childrenUrl: '/admin/api/collections<% if (!!collection) { %>/<%= collection %><% } %>?locale=<%= locale %>&sortBy=title<% if (!!collection) { %>&depth=1<% } %>',
+                childrenUrl: '/admin/api/collections<% if (!!collection) { %>/<%= collection %><% } %>?locale=<%= locale %>&sortBy=title<% if (!!collection) { %>&depth=1<% } %>&children=true',
                 mediaUrl: '/admin/api/media?locale=<%= locale %><% if (!!types) { %>&types=<%= types %><%}%><% if (!!collection) { %>&collection=<%= collection %><% } %>',
                 uploadUrl: '/admin/api/media?collection=<%= id %>&locale=<%= locale %>'
             }

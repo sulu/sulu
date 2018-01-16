@@ -15,45 +15,58 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
           <div class=\\"overlay\\">
             <div class=\\"dropzone\\" aria-disabled=\\"false\\">
               <!-- react-empty: 10 -->
-              <ul class=\\"breadcrumb\\">
-                <li>
-                  <button disabled=\\"\\" class=\\"item\\">All Media</button>
-                </li>
-              </ul>
-              <div class=\\"datagrid\\">
-                <!-- react-empty: 15 -->
-                <section>
-                  <ul class=\\"folderList\\">
+              <div>
+                <div class=\\"collectionSection\\">
+                  <ul class=\\"breadcrumb\\">
                     <li>
-                      <div class=\\"folder\\" role=\\"button\\" tabindex=\\"0\\">
-                        <div class=\\"iconContainer\\"><span class=\\"fa fa-folder-o\\" aria-label=\\"folder-o\\"></span></div>
-                        <div class=\\"description\\">
-                          <h5 class=\\"title\\">Title 1</h5>
-                          <div class=\\"info\\">1 Object</div>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <div class=\\"folder\\" role=\\"button\\" tabindex=\\"0\\">
-                        <div class=\\"iconContainer\\"><span class=\\"fa fa-folder-o\\" aria-label=\\"folder-o\\"></span></div>
-                        <div class=\\"description\\">
-                          <h5 class=\\"title\\">Title 2</h5>
-                          <div class=\\"info\\">0 Objects</div>
-                        </div>
-                      </div>
+                      <button disabled=\\"\\" class=\\"item\\">All Media</button>
                     </li>
                   </ul>
-                  <nav class=\\"pagination\\">
-                    <div class=\\"loader\\"></div><span class=\\"display\\"><!-- react-text: 35 -->Page<!-- /react-text --><!-- react-text: 36 -->: <!-- /react-text --><!-- react-text: 37 -->2<!-- /react-text --><!-- react-text: 38 --> <!-- /react-text --><!-- react-text: 39 -->of<!-- /react-text --><!-- react-text: 40 --> <!-- /react-text --><!-- react-text: 41 -->3<!-- /react-text --></span>
-                    <button
-                      class=\\"previous\\"><span class=\\"fa fa-angle-left\\" aria-label=\\"angle-left\\"></span></button>
-                      <button class=\\"next\\"><span class=\\"fa fa-angle-right\\" aria-label=\\"angle-right\\"></span></button>
-                  </nav>
-                </section>
+                  <div><span class=\\"fa fa-plus\\" aria-label=\\"plus\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"fa fa-pencil\\" aria-label=\\"pencil\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"fa fa-trash\\" aria-label=\\"trash\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+                </div>
+                <div class=\\"datagrid\\">
+                  <!-- react-empty: 21 -->
+                  <section>
+                    <ul class=\\"folderList\\">
+                      <li>
+                        <div class=\\"folder\\" role=\\"button\\" tabindex=\\"0\\">
+                          <div class=\\"iconContainer\\"><span class=\\"fa fa-folder-o\\" aria-label=\\"folder-o\\"></span></div>
+                          <div class=\\"description\\">
+                            <h5 class=\\"title\\">Title 1</h5>
+                            <div class=\\"info\\">1 Object</div>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class=\\"folder\\" role=\\"button\\" tabindex=\\"0\\">
+                          <div class=\\"iconContainer\\"><span class=\\"fa fa-folder-o\\" aria-label=\\"folder-o\\"></span></div>
+                          <div class=\\"description\\">
+                            <h5 class=\\"title\\">Title 2</h5>
+                            <div class=\\"info\\">0 Objects</div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                    <nav class=\\"pagination\\">
+                      <div class=\\"loader\\"></div><span class=\\"display\\"><!-- react-text: 41 -->Page<!-- /react-text --><!-- react-text: 42 -->: <!-- /react-text --><!-- react-text: 43 -->2<!-- /react-text --><!-- react-text: 44 --> <!-- /react-text --><!-- react-text: 45 -->of<!-- /react-text --><!-- react-text: 46 --> <!-- /react-text --><!-- react-text: 47 -->3<!-- /react-text --></span>
+                      <button
+                        class=\\"previous\\"><span class=\\"fa fa-angle-left\\" aria-label=\\"angle-left\\"></span></button>
+                        <button class=\\"next\\"><span class=\\"fa fa-angle-right\\" aria-label=\\"angle-right\\"></span></button>
+                    </nav>
+                  </section>
+                </div>
+                <div>
+                  <!-- react-empty: 53 -->
+                  <!-- react-empty: 54 -->
+                </div>
+                <div>
+                  <!-- react-empty: 56 -->
+                  <!-- react-empty: 57 -->
+                </div>
               </div>
               <div class=\\"divider\\"></div>
               <div class=\\"datagrid\\">
-                <!-- react-empty: 48 -->
+                <!-- react-empty: 60 -->
                 <section>
                   <div>
                     <div class=\\"masonry\\" style=\\"position: relative; height: 0px;\\">
@@ -84,7 +97,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                             </div>
                             <div>
                               <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"cloud-download\\"></span></button>
-                              <!-- react-empty: 77 -->
+                              <!-- react-empty: 89 -->
                             </div>
                           </div>
                           <div class=\\"media\\">
@@ -120,7 +133,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                             </div>
                             <div>
                               <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"cloud-download\\"></span></button>
-                              <!-- react-empty: 107 -->
+                              <!-- react-empty: 119 -->
                             </div>
                           </div>
                           <div class=\\"media\\">
@@ -140,9 +153,9 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
         </article>
         <footer>
           <div class=\\"actions\\">
-            <button class=\\"link\\">Reset fields</button>
+            <button class=\\"button link\\"><span class=\\"text\\">Reset fields</span></button>
           </div>
-          <button class=\\"primary\\">Confirm</button>
+          <button class=\\"button primary\\"><span class=\\"text\\">Confirm</span></button>
         </footer>
       </section>
     </div>

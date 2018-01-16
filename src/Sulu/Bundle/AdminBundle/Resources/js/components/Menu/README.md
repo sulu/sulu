@@ -4,11 +4,9 @@ different `Select` component types and as the container for the `Suggestions` of
 Example:
 
 ```
-const Option = require('../Select').default.Option;
-
 <Menu style={{maxWidth: '200px'}}>
-    <Option>Item 1</Option>
-    <Option>Item 2</Option>
-    <Option>Item 3</Option>
+    <Menu.Item>Item 1</Menu.Item>
+    <Menu.Item>Item 2</Menu.Item>
+    <Menu.Item>Item 3</Menu.Item>
 </Menu>
 ```

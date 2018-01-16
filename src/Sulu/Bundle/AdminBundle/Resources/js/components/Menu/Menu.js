@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, ElementRef} from 'react';
+import type {ChildrenArray, Element, ElementRef} from 'react';
 import Divider from './Divider';
 import menuStyles from './menu.scss';
 
 type Props = {
-    children?: ChildrenArray<*>,
+    children?: ChildrenArray<Element<*>>,
     menuRef?: (ref: ElementRef<'ul'>) => void,
     style?: Object,
 };

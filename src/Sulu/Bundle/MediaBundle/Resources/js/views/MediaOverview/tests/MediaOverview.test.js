@@ -6,6 +6,7 @@ import MediaCardOverviewAdapter from '../../../containers/Datagrid/adapters/Medi
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
         withToolbar: jest.fn((Component) => Component),
+        Form: require('sulu-admin-bundle/containers/Form').default,
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey) {
@@ -75,12 +76,20 @@ jest.mock('sulu-admin-bundle/containers', () => {
     };
 });
 
-jest.mock('../../../stores/CollectionStore', () => jest.fn(function() {
-    this.collection = {
-        id: null,
-    };
-    this.parentId = 1;
-    this.destroy = jest.fn();
+jest.mock('sulu-admin-bundle/stores', () => ({
+    ResourceStore: jest.fn(function() {
+        this.destroy = jest.fn();
+        this.loading = false;
+        this.id = 1;
+        this.data = {
+            id: 1,
+            _embedded: {
+                parent: {
+                    id: 1,
+                },
+            },
+        };
+    }),
 }));
 
 jest.mock('sulu-admin-bundle/utils', () => ({
@@ -174,7 +183,7 @@ test('Unbind all query params and destroy all stores on unmount', () => {
     mediaOverview.unmount();
     expect(mediaOverviewInstance.mediaDatagridStore.destroy).toBeCalled();
     expect(mediaOverviewInstance.collectionDatagridStore.destroy).toBeCalled();
-    expect(mediaOverviewInstance.collectionStore.destroy).toBeCalled();
+    expect(mediaOverviewInstance.collectionStore.resourceStore.destroy).toBeCalled();
     expect(router.unbind).toBeCalledWith('collectionPage', page);
     expect(router.unbind).toBeCalledWith('locale', locale);
 });

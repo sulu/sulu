@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {mount} from 'enzyme';
 import React from 'react';
 import Menu from '../Menu.js';

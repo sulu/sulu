@@ -99,6 +99,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $locale = $this->getRequestParameter($request, 'locale', true);
             $depth = intval($request->get('depth', 0));
             $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
+            $children = $this->getBooleanRequestParameter($request, 'children', false, false);
             $collectionManager = $this->getCollectionManager();
 
             // filter children
@@ -117,14 +118,15 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder) {
+                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder, $children) {
                     $collection = $collectionManager->getById(
                         $id,
                         $locale,
                         $depth,
                         $breadcrumb,
                         $filter,
-                        null !== $sortBy ? [$sortBy => $sortOrder] : []
+                        null !== $sortBy ? [$sortBy => $sortOrder] : [],
+                        $children
                     );
 
                     if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collection->getType()->getKey()) {
@@ -351,6 +353,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         $systemCollectionManager = $this->get('sulu_media.system_collections.manager');
         $parent = $request->get('parent');
+        $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
 
         if ((null !== $id && $systemCollectionManager->isSystemCollection(intval($id))) ||
             (null !== $parent && $systemCollectionManager->isSystemCollection(intval($parent)))
@@ -362,8 +365,10 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collectionManager = $this->getCollectionManager();
             $data = $this->getData($request);
             $data['id'] = $id;
+
             $data['locale'] = $this->getRequestParameter($request, 'locale', true);
-            $collection = $collectionManager->save($data, $this->getUser()->getId());
+
+            $collection = $collectionManager->save($data, $this->getUser()->getId(), $breadcrumb);
 
             $view = $this->view($collection, 200);
         } catch (CollectionNotFoundException $e) {

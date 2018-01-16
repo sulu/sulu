@@ -6,11 +6,11 @@ import React from 'react';
 import datagridAdapterRegistry from 'sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import MediaCardSelectionAdapter from '../../Datagrid/adapters/MediaCardSelectionAdapter';
-import CollectionStore from '../../../stores/CollectionStore';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
+        Form: require('sulu-admin-bundle/containers/Form').default,
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey) {
@@ -97,8 +97,15 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
     };
 });
 
-jest.mock('../../../stores/CollectionStore', () => jest.fn(function() {
-    this.destroy = jest.fn();
+jest.mock('sulu-admin-bundle/stores', () => ({
+    ResourceStore: jest.fn(function() {
+        this.destroy = jest.fn();
+        this.loading = false;
+        this.id = 1;
+        this.data = {
+            id: 1,
+        };
+    }),
 }));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -169,9 +176,6 @@ test('Should instantiate the needed stores when the overlay opens', () => {
 
     expect(mediaSelectionOverlayInstance.mediaPage.get()).toBe(1);
     expect(mediaSelectionOverlayInstance.collectionPage.get()).toBe(1);
-
-    expect(CollectionStore.mock.calls[0][0]).toBe(undefined);
-    expect(CollectionStore.mock.calls[0][1]).toBe(locale);
 
     expect(DatagridStore.mock.calls[0][0]).toBe(mediaResourceKey);
     expect(DatagridStore.mock.calls[0][1].locale).toBe(locale);
@@ -350,7 +354,7 @@ test('Should destroy the stores and cleanup all states when the overlay is close
     mediaSelectionOverlayInstance.handleClose();
     expect(mediaSelectionOverlayInstance.collectionId).toBe(undefined);
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([]);
-    expect(mediaSelectionOverlayInstance.collectionStore.destroy).toBeCalled();
+    expect(mediaSelectionOverlayInstance.collectionStore.resourceStore.destroy).toBeCalled();
     expect(mediaSelectionOverlayInstance.mediaDatagridStore.destroy).toBeCalled();
     expect(mediaSelectionOverlayInstance.collectionDatagridStore.destroy).toBeCalled();
 });

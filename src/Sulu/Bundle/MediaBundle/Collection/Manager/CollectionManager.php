@@ -119,21 +119,24 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = [], $sortBy = [])
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = [], $sortBy = [], $children = false)
     {
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
         if (null === $collectionEntity) {
             throw new CollectionNotFoundException($id);
         }
         $filter['locale'] = $locale;
-        $collectionChildren = $this->collectionRepository->findCollectionSet(
-            $depth,
-            $filter,
-            $collectionEntity,
-            $sortBy,
-            $this->getCurrentUser(),
-            $this->permissions[PermissionTypes::VIEW]
-        );
+        $collectionChildren = null;
+        if ($children) {
+            $collectionChildren = $this->collectionRepository->findCollectionSet(
+                $depth,
+                $filter,
+                $collectionEntity,
+                $sortBy,
+                $this->getCurrentUser(),
+                $this->permissions[PermissionTypes::VIEW]
+            );
+        }
 
         $breadcrumbEntities = null;
         if ($breadcrumb) {
@@ -384,26 +387,23 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function save($data, $userId)
+    public function save(array $data, int $userId, bool $breadcrumb = false)
     {
         if (isset($data['id'])) {
-            return $this->modifyCollection($data, $this->getUser($userId));
+            $collection = $this->modifyCollection($data, $this->getUser($userId), $breadcrumb);
         } else {
-            return $this->createCollection($data, $this->getUser($userId));
+            $collection = $this->createCollection($data, $this->getUser($userId), $breadcrumb);
         }
+
+        if ($breadcrumb) {
+            $breadcrumbEntities = $this->collectionRepository->findCollectionBreadcrumbById($collection->getId());
+            $this->setBreadcrumbToCollection($collection, $data['locale'], $breadcrumbEntities);
+        }
+
+        return $collection;
     }
 
-    /**
-     * Modified an exists collection.
-     *
-     * @param $data
-     * @param $user
-     *
-     * @return Collection
-     *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     */
-    private function modifyCollection($data, $user)
+    private function modifyCollection($data, $user, $breadcrumb): Collection
     {
         $collection = $this->getById($data['id'], $data['locale']);
         $data['changer'] = $user;
@@ -421,13 +421,7 @@ class CollectionManager implements CollectionManagerInterface
         return $collection;
     }
 
-    /**
-     * @param $data
-     * @param $user
-     *
-     * @return Collection
-     */
-    private function createCollection($data, $user)
+    private function createCollection($data, $user, $breadcrumb): Collection
     {
         $data['changer'] = $user;
         $data['creator'] = $user;
@@ -461,9 +455,7 @@ class CollectionManager implements CollectionManagerInterface
         // set parent
         if (!empty($data['parent'])) {
             $collectionEntity = $this->collectionRepository->findCollectionById($data['parent']);
-            $collection->setParent($this->getApiEntity($collectionEntity, $data['locale'])); // set parent
-        } else {
-            $collection->setParent(null); // is collection in root
+            $collection->setParent($this->getApiEntity($collectionEntity, $data['locale']));
         }
 
         // set other data
@@ -501,6 +493,22 @@ class CollectionManager implements CollectionManagerInterface
                 }
             }
         }
+
+        return $collection;
+    }
+
+    /**
+     * Sets the given breadcrumb entities as breadcrum on the given collection.
+     *
+     * @return Collection
+     */
+    protected function setBreadcrumbToCollection(Collection $collection, $locale, $breadcrumbEntities)
+    {
+        $breadcrumbApiEntities = [];
+        foreach ($breadcrumbEntities as $entity) {
+            $breadcrumbApiEntities[] = $this->getApiEntity($entity, $locale);
+        }
+        $collection->setBreadcrumb($breadcrumbApiEntities);
 
         return $collection;
     }
@@ -691,11 +699,7 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         if (null !== $breadcrumbEntities) {
-            $breadcrumbApiEntities = [];
-            foreach ($breadcrumbEntities as $entity) {
-                $breadcrumbApiEntities[] = $this->getApiEntity($entity, $locale);
-            }
-            $apiEntity->setBreadcrumb($breadcrumbApiEntities);
+            $this->setBreadcrumbToCollection($apiEntity, $locale, $breadcrumbEntities);
         }
 
         if ($entity && $entity->getId()) {

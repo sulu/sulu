@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
+import type {Node} from 'react';
 import Portal from 'react-portal';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
@@ -12,9 +13,10 @@ import dialogStyles from './dialog.scss';
 type Props = {
     open: boolean,
     title: string,
-    children: string,
+    children: Node,
     cancelText: string,
     confirmText: string,
+    confirmLoading: boolean,
     onConfirm: () => void,
     onCancel: () => void,
 };
@@ -23,6 +25,7 @@ type Props = {
 export default class Dialog extends React.PureComponent<Props> {
     static defaultProps = {
         open: false,
+        confirmLoading: false,
     };
 
     @observable visible: boolean = false;
@@ -71,6 +74,7 @@ export default class Dialog extends React.PureComponent<Props> {
             onConfirm,
             cancelText,
             confirmText,
+            confirmLoading,
         } = this.props;
         const containerClass = classNames(
             dialogStyles.dialogContainer,
@@ -99,7 +103,7 @@ export default class Dialog extends React.PureComponent<Props> {
                                     <Button skin="secondary" onClick={onCancel}>
                                         {cancelText}
                                     </Button>
-                                    <Button skin="primary" onClick={onConfirm}>
+                                    <Button skin="primary" onClick={onConfirm} loading={confirmLoading}>
                                         {confirmText}
                                     </Button>
                                 </footer>

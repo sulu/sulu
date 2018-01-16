@@ -19,6 +19,7 @@ type Props = {
     children: Node,
     actions: Array<Action>,
     confirmText: string,
+    confirmLoading: boolean,
     onConfirm: () => void,
     open: boolean,
     onClose: () => void,
@@ -31,6 +32,7 @@ export default class Overlay extends React.PureComponent<Props> {
     static defaultProps = {
         open: false,
         actions: [],
+        confirmLoading: false,
     };
 
     @observable visible: boolean = false;
@@ -88,6 +90,7 @@ export default class Overlay extends React.PureComponent<Props> {
             children,
             onConfirm,
             confirmText,
+            confirmLoading,
         } = this.props;
         const containerClass = classNames(
             overlayStyles.container,
@@ -117,7 +120,7 @@ export default class Overlay extends React.PureComponent<Props> {
                                 <article>{children}</article>
                                 <footer>
                                     <Actions actions={actions} />
-                                    <Button skin="primary" onClick={onConfirm}>
+                                    <Button skin="primary" onClick={onConfirm} loading={confirmLoading}>
                                         {confirmText}
                                     </Button>
                                 </footer>

@@ -10,5 +10,9 @@
     "sulu_media.media_selected_singular": "Medien Element ausgewählt",
     "sulu_media.media_selected_plural": "Medien Elemente ausgewählt",
     "sulu_media.drop_files_to_upload": "Files hierher ziehen um hochzuladen",
-    "sulu_media.click_here_to_upload": "oder klicken um hinzuzufügen"
+    "sulu_media.click_here_to_upload": "oder klicken um hinzuzufügen",
+    "sulu_media.add_collection": "Ordner hinzufügen",
+    "sulu_media.remove_collection": "Ordner löschen",
+    "sulu_media.remove_collection_warning": "Diese Operation löscht Daten und kann nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?",
+    "sulu_media.edit_collection": "Ordner bearbeiten"
 }

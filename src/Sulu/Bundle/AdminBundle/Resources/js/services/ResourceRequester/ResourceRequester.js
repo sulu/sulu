@@ -27,6 +27,11 @@ export default class ResourceRequester {
         return Requester.get(baseUrl + '/' + id + ResourceRequester.buildQueryString(queryOptions));
     }
 
+    static post(resourceKey: string, data: Object, queryOptions: ?Object) {
+        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
+        return Requester.post(baseUrl + ResourceRequester.buildQueryString(queryOptions), data);
+    }
+
     static put(resourceKey: string, id: number | string, data: Object, queryOptions: ?Object) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
         return Requester.put(baseUrl + '/' + id + ResourceRequester.buildQueryString(queryOptions), data);

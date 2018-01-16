@@ -4,6 +4,7 @@ import Breadcrumb from './Breadcrumb';
 import Checkbox from './Checkbox';
 import CircularProgressbar from './CircularProgressbar';
 import CroppedText from './CroppedText';
+import Dialog from './Dialog';
 import Divider from './Divider';
 import Icon from './Icon';
 import InfiniteScroller from './InfiniteScroller';
@@ -21,6 +22,7 @@ export {
     Checkbox,
     CircularProgressbar,
     CroppedText,
+    Dialog,
     Divider,
     Icon,
     InfiniteScroller,
