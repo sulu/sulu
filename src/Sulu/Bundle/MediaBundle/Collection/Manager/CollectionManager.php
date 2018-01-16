@@ -127,7 +127,7 @@ class CollectionManager implements CollectionManagerInterface
         }
         $filter['locale'] = $locale;
         $collectionChildren = null;
-        if ($children) { // TODO remove this flag before the 2.0 release (is only necessary because of the old UI)
+        if ($children) {
             $collectionChildren = $this->collectionRepository->findCollectionSet(
                 $depth,
                 $filter,
