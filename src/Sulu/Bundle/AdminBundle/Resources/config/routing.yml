@@ -13,6 +13,11 @@ sulu_admin_v2.translation:
     defaults:
         _controller: sulu_admin.admin_controller:translationsAction
 
+sulu_admin_v2.resources:
+    path: /resources/{resource}
+    defaults:
+        _controller: sulu_admin.admin_controller:resourcesAction
+
 sulu_admin:
     path:  /
     defaults:
