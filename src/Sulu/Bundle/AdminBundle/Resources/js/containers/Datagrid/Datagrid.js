@@ -25,10 +25,6 @@ export default class Datagrid extends React.PureComponent<Props> {
 
     componentWillMount() {
         this.validateAdapters();
-        this.props.store.updateStrategies(
-            new this.currentAdapter.LoadingStrategy(),
-            new this.currentAdapter.StructureStrategy()
-        );
     }
 
     componentWillReceiveProps(nextProps: Props) {
@@ -36,8 +32,7 @@ export default class Datagrid extends React.PureComponent<Props> {
             this.validateAdapters();
         }
 
-        if (!nextProps.store.loadingStrategy && !nextProps.store.structureStrategy) {
-            // this is only required initially, because there might be no adapter selected in the beginning
+        if (this.props.store !== nextProps.store) {
             nextProps.store.updateStrategies(
                 new this.currentAdapter.LoadingStrategy(),
                 new this.currentAdapter.StructureStrategy()
@@ -64,6 +59,10 @@ export default class Datagrid extends React.PureComponent<Props> {
 
     @action setCurrentAdapterKey = (adapter: string) => {
         this.currentAdapterKey = adapter;
+        this.props.store.updateStrategies(
+            new this.currentAdapter.LoadingStrategy(),
+            new this.currentAdapter.StructureStrategy()
+        );
     };
 
     handlePageChange = (page: number) => {
@@ -82,10 +81,6 @@ export default class Datagrid extends React.PureComponent<Props> {
 
     handleAdapterChange = (adapter: string) => {
         this.setCurrentAdapterKey(adapter);
-        this.props.store.updateStrategies(
-            new this.currentAdapter.LoadingStrategy(),
-            new this.currentAdapter.StructureStrategy()
-        );
     };
 
     handleItemActivation = (id: string | number) => {
