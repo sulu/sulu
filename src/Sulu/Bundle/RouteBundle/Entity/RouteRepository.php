@@ -74,4 +74,23 @@ class RouteRepository extends EntityRepository implements RouteRepositoryInterfa
 
         return $query->getResult();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findAllByEntity($entityClass, $entityId, $locale = null)
+    {
+        $queryBuilder = $this->createQueryBuilder('entity')
+            ->andWhere('entity.entityClass = :entityClass')
+            ->andWhere('entity.entityId = :entityId')
+            ->setParameters(['entityClass' => $entityClass, 'entityId' => $entityId]);
+
+        if ($locale) {
+            $queryBuilder
+                ->andWhere('entity.locale = :locale')
+                ->setParameter('locale', $locale);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
