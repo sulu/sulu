@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
-import type {SchemaEntry} from '../../stores/ResourceStore/types';
 import fieldRegistry from './registries/FieldRegistry';
 import fieldStyles from './field.scss';
+import type {SchemaEntry} from './types';
 
 type Props = {
     name: string,

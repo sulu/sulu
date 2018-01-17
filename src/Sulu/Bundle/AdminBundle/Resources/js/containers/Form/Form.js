@@ -3,24 +3,17 @@ import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
 import Loader from '../../components/Loader';
-import ResourceStore from '../../stores/ResourceStore';
 import Renderer from './Renderer';
-import metadataStore from './stores/MetadataStore';
+import FormStore from './stores/FormStore';
 
 type Props = {
-    store: ResourceStore,
+    store: FormStore,
     onSubmit: () => void,
 };
 
 @observer
 export default class Form extends React.PureComponent<Props> {
     renderer: ?ElementRef<typeof Renderer>;
-
-    componentWillMount() {
-        const {store} = this.props;
-        const schema = metadataStore.getSchema(store.resourceKey);
-        store.changeSchema(schema);
-    }
 
     /** @public */
     submit = () => {
@@ -45,7 +38,6 @@ export default class Form extends React.PureComponent<Props> {
 
     render() {
         const {store} = this.props;
-        const schema = metadataStore.getSchema(store.resourceKey);
 
         return store.loading
             ? <Loader />
@@ -53,7 +45,7 @@ export default class Form extends React.PureComponent<Props> {
                 ref={this.setRenderer}
                 onSubmit={this.handleSubmit}
                 onChange={this.handleChange}
-                schema={schema}
+                schema={store.schema}
                 data={store.data}
                 locale={store.locale}
             />;

@@ -12,6 +12,7 @@ jest.mock('../stores/MediaSelectionStore', () => jest.fn());
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
         Form: require('sulu-admin-bundle/containers/Form').default,
+        FormStore: jest.fn(),
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey) {

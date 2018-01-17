@@ -1,17 +1,19 @@
 // @flow
 import {action, autorun, observable, computed} from 'mobx';
-import type {LoadingStrategyInterface, ObservableOptions, StructureStrategyInterface} from '../types';
+import type {LoadingStrategyInterface, ObservableOptions, Schema, StructureStrategyInterface} from '../types';
 import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
     @observable pageCount: number = 0;
     @observable active: ?string | number = undefined;
     @observable selections: Array<string | number> = [];
-    @observable loading: boolean = true;
+    @observable dataLoading: boolean = true;
+    @observable schemaLoading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
     disposer: () => void;
     resourceKey: string;
+    schema: Schema = {};
     options: Object;
     observableOptions: ObservableOptions;
     localeInterceptionDisposer: () => void;
@@ -25,10 +27,20 @@ export default class DatagridStore {
         this.observableOptions = observableOptions;
         this.options = options;
         this.disposer = autorun(this.sendRequest);
+
+        metadataStore.getSchema(this.resourceKey)
+            .then(action((schema) => {
+                this.schema = schema;
+                this.schemaLoading = false;
+            }));
     }
 
     @computed get initialized(): boolean {
         return !!this.loadingStrategy && !!this.structureStrategy;
+    }
+
+    @computed get loading(): boolean {
+        return this.dataLoading || this.schemaLoading;
     }
 
     @computed get data(): Array<*> {
@@ -71,10 +83,6 @@ export default class DatagridStore {
         this.structureStrategy = structureStrategy;
     };
 
-    getSchema() {
-        return metadataStore.getSchema(this.resourceKey);
-    }
-
     @action reload() {
         const page = this.getPage();
         this.structureStrategy.clear();
@@ -100,7 +108,7 @@ export default class DatagridStore {
             observableOptions.locale = this.observableOptions.locale.get();
         }
 
-        this.setLoading(true);
+        this.setDataLoading(true);
 
         const data = this.structureStrategy.getData(this.active);
         if (!data) {
@@ -124,11 +132,11 @@ export default class DatagridStore {
 
     handleResponse = (response: Object) => {
         this.pageCount = response.pages;
-        this.setLoading(false);
+        this.setDataLoading(false);
     };
 
-    @action setLoading(loading: boolean) {
-        this.loading = loading;
+    @action setDataLoading(dataLoading: boolean) {
+        this.dataLoading = dataLoading;
     }
 
     getPage(): ?number {

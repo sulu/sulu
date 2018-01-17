@@ -343,6 +343,16 @@ EOL
         "id": {},
         "title": {},
         "objectCount": {}
+    },
+    "form": {
+        "title": {
+            "label": "Title",
+            "type": "text_line"
+        },
+        "description": {
+            "label": "Description",
+            "type": "text_area"
+        }
     }
 }
 EOL

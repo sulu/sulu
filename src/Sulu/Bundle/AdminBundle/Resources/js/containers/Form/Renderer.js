@@ -3,11 +3,11 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
-import type {Schema, SchemaEntry} from '../../stores/ResourceStore/types';
 import Divider from '../../components/Divider';
 import Grid from '../../components/Grid';
 import Field from './Field';
 import rendererStyles from './renderer.scss';
+import type {Schema, SchemaEntry} from './types';
 
 type Props = {
     data: Object,

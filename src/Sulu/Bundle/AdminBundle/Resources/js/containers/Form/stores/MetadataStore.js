@@ -1,15 +1,17 @@
 // @flow
 import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
-import type {Schema} from '../../../stores/ResourceStore/types';
+import type {Schema} from '../types';
 
 class MetadataStore {
-    getSchema(resourceKey: string): Schema {
-        const metadata = resourceMetadataStore.loadConfiguration(resourceKey);
-        if (!('form' in metadata)) {
-            throw new Error('There are no form metadata for the resourceKey "' + resourceKey + '"');
-        }
+    getSchema(resourceKey: string): Promise<Schema> {
+        return resourceMetadataStore.loadConfiguration(resourceKey)
+            .then((configuration) => {
+                if (!('form' in configuration)) {
+                    throw new Error('There are no form configurations for the resourceKey "' + resourceKey + '"');
+                }
 
-        return metadata.form;
+                return configuration.form;
+            });
     }
 }
 

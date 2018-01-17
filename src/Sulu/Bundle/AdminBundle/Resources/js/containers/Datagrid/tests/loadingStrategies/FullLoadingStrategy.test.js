@@ -13,6 +13,10 @@ jest.mock('../../../../services/ResourceRequester', () => ({
     })),
 }));
 
+jest.mock('../../../Datagrid/stores/MetadataStore', () => ({
+    getSchema: jest.fn().mockReturnValue(Promise.resolve()),
+}));
+
 function StructureStrategy() {
     this.data = [];
     this.getData = jest.fn().mockReturnValue(this.data);

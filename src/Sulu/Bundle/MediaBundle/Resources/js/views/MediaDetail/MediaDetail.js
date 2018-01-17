@@ -3,7 +3,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import {computed} from 'mobx';
 import {translate} from 'sulu-admin-bundle/utils';
-import {Form, withToolbar} from 'sulu-admin-bundle/containers';
+import {Form, FormStore, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import MediaUploadStore from '../../stores/MediaUploadStore';
@@ -21,6 +21,7 @@ type Props = ViewProps & {
 class MediaDetail extends React.PureComponent<Props> {
     mediaUploadStore: MediaUploadStore;
     form: ?Form;
+    formStore: FormStore;
 
     componentWillMount() {
         const {
@@ -28,6 +29,7 @@ class MediaDetail extends React.PureComponent<Props> {
             resourceStore,
         } = this.props;
 
+        this.formStore = new FormStore(resourceStore);
         const locale = resourceStore.locale;
 
         if (!locale) {
@@ -91,7 +93,6 @@ class MediaDetail extends React.PureComponent<Props> {
     };
 
     render() {
-        const {resourceStore} = this.props;
         const {
             progress,
             uploading,
@@ -112,7 +113,7 @@ class MediaDetail extends React.PureComponent<Props> {
                 <section className={mediaDetailStyles.formContainer}>
                     <Form
                         ref={this.setFormRef}
-                        store={resourceStore}
+                        store={this.formStore}
                         onSubmit={this.handleSubmit}
                     />
                 </section>
