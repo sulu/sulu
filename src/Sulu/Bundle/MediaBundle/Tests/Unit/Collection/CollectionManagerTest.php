@@ -166,4 +166,27 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $result[0]->getChildren());
         $this->assertCount(0, $result[1]->getChildren());
     }
+
+    /**
+     * This is e.g. needed for createing SystemCollections during installation.
+     */
+    public function testSaveWithoutUserId()
+    {
+        $collectionEntity = $this->createEntity(1, 'de');
+        $this->collectionRepository->findCollectionById(1)->willReturn($collectionEntity);
+        $this->collectionRepository->countMedia($collectionEntity)->willReturn(0);
+        $this->collectionRepository->countSubCollections($collectionEntity)->willReturn(0);
+        $this->mediaRepository->findMedia(Argument::cetera())->willReturn([]);
+
+        $this->collectionManager->save(
+            [
+                'id' => 1,
+                'locale' => 'de',
+            ],
+            null
+        );
+
+        $this->entityManager->persist($collectionEntity)->shouldBeCalled();
+        $this->entityManager->flush()->shouldBeCalled();
+    }
 }
