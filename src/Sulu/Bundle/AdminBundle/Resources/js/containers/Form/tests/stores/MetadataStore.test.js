@@ -53,6 +53,87 @@ test('Return form fields for given resourceKey from ResourceMetadataStore', () =
     });
 });
 
+test('Return form fields for given resourceKey and type', () => {
+    const snippetSidebarFormMetadata = {
+        title: {},
+    };
+    const snippetFooterFormMetadata = {
+        title: {},
+        description: {},
+    };
+
+    const snippetMetadata = {
+        types: {
+            sidebar: {
+                title: 'Sidebar',
+                form: snippetSidebarFormMetadata,
+            },
+            footer: {
+                title: 'Footer',
+                form: snippetFooterFormMetadata,
+            },
+        },
+    };
+
+    const snippetPromise = Promise.resolve(snippetMetadata);
+    resourceMetadataStore.loadConfiguration.mockReturnValue(snippetPromise);
+
+    const snippetSidebarFieldPromise = metadataStore.getSchema('snippets', 'sidebar');
+    const snippetFooterFieldPromise = metadataStore.getSchema('snippets', 'footer');
+
+    return Promise.all([
+        snippetSidebarFieldPromise,
+        snippetFooterFieldPromise,
+    ]).then(([snippetSidebarFields, snippetFooterFields]) => {
+        expect(snippetSidebarFields).toBe(snippetSidebarFormMetadata);
+        expect(snippetFooterFields).toBe(snippetFooterFormMetadata);
+    });
+});
+
+test('Throw if a type is requested, but the given resourceKey does not have type support', (done) => {
+    const snippetMetadata = {
+        form: {
+            title: {},
+            description: {},
+        },
+    };
+
+    const snippetPromise = Promise.resolve(snippetMetadata);
+    resourceMetadataStore.loadConfiguration.mockReturnValue(snippetPromise);
+
+    const snippetFieldsPromise = metadataStore.getSchema('snippets', 'sidebar');
+
+    return snippetFieldsPromise.catch((error) => {
+        expect(error.toString()).toEqual(expect.stringContaining('does not support types'));
+        expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
+        done();
+    });
+});
+
+test('Throw if a type is omitted, but the given reosurceKey has type support', (done) => {
+    const snippetMetadata = {
+        types: {
+            sidebar: {
+                form: {
+                    title: {},
+                    description: {},
+                },
+            },
+        },
+    };
+
+    const snippetPromise = Promise.resolve(snippetMetadata);
+    resourceMetadataStore.loadConfiguration.mockReturnValue(snippetPromise);
+
+    const snippetFieldsPromise = metadataStore.getSchema('snippets');
+
+    return snippetFieldsPromise.catch((error) => {
+        expect(error.toString()).toEqual(expect.stringContaining('requires a type'));
+        expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
+        done();
+    });
+});
+
 test('Throw exception if no form fields for given resourceKey are available', () => {
     const contactMetadata = {};
     const contactPromise = Promise.resolve(contactMetadata);
