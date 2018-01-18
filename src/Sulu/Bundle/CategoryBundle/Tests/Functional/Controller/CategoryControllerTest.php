@@ -530,6 +530,65 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertTrue($categories[0]->hasChildren);
     }
 
+    public function testCGetFlatWithRootAndSearch()
+    {
+        // search for existing third category
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey() .
+            '&searchFields=name&search=' . $this->category3->findTranslationByLocale('en')->getTranslation()
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $categories = $response->_embedded->categories;
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals($this->category3->getId(), $categories[0]->id);
+        $this->assertTrue($categories[0]->hasChildren);
+
+        // search for the root category => should be excluded also!
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey() .
+            '&searchFields=name&search=' . $this->category1->findTranslationByLocale('en')->getTranslation()
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $categories = $response->_embedded->categories;
+
+        $this->assertEquals(0, count($categories));
+
+        // search for not existing category
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey() .
+            '&searchFields=name&search=XXX'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $categories = $response->_embedded->categories;
+
+        $this->assertEquals(0, count($categories));
+    }
+
     public function testCGetFlatWithRootAndExpandIds()
     {
         $client = $this->createAuthenticatedClient();

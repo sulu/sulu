@@ -4,6 +4,8 @@ CHANGELOG for Sulu
 * dev-master
     * ENHANCEMENT #3715 [RouteBundle]             RouteRepository: Added method 'findAllByEntity'
     * HOTFIX      #3713 [WebsiteBundle]           Fixed redirect listener to allow trailing slashes for homepage
+    * HOTFIX      #3709 [CategoryBundle]          Category API: Fix bug when searching with rootKey parameter
+    * BUGFIX      #3693 [MediaBundle]             Fix retina flag in XmlFormatLoader11 & add tests for retina flag
 
 * 1.6.12 (2017-12-21)
     * ENHANCEMENT #3698 [ContentBundle]           SEO description length changed from 155 to 320
@@ -149,6 +151,10 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.9 (2018-01-18)
+    * HOTFIX      #3709 [CategoryBundle]        Category API: Fix bug when searching with rootKey parameter
+    * BUGFIX      #3693 [MediaBundle]           Fix retina flag in XmlFormatLoader11 & add tests for retina flag
 
 * 1.5.8 (2017-12-13)
     * HOTFIX      #3690 [ContentBundle]         Fix saving of not yet started text editor

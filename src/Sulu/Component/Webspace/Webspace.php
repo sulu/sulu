@@ -59,7 +59,7 @@ class Webspace implements ArrayableInterface
      *
      * @var Segment[]
      */
-    private $segments;
+    private $segments = [];
 
     /**
      * The default segment defined for this webspace.

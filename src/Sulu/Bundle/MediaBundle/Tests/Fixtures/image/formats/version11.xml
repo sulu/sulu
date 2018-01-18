@@ -34,4 +34,8 @@
     <format key="200x180-inset">
         <scale x="200" y="180"/>
     </format>
+
+    <format key="3840x2160-retina">
+        <scale x="3840" y="2160" retina="true"/>
+    </format>
 </formats>

@@ -51,7 +51,7 @@ abstract class ApiEntity
      *
      * @var string
      */
-    private $_links;
+    private $_links = [];
 
     /**
      * returns the id of an entity.

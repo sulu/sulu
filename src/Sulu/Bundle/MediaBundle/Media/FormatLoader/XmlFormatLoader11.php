@@ -85,7 +85,7 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
                 $forceRatio = false;
             }
             if (null !== $retinaNode && 'true' === $retinaNode->nodeValue) {
-                $retina = false;
+                $retina = true;
             }
 
             $scale = [

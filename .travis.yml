@@ -22,9 +22,6 @@ matrix:
     - php: 7.1
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction
-    - php: 7.0
-      env:
-        - COMPOSER_FLAGS="--prefer-dist --no-interaction
         - SYMFONY__DATABASE__DRIVER=pdo_pgsql
         - SYMFONY__DATABASE__USER=postgres
         - SYMFONY__DATABASE__PASSWORD=postgres
