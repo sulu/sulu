@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.13 (2017-01-18)
     * ENHANCEMENT #3715 [RouteBundle]             RouteRepository: Added method 'findAllByEntity'
     * HOTFIX      #3713 [WebsiteBundle]           Fixed redirect listener to allow trailing slashes for homepage
     * HOTFIX      #3709 [CategoryBundle]          Category API: Fix bug when searching with rootKey parameter
