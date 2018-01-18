@@ -5,21 +5,21 @@ import ResourceStore from '../../../stores/ResourceStore';
 import type {Schema} from '../types';
 import metadataStore from './MetadataStore';
 
-function addObjectProperty(schema: Schema, key, object) {
+function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
 
     if (type !== 'section') {
-        object[key] = null;
+        data[key] = null;
     }
 
     const items = schema[key].items;
 
     if (type === 'section' && items) {
         Object.keys(items)
-            .reduce((object, childKey) => addObjectProperty(items, childKey, object), object);
+            .reduce((object, childKey) => addSchemaProperties(data, childKey, items), data);
     }
 
-    return object;
+    return data;
 }
 
 export default class FormStore {
@@ -59,7 +59,7 @@ export default class FormStore {
 
     changeSchema(schema: Schema) {
         this.schema = schema;
-        const schemaFields = Object.keys(schema).reduce((object, key) => addObjectProperty(schema, key, object), {});
+        const schemaFields = Object.keys(schema).reduce((data, key) => addSchemaProperties(data, key, schema), {});
 
         this.resourceStore.data = {...schemaFields, ...this.resourceStore.data};
     }
