@@ -144,6 +144,7 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->collectionRepository->findTree(5, 'de')->willReturn($entities);
+        $this->mediaRepository->findMedia(Argument::cetera())->willReturn([]);
 
         $result = $this->collectionManager->getTreeById(5, 'de');
 

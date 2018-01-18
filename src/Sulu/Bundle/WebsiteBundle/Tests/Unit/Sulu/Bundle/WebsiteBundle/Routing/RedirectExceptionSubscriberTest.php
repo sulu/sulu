@@ -119,6 +119,54 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
     }
 
+    public function testRedirectSlashToHomepage()
+    {
+        $this->attributes->getAttribute('resourceLocator', null)->willReturn('/');
+        $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn(null);
+
+        $this->request->getPathInfo()->willReturn('//');
+        $this->request->getRequestFormat()->willReturn('html');
+
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
+            $this->prophesize(Route::class)->reveal()
+        );
+
+        $this->event->setResponse(
+            Argument::that(
+                function (RedirectResponse $response) {
+                    return '/' === $response->getTargetUrl();
+                }
+            )
+        )->shouldBeCalled();
+
+        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
+    }
+
+    public function testRedirectDoubleSlashToHomepage()
+    {
+        $this->attributes->getAttribute('resourceLocator', null)->willReturn('//');
+        $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn(null);
+
+        $this->request->getPathInfo()->willReturn('///');
+        $this->request->getRequestFormat()->willReturn('html');
+
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
+            $this->prophesize(Route::class)->reveal()
+        );
+
+        $this->event->setResponse(
+            Argument::that(
+                function (RedirectResponse $response) {
+                    echo '"' . $response->getTargetUrl() . '"';
+
+                    return '/' === $response->getTargetUrl();
+                }
+            )
+        )->shouldBeCalled();
+
+        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
+    }
+
     public function testRedirectTrailingHtml()
     {
         $this->attributes->getAttribute('resourceLocator', null)->willReturn('/test');
