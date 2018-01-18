@@ -103,7 +103,7 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
         $prefix = $attributes->getAttribute('resourceLocatorPrefix');
         $resourceLocator = $attributes->getAttribute('resourceLocator');
 
-        $route = rtrim($prefix . $resourceLocator, '/');
+        $route = '/' . trim($prefix . $resourceLocator, '/');
         if (!in_array($request->getRequestFormat(), ['htm', 'html'])
             || $route === $request->getPathInfo()
             || !$this->matchRoute($request->getSchemeAndHttpHost() . $route)

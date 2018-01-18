@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * ENHANCEMENT #3715 [RouteBundle]             RouteRepository: Added method 'findAllByEntity'
+    * HOTFIX      #3713 [WebsiteBundle]           Fixed redirect listener to allow trailing slashes for homepage
 
 * 1.6.12 (2017-12-21)
     * ENHANCEMENT #3698 [ContentBundle]           SEO description length changed from 155 to 320
