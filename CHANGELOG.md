@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * ENHANCEMENT #XXXX [ContentBundle]           ResourceLocator: Show whole url in history overlay
+    * ENHANCEMENT #3717 [ContentBundle]           ResourceLocator: Show whole url in history overlay
 
 * 1.6.13 (2017-01-18)
     * ENHANCEMENT #3715 [RouteBundle]             RouteRepository: Added method 'findAllByEntity'
