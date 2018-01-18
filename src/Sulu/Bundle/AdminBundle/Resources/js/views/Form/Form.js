@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {default as FormContainer} from '../../containers/Form';
+import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
@@ -12,10 +12,13 @@ type Props = ViewProps & {
 };
 
 class Form extends React.PureComponent<Props> {
+    formStore: FormStore;
+
     form: ?FormContainer;
 
     componentWillMount() {
         const {resourceStore, router} = this.props;
+        this.formStore = new FormStore(resourceStore);
 
         if (resourceStore.locale) {
             router.bind('locale', resourceStore.locale);
@@ -31,7 +34,7 @@ class Form extends React.PureComponent<Props> {
     }
 
     handleSubmit = () => {
-        this.props.resourceStore.save();
+        this.formStore.save();
     };
 
     setFormRef = (form) => {
@@ -43,7 +46,7 @@ class Form extends React.PureComponent<Props> {
             <div className={formStyles.form}>
                 <FormContainer
                     ref={this.setFormRef}
-                    store={this.props.resourceStore}
+                    store={this.formStore}
                     onSubmit={this.handleSubmit}
                 />
             </div>

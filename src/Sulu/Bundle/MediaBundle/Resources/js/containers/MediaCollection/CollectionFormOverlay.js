@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import {Form} from 'sulu-admin-bundle/containers';
+import {Form, FormStore} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Dialog, Overlay} from 'sulu-admin-bundle/components';
 import type {OverlayType, OperationType} from './types';
@@ -19,21 +20,27 @@ type Props = {
 @observer
 export default class CollectionFormOverlay extends React.PureComponent<Props> {
     formRef: ?Form;
-
     title: string;
-
     operationType: string;
+    @observable formStore: FormStore;
 
-    componentWillReceiveProps(nextProps: Props) {
+    componentWillMount() {
+        const {resourceStore} = this.props;
+        this.formStore = new FormStore(resourceStore);
+    }
+
+    @action componentWillReceiveProps(nextProps: Props) {
         const {operationType} = nextProps;
 
-        if (!operationType) {
-            return;
+        if (operationType) {
+            this.title = operationType === 'create'
+                ? translate('sulu_media.add_collection')
+                : translate('sulu_media.edit_collection');
         }
 
-        this.title = operationType === 'create'
-            ? translate('sulu_media.add_collection')
-            : translate('sulu_media.edit_collection');
+        if (this.props.resourceStore !== nextProps.resourceStore) {
+            this.formStore = new FormStore(nextProps.resourceStore);
+        }
     }
 
     setFormRef = (formRef: ?Form) => {
@@ -67,7 +74,7 @@ export default class CollectionFormOverlay extends React.PureComponent<Props> {
         const form = (
             <Form
                 ref={this.setFormRef}
-                store={resourceStore}
+                store={this.formStore}
                 onSubmit={this.handleSubmit}
             />
         );

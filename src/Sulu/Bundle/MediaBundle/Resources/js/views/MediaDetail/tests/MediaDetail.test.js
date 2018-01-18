@@ -7,6 +7,7 @@ import {mount, render} from 'enzyme';
 jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
     Form: require.requireActual('sulu-admin-bundle/containers').Form,
+    FormStore: require.requireActual('sulu-admin-bundle/containers').FormStore,
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({
@@ -16,7 +17,7 @@ jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
-    getSchema: jest.fn().mockReturnValue({}),
+    getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
 jest.mock('sulu-admin-bundle/utils', () => ({
@@ -45,7 +46,7 @@ beforeEach(() => {
     jest.resetModules();
 });
 
-test('Render a MediaDetail view', () => {
+test('Render a loading MediaDetail view', () => {
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const router = {
@@ -58,6 +59,7 @@ test('Render a MediaDetail view', () => {
         },
     };
     const resourceStore = new ResourceStore('media', '1', {locale: observable()});
+    resourceStore.loading = true;
 
     expect(render(
         <MediaDetail router={router} resourceStore={resourceStore} />
@@ -189,16 +191,20 @@ test('Should initialize the ResourceStore with a schema', () => {
         },
     };
 
-    metadataStore.getSchema.mockReturnValue({
+    const promise = Promise.resolve({
         title: {},
         description: {},
     });
-    mount(<MediaDetail router={router} resourceStore={resourceStore} />).get(0);
-    expect(resourceStore.resourceKey).toBe('media');
-    expect(resourceStore.id).toBe(4);
-    expect(resourceStore.data).toEqual({
-        title: null,
-        description: null,
+    metadataStore.getSchema.mockReturnValue(promise);
+    mount(<MediaDetail router={router} resourceStore={resourceStore} />);
+
+    return promise.then(() => {
+        expect(resourceStore.resourceKey).toBe('media');
+        expect(resourceStore.id).toBe(4);
+        expect(resourceStore.data).toEqual({
+            title: null,
+            description: null,
+        });
     });
 });
 
@@ -236,6 +242,10 @@ test('Should save form when submitted', () => {
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const resourceStore = new ResourceStore('media', 4, {locale: observable()});
 
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
+    const promise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(promise);
+
     const router = {
         bind: jest.fn(),
         navigate: jest.fn(),
@@ -252,9 +262,11 @@ test('Should save form when submitted', () => {
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
-    mediaDetail.find('Form').simulate('submit');
 
-    expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
+    return promise.then(() => {
+        mediaDetail.find('Form').simulate('submit');
+        expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
+    });
 });
 
 test('Should unbind the binding and destroy the store on unmount', () => {

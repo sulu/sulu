@@ -7,48 +7,58 @@ jest.mock('../../../../stores/ResourceMetadataStore', () => ({
 }));
 
 test('Return list fields for given resourceKey from ResourceMetadataStore', () => {
-    const resourceMetadata = {
-        snippets: {
-            list: {
-                id: {},
-                title: {
-                    sortable: true,
-                },
-            },
-        },
-        contacts: {
-            list: {
-                id: {},
-                firstName: {
-                    sortable: true,
-                },
-                lastName: {
-                    sortable: true,
-                },
+    const snippetMetadata = {
+        list: {
+            id: {},
+            title: {
+                sortable: true,
             },
         },
     };
-    resourceMetadataStore.loadConfiguration.mockImplementation((resourceKey) => resourceMetadata[resourceKey]);
+    const contactMetadata = {
+        list: {
+            id: {},
+            firstName: {
+                sortable: true,
+            },
+            lastName: {
+                sortable: true,
+            },
+        },
+    };
+    const snippetPromise = Promise.resolve(snippetMetadata);
+    const contactPromise = Promise.resolve(contactMetadata);
+    resourceMetadataStore.loadConfiguration.mockImplementation((resourceKey) => {
+        switch(resourceKey) {
+            case 'snippets':
+                return snippetPromise;
+            case 'contacts':
+                return contactPromise;
+        }
+    });
 
-    const snippetFields = metadataStore.getSchema('snippets');
-    expect(Object.keys(snippetFields)).toHaveLength(2);
-    expect(snippetFields.id).toEqual({});
-    expect(snippetFields.title).toEqual({sortable: true});
+    const snippetFieldPromise = metadataStore.getSchema('snippets');
+    const contactFieldPromise = metadataStore.getSchema('contacts');
 
-    const contactFields = metadataStore.getSchema('contacts');
-    expect(Object.keys(contactFields)).toHaveLength(3);
-    expect(contactFields.id).toEqual({});
-    expect(contactFields.firstName).toEqual({sortable: true});
-    expect(contactFields.lastName).toEqual({sortable: true});
+    return Promise.all([snippetFieldPromise, contactFieldPromise]).then(([snippetFields, contactFields]) => {
+        expect(Object.keys(snippetFields)).toHaveLength(2);
+        expect(snippetFields.id).toEqual({});
+        expect(snippetFields.title).toEqual({sortable: true});
+
+        expect(Object.keys(contactFields)).toHaveLength(3);
+        expect(contactFields.id).toEqual({});
+        expect(contactFields.firstName).toEqual({sortable: true});
+        expect(contactFields.lastName).toEqual({sortable: true});
+    });
 });
 
 test('Throw exception if no list fields for given resourceKey are available', () => {
-    const resourceMetadata = {
-        snippets: {},
-        contacts: {},
-    };
-    resourceMetadataStore.loadConfiguration.mockImplementation((resourceKey) => resourceMetadata[resourceKey]);
+    const contactMetadata = {};
+    const contactPromise = Promise.resolve(contactMetadata);
 
-    expect(() => metadataStore.getSchema('snippets')).toThrow(/"snippets"/);
-    expect(() => metadataStore.getSchema('contacts')).toThrow(/"contacts"/);
+    resourceMetadataStore.loadConfiguration.mockReturnValue(contactPromise);
+
+    return metadataStore.getSchema('contacts').catch((error) => {
+        expect(error.toString()).toEqual(expect.stringContaining('"contacts"'));
+    });
 });

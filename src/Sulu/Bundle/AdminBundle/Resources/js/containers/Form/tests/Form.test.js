@@ -3,6 +3,7 @@ import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import Form from '../Form';
 import ResourceStore from '../../../stores/ResourceStore';
+import FormStore from '../stores/FormStore';
 import metadataStore from '../stores/MetadataStore';
 
 jest.mock('../registries/FieldRegistry', () => ({
@@ -14,11 +15,13 @@ jest.mock('../registries/FieldRegistry', () => ({
     }),
 }));
 
-jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey) {
-    this.resourceKey = resourceKey;
+jest.mock('../stores/FormStore', () => jest.fn(function() {
+    this.schema = {};
+    this.data = {};
     this.set = jest.fn();
-    this.changeSchema = jest.fn();
 }));
+
+jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
 jest.mock('../stores/MetadataStore', () => ({
     getSchema: jest.fn(),
@@ -26,8 +29,7 @@ jest.mock('../stores/MetadataStore', () => ({
 
 test('Should render form using renderer', () => {
     const submitSpy = jest.fn();
-    const store = new ResourceStore('snippet', '1');
-    metadataStore.getSchema.mockReturnValue({});
+    const store = new FormStore(new ResourceStore('snippet', '1'));
 
     const form = render(<Form store={store} onSubmit={submitSpy} />);
     expect(form).toMatchSnapshot();
@@ -35,7 +37,7 @@ test('Should render form using renderer', () => {
 
 test('Should call onSubmit callback on submit', () => {
     const submitSpy = jest.fn();
-    const store = new ResourceStore('snippet', '1');
+    const store = new FormStore(new ResourceStore('snippet', '1'));
     metadataStore.getSchema.mockReturnValue({});
 
     const form = mount(<Form onSubmit={submitSpy} store={store} />);
@@ -46,43 +48,19 @@ test('Should call onSubmit callback on submit', () => {
 
 test('Should pass schema and data to renderer', () => {
     const submitSpy = jest.fn();
-    const schema = {};
-    const store = new ResourceStore('snippet', '1');
-    store.data = {
-        title: 'Title',
-        description: 'Description',
-    };
-    metadataStore.getSchema.mockReturnValue(schema);
+    const store = new FormStore(new ResourceStore('snippet', '1'));
+    store.schema = {};
+    store.data.title = 'Title';
+    store.data.description = 'Description';
     const form = shallow(<Form onSubmit={submitSpy} store={store} />);
 
-    expect(form.find('Renderer').props().schema).toBe(schema);
-});
-
-test('Should initialize resourceStore with correct schema', () => {
-    const submitSpy = jest.fn();
-    const store = new ResourceStore('snippet', '1');
-    const schema = {
-        title: {
-            type: 'text_line',
-        },
-        slogan: {
-            type: 'text_line',
-        },
-    };
-
-    store.data = {
-        title: 'Title',
-        slogan: 'Slogan',
-    };
-    metadataStore.getSchema.mockReturnValue(schema);
-    mount(<Form onSubmit={submitSpy} store={store} />);
-
-    expect(store.changeSchema).toBeCalledWith(schema);
+    expect(form.find('Renderer').props().schema).toBe(store.schema);
+    expect(form.find('Renderer').props().data).toBe(store.data);
 });
 
 test('Should set data on store when changed', () => {
     const submitSpy = jest.fn();
-    const store = new ResourceStore('snippet', '1');
+    const store = new FormStore(new ResourceStore('snippet', '1'));
     const form = shallow(<Form onSubmit={submitSpy} store={store} />);
 
     form.find('Renderer').simulate('change', 'field', 'value');
@@ -91,9 +69,8 @@ test('Should set data on store when changed', () => {
 
 test('Should set data on store without sections', () => {
     const submitSpy = jest.fn();
-    const store = new ResourceStore('snippet', '1');
-    store.data = {};
-    metadataStore.getSchema.mockReturnValue({
+    const store = new FormStore(new ResourceStore('snippet', '1'));
+    store.schema = {
         section1: {
             label: 'Section 1',
             type: 'section',
@@ -118,7 +95,7 @@ test('Should set data on store without sections', () => {
                 },
             },
         },
-    });
+    };
 
     const form = mount(<Form store={store} onSubmit={submitSpy} />);
     form.find('Input').get(0).handleChange({currentTarget: {value: 'value!'}});

@@ -1,4 +1,6 @@
 // @flow
+import Requester from '../../services/Requester';
+
 class ResourceMetadataStore {
     // TODO load from server
     baseUrls: {[string]: string} = {
@@ -12,131 +14,7 @@ class ResourceMetadataStore {
         nodes: '/admin/api/nodes', // TODO rename nodes to pages
     };
 
-    // TODO load from server
-    configuration: {[string]: Object} = {
-        snippets: {
-            list: {
-                id: {},
-                title: {},
-                template: {},
-                changed: {},
-                created: {},
-            },
-            form: {
-                title: {
-                    label: 'Title',
-                    type: 'text_line',
-                },
-                slogan: {
-                    label: 'Slogan',
-                    type: 'text_line',
-                },
-                media: {
-                    label: 'Media',
-                    type: 'media_selection',
-                },
-            },
-        },
-        contacts: {
-            list: {
-                id: {},
-                firstName: {},
-                lastName: {},
-                title: {},
-                fullName: {},
-            },
-            form: {
-                title: {
-                    label: 'Title',
-                    type: 'text_line',
-                    size: 6,
-                    spaceAfter: 6,
-                },
-                firstName: {
-                    label: 'First Name',
-                    type: 'text_line',
-                    size: 6,
-                },
-                lastName: {
-                    label: 'Last Name',
-                    type: 'text_line',
-                    size: 6,
-                },
-            },
-        },
-        accounts: {
-            list: {
-                id: {},
-                name: {},
-                email: {},
-            },
-        },
-        roles: {
-            list: {
-                id: {},
-                name: {},
-                system: {},
-            },
-        },
-        tags: {
-            list: {
-                id: {},
-                name: {},
-            },
-        },
-        collections: {
-            list: {
-                id: {},
-                title: {},
-                objectCount: {},
-            },
-            form: {
-                title: {
-                    label: 'Title',
-                    type: 'text_line',
-                },
-                description: {
-                    label: 'Description',
-                    type: 'text_area',
-                },
-            },
-        },
-        media: {
-            list: {
-                id: {},
-                size: {},
-                title: {},
-                mimeType: {},
-                thumbnails: {},
-            },
-            form: {
-                title: {
-                    label: 'Title',
-                    type: 'text_line',
-                },
-                description: {
-                    label: 'Description',
-                    type: 'text_area',
-                },
-                license: {
-                    label: 'License',
-                    type: 'section',
-                    items: {
-                        copyright: {
-                            label: 'Copyright information',
-                            type: 'text_area',
-                        },
-                    },
-                },
-            },
-        },
-        nodes: {
-            list: {
-                id: {},
-                title: {},
-            },
-        },
-    };
+    configurationPromises: {[string]: Promise<Object>} = {};
 
     getBaseUrl(key: string) {
         if (!(key in this.baseUrls)) {
@@ -145,11 +23,12 @@ class ResourceMetadataStore {
         return this.baseUrls[key];
     }
 
-    loadConfiguration(key: string): Object {
-        if (!(key in this.configuration)) {
-            throw new Error('There is no configuration for the resourceKey "' + key + '"');
+    loadConfiguration(key: string): Promise<Object> {
+        if (!(key in this.configurationPromises)) {
+            this.configurationPromises[key] = Requester.get('/admin/resources/' + key);
         }
-        return this.configuration[key];
+
+        return this.configurationPromises[key];
     }
 }
 

@@ -2,24 +2,7 @@
 import {action, autorun, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import ResourceRequester from '../../services/ResourceRequester';
-import type {ObservableOptions, Schema} from './types';
-
-function addObjectProperty(schema: Schema, key, object) {
-    const type = schema[key].type;
-
-    if (type !== 'section') {
-        object[key] = null;
-    }
-
-    const items = schema[key].items;
-
-    if (type === 'section' && items) {
-        Object.keys(items)
-            .reduce((object, childKey) => addObjectProperty(items, childKey, object), object);
-    }
-
-    return object;
-}
+import type {ObservableOptions} from './types';
 
 export default class ResourceStore {
     resourceKey: string;
@@ -160,12 +143,6 @@ export default class ResourceStore {
             .catch(action(() => {
                 this.saving = false;
             }));
-    }
-
-    @action changeSchema(schema: Schema) {
-        const schemaFields = Object.keys(schema).reduce((object, key) => addObjectProperty(schema, key, object), {});
-
-        this.data = {...schemaFields, ...this.data};
     }
 
     @action set(name: string, value: mixed) {

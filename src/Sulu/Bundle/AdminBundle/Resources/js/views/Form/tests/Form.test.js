@@ -37,7 +37,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
 }));
 
 jest.mock('../../../containers/Form/stores/MetadataStore', () => ({
-    getSchema: jest.fn().mockReturnValue({}),
+    getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
 beforeEach(() => {
@@ -206,16 +206,21 @@ test('Should initialize the ResourceStore with a schema', () => {
         },
     };
 
-    metadataStore.getSchema.mockReturnValue({
+    const promise = Promise.resolve({
         title: {},
         slogan: {},
     });
-    mount(<Form router={router} resourceStore={resourceStore} />).get(0);
-    expect(resourceStore.resourceKey).toBe('snippets');
-    expect(resourceStore.id).toBe(12);
-    expect(resourceStore.data).toEqual({
-        title: null,
-        slogan: null,
+    metadataStore.getSchema.mockReturnValue(promise);
+
+    mount(<Form router={router} resourceStore={resourceStore} />);
+
+    return promise.then(() => {
+        expect(resourceStore.resourceKey).toBe('snippets');
+        expect(resourceStore.id).toBe(12);
+        expect(resourceStore.data).toEqual({
+            title: null,
+            slogan: null,
+        });
     });
 });
 
@@ -251,7 +256,11 @@ test('Should save form when submitted', () => {
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable()});
+
+    const promise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(promise);
 
     const router = {
         bind: jest.fn(),
@@ -266,12 +275,15 @@ test('Should save form when submitted', () => {
         },
     };
     const form = mount(<Form router={router} resourceStore={resourceStore} />);
+
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
-    form.find('Form').at(1).simulate('submit');
 
-    expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
+    return promise.then(() => {
+        form.find('Form').at(1).simulate('submit');
+        expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
+    });
 });
 
 test('Should pass store and schema handler to FormContainer', () => {
@@ -293,7 +305,7 @@ test('Should pass store and schema handler to FormContainer', () => {
     const form = shallow(<Form router={router} resourceStore={resourceStore} />);
     const formContainer = form.find('Form');
 
-    expect(formContainer.prop('store')).toEqual(resourceStore);
+    expect(formContainer.prop('store').resourceStore).toEqual(resourceStore);
     expect(formContainer.prop('onSubmit')).toBeInstanceOf(Function);
 });
 

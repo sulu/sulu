@@ -5,6 +5,10 @@ import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
+jest.mock('../../../containers/Datagrid/stores/MetadataStore', () => ({
+    getSchema: jest.fn().mockReturnValue({}),
+}));
+
 jest.mock(
     '../../../containers/Datagrid/stores/DatagridStore',
     () => jest.fn(function(resourceKey, observableOptions, options) {
@@ -28,10 +32,10 @@ jest.mock(
         ];
         this.selections = [];
         this.getPage = jest.fn().mockReturnValue(2);
-        this.getSchema = jest.fn().mockReturnValue({
+        this.schema = {
             title: {},
             description: {},
-        });
+        };
         this.destroy = jest.fn();
         this.sendRequest = jest.fn();
         this.clearSelection = jest.fn();

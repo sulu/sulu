@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a MediaDetail view 1`] = `
+exports[`Render a loading MediaDetail view 1`] = `
 <div
   class="mediaDetail"
 >
@@ -49,19 +49,17 @@ exports[`Render a MediaDetail view 1`] = `
   <section
     class="formContainer"
   >
-    <form
-      class="form"
+    <div
+      class="spinner"
+      style="width:40px;height:40px;"
     >
       <div
-        class="grid"
+        class="doubleBounce1"
       />
-      <button
-        class="submit"
-        type="submit"
-      >
-        Submit
-      </button>
-    </form>
+      <div
+        class="doubleBounce2"
+      />
+    </div>
   </section>
 </div>
 `;

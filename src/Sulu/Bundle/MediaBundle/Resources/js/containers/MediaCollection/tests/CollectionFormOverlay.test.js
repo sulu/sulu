@@ -1,8 +1,13 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {shallow} from 'enzyme';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import CollectionFormOverlay from '../CollectionFormOverlay';
+
+jest.mock('sulu-admin-bundle/containers', () => ({
+    FormStore: jest.fn(),
+    Form: require.requireActual('sulu-admin-bundle/containers').Form,
+}));
 
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) => key),

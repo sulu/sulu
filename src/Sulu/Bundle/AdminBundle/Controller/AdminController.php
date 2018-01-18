@@ -231,6 +231,187 @@ class AdminController
         return new JsonResponse($translations);
     }
 
+    public function resourcesAction($resource): Response
+    {
+        $response = null;
+        switch ($resource) {
+        case 'snippets':
+            $response = new Response(
+                <<<'EOL'
+{
+    "list": {
+        "id": {},
+        "title": {},
+        "template": {},
+        "changed": {},
+        "created": {}
+    },
+    "form": {
+        "title": {
+            "label": "Title",
+            "type": "text_line"
+        },
+        "slogan": {
+            "label": "Slogan",
+            "type": "text_line"
+        },
+        "media": {
+            "label": "Media",
+            "type": "media_selection"
+        }
+    }
+}
+EOL
+            );
+            break;
+        case 'contacts':
+            $response = new Response(
+                <<<'EOL'
+{
+    "list": {
+        "id": {},
+        "firstName": {},
+        "lastName": {},
+        "title": {},
+        "fullName": {}
+    },
+    "form": {
+        "title": {
+            "label": "Title",
+            "type": "text_line",
+            "size": 6,
+            "spaceAfter": 6
+        },
+        "firstName": {
+            "label": "First Name",
+            "type": "text_line",
+            "size": 6
+        },
+        "lastName": {
+            "label": "Last Name",
+            "type": "text_line",
+            "size": 6
+        }
+    }
+}
+EOL
+            );
+            break;
+        case 'accounts':
+            $response = new Response(
+                <<<'EOL'
+{
+    "list": {
+        "id": {},
+        "name": {},
+        "email": {}
+    }
+}
+EOL
+            );
+            break;
+        case 'roles':
+            $response = new Response(
+                <<<'EOL'
+{
+    "list": {
+        "id": {},
+        "name": {},
+        "system": {}
+    }
+}
+EOL
+            );
+            break;
+        case 'tags':
+            $response = new Response(
+                <<<'EOL'
+{
+    "list": {
+        "id": {},
+        "name": {}
+    }
+}
+EOL
+            );
+            break;
+        case 'collections':
+            $response = new Response(
+                <<<'EOL'
+{
+    "list": {
+        "id": {},
+        "title": {},
+        "objectCount": {}
+    },
+    "form": {
+        "title": {
+            "label": "Title",
+            "type": "text_line"
+        },
+        "description": {
+            "label": "Description",
+            "type": "text_area"
+        }
+    }
+}
+EOL
+            );
+            break;
+        case 'media':
+            $response = new Response(
+                <<<'EOL'
+{
+    "list": {
+        "id": {},
+        "size": {},
+        "title": {},
+        "mimeType": {},
+        "thumbnails": {}
+    },
+    "form": {
+        "title": {
+            "label": "Title",
+            "type": "text_line"
+        },
+        "description": {
+            "label": "Description",
+            "type": "text_area"
+        },
+        "license": {
+            "label": "License",
+            "type": "section",
+            "items": {
+                "copyright": {
+                    "label": "Copyright information",
+                    "type": "text_area"
+                }
+            }
+        }
+    }
+}
+EOL
+            );
+            break;
+        case 'nodes':
+            $response = new Response(
+                <<<'EOL'
+{
+    "list": {
+        "id": {},
+        "title": {}
+    }
+}
+EOL
+            );
+            break;
+        }
+
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
     /**
      * Returns a array of all bundles.
      *

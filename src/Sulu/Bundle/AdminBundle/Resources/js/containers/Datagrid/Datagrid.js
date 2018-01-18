@@ -113,7 +113,7 @@ export default class Datagrid extends React.PureComponent<Props> {
                     onPageChange={this.handlePageChange}
                     page={store.getPage()}
                     pageCount={store.pageCount}
-                    schema={store.getSchema()}
+                    schema={store.schema}
                     selections={store.selections}
                 />
             </div>

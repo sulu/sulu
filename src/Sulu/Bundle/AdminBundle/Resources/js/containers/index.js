@@ -11,7 +11,7 @@ import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyIn
 import {viewRegistry} from './ViewRenderer';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
-import Form, {fieldRegistry} from './Form';
+import Form, {fieldRegistry, FormStore} from './Form';
 
 export type {
     DatagridAdapterProps,
@@ -28,6 +28,7 @@ export {
     fieldRegistry,
     FlatStructureStrategy,
     Form,
+    FormStore,
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
     viewRegistry,

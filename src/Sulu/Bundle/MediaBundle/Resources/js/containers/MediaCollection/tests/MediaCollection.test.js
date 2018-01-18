@@ -12,6 +12,24 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
         Form: require('sulu-admin-bundle/containers/Form').default,
+        FormStore: jest.fn(function(resourceStore) {
+            switch (resourceStore.resourceKey) {
+                case 'collections':
+                    this.schema = {
+                        title: {
+                            type: 'text_line',
+                        },
+                        description: {
+                            type: 'text_line',
+                        },
+                    };
+                    break;
+                default:
+                    this.schema = {};
+            }
+
+            this.data = resourceStore.data;
+        }),
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         DatagridStore: jest.fn(function(resourceKey) {
@@ -81,6 +99,10 @@ jest.mock('sulu-admin-bundle/containers', () => {
     };
 });
 
+jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({
+    get: jest.fn().mockReturnValue(jest.fn().mockReturnValue(null)),
+}));
+
 jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => {
     const getAllAdaptersMock = jest.fn();
 
@@ -96,11 +118,16 @@ jest.mock('sulu-admin-bundle/stores/ResourceMetadataStore', () => ({
     loadConfiguration: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(function() {
+jest.mock('sulu-admin-bundle/stores', () => {
+    const ResourceStoreMock = jest.fn(function(resourceKey) {
+        this.resourceKey = resourceKey;
         this.destroy = jest.fn();
         this.delete = jest.fn();
-        this.clone = jest.fn().mockReturnValue(this);
+        this.clone = jest.fn(() => {
+            const resourceStore = new ResourceStoreMock(resourceKey);
+            resourceStore.data = this.data;
+            return resourceStore;
+        });
         this.save = jest.fn();
         this.setMultiple = jest.fn();
         this.changeSchema = jest.fn();
@@ -109,8 +136,12 @@ jest.mock('sulu-admin-bundle/stores', () => ({
         this.data = {
             id: 1,
         };
-    }),
-}));
+    });
+
+    return {
+        ResourceStore: ResourceStoreMock,
+    };
+});
 
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: function(key) {
@@ -204,7 +235,10 @@ test('Render the MediaCollection', () => {
 });
 
 test('Should send a request to add a new collection via the overlay', () => {
+    const fieldRegistry = require('sulu-admin-bundle/containers/Form/registries/FieldRegistry');
     const promise = Promise.resolve();
+    const field = jest.fn().mockReturnValue(null);
+    fieldRegistry.get.mockReturnValue(field);
     const page = observable();
     const locale = observable();
     const collectionNavigateSpy = jest.fn();
@@ -219,6 +253,9 @@ test('Should send a request to add a new collection via the overlay', () => {
     });
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
+    collectionStore.resourceStore.data = {
+        title: 'Title',
+    };
 
     ResourceMetadataStore.loadConfiguration.mockReturnValue({form: {}});
 
@@ -237,6 +274,7 @@ test('Should send a request to add a new collection via the overlay', () => {
     // but we have to update enzyme because of https://github.com/airbnb/enzyme/issues/534
     mediaCollection.find('.collectionSection .fa-plus').simulate('click');
     expect(collectionStore.resourceStore.clone).not.toBeCalled();
+    expect(field.mock.calls[0][0].value).toEqual(undefined);
 
     expect(mediaCollection.find('Dialog').prop('open')).toEqual(false);
     expect(mediaCollection.find('Overlay').prop('open')).toEqual(true);
@@ -255,10 +293,14 @@ test('Should send a request to add a new collection via the overlay', () => {
 });
 
 test('Should send a request to update the collection via the overlay', () => {
+    const fieldRegistry = require('sulu-admin-bundle/containers/Form/registries/FieldRegistry');
+    const field = jest.fn().mockReturnValue(null);
+    fieldRegistry.get.mockReturnValue(field);
     const promise = Promise.resolve();
     const page = observable();
     const locale = observable();
     const collectionNavigateSpy = jest.fn();
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
     const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
         page,
@@ -270,9 +312,9 @@ test('Should send a request to update the collection via the overlay', () => {
     });
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
-    collectionStore.resourceStore.save.mockReturnValue(promise);
-
-    ResourceMetadataStore.loadConfiguration.mockReturnValue({form: {}});
+    collectionStore.resourceStore.data = {
+        title: 'Title',
+    };
 
     const mediaCollection = mount(
         <MediaCollection
@@ -288,7 +330,12 @@ test('Should send a request to update the collection via the overlay', () => {
     // TODO something like Icon[name="trash"] should be possible as selector,
     // but we have to update enzyme because of https://github.com/airbnb/enzyme/issues/534
     mediaCollection.find('.collectionSection .fa-pencil').simulate('click');
+
+    const resourceStoreInstances = ResourceStore.mock.instances;
+    const newResourceStore = resourceStoreInstances[resourceStoreInstances.length - 1];
+    newResourceStore.save.mockReturnValue(promise);
     expect(collectionStore.resourceStore.clone).toBeCalled();
+    expect(field.mock.calls[0][0].value).toEqual('Title');
 
     expect(mediaCollection.find('Dialog').prop('open')).toEqual(false);
     expect(mediaCollection.find('Overlay').prop('open')).toEqual(true);
@@ -299,7 +346,7 @@ test('Should send a request to update the collection via the overlay', () => {
 
     return promise.then(() => {
         expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
-        expect(collectionStore.resourceStore.save).toBeCalledWith({breadcrumb: true});
+        expect(newResourceStore.save).toBeCalledWith({breadcrumb: true});
     });
 });
 

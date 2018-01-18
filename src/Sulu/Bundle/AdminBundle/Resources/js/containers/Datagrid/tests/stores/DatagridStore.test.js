@@ -5,7 +5,7 @@ import DatagridStore from '../../stores/DatagridStore';
 import metadataStore from '../../stores/MetadataStore';
 
 jest.mock('../../stores/MetadataStore', () => ({
-    getSchema: jest.fn(),
+    getSchema: jest.fn(() => Promise.resolve()),
 }));
 
 function LoadingStrategy() {
@@ -240,12 +240,27 @@ test('The active item should not be passed as parent if undefined', () => {
     datagridStore.destroy();
 });
 
+test('Set loading flag to true before schema is loaded', () => {
+    const promise = Promise.resolve();
+    metadataStore.getSchema.mockReturnValue(promise);
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {page});
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    page.set(1);
+    datagridStore.setDataLoading(false);
+    expect(datagridStore.loading).toEqual(true);
+    return promise.then(() => {
+        expect(datagridStore.loading).toEqual(false);
+        datagridStore.destroy();
+    });
+});
+
 test('Set loading flag to true before request', () => {
     const page = observable();
     const datagridStore = new DatagridStore('tests', {page});
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     page.set(1);
-    datagridStore.setLoading(false);
+    datagridStore.setDataLoading(false);
     datagridStore.sendRequest();
     expect(datagridStore.loading).toEqual(true);
     datagridStore.destroy();
@@ -273,16 +288,19 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     const fields = {
         test: {},
     };
-    metadataStore.getSchema.mockReturnValue(fields);
+    const promise = Promise.resolve(fields);
+    metadataStore.getSchema.mockReturnValue(promise);
 
     const page = observable();
     const datagridStore = new DatagridStore('tests', {
         page,
     });
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
-    expect(datagridStore.getSchema()).toBe(fields);
     expect(metadataStore.getSchema).toBeCalledWith('tests');
-    datagridStore.destroy();
+    return promise.then(() => {
+        expect(datagridStore.schema).toBe(fields);
+        datagridStore.destroy();
+    });
 });
 
 test('After initialization no row should be selected', () => {
