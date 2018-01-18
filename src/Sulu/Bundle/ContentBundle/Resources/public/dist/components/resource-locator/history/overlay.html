@@ -1,13 +1,15 @@
 <% if (histories.length > 0) { %>
-<ul class="resource-locator-history">
-    <% _.each(histories, function(history) { %>
-    <li data-id="<%= history.id %>" data-path="<%= history[pathKey] %>">
-        <span class="url" title="<%= history[pathKey] %>"><%= crop(history[pathKey], 75) %></span>
-        <span class="date"><%= dateFormat(history.created) %></span>
-        <span class="options-delete"><i class="fa fa-trash-o pointer"></i></span>
-    </li>
-    <% }); %>
-</ul>
+<div class="resource-locator-history">
+    <table class="resource-locator-history-table">
+        <% _.each(histories, function(history) { %>
+        <tr data-id="<%= history.id %>" data-path="<%= history[pathKey] %>">
+            <td class="url"><%= history[pathKey] %></td>
+            <td class="date"><%= dateFormat(history.created) %></td>
+            <td class="options-delete"><i class="fa fa-trash-o pointer"></i></td>
+        </tr>
+        <% }); %>
+    </table>
+</div>
 <% } else { %>
 <p><%= translations.noHistory %></p>
 <% } %>
