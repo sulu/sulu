@@ -1,8 +1,8 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, autorun, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import ResourceStore from '../../../stores/ResourceStore';
-import type {Schema, SchemaType} from '../types';
+import type {Schema, SchemaTypes} from '../types';
 import metadataStore from './MetadataStore';
 
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
@@ -25,24 +25,35 @@ function addSchemaProperties(data: Object, key: string, schema: Schema) {
 export default class FormStore {
     resourceStore: ResourceStore;
     schema: Schema;
-    @observable types: Array<SchemaType> = [];
+    @observable type: string;
+    @observable types: SchemaTypes = {};
     @observable schemaLoading: boolean = true;
     @observable typesLoading: boolean = true;
+    schemaDisposer: () => void;
 
     constructor(resourceStore: ResourceStore) {
         this.resourceStore = resourceStore;
 
-        metadataStore.getSchema(this.resourceStore.resourceKey)
-            .then(action((schema) => {
-                this.changeSchema(schema);
-                this.schemaLoading = false;
-            }));
+        this.schemaDisposer = autorun(() => {
+            metadataStore.getSchema(this.resourceStore.resourceKey, this.type)
+                .then(action((schema) => {
+                    this.schema = schema;
+                    const schemaFields = Object.keys(schema)
+                        .reduce((data, key) => addSchemaProperties(data, key, schema), {});
+                    this.resourceStore.data = {...schemaFields, ...this.resourceStore.data};
+                    this.schemaLoading = false;
+                }));
+        });
 
         metadataStore.getSchemaTypes(this.resourceStore.resourceKey)
             .then(action((types) => {
                 this.types = types;
                 this.typesLoading = false;
             }));
+    }
+
+    destroy() {
+        this.schemaDisposer();
     }
 
     @computed get loading(): boolean {
@@ -65,10 +76,11 @@ export default class FormStore {
         return this.resourceStore.locale;
     }
 
-    changeSchema(schema: Schema) {
-        this.schema = schema;
-        const schemaFields = Object.keys(schema).reduce((data, key) => addSchemaProperties(data, key, schema), {});
+    @action changeType(type: string) {
+        if (Object.keys(this.types).length === 0) {
+            throw new Error('The resource handled by this FormStore cannot handle types');
+        }
 
-        this.resourceStore.data = {...schemaFields, ...this.resourceStore.data};
+        this.type = type;
     }
 }

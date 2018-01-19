@@ -25,6 +25,7 @@ class Form extends React.PureComponent<Props> {
     }
 
     componentWillUnmount() {
+        this.formStore.destroy();
         const {resourceStore, router} = this.props;
 
         if (resourceStore.locale) {
@@ -101,9 +102,11 @@ export default withToolbar(Form, function() {
         items.push({
             type: 'select',
             icon: 'paint-brush',
-            onChange: () => {},
+            onChange: (value) => {
+                this.formStore.changeType(value);
+            },
             loading: this.formStore.typesLoading,
-            value: 'sidebar',
+            value: this.formStore.type,
             options: Object.keys(formTypes).map((key) => ({
                 value: formTypes[key].key,
                 label: formTypes[key].title,
