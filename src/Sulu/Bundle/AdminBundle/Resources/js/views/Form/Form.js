@@ -13,7 +13,6 @@ type Props = ViewProps & {
 
 class Form extends React.PureComponent<Props> {
     formStore: FormStore;
-
     form: ?FormContainer;
 
     componentWillMount() {
@@ -57,6 +56,10 @@ class Form extends React.PureComponent<Props> {
 export default withToolbar(Form, function() {
     const {router} = this.props;
     const {backRoute, locales} = router.route.options;
+    const formTypes = this.formStore.types.map((type) => ({
+        value: type.key,
+        label: type.title,
+    }));
 
     const backButton = backRoute
         ? {
@@ -84,20 +87,33 @@ export default withToolbar(Form, function() {
         }
         : undefined;
 
+    const items = [
+        {
+            type: 'button',
+            value: translate('sulu_admin.save'),
+            icon: 'floppy-o',
+            disabled: !this.props.resourceStore.dirty,
+            loading: this.props.resourceStore.saving,
+            onClick: () => {
+                this.form.submit();
+            },
+        },
+    ];
+
+    if (this.formStore.typesLoading || formTypes.length > 0) {
+        items.push({
+            type: 'select',
+            icon: 'paint-brush',
+            onChange: () => {},
+            loading: this.formStore.typesLoading,
+            value: 'sidebar',
+            options: formTypes,
+        });
+    }
+
     return {
         backButton,
         locale,
-        items: [
-            {
-                type: 'button',
-                value: translate('sulu_admin.save'),
-                icon: 'floppy-o',
-                disabled: !this.props.resourceStore.dirty,
-                loading: this.props.resourceStore.saving,
-                onClick: () => {
-                    this.form.submit();
-                },
-            },
-        ],
+        items,
     };
 });

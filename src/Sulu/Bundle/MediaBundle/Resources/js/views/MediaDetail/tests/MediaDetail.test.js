@@ -18,6 +18,7 @@ jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
+    getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve([])),
 }));
 
 jest.mock('sulu-admin-bundle/utils', () => ({

@@ -144,3 +144,39 @@ test('Throw exception if no form fields for given resourceKey are available', ()
         expect(error.toString()).toEqual(expect.stringContaining('"contacts"'));
     });
 });
+
+test('Return available types for given resourceKey', () => {
+    const snippetMetadata = {
+        types: {
+            sidebar: {
+                title: 'Sidebar Snippet',
+            },
+            footer: {},
+        },
+    };
+    const snippetPromise = Promise.resolve(snippetMetadata);
+    resourceMetadataStore.loadConfiguration.mockReturnValue(snippetPromise);
+
+    const snippetTypesPromise = metadataStore.getSchemaTypes('snippets');
+
+    return snippetTypesPromise.then((snippetTypes) => {
+        expect(snippetTypes).toEqual([
+            {key: 'sidebar', title: 'Sidebar Snippet'},
+            {key: 'footer', title: 'footer'},
+        ]);
+    });
+});
+
+test('Return empty array as available types for given resourceKey if types are not supported', () => {
+    const snippetMetadata = {
+        form: {},
+    };
+    const snippetPromise = Promise.resolve(snippetMetadata);
+    resourceMetadataStore.loadConfiguration.mockReturnValue(snippetPromise);
+
+    const snippetTypesPromise = metadataStore.getSchemaTypes('snippets');
+
+    return snippetTypesPromise.then((snippetTypes) => {
+        expect(snippetTypes).toEqual([]);
+    });
+});

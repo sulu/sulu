@@ -1,5 +1,5 @@
 // @flow
-import {observable} from 'mobx';
+import {observable, toJS} from 'mobx';
 import FormStore from '../../stores/FormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/MetadataStore';
@@ -10,7 +10,8 @@ jest.mock('../../../../stores/ResourceStore', () => function() {
 });
 
 jest.mock('../../stores/MetadataStore', () => ({
-    getSchema: jest.fn(),
+    getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
+    getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve([])),
 }));
 
 test('Create data object for schema', () => {
@@ -27,8 +28,10 @@ test('Create data object for schema', () => {
     const promise = Promise.resolve(metadata);
     metadataStore.getSchema.mockReturnValue(promise);
     const formStore = new FormStore(new ResourceStore('snippets', '1'));
+    expect(formStore.schemaLoading).toEqual(true);
 
     return promise.then(() => {
+        expect(formStore.schemaLoading).toEqual(false);
         expect(Object.keys(formStore.data)).toHaveLength(2);
         expect(formStore.data).toEqual({
             title: null,
@@ -106,6 +109,24 @@ test('Change schema should keep data', () => {
             description: null,
             slogan: 'Slogan',
         });
+    });
+});
+
+test('types property should be returning types from server', () => {
+    const types = [
+        {key: 'sidebar', title: 'Sidebar'},
+        {key: 'footer', title: 'Footer'},
+    ];
+    const promise = Promise.resolve(types);
+    metadataStore.getSchemaTypes.mockReturnValue(promise);
+
+    const formStore = new FormStore(new ResourceStore('snippets', '1'));
+    expect(toJS(formStore.types)).toEqual([]);
+    expect(formStore.typesLoading).toEqual(true);
+
+    return promise.then(() => {
+        expect(toJS(formStore.types)).toEqual(types);
+        expect(formStore.typesLoading).toEqual(false);
     });
 });
 

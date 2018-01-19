@@ -2,7 +2,7 @@
 import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import ResourceStore from '../../../stores/ResourceStore';
-import type {Schema} from '../types';
+import type {Schema, SchemaType} from '../types';
 import metadataStore from './MetadataStore';
 
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
@@ -25,7 +25,9 @@ function addSchemaProperties(data: Object, key: string, schema: Schema) {
 export default class FormStore {
     resourceStore: ResourceStore;
     schema: Schema;
+    @observable types: Array<SchemaType> = [];
     @observable schemaLoading: boolean = true;
+    @observable typesLoading: boolean = true;
 
     constructor(resourceStore: ResourceStore) {
         this.resourceStore = resourceStore;
@@ -34,6 +36,12 @@ export default class FormStore {
             .then(action((schema) => {
                 this.changeSchema(schema);
                 this.schemaLoading = false;
+            }));
+
+        metadataStore.getSchemaTypes(this.resourceStore.resourceKey)
+            .then(action((types) => {
+                this.types = types;
+                this.typesLoading = false;
             }));
     }
 
