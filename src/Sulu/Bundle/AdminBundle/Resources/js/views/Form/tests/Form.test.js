@@ -207,10 +207,10 @@ test('Should show templates chooser in toolbar if types are available', () => {
         attributes: {},
     };
 
-    const typesPromise = Promise.resolve([
-        {key: 'sidebar', title: 'Sidebar'},
-        {key: 'footer', title: 'Footer'},
-    ]);
+    const typesPromise = Promise.resolve({
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    });
     metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
 
     const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
@@ -238,7 +238,7 @@ test('Should not show templates chooser in toolbar if types are not available', 
         attributes: {},
     };
 
-    const typesPromise = Promise.resolve([]);
+    const typesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
 
     const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);

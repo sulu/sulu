@@ -56,10 +56,7 @@ class Form extends React.PureComponent<Props> {
 export default withToolbar(Form, function() {
     const {router} = this.props;
     const {backRoute, locales} = router.route.options;
-    const formTypes = this.formStore.types.map((type) => ({
-        value: type.key,
-        label: type.title,
-    }));
+    const formTypes = this.formStore.types;
 
     const backButton = backRoute
         ? {
@@ -100,14 +97,17 @@ export default withToolbar(Form, function() {
         },
     ];
 
-    if (this.formStore.typesLoading || formTypes.length > 0) {
+    if (this.formStore.typesLoading || Object.keys(formTypes).length > 0) {
         items.push({
             type: 'select',
             icon: 'paint-brush',
             onChange: () => {},
             loading: this.formStore.typesLoading,
             value: 'sidebar',
-            options: formTypes,
+            options: Object.keys(formTypes).map((key) => ({
+                value: formTypes[key].key,
+                label: formTypes[key].title,
+            })),
         });
     }
 

@@ -160,14 +160,11 @@ test('Return available types for given resourceKey', () => {
     const snippetTypesPromise = metadataStore.getSchemaTypes('snippets');
 
     return snippetTypesPromise.then((snippetTypes) => {
-        expect(snippetTypes).toEqual([
-            {key: 'sidebar', title: 'Sidebar Snippet'},
-            {key: 'footer', title: 'footer'},
-        ]);
+        expect(snippetTypes).toMatchSnapshot();
     });
 });
 
-test('Return empty array as available types for given resourceKey if types are not supported', () => {
+test('Return empty object as available types for given resourceKey if types are not supported', () => {
     const snippetMetadata = {
         form: {},
     };
@@ -177,6 +174,6 @@ test('Return empty array as available types for given resourceKey if types are n
     const snippetTypesPromise = metadataStore.getSchemaTypes('snippets');
 
     return snippetTypesPromise.then((snippetTypes) => {
-        expect(snippetTypes).toEqual([]);
+        expect(snippetTypes).toEqual({});
     });
 });

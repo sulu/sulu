@@ -1,21 +1,26 @@
 // @flow
 import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
-import type {Schema, SchemaType} from '../types';
+import type {Schema, SchemaTypes} from '../types';
 
 class MetadataStore {
-    getSchemaTypes(resourceKey: string): Promise<Array<SchemaType>> {
+    getSchemaTypes(resourceKey: string): Promise<SchemaTypes> {
         return resourceMetadataStore.loadConfiguration(resourceKey)
             .then((configuration) => {
                 const {types} = configuration;
 
                 if (!types) {
-                    return [];
+                    return {};
                 }
 
-                return Object.keys(types).map((key) => ({
-                    key: key,
-                    title: types[key].title || key,
-                }));
+                const schemaTypes = {};
+                Object.keys(types).forEach((key) => {
+                    schemaTypes[key] = {
+                        key: key,
+                        title: types[key].title || key,
+                    };
+                });
+
+                return schemaTypes;
             });
     }
 

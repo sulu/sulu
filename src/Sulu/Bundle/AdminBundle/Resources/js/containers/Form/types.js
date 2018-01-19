@@ -6,6 +6,8 @@ export type SchemaType = {
     title: string,
 };
 
+export type SchemaTypes = {[key: string]: SchemaType};
+
 export type SchemaEntry = {
     label: string,
     type: string,
