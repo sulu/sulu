@@ -18,35 +18,23 @@
 }
 
 .resource-locator-history {
-    list-style-type: none;
-    padding: 0 40px 0 30px;
+    padding: 20px 40px 20px 30px;
 
-    &::after {
-        display: table;
-        content: "";
-        clear: both;
-    }
-
-    li::after {
-        clear: both;
+    .resource-locator-history-table {
+        table-layout: fixed;
     }
 
     .url,
     .date,
     .options-delete {
-        display: block;
         padding-top: 10px;
         padding-bottom: 10px;
         border-bottom: 1px solid $grayLighterer;
     }
 
-    .url,
-    .date {
-        float: left;
-    }
-
     .url {
         width: 72.5%;
+        word-wrap: break-word;
     }
 
     .date {
@@ -54,7 +42,6 @@
     }
 
     .options-delete {
-        float: right;
         width: 5%;
         text-align: center;
     }
