@@ -4,14 +4,17 @@ import FormStore from '../../stores/FormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/MetadataStore';
 
-jest.mock('../../../../stores/ResourceStore', () => function() {
+jest.mock('../../../../stores/ResourceStore', () => function(resourceKey) {
+    this.resourceKey = resourceKey;
     this.save = jest.fn();
     this.set = jest.fn();
+    this.data = {};
+    this.loading = false;
 });
 
 jest.mock('../../stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
-    getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve([])),
+    getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
 test('Create data object for schema', () => {
@@ -25,12 +28,17 @@ test('Create data object for schema', () => {
             type: 'text_line',
         },
     };
-    const promise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(promise);
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
     const formStore = new FormStore(new ResourceStore('snippets', '1'));
     expect(formStore.schemaLoading).toEqual(true);
 
-    return promise.then(() => {
+    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(formStore.schemaLoading).toEqual(false);
         expect(Object.keys(formStore.data)).toHaveLength(2);
         expect(formStore.data).toEqual({
@@ -68,12 +76,16 @@ test('Create data object for schema with sections', () => {
             },
         },
     };
-    const promise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(promise);
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
 
     const formStore = new FormStore(new ResourceStore('snippets', '1'));
 
-    return promise.then(() => {
+    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(formStore.data).toEqual({
             item11: null,
             item21: null,
@@ -100,11 +112,15 @@ test('Change schema should keep data', () => {
         slogan: 'Slogan',
     };
 
-    const promise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(promise);
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
     const formStore = new FormStore(resourceStore);
 
-    return promise.then(() => {
+    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(Object.keys(formStore.data)).toHaveLength(3);
         expect(formStore.data).toEqual({
             title: 'Title',
@@ -116,6 +132,7 @@ test('Change schema should keep data', () => {
 });
 
 test('Change type should update schema and data', () => {
+    const schemaTypesPromise = Promise.resolve({});
     const sidebarMetadata = {
         title: {
             label: 'Title',
@@ -134,10 +151,11 @@ test('Change type should update schema and data', () => {
         slogan: 'Slogan',
     };
 
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
     metadataStore.getSchema.mockReturnValue(sidebarPromise);
     const formStore = new FormStore(resourceStore);
 
-    return sidebarPromise.then(() => {
+    return Promise.all([schemaTypesPromise, sidebarPromise]).then(() => {
         expect(formStore.schema).toBe(sidebarMetadata);
         expect(formStore.data).toEqual({
             title: 'Title',
@@ -161,10 +179,10 @@ test('Change type should throw an error if no types are available', () => {
 });
 
 test('types property should be returning types from server', () => {
-    const types = [
-        {key: 'sidebar', title: 'Sidebar'},
-        {key: 'footer', title: 'Footer'},
-    ];
+    const types = {
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    };
     const promise = Promise.resolve(types);
     metadataStore.getSchemaTypes.mockReturnValue(promise);
 
@@ -176,6 +194,78 @@ test('types property should be returning types from server', () => {
         expect(toJS(formStore.types)).toEqual(types);
         expect(formStore.typesLoading).toEqual(false);
         formStore.destroy();
+    });
+});
+
+test('Type should be set from response', () => {
+    const resourceStore = new ResourceStore('snippets', '1');
+    resourceStore.data = {
+        template: 'sidebar',
+    };
+
+    const schemaTypesPromise = Promise.resolve({
+        sidebar: {},
+    });
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+    const formStore = new FormStore(resourceStore);
+
+    return schemaTypesPromise.then(() => {
+        expect(formStore.type).toEqual('sidebar');
+    });
+});
+
+test('Type should not be set from response if types are not supported', () => {
+    const resourceStore = new ResourceStore('snippets', '1');
+    resourceStore.data = {
+        template: 'sidebar',
+    };
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+    const formStore = new FormStore(resourceStore);
+
+    return schemaTypesPromise.then(() => {
+        expect(formStore.type).toEqual(undefined);
+    });
+});
+
+test('Changing type should set the appropriate property in the ResourceStore', () => {
+    const resourceStore = new ResourceStore('snippets', '1');
+    resourceStore.data = {
+        template: 'sidebar',
+    };
+
+    const schemaTypesPromise = Promise.resolve({
+        sidebar: {},
+        footer: {},
+    });
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const formStore = new FormStore(resourceStore);
+
+    return metadataPromise.then(() => {
+        formStore.changeType('footer');
+        expect(formStore.type).toEqual('footer');
+        setTimeout(() => { // The observe command is executed later
+            expect(resourceStore.set).toBeCalledWith('template', 'footer');
+        });
+    });
+});
+
+test('Changing type should throw an exception if types are not supported', () => {
+    const resourceStore = new ResourceStore('snippets', '1');
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const formStore = new FormStore(resourceStore);
+
+    return schemaTypesPromise.then(() => {
+        expect(() => formStore.changeType('sidebar'))
+            .toThrow(/"snippets" handled by this FormStore cannot handle types/);
     });
 });
 
@@ -228,5 +318,24 @@ test('Set should be passed to resourceStore', () => {
     formStore.set('title', 'Title');
 
     expect(formStore.resourceStore.set).toBeCalledWith('title', 'Title');
+    formStore.destroy();
+});
+
+test('Destroying the store should call all the disposers', () => {
+    const formStore = new FormStore(new ResourceStore('snippets', '2'));
+    formStore.schemaDisposer = jest.fn();
+    formStore.typeDisposer = jest.fn();
+
+    formStore.destroy();
+
+    expect(formStore.schemaDisposer).toBeCalled();
+    expect(formStore.typeDisposer).toBeCalled();
+});
+
+test('Destroying the store should not fail if no disposers are available', () => {
+    const formStore = new FormStore(new ResourceStore('snippets', '2'));
+    formStore.schemaDisposer = undefined;
+    formStore.typeDisposer = undefined;
+
     formStore.destroy();
 });

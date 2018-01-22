@@ -192,14 +192,17 @@ test('Should initialize the ResourceStore with a schema', () => {
         },
     };
 
-    const promise = Promise.resolve({
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve({
         title: {},
         description: {},
     });
-    metadataStore.getSchema.mockReturnValue(promise);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
     mount(<MediaDetail router={router} resourceStore={resourceStore} />);
 
-    return promise.then(() => {
+    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(resourceStore.resourceKey).toBe('media');
         expect(resourceStore.id).toBe(4);
         expect(resourceStore.data).toEqual({
@@ -241,11 +244,14 @@ test('Should save form when submitted', () => {
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('media', 4, {locale: observable()});
 
-    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
-    const promise = Promise.resolve({});
-    metadataStore.getSchema.mockReturnValue(promise);
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
 
     const router = {
         bind: jest.fn(),
@@ -264,7 +270,7 @@ test('Should save form when submitted', () => {
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
 
-    return promise.then(() => {
+    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         mediaDetail.find('Form').simulate('submit');
         expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
     });

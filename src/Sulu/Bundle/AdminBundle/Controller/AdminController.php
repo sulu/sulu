@@ -246,18 +246,36 @@ class AdminController
         "changed": {},
         "created": {}
     },
-    "form": {
-        "title": {
-            "label": "Title",
-            "type": "text_line"
+    "types": {
+        "default": {
+            "title": "Default",
+            "form": {
+                "title": {
+                    "label": "Title",
+                    "type": "text_line"
+                },
+                "description": {
+                    "label": "Description",
+                    "type": "text_line"
+                },
+                "media": {
+                    "label": "Media",
+                    "type": "media_selection"
+                }
+            }
         },
-        "slogan": {
-            "label": "Slogan",
-            "type": "text_line"
-        },
-        "media": {
-            "label": "Media",
-            "type": "media_selection"
+        "footer": {
+            "title": "Footer",
+            "form": {
+                "title": {
+                    "label": "Title",
+                    "type": "text_line"
+                },
+                "description": {
+                    "label": "Description",
+                    "type": "text_line"
+                }
+            }
         }
     }
 }
