@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.5
+    * HOTFIX      #3720 [MediaBundle]           Added extension-guesser to fix wrong extensions on download
+
 * 1.5.9 (2018-01-18)
     * HOTFIX      #3709 [CategoryBundle]        Category API: Fix bug when searching with rootKey parameter
     * BUGFIX      #3693 [MediaBundle]           Fix retina flag in XmlFormatLoader11 & add tests for retina flag
