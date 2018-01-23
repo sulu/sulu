@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
+import type {FieldProps} from 'sulu-admin-bundle';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaSelectionStore from './stores/MediaSelectionStore';
@@ -12,14 +12,8 @@ import type {Value} from './types';
 
 const ADD_ICON = 'plus';
 
-type Props = {
-    locale: IObservableValue<string>,
-    value: ?Value,
-    onChange: (value: Value) => void,
-};
-
 @observer
-export default class MediaSelection extends React.PureComponent<Props> {
+export default class MediaSelection extends React.PureComponent<FieldProps<Value>> {
     mediaSelectionStore: MediaSelectionStore;
     @observable overlayOpen: boolean = false;
 
@@ -29,6 +23,10 @@ export default class MediaSelection extends React.PureComponent<Props> {
             locale,
         } = this.props;
         const selectedMediaIds = (value && value.ids) ? value.ids : null;
+
+        if (!locale) {
+            throw new Error('The media selection needs a locale to work properly');
+        }
 
         this.mediaSelectionStore = new MediaSelectionStore(selectedMediaIds, locale);
     }
@@ -83,6 +81,11 @@ export default class MediaSelection extends React.PureComponent<Props> {
 
     render() {
         const {locale} = this.props;
+
+        if (!locale) {
+            throw new Error('The media selection needs a locale to work properly');
+        }
+
         const {
             loading,
             selectedMedia,

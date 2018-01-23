@@ -1,12 +1,11 @@
 // @flow
 import React from 'react';
+import type {FieldProps} from '../../types';
 import textAreaStyles from './textArea.scss';
 
-type Props = {
+type Props = FieldProps<string> & {
     name?: string,
-    value: ?string,
     placeholder?: string,
-    onChange: (value: string) => void,
 };
 
 export default class TextArea extends React.PureComponent<Props> {

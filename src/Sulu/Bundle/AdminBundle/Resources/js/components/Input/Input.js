@@ -3,18 +3,17 @@ import React from 'react';
 import type {ElementRef} from 'react';
 import Icon from '../Icon';
 import Loader from '../Loader';
+import type {FieldProps} from '../../types';
 import inputStyles from './input.scss';
 
 const LOADER_SIZE = 20;
 
-type Props = {
+type Props = FieldProps<string> & {
     name?: string,
     icon?: string,
     type: string,
-    value: ?string,
     loading?: boolean,
     placeholder?: string,
-    onChange: (value: string) => void,
     inputRef?: (ref: ElementRef<'label'>) => void,
     onFocus?: () => void,
 };
