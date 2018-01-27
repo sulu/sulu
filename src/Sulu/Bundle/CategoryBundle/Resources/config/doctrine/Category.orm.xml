@@ -9,7 +9,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="key" column="category_key" type="string" length="255" nullable="true" unique="true"/>
+        <field name="key" column="category_key" type="string" length="191" nullable="true" unique="true"/>
         <field name="defaultLocale" column="default_locale" type="string" length="5" nullable="false"/>
         <field name="lft" type="integer" column="lft">
             <gedmo:tree-left/>

@@ -14,7 +14,7 @@
 
         <field name="permissions" type="smallint" column="permissions"/>
         <field name="entityId" type="integer" column="entityId"/>
-        <field name="entityClass" type="string" column="entityClass"/>
+        <field name="entityClass" type="string" column="entityClass" length="191"/>
 
         <many-to-one field="role" target-entity="Sulu\Component\Security\Authentication\RoleInterface">
             <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>

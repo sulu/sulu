@@ -19,7 +19,7 @@
             <gedmo:tree-level/>
         </field>
 
-        <field name="key" type="string" column="collection_key" length="255" unique="true" nullable="true"/>
+        <field name="key" type="string" column="collection_key" length="191" unique="true" nullable="true"/>
 
         <many-to-one field="type" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionType" inversed-by="collections">
             <join-columns>

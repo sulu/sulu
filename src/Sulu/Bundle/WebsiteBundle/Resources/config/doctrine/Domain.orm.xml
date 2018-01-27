@@ -12,7 +12,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="url" type="string" column="url" length="255"/>
+        <field name="url" type="string" column="url" length="191"/>
         <field name="environment" type="string" column="environment" length="10"/>
     </entity>
 </doctrine-mapping>

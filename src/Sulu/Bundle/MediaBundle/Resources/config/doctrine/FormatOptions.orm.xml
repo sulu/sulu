@@ -7,7 +7,7 @@
             table="me_format_options">
 
         <id name="fileVersion" association-key="true"/>
-        <id name="formatKey" type="string" length="255"/>
+        <id name="formatKey" type="string" length="191"/>
 
         <field name="cropX" type="integer"/>
         <field name="cropY" type="integer"/>
