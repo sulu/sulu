@@ -222,12 +222,13 @@ test('Should change template on click in template chooser', () => {
             type: 'text_line',
         },
     });
-    const footerPromise = Promise.resolve({
+    const footerMetadata = {
         title: {
             label: 'Title',
             type: 'text_line',
         },
-    });
+    };
+    const footerPromise = Promise.resolve(footerMetadata);
     metadataStore.getSchema.mockImplementation((resourceKey, type) => {
         switch (type) {
             case 'sidebar':
@@ -242,8 +243,12 @@ test('Should change template on click in template chooser', () => {
     return Promise.all([typesPromise, sidebarPromise, footerPromise]).then(() => {
         const toolbarOptions = withToolbar.mock.calls[0][1].call(form.get(0));
         toolbarOptions.items[1].onChange('footer');
-        const formStore = form.get(0).formStore;
-        expect(formStore.type).toEqual('footer');
+        const schemaPromise = Promise.resolve(footerMetadata);
+        metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+        return schemaPromise.then(() => {
+            expect(form.find('.gridItem')).toHaveLength(1);
+        });
     });
 });
 
