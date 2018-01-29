@@ -145,6 +145,23 @@ test('Throw exception if no form fields for given resourceKey are available', ()
     });
 });
 
+test('Throw exception if no form fields for given resourceKey and type are available', () => {
+    const snippetMetadata = {
+        types: {
+            default: {},
+        },
+    };
+    const snippetPromise = Promise.resolve(snippetMetadata);
+
+    resourceMetadataStore.loadConfiguration.mockReturnValue(snippetPromise);
+
+    return metadataStore.getSchema('snippets', 'default').catch((error) => {
+        expect(error.toString()).toEqual(expect.stringContaining('no form schema'));
+        expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
+        expect(error.toString()).toEqual(expect.stringContaining('"default"'));
+    });
+});
+
 test('Return available types for given resourceKey', () => {
     const snippetMetadata = {
         types: {

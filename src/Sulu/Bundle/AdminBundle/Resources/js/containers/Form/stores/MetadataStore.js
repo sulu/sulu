@@ -29,7 +29,7 @@ class MetadataStore {
             .then((configuration) => {
                 if (configuration.types && !type) {
                     throw new Error(
-                        'The "' + resourceKey + '" configuration requires a type for loading the form configuration'
+                        'The "' + resourceKey + '" configuration requires a type for loading the form schema'
                     );
                 }
 
@@ -43,7 +43,12 @@ class MetadataStore {
                 const typeConfiguration = configuration.types ? configuration.types[type] : configuration;
 
                 if (!('form' in typeConfiguration)) {
-                    throw new Error('There are no form configurations for the resourceKey "' + resourceKey + '"');
+                    let errorMessage = 'There is no form schema for the resourceKey "' + resourceKey + '"';
+                    if (type) {
+                        errorMessage += ' for the type "' + type + '"';
+                    }
+
+                    throw new Error(errorMessage);
                 }
 
                 return typeConfiguration.form;

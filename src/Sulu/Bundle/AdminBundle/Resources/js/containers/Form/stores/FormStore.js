@@ -39,42 +39,7 @@ export default class FormStore {
         this.resourceStore = resourceStore;
 
         metadataStore.getSchemaTypes(this.resourceStore.resourceKey)
-            .then(action((types) => {
-                this.types = types;
-                this.typesLoading = false;
-
-                if (this.hasTypes) {
-                    when(
-                        () => !this.resourceStore.loading,
-                        () => this.changeType(this.resourceStore.data[TYPE])
-                    );
-                }
-
-                this.schemaDisposer = autorun(() => {
-                    const {type} = this;
-
-                    if (this.hasTypes && !type) {
-                        return;
-                    }
-
-                    metadataStore.getSchema(this.resourceStore.resourceKey, type)
-                        .then(action((schema) => {
-                            this.schema = schema;
-                            const schemaFields = Object.keys(schema)
-                                .reduce((data, key) => addSchemaProperties(data, key, schema), {});
-                            this.resourceStore.data = {...schemaFields, ...this.resourceStore.data};
-                            this.schemaLoading = false;
-
-                            if (this.hasTypes) {
-                                this.typeDisposer = observe(this, (change) => {
-                                    if (change.name === 'type') {
-                                        this.resourceStore.set(TYPE, change.newValue);
-                                    }
-                                });
-                            }
-                        }));
-                });
-            }));
+            .then(this.handleSchemaTypeResponse);
     }
 
     destroy() {
@@ -86,6 +51,46 @@ export default class FormStore {
             this.typeDisposer();
         }
     }
+
+    @action handleSchemaTypeResponse = (types: SchemaTypes) => {
+        this.types = types;
+        this.typesLoading = false;
+
+        if (this.hasTypes) {
+            // this will set the correct type from the server response after it has been loaded
+            when(
+                () => !this.resourceStore.loading,
+                () => this.changeType(this.resourceStore.data[TYPE])
+            );
+        }
+
+        this.schemaDisposer = autorun(() => {
+            const {type} = this;
+
+            if (this.hasTypes && !type) {
+                return;
+            }
+
+            metadataStore.getSchema(this.resourceStore.resourceKey, type)
+                .then(this.handleSchemaResponse);
+        });
+    };
+
+    @action handleSchemaResponse = (schema: Schema) => {
+        this.schema = schema;
+        const schemaFields = Object.keys(schema)
+            .reduce((data, key) => addSchemaProperties(data, key, schema), {});
+        this.resourceStore.data = {...schemaFields, ...this.resourceStore.data};
+        this.schemaLoading = false;
+
+        if (this.hasTypes) {
+            this.typeDisposer = observe(this, (change) => {
+                if (change.name === 'type') {
+                    this.resourceStore.set(TYPE, change.newValue);
+                }
+            });
+        }
+    };
 
     @computed get hasTypes(): boolean {
         return Object.keys(this.types).length > 0;
