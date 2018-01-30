@@ -12,7 +12,7 @@ function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
 
     if (type !== 'section') {
-        data[key] = null;
+        data[key] = undefined;
     }
 
     const items = schema[key].items;

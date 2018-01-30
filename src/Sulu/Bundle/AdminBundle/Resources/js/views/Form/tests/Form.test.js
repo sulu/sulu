@@ -364,8 +364,8 @@ test('Should initialize the ResourceStore with a schema', () => {
         expect(resourceStore.resourceKey).toBe('snippets');
         expect(resourceStore.id).toBe(12);
         expect(resourceStore.data).toEqual({
-            title: null,
-            slogan: null,
+            title: undefined,
+            slogan: undefined,
         });
     });
 });

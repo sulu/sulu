@@ -42,8 +42,8 @@ test('Create data object for schema', () => {
         expect(formStore.schemaLoading).toEqual(false);
         expect(Object.keys(formStore.data)).toHaveLength(2);
         expect(formStore.data).toEqual({
-            title: null,
-            description: null,
+            title: undefined,
+            description: undefined,
         });
         formStore.destroy();
     });
@@ -87,8 +87,8 @@ test('Create data object for schema with sections', () => {
 
     return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(formStore.data).toEqual({
-            item11: null,
-            item21: null,
+            item11: undefined,
+            item21: undefined,
         });
         formStore.destroy();
     });
@@ -124,7 +124,7 @@ test('Change schema should keep data', () => {
         expect(Object.keys(formStore.data)).toHaveLength(3);
         expect(formStore.data).toEqual({
             title: 'Title',
-            description: null,
+            description: undefined,
             slogan: 'Slogan',
         });
         formStore.destroy();
