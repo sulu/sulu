@@ -275,7 +275,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="heart"
-                        className="button fa fa-heart"
+                        className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -298,7 +298,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="pencil"
-                        className="button fa fa-pencil"
+                        className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -380,7 +380,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="heart"
-                        className="button fa fa-heart"
+                        className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -403,7 +403,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="pencil"
-                        className="button fa fa-pencil"
+                        className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -494,7 +494,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="heart"
-                        className="button fa fa-heart"
+                        className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -517,7 +517,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="pencil"
-                        className="button fa fa-pencil"
+                        className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -782,7 +782,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="heart"
-                        className="button fa fa-heart"
+                        className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -805,7 +805,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="pencil"
-                        className="button fa fa-pencil"
+                        className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -887,7 +887,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="heart"
-                        className="button fa fa-heart"
+                        className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -910,7 +910,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="pencil"
-                        className="button fa fa-pencil"
+                        className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -1184,7 +1184,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="heart"
-                        className="button fa fa-heart"
+                        className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -1207,7 +1207,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="pencil"
-                        className="button fa fa-pencil"
+                        className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -1289,7 +1289,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="heart"
-                        className="button fa fa-heart"
+                        className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}
@@ -1312,7 +1312,7 @@ exports[`The ColumnList component should render 1`] = `
                     >
                       <span
                         aria-label="pencil"
-                        className="button fa fa-pencil"
+                        className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
                         tabIndex={0}

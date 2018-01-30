@@ -17,7 +17,7 @@ exports[`Icon should render with class names 1`] = `
 exports[`Icon should render with onClick handler, role and tabindex 1`] = `
 <span
   aria-label="save"
-  class="test fa fa-save"
+  class="test fa fa-save clickable"
   role="button"
   tabindex="0"
 />

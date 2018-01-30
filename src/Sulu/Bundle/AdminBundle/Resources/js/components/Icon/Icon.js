@@ -2,6 +2,7 @@
 import 'font-awesome/css/font-awesome.min.css';
 import React from 'react';
 import classNames from 'classnames';
+import iconStyles from './icon.scss';
 
 type Props = {
     className?: string,
@@ -23,7 +24,14 @@ export default class Icon extends React.PureComponent<Props> {
 
     render() {
         const {className, name, onClick} = this.props;
-        const iconClass = classNames(className, 'fa', 'fa-' + name);
+        const iconClass = classNames(
+            className,
+            'fa',
+            'fa-' + name,
+            {
+                [iconStyles.clickable]: onClick,
+            }
+        );
 
         const onClickProperties = onClick
             ? {
