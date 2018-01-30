@@ -19,6 +19,14 @@ test('Render a collapsed block', () => {
     )).toMatchSnapshot();
 });
 
+test('Render the dragHandle prop if passed', () => {
+    expect(render(
+        <Block onCollapse={jest.fn()} onExpand={jest.fn()} dragHandle={<span>Test</span>}>
+            Block Content with custom drag handle
+        </Block>
+    )).toMatchSnapshot();
+});
+
 test('Clicking on a collapsed block should call the onExpand callback', () => {
     const expandSpy = jest.fn();
     const block = shallow(<Block onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);

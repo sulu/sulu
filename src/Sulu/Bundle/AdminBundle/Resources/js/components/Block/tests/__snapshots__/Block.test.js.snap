@@ -43,3 +43,24 @@ exports[`Render an expanded block 1`] = `
   </div>
 </section>
 `;
+
+exports[`Render the dragHandle prop if passed 1`] = `
+<section
+  class="block"
+>
+  <div
+    class="handle"
+  >
+    <span>
+      Test
+    </span>
+  </div>
+  <div
+    class="content"
+  >
+    <article>
+      Block Content with custom drag handle
+    </article>
+  </div>
+</section>
+`;

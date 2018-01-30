@@ -17,6 +17,9 @@ $handleBackgroundColor: $silver;
 }
 
 .handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: $handleBackgroundColor;
     border-radius: $borderRadius 0 0 $borderRadius;
     width: 20px;

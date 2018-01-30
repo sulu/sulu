@@ -7,6 +7,7 @@ import blockStyles from './block.scss';
 
 type Props = {
     children: Node,
+    dragHandle?: Node,
     expanded: boolean,
     onCollapse: () => void,
     onExpand: () => void,
@@ -32,7 +33,7 @@ export default class Block extends React.Component<Props> {
     };
 
     render() {
-        const {children, expanded} = this.props;
+        const {children, dragHandle, expanded} = this.props;
 
         const blockClass = classNames(
             blockStyles.block,
@@ -44,6 +45,7 @@ export default class Block extends React.Component<Props> {
         return (
             <section className={blockClass} onClick={this.handleExpand}>
                 <div className={blockStyles.handle}>
+                    {dragHandle}
                 </div>
                 <div className={blockStyles.content}>
                     {expanded &&
