@@ -18,7 +18,8 @@ export default class Button extends React.PureComponent<Props> {
         loading: false,
     };
 
-    handleClick = () => {
+    handleClick = (event: SyntheticEvent<HTMLButtonElement>) => {
+        event.preventDefault();
         this.props.onClick();
     };
 
