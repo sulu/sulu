@@ -219,6 +219,14 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @return string|null
+     */
+    public function getExtension()
+    {
+        return $this->getFileVersion()->getExtension();
+    }
+
+    /**
      * @param string $title
      *
      * @return $this

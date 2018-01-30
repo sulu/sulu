@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 
 /**
  * FileVersion.
@@ -273,6 +274,24 @@ class FileVersion implements AuditableInterface
     public function getMimeType()
     {
         return $this->mimeType;
+    }
+
+    /**
+     * Get extension.
+     *
+     * @return null|string
+     */
+    public function getExtension()
+    {
+        $pathInfo = pathinfo($this->getName());
+        $extension = ExtensionGuesser::getInstance()->guess($this->getMimeType());
+        if ($extension) {
+            return $extension;
+        } elseif (isset($pathInfo['extension'])) {
+            return $pathInfo['extension'];
+        }
+
+        return null;
     }
 
     /**
