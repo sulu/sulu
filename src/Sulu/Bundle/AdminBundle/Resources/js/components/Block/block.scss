@@ -1,0 +1,33 @@
+@import '../../containers/Application/colors.scss';
+
+$borderRadius: 3px;
+$blockBackgroundColor: $white;
+$blockBorderColor: $silver;
+$handleBackgroundColor: $silver;
+
+.block {
+    display: flex;
+    background-color: $blockBackgroundColor;
+    border-radius: $borderRadius;
+
+    &:not(.expanded) {
+        cursor: pointer;
+        border: 1px solid $blockBorderColor;
+    }
+}
+
+.handle {
+    background-color: $handleBackgroundColor;
+    border-radius: $borderRadius 0 0 $borderRadius;
+    width: 20px;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px 60px 20px 40px;
+}
+
+.header {
+    padding-bottom: 30px;
+    text-align: right;
+}

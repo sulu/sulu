@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a collapsed block 1`] = `
+<section
+  class="block"
+>
+  <div
+    class="handle"
+  />
+  <div
+    class="content"
+  >
+    <article>
+      Some block content
+    </article>
+  </div>
+</section>
+`;
+
+exports[`Render an expanded block 1`] = `
+<section
+  class="block expanded"
+>
+  <div
+    class="handle"
+  />
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <span
+        aria-label="times"
+        class="fa fa-times clickable"
+        role="button"
+        tabindex="0"
+      />
+    </header>
+    <article>
+      Some block content
+    </article>
+  </div>
+</section>
+`;
