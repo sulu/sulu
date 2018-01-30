@@ -1,11 +1,11 @@
 // @flow
 import type {ComponentType} from 'react';
-import type {FieldProps} from '../../../types';
+import type {FieldTypeProps} from '../../../types';
 
 class FieldRegistry {
     // TODO add correct props when possible
     // see https://github.com/facebook/flow/issues/5703
-    fields: {[string]: ComponentType<FieldProps<*>>};
+    fields: {[string]: ComponentType<FieldTypeProps<*>>};
 
     constructor() {
         this.clear();

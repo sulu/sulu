@@ -2,7 +2,7 @@
 import React from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import type {FieldProps} from 'sulu-admin-bundle';
+import type {FieldTypeProps} from 'sulu-admin-bundle';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaSelectionStore from './stores/MediaSelectionStore';
@@ -13,7 +13,7 @@ import type {Value} from './types';
 const ADD_ICON = 'plus';
 
 @observer
-export default class MediaSelection extends React.PureComponent<FieldProps<Value>> {
+export default class MediaSelection extends React.PureComponent<FieldTypeProps<Value>> {
     mediaSelectionStore: MediaSelectionStore;
     @observable overlayOpen: boolean = false;
 

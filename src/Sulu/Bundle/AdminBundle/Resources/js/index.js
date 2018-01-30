@@ -17,9 +17,9 @@ import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
 import List from './views/List';
 import {bundlesReadyPromise, bundleReady} from './services/Bundles';
-import type {FieldProps} from './types';
+import type {FieldTypeProps} from './types';
 
-export type {FieldProps};
+export type {FieldTypeProps};
 
 useStrict(true);
 

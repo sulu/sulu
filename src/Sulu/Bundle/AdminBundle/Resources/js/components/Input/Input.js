@@ -3,12 +3,12 @@ import React from 'react';
 import type {ElementRef} from 'react';
 import Icon from '../Icon';
 import Loader from '../Loader';
-import type {FieldProps} from '../../types';
+import type {FieldTypeProps} from '../../types';
 import inputStyles from './input.scss';
 
 const LOADER_SIZE = 20;
 
-type Props = FieldProps<string> & {
+type Props = FieldTypeProps<string> & {
     name?: string,
     icon?: string,
     type: string,

@@ -36,19 +36,19 @@ exports[`Render a simple MediaOverview 1`] = `
         <div>
           <span
             aria-label="plus"
-            class="fa fa-plus"
+            class="fa fa-plus clickable"
             role="button"
             tabindex="0"
           />
           <span
             aria-label="pencil"
-            class="fa fa-pencil"
+            class="fa fa-pencil clickable"
             role="button"
             tabindex="0"
           />
           <span
             aria-label="trash"
-            class="fa fa-trash"
+            class="fa fa-trash clickable"
             role="button"
             tabindex="0"
           />

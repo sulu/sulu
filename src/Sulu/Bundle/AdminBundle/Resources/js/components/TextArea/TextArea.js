@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {FieldProps} from '../../types';
+import type {FieldTypeProps} from '../../types';
 import textAreaStyles from './textArea.scss';
 
-type Props = FieldProps<string> & {
+type Props = FieldTypeProps<string> & {
     name?: string,
     placeholder?: string,
 };
