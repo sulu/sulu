@@ -38,6 +38,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
 
 jest.mock('../../../containers/Form/stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
+    getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
 beforeEach(() => {
@@ -167,6 +168,149 @@ test('Should show locales from router options in toolbar', () => {
     ]);
 });
 
+test('Should show loading templates chooser in toolbar while types are loading', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {},
+        },
+        attributes: {},
+    };
+
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+
+    const toolbarConfig = toolbarFunction.call(form);
+    expect(toolbarConfig).toMatchSnapshot();
+});
+
+test('Should change template on click in template chooser', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
+
+    const resourceStore = new ResourceStore('snippet', 1);
+    resourceStore.loading = false;
+    resourceStore.data.template = 'sidebar';
+
+    const router = {
+        route: {
+            options: {},
+        },
+    };
+
+    const typesPromise = Promise.resolve({
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    });
+    metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
+
+    const sidebarPromise = Promise.resolve({
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        description: {
+            label: 'Description',
+            type: 'text_line',
+        },
+    });
+    const footerMetadata = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+    };
+    const footerPromise = Promise.resolve(footerMetadata);
+    metadataStore.getSchema.mockImplementation((resourceKey, type) => {
+        switch (type) {
+            case 'sidebar':
+                return sidebarPromise;
+            case 'footer':
+                return footerPromise;
+        }
+    });
+
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+
+    return Promise.all([typesPromise, sidebarPromise, footerPromise]).then(() => {
+        const toolbarOptions = withToolbar.mock.calls[0][1].call(form.get(0));
+        toolbarOptions.items[1].onChange('footer');
+        const schemaPromise = Promise.resolve(footerMetadata);
+        metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+        return schemaPromise.then(() => {
+            expect(form.find('.gridItem')).toHaveLength(1);
+        });
+    });
+});
+
+test('Should show templates chooser in toolbar if types are available', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('snippet', 1);
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
+
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {},
+        },
+        attributes: {},
+    };
+
+    const typesPromise = Promise.resolve({
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    });
+    metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
+
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+
+    return typesPromise.then(() => {
+        const toolbarConfig = toolbarFunction.call(form);
+        expect(toolbarConfig).toMatchSnapshot();
+    });
+});
+
+test('Should not show templates chooser in toolbar if types are not available', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('snippet', 1);
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
+
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {},
+        },
+        attributes: {},
+    };
+
+    const typesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
+
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+
+    return typesPromise.then(() => {
+        const toolbarConfig = toolbarFunction.call(form);
+        expect(toolbarConfig).toMatchSnapshot();
+    });
+});
+
 test('Should not show a locale chooser if no locales are passed in router options', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
@@ -206,15 +350,17 @@ test('Should initialize the ResourceStore with a schema', () => {
         },
     };
 
-    const promise = Promise.resolve({
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+    const schemaPromise = Promise.resolve({
         title: {},
         slogan: {},
     });
-    metadataStore.getSchema.mockReturnValue(promise);
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
 
     mount(<Form router={router} resourceStore={resourceStore} />);
 
-    return promise.then(() => {
+    return Promise.all([schemaTypesPromise, schemaPromise]).then(() => {
         expect(resourceStore.resourceKey).toBe('snippets');
         expect(resourceStore.id).toBe(12);
         expect(resourceStore.data).toEqual({
@@ -259,8 +405,11 @@ test('Should save form when submitted', () => {
     const metadataStore = require('../../../containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable()});
 
-    const promise = Promise.resolve({});
-    metadataStore.getSchema.mockReturnValue(promise);
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
 
     const router = {
         bind: jest.fn(),
@@ -280,7 +429,7 @@ test('Should save form when submitted', () => {
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
 
-    return promise.then(() => {
+    return Promise.all([schemaTypesPromise, schemaPromise]).then(() => {
         form.find('Form').at(1).simulate('submit');
         expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
     });

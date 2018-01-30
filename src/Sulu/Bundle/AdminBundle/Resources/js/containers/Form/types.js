@@ -1,6 +1,13 @@
 // @flow
 import type {Size} from '../../components/Grid';
 
+export type SchemaType = {
+    key: string,
+    title: string,
+};
+
+export type SchemaTypes = {[key: string]: SchemaType};
+
 export type SchemaEntry = {
     label: string,
     type: string,

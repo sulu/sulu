@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Return available types for given resourceKey 1`] = `
+Object {
+  "footer": Object {
+    "key": "footer",
+    "title": "footer",
+  },
+  "sidebar": Object {
+    "key": "sidebar",
+    "title": "Sidebar Snippet",
+  },
+}
+`;

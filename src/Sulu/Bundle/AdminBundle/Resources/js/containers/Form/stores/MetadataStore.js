@@ -1,16 +1,57 @@
 // @flow
 import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
-import type {Schema} from '../types';
+import type {Schema, SchemaTypes} from '../types';
 
 class MetadataStore {
-    getSchema(resourceKey: string): Promise<Schema> {
+    getSchemaTypes(resourceKey: string): Promise<SchemaTypes> {
         return resourceMetadataStore.loadConfiguration(resourceKey)
             .then((configuration) => {
-                if (!('form' in configuration)) {
-                    throw new Error('There are no form configurations for the resourceKey "' + resourceKey + '"');
+                const {types} = configuration;
+
+                if (!types) {
+                    return {};
                 }
 
-                return configuration.form;
+                const schemaTypes = {};
+                Object.keys(types).forEach((key) => {
+                    schemaTypes[key] = {
+                        key: key,
+                        title: types[key].title || key,
+                    };
+                });
+
+                return schemaTypes;
+            });
+    }
+
+    getSchema(resourceKey: string, type: ?string): Promise<Schema> {
+        return resourceMetadataStore.loadConfiguration(resourceKey)
+            .then((configuration) => {
+                if (configuration.types && !type) {
+                    throw new Error(
+                        'The "' + resourceKey + '" configuration requires a type for loading the form schema'
+                    );
+                }
+
+                if (!configuration.types && type) {
+                    throw new Error(
+                        'The "' + resourceKey + '" configuration does not support types,'
+                        + ' but a type of "' + type + '" was given'
+                    );
+                }
+
+                const typeConfiguration = configuration.types ? configuration.types[type] : configuration;
+
+                if (!('form' in typeConfiguration)) {
+                    let errorMessage = 'There is no form schema for the resourceKey "' + resourceKey + '"';
+                    if (type) {
+                        errorMessage += ' for the type "' + type + '"';
+                    }
+
+                    throw new Error(errorMessage);
+                }
+
+                return typeConfiguration.form;
             });
     }
 }

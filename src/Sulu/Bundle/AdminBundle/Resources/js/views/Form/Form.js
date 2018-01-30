@@ -13,7 +13,6 @@ type Props = ViewProps & {
 
 class Form extends React.PureComponent<Props> {
     formStore: FormStore;
-
     form: ?FormContainer;
 
     componentWillMount() {
@@ -26,6 +25,7 @@ class Form extends React.PureComponent<Props> {
     }
 
     componentWillUnmount() {
+        this.formStore.destroy();
         const {resourceStore, router} = this.props;
 
         if (resourceStore.locale) {
@@ -57,6 +57,7 @@ class Form extends React.PureComponent<Props> {
 export default withToolbar(Form, function() {
     const {router} = this.props;
     const {backRoute, locales} = router.route.options;
+    const formTypes = this.formStore.types;
 
     const backButton = backRoute
         ? {
@@ -84,20 +85,38 @@ export default withToolbar(Form, function() {
         }
         : undefined;
 
+    const items = [
+        {
+            type: 'button',
+            value: translate('sulu_admin.save'),
+            icon: 'floppy-o',
+            disabled: !this.props.resourceStore.dirty,
+            loading: this.props.resourceStore.saving,
+            onClick: () => {
+                this.form.submit();
+            },
+        },
+    ];
+
+    if (this.formStore.typesLoading || Object.keys(formTypes).length > 0) {
+        items.push({
+            type: 'select',
+            icon: 'paint-brush',
+            onChange: (value) => {
+                this.formStore.changeType(value);
+            },
+            loading: this.formStore.typesLoading,
+            value: this.formStore.type,
+            options: Object.keys(formTypes).map((key) => ({
+                value: formTypes[key].key,
+                label: formTypes[key].title,
+            })),
+        });
+    }
+
     return {
         backButton,
         locale,
-        items: [
-            {
-                type: 'button',
-                value: translate('sulu_admin.save'),
-                icon: 'floppy-o',
-                disabled: !this.props.resourceStore.dirty,
-                loading: this.props.resourceStore.saving,
-                onClick: () => {
-                    this.form.submit();
-                },
-            },
-        ],
+        items,
     };
 });
