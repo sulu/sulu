@@ -38,6 +38,24 @@ test('Render expanded sortable block', () => {
     )).toMatchSnapshot();
 });
 
+test('Render expanded sortable block with types', () => {
+    const renderBlockContent = jest.fn().mockImplementation((value) => 'Test for ' + value.content);
+
+    expect(render(
+        <SortableBlock
+            activeType={'type2'}
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            onRemove={jest.fn()}
+            renderBlockContent={renderBlockContent}
+            sortIndex={1}
+            types={{type1: 'Type 1', type2: 'Type 2'}}
+            value={{content: 'Test Content'}}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Should call onCollapse when the block is being collapsed', () => {
     const collapseSpy = jest.fn();
     const expandSpy = jest.fn();
@@ -57,7 +75,7 @@ test('Should call onCollapse when the block is being collapsed', () => {
 
     sortableBlock.find('Block').prop('onCollapse')();
 
-    expect(collapseSpy).toBeCalled();
+    expect(collapseSpy).toBeCalledWith(1);
     expect(expandSpy).not.toBeCalled();
     expect(removeSpy).not.toBeCalled();
 });
@@ -82,7 +100,7 @@ test('Should call onExpand when the block is being expanded', () => {
     sortableBlock.find('Block').prop('onExpand')();
 
     expect(collapseSpy).not.toBeCalled();
-    expect(expandSpy).toBeCalled();
+    expect(expandSpy).toBeCalledWith(1);
     expect(removeSpy).not.toBeCalled();
 });
 
@@ -107,5 +125,26 @@ test('Should call onRemove when the block is being removed', () => {
 
     expect(collapseSpy).not.toBeCalled();
     expect(expandSpy).not.toBeCalled();
-    expect(removeSpy).toBeCalled();
+    expect(removeSpy).toBeCalledWith(1);
+});
+
+test('Should call onTypeChange when the block has changed its type', () => {
+    const typeChangeSpy = jest.fn();
+
+    const sortableBlock = shallow(
+        <SortableBlock
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            onRemove={jest.fn()}
+            onTypeChange={typeChangeSpy}
+            renderBlockContent={jest.fn()}
+            sortIndex={1}
+            value={{content: 'Test Content'}}
+        />
+    );
+
+    sortableBlock.find('Block').prop('onTypeChange')('type1');
+
+    expect(typeChangeSpy).toBeCalledWith('type1', 1);
 });

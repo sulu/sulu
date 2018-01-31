@@ -1,4 +1,4 @@
-// @flow
+
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import BlockCollection from '../BlockCollection';
@@ -27,6 +27,33 @@ test('Should render a filled block list', () => {
             value={[{content: 'Test 1'}, {content: 'Test 2'}]}
         />
     )).toMatchSnapshot();
+});
+
+test('Choosing a different type should change the type', () => {
+    const renderBlockContent = jest.fn();
+    const blockCollection = mount(
+        <BlockCollection
+            onChange={jest.fn()}
+            renderBlockContent={renderBlockContent}
+            types={{type1: 'Type 1', type2: 'Type2'}}
+            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+        />
+    );
+
+    const block1 = blockCollection.find('Block').at(0);
+    const block2 = blockCollection.find('Block').at(1);
+
+    block1.simulate('click');
+    block2.simulate('click');
+
+    const select1 = block1.find('SingleSelect');
+    const select2 = block2.find('SingleSelect');
+    expect(select1.prop('value')).toEqual('type1');
+    expect(select2.prop('value')).toEqual('type1');
+
+    select1.prop('onChange')('type2');
+    expect(select1.prop('value')).toEqual('type2');
+    expect(select2.prop('value')).toEqual('type1');
 });
 
 test('Should allow to expand blocks', () => {
@@ -85,6 +112,30 @@ test('Should allow to reorder blocks by using drag and drop', () => {
     expect(changeSpy).toBeCalledWith([{content: 'Test 2'}, {content: 'Test 3'}, {content: 'Test 1'}]);
 
     expect(blockCollection.get(0).expandedBlocks.toJS()).toEqual([false, false, true]);
+});
+
+test('Should keep types when reordering blocks by using drag and drop', () => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1'}, {content: 'Test 2'}, {content: 'Test 3'}];
+    const blockCollection = mount(
+        <BlockCollection
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={{type1: 'Type 1', type2: 'Type 2'}}
+            value={value}
+        />
+    );
+
+    expect(blockCollection.get(0).blockTypes.toJS()).toEqual(['type1', 'type1', 'type1']);
+
+    const block1 = blockCollection.find('Block').at(0);
+    block1.simulate('click');
+    block1.find('SingleSelect').prop('onChange')('type2');
+    expect(blockCollection.get(0).blockTypes.toJS()).toEqual(['type2', 'type1', 'type1']);
+
+    blockCollection.find(SortableContainer).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
+
+    expect(blockCollection.get(0).blockTypes.toJS()).toEqual(['type1', 'type1', 'type2']);
 });
 
 test('Should allow to add a new block', () => {

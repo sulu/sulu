@@ -7,11 +7,14 @@ import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
 
 type Props = {
+    blockTypes: Array<string>,
     expandedBlocks: Array<boolean>,
     onExpand: (index: number) => void,
     onCollapse: (index: number) => void,
     onRemove: (index: number) => void,
+    onTypeChange?: (type: string | number, index: number) => void,
     renderBlockContent: (value: *) => Node,
+    types?: {[key: string]: string},
     value: Array<*>,
 };
 
@@ -32,21 +35,32 @@ class SortableBlockList extends React.Component<Props> {
         onRemove(index);
     };
 
+    handleTypeChange = (type: string | number, index: number) => {
+        const {onTypeChange} = this.props;
+
+        if (onTypeChange) {
+            onTypeChange(type, index);
+        }
+    };
+
     render() {
-        const {expandedBlocks, renderBlockContent, value} = this.props;
+        const {blockTypes, expandedBlocks, renderBlockContent, types, value} = this.props;
 
         return (
             <div className={sortableBlockListStyles.sortableBlockList}>
                 {value && value.map((block, index) => (
                     <SortableBlock
+                        activeType={blockTypes[index]}
                         expanded={expandedBlocks[index]}
                         index={index}
                         key={index}
                         onExpand={this.handleExpand}
                         onCollapse={this.handleCollapse}
                         onRemove={this.handleRemove}
+                        onTypeChange={this.handleTypeChange}
                         renderBlockContent={renderBlockContent}
                         sortIndex={index}
+                        types={types}
                         value={block}
                     />
                 ))}

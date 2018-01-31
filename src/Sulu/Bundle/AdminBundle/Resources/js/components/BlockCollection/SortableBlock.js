@@ -6,12 +6,15 @@ import Block from '../Block';
 import SortableHandle from './SortableHandle';
 
 type Props = {
+    activeType?: string,
     expanded: boolean,
     onCollapse: (index: number) => void,
     onExpand: (index: number) => void,
     onRemove: (index: number) => void,
+    onTypeChange?: (type: string | number, index: number) => void,
     renderBlockContent: (value: *) => Node,
     sortIndex: number,
+    types?: {[key: string]: string},
     value: Object,
 };
 
@@ -34,16 +37,27 @@ class SortableBlock extends React.Component<Props> {
         onRemove(sortIndex);
     };
 
+    handleTypeChange = (type) => {
+        const {sortIndex, onTypeChange} = this.props;
+
+        if (onTypeChange) {
+            onTypeChange(type, sortIndex);
+        }
+    };
+
     render() {
-        const {expanded, renderBlockContent, value} = this.props;
+        const {activeType, expanded, renderBlockContent, types, value} = this.props;
 
         return (
             <Block
+                activeType={activeType}
                 dragHandle={<SortableHandle />}
                 expanded={expanded}
                 onCollapse={this.handleCollapse}
                 onExpand={this.handleExpand}
                 onRemove={this.handleRemove}
+                onTypeChange={this.handleTypeChange}
+                types={types}
             >
                 {expanded && renderBlockContent(value)}
             </Block>

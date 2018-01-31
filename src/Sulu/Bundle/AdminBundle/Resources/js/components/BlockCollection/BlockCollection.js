@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import {arrayMove} from 'react-sortable-hoc';
 import {translate} from '../../utils/Translator';
 import Button from '../Button';
@@ -12,9 +13,11 @@ import blockCollectionStyles from './blockCollection.scss';
 type Props = {
     onChange: (value: *) => void,
     renderBlockContent: (value: *) => Node,
+    types?: {[key: string]: string},
     value: Array<*>,
 };
 
+@observer
 export default class BlockCollection extends React.Component<Props> {
     static defaultProps = {
         value: [],
@@ -22,19 +25,32 @@ export default class BlockCollection extends React.Component<Props> {
 
     @observable expandedBlocks: Array<boolean> = [];
 
-    componentWillMount() {
-        this.fillExpandedBlocksArray();
+    @observable blockTypes: Array<?string | number> = [];
+
+    @computed get defaultType(): ?string {
+        const {types} = this.props;
+
+        if (!types) {
+            return undefined;
+        }
+
+        return Object.keys(types)[0];
     }
 
-    fillExpandedBlocksArray() {
+    componentWillMount() {
+        this.fillArrays();
+    }
+
+    fillArrays() {
         const {value} = this.props;
-        const {expandedBlocks} = this;
+        const {blockTypes, expandedBlocks} = this;
 
         if (!value) {
             return;
         }
 
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(false));
+        blockTypes.push(...new Array(value.length - blockTypes.length).fill(this.defaultType));
     }
 
     @action handleAddBlock = () => {
@@ -42,6 +58,7 @@ export default class BlockCollection extends React.Component<Props> {
 
         if (value) {
             this.expandedBlocks.push(false);
+            this.blockTypes.push(this.defaultType);
             onChange([...value, {}]);
         }
     };
@@ -51,6 +68,7 @@ export default class BlockCollection extends React.Component<Props> {
 
         if (value) {
             this.expandedBlocks.splice(index, 1);
+            this.blockTypes.splice(index, 1);
             onChange(value.filter((element, arrayIndex) => arrayIndex != index));
         }
     };
@@ -59,34 +77,38 @@ export default class BlockCollection extends React.Component<Props> {
         const {onChange, value} = this.props;
 
         this.expandedBlocks = arrayMove(this.expandedBlocks, oldIndex, newIndex);
+        this.blockTypes = arrayMove(this.blockTypes, oldIndex, newIndex);
         onChange(arrayMove(value, oldIndex, newIndex));
     };
 
     @action handleCollapse = (index: number) => {
-        const {expandedBlocks} = this;
-
-        expandedBlocks[index] = false;
+        this.expandedBlocks[index] = false;
     };
 
     @action handleExpand = (index: number) => {
-        const {expandedBlocks} = this;
+        this.expandedBlocks[index] = true;
+    };
 
-        expandedBlocks[index] = true;
+    @action handleTypeChange = (type: string | number, index: number) => {
+        this.blockTypes[index] = type;
     };
 
     render() {
-        const {renderBlockContent, value} = this.props;
+        const {renderBlockContent, types, value} = this.props;
 
         return (
             <section className={blockCollectionStyles.blockCollection}>
                 <SortableBlockList
+                    blockTypes={this.blockTypes}
                     expandedBlocks={this.expandedBlocks}
                     lockAxis="y"
                     onExpand={this.handleExpand}
                     onCollapse={this.handleCollapse}
                     onRemove={this.handleRemove}
                     onSortEnd={this.handleSortEnd}
+                    onTypeChange={this.handleTypeChange}
                     renderBlockContent={renderBlockContent}
+                    types={types}
                     useDragHandle={true}
                     value={value}
                 />

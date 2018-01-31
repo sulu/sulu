@@ -16,3 +16,28 @@ const renderBlockContent = (value) => (<p>{value.content || <i>There is no conte
 
 <BlockCollection onChange={onChange} value={state.value} renderBlockContent={renderBlockContent} />
 ```
+
+By passing the `types` argument to the block it is possible to allow every single `Block` to be chosen a specific type.
+This can also have an impact on the rendering of the block.
+
+```javascript
+initialState = {value: []};
+
+const onChange = (value) => {
+    setState({value});
+};
+
+const types = {
+    type1: 'Type 1',
+    type2: 'Type 2',
+};
+
+const renderBlockContent = () => 'This block does not really care about its value...';
+
+<BlockCollection
+    onChange={onChange}
+    renderBlockContent={renderBlockContent}
+    types={types}
+    value={state.value}
+/>
+```
