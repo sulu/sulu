@@ -33,4 +33,8 @@ $handleBackgroundColor: $silver;
 .header {
     padding-bottom: 30px;
     text-align: right;
+
+    & > * {
+        margin-left: 20px;
+    }
 }

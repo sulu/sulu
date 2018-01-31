@@ -11,6 +11,7 @@ type Props = {
     expanded: boolean,
     onCollapse: () => void,
     onExpand: () => void,
+    onRemove?: () => void,
 };
 
 export default class Block extends React.Component<Props> {
@@ -32,8 +33,16 @@ export default class Block extends React.Component<Props> {
         }
     };
 
+    handleRemove = () => {
+        const {onRemove} = this.props;
+
+        if (onRemove) {
+            onRemove();
+        }
+    };
+
     render() {
-        const {children, dragHandle, expanded} = this.props;
+        const {children, dragHandle, expanded, onRemove} = this.props;
 
         const blockClass = classNames(
             blockStyles.block,
@@ -50,6 +59,7 @@ export default class Block extends React.Component<Props> {
                 <div className={blockStyles.content}>
                     {expanded &&
                         <header className={blockStyles.header}>
+                            {onRemove && <Icon name="trash-o" onClick={this.handleRemove} />}
                             <Icon name="times" onClick={this.handleCollapse} />
                         </header>
                     }

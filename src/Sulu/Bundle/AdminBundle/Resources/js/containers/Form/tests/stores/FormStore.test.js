@@ -159,7 +159,7 @@ test('Change type should update schema and data', () => {
         expect(formStore.schema).toBe(sidebarMetadata);
         expect(formStore.data).toEqual({
             title: 'Title',
-            description: null,
+            description: undefined,
             slogan: 'Slogan',
         });
         formStore.destroy();

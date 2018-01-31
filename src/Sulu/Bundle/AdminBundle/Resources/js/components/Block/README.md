@@ -15,3 +15,18 @@ const onExpand = () => setState({expanded: true});
     That is the content of the block!
 </Block>
 ```
+
+When the `onRemove` callback is passed, there will also be a remove icon shown, which calls this callback when being
+clicked.
+
+```javascript
+initialState = {expanded: true};
+
+const onCollapse = () => setState({expanded: false});
+const onExpand = () => setState({expanded: true});
+const onRemove = () => alert('Remove callback was invoked!');
+
+<Block expanded={state.expanded} onCollapse={onCollapse} onExpand={onExpand} onRemove={onRemove}>
+    That is the content of the block!
+</Block>
+```

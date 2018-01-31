@@ -1,5 +1,38 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Passing a onRemove callback should render the remove icon 1`] = `
+<section
+  class="block expanded"
+>
+  <div
+    class="handle"
+  />
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <span
+        aria-label="trash-o"
+        class="fa fa-trash-o clickable"
+        role="button"
+        tabindex="0"
+      />
+      <span
+        aria-label="times"
+        class="fa fa-times clickable"
+        role="button"
+        tabindex="0"
+      />
+    </header>
+    <article>
+      Some block content
+    </article>
+  </div>
+</section>
+`;
+
 exports[`Render a collapsed block 1`] = `
 <section
   class="block"

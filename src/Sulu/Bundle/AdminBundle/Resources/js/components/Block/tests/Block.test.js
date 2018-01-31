@@ -27,6 +27,14 @@ test('Render the dragHandle prop if passed', () => {
     )).toMatchSnapshot();
 });
 
+test('Passing a onRemove callback should render the remove icon', () => {
+    expect(render(
+        <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={jest.fn()}>
+            Some block content
+        </Block>
+    )).toMatchSnapshot();
+});
+
 test('Clicking on a collapsed block should call the onExpand callback', () => {
     const expandSpy = jest.fn();
     const block = shallow(<Block onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
@@ -55,4 +63,18 @@ test('Clicking the close icon in an expanded block should collapse it', () => {
     closeIcon.simulate('click');
 
     expect(collapseSpy).toHaveBeenCalledTimes(1);
+});
+
+test('Clicking the remove icon in an expanded block should remove it', () => {
+    const removeSpy = jest.fn();
+    const block = shallow(
+        <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={removeSpy}>Block content</Block>
+    );
+
+    const removeIcon = block.find('Icon[name="trash-o"]');
+    expect(removeIcon).toHaveLength(1);
+
+    removeIcon.simulate('click');
+
+    expect(removeSpy).toHaveBeenCalledTimes(1);
 });
