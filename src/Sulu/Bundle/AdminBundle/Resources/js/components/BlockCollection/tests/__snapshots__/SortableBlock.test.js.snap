@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render collapsed sortable block 1`] = `
+<section
+  class="block"
+>
+  <div
+    class="handle"
+  >
+    <span
+      aria-label="ellipsis-v"
+      class="sortableHandle fa fa-ellipsis-v"
+    />
+  </div>
+  <div
+    class="content"
+  >
+    <article />
+  </div>
+</section>
+`;
+
+exports[`Render expanded sortable block 1`] = `
+<section
+  class="block expanded"
+>
+  <div
+    class="handle"
+  >
+    <span
+      aria-label="ellipsis-v"
+      class="sortableHandle fa fa-ellipsis-v"
+    />
+  </div>
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <span
+        aria-label="trash-o"
+        class="fa fa-trash-o clickable"
+        role="button"
+        tabindex="0"
+      />
+      <span
+        aria-label="times"
+        class="fa fa-times clickable"
+        role="button"
+        tabindex="0"
+      />
+    </header>
+    <article>
+      Test Content
+    </article>
+  </div>
+</section>
+`;

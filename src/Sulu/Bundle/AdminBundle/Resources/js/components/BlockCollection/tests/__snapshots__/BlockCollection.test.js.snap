@@ -21,9 +21,7 @@ exports[`Should render a filled block list 1`] = `
       <div
         class="content"
       >
-        <article>
-          Test 1
-        </article>
+        <article />
       </div>
     </section>
     <section
@@ -40,9 +38,7 @@ exports[`Should render a filled block list 1`] = `
       <div
         class="content"
       >
-        <article>
-          Test 2
-        </article>
+        <article />
       </div>
     </section>
   </div>

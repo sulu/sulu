@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {ComponentType} from 'react';
 import {SortableElement} from 'react-sortable-hoc';
 import Block from '../Block';
 import SortableHandle from './SortableHandle';
@@ -43,10 +44,11 @@ class SortableBlock extends React.Component<Props> {
                 onExpand={this.handleExpand}
                 onRemove={this.handleRemove}
             >
-                {value.content}
+                {expanded && value.content}
             </Block>
         );
     }
 }
 
-export default SortableElement(SortableBlock);
+const SortableElementBlock: ComponentType<Props> = SortableElement(SortableBlock);
+export default SortableElementBlock;
