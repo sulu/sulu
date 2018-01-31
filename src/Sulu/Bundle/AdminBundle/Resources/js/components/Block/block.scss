@@ -31,7 +31,12 @@ $handleBackgroundColor: $silver;
 }
 
 .header {
+    display: flex;
     padding-bottom: 30px;
+}
+
+.icons {
+    flex-grow: 1;
     text-align: right;
 
     & > * {

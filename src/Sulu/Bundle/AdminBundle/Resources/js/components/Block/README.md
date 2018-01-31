@@ -30,3 +30,31 @@ const onRemove = () => alert('Remove callback was invoked!');
     That is the content of the block!
 </Block>
 ```
+
+It is also possible to pass an object containing the available types, whereby the object key is the identifier and the
+value a title. The values of this `types` prop will be used to render a select if there is more than one type
+available. The select will call the passed callback prop named `onTypeChange`. The `activeType` prop should equal the
+currently selected type.
+
+```javascript
+initialState = {activeType: 'type2', expanded: true};
+
+const onCollapse = () => setState({expanded: false});
+const onExpand = () => setState({expanded: true});
+const onTypeChange = (type) => setState({activeType: type});
+const types = {
+    type1: 'Type 1',
+    type2: 'Type 2',
+};
+
+<Block
+    activeType={state.activeType}
+    expanded={state.expanded}
+    onCollapse={onCollapse}
+    onExpand={onExpand}
+    onTypeChange={onTypeChange}
+    types={types}
+>
+    That is a {state.activeType} Block!
+</Block>
+```

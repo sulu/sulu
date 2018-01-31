@@ -9,7 +9,7 @@ import type {FieldTypeProps} from '../../types';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
 
-export default class BlockCollection extends React.Component<FieldTypeProps<Array<Object>>> {
+export default class BlockCollection extends React.Component<FieldTypeProps<Array<*>>> {
     static defaultProps = {
         value: [],
     };

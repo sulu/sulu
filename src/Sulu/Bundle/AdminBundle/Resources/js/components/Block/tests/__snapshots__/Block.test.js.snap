@@ -13,18 +13,22 @@ exports[`Passing a onRemove callback should render the remove icon 1`] = `
     <header
       class="header"
     >
-      <span
-        aria-label="trash-o"
-        class="fa fa-trash-o clickable"
-        role="button"
-        tabindex="0"
-      />
-      <span
-        aria-label="times"
-        class="fa fa-times clickable"
-        role="button"
-        tabindex="0"
-      />
+      <div
+        class="icons"
+      >
+        <span
+          aria-label="trash-o"
+          class="fa fa-trash-o clickable"
+          role="button"
+          tabindex="0"
+        />
+        <span
+          aria-label="times"
+          class="fa fa-times clickable"
+          role="button"
+          tabindex="0"
+        />
+      </div>
     </header>
     <article>
       Some block content
@@ -63,12 +67,115 @@ exports[`Render an expanded block 1`] = `
     <header
       class="header"
     >
-      <span
-        aria-label="times"
-        class="fa fa-times clickable"
-        role="button"
-        tabindex="0"
-      />
+      <div
+        class="icons"
+      >
+        <span
+          aria-label="times"
+          class="fa fa-times clickable"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </header>
+    <article>
+      Some block content
+    </article>
+  </div>
+</section>
+`;
+
+exports[`Render an expanded block with a multiple types 1`] = `
+<section
+  class="block expanded"
+>
+  <div
+    class="handle"
+  />
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue"
+        >
+          <div
+            aria-label="Type1"
+            class="croppedText"
+            title="Type1"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              Typ
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                e1
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              Type1
+            </div>
+          </div>
+          <span
+            aria-label="chevron-down"
+            class="toggle fa fa-chevron-down"
+          />
+        </button>
+      </div>
+      <div
+        class="icons"
+      >
+        <span
+          aria-label="times"
+          class="fa fa-times clickable"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </header>
+    <article>
+      Some block content
+    </article>
+  </div>
+</section>
+`;
+
+exports[`Render an expanded block with a single type 1`] = `
+<section
+  class="block expanded"
+>
+  <div
+    class="handle"
+  />
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <div
+        class="icons"
+      >
+        <span
+          aria-label="times"
+          class="fa fa-times clickable"
+          role="button"
+          tabindex="0"
+        />
+      </div>
     </header>
     <article>
       Some block content

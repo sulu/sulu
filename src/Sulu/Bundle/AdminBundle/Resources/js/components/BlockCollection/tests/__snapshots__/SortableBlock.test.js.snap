@@ -38,18 +38,22 @@ exports[`Render expanded sortable block 1`] = `
     <header
       class="header"
     >
-      <span
-        aria-label="trash-o"
-        class="fa fa-trash-o clickable"
-        role="button"
-        tabindex="0"
-      />
-      <span
-        aria-label="times"
-        class="fa fa-times clickable"
-        role="button"
-        tabindex="0"
-      />
+      <div
+        class="icons"
+      >
+        <span
+          aria-label="trash-o"
+          class="fa fa-trash-o clickable"
+          role="button"
+          tabindex="0"
+        />
+        <span
+          aria-label="times"
+          class="fa fa-times clickable"
+          role="button"
+          tabindex="0"
+        />
+      </div>
     </header>
     <article>
       Test Content
