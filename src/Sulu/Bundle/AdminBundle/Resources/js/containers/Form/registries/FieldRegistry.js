@@ -3,8 +3,6 @@ import type {ComponentType} from 'react';
 import type {FieldTypeProps} from '../../../types';
 
 class FieldRegistry {
-    // TODO add correct props when possible
-    // see https://github.com/facebook/flow/issues/5703
     fields: {[string]: ComponentType<FieldTypeProps<*>>};
 
     constructor() {
