@@ -14,48 +14,58 @@ export default class BlockCollection extends React.Component<FieldTypeProps<Arra
         value: [],
     };
 
-    @observable expandedBlocks = [];
+    @observable expandedBlocks: Array<boolean> = [];
 
-    handleAddBlock = () => {
+    componentWillMount() {
+        this.fillExpandedBlocksArray();
+    }
+
+    fillExpandedBlocksArray() {
+        const {value} = this.props;
+        const {expandedBlocks} = this;
+
+        if (!value) {
+            return;
+        }
+
+        expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(false));
+    }
+
+    @action handleAddBlock = () => {
         const {onChange, value} = this.props;
 
         if (value) {
+            this.expandedBlocks.push(false);
             onChange([...value, {content: 'Test content'}]);
         }
     };
 
-    handleRemove = (index: number) => {
+    @action handleRemove = (index: number) => {
         const {onChange, value} = this.props;
 
         if (value) {
+            this.expandedBlocks.splice(index, 1);
             onChange(value.filter((element, arrayIndex) => arrayIndex != index));
         }
     };
 
-    handleSortEnd = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
+    @action handleSortEnd = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
         const {onChange, value} = this.props;
 
+        this.expandedBlocks = arrayMove(this.expandedBlocks, oldIndex, newIndex);
         onChange(arrayMove(value, oldIndex, newIndex));
     };
 
     @action handleCollapse = (index: number) => {
         const {expandedBlocks} = this;
 
-        if (!expandedBlocks.includes(index)) {
-            return;
-        }
-
-        expandedBlocks.splice(expandedBlocks.indexOf(index), 1);
+        expandedBlocks[index] = false;
     };
 
     @action handleExpand = (index: number) => {
         const {expandedBlocks} = this;
 
-        if (expandedBlocks.includes(index)) {
-            return;
-        }
-
-        expandedBlocks.push(index);
+        expandedBlocks[index] = true;
     };
 
     render() {

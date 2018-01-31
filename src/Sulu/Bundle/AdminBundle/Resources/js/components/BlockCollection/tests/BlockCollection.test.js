@@ -61,8 +61,14 @@ test('Should allow to reorder blocks by using drag and drop', () => {
     const value = [{content: 'Test 1'}, {content: 'Test 2'}, {content: 'Test 3'}];
     const blockCollection = mount(<BlockCollection onChange={changeSpy} value={value} />);
 
+    blockCollection.find('Block').at(0).simulate('click');
+
+    expect(blockCollection.get(0).expandedBlocks.toJS()).toEqual([true, false, false]);
+
     blockCollection.find(SortableContainer).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
     expect(changeSpy).toBeCalledWith([{content: 'Test 2'}, {content: 'Test 3'}, {content: 'Test 1'}]);
+
+    expect(blockCollection.get(0).expandedBlocks.toJS()).toEqual([false, false, true]);
 });
 
 test('Should allow to add a new block', () => {
@@ -76,13 +82,16 @@ test('Should allow to add a new block', () => {
 });
 
 test('Should allow to remove an existing block', () => {
-    const changeSpy = jest.fn();
     const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+    const changeSpy = jest.fn().mockImplementation((newValue) => {
+        value.splice(0, value.length);
+        value.push(...newValue);
+    });
     const blockCollection = mount(<BlockCollection onChange={changeSpy} value={value} />);
 
     const block1 = blockCollection.find('Block').at(0);
     block1.simulate('click');
     block1.find('.fa-trash-o').simulate('click');
 
-    expect(changeSpy).toBeCalledWith([value[1]]);
+    expect(changeSpy).toBeCalledWith([{content: 'Test 2'}]);
 });

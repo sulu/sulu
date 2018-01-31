@@ -2,7 +2,7 @@ This component allows to have multiple [`Block`](#block) components in a collect
 in different ways.
 
 ```javascript
-initialState = {value: []};
+initialState = {value: [{}, {}]};
 
 const onChange = (value) => {
     setState({value});

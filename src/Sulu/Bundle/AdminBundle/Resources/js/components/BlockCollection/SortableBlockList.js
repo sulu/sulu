@@ -6,7 +6,7 @@ import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
 
 type Props = {
-    expandedBlocks: Array<number>,
+    expandedBlocks: Array<boolean>,
     onExpand: (index: number) => void,
     onCollapse: (index: number) => void,
     onRemove: (index: number) => void,
@@ -37,7 +37,7 @@ class SortableBlockList extends React.Component<Props> {
             <div className={sortableBlockListStyles.sortableBlockList}>
                 {value && value.map((block, index) => (
                     <SortableBlock
-                        expanded={expandedBlocks.includes(index)}
+                        expanded={expandedBlocks[index]}
                         index={index}
                         key={index}
                         onExpand={this.handleExpand}
