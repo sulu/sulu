@@ -15,6 +15,7 @@ test('Render collapsed sortable block', () => {
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
             onRemove={jest.fn()}
+            renderBlockContent={jest.fn()}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -22,12 +23,15 @@ test('Render collapsed sortable block', () => {
 });
 
 test('Render expanded sortable block', () => {
+    const renderBlockContent = jest.fn().mockImplementation((value) => 'Test for ' + value.content);
+
     expect(render(
         <SortableBlock
             expanded={true}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
             onRemove={jest.fn()}
+            renderBlockContent={renderBlockContent}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -45,6 +49,7 @@ test('Should call onCollapse when the block is being collapsed', () => {
             onCollapse={collapseSpy}
             onExpand={expandSpy}
             onRemove={removeSpy}
+            renderBlockContent={jest.fn()}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -68,6 +73,7 @@ test('Should call onExpand when the block is being expanded', () => {
             onCollapse={collapseSpy}
             onExpand={expandSpy}
             onRemove={removeSpy}
+            renderBlockContent={jest.fn()}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -91,6 +97,7 @@ test('Should call onRemove when the block is being removed', () => {
             onCollapse={collapseSpy}
             onExpand={expandSpy}
             onRemove={removeSpy}
+            renderBlockContent={jest.fn()}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />

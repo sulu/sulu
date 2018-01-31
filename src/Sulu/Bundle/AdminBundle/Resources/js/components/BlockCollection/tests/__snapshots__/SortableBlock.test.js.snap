@@ -56,7 +56,7 @@ exports[`Render expanded sortable block 1`] = `
       </div>
     </header>
     <article>
-      Test Content
+      Test for Test Content
     </article>
   </div>
 </section>

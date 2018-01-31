@@ -1,15 +1,21 @@
 // @flow
 import React from 'react';
+import type {Node} from 'react';
 import {action, observable} from 'mobx';
 import {arrayMove} from 'react-sortable-hoc';
 import {translate} from '../../utils/Translator';
 import Button from '../Button';
 import Icon from '../Icon';
-import type {FieldTypeProps} from '../../types';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
 
-export default class BlockCollection extends React.Component<FieldTypeProps<Array<*>>> {
+type Props = {
+    onChange: (value: *) => void,
+    renderBlockContent: (value: *) => Node,
+    value: Array<*>,
+};
+
+export default class BlockCollection extends React.Component<Props> {
     static defaultProps = {
         value: [],
     };
@@ -36,7 +42,7 @@ export default class BlockCollection extends React.Component<FieldTypeProps<Arra
 
         if (value) {
             this.expandedBlocks.push(false);
-            onChange([...value, {content: 'Test content'}]);
+            onChange([...value, {}]);
         }
     };
 
@@ -69,7 +75,7 @@ export default class BlockCollection extends React.Component<FieldTypeProps<Arra
     };
 
     render() {
-        const {value} = this.props;
+        const {renderBlockContent, value} = this.props;
 
         return (
             <section className={blockCollectionStyles.blockCollection}>
@@ -80,6 +86,7 @@ export default class BlockCollection extends React.Component<FieldTypeProps<Arra
                     onCollapse={this.handleCollapse}
                     onRemove={this.handleRemove}
                     onSortEnd={this.handleSortEnd}
+                    renderBlockContent={renderBlockContent}
                     useDragHandle={true}
                     value={value}
                 />

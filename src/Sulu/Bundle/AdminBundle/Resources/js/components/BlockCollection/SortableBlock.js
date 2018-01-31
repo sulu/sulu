@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {ComponentType} from 'react';
+import type {ComponentType, Node} from 'react';
 import {SortableElement} from 'react-sortable-hoc';
 import Block from '../Block';
 import SortableHandle from './SortableHandle';
@@ -10,6 +10,7 @@ type Props = {
     onCollapse: (index: number) => void,
     onExpand: (index: number) => void,
     onRemove: (index: number) => void,
+    renderBlockContent: (value: *) => Node,
     sortIndex: number,
     value: Object,
 };
@@ -34,7 +35,7 @@ class SortableBlock extends React.Component<Props> {
     };
 
     render() {
-        const {expanded, value} = this.props;
+        const {expanded, renderBlockContent, value} = this.props;
 
         return (
             <Block
@@ -44,7 +45,7 @@ class SortableBlock extends React.Component<Props> {
                 onExpand={this.handleExpand}
                 onRemove={this.handleRemove}
             >
-                {expanded && value.content}
+                {expanded && renderBlockContent(value)}
             </Block>
         );
     }

@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {Node} from 'react';
 import {observer} from 'mobx-react';
 import {SortableContainer} from 'react-sortable-hoc';
 import SortableBlock from './SortableBlock';
@@ -10,6 +11,7 @@ type Props = {
     onExpand: (index: number) => void,
     onCollapse: (index: number) => void,
     onRemove: (index: number) => void,
+    renderBlockContent: (value: *) => Node,
     value: Array<*>,
 };
 
@@ -31,7 +33,7 @@ class SortableBlockList extends React.Component<Props> {
     };
 
     render() {
-        const {expandedBlocks, value} = this.props;
+        const {expandedBlocks, renderBlockContent, value} = this.props;
 
         return (
             <div className={sortableBlockListStyles.sortableBlockList}>
@@ -43,6 +45,7 @@ class SortableBlockList extends React.Component<Props> {
                         onExpand={this.handleExpand}
                         onCollapse={this.handleCollapse}
                         onRemove={this.handleRemove}
+                        renderBlockContent={renderBlockContent}
                         sortIndex={index}
                         value={block}
                     />
