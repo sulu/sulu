@@ -11,12 +11,11 @@ export default class DatagridStore {
     @observable schemaLoading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
+    @observable options: Object;
     disposer: () => void;
     resourceKey: string;
     schema: Schema = {};
-    options: Object;
     observableOptions: ObservableOptions;
-    localeInterceptionDisposer: () => void;
 
     constructor(
         resourceKey: string,
@@ -191,9 +190,5 @@ export default class DatagridStore {
 
     destroy() {
         this.disposer();
-
-        if (this.localeInterceptionDisposer) {
-            this.localeInterceptionDisposer();
-        }
     }
 }

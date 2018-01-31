@@ -16,6 +16,7 @@ export type Route = {
     path: string,
     options: Object,
     attributeDefaults: AttributeMap,
+    rerenderAttributes: Array<string>,
 };
 
 export type AttributeMap = {[string]: string};

@@ -1,0 +1,32 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$smartSelectBackgroundColor: $blueZodiac;
+$buttonColor: $silver;
+
+.smart-select {
+    cursor: pointer;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.button {
+    border-radius: 3px;
+    background-color: $smartSelectBackgroundColor;
+    color: $silver;
+    cursor: pointer;
+    border: none;
+    padding: 12px 20px;
+    min-width: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.button-icon {
+    font-size: 22px;
+}
+
+.button-value {
+    padding: 0 15px;
+    justify-self: flex-start;
+}

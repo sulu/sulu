@@ -24,8 +24,8 @@ const routes = [
         key: 'sulu_media.overview',
     },
     {
-        name: 'Pages',
-        key: 'sulu_content.pages',
+        name: 'Webspaces',
+        key: 'sulu_content.webspaces',
     },
     {
         name: 'Roles',
