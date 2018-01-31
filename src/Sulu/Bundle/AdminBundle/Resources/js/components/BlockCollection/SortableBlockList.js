@@ -9,6 +9,7 @@ type Props = {
     expandedBlocks: Array<number>,
     onExpand: (index: number) => void,
     onCollapse: (index: number) => void,
+    onRemove: (index: number) => void,
     value: Array<*>,
 };
 
@@ -24,6 +25,11 @@ class SortableBlockList extends React.Component<Props> {
         onCollapse(index);
     };
 
+    handleRemove = (index: number) => {
+        const {onRemove} = this.props;
+        onRemove(index);
+    };
+
     render() {
         const {expandedBlocks, value} = this.props;
 
@@ -36,6 +42,7 @@ class SortableBlockList extends React.Component<Props> {
                         key={index}
                         onExpand={this.handleExpand}
                         onCollapse={this.handleCollapse}
+                        onRemove={this.handleRemove}
                         sortIndex={index}
                         value={block}
                     />

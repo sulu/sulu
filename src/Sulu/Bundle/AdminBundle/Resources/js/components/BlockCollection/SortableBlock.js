@@ -8,6 +8,7 @@ type Props = {
     expanded: boolean,
     onCollapse: (index: number) => void,
     onExpand: (index: number) => void,
+    onRemove: (index: number) => void,
     sortIndex: number,
     value: Object,
 };
@@ -25,6 +26,12 @@ class SortableBlock extends React.Component<Props> {
         onExpand(sortIndex);
     };
 
+    handleRemove = () => {
+        const {sortIndex, onRemove} = this.props;
+
+        onRemove(sortIndex);
+    };
+
     render() {
         const {expanded, value} = this.props;
 
@@ -34,6 +41,7 @@ class SortableBlock extends React.Component<Props> {
                 expanded={expanded}
                 onCollapse={this.handleCollapse}
                 onExpand={this.handleExpand}
+                onRemove={this.handleRemove}
             >
                 {value.content}
             </Block>

@@ -74,3 +74,15 @@ test('Should allow to add a new block', () => {
 
     expect(changeSpy).toBeCalledWith([...value, {content: 'Test content'}]);
 });
+
+test('Should allow to remove an existing block', () => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+    const blockCollection = mount(<BlockCollection onChange={changeSpy} value={value} />);
+
+    const block1 = blockCollection.find('Block').at(0);
+    block1.simulate('click');
+    block1.find('.fa-trash-o').simulate('click');
+
+    expect(changeSpy).toBeCalledWith([value[1]]);
+});

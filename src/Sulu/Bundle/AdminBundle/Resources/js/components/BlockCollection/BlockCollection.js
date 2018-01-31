@@ -24,6 +24,14 @@ export default class BlockCollection extends React.Component<FieldTypeProps<Arra
         }
     };
 
+    handleRemove = (index: number) => {
+        const {onChange, value} = this.props;
+
+        if (value) {
+            onChange(value.filter((element, arrayIndex) => arrayIndex != index));
+        }
+    };
+
     handleSortEnd = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
         const {onChange, value} = this.props;
 
@@ -60,6 +68,7 @@ export default class BlockCollection extends React.Component<FieldTypeProps<Arra
                     lockAxis="y"
                     onExpand={this.handleExpand}
                     onCollapse={this.handleCollapse}
+                    onRemove={this.handleRemove}
                     onSortEnd={this.handleSortEnd}
                     useDragHandle={true}
                     value={value}
