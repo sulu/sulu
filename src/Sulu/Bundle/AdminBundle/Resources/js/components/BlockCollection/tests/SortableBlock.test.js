@@ -39,7 +39,9 @@ test('Render expanded sortable block', () => {
 });
 
 test('Render expanded sortable block with types', () => {
-    const renderBlockContent = jest.fn().mockImplementation((value) => 'Test for ' + value.content);
+    const renderBlockContent = jest.fn().mockImplementation(
+        (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
+    );
 
     expect(render(
         <SortableBlock

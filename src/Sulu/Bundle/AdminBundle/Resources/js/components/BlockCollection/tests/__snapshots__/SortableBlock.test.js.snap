@@ -135,7 +135,7 @@ exports[`Render expanded sortable block with types 1`] = `
       </div>
     </header>
     <article>
-      Test for Test Content
+      Test for Test Content and type type2
     </article>
   </div>
 </section>

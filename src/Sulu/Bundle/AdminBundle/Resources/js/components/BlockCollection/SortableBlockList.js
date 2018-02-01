@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {observer} from 'mobx-react';
 import {SortableContainer} from 'react-sortable-hoc';
 import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
+import type {RenderBlockContentCallback} from './types';
 
 type Props = {
     blockTypes: Array<string>,
@@ -13,7 +13,7 @@ type Props = {
     onCollapse: (index: number) => void,
     onRemove: (index: number) => void,
     onTypeChange?: (type: string | number, index: number) => void,
-    renderBlockContent: (value: *) => Node,
+    renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
     value: Array<*>,
 };

@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {arrayMove} from 'react-sortable-hoc';
@@ -9,10 +8,11 @@ import Button from '../Button';
 import Icon from '../Icon';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
+import type {RenderBlockContentCallback} from './types';
 
 type Props = {
     onChange: (value: *) => void,
-    renderBlockContent: (value: *) => Node,
+    renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
     value: Array<*>,
 };

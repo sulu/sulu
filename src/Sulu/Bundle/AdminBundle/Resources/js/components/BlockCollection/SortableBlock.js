@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
-import type {ComponentType, Node} from 'react';
+import type {ComponentType} from 'react';
 import {SortableElement} from 'react-sortable-hoc';
 import Block from '../Block';
 import SortableHandle from './SortableHandle';
+import type {RenderBlockContentCallback} from './types';
 
 type Props = {
     activeType?: string,
@@ -12,7 +13,7 @@ type Props = {
     onExpand: (index: number) => void,
     onRemove: (index: number) => void,
     onTypeChange?: (type: string | number, index: number) => void,
-    renderBlockContent: (value: *) => Node,
+    renderBlockContent: RenderBlockContentCallback,
     sortIndex: number,
     types?: {[key: string]: string},
     value: Object,
@@ -59,7 +60,7 @@ class SortableBlock extends React.Component<Props> {
                 onTypeChange={this.handleTypeChange}
                 types={types}
             >
-                {expanded && renderBlockContent(value)}
+                {expanded && renderBlockContent(value, activeType)}
             </Block>
         );
     }

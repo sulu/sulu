@@ -186,3 +186,40 @@ test('Should apply renderBlockContent before rendering the block content', () =>
     expect(blocks.at(0).prop('children')).toEqual(prefix + value[0].content);
     expect(blocks.at(1).prop('children')).toEqual(prefix + value[1].content);
 });
+
+test('Should apply renderBlockContent before rendering the block content including the type', () => {
+    const prefix = 'This is the test for ';
+    const typePrefix = ' which has a type of ';
+    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+    const renderBlockContent = jest.fn().mockImplementation(
+        (value, type) => prefix + value.content + (type ? typePrefix + type : '')
+    );
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const blockCollection = mount(
+        <BlockCollection
+            onChange={jest.fn()}
+            renderBlockContent={renderBlockContent}
+            types={types}
+            value={value}
+        />
+    );
+    const blocks = blockCollection.find('Block');
+
+    blocks.at(0).simulate('click');
+    blocks.at(1).simulate('click');
+
+    expect(blocks.at(0).prop('children')).toEqual(prefix + value[0].content + typePrefix + 'type1');
+    expect(blocks.at(1).prop('children')).toEqual(prefix + value[1].content + typePrefix + 'type1');
+
+    expect(blocks.at(0).prop('children')).toEqual(prefix + value[0].content + typePrefix + 'type1');
+    expect(blocks.at(1).prop('children')).toEqual(prefix + value[1].content + typePrefix + 'type1');
+
+    blocks.at(1).find('SingleSelect').prop('onChange')('type2');
+
+    expect(blocks.at(0).prop('children')).toEqual(prefix + value[0].content + typePrefix + 'type1');
+    expect(blocks.at(1).prop('children')).toEqual(prefix + value[1].content + typePrefix + 'type2');
+});
