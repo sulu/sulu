@@ -16,8 +16,10 @@ test('Button should render with skin link', () => {
 });
 
 test('Button should call the callback on click', () => {
+    const preventDefaultSpy = jest.fn();
     const onClick = jest.fn();
     const button = shallow(<Button skin="primary" onClick={onClick} />);
-    button.find('button').simulate('click');
+    button.find('button').simulate('click', {preventDefault: preventDefaultSpy});
+    expect(preventDefaultSpy).toBeCalled();
     expect(onClick).toBeCalled();
 });

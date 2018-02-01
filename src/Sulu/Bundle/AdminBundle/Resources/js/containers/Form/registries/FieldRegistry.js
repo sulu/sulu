@@ -1,8 +1,9 @@
 // @flow
 import type {ComponentType} from 'react';
+import type {FieldTypeProps} from '../../../types';
 
 class FieldRegistry {
-    fields: {[string]: ComponentType<*>};
+    fields: {[string]: ComponentType<FieldTypeProps<*>>};
 
     constructor() {
         this.clear();

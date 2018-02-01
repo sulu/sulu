@@ -206,8 +206,8 @@ test('Should initialize the ResourceStore with a schema', () => {
         expect(resourceStore.resourceKey).toBe('media');
         expect(resourceStore.id).toBe(4);
         expect(resourceStore.data).toEqual({
-            title: null,
-            description: null,
+            title: undefined,
+            description: undefined,
         });
     });
 });

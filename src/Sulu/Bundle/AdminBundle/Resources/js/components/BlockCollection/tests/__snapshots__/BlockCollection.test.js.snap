@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render a filled block list 1`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="ellipsis-v"
+          class="sortableHandle fa fa-ellipsis-v"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article />
+      </div>
+    </section>
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="ellipsis-v"
+          class="sortableHandle fa fa-ellipsis-v"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article />
+      </div>
+    </section>
+  </div>
+  <button
+    class="button secondary"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="plus"
+        class="addButtonIcon fa fa-plus"
+      />
+      Add block
+    </span>
+  </button>
+</section>
+`;
+
+exports[`Should render an empty block list 1`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  />
+  <button
+    class="button secondary"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="plus"
+        class="addButtonIcon fa fa-plus"
+      />
+      Add block
+    </span>
+  </button>
+</section>
+`;

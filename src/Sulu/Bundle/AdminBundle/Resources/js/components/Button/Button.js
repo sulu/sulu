@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {Node} from 'react';
 import classNames from 'classnames';
 import Loader from '../Loader';
 import buttonStyles from './button.scss';
@@ -7,7 +8,7 @@ import buttonStyles from './button.scss';
 const LOADER_SIZE = 25;
 
 type Props = {
-    children: string,
+    children: Node,
     skin: 'primary' | 'secondary' | 'link',
     onClick: () => void,
     loading: boolean,
@@ -18,7 +19,8 @@ export default class Button extends React.PureComponent<Props> {
         loading: false,
     };
 
-    handleClick = () => {
+    handleClick = (event: SyntheticEvent<HTMLButtonElement>) => {
+        event.preventDefault();
         this.props.onClick();
     };
 

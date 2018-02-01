@@ -185,7 +185,7 @@ test('Render a MediaSelection field', () => {
     });
 
     expect(render(
-        <MediaSelection />
+        <MediaSelection locale="en" />
     )).toMatchSnapshot();
 });
 
@@ -212,7 +212,7 @@ test('The MediaSelection should have 3 child-items', () => {
     });
 
     const mediaSelection = shallow(
-        <MediaSelection />
+        <MediaSelection locale="en" />
     );
 
     expect(mediaSelection.find('Item').length).toBe(3);
@@ -225,7 +225,7 @@ test('Clicking on the "add media" button should open up an overlay', () => {
     });
 
     const body = document.body;
-    const mediaSelection = mount(<MediaSelection />);
+    const mediaSelection = mount(<MediaSelection locale="de" />);
 
     mediaSelection.find('.button.left').simulate('click');
     expect(pretty(body.innerHTML)).toMatchSnapshot();
@@ -239,7 +239,7 @@ test('Should remove media from the selection', () => {
     });
 
     const changeSpy = jest.fn();
-    const mediaSelectionInstance = shallow(<MediaSelection onChange={changeSpy} />).instance();
+    const mediaSelectionInstance = shallow(<MediaSelection locale="de" onChange={changeSpy} />).instance();
 
     mediaSelectionInstance.handleRemove(1);
     expect(changeSpy).toBeCalled();
@@ -254,7 +254,7 @@ test('Should move media inside the selection', () => {
     });
 
     const changeSpy = jest.fn();
-    const mediaSelectionInstance = shallow(<MediaSelection onChange={changeSpy} />).instance();
+    const mediaSelectionInstance = shallow(<MediaSelection locale="en" onChange={changeSpy} />).instance();
 
     mediaSelectionInstance.handleSorted(1, 3);
     expect(changeSpy).toBeCalled();
@@ -273,7 +273,7 @@ test('Should add the selected medias to the selection store on confirm', () => {
         'sulu-25x25': 'http://lorempixel.com/25/25',
     };
     const changeSpy = jest.fn();
-    const mediaSelectionInstance = shallow(<MediaSelection onChange={changeSpy} />).instance();
+    const mediaSelectionInstance = shallow(<MediaSelection locale="de" onChange={changeSpy} />).instance();
 
     mediaSelectionInstance.openMediaOverlay();
     mediaSelectionInstance.handleOverlayConfirm([
