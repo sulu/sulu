@@ -19,7 +19,7 @@ type Props = {
 };
 
 @observer
-class SortableBlockList extends React.Component<Props> {
+class SortableBlocks extends React.Component<Props> {
     handleExpand = (index: number) => {
         const {onExpand} = this.props;
         onExpand(index);
@@ -69,4 +69,4 @@ class SortableBlockList extends React.Component<Props> {
     }
 }
 
-export default SortableContainer(SortableBlockList);
+export default SortableContainer(SortableBlocks);

@@ -2,7 +2,7 @@
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import BlockCollection from '../BlockCollection';
-import SortableContainer from '../SortableBlockList';
+import SortableContainer from '../SortableBlocks';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn().mockImplementation((key) => {

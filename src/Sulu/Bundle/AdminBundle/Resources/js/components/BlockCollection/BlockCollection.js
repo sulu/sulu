@@ -6,7 +6,7 @@ import {arrayMove} from 'react-sortable-hoc';
 import {translate} from '../../utils/Translator';
 import Button from '../Button';
 import Icon from '../Icon';
-import SortableBlockList from './SortableBlockList';
+import SortableBlocks from './SortableBlocks';
 import blockCollectionStyles from './blockCollection.scss';
 import type {RenderBlockContentCallback} from './types';
 
@@ -98,7 +98,7 @@ export default class BlockCollection extends React.Component<Props> {
 
         return (
             <section className={blockCollectionStyles.blockCollection}>
-                <SortableBlockList
+                <SortableBlocks
                     blockTypes={this.blockTypes}
                     expandedBlocks={this.expandedBlocks}
                     lockAxis="y"
