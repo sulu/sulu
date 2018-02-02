@@ -1,8 +1,15 @@
 @import 'normalize.css/normalize.css';
 @import './colors.scss';
+@import './fonts.scss';
 
 $bodyBackgroundColor: $wildSand;
 $h1TextColor: $blueZodiac;
+
+* {
+    font-family: "Open Sans";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 
 *,
 *::after,
@@ -27,6 +34,7 @@ body {
 h1 {
     color: $h1TextColor;
     margin: 0 0 30px;
+    font-weight: 600;
 }
 
 button {
