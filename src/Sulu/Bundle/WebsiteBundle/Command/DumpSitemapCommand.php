@@ -89,7 +89,7 @@ class DumpSitemapCommand extends ContainerAwareCommand
         }
 
         if ($input->getOption('clear')) {
-            $this->filesystem->remove(rtrim($this->baseDirectory, '/') . '/' . $this->scheme);
+            $this->clear();
         }
 
         $output->writeln('Start dumping "sitemap.xml" files:');
@@ -125,8 +125,22 @@ class DumpSitemapCommand extends ContainerAwareCommand
      */
     private function dumpPortalInformations(array $portalInformations)
     {
-        foreach ($portalInformations as $portalInformation) {
-            $this->sitemapDumper->dumpPortalInformation($portalInformation, $this->scheme);
+        try {
+            foreach ($portalInformations as $portalInformation) {
+                $this->sitemapDumper->dumpPortalInformation($portalInformation, $this->scheme);
+            }
+        } catch (\InvalidArgumentException $exception) {
+            $this->clear();
+
+            throw $exception;
         }
+    }
+
+    /**
+     * Clear the sitemap-cache.
+     */
+    private function clear()
+    {
+        $this->filesystem->remove(rtrim($this->baseDirectory, '/') . '/' . $this->scheme);
     }
 }

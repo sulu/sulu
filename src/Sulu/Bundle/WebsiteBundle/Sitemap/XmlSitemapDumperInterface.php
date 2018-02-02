@@ -49,6 +49,8 @@ interface XmlSitemapDumperInterface
      *
      * @param PortalInformation $portalInformation
      * @param string $scheme
+     *
+     * @throws \InvalidArgumentException
      */
     public function dumpPortalInformation(PortalInformation $portalInformation, $scheme);
 }
