@@ -12,7 +12,7 @@ type Props = {
 };
 
 @observer
-export default class Form extends React.PureComponent<Props> {
+export default class Form extends React.Component<Props> {
     renderer: ?ElementRef<typeof Renderer>;
 
     /** @public */

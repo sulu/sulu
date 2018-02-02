@@ -12,7 +12,7 @@ import type {ViewProps} from '../../containers/ViewRenderer';
 import listStyles from './list.scss';
 
 @observer
-class List extends React.PureComponent<ViewProps> {
+class List extends React.Component<ViewProps> {
     page: IObservableValue<number> = observable();
     locale: IObservableValue<string> = observable();
     datagridStore: DatagridStore;

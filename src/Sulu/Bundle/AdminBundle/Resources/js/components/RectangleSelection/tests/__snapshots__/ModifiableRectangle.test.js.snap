@@ -3,14 +3,14 @@
 exports[`The component should render 1`] = `
 <div
   class="rectangle"
-  style="left:0px;top:0px;width:200px;height:100px;"
+  style="left:0px;top:0px;width:200px;height:100px"
 >
   <div
     class="resizeHandle"
   />
   <div
     class="backdrop"
-    style="outline-width:0px;"
+    style="outline-width:0px"
   />
 </div>
 `;
@@ -18,14 +18,14 @@ exports[`The component should render 1`] = `
 exports[`The component should render with correct positions 1`] = `
 <div
   class="rectangle"
-  style="left:10px;top:20px;width:200px;height:100px;"
+  style="left:10px;top:20px;width:200px;height:100px"
 >
   <div
     class="resizeHandle"
   />
   <div
     class="backdrop"
-    style="outline-width:0px;"
+    style="outline-width:0px"
   />
 </div>
 `;

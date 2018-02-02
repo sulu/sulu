@@ -25,7 +25,7 @@ type Props = {
 };
 
 @observer
-export default class Popover extends React.PureComponent<Props> {
+export default class Popover extends React.Component<Props> {
     static defaultProps = {
         open: false,
         horizontalOffset: 0,

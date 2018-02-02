@@ -149,11 +149,13 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const resourceStore = new ResourceStore('test', testId, {locale: observable()});
+    resourceStore.set('id', testId);
     const promise = Promise.resolve({name: 'test.jpg'});
 
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
+        unbind: jest.fn(),
         route: {
             options: {
                 locales: [],
@@ -161,12 +163,11 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
         },
         attributes: {},
     };
-    const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />).get(0);
+    const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
 
-    mediaDetail.mediaUploadStore.update.mockReturnValue(promise);
-    resourceStore.set('id', testId);
-    mediaDetail.handleMediaDrop(testFile);
-    expect(mediaDetail.mediaUploadStore.update).toHaveBeenCalledWith(testId, testFile);
+    mediaDetail.instance().mediaUploadStore.update.mockReturnValue(promise);
+    mediaDetail.instance().handleMediaDrop(testFile);
+    expect(mediaDetail.instance().mediaUploadStore.update).toHaveBeenCalledWith(testId, testFile);
 
     promise.then(() => {
         expect(resourceStore.data).toEqual({id: 1, name: 'test.jpg'});
@@ -241,11 +242,14 @@ test('Should render save button disabled only if form is not dirty', () => {
 
 test('Should save form when submitted', () => {
     const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
-    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('media', 4, {locale: observable()});
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
 
     const schemaTypesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
@@ -255,6 +259,7 @@ test('Should save form when submitted', () => {
 
     const router = {
         bind: jest.fn(),
+        unbind: jest.fn(),
         navigate: jest.fn(),
         route: {
             options: {
@@ -266,9 +271,6 @@ test('Should save form when submitted', () => {
         },
     };
     const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
-    resourceStore.locale.set('en');
-    resourceStore.data = {value: 'Value'};
-    resourceStore.loading = false;
 
     return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         mediaDetail.find('Form').simulate('submit');

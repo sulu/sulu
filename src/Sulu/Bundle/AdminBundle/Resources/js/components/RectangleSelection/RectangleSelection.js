@@ -26,7 +26,7 @@ type Props = {
 };
 
 @observer
-export class RectangleSelection extends React.PureComponent<Props> {
+export class RectangleSelection extends React.Component<Props> {
     static defaultProps = {
         round: true,
     };

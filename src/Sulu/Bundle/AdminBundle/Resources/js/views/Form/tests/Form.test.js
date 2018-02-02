@@ -63,10 +63,10 @@ test('Should navigate to defined route on back button click', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
     resourceStore.setLocale('de');
 
-    const toolbarConfig = toolbarFunction.call(form);
+    const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
     expect(router.restore).toBeCalledWith('test_route', {locale: 'de'});
 });
@@ -88,9 +88,9 @@ test('Should navigate to defined route on back button click without locale', () 
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
-    const toolbarConfig = toolbarFunction.call(form);
+    const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
     expect(router.restore).toBeCalledWith('test_route', {});
 });
@@ -110,9 +110,9 @@ test('Should not render back button when no editLink is configured', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
-    const toolbarConfig = toolbarFunction.call(form);
+    const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.backButton).toBe(undefined);
 });
 
@@ -134,10 +134,10 @@ test('Should change locale in form store via locale chooser', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
     resourceStore.locale.set('de');
 
-    const toolbarConfig = toolbarFunction.call(form);
+    const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.locale.onChange('en');
     expect(resourceStore.locale.get()).toBe('en');
 });
@@ -159,9 +159,9 @@ test('Should show locales from router options in toolbar', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
-    const toolbarConfig = toolbarFunction.call(form);
+    const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.locale.options).toEqual([
         {value: 'en', label: 'en'},
         {value: 'de', label: 'de'},
@@ -184,9 +184,9 @@ test('Should show loading templates chooser in toolbar while types are loading',
         attributes: {},
     };
 
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
-    const toolbarConfig = toolbarFunction.call(form);
+    const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig).toMatchSnapshot();
 });
 
@@ -241,13 +241,14 @@ test('Should change template on click in template chooser', () => {
     const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
     return Promise.all([typesPromise, sidebarPromise, footerPromise]).then(() => {
-        const toolbarOptions = withToolbar.mock.calls[0][1].call(form.get(0));
+        const toolbarOptions = withToolbar.mock.calls[0][1].call(form.instance());
         toolbarOptions.items[1].onChange('footer');
         const schemaPromise = Promise.resolve(footerMetadata);
         metadataStore.getSchema.mockReturnValue(schemaPromise);
 
         return schemaPromise.then(() => {
-            expect(form.find('.gridItem')).toHaveLength(1);
+            form.update();
+            expect(form.find('Item')).toHaveLength(1);
         });
     });
 });
@@ -275,10 +276,10 @@ test('Should show templates chooser in toolbar if types are available', () => {
     });
     metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
 
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
     return typesPromise.then(() => {
-        const toolbarConfig = toolbarFunction.call(form);
+        const toolbarConfig = toolbarFunction.call(form.instance());
         expect(toolbarConfig).toMatchSnapshot();
     });
 });
@@ -303,10 +304,10 @@ test('Should not show templates chooser in toolbar if types are not available', 
     const typesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
 
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
     return typesPromise.then(() => {
-        const toolbarConfig = toolbarFunction.call(form);
+        const toolbarConfig = toolbarFunction.call(form.instance());
         expect(toolbarConfig).toMatchSnapshot();
     });
 });
@@ -326,9 +327,9 @@ test('Should not show a locale chooser if no locales are passed in router option
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
-    const toolbarConfig = toolbarFunction.call(form);
+    const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.locale).toBe(undefined);
 });
 
@@ -372,7 +373,7 @@ test('Should initialize the ResourceStore with a schema', () => {
 
 test('Should render save button disabled only if form is not dirty', () => {
     function getSaveItem() {
-        return toolbarFunction.call(form).items.find((item) => item.value === 'Save');
+        return toolbarFunction.call(form.instance()).items.find((item) => item.value === 'Save');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -389,7 +390,7 @@ test('Should render save button disabled only if form is not dirty', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
     expect(getSaveItem().disabled).toBe(true);
 
@@ -460,7 +461,7 @@ test('Should pass store and schema handler to FormContainer', () => {
 
 test('Should render save button loading only if form is saving', () => {
     function getSaveItem() {
-        return toolbarFunction.call(form).items.find((item) => item.value === 'Save');
+        return toolbarFunction.call(form.instance()).items.find((item) => item.value === 'Save');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -477,7 +478,7 @@ test('Should render save button loading only if form is saving', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
     expect(getSaveItem().loading).toBe(false);
 

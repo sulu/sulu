@@ -3,7 +3,7 @@
 exports[`Should render a MimeTypeIndicator 1`] = `
 <div
   class="mimeTypeIndicator"
-  style="color:#fff;font-size:52px;background-color:#00723a;"
+  style="color:#fff;font-size:52px;background-color:#00723a"
 >
   <span
     aria-label="file-excel-o"
@@ -15,7 +15,7 @@ exports[`Should render a MimeTypeIndicator 1`] = `
 exports[`Should render a MimeTypeIndicator with different dimensions 1`] = `
 <div
   class="mimeTypeIndicator"
-  style="color:#fff;font-size:32px;background-color:#00723a;width:200px;height:200px;"
+  style="color:#fff;font-size:32px;background-color:#00723a;width:200px;height:200px"
 >
   <span
     aria-label="file-excel-o"

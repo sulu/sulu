@@ -2,11 +2,11 @@
 
 exports[`Render a CircularProgressbar 1`] = `
 <div
-  style="width:100px;height:100px;"
+  style="width:100px;height:100px"
 >
   <svg
     class="root  "
-    viewbox="0 0 100 100"
+    viewBox="0 0 100 100"
   >
     <circle
       class="background"
@@ -32,7 +32,7 @@ exports[`Render a CircularProgressbar 1`] = `
     "
       fill-opacity="0"
       stroke-width="8"
-      style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:95.50441666912971px;"
+      style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:95.50441666912971px"
     />
     <text
       class="text"
@@ -47,11 +47,11 @@ exports[`Render a CircularProgressbar 1`] = `
 
 exports[`Render a CircularProgressbar in a different size 1`] = `
 <div
-  style="width:200px;height:200px;"
+  style="width:200px;height:200px"
 >
   <svg
     class="root  "
-    viewbox="0 0 100 100"
+    viewBox="0 0 100 100"
   >
     <circle
       class="background"
@@ -77,7 +77,7 @@ exports[`Render a CircularProgressbar in a different size 1`] = `
     "
       fill-opacity="0"
       stroke-width="8"
-      style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:95.50441666912971px;"
+      style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:95.50441666912971px"
     />
     <text
       class="text"
@@ -92,11 +92,11 @@ exports[`Render a CircularProgressbar in a different size 1`] = `
 
 exports[`Render a CircularProgressbar without the progress info in the center 1`] = `
 <div
-  style="width:100px;height:100px;"
+  style="width:100px;height:100px"
 >
   <svg
     class="root  "
-    viewbox="0 0 100 100"
+    viewBox="0 0 100 100"
   >
     <circle
       class="background"
@@ -122,7 +122,7 @@ exports[`Render a CircularProgressbar without the progress info in the center 1`
     "
       fill-opacity="0"
       stroke-width="8"
-      style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:95.50441666912971px;"
+      style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:95.50441666912971px"
     />
   </svg>
 </div>

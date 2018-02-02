@@ -46,7 +46,7 @@ test('Should call onSubmit callback when submitted', () => {
         <Renderer data={{}} schema={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />
     );
 
-    renderer.instance().submit();
+    renderer.prop('onSubmit')();
     expect(submitSpy).toBeCalled();
 });
 

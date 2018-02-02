@@ -33,7 +33,7 @@ test('InfiniteScroller traverses the dom upwards until it finds a scroll contain
         </div>
     );
 
-    expect(infiniteScrollerWrapper.find('InfiniteScroller').get(0).scrollContainer.id).toBe('scrollable');
+    expect(infiniteScrollerWrapper.find('InfiniteScroller').instance().scrollContainer.id).toBe('scrollable');
 });
 
 test('InfiniteScroller should call onChange if the the bottom of the content is reached', (done) => {
@@ -55,12 +55,13 @@ test('InfiniteScroller should call onChange if the the bottom of the content is 
         </div>
     );
 
-    const infiniteScroller = infiniteScrollerWrapper.find('InfiniteScroller').get(0);
+    const infiniteScroller = infiniteScrollerWrapper.find('InfiniteScroller').instance();
 
     infiniteScroller.scrollContainer = {
         getBoundingClientRect: () => ({
             bottom: 260,
         }),
+        removeEventListener: jest.fn(),
     };
     infiniteScroller.elementRef = {
         getBoundingClientRect: () => ({
@@ -95,7 +96,7 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
         </div>
     );
 
-    const infiniteScroller = infiniteScrollerWrapper.find('InfiniteScroller').get(0);
+    const infiniteScroller = infiniteScrollerWrapper.find('InfiniteScroller').instance();
 
     infiniteScroller.scrollContainer = {
         removeEventListener: removeEventListenerSpy,

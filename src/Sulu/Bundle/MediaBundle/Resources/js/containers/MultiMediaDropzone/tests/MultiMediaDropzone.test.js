@@ -52,6 +52,7 @@ test('Render a MultiMediaDropzone while the overlay is visible', () => {
     );
 
     multiMediaDropzone.instance().openOverlay();
+    multiMediaDropzone.update();
 
     expect(multiMediaDropzone.render()).toMatchSnapshot();
 });
@@ -68,14 +69,14 @@ test('Render a MultiMediaDropzone while media is uploaded', () => {
             <div />
         </MultiMediaDropzone>
     );
-    const multiMediaDropzoneInstance = multiMediaDropzone.instance();
     const files = [
         new File([''], 'fileA'),
         new File([''], 'fileB'),
     ];
 
-    multiMediaDropzoneInstance.openOverlay();
-    multiMediaDropzoneInstance.handleDrop(files);
+    multiMediaDropzone.instance().openOverlay();
+    multiMediaDropzone.instance().handleDrop(files);
+    multiMediaDropzone.update();
 
     expect(multiMediaDropzone.render()).toMatchSnapshot();
 });

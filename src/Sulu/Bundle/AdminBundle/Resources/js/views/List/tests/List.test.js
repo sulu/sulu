@@ -207,13 +207,13 @@ test('Should navigate when pencil button is clicked and locales have been passed
         },
     };
 
-    const listWrapper = mount(<List router={router} />);
-    listWrapper.find('List').get(0).locale = {
+    const list= mount(<List router={router} />);
+    list.instance().locale = {
         get: function() {
             return 'de';
         },
     };
-    listWrapper.find('ButtonCell button').at(0).simulate('click');
+    list.find('ButtonCell button').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1, locale: 'de'});
 });
 
@@ -231,13 +231,13 @@ test('Should navigate without locale when pencil button is clicked', () => {
         },
     };
 
-    const listWrapper = mount(<List router={router} />);
-    listWrapper.find('List').get(0).datagridStore.locale = {
+    const list = mount(<List router={router} />);
+    list.instance().datagridStore.locale = {
         get: function() {
             return 'de';
         },
     };
-    listWrapper.find('ButtonCell button').at(0).simulate('click');
+    list.find('ButtonCell button').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
 });
 
@@ -255,16 +255,16 @@ test('Should render the delete item enabled only if something is selected', () =
         },
     };
 
-    const list = mount(<List router={router} />).get(0);
-    const datagridStore = list.datagridStore;
+    const list = mount(<List router={router} />);
+    const datagridStore = list.instance().datagridStore;
 
     let toolbarConfig, item;
-    toolbarConfig = toolbarFunction.call(list);
+    toolbarConfig = toolbarFunction.call(list.instance());
     item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(true);
 
     datagridStore.selections.push(1);
-    toolbarConfig = toolbarFunction.call(list);
+    toolbarConfig = toolbarFunction.call(list.instance());
     item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(false);
 });
@@ -284,14 +284,14 @@ test('Should render the locale dropdown with the options from router', () => {
         },
     };
 
-    const list = mount(<List router={router} />).get(0);
-    list.locale = {
+    const list = mount(<List router={router} />);
+    list.instance().locale = {
         get: function() {
             return 'de';
         },
     };
 
-    const toolbarConfig = toolbarFunction.call(list);
+    const toolbarConfig = toolbarFunction.call(list.instance());
     expect(toolbarConfig.locale.value).toBe('de');
     expect(toolbarConfig.locale.options).toEqual([
         {value: 'en', label: 'en'},
@@ -315,8 +315,8 @@ test('Should pass options from router to the DatagridStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />).get(0);
-    const datagridStore = list.datagridStore;
+    const list = mount(<List router={router} />);
+    const datagridStore = list.instance().datagridStore;
 
     expect(datagridStore.options.webspace).toEqual('example');
 });
@@ -334,8 +334,8 @@ test('Should pass locale and page observables to the DatagridStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />).get(0);
-    const datagridStore = list.datagridStore;
+    const list = mount(<List router={router} />);
+    const datagridStore = list.instance().datagridStore;
 
     expect(datagridStore.observableOptions).toHaveProperty('page');
     expect(datagridStore.observableOptions).toHaveProperty('locale');
@@ -353,8 +353,8 @@ test('Should not pass the locale observable to the DatagridStore if no locales a
         },
     };
 
-    const list = mount(<List router={router} />).get(0);
-    const datagridStore = list.datagridStore;
+    const list = mount(<List router={router} />);
+    const datagridStore = list.instance().datagridStore;
 
     expect(datagridStore.observableOptions).toHaveProperty('page');
     expect(datagridStore.observableOptions).not.toHaveProperty('locale');
@@ -362,7 +362,7 @@ test('Should not pass the locale observable to the DatagridStore if no locales a
 
 test('Should delete selected items when click on delete button', () => {
     function getDeleteItem() {
-        return toolbarFunction.call(list).items.find((item) => item.value === 'Delete');
+        return toolbarFunction.call(list.instance()).items.find((item) => item.value === 'Delete');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -379,8 +379,8 @@ test('Should delete selected items when click on delete button', () => {
         },
     };
 
-    const list = mount(<List router={router} />).get(0);
-    const datagridStore = list.datagridStore;
+    const list = mount(<List router={router} />);
+    const datagridStore = list.instance().datagridStore;
     datagridStore.selections = [1, 4, 6];
 
     expect(getDeleteItem().loading).toBe(false);

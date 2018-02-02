@@ -5,7 +5,7 @@ exports[`Render a Masonry container with items 1`] = `
   class="masonry"
 >
   <li
-    style="margin-bottom:30px;"
+    style="margin-bottom:30px"
   >
     <div>
       <img
@@ -14,7 +14,7 @@ exports[`Render a Masonry container with items 1`] = `
     </div>
   </li>
   <li
-    style="margin-bottom:30px;"
+    style="margin-bottom:30px"
   >
     <div>
       <img
@@ -23,7 +23,7 @@ exports[`Render a Masonry container with items 1`] = `
     </div>
   </li>
   <li
-    style="margin-bottom:30px;"
+    style="margin-bottom:30px"
   >
     <div>
       <img

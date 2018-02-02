@@ -270,9 +270,7 @@ test('Should send a request to add a new collection via the overlay', () => {
         />
     );
 
-    // TODO something like Icon[name="trash"] should be possible as selector,
-    // but we have to update enzyme because of https://github.com/airbnb/enzyme/issues/534
-    mediaCollection.find('.collectionSection .fa-plus').simulate('click');
+    mediaCollection.find('CollectionSection Icon[name="plus"]').simulate('click');
     expect(collectionStore.resourceStore.clone).not.toBeCalled();
     expect(field.mock.calls[0][0].value).toEqual(undefined);
 
@@ -280,13 +278,14 @@ test('Should send a request to add a new collection via the overlay', () => {
     expect(mediaCollection.find('Overlay').prop('open')).toEqual(true);
     expect(document.querySelector('.content header').outerHTML).toEqual(expect.stringContaining('Add collection'));
 
-    const newResourceStore = mediaCollection.find('CollectionSection').node.resourceStoreByOperationType;
+    const newResourceStore = mediaCollection.find('CollectionSection').instance().resourceStoreByOperationType;
     newResourceStore.save = jest.fn().mockReturnValue(promise);
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
     document.querySelector('button.primary').click();
 
     return promise.then(() => {
+        mediaCollection.update();
         expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
         expect(newResourceStore.save).toBeCalled();
     });
@@ -327,9 +326,7 @@ test('Should send a request to update the collection via the overlay', () => {
         />
     );
 
-    // TODO something like Icon[name="trash"] should be possible as selector,
-    // but we have to update enzyme because of https://github.com/airbnb/enzyme/issues/534
-    mediaCollection.find('.collectionSection .fa-pencil').simulate('click');
+    mediaCollection.find('CollectionSection Icon[name="pencil"]').simulate('click');
 
     const resourceStoreInstances = ResourceStore.mock.instances;
     const newResourceStore = resourceStoreInstances[resourceStoreInstances.length - 1];
@@ -345,6 +342,7 @@ test('Should send a request to update the collection via the overlay', () => {
     document.querySelector('button.primary').click();
 
     return promise.then(() => {
+        mediaCollection.update();
         expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
         expect(newResourceStore.save).toBeCalledWith({breadcrumb: true});
     });
@@ -379,9 +377,7 @@ test('Confirming the delete dialog should delete the item', () => {
         />
     );
 
-    // TODO something like Icon[name="trash"] should be possible as selector,
-    // but we have to update enzyme because of https://github.com/airbnb/enzyme/issues/534
-    mediaCollection.find('.fa-trash').simulate('click');
+    mediaCollection.find('Icon[name="trash"]').simulate('click');
 
     expect(mediaCollection.find('Dialog').prop('open')).toEqual(true);
     expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
@@ -393,6 +389,7 @@ test('Confirming the delete dialog should delete the item', () => {
 
     return promise.then(() => {
         expect(collectionNavigateSpy).toBeCalledWith(null);
+        mediaCollection.update();
         expect(mediaCollection.find('Dialog').prop('open')).toEqual(false);
     });
 });
@@ -434,9 +431,7 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
         />
     );
 
-    // TODO something like Icon[name="trash"] should be possible as selector,
-    // but we have to update enzyme because of https://github.com/airbnb/enzyme/issues/534
-    mediaCollection.find('.fa-trash').simulate('click');
+    mediaCollection.find('Icon[name="trash"]').simulate('click');
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
     document.querySelector('button.primary').click();

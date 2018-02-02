@@ -18,7 +18,7 @@ test('The component should render a generic select', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    expect(select.node.type).toBe(Select);
+    expect(select.getElement().type).toBe(Select);
 });
 
 test('The component should return the first option as default display value', () => {

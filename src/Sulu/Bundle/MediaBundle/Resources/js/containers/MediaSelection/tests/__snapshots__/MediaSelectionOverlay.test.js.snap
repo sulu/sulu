@@ -2,19 +2,16 @@
 
 exports[`Render an open MediaSelectionOverlay 1`] = `
 "<div>
-  <div data-reactroot=\\"\\" class=\\"backdrop visible\\"></div>
+  <div class=\\"backdrop visible\\"></div>
 </div>
 <div>
-  <div data-reactroot=\\"\\" class=\\"container\\">
+  <div class=\\"container\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
-        <header>
-          <!-- react-text: 5 -->Select media
-          <!-- /react-text --><span class=\\"icon fa fa-times clickable\\" aria-label=\\"times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <header>Select media<span class=\\"icon fa fa-times clickable\\" aria-label=\\"times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <div class=\\"overlay\\">
             <div class=\\"dropzone\\" aria-disabled=\\"false\\">
-              <!-- react-empty: 10 -->
               <div>
                 <div class=\\"collectionSection\\">
                   <ul class=\\"breadcrumb\\">
@@ -26,7 +23,6 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                       role=\\"button\\" tabindex=\\"0\\"></span></div>
                 </div>
                 <div class=\\"datagrid\\">
-                  <!-- react-empty: 21 -->
                   <section>
                     <ul class=\\"folderList\\">
                       <li>
@@ -49,25 +45,17 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                       </li>
                     </ul>
                     <nav class=\\"pagination\\">
-                      <div class=\\"loader\\"></div><span class=\\"display\\"><!-- react-text: 41 -->Page<!-- /react-text --><!-- react-text: 42 -->: <!-- /react-text --><!-- react-text: 43 -->2<!-- /react-text --><!-- react-text: 44 --> <!-- /react-text --><!-- react-text: 45 -->of<!-- /react-text --><!-- react-text: 46 --> <!-- /react-text --><!-- react-text: 47 -->3<!-- /react-text --></span>
-                      <button
-                        class=\\"previous\\"><span class=\\"fa fa-angle-left\\" aria-label=\\"angle-left\\"></span></button>
-                        <button class=\\"next\\"><span class=\\"fa fa-angle-right\\" aria-label=\\"angle-right\\"></span></button>
+                      <div class=\\"loader\\"></div><span class=\\"display\\">Page: 2 of 3</span>
+                      <button class=\\"previous\\"><span class=\\"fa fa-angle-left\\" aria-label=\\"angle-left\\"></span></button>
+                      <button class=\\"next\\"><span class=\\"fa fa-angle-right\\" aria-label=\\"angle-right\\"></span></button>
                     </nav>
                   </section>
                 </div>
-                <div>
-                  <!-- react-empty: 53 -->
-                  <!-- react-empty: 54 -->
-                </div>
-                <div>
-                  <!-- react-empty: 56 -->
-                  <!-- react-empty: 57 -->
-                </div>
+                <div></div>
+                <div></div>
               </div>
               <div class=\\"divider\\"></div>
               <div class=\\"datagrid\\">
-                <!-- react-empty: 60 -->
                 <section>
                   <div>
                     <div class=\\"masonry\\" style=\\"position: relative; height: 0px;\\">
@@ -140,7 +128,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                   <div class=\\"indicator\\"></div>
                 </section>
               </div>
-              <input type=\\"file\\" multiple=\\"\\" autocomplete=\\"off\\" style=\\"display: none;\\">
+              <input type=\\"file\\" style=\\"display: none;\\" multiple=\\"\\" autocomplete=\\"off\\">
             </div>
           </div>
         </article>

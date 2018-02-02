@@ -20,7 +20,7 @@ type Props = {
 };
 
 @observer
-export default class SingleMediaDropzone extends React.PureComponent<Props> {
+export default class SingleMediaDropzone extends React.Component<Props> {
     static defaultProps = {
         progress: 0,
         uploading: false,

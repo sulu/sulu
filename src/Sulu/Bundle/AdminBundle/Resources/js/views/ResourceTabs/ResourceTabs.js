@@ -10,7 +10,7 @@ import ResourceStore from '../../stores/ResourceStore';
 import resourceTabsStyle from './resourceTabs.scss';
 
 @observer
-export default class ResourceTabs extends React.PureComponent<ViewProps> {
+export default class ResourceTabs extends React.Component<ViewProps> {
     resourceStore: ResourceStore;
 
     componentWillMount() {

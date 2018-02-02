@@ -29,7 +29,7 @@ type Props = {
 };
 
 @observer
-export default class AutoComplete extends React.PureComponent<Props> {
+export default class AutoComplete extends React.Component<Props> {
     static defaultProps = {
         value: '',
     };

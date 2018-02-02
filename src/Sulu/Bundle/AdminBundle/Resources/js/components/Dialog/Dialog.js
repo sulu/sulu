@@ -22,7 +22,7 @@ type Props = {
 };
 
 @observer
-export default class Dialog extends React.PureComponent<Props> {
+export default class Dialog extends React.Component<Props> {
     static defaultProps = {
         open: false,
         confirmLoading: false,

@@ -18,7 +18,7 @@ type Props = ViewProps & {
 };
 
 @observer
-class MediaDetail extends React.PureComponent<Props> {
+class MediaDetail extends React.Component<Props> {
     mediaUploadStore: MediaUploadStore;
     form: ?Form;
     formStore: FormStore;

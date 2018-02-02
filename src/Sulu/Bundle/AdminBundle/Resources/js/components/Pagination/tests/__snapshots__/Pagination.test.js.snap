@@ -77,7 +77,7 @@ exports[`Render disabled previous link current page is first page 1`] = `
 exports[`Render only loader if total is not passed initially 1`] = `
 <div
   class="spinner"
-  style="width:40px;height:40px;"
+  style="width:40px;height:40px"
 >
   <div
     class="doubleBounce1"
@@ -101,7 +101,7 @@ exports[`Render pagination with loader 1`] = `
     >
       <div
         class="spinner"
-        style="width:24px;height:24px;"
+        style="width:24px;height:24px"
       >
         <div
           class="doubleBounce1"
