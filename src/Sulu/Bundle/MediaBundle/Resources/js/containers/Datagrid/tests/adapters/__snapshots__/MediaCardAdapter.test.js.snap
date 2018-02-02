@@ -7,7 +7,7 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
       class="masonry"
     >
       <li
-        style="margin-bottom:30px;"
+        style="margin-bottom:30px"
       >
         <div
           class="mediaCard"
@@ -126,7 +126,7 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
         </div>
       </li>
       <li
-        style="margin-bottom:30px;"
+        style="margin-bottom:30px"
       >
         <div
           class="mediaCard"

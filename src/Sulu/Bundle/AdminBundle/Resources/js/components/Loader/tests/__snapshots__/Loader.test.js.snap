@@ -3,7 +3,7 @@
 exports[`Render loader 1`] = `
 <div
   class="spinner"
-  style="width:40px;height:40px;"
+  style="width:40px;height:40px"
 >
   <div
     class="doubleBounce1"
@@ -17,7 +17,7 @@ exports[`Render loader 1`] = `
 exports[`Render loader with additional classname 1`] = `
 <div
   class="spinner test"
-  style="width:40px;height:40px;"
+  style="width:40px;height:40px"
 >
   <div
     class="doubleBounce1"
@@ -31,7 +31,7 @@ exports[`Render loader with additional classname 1`] = `
 exports[`Render loader with other dimensions 1`] = `
 <div
   class="spinner"
-  style="width:50px;height:50px;"
+  style="width:50px;height:50px"
 >
   <div
     class="doubleBounce1"

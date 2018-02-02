@@ -100,8 +100,14 @@ test('Recall toolbar-function when changing observable', () => {
 });
 
 test('Throw error when component has property toolbarDisposer', () => {
+    // catch error logging as described in https://github.com/facebook/react/issues/11098#issuecomment-335290556
+    // until better solution is availble
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
     const Component = class Component extends React.Component {
         toolbarDisposer = true;
+
+        componentDidCatch() {}
 
         render() {
             return <h1>Test</h1>;

@@ -28,7 +28,7 @@ type Props = {
 const CLOSE_ICON = 'times';
 
 @observer
-export default class Overlay extends React.PureComponent<Props> {
+export default class Overlay extends React.Component<Props> {
     static defaultProps = {
         open: false,
         actions: [],

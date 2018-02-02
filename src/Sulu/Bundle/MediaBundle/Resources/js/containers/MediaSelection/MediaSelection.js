@@ -13,7 +13,7 @@ import type {Value} from './types';
 const ADD_ICON = 'plus';
 
 @observer
-export default class MediaSelection extends React.PureComponent<FieldTypeProps<Value>> {
+export default class MediaSelection extends React.Component<FieldTypeProps<Value>> {
     mediaSelectionStore: MediaSelectionStore;
     @observable overlayOpen: boolean = false;
 

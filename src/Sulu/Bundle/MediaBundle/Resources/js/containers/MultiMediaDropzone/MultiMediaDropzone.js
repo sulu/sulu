@@ -18,7 +18,7 @@ type Props = {
 };
 
 @observer
-export default class MultiMediaDropzone extends React.PureComponent<Props> {
+export default class MultiMediaDropzone extends React.Component<Props> {
     dropzoneRef: ElementRef<Dropzone>;
 
     @observable overlayOpen: boolean = false;

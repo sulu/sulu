@@ -8,7 +8,7 @@ type Props = {
     className?: string,
 };
 
-export default class Loader extends React.PureComponent<Props> {
+export default class Loader extends React.Component<Props> {
     static defaultProps = {
         size: 40,
     };

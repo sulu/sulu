@@ -9,7 +9,7 @@ import OptionList from './OptionList';
 import dropdownStyles from './dropdown.scss';
 
 @observer
-export default class Dropdown extends React.PureComponent<DropdownProps> {
+export default class Dropdown extends React.Component<DropdownProps> {
     @observable open = false;
 
     @action close = () => {

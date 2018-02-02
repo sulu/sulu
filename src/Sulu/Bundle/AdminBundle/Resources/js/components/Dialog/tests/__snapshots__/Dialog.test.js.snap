@@ -6,10 +6,10 @@ exports[`The component should render in body when open 1`] = `<div />`;
 
 exports[`The component should render in body when open 2`] = `
 "<div>
-  <div data-reactroot=\\"\\" class=\\"backdrop visible\\"></div>
+  <div class=\\"backdrop visible\\"></div>
 </div>
 <div>
-  <div data-reactroot=\\"\\" class=\\"dialogContainer\\">
+  <div class=\\"dialogContainer\\">
     <div class=\\"dialog\\">
       <section class=\\"content\\">
         <header>My dialog title</header>
@@ -30,10 +30,10 @@ exports[`The component should render in body with loader instead of confirm butt
 
 exports[`The component should render in body with loader instead of confirm button 2`] = `
 "<div>
-  <div data-reactroot=\\"\\" class=\\"backdrop visible\\"></div>
+  <div class=\\"backdrop visible\\"></div>
 </div>
 <div>
-  <div data-reactroot=\\"\\" class=\\"dialogContainer\\">
+  <div class=\\"dialogContainer\\">
     <div class=\\"dialog\\">
       <section class=\\"content\\">
         <header>My dialog title</header>
@@ -44,7 +44,7 @@ exports[`The component should render in body with loader instead of confirm butt
           <button class=\\"button secondary\\"><span class=\\"text\\">Cancel</span></button>
           <button class=\\"button primary loading\\" disabled=\\"\\"><span class=\\"text\\">Confirm</span>
             <div class=\\"loader\\">
-              <div class=\\"spinner\\" style=\\"width: 25px; height: 25px;\\">
+              <div style=\\"width: 25px; height: 25px;\\" class=\\"spinner\\">
                 <div class=\\"doubleBounce1\\"></div>
                 <div class=\\"doubleBounce2\\"></div>
               </div>

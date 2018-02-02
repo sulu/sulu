@@ -128,7 +128,7 @@ exports[`Render an MultiItemSelection while loading 1`] = `
       >
         <div
           class="spinner"
-          style="width:24px;height:24px;"
+          style="width:24px;height:24px"
         >
           <div
             class="doubleBounce1"

@@ -15,7 +15,7 @@ type Props = {
 };
 
 @observer
-export default class DownloadListItem extends React.PureComponent<Props> {
+export default class DownloadListItem extends React.Component<Props> {
     static defaultProps = {
         copyUrlOnClick: false,
     };

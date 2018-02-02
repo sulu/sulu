@@ -177,7 +177,7 @@ exports[`Render a simple MediaOverview 1`] = `
             class="masonry"
           >
             <li
-              style="margin-bottom:30px;"
+              style="margin-bottom:30px"
             >
               <div
                 class="mediaCard"
@@ -296,7 +296,7 @@ exports[`Render a simple MediaOverview 1`] = `
               </div>
             </li>
             <li
-              style="margin-bottom:30px;"
+              style="margin-bottom:30px"
             >
               <div
                 class="mediaCard"
@@ -424,7 +424,7 @@ exports[`Render a simple MediaOverview 1`] = `
     <input
       autocomplete="off"
       multiple=""
-      style="display:none;"
+      style="display:none"
       type="file"
     />
   </div>

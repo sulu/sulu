@@ -25,7 +25,7 @@ exports[`Should render field types based on schema 1`] = `
   >
     <div
       class="item gridItem"
-      style="width:100%;margin-left:0%;margin-right:0%;"
+      style="width:100%;margin-left:0%;margin-right:0%"
     >
       <div>
         <label
@@ -40,7 +40,7 @@ exports[`Should render field types based on schema 1`] = `
     </div>
     <div
       class="item gridItem"
-      style="width:100%;margin-left:0%;margin-right:0%;"
+      style="width:100%;margin-left:0%;margin-right:0%"
     >
       <div>
         <label
@@ -72,11 +72,11 @@ exports[`Should render nested sections 1`] = `
   >
     <div
       class="section gridSection"
-      style="width:100%;margin-left:0%;margin-right:0%;"
+      style="width:100%;margin-left:0%;margin-right:0%"
     >
       <div
         class="item"
-        style="width:100%;margin-left:0%;margin-right:0%;"
+        style="width:100%;margin-left:0%;margin-right:0%"
       >
         <div
           class="divider"
@@ -86,7 +86,7 @@ exports[`Should render nested sections 1`] = `
       </div>
       <div
         class="item gridItem"
-        style="width:100%;margin-left:0%;margin-right:0%;"
+        style="width:100%;margin-left:0%;margin-right:0%"
       >
         <div>
           <label
@@ -101,11 +101,11 @@ exports[`Should render nested sections 1`] = `
       </div>
       <div
         class="section gridSection"
-        style="width:100%;margin-left:0%;margin-right:0%;"
+        style="width:100%;margin-left:0%;margin-right:0%"
       >
         <div
           class="item"
-          style="width:100%;margin-left:0%;margin-right:0%;"
+          style="width:100%;margin-left:0%;margin-right:0%"
         >
           <div
             class="divider"
@@ -117,11 +117,11 @@ exports[`Should render nested sections 1`] = `
     </div>
     <div
       class="section gridSection"
-      style="width:100%;margin-left:0%;margin-right:0%;"
+      style="width:100%;margin-left:0%;margin-right:0%"
     >
       <div
         class="item"
-        style="width:100%;margin-left:0%;margin-right:0%;"
+        style="width:100%;margin-left:0%;margin-right:0%"
       >
         <div
           class="divider"
@@ -131,7 +131,7 @@ exports[`Should render nested sections 1`] = `
       </div>
       <div
         class="item gridItem"
-        style="width:100%;margin-left:0%;margin-right:0%;"
+        style="width:100%;margin-left:0%;margin-right:0%"
       >
         <div>
           <label

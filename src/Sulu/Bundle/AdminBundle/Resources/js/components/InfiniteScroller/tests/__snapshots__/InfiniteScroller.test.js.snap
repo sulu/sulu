@@ -13,7 +13,7 @@ exports[`InfiniteScroller should show a loader when the loading prop is set to t
     >
       <div
         class="spinner"
-        style="width:40px;height:40px;"
+        style="width:40px;height:40px"
       >
         <div
           class="doubleBounce1"

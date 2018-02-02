@@ -189,7 +189,7 @@ test('Should pass the ResourceStore to child components', () => {
     const ChildComponent = jest.fn(() => null);
     const resourceTabs = mount(
         <ResourceTabs router={router} route={route}>{(props) => (<ChildComponent {...props} />)}</ResourceTabs>
-    ).get(0);
+    ).instance();
 
     expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
 });

@@ -41,8 +41,17 @@ test('Should call onSubmit callback on submit', () => {
     metadataStore.getSchema.mockReturnValue({});
 
     const form = mount(<Form onSubmit={submitSpy} store={store} />);
+
+    const submitButtonClick = jest.fn();
+    form.find('Renderer').instance().submitButton.click = submitButtonClick;
+
     form.instance().submit();
 
+    const preventDefault = jest.fn();
+    form.find('form').prop('onSubmit')({preventDefault});
+
+    expect(submitButtonClick).toBeCalled();
+    expect(preventDefault).toBeCalled();
     expect(submitSpy).toBeCalled();
 });
 
@@ -98,7 +107,7 @@ test('Should set data on store without sections', () => {
     };
 
     const form = mount(<Form store={store} onSubmit={submitSpy} />);
-    form.find('Input').get(0).handleChange({currentTarget: {value: 'value!'}});
+    form.find('Input').at(0).instance().handleChange({currentTarget: {value: 'value!'}});
 
     expect(store.set).toBeCalledWith('item11', 'value!');
 });

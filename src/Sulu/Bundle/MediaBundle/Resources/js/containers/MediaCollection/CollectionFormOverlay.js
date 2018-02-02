@@ -18,7 +18,7 @@ type Props = {
 };
 
 @observer
-export default class CollectionFormOverlay extends React.PureComponent<Props> {
+export default class CollectionFormOverlay extends React.Component<Props> {
     formRef: ?Form;
     title: string;
     operationType: string;

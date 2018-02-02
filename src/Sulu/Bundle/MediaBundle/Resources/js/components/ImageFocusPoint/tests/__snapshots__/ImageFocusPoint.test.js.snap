@@ -9,22 +9,22 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
   >
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(-45deg);"
+        style="transform:rotate(-45deg)"
       >
         <span
           aria-label="arrow-up"
@@ -34,10 +34,10 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(0deg);"
+        style="transform:rotate(0deg)"
       >
         <span
           aria-label="arrow-up"
@@ -47,10 +47,10 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(45deg);"
+        style="transform:rotate(45deg)"
       >
         <span
           aria-label="arrow-up"
@@ -60,10 +60,10 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(-90deg);"
+        style="transform:rotate(-90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -74,14 +74,14 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
     <button
       class="imageFocusPointCell active"
       disabled=""
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(90deg);"
+        style="transform:rotate(90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -106,22 +106,22 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
   >
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(0deg);"
+        style="transform:rotate(0deg)"
       >
         <span
           aria-label="arrow-up"
@@ -131,10 +131,10 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(45deg);"
+        style="transform:rotate(45deg)"
       >
         <span
           aria-label="arrow-up"
@@ -144,19 +144,19 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell active"
       disabled=""
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(90deg);"
+        style="transform:rotate(90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -166,7 +166,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
   </div>
   <img
@@ -185,26 +185,26 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
   >
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(-45deg);"
+        style="transform:rotate(-45deg)"
       >
         <span
           aria-label="arrow-up"
@@ -214,10 +214,10 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(0deg);"
+        style="transform:rotate(0deg)"
       >
         <span
           aria-label="arrow-up"
@@ -227,14 +227,14 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(-90deg);"
+        style="transform:rotate(-90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -245,7 +245,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
     <button
       class="imageFocusPointCell active"
       disabled=""
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
   </div>
   <img
@@ -264,10 +264,10 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
   >
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(-45deg);"
+        style="transform:rotate(-45deg)"
       >
         <span
           aria-label="arrow-up"
@@ -277,10 +277,10 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(0deg);"
+        style="transform:rotate(0deg)"
       >
         <span
           aria-label="arrow-up"
@@ -290,10 +290,10 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(45deg);"
+        style="transform:rotate(45deg)"
       >
         <span
           aria-label="arrow-up"
@@ -303,10 +303,10 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(-90deg);"
+        style="transform:rotate(-90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -317,14 +317,14 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     <button
       class="imageFocusPointCell active"
       disabled=""
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(90deg);"
+        style="transform:rotate(90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -334,10 +334,10 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(225deg);"
+        style="transform:rotate(225deg)"
       >
         <span
           aria-label="arrow-up"
@@ -347,10 +347,10 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(180deg);"
+        style="transform:rotate(180deg)"
       >
         <span
           aria-label="arrow-up"
@@ -360,10 +360,10 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(125deg);"
+        style="transform:rotate(125deg)"
       >
         <span
           aria-label="arrow-up"
@@ -388,10 +388,10 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
   >
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(0deg);"
+        style="transform:rotate(0deg)"
       >
         <span
           aria-label="arrow-up"
@@ -401,10 +401,10 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(45deg);"
+        style="transform:rotate(45deg)"
       >
         <span
           aria-label="arrow-up"
@@ -414,19 +414,19 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell active"
       disabled=""
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(90deg);"
+        style="transform:rotate(90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -436,14 +436,14 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(180deg);"
+        style="transform:rotate(180deg)"
       >
         <span
           aria-label="arrow-up"
@@ -453,10 +453,10 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(125deg);"
+        style="transform:rotate(125deg)"
       >
         <span
           aria-label="arrow-up"
@@ -466,7 +466,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
   </div>
   <img
@@ -485,14 +485,14 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
   >
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(-45deg);"
+        style="transform:rotate(-45deg)"
       >
         <span
           aria-label="arrow-up"
@@ -502,10 +502,10 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(0deg);"
+        style="transform:rotate(0deg)"
       >
         <span
           aria-label="arrow-up"
@@ -515,14 +515,14 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(-90deg);"
+        style="transform:rotate(-90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -533,18 +533,18 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
     <button
       class="imageFocusPointCell active"
       disabled=""
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(225deg);"
+        style="transform:rotate(225deg)"
       >
         <span
           aria-label="arrow-up"
@@ -554,10 +554,10 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(180deg);"
+        style="transform:rotate(180deg)"
       >
         <span
           aria-label="arrow-up"
@@ -582,10 +582,10 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
   >
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(-90deg);"
+        style="transform:rotate(-90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -596,14 +596,14 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     <button
       class="imageFocusPointCell active"
       disabled=""
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(90deg);"
+        style="transform:rotate(90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -613,10 +613,10 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(225deg);"
+        style="transform:rotate(225deg)"
       >
         <span
           aria-label="arrow-up"
@@ -626,10 +626,10 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(180deg);"
+        style="transform:rotate(180deg)"
       >
         <span
           aria-label="arrow-up"
@@ -639,10 +639,10 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(125deg);"
+        style="transform:rotate(125deg)"
       >
         <span
           aria-label="arrow-up"
@@ -652,15 +652,15 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
   </div>
   <img
@@ -680,14 +680,14 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
     <button
       class="imageFocusPointCell active"
       disabled=""
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(90deg);"
+        style="transform:rotate(90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -697,14 +697,14 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(180deg);"
+        style="transform:rotate(180deg)"
       >
         <span
           aria-label="arrow-up"
@@ -714,10 +714,10 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(125deg);"
+        style="transform:rotate(125deg)"
       >
         <span
           aria-label="arrow-up"
@@ -727,19 +727,19 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
   </div>
   <img
@@ -758,14 +758,14 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
   >
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(-90deg);"
+        style="transform:rotate(-90deg)"
       >
         <span
           aria-label="arrow-up"
@@ -776,18 +776,18 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
     <button
       class="imageFocusPointCell active"
       disabled=""
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(225deg);"
+        style="transform:rotate(225deg)"
       >
         <span
           aria-label="arrow-up"
@@ -797,10 +797,10 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     >
       <div
-        style="transform:rotate(180deg);"
+        style="transform:rotate(180deg)"
       >
         <span
           aria-label="arrow-up"
@@ -810,15 +810,15 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
     </button>
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
     <button
       class="imageFocusPointCell"
-      style="width:33.333333333333336%;height:33.333333333333336%;"
+      style="width:33.333333333333336%;height:33.333333333333336%"
     />
   </div>
   <img

@@ -23,7 +23,7 @@ test('The component should render a generic select', () => {
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    expect(select.node.type).toBe(Select);
+    expect(select.getElement().type).toBe(Select);
 });
 
 test('The component should pass the correct display value if nothing is selected', () => {

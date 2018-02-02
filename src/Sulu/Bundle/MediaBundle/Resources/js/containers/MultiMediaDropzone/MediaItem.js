@@ -13,7 +13,7 @@ type Props = {
 };
 
 @observer
-export default class MediaItem extends React.PureComponent<Props> {
+export default class MediaItem extends React.Component<Props> {
     @computed get thumbnail(): ?string {
         const {store} = this.props;
         const {thumbnails} = store.data;

@@ -271,7 +271,7 @@ exports[`Render data with loading column 1`] = `
         >
           <div
             class="spinner"
-            style="width:40px;height:40px;"
+            style="width:40px;height:40px"
           >
             <div
               class="doubleBounce1"

@@ -9,7 +9,7 @@ exports[`Render a MultiMediaDropzone 1`] = `
   <input
     autocomplete="off"
     multiple=""
-    style="display:none;"
+    style="display:none"
     type="file"
   />
 </div>
@@ -74,7 +74,7 @@ exports[`Render a MultiMediaDropzone while media is uploaded 1`] = `
   <input
     autocomplete="off"
     multiple=""
-    style="display:none;"
+    style="display:none"
     type="file"
   />
 </div>
@@ -124,7 +124,7 @@ exports[`Render a MultiMediaDropzone while the overlay is visible 1`] = `
   <input
     autocomplete="off"
     multiple=""
-    style="display:none;"
+    style="display:none"
     type="file"
   />
 </div>

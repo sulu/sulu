@@ -27,6 +27,7 @@ test('Pass the size of the container to the component via props', () => {
 
     const view = mount(<WithSizeComponent />);
     view.instance().readContainerDimensions({clientWidth: 500, clientHeight: 600});
+    view.update();
     const component = view.find(Component);
 
     expect(component.props().containerWidth).toBe(500);

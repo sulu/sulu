@@ -40,20 +40,17 @@ test('Choosing a different type should change the type', () => {
         />
     );
 
-    const block1 = blockCollection.find('Block').at(0);
-    const block2 = blockCollection.find('Block').at(1);
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(1).simulate('click');
 
-    block1.simulate('click');
-    block2.simulate('click');
+    expect(blockCollection.find('Block').at(0).find('SingleSelect').prop('value')).toEqual('type1');
+    expect(blockCollection.find('Block').at(1).find('SingleSelect').prop('value')).toEqual('type1');
 
-    const select1 = block1.find('SingleSelect');
-    const select2 = block2.find('SingleSelect');
-    expect(select1.prop('value')).toEqual('type1');
-    expect(select2.prop('value')).toEqual('type1');
+    blockCollection.find('Block').at(0).find('SingleSelect').prop('onChange')('type2');
+    blockCollection.update();
 
-    select1.prop('onChange')('type2');
-    expect(select1.prop('value')).toEqual('type2');
-    expect(select2.prop('value')).toEqual('type1');
+    expect(blockCollection.find('Block').at(0).find('SingleSelect').prop('value')).toEqual('type2');
+    expect(blockCollection.find('Block').at(1).find('SingleSelect').prop('value')).toEqual('type1');
 });
 
 test('Should allow to expand blocks', () => {
@@ -64,15 +61,14 @@ test('Should allow to expand blocks', () => {
             value={[{content: 'Test 1'}, {content: 'Test 2'}]}
         />
     );
-    const blocks = blockCollection.find('Block');
 
-    expect(blocks.at(0).prop('expanded')).toEqual(false);
-    expect(blocks.at(1).prop('expanded')).toEqual(false);
+    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
+    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(false);
 
-    blocks.at(1).simulate('click');
+    blockCollection.find('Block').at(1).simulate('click');
 
-    expect(blocks.at(0).prop('expanded')).toEqual(false);
-    expect(blocks.at(1).prop('expanded')).toEqual(true);
+    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
+    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
 });
 
 test('Should allow to collapse blocks', () => {
@@ -83,18 +79,17 @@ test('Should allow to collapse blocks', () => {
             value={[{content: 'Test 1'}, {content: 'Test 2'}]}
         />
     );
-    const blocks = blockCollection.find('Block');
 
-    blocks.at(0).simulate('click');
-    blocks.at(1).simulate('click');
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(1).simulate('click');
 
-    expect(blocks.at(0).prop('expanded')).toEqual(true);
-    expect(blocks.at(1).prop('expanded')).toEqual(true);
+    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(true);
+    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
 
-    blocks.at(0).find('.fa-times').simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="times"]').simulate('click');
 
-    expect(blocks.at(0).prop('expanded')).toEqual(false);
-    expect(blocks.at(1).prop('expanded')).toEqual(true);
+    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
+    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
 });
 
 test('Should allow to reorder blocks by using drag and drop', () => {
@@ -106,12 +101,12 @@ test('Should allow to reorder blocks by using drag and drop', () => {
 
     blockCollection.find('Block').at(0).simulate('click');
 
-    expect(blockCollection.get(0).expandedBlocks.toJS()).toEqual([true, false, false]);
+    expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([true, false, false]);
 
     blockCollection.find(SortableContainer).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
     expect(changeSpy).toBeCalledWith([{content: 'Test 2'}, {content: 'Test 3'}, {content: 'Test 1'}]);
 
-    expect(blockCollection.get(0).expandedBlocks.toJS()).toEqual([false, false, true]);
+    expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([false, false, true]);
 });
 
 test('Should keep types when reordering blocks by using drag and drop', () => {
@@ -126,16 +121,15 @@ test('Should keep types when reordering blocks by using drag and drop', () => {
         />
     );
 
-    expect(blockCollection.get(0).blockTypes.toJS()).toEqual(['type1', 'type1', 'type1']);
+    expect(blockCollection.instance().blockTypes.toJS()).toEqual(['type1', 'type1', 'type1']);
 
-    const block1 = blockCollection.find('Block').at(0);
-    block1.simulate('click');
-    block1.find('SingleSelect').prop('onChange')('type2');
-    expect(blockCollection.get(0).blockTypes.toJS()).toEqual(['type2', 'type1', 'type1']);
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(0).find('SingleSelect').prop('onChange')('type2');
+    expect(blockCollection.instance().blockTypes.toJS()).toEqual(['type2', 'type1', 'type1']);
 
     blockCollection.find(SortableContainer).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
 
-    expect(blockCollection.get(0).blockTypes.toJS()).toEqual(['type1', 'type1', 'type2']);
+    expect(blockCollection.instance().blockTypes.toJS()).toEqual(['type1', 'type1', 'type2']);
 });
 
 test('Should allow to add a new block', () => {
@@ -160,9 +154,8 @@ test('Should allow to remove an existing block', () => {
         <BlockCollection onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />
     );
 
-    const block1 = blockCollection.find('Block').at(0);
-    block1.simulate('click');
-    block1.find('.fa-trash-o').simulate('click');
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="trash-o"]').simulate('click');
 
     expect(changeSpy).toBeCalledWith([{content: 'Test 2'}]);
 });
@@ -178,13 +171,12 @@ test('Should apply renderBlockContent before rendering the block content', () =>
             value={value}
         />
     );
-    const blocks = blockCollection.find('Block');
 
-    blocks.at(0).simulate('click');
-    blocks.at(1).simulate('click');
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(1).simulate('click');
 
-    expect(blocks.at(0).prop('children')).toEqual(prefix + value[0].content);
-    expect(blocks.at(1).prop('children')).toEqual(prefix + value[1].content);
+    expect(blockCollection.find('Block').at(0).prop('children')).toEqual(prefix + value[0].content);
+    expect(blockCollection.find('Block').at(1).prop('children')).toEqual(prefix + value[1].content);
 });
 
 test('Should apply renderBlockContent before rendering the block content including the type', () => {
@@ -207,19 +199,25 @@ test('Should apply renderBlockContent before rendering the block content includi
             value={value}
         />
     );
-    const blocks = blockCollection.find('Block');
 
-    blocks.at(0).simulate('click');
-    blocks.at(1).simulate('click');
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(1).simulate('click');
 
-    expect(blocks.at(0).prop('children')).toEqual(prefix + value[0].content + typePrefix + 'type1');
-    expect(blocks.at(1).prop('children')).toEqual(prefix + value[1].content + typePrefix + 'type1');
+    expect(blockCollection.find('Block').at(0).prop('children'))
+        .toEqual(prefix + value[0].content + typePrefix + 'type1');
+    expect(blockCollection.find('Block').at(1).prop('children'))
+        .toEqual(prefix + value[1].content + typePrefix + 'type1');
 
-    expect(blocks.at(0).prop('children')).toEqual(prefix + value[0].content + typePrefix + 'type1');
-    expect(blocks.at(1).prop('children')).toEqual(prefix + value[1].content + typePrefix + 'type1');
+    expect(blockCollection.find('Block').at(0).prop('children'))
+        .toEqual(prefix + value[0].content + typePrefix + 'type1');
+    expect(blockCollection.find('Block').at(1).prop('children'))
+        .toEqual(prefix + value[1].content + typePrefix + 'type1');
 
-    blocks.at(1).find('SingleSelect').prop('onChange')('type2');
+    blockCollection.find('Block').at(1).find('SingleSelect').prop('onChange')('type2');
+    blockCollection.update();
 
-    expect(blocks.at(0).prop('children')).toEqual(prefix + value[0].content + typePrefix + 'type1');
-    expect(blocks.at(1).prop('children')).toEqual(prefix + value[1].content + typePrefix + 'type2');
+    expect(blockCollection.find('Block').at(0).prop('children'))
+        .toEqual(prefix + value[0].content + typePrefix + 'type1');
+    expect(blockCollection.find('Block').at(1).prop('children'))
+        .toEqual(prefix + value[1].content + typePrefix + 'type2');
 });

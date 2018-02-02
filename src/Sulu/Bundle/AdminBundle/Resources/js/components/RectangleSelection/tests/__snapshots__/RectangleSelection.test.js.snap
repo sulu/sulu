@@ -75,14 +75,14 @@ exports[`The component should render with children 1`] = `
   </p>
   <div
     class="rectangle"
-    style="left:0px;top:0px;width:0px;height:0px;"
+    style="left:0px;top:0px;width:0px;height:0px"
   >
     <div
       class="resizeHandle"
     />
     <div
       class="backdrop"
-      style="outline-width:2000px;"
+      style="outline-width:2000px"
     />
   </div>
 </div>

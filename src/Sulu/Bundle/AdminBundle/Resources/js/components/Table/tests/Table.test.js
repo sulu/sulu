@@ -202,7 +202,7 @@ test('Clicking a checkbox should call onRowSelectionChange with the selection st
     expect(onChangeSpy).toHaveBeenCalledTimes(0);
 
     const checkboxOne = table.find('Row').at(0).find('Checkbox input');
-    checkboxOne.get(0).checked = true;
+    checkboxOne.at(0).instance().checked = true;
 
     checkboxOne.simulate('change');
     expect(onChangeSpy).toHaveBeenCalledWith(rowIdOne, true);
@@ -232,7 +232,7 @@ test('Clicking the select-all checkbox should call the onAllSelectionChange call
     );
 
     const allCheckbox = table.find('Header').find('Checkbox input');
-    allCheckbox.get(0).checked = true;
+    allCheckbox.at(0).instance().checked = true;
 
     allCheckbox.simulate('change');
     expect(onChangeSpy).toHaveBeenCalledWith(true);

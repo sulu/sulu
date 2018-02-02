@@ -22,7 +22,7 @@ type Props = {
 };
 
 @observer
-export default class MediaSelectionOverlay extends React.PureComponent<Props> {
+export default class MediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
         open: false,
         excludedIds: [],

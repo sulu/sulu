@@ -14,7 +14,7 @@ exports[`The ColumnList component should render 1`] = `
       },
     ]
   }
-  onItemClick={[Function]}
+  onItemClick={[MockFunction]}
   toolbarItems={
     Array [
       Object {
@@ -68,9 +68,10 @@ exports[`The ColumnList component should render 1`] = `
           ]
         }
         index={0}
+        key=".0"
         loading={false}
         onActive={[Function]}
-        onItemClick={[Function]}
+        onItemClick={[MockFunction]}
         toolbarItems={
           Array [
             Object {
@@ -149,6 +150,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={0}
                 icon="plus"
                 index={0}
+                key="0"
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -171,6 +173,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={0}
                 icon="search"
                 index={0}
+                key="1"
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -193,6 +196,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={0}
                 icon="gear"
                 index={0}
+                key="2"
                 options={
                   Array [
                     Object {
@@ -249,7 +253,8 @@ exports[`The ColumnList component should render 1`] = `
               }
               hasChildren={false}
               id="1"
-              onClick={[Function]}
+              key=".0"
+              onClick={[MockFunction]}
               selected={true}
             >
               <div
@@ -267,6 +272,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="1"
+                    key="button-0"
                   >
                     <Icon
                       className="button"
@@ -290,6 +296,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="1"
+                    key="button-1"
                   >
                     <Icon
                       className="button"
@@ -355,7 +362,8 @@ exports[`The ColumnList component should render 1`] = `
               }
               hasChildren={true}
               id="2"
-              onClick={[Function]}
+              key=".1"
+              onClick={[MockFunction]}
             >
               <div
                 className="item"
@@ -372,6 +380,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="2"
+                    key="button-0"
                   >
                     <Icon
                       className="button"
@@ -395,6 +404,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="2"
+                    key="button-1"
                   >
                     <Icon
                       className="button"
@@ -469,7 +479,8 @@ exports[`The ColumnList component should render 1`] = `
               }
               hasChildren={false}
               id="3"
-              onClick={[Function]}
+              key=".2"
+              onClick={[MockFunction]}
             >
               <div
                 className="item"
@@ -486,6 +497,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="3"
+                    key="button-0"
                   >
                     <Icon
                       className="button"
@@ -509,6 +521,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="3"
+                    key="button-1"
                   >
                     <Icon
                       className="button"
@@ -576,9 +589,10 @@ exports[`The ColumnList component should render 1`] = `
           ]
         }
         index={1}
+        key=".1"
         loading={false}
         onActive={[Function]}
-        onItemClick={[Function]}
+        onItemClick={[MockFunction]}
         toolbarItems={
           Array [
             Object {
@@ -657,6 +671,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={1}
                 icon="plus"
                 index={0}
+                key="0"
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -679,6 +694,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={1}
                 icon="search"
                 index={0}
+                key="1"
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -701,6 +717,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={1}
                 icon="gear"
                 index={0}
+                key="2"
                 options={
                   Array [
                     Object {
@@ -757,7 +774,8 @@ exports[`The ColumnList component should render 1`] = `
               }
               hasChildren={false}
               id="1-1"
-              onClick={[Function]}
+              key=".0"
+              onClick={[MockFunction]}
             >
               <div
                 className="item"
@@ -774,6 +792,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="1-1"
+                    key="button-0"
                   >
                     <Icon
                       className="button"
@@ -797,6 +816,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="1-1"
+                    key="button-1"
                   >
                     <Icon
                       className="button"
@@ -862,7 +882,8 @@ exports[`The ColumnList component should render 1`] = `
               }
               hasChildren={true}
               id="1-2"
-              onClick={[Function]}
+              key=".1"
+              onClick={[MockFunction]}
             >
               <div
                 className="item"
@@ -879,6 +900,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="1-2"
+                    key="button-0"
                   >
                     <Icon
                       className="button"
@@ -902,6 +924,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="1-2"
+                    key="button-1"
                   >
                     <Icon
                       className="button"
@@ -978,9 +1001,10 @@ exports[`The ColumnList component should render 1`] = `
           ]
         }
         index={2}
+        key=".2"
         loading={false}
         onActive={[Function]}
-        onItemClick={[Function]}
+        onItemClick={[MockFunction]}
         toolbarItems={
           Array [
             Object {
@@ -1059,6 +1083,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={2}
                 icon="plus"
                 index={0}
+                key="0"
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -1081,6 +1106,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={2}
                 icon="search"
                 index={0}
+                key="1"
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -1103,6 +1129,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={2}
                 icon="gear"
                 index={0}
+                key="2"
                 options={
                   Array [
                     Object {
@@ -1159,7 +1186,8 @@ exports[`The ColumnList component should render 1`] = `
               }
               hasChildren={false}
               id="1-1-1"
-              onClick={[Function]}
+              key=".0"
+              onClick={[MockFunction]}
             >
               <div
                 className="item"
@@ -1176,6 +1204,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="1-1-1"
+                    key="button-0"
                   >
                     <Icon
                       className="button"
@@ -1199,6 +1228,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="1-1-1"
+                    key="button-1"
                   >
                     <Icon
                       className="button"
@@ -1264,7 +1294,8 @@ exports[`The ColumnList component should render 1`] = `
               }
               hasChildren={false}
               id="1-1-2"
-              onClick={[Function]}
+              key=".1"
+              onClick={[MockFunction]}
             >
               <div
                 className="item"
@@ -1281,6 +1312,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="1-1-2"
+                    key="button-0"
                   >
                     <Icon
                       className="button"
@@ -1304,6 +1336,7 @@ exports[`The ColumnList component should render 1`] = `
                       }
                     }
                     id="1-1-2"
+                    key="button-1"
                   >
                     <Icon
                       className="button"
@@ -1371,9 +1404,10 @@ exports[`The ColumnList component should render 1`] = `
           ]
         }
         index={3}
+        key=".3"
         loading={true}
         onActive={[Function]}
-        onItemClick={[Function]}
+        onItemClick={[MockFunction]}
         toolbarItems={
           Array [
             Object {
@@ -1452,6 +1486,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={3}
                 icon="plus"
                 index={0}
+                key="0"
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -1474,6 +1509,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={3}
                 icon="search"
                 index={0}
+                key="1"
                 onClick={[Function]}
                 skin="primary"
                 type="button"
@@ -1496,6 +1532,7 @@ exports[`The ColumnList component should render 1`] = `
                 columnIndex={3}
                 icon="gear"
                 index={0}
+                key="2"
                 options={
                   Array [
                     Object {

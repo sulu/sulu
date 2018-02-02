@@ -16,7 +16,7 @@ const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 @observer
-class MediaOverview extends React.PureComponent<ViewProps> {
+class MediaOverview extends React.Component<ViewProps> {
     mediaPage: IObservableValue<number> = observable();
     collectionPage: IObservableValue<number> = observable();
     locale: IObservableValue<string> = observable();

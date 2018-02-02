@@ -17,7 +17,7 @@ type Props = {
 };
 
 @observer
-export default class MultiMediaDropzone extends React.PureComponent<Props> {
+export default class DropzoneOverlay extends React.Component<Props> {
     static defaultProps = {
         open: false,
     };

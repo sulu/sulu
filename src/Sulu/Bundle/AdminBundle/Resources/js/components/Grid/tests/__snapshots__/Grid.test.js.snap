@@ -6,11 +6,11 @@ exports[`Render a Grid with Items having spaces between them 1`] = `
 >
   <div
     class="item"
-    style="width:33.333333333333336%;margin-left:0%;margin-right:66.66666666666667%;"
+    style="width:33.333333333333336%;margin-left:0%;margin-right:66.66666666666667%"
   />
   <div
     class="item"
-    style="width:16.666666666666668%;margin-left:83.33333333333333%;margin-right:0%;"
+    style="width:16.666666666666668%;margin-left:83.33333333333333%;margin-right:0%"
   />
 </div>
 `;
@@ -21,51 +21,51 @@ exports[`Render a Grid with Items in all sizes 1`] = `
 >
   <div
     class="item"
-    style="width:8.333333333333334%;margin-left:0%;margin-right:0%;"
+    style="width:8.333333333333334%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:16.666666666666668%;margin-left:0%;margin-right:0%;"
+    style="width:16.666666666666668%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:25%;margin-left:0%;margin-right:0%;"
+    style="width:25%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:33.333333333333336%;margin-left:0%;margin-right:0%;"
+    style="width:33.333333333333336%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:41.666666666666664%;margin-left:0%;margin-right:0%;"
+    style="width:41.666666666666664%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:50%;margin-left:0%;margin-right:0%;"
+    style="width:50%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:58.333333333333336%;margin-left:0%;margin-right:0%;"
+    style="width:58.333333333333336%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:66.66666666666667%;margin-left:0%;margin-right:0%;"
+    style="width:66.66666666666667%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:75%;margin-left:0%;margin-right:0%;"
+    style="width:75%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:83.33333333333333%;margin-left:0%;margin-right:0%;"
+    style="width:83.33333333333333%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:91.66666666666667%;margin-left:0%;margin-right:0%;"
+    style="width:91.66666666666667%;margin-left:0%;margin-right:0%"
   />
   <div
     class="item"
-    style="width:100%;margin-left:0%;margin-right:0%;"
+    style="width:100%;margin-left:0%;margin-right:0%"
   />
 </div>
 `;
@@ -76,60 +76,60 @@ exports[`Render a Grid with Sections 1`] = `
 >
   <div
     class="section"
-    style="width:33.333333333333336%;margin-left:0%;margin-right:0%;"
+    style="width:33.333333333333336%;margin-left:0%;margin-right:0%"
   >
     <div
       class="item"
-      style="width:8.333333333333334%;margin-left:0%;margin-right:0%;"
+      style="width:8.333333333333334%;margin-left:0%;margin-right:0%"
     />
     <div
       class="item"
-      style="width:16.666666666666668%;margin-left:0%;margin-right:0%;"
+      style="width:16.666666666666668%;margin-left:0%;margin-right:0%"
     />
     <div
       class="item"
-      style="width:25%;margin-left:0%;margin-right:0%;"
+      style="width:25%;margin-left:0%;margin-right:0%"
     />
     <div
       class="item"
-      style="width:33.333333333333336%;margin-left:0%;margin-right:0%;"
+      style="width:33.333333333333336%;margin-left:0%;margin-right:0%"
     />
     <div
       class="item"
-      style="width:41.666666666666664%;margin-left:0%;margin-right:0%;"
+      style="width:41.666666666666664%;margin-left:0%;margin-right:0%"
     />
     <div
       class="item"
-      style="width:50%;margin-left:0%;margin-right:0%;"
+      style="width:50%;margin-left:0%;margin-right:0%"
     />
   </div>
   <div
     class="section"
-    style="width:66.66666666666667%;margin-left:0%;margin-right:0%;"
+    style="width:66.66666666666667%;margin-left:0%;margin-right:0%"
   >
     <div
       class="item"
-      style="width:58.333333333333336%;margin-left:0%;margin-right:0%;"
+      style="width:58.333333333333336%;margin-left:0%;margin-right:0%"
     />
     <div
       class="item"
-      style="width:66.66666666666667%;margin-left:0%;margin-right:0%;"
+      style="width:66.66666666666667%;margin-left:0%;margin-right:0%"
     />
     <div
       class="item"
-      style="width:75%;margin-left:0%;margin-right:0%;"
+      style="width:75%;margin-left:0%;margin-right:0%"
     />
     <div
       class="item"
-      style="width:83.33333333333333%;margin-left:0%;margin-right:0%;"
+      style="width:83.33333333333333%;margin-left:0%;margin-right:0%"
     />
     <div
       class="item"
-      style="width:91.66666666666667%;margin-left:0%;margin-right:0%;"
+      style="width:91.66666666666667%;margin-left:0%;margin-right:0%"
     />
     <div
       class="item"
-      style="width:100%;margin-left:0%;margin-right:0%;"
+      style="width:100%;margin-left:0%;margin-right:0%"
     />
   </div>
 </div>
@@ -141,11 +141,11 @@ exports[`Render a Grid with class names attached 1`] = `
 >
   <div
     class="section test-section"
-    style="width:100%;margin-left:0%;margin-right:0%;"
+    style="width:100%;margin-left:0%;margin-right:0%"
   >
     <div
       class="item test-item"
-      style="width:100%;margin-left:0%;margin-right:0%;"
+      style="width:100%;margin-left:0%;margin-right:0%"
     />
   </div>
 </div>

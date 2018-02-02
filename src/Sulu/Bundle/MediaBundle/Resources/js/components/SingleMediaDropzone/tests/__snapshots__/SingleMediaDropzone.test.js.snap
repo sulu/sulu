@@ -25,7 +25,7 @@ exports[`Render a SingleMediaDropzone 1`] = `
   />
   <input
     autocomplete="off"
-    style="display:none;"
+    style="display:none"
     type="file"
   />
 </div>
@@ -40,11 +40,11 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
     class="progressbar"
   >
     <div
-      style="width:200px;height:200px;"
+      style="width:200px;height:200px"
     >
       <svg
         class="root  "
-        viewbox="0 0 100 100"
+        viewBox="0 0 100 100"
       >
         <circle
           class="background"
@@ -70,7 +70,7 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
     "
           fill-opacity="0"
           stroke-width="8"
-          style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:119.38052083641213px;"
+          style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:119.38052083641213px"
         />
         <text
           class="text"
@@ -88,7 +88,7 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
   />
   <input
     autocomplete="off"
-    style="display:none;"
+    style="display:none"
     type="file"
   />
 </div>

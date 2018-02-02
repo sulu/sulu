@@ -23,7 +23,7 @@ type Props = {
 };
 
 @observer
-export default class CollectionSection extends React.PureComponent<Props> {
+export default class CollectionSection extends React.Component<Props> {
     @observable openedCollectionOperationOverlayType: OperationType;
 
     @action openCollectionOperationOverlay(operationType: OperationType) {

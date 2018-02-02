@@ -31,7 +31,7 @@ type Props = {
 };
 
 @observer
-export default class Table extends React.PureComponent<Props> {
+export default class Table extends React.Component<Props> {
     static defaultProps = {
         selectMode: 'none',
     };

@@ -46,7 +46,7 @@ type Props = {
 };
 
 @observer
-export default class Application extends React.PureComponent<Props> {
+export default class Application extends React.Component<Props> {
     @observable navigationOverlayOpen: boolean =  false;
 
     @action openNavigationOverlay() {
