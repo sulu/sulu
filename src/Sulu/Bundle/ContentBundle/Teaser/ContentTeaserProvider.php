@@ -60,6 +60,7 @@ class ContentTeaserProvider implements TeaserProviderInterface
         $searchResult = $this->searchManager
             ->createSearch(implode(' OR ', $statements))
             ->indexes($this->getPageIndexes())
+            ->locale($locale)
             ->execute();
 
         /** @var QueryHit $item */
