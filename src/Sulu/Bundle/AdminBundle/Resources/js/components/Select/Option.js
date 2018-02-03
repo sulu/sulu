@@ -38,24 +38,24 @@ export default class Option extends React.PureComponent<Props> {
         }
     };
 
-    setItem = (item: ElementRef<'li'>) => {
+    setItemRef = (item: ?ElementRef<'li'>) => {
         const {
             selected,
             optionRef,
         } = this.props;
 
-        if (optionRef) {
+        if (optionRef && item) {
             optionRef(item, selected);
         }
     };
 
-    setButton = (button: ElementRef<'button'>) => {
-        if (!button) {
-            return;
-        }
-
+    setButtonRef = (button: ?ElementRef<'button'>) => {
         if (this.props.focus) {
             afterElementsRendered(() => {
+                if (!button) {
+                    return;
+                }
+
                 button.focus();
             });
         }
@@ -91,10 +91,10 @@ export default class Option extends React.PureComponent<Props> {
         );
 
         return (
-            <li ref={this.setItem}>
+            <li ref={this.setItemRef}>
                 <button
                     className={optionClass}
-                    ref={this.setButton}
+                    ref={this.setButtonRef}
                     onClick={this.handleButtonClick}
                     disabled={disabled}
                 >

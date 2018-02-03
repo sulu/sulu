@@ -36,7 +36,7 @@ export default class AutoComplete extends React.Component<Props> {
 
     static Suggestion = Suggestion;
 
-    @observable inputRef: ElementRef<'input'>;
+    @observable inputRef: ElementRef<'label'>;
 
     @observable inputValue: string = this.props.value;
 
@@ -84,7 +84,7 @@ export default class AutoComplete extends React.Component<Props> {
         this.inputValue = value;
     }
 
-    setInputRef = (inputRef: ElementRef<'label'>) => {
+    setInputRef = (inputRef: ?ElementRef<'label'>) => {
         if (inputRef) {
             this.inputRef = inputRef;
         }

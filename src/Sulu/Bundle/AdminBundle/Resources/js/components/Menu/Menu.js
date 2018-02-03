@@ -13,9 +13,10 @@ type Props = {
 export default class Menu extends React.PureComponent<Props> {
     static Divider = Divider;
 
-    setRef = (ref: ElementRef<'ul'>) => {
-        if (this.props.menuRef) {
-            this.props.menuRef(ref);
+    setRef = (ref: ?ElementRef<'ul'>) => {
+        const {menuRef} = this.props;
+        if (menuRef && ref) {
+            menuRef(ref);
         }
     };
 

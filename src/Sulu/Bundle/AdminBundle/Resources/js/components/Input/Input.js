@@ -14,7 +14,7 @@ type Props = FieldTypeProps<string> & {
     type: string,
     loading?: boolean,
     placeholder?: string,
-    inputRef?: (ref: ElementRef<'label'>) => void,
+    inputRef?: (ref: ?ElementRef<'label'>) => void,
     onFocus?: () => void,
 };
 
@@ -23,7 +23,7 @@ export default class Input extends React.PureComponent<Props> {
         type: 'text',
     };
 
-    setRef = (ref: ElementRef<'label'>) => {
+    setRef = (ref: ?ElementRef<'label'>) => {
         if (this.props.inputRef) {
             this.props.inputRef(ref);
         }

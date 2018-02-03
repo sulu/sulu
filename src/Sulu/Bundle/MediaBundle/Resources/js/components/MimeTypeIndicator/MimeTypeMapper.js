@@ -93,7 +93,7 @@ const mapping = {
 };
 
 export default class MimeTypeMapper {
-    static get(mimeType) {
+    static get(mimeType: string) {
         const fileType = mimeType.split('/')[0];
 
         if (mapping[mimeType]) {

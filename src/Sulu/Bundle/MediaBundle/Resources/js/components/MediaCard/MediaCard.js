@@ -53,11 +53,11 @@ export default class MediaCard extends React.Component<Props> {
         downloadCopyText: '',
     };
 
-    @observable downloadButtonRef: ElementRef<'button'>;
+    @observable downloadButtonRef: ?ElementRef<'button'>;
 
     @observable downloadListOpen: boolean = false;
 
-    @action setDownloadButtonRef = (ref: ElementRef<'button'>) => {
+    @action setDownloadButtonRef = (ref: ?ElementRef<'button'>) => {
         this.downloadButtonRef = ref;
     };
 

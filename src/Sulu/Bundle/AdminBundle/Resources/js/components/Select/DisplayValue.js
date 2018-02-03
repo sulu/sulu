@@ -18,9 +18,10 @@ const TOGGLE_ICON = 'chevron-down';
 export default class DisplayValue extends React.PureComponent<Props> {
     button: ElementRef<'button'>;
 
-    setButtonRef = (button: ElementRef<'button'>) => {
-        if (this.props.displayValueRef) {
-            this.props.displayValueRef(button);
+    setButtonRef = (button: ?ElementRef<'button'>) => {
+        const {displayValueRef} = this.props;
+        if (displayValueRef && button) {
+            displayValueRef(button);
         }
     };
 

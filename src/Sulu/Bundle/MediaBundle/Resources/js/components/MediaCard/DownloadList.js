@@ -9,7 +9,7 @@ type Props = {
     open: boolean,
     onClose: () => void,
     copyText: string,
-    buttonRef: ElementRef<'button'>,
+    buttonRef: ?ElementRef<'button'>,
     imageSizes: Array<{url: string, label: string}>,
     downloadUrl: string,
     downloadText: string,

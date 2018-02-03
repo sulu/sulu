@@ -8,7 +8,7 @@ type Props = {
     width?: number,
     height?: number,
     iconSize?: number,
-    mimeType?: string,
+    mimeType: string,
 };
 
 export default class MimeTypeIndicator extends React.PureComponent<Props> {
