@@ -38,7 +38,7 @@ export type LoadOptions = {
 export type ItemEnhancer = (item: Object) => Object;
 
 export interface LoadingStrategyInterface {
-    constructor(): LoadingStrategyInterface,
+    constructor(): void,
     initialize(datagridStore: DatagridStore): void,
     reset(datagridStore: DatagridStore): void,
     destroy(): void,
@@ -46,8 +46,8 @@ export interface LoadingStrategyInterface {
 }
 
 export interface StructureStrategyInterface {
+    constructor(): void,
     data: Array<*>,
-    constructor(): StructureStrategyInterface,
     getData(parent: ?string | number): ?Array<*>,
     enhanceItem(item: Object): Object,
     clear(): void,

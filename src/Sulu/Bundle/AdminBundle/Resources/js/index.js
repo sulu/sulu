@@ -39,7 +39,14 @@ fieldRegistry.add('text_area', TextArea);
 
 function startApplication() {
     const router = new Router(createHistory());
-    render(<Application router={router} />, document.getElementById('application'));
+    const id = 'application';
+    const applicationElement = document.getElementById(id);
+
+    if (!applicationElement) {
+        throw new Error('DOM element with ID "id" was not found!');
+    }
+
+    render(<Application router={router} />, applicationElement);
 }
 
 const translationPromise = Requester.get('/admin/v2/translations?locale=en')

@@ -17,23 +17,23 @@ jest.mock('../../../Datagrid/stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve()),
 }));
 
-function StructureStrategy() {
-    this.data = [];
-    this.getData = jest.fn().mockReturnValue(this.data);
-    this.clear = jest.fn();
-    this.enhanceItem = jest.fn();
+class StructureStrategy {
+    data = [];
+    getData = jest.fn().mockReturnValue(this.data);
+    clear = jest.fn();
+    enhanceItem = jest.fn();
 }
 
-function OtherLoadingStrategy() {
-    this.paginationAdapter = undefined;
-    this.initialize = jest.fn();
-    this.reset = jest.fn();
-    this.load = jest.fn().mockReturnValue(Promise.resolve({
+class OtherLoadingStrategy {
+    paginationAdapter = undefined;
+    initialize = jest.fn();
+    reset = jest.fn();
+    load = jest.fn().mockReturnValue(Promise.resolve({
         _embedded: {
             snippets: [],
         },
     }));
-    this.destroy = jest.fn();
+    destroy = jest.fn();
 }
 
 test('Should reset page count and page when strategy changes', () => {
@@ -59,12 +59,13 @@ test('Should reset page count to 0 and page to 1 when locale is changed', () => 
 
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
 
-    const structureStrategy = {
-        data: [],
-        clear: jest.fn(),
-        getData: jest.fn().mockReturnValue([]),
-        enhanceItem: jest.fn(),
-    };
+    class StructureStrategy {
+        data = [];
+        clear = jest.fn();
+        getData = jest.fn().mockReturnValue([]);
+        enhanceItem = jest.fn();
+    }
+    const structureStrategy = new StructureStrategy();
     datagridStore.updateStrategies(infiniteLoadingStrategy, structureStrategy);
 
     datagridStore.setPage(2);

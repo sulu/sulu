@@ -14,12 +14,14 @@ export default class InfiniteScroller extends React.PureComponent<PaginationProp
         loading: false,
     };
 
-    elementRef: ElementRef<'div'>;
+    elementRef: ?ElementRef<'section'>;
 
     scrollContainer: ElementRef<*>;
 
     componentDidMount() {
-        this.scrollContainer = this.getScrollContainer(this.elementRef.parentNode);
+        if (this.elementRef) {
+            this.scrollContainer = this.getScrollContainer(this.elementRef.parentNode);
+        }
 
         this.bindScrollListener();
     }
@@ -52,7 +54,7 @@ export default class InfiniteScroller extends React.PureComponent<PaginationProp
         return overflowY === 'auto' || overflowY === 'scroll';
     }
 
-    setRef = (ref: ElementRef<'div'>) => {
+    setRef = (ref: ?ElementRef<'section'>) => {
         this.elementRef = ref;
     };
 
@@ -76,6 +78,11 @@ export default class InfiniteScroller extends React.PureComponent<PaginationProp
     }
 
     scrollListener = debounce(() => {
+        const {elementRef} = this;
+        if (!elementRef) {
+            return;
+        }
+
         const {
             onChange,
             current,
@@ -85,7 +92,7 @@ export default class InfiniteScroller extends React.PureComponent<PaginationProp
         } = this.scrollContainer.getBoundingClientRect();
         const {
             bottom: elementOffsetBottom,
-        } = this.elementRef.getBoundingClientRect();
+        } = elementRef.getBoundingClientRect();
 
         if ((elementOffsetBottom - scrollContainerOffsetBottom) < THRESHOLD)  {
             const nextPage = current + 1;

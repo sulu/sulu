@@ -2,7 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import {Icon} from 'sulu-admin-bundle/components';
-import type {Point} from './types';
+import type {ArrowDirection, Point} from './types';
 import imageFocusPointCellStyles from './imageFocusPointCell.scss';
 
 const ARROW_UP_ICON = 'arrow-up';
@@ -12,7 +12,7 @@ type Props = {
     value: Point,
     active: boolean,
     onClick?: (value: Point) => void,
-    arrowDirection?: 'left' | 'top-left' | 'top' | 'top-right' | 'right' | 'bottom-right' | 'bottom' | 'bottom-left',
+    arrowDirection?: ArrowDirection,
 };
 
 export default class ImageFocusPointCell extends React.PureComponent<Props> {
@@ -20,7 +20,7 @@ export default class ImageFocusPointCell extends React.PureComponent<Props> {
         active: false,
     };
 
-    static getDirectionInDegrees(direction) {
+    static getDirectionInDegrees(direction: ArrowDirection) {
         switch (direction) {
             case 'left':
                 return -90;

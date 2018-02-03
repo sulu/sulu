@@ -15,11 +15,11 @@ type Props = {
 };
 
 export default class Masonry extends React.PureComponent<Props> {
-    masonryRef: ElementRef<'div'>;
+    masonryRef: ?ElementRef<'div'>;
 
     masonry: MasonryLayout;
 
-    layoutedChildNodes: Node[];
+    layoutedChildNodes: HTMLElement[];
 
     componentDidMount() {
         this.initMasonryLayout();
@@ -37,12 +37,18 @@ export default class Masonry extends React.PureComponent<Props> {
         this.handleImagesLoading();
     }
 
-    setMasonryRef = (ref: ElementRef<'div'>) => {
+    setMasonryRef = (ref: ?ElementRef<'div'>) => {
         this.masonryRef = ref;
     };
 
     getChildNodes() {
-        const childNodes = this.masonryRef.children;
+        const {masonryRef} = this;
+
+        if (!masonryRef) {
+            return [];
+        }
+
+        const childNodes = masonryRef.children;
 
         return Array.from(childNodes);
     }

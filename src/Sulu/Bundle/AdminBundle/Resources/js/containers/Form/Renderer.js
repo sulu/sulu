@@ -19,11 +19,15 @@ type Props = {
 
 @observer
 export default class Renderer extends React.Component<Props> {
-    submitButton: ElementRef<'button'>;
+    submitButton: ?ElementRef<'button'>;
 
     /** @public */
     submit = () => {
-        this.submitButton.click();
+        const {submitButton} = this;
+
+        if (submitButton) {
+            submitButton.click();
+        }
     };
 
     handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
@@ -31,7 +35,7 @@ export default class Renderer extends React.Component<Props> {
         event.preventDefault();
     };
 
-    setSubmitButtonRef = (submitButton: ElementRef<'button'>) => {
+    setSubmitButtonRef = (submitButton: ?ElementRef<'button'>) => {
         this.submitButton = submitButton;
     };
 
