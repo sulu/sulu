@@ -103,6 +103,7 @@
         </service>
 
         <service id="sulu_media.image.transformation.paste" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\PasteTransformation">
+            <argument type="service" id="sulu_media.adapter"/>
             <argument type="service" id="file_locator"/>
 
             <tag name="sulu_media.image.transformation" alias="paste" />

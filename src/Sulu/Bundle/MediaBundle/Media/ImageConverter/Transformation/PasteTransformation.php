@@ -11,11 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation;
 
-use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
-use Imagine\Imagick\Imagine as ImagickImagine;
 use Symfony\Component\Config\FileLocator;
 
 /**
@@ -24,6 +23,11 @@ use Symfony\Component\Config\FileLocator;
 class PasteTransformation implements TransformationInterface
 {
     /**
+     * @var ImagineInterface
+     */
+    private $imagine;
+
+    /**
      * @var FileLocator
      */
     private $fileLocator;
@@ -31,11 +35,14 @@ class PasteTransformation implements TransformationInterface
     /**
      * MaskTransformation constructor.
      *
+     * @param ImagineInterface $imagine
      * @param FileLocator $fileLocator
      */
     public function __construct(
+        ImagineInterface $imagine,
         FileLocator $fileLocator
     ) {
+        $this->imagine = $imagine;
         $this->fileLocator = $fileLocator;
     }
 
@@ -94,14 +101,7 @@ class PasteTransformation implements TransformationInterface
      */
     protected function createMask($maskPath, $width, $height)
     {
-        try {
-            // todo get this from a service
-            $imagine = new ImagickImagine();
-        } catch (\RuntimeException $ex) {
-            $imagine = new GdImagine();
-        }
-
-        $mask = $imagine->open($maskPath);
+        $mask = $this->imagine->open($maskPath);
         $mask->resize(
             new Box(
                 $width ?: 1,
