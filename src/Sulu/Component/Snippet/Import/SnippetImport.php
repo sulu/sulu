@@ -17,18 +17,21 @@ use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
+use Sulu\Component\Import\Exception\FormatImporterNotFoundException;
 use Sulu\Component\Import\Format\FormatImportInterface;
 use Sulu\Component\Import\Import;
 use Sulu\Component\Import\Manager\ImportManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Import Snippets by given xliff-file.
  */
-class SnippetImport extends Import
+class SnippetImport extends Import implements SnippetImportInterface
 {
     /**
      * @var LoggerInterface
@@ -36,7 +39,7 @@ class SnippetImport extends Import
     protected $logger;
 
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     private $documentManager;
 
@@ -50,22 +53,6 @@ class SnippetImport extends Import
      */
     protected $documentRegistry;
 
-    /**
-     * @var FormatImportInterface[]
-     */
-    protected $formatFilePaths = [];
-
-    /**
-     * SnippetImport constructor.
-     *
-     * @param DocumentManager $documentManager
-     * @param StructureManagerInterface $structureManager
-     * @param DocumentRegistry $documentRegistry
-     * @param ImportManagerInterface $importManager
-     * @param LegacyPropertyFactory $legacyPropertyFactory
-     * @param LoggerInterface $logger
-     * @param FormatImportInterface $xliff12
-     */
     public function __construct(
         DocumentManager $documentManager,
         StructureManagerInterface $structureManager,
@@ -75,32 +62,28 @@ class SnippetImport extends Import
         LoggerInterface $logger,
         FormatImportInterface $xliff12
     ) {
+        parent::__construct($importManager, $legacyPropertyFactory, ['1.2.xliff' => $xliff12]);
+
         $this->documentManager = $documentManager;
         $this->documentRegistry = $documentRegistry;
         $this->structureManager = $structureManager;
-        $this->importManager = $importManager; // only import/import
-        $this->legacyPropertyFactory = $legacyPropertyFactory;
-        // only import/import
         $this->logger = $logger;
-        $this->add($xliff12, '1.2.xliff');
     }
 
     /**
      * Import Snippet by given XLIFF-File.
      *
-     * @param $locale
-     * @param $filePath
-     * @param $output
-     * @param $format
+     * @param string $locale
+     * @param string $filePath
+     * @param OutputInterface $output
+     * @param string $format
      *
      * @return \stdClass
+     *
+     * @throws FormatImporterNotFoundException
      */
-    public function import(
-        $locale,
-        $filePath,
-        $output,
-        $format
-    ) {
+    public function import($locale, $filePath, OutputInterface $output = null, $format = '1.2.xliff')
+    {
         $parsedDataList = $this->getParser($format)->parse($filePath, $locale);
         $failedImports = [];
         $importedCounter = 0;
@@ -215,6 +198,10 @@ class SnippetImport extends Import
      * @param string $locale
      * @param string $format
      * @param array $data
+     *
+     * @return bool
+     *
+     * @throws FormatImporterNotFoundException
      */
     protected function setDocumentData($document, $locale, $format, $data)
     {

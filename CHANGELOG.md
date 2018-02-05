@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * HOTFIX      #3739 [ContentBundle]         Added locale to content-teaser query
     * ENHANCEMENT #3735 [DocumentManager]       Set proper default locale for document-manager
     * ENHANCEMENT #3736 [WebsiteBundle]         Added exception when default_host is needed for sitemap generation
+    * HOTFIX      #3741 [ContentBundle]         Cleand-up xliff import/export component
     * HOTFIX      #3730 [ContactBundle]         Fixed class parameter to load field-descriptor
     * HOTFIX      #3720 [MediaBundle]           Added extension-guesser to fix wrong extensions on download
 

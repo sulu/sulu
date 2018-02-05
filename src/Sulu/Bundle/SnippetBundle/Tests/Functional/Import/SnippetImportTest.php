@@ -11,8 +11,12 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Import;
 
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Snippet\Import\SnippetImportInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -27,16 +31,23 @@ class SnippetImportTest extends SuluTestCase
     private $documentManager;
 
     /**
-     * @var object
+     * @var SnippetImportInterface
      */
-    private $parent;
-
     private $snippetImporter;
 
+    /**
+     * @var SnippetDocument[]
+     */
     private $snippets = [];
 
+    /**
+     * @var string
+     */
     protected $distPath = './src/Sulu/Bundle/SnippetBundle/Tests/app/Resources/import/export.xliff.dist';
 
+    /**
+     * @var string
+     */
     protected $path = './src/Sulu/Bundle/SnippetBundle/Tests/app/Resources/import/export.xliff';
 
     /**

@@ -15,10 +15,12 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\Export\Export;
 use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -32,29 +34,10 @@ class SnippetExport extends Export implements SnippetExportInterface
     private $snippetManager;
 
     /**
-     * @var ExportManagerInterface
-     */
-    protected $exportManager;
-
-    /**
-     * @var string[]
-     */
-    protected $formatFilePaths;
-
-    /**
-     * @var Output
+     * @var OutputInterface
      */
     protected $output;
 
-    /**
-     * Snippet constructor.
-     *
-     * @param EngineInterface $templating
-     * @param SnippetRepository $snippetManager
-     * @param DocumentManager $documentManager
-     * @param DocumentInspector $documentInspector
-     * @param array $formatFilePaths
-     */
     public function __construct(
         EngineInterface $templating,
         SnippetRepository $snippetManager,
@@ -63,23 +46,17 @@ class SnippetExport extends Export implements SnippetExportInterface
         ExportManagerInterface $exportManager,
         $formatFilePaths
     ) {
-        $this->templating = $templating;
+        parent::__construct($templating, $documentManager, $documentInspector, $exportManager, $formatFilePaths);
+
         $this->snippetManager = $snippetManager;
-        $this->documentManager = $documentManager;
-        $this->documentInspector = $documentInspector;
-        $this->exportManager = $exportManager;
-        $this->formatFilePaths = $formatFilePaths;
         $this->output = new NullOutput();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function export(
-        $locale,
-        $output = null,
-        $format = '1.2.xliff'
-    ) {
+    public function export($locale, $output = null, $format = '1.2.xliff')
+    {
         if (!$locale) {
             throw new \Exception(sprintf('Invalid parameters for export "%s"', $locale));
         }
@@ -102,6 +79,8 @@ class SnippetExport extends Export implements SnippetExportInterface
      * Returns all data that we need to create a xliff-File.
      *
      * @return array
+     *
+     * @throws DocumentManagerException
      */
     public function getExportData()
     {
@@ -138,7 +117,7 @@ class SnippetExport extends Export implements SnippetExportInterface
     /**
      * Returns all Snippets.
      *
-     * @return SnippetBridge[]
+     * @return SnippetDocument[]
      */
     protected function getSnippets()
     {

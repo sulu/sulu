@@ -17,11 +17,13 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\Export\Export;
 use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -29,11 +31,6 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class WebspaceExport extends Export implements WebspaceExportInterface
 {
-    /**
-     * @var EngineInterface
-     */
-    protected $documentInspector;
-
     /**
      * @var StructureManagerInterface
      */
@@ -45,45 +42,23 @@ class WebspaceExport extends Export implements WebspaceExportInterface
     protected $extensionManager;
 
     /**
-     * @var ExportManagerInterface
-     */
-    protected $exportManager;
-
-    /**
-     * @var string[]
-     */
-    protected $formatFilePaths;
-
-    /**
-     * @var Output
+     * @var OutputInterface
      */
     protected $output;
 
-    /**
-     * @param EngineInterface $templating
-     * @param DocumentManager $documentManager
-     * @param DocumentInspector $documentInspector
-     * @param StructureManagerInterface $structureManager
-     * @param ExtensionManagerInterface $extensionManager
-     * @param ExportManagerInterface $exportManager
-     * @param array $formatFilePaths
-     */
     public function __construct(
         EngineInterface $templating,
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         ExportManagerInterface $exportManager,
         array $formatFilePaths
     ) {
-        $this->templating = $templating;
-        $this->documentManager = $documentManager;
-        $this->documentInspector = $documentInspector;
+        parent::__construct($templating, $documentManager, $documentInspector, $exportManager, $formatFilePaths);
+
         $this->structureManager = $structureManager;
         $this->extensionManager = $extensionManager;
-        $this->exportManager = $exportManager;
-        $this->formatFilePaths = $formatFilePaths;
         $this->output = new NullOutput();
     }
 
@@ -120,12 +95,8 @@ class WebspaceExport extends Export implements WebspaceExportInterface
     /**
      * {@inheritdoc}
      */
-    public function getExportData(
-        $webspaceKey,
-        $uuid = null,
-        $nodes = null,
-        $ignoredNodes = null
-    ) {
+    public function getExportData($webspaceKey, $uuid = null, $nodes = null, $ignoredNodes = null)
+    {
         /** @var PageDocument[] $documents */
         $documents = $this->getDocuments($webspaceKey, $uuid, $nodes, $ignoredNodes);
         /** @var PageDocument[] $loadedDocuments */
@@ -171,7 +142,6 @@ class WebspaceExport extends Export implements WebspaceExportInterface
      * Returns a flat array with the extensions of the given document.
      *
      * @param BasePageDocument $document
-     * @param string $format
      *
      * @return array
      */
@@ -195,7 +165,6 @@ class WebspaceExport extends Export implements WebspaceExportInterface
      * Returns a flat array with the settings of the given document.
      *
      * @param BasePageDocument $document
-     * @param string $format
      *
      * @return array
      */
@@ -268,19 +237,16 @@ class WebspaceExport extends Export implements WebspaceExportInterface
      * Returns all Documents from given webspace.
      *
      * @param string $webspaceKey
-     * @param string $locale
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
      *
      * @return array
+     *
+     * @throws DocumentManagerException
      */
-    protected function getDocuments(
-        $webspaceKey,
-        $uuid = null,
-        $nodes = null,
-        $ignoredNodes = null
-    ) {
+    protected function getDocuments($webspaceKey, $uuid = null, $nodes = null, $ignoredNodes = null)
+    {
         $queryString = $this->getDocumentsQueryString($webspaceKey, $uuid, $nodes, $ignoredNodes);
 
         $query = $this->documentManager->createQuery($queryString, $this->exportLocale);
@@ -291,20 +257,17 @@ class WebspaceExport extends Export implements WebspaceExportInterface
     /**
      * Create the query to get all documents from given webspace and language.
      *
-     * @param $webspaceKey
-     * @param $locale
+     * @param string $webspaceKey
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
      *
      * @return string
+     *
+     * @throws DocumentManagerException
      */
-    protected function getDocumentsQueryString(
-        $webspaceKey,
-        $uuid = null,
-        $nodes = null,
-        $ignoredNodes = null
-    ) {
+    protected function getDocumentsQueryString($webspaceKey, $uuid = null, $nodes = null, $ignoredNodes = null)
+    {
         $where = [];
 
         // only pages
@@ -351,6 +314,8 @@ class WebspaceExport extends Export implements WebspaceExportInterface
      * @param bool|false $not
      *
      * @return string
+     *
+     * @throws DocumentManagerException
      */
     protected function buildNodeUuidToPathWhere($nodes, $not = false)
     {
@@ -376,6 +341,8 @@ class WebspaceExport extends Export implements WebspaceExportInterface
      * @param $uuids
      *
      * @return string[]
+     *
+     * @throws DocumentManagerException
      */
     protected function getPathsByUuids($uuids)
     {

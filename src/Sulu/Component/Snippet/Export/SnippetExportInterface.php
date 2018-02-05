@@ -25,9 +25,5 @@ interface SnippetExportInterface
      *
      * @return array
      */
-    public function export(
-        $locale,
-        $output,
-        $format = '1.2.xliff'
-    );
+    public function export($locale, $output, $format = '1.2.xliff');
 }

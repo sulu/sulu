@@ -11,7 +11,15 @@
 
 namespace Sulu\Component\Export;
 
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
+use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
+use Sulu\Component\Export\Manager\ExportManagerInterface;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Base export for sulu documents.
@@ -24,7 +32,7 @@ class Export
     protected $templating;
 
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     protected $documentManager;
 
@@ -34,14 +42,38 @@ class Export
     protected $documentInspector;
 
     /**
-     * @var null
+     * @var ExportManagerInterface
+     */
+    protected $exportManager;
+
+    /**
+     * @var string[]
+     */
+    protected $formatFilePaths;
+
+    /**
+     * @var string
      */
     protected $exportLocale = 'en';
 
     /**
-     * @var null
+     * @var string
      */
     protected $format = '1.2.xliff';
+
+    public function __construct(
+        EngineInterface $templating,
+        DocumentManagerInterface $documentManager,
+        DocumentInspector $documentInspector,
+        ExportManagerInterface $exportManager,
+        array $formatFilePaths
+    ) {
+        $this->templating = $templating;
+        $this->documentManager = $documentManager;
+        $this->documentInspector = $documentInspector;
+        $this->exportManager = $exportManager;
+        $this->formatFilePaths = $formatFilePaths;
+    }
 
     /**
      * Creates and returns a property-array.
@@ -66,7 +98,6 @@ class Export
      *
      * @param BlockMetadata $property
      * @param PropertyValue $propertyValue
-     * @param $format
      *
      * @return array
      */
@@ -137,7 +168,6 @@ class Export
      *
      * @param PropertyMetadata[] $properties
      * @param $propertyValues
-     * @param $format
      *
      * @return array
      */
@@ -173,6 +203,8 @@ class Export
      * @param $locale
      *
      * @return array
+     *
+     * @throws DocumentManagerException
      */
     protected function getContentData($document, $locale)
     {
