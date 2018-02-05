@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render a form tag 1`] = `
-<form
-  class="form"
->
+<form>
   <div
     class="grid"
   />
@@ -17,9 +15,7 @@ exports[`Should render a form tag 1`] = `
 `;
 
 exports[`Should render field types based on schema 1`] = `
-<form
-  class="form"
->
+<form>
   <div
     class="grid"
   >
@@ -64,9 +60,7 @@ exports[`Should render field types based on schema 1`] = `
 `;
 
 exports[`Should render nested sections 1`] = `
-<form
-  class="form"
->
+<form>
   <div
     class="grid"
   >
