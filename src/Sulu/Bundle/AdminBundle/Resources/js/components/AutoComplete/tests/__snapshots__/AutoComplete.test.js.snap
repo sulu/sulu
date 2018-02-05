@@ -43,7 +43,6 @@ exports[`Render the AutoComplete with open suggestions list 1`] = `
       value="Test"
     />
   </label>
-  <div />
 </div>
 `;
 

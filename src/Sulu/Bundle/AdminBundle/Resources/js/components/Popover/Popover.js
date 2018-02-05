@@ -1,6 +1,6 @@
 // @flow
-import React from 'react';
-import Portal from 'react-portal';
+import React, {Fragment} from 'react';
+import {Portal} from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import type {ElementRef, Node} from 'react';
@@ -149,16 +149,17 @@ export default class Popover extends React.Component<Props> {
         };
 
         return (
-            <div>
-                <Backdrop visible={false} open={open} onClick={this.handleBackdropClick} />
-                <Portal isOpened={open}>
+            // TODO: Use short syntax when eslint bug is fixed: https://github.com/babel/babel-eslint/issues/554
+            <Fragment>
+                <Backdrop visible={false} open={true} onClick={this.handleBackdropClick} />
+                <Portal>
                     <div className={popoverStyles.container}>
                         {children &&
                             children(this.setPopoverChildRef, styles)
                         }
                     </div>
                 </Portal>
-            </div>
+            </Fragment>
         );
     }
 }

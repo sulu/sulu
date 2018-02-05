@@ -13,7 +13,7 @@ afterEach(() => {
 test('The component should render in body when open', () => {
     const body = document.body;
     const view = mount(<Backdrop open={true} />).render();
-    expect(view.html()).toBe(null);
+    expect(view.html()).toBe('');
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -31,7 +31,7 @@ test('The component should not render in the body when closed', () => {
 
 test('The component should call a function when clicked', () => {
     const onClickSpy = jest.fn();
-    const view = shallow(<Backdrop open={false} onClick={onClickSpy} />);
+    const view = shallow(<Backdrop open={true} onClick={onClickSpy} />);
 
     expect(onClickSpy).toHaveBeenCalledTimes(0);
     view.find('.backdrop').simulate('click');

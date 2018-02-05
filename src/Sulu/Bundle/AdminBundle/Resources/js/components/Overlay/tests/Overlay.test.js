@@ -160,6 +160,7 @@ test('The component should call the callback when the confirm button is clicked'
             onClose={onClose}
             onConfirm={onConfirm}
             confirmText="Alright mate!"
+            open={true}
         >
             <p>My overlay content</p>
         </Overlay>
