@@ -87,7 +87,7 @@ export default class Dialog extends React.Component<Props> {
 
         return (
             <div>
-                <Backdrop open={open || this.openHasChanged} />
+                <Backdrop open={showPortal} />
                 {showPortal &&
                     <Portal>
                         <div

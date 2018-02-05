@@ -128,7 +128,7 @@ test('The component should request to be closed when the close icon is clicked',
     );
 
     expect(closeSpy).not.toBeCalled();
-    view.find('Portal').find('Icon').simulate('click');
+    view.find('Icon').simulate('click');
     expect(closeSpy).toBeCalled();
 });
 
@@ -167,6 +167,6 @@ test('The component should call the callback when the confirm button is clicked'
     );
 
     expect(onConfirm).not.toBeCalled();
-    view.find('Portal').find('Button').simulate('click');
+    view.find('Button').simulate('click');
     expect(onConfirm).toBeCalled();
 });
