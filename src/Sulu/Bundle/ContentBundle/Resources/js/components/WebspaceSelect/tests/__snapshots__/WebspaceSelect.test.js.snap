@@ -1,20 +1,56 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render ArrowMenu closed 1`] = `
-<button>
-  Nice button
-</button>
+exports[`Render WebspaceSelect closed 1`] = `
+<div
+  class="smartSelect"
+>
+  <button
+    class="button"
+  >
+    <span
+      aria-label="dot-circle-o"
+      class="buttonIcon fa fa-dot-circle-o"
+    />
+    <span
+      class="buttonValue"
+    >
+      Sulu
+    </span>
+    <span
+      aria-label="chevron-down"
+      class="buttonIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
 `;
 
-exports[`Render ArrowMenu closed 2`] = `""`;
+exports[`Render WebspaceSelect closed 2`] = `""`;
 
-exports[`Render ArrowMenu open 1`] = `
-<button>
-  Nice button
-</button>
+exports[`Render WebspaceSelect opened 1`] = `
+<div
+  class="smartSelect"
+>
+  <button
+    class="button"
+  >
+    <span
+      aria-label="dot-circle-o"
+      class="buttonIcon fa fa-dot-circle-o"
+    />
+    <span
+      class="buttonValue"
+    >
+      Sulu
+    </span>
+    <span
+      aria-label="chevron-down"
+      class="buttonIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
 `;
 
-exports[`Render ArrowMenu open 2`] = `
+exports[`Render WebspaceSelect opened 2`] = `
 "<div>
   <div class=\\"backdrop\\"></div>
 </div>
@@ -24,24 +60,11 @@ exports[`Render ArrowMenu open 2`] = `
       <div class=\\"arrow top left\\"></div>
       <div class=\\"arrowMenu\\">
         <div class=\\"container\\">
-          <div class=\\"title\\">Search Section</div>
-          <div class=\\"children\\">
-            <input type=\\"text\\">
-          </div>
-        </div>
-        <div class=\\"container\\">
           <div class=\\"title\\">Webspaces</div>
           <div class=\\"children\\">
             <div class=\\"item active\\"><span class=\\"icon\\"><span class=\\"icon fa fa-dot-circle-o\\" aria-label=\\"dot-circle-o\\"></span></span><span>Sulu</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Blog</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Doc</span></div>
-          </div>
-        </div>
-        <div class=\\"container\\">
-          <div class=\\"title\\">Columns</div>
-          <div class=\\"children\\">
-            <div class=\\"item\\"><span class=\\"icon\\"></span><span>Title</span></div>
-            <div class=\\"item\\"><span class=\\"icon\\"></span><span>Description</span></div>
           </div>
         </div>
       </div>

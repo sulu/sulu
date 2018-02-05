@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ChildrenArray, Element, ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
@@ -25,9 +25,9 @@ export default class ArrowMenu extends React.Component<Props> {
     static ItemSection = ItemSection;
     static Item = Item;
 
-    @observable displayValueRef: ?ElementRef<'button'>;
+    @observable displayValueRef: ?ElementRef<*>;
 
-    @action setDisplayValueRef = (ref: ?ElementRef<'button'>) => {
+    @action setDisplayValueRef = (ref: ?ElementRef<*>) => {
         this.displayValueRef = ref;
     };
 
@@ -50,7 +50,7 @@ export default class ArrowMenu extends React.Component<Props> {
         const clonedAnchorElement = this.cloneAnchorElement(anchorElement);
 
         return (
-            <React.Fragment>
+            <Fragment>
                 {clonedAnchorElement}
                 <Popover
                     open={open}
@@ -66,7 +66,7 @@ export default class ArrowMenu extends React.Component<Props> {
                         }
                     }
                 </Popover>
-            </React.Fragment>
+            </Fragment>
         );
     }
 
@@ -91,12 +91,10 @@ export default class ArrowMenu extends React.Component<Props> {
         );
 
         return (
-            <div>
-                <div ref={setPopoverElementRef} style={popoverStyle} className={arrowMenuStyles.arrowMenuContainer}>
-                    <div className={arrowClass} />
-                    <div className={arrowMenuStyles.arrowMenu}>
-                        {children}
-                    </div>
+            <div ref={setPopoverElementRef} style={popoverStyle} className={arrowMenuStyles.arrowMenuContainer}>
+                <div className={arrowClass} />
+                <div className={arrowMenuStyles.arrowMenu}>
+                    {children}
                 </div>
             </div>
         );

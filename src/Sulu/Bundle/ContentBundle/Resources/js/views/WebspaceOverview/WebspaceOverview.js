@@ -6,7 +6,7 @@ import React from 'react';
 import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import WebspaceSelect from '../../components/WebspaceSelect';
-import listStyles from './pageList.scss';
+import webspaceOverviewStyles from './webspaceOverview.scss';
 
 // TODO: After implemented loading of webspace data from server, move or delete this also!
 type Webspace = {
@@ -15,7 +15,7 @@ type Webspace = {
 };
 
 @observer
-class WebspaceOverview extends React.PureComponent<ViewProps> {
+class WebspaceOverview extends React.Component<ViewProps> {
     page: IObservableValue<number> = observable();
     locale: IObservableValue<string> = observable();
     webspace: IObservableValue<string> = observable();
@@ -61,8 +61,8 @@ class WebspaceOverview extends React.PureComponent<ViewProps> {
         ];
 
         return (
-            <div className={listStyles.pageList}>
-                <div className={listStyles.webspaceSelect}>
+            <div className={webspaceOverviewStyles.pageList}>
+                <div className={webspaceOverviewStyles.webspaceSelect}>
                     <WebspaceSelect value={this.webspace.get()} onChange={this.handleWebspaceChange}>
                         {webspaces.map((webspace) => (
                             <WebspaceSelect.Item key={webspace.key} value={webspace.key}>
@@ -72,7 +72,7 @@ class WebspaceOverview extends React.PureComponent<ViewProps> {
                     </WebspaceSelect>
                 </div>
                 <Datagrid
-                    className={listStyles.datagrid}
+                    className={webspaceOverviewStyles.datagrid}
                     store={this.datagridStore}
                     adapters={['column_list']}
                 />

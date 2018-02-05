@@ -8,7 +8,7 @@ import webspaceSelectStyles from './webspaceSelect.scss';
 
 type Props = {
     onChange?: (value: string) => void,
-    value: ?string,
+    value: string,
     children: ChildrenArray<Element<typeof ArrowMenu.Item>>;
 };
 
@@ -42,10 +42,11 @@ export default class WebspaceSelect extends React.Component<Props> {
     };
 
     get displayValue(): string {
-        let displayValue = 'Please choose your webspace';
+        const {children, value} = this.props;
+        let displayValue = '';
 
-        React.Children.forEach(this.props.children, (child: any) => {
-            if (this.props.value === child.props.value) {
+        React.Children.forEach(children, (child: any) => {
+            if (value === child.props.value) {
                 displayValue = child.props.children;
             }
         });
