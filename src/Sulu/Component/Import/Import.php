@@ -13,8 +13,10 @@ namespace Sulu\Component\Import;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Import\Exception\FormatImporterNotFoundException;
+use Sulu\Component\Import\Format\FormatImportInterface;
 use Sulu\Component\Import\Manager\ImportManagerInterface;
 
 /**
@@ -23,7 +25,7 @@ use Sulu\Component\Import\Manager\ImportManagerInterface;
 class Import
 {
     /**
-     * @var WebspaceFormatImportInterface[]
+     * @var FormatImportInterface[]
      */
     protected $formatFilePaths = [];
 
@@ -42,9 +44,14 @@ class Import
      */
     protected $exceptionStore = [];
 
-    public function add($service, $format)
-    {
-        $this->formatFilePaths[$format] = $service;
+    public function __construct(
+        ImportManagerInterface $importManager,
+        LegacyPropertyFactory $legacyPropertyFactory,
+        array $formatFilePaths
+    ) {
+        $this->formatFilePaths = $formatFilePaths;
+        $this->importManager = $importManager;
+        $this->legacyPropertyFactory = $legacyPropertyFactory;
     }
 
     /**
@@ -52,9 +59,9 @@ class Import
      *
      * @param $format
      *
-     * @return WebspaceFormatImportInterface
+     * @return FormatImportInterface
      *
-     * @throws WebspaceFormatImporterNotFoundException
+     * @throws FormatImporterNotFoundException
      */
     protected function getParser($format)
     {
@@ -70,6 +77,7 @@ class Import
      *
      * @param PropertyInterface $property
      * @param NodeInterface $node
+     * @param StructureInterface $structure
      * @param string $value
      * @param string $webspaceKey
      * @param string $locale
