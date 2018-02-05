@@ -1,24 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should render a form tag 1`] = `
-<form>
-  <div
-    class="grid"
-  />
-  <button
-    class="submit"
-    type="submit"
-  >
-    Submit
-  </button>
-</form>
+exports[`Should render a grid 1`] = `
+<div
+  class="grid"
+/>
 `;
 
 exports[`Should render field types based on schema 1`] = `
-<form>
+<div
+  class="grid"
+>
   <div
-    class="grid"
+    class="item gridItem"
+    style="width:100%;margin-left:0%;margin-right:0%"
   >
+    <div>
+      <label
+        class="label"
+      >
+        Text
+      </label>
+      <input
+        type="text"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem"
+    style="width:100%;margin-left:0%;margin-right:0%"
+  >
+    <div>
+      <label
+        class="label"
+      >
+        Datetime
+      </label>
+      <input
+        type="datetime"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Should render nested sections 1`] = `
+<div
+  class="grid"
+>
+  <div
+    class="section gridSection"
+    style="width:100%;margin-left:0%;margin-right:0%"
+  >
+    <div
+      class="item"
+      style="width:100%;margin-left:0%;margin-right:0%"
+    >
+      <div
+        class="divider"
+      >
+        Section 1
+      </div>
+    </div>
     <div
       class="item gridItem"
       style="width:100%;margin-left:0%;margin-right:0%"
@@ -27,7 +69,7 @@ exports[`Should render field types based on schema 1`] = `
         <label
           class="label"
         >
-          Text
+          Item 1.1
         </label>
         <input
           type="text"
@@ -35,6 +77,36 @@ exports[`Should render field types based on schema 1`] = `
       </div>
     </div>
     <div
+      class="section gridSection"
+      style="width:100%;margin-left:0%;margin-right:0%"
+    >
+      <div
+        class="item"
+        style="width:100%;margin-left:0%;margin-right:0%"
+      >
+        <div
+          class="divider"
+        >
+          Section 1.1
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="section gridSection"
+    style="width:100%;margin-left:0%;margin-right:0%"
+  >
+    <div
+      class="item"
+      style="width:100%;margin-left:0%;margin-right:0%"
+    >
+      <div
+        class="divider"
+      >
+        Section 2
+      </div>
+    </div>
+    <div
       class="item gridItem"
       style="width:100%;margin-left:0%;margin-right:0%"
     >
@@ -42,109 +114,13 @@ exports[`Should render field types based on schema 1`] = `
         <label
           class="label"
         >
-          Datetime
+          Item 2.1
         </label>
         <input
-          type="datetime"
+          type="text"
         />
       </div>
     </div>
   </div>
-  <button
-    class="submit"
-    type="submit"
-  >
-    Submit
-  </button>
-</form>
-`;
-
-exports[`Should render nested sections 1`] = `
-<form>
-  <div
-    class="grid"
-  >
-    <div
-      class="section gridSection"
-      style="width:100%;margin-left:0%;margin-right:0%"
-    >
-      <div
-        class="item"
-        style="width:100%;margin-left:0%;margin-right:0%"
-      >
-        <div
-          class="divider"
-        >
-          Section 1
-        </div>
-      </div>
-      <div
-        class="item gridItem"
-        style="width:100%;margin-left:0%;margin-right:0%"
-      >
-        <div>
-          <label
-            class="label"
-          >
-            Item 1.1
-          </label>
-          <input
-            type="text"
-          />
-        </div>
-      </div>
-      <div
-        class="section gridSection"
-        style="width:100%;margin-left:0%;margin-right:0%"
-      >
-        <div
-          class="item"
-          style="width:100%;margin-left:0%;margin-right:0%"
-        >
-          <div
-            class="divider"
-          >
-            Section 1.1
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="section gridSection"
-      style="width:100%;margin-left:0%;margin-right:0%"
-    >
-      <div
-        class="item"
-        style="width:100%;margin-left:0%;margin-right:0%"
-      >
-        <div
-          class="divider"
-        >
-          Section 2
-        </div>
-      </div>
-      <div
-        class="item gridItem"
-        style="width:100%;margin-left:0%;margin-right:0%"
-      >
-        <div>
-          <label
-            class="label"
-          >
-            Item 2.1
-          </label>
-          <input
-            type="text"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-  <button
-    class="submit"
-    type="submit"
-  >
-    Submit
-  </button>
-</form>
+</div>
 `;

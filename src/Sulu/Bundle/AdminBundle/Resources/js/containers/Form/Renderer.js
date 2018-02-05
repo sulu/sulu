@@ -1,7 +1,6 @@
 // @flow
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
-import type {ElementRef} from 'react';
 import React from 'react';
 import Divider from '../../components/Divider';
 import Grid from '../../components/Grid';
@@ -12,33 +11,12 @@ import type {Schema, SchemaEntry} from './types';
 type Props = {
     data: Object,
     schema: Schema,
-    onSubmit: () => void,
     onChange: (string, mixed) => void,
     locale: ?IObservableValue<string>,
 };
 
 @observer
 export default class Renderer extends React.Component<Props> {
-    submitButton: ?ElementRef<'button'>;
-
-    /** @public */
-    submit = () => {
-        const {submitButton} = this;
-
-        if (submitButton) {
-            submitButton.click();
-        }
-    };
-
-    handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
-        this.props.onSubmit();
-        event.preventDefault();
-    };
-
-    setSubmitButtonRef = (submitButton: ?ElementRef<'button'>) => {
-        this.submitButton = submitButton;
-    };
-
     renderGridSection(schemaField: SchemaEntry, schemaKey: string) {
         const {items} = schemaField;
         return (
@@ -91,12 +69,9 @@ export default class Renderer extends React.Component<Props> {
         const schemaKeys = Object.keys(schema);
 
         return (
-            <form onSubmit={this.handleSubmit}>
-                <Grid>
-                    {schemaKeys.map((schemaKey) => this.renderItem(schema[schemaKey], schemaKey))}
-                </Grid>
-                <button ref={this.setSubmitButtonRef} type="submit" className={rendererStyles.submit}>Submit</button>
-            </form>
+            <Grid>
+                {schemaKeys.map((schemaKey) => this.renderItem(schema[schemaKey], schemaKey))}
+            </Grid>
         );
     }
 }

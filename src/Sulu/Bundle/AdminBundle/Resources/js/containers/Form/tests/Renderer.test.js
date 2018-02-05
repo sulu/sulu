@@ -18,25 +18,13 @@ jest.mock('../registries/FieldRegistry', () => ({
     }),
 }));
 
-test('Should render a form tag', () => {
+test('Should render a grid', () => {
     const submitSpy = jest.fn();
     const changeSpy = jest.fn();
     const renderer = render(
         <Renderer data={{}} schema={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />
     );
     expect(renderer).toMatchSnapshot();
-});
-
-test('Should prevent default submit handling', () => {
-    const preventDefaultSpy = jest.fn();
-    const submitSpy = jest.fn();
-    const changeSpy = jest.fn();
-    const renderer = shallow(
-        <Renderer data={{}} schema={{}} locale={undefined} onChange={changeSpy} onSubmit={submitSpy} />
-    );
-
-    renderer.find('form').simulate('submit', {preventDefault: preventDefaultSpy});
-    expect(preventDefaultSpy).toBeCalled();
 });
 
 test('Should call onSubmit callback when submitted', () => {
