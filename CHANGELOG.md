@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-release/1.5
+    * HOTFIX      #3739 [ContentBundle]         Added locale to content-teaser query
     * HOTFIX      #3730 [ContactBundle]         Fixed class parameter to load field-descriptor
     * HOTFIX      #3720 [MediaBundle]           Added extension-guesser to fix wrong extensions on download
 
