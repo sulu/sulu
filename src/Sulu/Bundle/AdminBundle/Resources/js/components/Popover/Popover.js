@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
@@ -149,7 +149,8 @@ export default class Popover extends React.Component<Props> {
         };
 
         return (
-            <React.Fragment>
+            // TODO: Use short syntax when eslint bug is fixed: https://github.com/babel/babel-eslint/issues/554
+            <Fragment>
                 <Backdrop visible={false} open={true} onClick={this.handleBackdropClick} />
                 <Portal>
                     <div className={popoverStyles.container}>
@@ -158,7 +159,7 @@ export default class Popover extends React.Component<Props> {
                         }
                     </div>
                 </Portal>
-            </React.Fragment>
+            </Fragment>
         );
     }
 }
