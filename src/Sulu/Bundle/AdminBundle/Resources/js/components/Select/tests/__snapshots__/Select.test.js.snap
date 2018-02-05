@@ -37,7 +37,6 @@ exports[`The component should open the popover when the display value is clicked
       class="toggle fa fa-chevron-down"
     />
   </button>
-  <div />
 </div>
 `;
 

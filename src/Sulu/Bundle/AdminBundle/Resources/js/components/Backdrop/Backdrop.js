@@ -1,6 +1,6 @@
 // @flow
 import classNames from 'classnames';
-import Portal from 'react-portal';
+import {Portal} from 'react-portal';
 import React from 'react';
 import backdropStyles from './backdrop.scss';
 
@@ -30,6 +30,7 @@ export default class Backdrop extends React.PureComponent<Props> {
         const {
             open,
             visible,
+            local,
         } = this.props;
         const backdropClass = classNames(
             backdropStyles.backdrop,
@@ -39,10 +40,14 @@ export default class Backdrop extends React.PureComponent<Props> {
         );
         const backdrop = <div onClick={this.handleClick} className={backdropClass} />;
 
-        if (this.props.local) {
+        if (local) {
             return backdrop;
         }
 
-        return <Portal isOpened={open}>{backdrop}</Portal>;
+        if (!open) {
+            return null;
+        }
+
+        return <Portal>{backdrop}</Portal>;
     }
 }

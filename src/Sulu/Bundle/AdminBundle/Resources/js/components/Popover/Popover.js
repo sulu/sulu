@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Portal from 'react-portal';
+import {Portal} from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import type {ElementRef, Node} from 'react';
@@ -149,16 +149,18 @@ export default class Popover extends React.Component<Props> {
         };
 
         return (
-            <div>
+            <React.Fragment>
                 <Backdrop visible={false} open={open} onClick={this.handleBackdropClick} />
-                <Portal isOpened={open}>
-                    <div className={popoverStyles.container}>
-                        {children &&
-                            children(this.setPopoverChildRef, styles)
-                        }
-                    </div>
-                </Portal>
-            </div>
+                {open &&
+                    <Portal>
+                        <div className={popoverStyles.container}>
+                            {children &&
+                                children(this.setPopoverChildRef, styles)
+                            }
+                        </div>
+                    </Portal>
+                }
+            </React.Fragment>
         );
     }
 }
