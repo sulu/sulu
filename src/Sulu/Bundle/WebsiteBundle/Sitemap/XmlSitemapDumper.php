@@ -104,7 +104,7 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
     {
         if (false !== strpos($portalInformation->getUrl(), '{host}')) {
             if (!$this->defaultHost) {
-                return;
+                throw new \InvalidArgumentException('When using host replacer a default_host has to be set.');
             }
 
             $portalInformation->setUrl(str_replace('{host}', $this->defaultHost, $portalInformation->getUrl()));

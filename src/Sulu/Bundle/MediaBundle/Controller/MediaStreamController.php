@@ -131,7 +131,7 @@ class MediaStreamController extends Controller
         $disposition = $response->headers->makeDisposition(
             $dispositionType,
             $fileName,
-            $this->cleanUpFileName($fileName, $locale)
+            $this->cleanUpFileName($fileName, $locale, $fileVersion->getExtension())
         );
 
         // Set headers
@@ -187,15 +187,16 @@ class MediaStreamController extends Controller
      *
      * @param string $fileName
      * @param string $locale
+     * @param string $extension
      *
      * @return string
      */
-    private function cleanUpFileName($fileName, $locale)
+    private function cleanUpFileName($fileName, $locale, $extension)
     {
         $pathInfo = pathinfo($fileName);
         $cleanedFileName = $this->get('sulu.content.path_cleaner')->cleanup($pathInfo['filename'], $locale);
-        if (isset($pathInfo['extension'])) {
-            $cleanedFileName .= '.' . $pathInfo['extension'];
+        if ($extension) {
+            $cleanedFileName .= '.' . $extension;
         }
 
         return $cleanedFileName;

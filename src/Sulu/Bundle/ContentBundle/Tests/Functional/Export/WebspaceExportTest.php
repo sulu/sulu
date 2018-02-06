@@ -19,19 +19,20 @@ use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Export\WebspaceInterface;
+use Sulu\Component\Content\Export\WebspaceExportInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Symfony\Component\DependencyInjection\Extension\Extension;
+use Sulu\Component\DocumentManager\Exception\MetadataNotFoundException;
 
 /**
  * Tests for the Webspace Export class.
  */
-class WebspaceTest extends SuluTestCase
+class WebspaceExportTest extends SuluTestCase
 {
     /**
-     * @var WebspaceInterface
+     * @var WebspaceExportInterface
      */
     private $webspaceExporter;
 
@@ -86,21 +87,66 @@ class WebspaceTest extends SuluTestCase
 
     /**
      * @return StructureInterface[]
+     *
+     * @throws DocumentManagerException
+     * @throws MetadataNotFoundException
      */
     private function prepareData()
     {
         /** @var \Sulu\Component\Content\Compat\Structure\PageBridge[] $data */
-        $data = $this->getDataArray();
+        $data = $this->getRawData();
         $extensionDataList = $this->getExtensionDataArray();
         $data[0]['ext'] = $extensionDataList[0];
         $data[1]['ext'] = $extensionDataList[1];
 
         $documents = [];
 
-        $documents[0] = $this->save($data[0], 'overview', 'sulu_io', 'en', $this->creator);
-        $documents[1] = $this->save($data[1], 'overview', 'sulu_io', 'en', $this->creator);
+        $documents[0] = $this->save($data[0], 'overview', 'sulu_io', 'en');
+        $documents[1] = $this->save($data[1], 'overview', 'sulu_io', 'en');
 
         return $documents;
+    }
+
+    /**
+     * @return array
+     */
+    private function getRawData()
+    {
+        $data = $this->getDataArray();
+
+        return [
+            [
+                'title' => $data[0]['title'],
+                'subtitle' => $data[0]['subtitle'],
+                'url' => $data[0]['url'],
+                'article' => $data[0]['article'],
+                'block' => [
+                    [
+                        'type' => $data[0]['block'][0]['type']['value'],
+                        'title' => $data[0]['block'][0]['title']['value'],
+                        'article' => $data[0]['block'][0]['article']['value'],
+                    ],
+                    [
+                        'type' => $data[0]['block'][1]['type']['value'],
+                        'title' => $data[0]['block'][1]['title']['value'],
+                        'article' => $data[0]['block'][1]['article']['value'],
+                    ],
+                ],
+            ],
+            [
+                'title' => $data[1]['title'],
+                'subtitle' => $data[1]['subtitle'],
+                'url' => $data[1]['url'],
+                'article' => $data[1]['article'],
+                'block' => [
+                    [
+                        'type' => $data[1]['block'][0]['type']['value'],
+                        'title' => $data[1]['block'][0]['title']['value'],
+                        'article' => $data[1]['block'][0]['article']['value'],
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -116,14 +162,56 @@ class WebspaceTest extends SuluTestCase
                 'article' => 'Lorem Ipsum dolorem apsum',
                 'block' => [
                     [
-                        'type' => 'type1',
-                        'title' => 'Block-Title-1',
-                        'article' => 'Block-Article-1-1',
+                        'type' => [
+                            'name' => 'type',
+                            'type' => 'block_type',
+                            'options' => [
+                                'translate' => false,
+                            ],
+                            'value' => 'type1',
+                        ],
+                        'title' => [
+                            'name' => 'title',
+                            'type' => 'text_line',
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Title-1',
+                        ],
+                        'article' => [
+                            'name' => 'article',
+                            'type' => 'text_line',
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Article-1-1',
+                        ],
                     ],
                     [
-                        'type' => 'type1',
-                        'title' => 'Block-Title-1',
-                        'article' => 'Block-Article-1-2',
+                        'type' => [
+                            'name' => 'type',
+                            'type' => 'block_type',
+                            'options' => [
+                                'translate' => false,
+                            ],
+                            'value' => 'type1',
+                        ],
+                        'title' => [
+                            'name' => 'title',
+                            'type' => 'text_line',
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Title-1',
+                        ],
+                        'article' => [
+                            'name' => 'article',
+                            'type' => 'text_line',
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Article-1-2',
+                        ],
                     ],
                 ],
             ],
@@ -134,9 +222,30 @@ class WebspaceTest extends SuluTestCase
                 'article' => 'asdfasdf',
                 'block' => [
                     [
-                        'type' => 'type1',
-                        'title' => 'Block-Title-2',
-                        'article' => 'Block-Article-2-1',
+                        'type' => [
+                            'name' => 'type',
+                            'type' => 'block_type',
+                            'options' => [
+                                'translate' => false,
+                            ],
+                            'value' => 'type1',
+                        ],
+                        'title' => [
+                            'name' => 'title',
+                            'type' => 'text_line',
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Title-2',
+                        ],
+                        'article' => [
+                            'name' => 'article',
+                            'type' => 'text_line',
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Article-2-1',
+                        ],
                     ],
                 ],
             ],
@@ -441,7 +550,7 @@ class WebspaceTest extends SuluTestCase
         }
 
         if (null !== $children) {
-            $data['value'] = $children;
+            $data['children'] = $children;
         }
 
         return $data;
@@ -452,8 +561,6 @@ class WebspaceTest extends SuluTestCase
      * @param string $structureType
      * @param string $webspaceKey
      * @param string $locale
-     * @param int $userId
-     * @param bool $partialUpdate
      * @param string $uuid
      * @param string $parentUuid
      * @param int $state
@@ -462,14 +569,15 @@ class WebspaceTest extends SuluTestCase
      * @param string $documentAlias
      *
      * @return object
+     *
+     * @throws DocumentManagerException
+     * @throws MetadataNotFoundException
      */
     private function save(
         $data,
         $structureType,
         $webspaceKey,
         $locale,
-        $userId,
-        $partialUpdate = true,
         $uuid = null,
         $parentUuid = null,
         $state = null,

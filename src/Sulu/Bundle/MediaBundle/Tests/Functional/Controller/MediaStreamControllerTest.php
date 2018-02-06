@@ -22,6 +22,8 @@ class MediaStreamControllerTest extends SuluTestCase
     {
         parent::setUp();
 
+        $this->purgeDatabase();
+
         $collectionTypes = new LoadCollectionTypes();
         $collectionTypes->load($this->getEntityManager());
         $mediaTypes = new LoadMediaTypes();
@@ -30,7 +32,7 @@ class MediaStreamControllerTest extends SuluTestCase
 
     public function testDownloadAction()
     {
-        $filePath = tempnam(sys_get_temp_dir(), 'test.jpg');
+        $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'file-without-extension');
         $client = $this->createAuthenticatedClient();
         $client->request('GET', $media->getUrl());
@@ -40,12 +42,27 @@ class MediaStreamControllerTest extends SuluTestCase
 
     public function testDownloadWithoutExtensionAction()
     {
-        $filePath = tempnam(sys_get_temp_dir(), 'file-without-extension');
+        $filePath = $this->createMediaFile('file-without-extension');
         $media = $this->createMedia($filePath, 'File without Extension');
         $client = $this->createAuthenticatedClient();
         $client->request('GET', $media->getUrl());
         $response = $client->getResponse();
         $this->assertHttpStatusCode(200, $response);
+    }
+
+    public function testDownloadWithDotInName()
+    {
+        $filePath = $this->createMediaFile('fitness-seasons.agency--C-&-C--Rodach,-Johannes');
+        $media = $this->createMedia($filePath, 'fitness-seasons.agency--C-&-C--Rodach,-Johannes');
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', $media->getUrl());
+        $response = $client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->assertEquals(
+            'attachment; filename="fitness-seasons.jpeg"; filename*=utf-8\'\'fitness-seasons.agency--C-%26-C--Rodach%2C-Johannes',
+            $response->headers->get('content-disposition')
+        );
     }
 
     public function testGetImageActionForNonExistingMedia()
@@ -106,5 +123,13 @@ class MediaStreamControllerTest extends SuluTestCase
     private function getCollectionManager()
     {
         return $this->getContainer()->get('sulu_media.collection_manager');
+    }
+
+    private function createMediaFile($name)
+    {
+        $filePath = sys_get_temp_dir() . '/' . $name;
+        copy(__DIR__ . '/../../app/Resources/images/photo.jpeg', $filePath);
+
+        return $filePath;
     }
 }
