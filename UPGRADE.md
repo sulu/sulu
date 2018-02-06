@@ -14,6 +14,32 @@ Follow upgrade path of following libraries:
 
 The api endpoint for `/admin/api/nodes/filter` was removed and replaced by `/admin/api/items`.
 
+### Database changes
+
+To support utf8mb4 we needed to change some database entities which you also need to migrate when not using utf8mb4:
+Run the following SQL to migrate to the new schema:
+
+```sql
+ALTER TABLE me_format_options CHANGE format_key format_key VARCHAR(191) NOT NULL;
+ALTER TABLE me_collections CHANGE collection_key collection_key VARCHAR(191) DEFAULT NULL;
+ALTER TABLE me_collection_types CHANGE collection_type_key collection_type_key VARCHAR(191) DEFAULT NULL;
+ALTER TABLE me_media_types CHANGE name name VARCHAR(191) NOT NULL;
+ALTER TABLE me_file_versions CHANGE mimeType mimeType VARCHAR(191) DEFAULT NULL;
+ALTER TABLE se_users CHANGE email email VARCHAR(191) DEFAULT NULL;
+ALTER TABLE se_role_settings CHANGE settingKey settingKey VARCHAR(191) NOT NULL;
+ALTER TABLE se_permissions CHANGE context context VARCHAR(191) NOT NULL;
+ALTER TABLE se_access_controls CHANGE entityClass entityClass VARCHAR(191) NOT NULL;
+ALTER TABLE ca_categories CHANGE category_key category_key VARCHAR(191) DEFAULT NULL;
+ALTER TABLE ca_keywords CHANGE keyword keyword VARCHAR(191) NOT NULL;
+ALTER TABLE ta_tags CHANGE name name VARCHAR(191) NOT NULL;
+ALTER TABLE we_domains CHANGE url url VARCHAR(191) NOT NULL;
+ALTER TABLE we_analytics CHANGE webspace_key webspace_key VARCHAR(191) NOT NULL;
+ALTER TABLE ro_routes CHANGE path path VARCHAR(191) NOT NULL, CHANGE entity_class entity_class VARCHAR(191) NOT NULL, CHANGE entity_id entity_id VARCHAR(191) NOT NULL;
+ALTER TABLE me_collection_meta CHANGE title title VARCHAR(191) NOT NULL;
+ALTER TABLE me_file_version_meta CHANGE title title VARCHAR(191) NOT NULL;
+ALTER TABLE me_file_versions CHANGE name name VARCHAR(191) NOT NULL;
+```
+
 ## 1.6.11
 
 ### SEO Description

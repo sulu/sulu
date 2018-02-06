@@ -8,10 +8,10 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="path" type="string" length="255"/>
+        <field name="path" type="string" length="191"/>
         <field name="locale" type="string" length="8"/>
-        <field name="entityClass" type="string" length="255"/>
-        <field name="entityId" type="string" length="255"/>
+        <field name="entityClass" type="string" length="191"/>
+        <field name="entityId" type="string" length="191"/>
         <field name="history" type="boolean"/>
 
         <one-to-many field="histories" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface" mapped-by="target">

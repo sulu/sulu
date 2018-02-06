@@ -11,6 +11,8 @@ env:
     - SYMFONY__PHPCR__TRANSPORT=doctrinedbal
     - TEST_FLAGS=""
     - SYMFONY__DATABASE__DRIVER=pdo_mysql
+    - SYMFONY__DATABASE__CHARSET=utf8mb4
+    - SYMFONY__DATABASE__COLLATE=utf8mb4_unicode_ci
 
 matrix:
   include:
@@ -31,6 +33,8 @@ matrix:
         - SYMFONY__DATABASE__USER=postgres
         - SYMFONY__DATABASE__PASSWORD=postgres
         - SYMFONY__PHPCR__TRANSPORT=jackrabbit
+        - SYMFONY__DATABASE__CHARSET=UTF8
+        - SYMFONY__DATABASE__COLLATE=
         # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
         - TEST_FLAGS="--jackrabbit-restart"
 

@@ -76,7 +76,10 @@ doctrine:
         password: "%database.password%"
         path: "%database.path%"
         server_version: "%database.version%"
-        charset:  UTF8
+        charset: "%database.charset%"
+        default_table_options:
+            charset: "%database.charset%"
+            collate: "%database.collate%"
 
 stof_doctrine_extensions:
     orm:

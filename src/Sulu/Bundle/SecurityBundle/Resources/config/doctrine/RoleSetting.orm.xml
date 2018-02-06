@@ -16,7 +16,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="key" type="string" column="settingKey" length="255"/>
+        <field name="key" type="string" column="settingKey" length="191"/>
         <field name="value" type="json_array" column="value"/>
 
         <many-to-one field="role" target-entity="Sulu\Component\Security\Authentication\RoleInterface"
