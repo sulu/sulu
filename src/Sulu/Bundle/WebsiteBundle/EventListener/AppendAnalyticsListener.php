@@ -16,6 +16,8 @@ use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Appends analytics scripts into body.
@@ -94,8 +96,15 @@ class AppendAnalyticsListener
      */
     public function onResponse(FilterResponseEvent $event)
     {
+        $response = $event->getResponse();
+
+        if ($response instanceof BinaryFileResponse
+            || $response instanceof StreamedResponse) {
+            return;
+        }
+
         if ($this->preview
-            || 0 !== strpos($event->getResponse()->headers->get('Content-Type'), 'text/html')
+            || 0 !== strpos($response->headers->get('Content-Type'), 'text/html')
             || null === $this->requestAnalyzer->getPortalInformation()
         ) {
             return;
@@ -114,7 +123,6 @@ class AppendAnalyticsListener
             $analyticsContent = $this->generateAnalyticsContent($analyticsContent, $analytics);
         }
 
-        $response = $event->getResponse();
         $response->setContent($this->setAnalyticsContent($response->getContent(), $analyticsContent));
     }
 
