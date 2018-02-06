@@ -129,7 +129,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue('i18n')
                         ->end()
                         ->scalarNode('default')
-                            ->defaultValue('en')
+                            ->defaultValue('%kernel.default_locale%')
                         ->end()
                     ->end()
                 ->end()

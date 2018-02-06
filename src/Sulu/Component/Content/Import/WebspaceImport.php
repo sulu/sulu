@@ -22,9 +22,10 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
+use Sulu\Component\Import\Exception\FormatImporterNotFoundException;
 use Sulu\Component\Import\Format\FormatImportInterface;
 use Sulu\Component\Import\Import;
 use Sulu\Component\Import\Manager\ImportManagerInterface;
@@ -37,7 +38,7 @@ use Symfony\Component\Console\Output\NullOutput;
 class WebspaceImport extends Import implements WebspaceImportInterface
 {
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     protected $documentManager;
 
@@ -84,20 +85,8 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         'resourceSegment',
     ];
 
-    /**
-     * @param DocumentManager $documentManager
-     * @param DocumentInspector $documentInspector
-     * @param DocumentRegistry $documentRegistry
-     * @param LegacyPropertyFactory $legacyPropertyFactory
-     * @param ResourceLocatorStrategyInterface $rlpStrategy
-     * @param StructureManagerInterface $structureManager
-     * @param ExtensionManagerInterface $extensionManager
-     * @param ImportManagerInterface $importManager
-     * @param LoggerInterface $logger
-     * @param FormatImportInterface $xliff12
-     */
     public function __construct(
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         DocumentRegistry $documentRegistry,
         LegacyPropertyFactory $legacyPropertyFactory,
@@ -108,16 +97,15 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         LoggerInterface $logger,
         FormatImportInterface $xliff12
     ) {
+        parent::__construct($importManager, $legacyPropertyFactory, ['1.2.xliff' => $xliff12]);
+
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->documentRegistry = $documentRegistry;
-        $this->legacyPropertyFactory = $legacyPropertyFactory;
         $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
         $this->extensionManager = $extensionManager;
-        $this->importManager = $importManager;
         $this->logger = $logger;
-        $this->add($xliff12, '1.2.xliff');
     }
 
     /**
@@ -243,7 +231,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
             if (!$this->setDocumentData($document, $structureType, $webspaceKey, $locale, $format, $data)) {
                 return false;
             }
-            $this->setDocumentSettings($document, $structureType, $webspaceKey, $locale, $format, $data, $overrideSettings);
+            $this->setDocumentSettings($document, $format, $data, $overrideSettings);
 
             // save document
             $this->documentManager->persist($document, $locale);
@@ -283,6 +271,10 @@ class WebspaceImport extends Import implements WebspaceImportInterface
      * @param string $locale
      * @param string $format
      * @param array $data
+     *
+     * @return bool
+     *
+     * @throws FormatImporterNotFoundException
      */
     protected function setDocumentData(
         BasePageDocument $document,
@@ -362,17 +354,15 @@ class WebspaceImport extends Import implements WebspaceImportInterface
      * Import property -o must be set to true.
      *
      * @param BasePageDocument $document
-     * @param string $structureType
-     * @param string $webspaceKey
-     * @param string $locale
      * @param string $format
      * @param array $data
+     * @param $overrideSettings
+     *
+     * @throws DocumentManagerException
+     * @throws FormatImporterNotFoundException
      */
     protected function setDocumentSettings(
         BasePageDocument $document,
-        $structureType,
-        $webspaceKey,
-        $locale,
         $format,
         $data,
         $overrideSettings
@@ -404,6 +394,8 @@ class WebspaceImport extends Import implements WebspaceImportInterface
      * @param $value
      *
      * @return mixed|object
+     *
+     * @throws DocumentManagerException
      */
     protected function getSetterValue($key, $value)
     {
@@ -436,6 +428,8 @@ class WebspaceImport extends Import implements WebspaceImportInterface
      * @param string $webspaceKey
      * @param string $locale
      * @param string $format
+     *
+     * @throws FormatImporterNotFoundException
      */
     protected function importExtension(
         ExportExtensionInterface $extension,
@@ -473,6 +467,8 @@ class WebspaceImport extends Import implements WebspaceImportInterface
      * @param array $data
      *
      * @return string
+     *
+     * @throws FormatImporterNotFoundException
      */
     private function generateUrl($properties, $parentUuid, $webspaceKey, $locale, $format, $data)
     {
