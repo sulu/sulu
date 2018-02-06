@@ -5,8 +5,8 @@ Example:
 
 ```
 <Menu style={{maxWidth: '200px'}}>
-    <Menu.Item>Item 1</Menu.Item>
-    <Menu.Item>Item 2</Menu.Item>
-    <Menu.Item>Item 3</Menu.Item>
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
 </Menu>
 ```
