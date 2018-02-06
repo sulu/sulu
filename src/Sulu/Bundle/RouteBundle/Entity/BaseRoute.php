@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\RouteBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route as HateoasRoute;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -97,6 +98,7 @@ abstract class BaseRoute implements RouteInterface, AuditableInterface
         $this->entityId = $entityId;
         $this->entityClass = $entityClass;
         $this->locale = $locale;
+        $this->histories = new ArrayCollection();
     }
 
     /**

@@ -1,6 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
+    * HOTFIX      #     [RouteBundle]             Added empty array as default value to histories property.
+
 * 1.6.14 (2018-02-06)
     * ENHANCEMENT #3717 [ContentBundle]           ResourceLocator: Show whole url in history overlay
     * HOTFIX      #3739 [ContentBundle]           Added locale to content-teaser query
