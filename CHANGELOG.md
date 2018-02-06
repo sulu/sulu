@@ -1,5 +1,7 @@
 CHANGELOG for Sulu
 ==================
+* dev-master
+    * HOTFIX      #3750 [PreviewBundle]           Fixed refresh preview
 
 * 1.6.14 (2018-02-06)
     * ENHANCEMENT #3717 [ContentBundle]           ResourceLocator: Show whole url in history overlay
