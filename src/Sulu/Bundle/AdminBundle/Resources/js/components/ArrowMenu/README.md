@@ -1,11 +1,11 @@
-The `ArrowMenu` is a component to stylize a list. Usage example of the `ArrowMenu` is the `WebspaceSelect` in the
+The `ArrowMenu` is a component to stylize a list. Usage example of the `ArrowMenu` is the [`WebspaceSelect`](#webspaceselect) in the
 SuluContentBundle.
 
 Possible Children of this component are `Section`, for custom sections and the default `ItemSection`.
-The component `ItemSection` you can give `Item` as children.
+The component `ItemSection` can receive `Item` as children.
 
 Important for this component is the render prop `anchorElement`.
-This prop will be rendered into the component. Internally there is used an `Popover` to position the menu correctly.
+This prop will be rendered into the component. Internally there is used an [`Popover`](#popover) to position the menu correctly.
 
 Example with one section:
 
