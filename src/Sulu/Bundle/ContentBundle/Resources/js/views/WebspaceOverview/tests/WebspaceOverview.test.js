@@ -63,9 +63,9 @@ test('Should bind/unbind router', () => {
 
     const webspaceOverview = mount(<WebspaceOverview router={router} />);
     webspaceOverview.instance().webspace.set('sulu');
-    const page = router.bind.mock.calls[0][1];
-    const locale = router.bind.mock.calls[1][1];
-    const webspace = router.bind.mock.calls[2][1];
+    const page = webspaceOverview.instance().page;
+    const locale = webspaceOverview.instance().locale;
+    const webspace = webspaceOverview.instance().webspace;
 
     expect(router.bind).toBeCalledWith('page', page, '1');
     expect(router.bind).toBeCalledWith('locale', locale);

@@ -8,12 +8,6 @@ import type {ViewProps} from 'sulu-admin-bundle/containers';
 import WebspaceSelect from '../../components/WebspaceSelect';
 import webspaceOverviewStyles from './webspaceOverview.scss';
 
-// TODO: After implemented loading of webspace data from server, move or delete this also!
-type Webspace = {
-    key: string,
-    name: string,
-};
-
 @observer
 class WebspaceOverview extends React.Component<ViewProps> {
     page: IObservableValue<number> = observable();
@@ -54,14 +48,14 @@ class WebspaceOverview extends React.Component<ViewProps> {
 
     render() {
         // TODO: Load this data dynamically from server!
-        const webspaces: Array<Webspace> = [
+        const webspaces: Array<Object> = [
             {key: 'sulu', name: 'Sulu'},
             {key: 'sulu_blog', name: 'Sulu Blog'},
             {key: 'sulu_doc', name: 'Sulu Doc'},
         ];
 
         return (
-            <div className={webspaceOverviewStyles.pageList}>
+            <div className={webspaceOverviewStyles.webspaceOverview}>
                 <div className={webspaceOverviewStyles.webspaceSelect}>
                     <WebspaceSelect value={this.webspace.get()} onChange={this.handleWebspaceChange}>
                         {webspaces.map((webspace) => (
@@ -72,7 +66,6 @@ class WebspaceOverview extends React.Component<ViewProps> {
                     </WebspaceSelect>
                 </div>
                 <Datagrid
-                    className={webspaceOverviewStyles.datagrid}
                     store={this.datagridStore}
                     adapters={['column_list']}
                 />

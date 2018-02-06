@@ -16,7 +16,7 @@ export default class Section extends React.PureComponent<Props> {
         } = this.props;
 
         return (
-            <div className={sectionStyles.container}>
+            <div className={sectionStyles.section}>
                 <div className={sectionStyles.title}>{title}</div>
                 <div className={sectionStyles.children}>
                     {children}

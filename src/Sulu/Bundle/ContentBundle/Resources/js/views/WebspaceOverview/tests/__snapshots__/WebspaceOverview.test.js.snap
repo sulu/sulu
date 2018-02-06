@@ -2,13 +2,13 @@
 
 exports[`Render WebspaceOverview 1`] = `
 <div
-  class="pageList"
+  class="webspaceOverview"
 >
   <div
     class="webspaceSelect"
   >
     <div
-      class="smartSelect"
+      class="webspaceSelect"
     >
       <button
         class="button"

@@ -119,8 +119,10 @@ class ContentAdmin extends Admin
     {
         return [
             (new Route('sulu_content.webspaces', '/webspaces/:webspace/:locale', 'sulu_content.webspace_overview'))
-                ->addAttributeDefault('webspace', 'sulu') // get first webspace
-                ->addAttributeDefault('locale', 'en') // get default locale from first webspace
+                // TODO: get first webspace
+                ->addAttributeDefault('webspace', 'sulu')
+                // TODO: get default locale from first webspace
+                ->addAttributeDefault('locale', 'en')
                 ->addRerenderAttribute('webspace'),
         ];
     }

@@ -7,20 +7,14 @@ import Section from './Section';
 type Props = {
     children: ChildrenArray<Element<typeof Item>>,
     title: string,
-    onChange?: (value: *) => void,
+    onChange: (value: *) => void,
     value: ?*,
     icon?: string,
 };
 
 export default class ItemSection extends React.PureComponent<Props> {
     handleItemClick = (value: *) => {
-        const {onChange} = this.props;
-
-        if (!onChange) {
-            return;
-        }
-
-        onChange(value);
+        this.props.onChange(value);
     };
 
     cloneChildren = (items: ChildrenArray<Element<typeof Item>>) => {

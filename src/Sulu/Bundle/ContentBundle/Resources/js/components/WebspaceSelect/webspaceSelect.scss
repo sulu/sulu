@@ -1,9 +1,9 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
-$smartSelectBackgroundColor: $blueZodiac;
+$webspaceSelectBackgroundColor: $blueZodiac;
 $buttonColor: $silver;
 
-.smart-select {
+.webspace-select {
     cursor: pointer;
     display: inline-block;
     max-width: 100%;
@@ -11,7 +11,7 @@ $buttonColor: $silver;
 
 .button {
     border-radius: 3px;
-    background-color: $smartSelectBackgroundColor;
+    background-color: $webspaceSelectBackgroundColor;
     color: $silver;
     cursor: pointer;
     border: none;

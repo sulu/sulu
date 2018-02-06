@@ -11,7 +11,7 @@ import Item from './Item';
 import arrowMenuStyles from './arrowMenu.scss';
 
 type Props = {
-    children?: ChildrenArray<Element<*>>,
+    children: ChildrenArray<Element<*>>,
     anchorElement: Element<*>,
     open: boolean,
     onClose?: () => void,

@@ -12,16 +12,22 @@ type Props = {
 
 @observer
 export default class ViewRenderer extends React.Component<Props> {
-    getKey = (route: Route, router: Router) => {
+    getKey = (route: Route) => {
         if (!route.rerenderAttributes) {
             return undefined;
         }
 
+        const {
+            router: {
+                attributes,
+            },
+        } = this.props;
+
         const rerenderAttributeValues = [];
 
         route.rerenderAttributes.forEach((rerenderAttribute) => {
-            if (router.attributes && router.attributes.hasOwnProperty(rerenderAttribute)) {
-                rerenderAttributeValues.push(router.attributes[rerenderAttribute]);
+            if (attributes.hasOwnProperty(rerenderAttribute)) {
+                rerenderAttributeValues.push(attributes[rerenderAttribute]);
             }
         });
 
@@ -38,7 +44,7 @@ export default class ViewRenderer extends React.Component<Props> {
         }
 
         const element = (
-            <View router={router} route={route} key={this.getKey(route, router)}>
+            <View router={router} route={route} key={this.getKey(route)}>
                 {(props) => child ? React.cloneElement(child, props) : null}
             </View>
         );

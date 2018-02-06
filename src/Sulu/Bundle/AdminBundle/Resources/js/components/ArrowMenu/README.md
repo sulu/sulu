@@ -1,4 +1,13 @@
-Example:
+The `ArrowMenu` is a component to stylize a list. Usage example of the `ArrowMenu` is the `WebspaceSelect` in the
+SuluContentBundle.
+
+Possible Children of this component are `Section`, for custom sections and the default `ItemSection`.
+The component `ItemSection` you can give `Item` as children.
+
+Important for this component is the render prop `anchorElement`.
+This prop will be rendered into the component. Internally there is used an `Popover` to position the menu correctly.
+
+Example with one section:
 
 ```javascript
 const ItemSection = ArrowMenu.ItemSection;
@@ -88,7 +97,6 @@ const handleClose = () => {
 
 const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
 
-
 <div>
     <div>
         <h3>Current values</h3>
@@ -97,7 +105,6 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
             <li>Value 2: {state.value2}</li>
         </ul>
     </div>
-    
     
     <ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
         <ItemSection icon="dot-circle-o" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
@@ -153,7 +160,6 @@ const handleClose = () => {
 };
 
 const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
-
 
 <div>
     <div>

@@ -40,7 +40,7 @@ test('Render WebspaceSelect opened', () => {
     expect(arrowMenu.instance().open).toBe(false);
 
     // click button to open webspace select
-    arrowMenu.find('.smartSelect button').simulate('click');
+    arrowMenu.find('WebspaceSelect button').simulate('click');
     expect(arrowMenu.instance().open).toBe(true);
 
     expect(arrowMenu.render()).toMatchSnapshot();
@@ -61,7 +61,7 @@ test('Change event should be called correctly', () => {
     expect(webspaceSelect.instance().open).toBe(false);
 
     // click button to open webspace select
-    webspaceSelect.find('.smartSelect button').simulate('click');
+    webspaceSelect.find('WebspaceSelect button').simulate('click');
     expect(webspaceSelect.instance().open).toBe(true);
 
     // click second item to fire change event

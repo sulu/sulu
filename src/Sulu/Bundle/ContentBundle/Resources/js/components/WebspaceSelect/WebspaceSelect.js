@@ -7,7 +7,7 @@ import {Icon, ArrowMenu} from 'sulu-admin-bundle/components';
 import webspaceSelectStyles from './webspaceSelect.scss';
 
 type Props = {
-    onChange?: (value: string) => void,
+    onChange: (value: string) => void,
     value: string,
     children: ChildrenArray<Element<typeof ArrowMenu.Item>>;
 };
@@ -31,14 +31,8 @@ export default class WebspaceSelect extends React.Component<Props> {
     handleMenuClose = this.closeMenu;
 
     handleChange = (value: string) => {
-        const {onChange} = this.props;
-
-        if (!onChange) {
-            return;
-        }
-
         this.closeMenu();
-        onChange(value);
+        this.props.onChange(value);
     };
 
     get displayValue(): string {
@@ -56,7 +50,7 @@ export default class WebspaceSelect extends React.Component<Props> {
 
     renderButton() {
         return (
-            <div className={webspaceSelectStyles.smartSelect}>
+            <div className={webspaceSelectStyles.webspaceSelect}>
                 <button
                     className={webspaceSelectStyles.button}
                     onClick={this.handleButtonClick}

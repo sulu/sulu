@@ -2,7 +2,7 @@
 
 exports[`Render ItemSection 1`] = `
 <div
-  class="container"
+  class="section"
 >
   <div
     class="title"
@@ -48,7 +48,7 @@ exports[`Render ItemSection 1`] = `
 
 exports[`Render ItemSection with value 1`] = `
 <div
-  class="container"
+  class="section"
 >
   <div
     class="title"

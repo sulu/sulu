@@ -2,7 +2,7 @@
 
 exports[`Render WebspaceSelect closed 1`] = `
 <div
-  class="smartSelect"
+  class="webspaceSelect"
 >
   <button
     class="button"
@@ -28,7 +28,7 @@ exports[`Render WebspaceSelect closed 2`] = `""`;
 
 exports[`Render WebspaceSelect opened 1`] = `
 <div
-  class="smartSelect"
+  class="webspaceSelect"
 >
   <button
     class="button"
@@ -59,7 +59,7 @@ exports[`Render WebspaceSelect opened 2`] = `
     <div style=\\"top: 20px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\" class=\\"arrowMenuContainer\\">
       <div class=\\"arrow top left\\"></div>
       <div class=\\"arrowMenu\\">
-        <div class=\\"container\\">
+        <div class=\\"section\\">
           <div class=\\"title\\">Webspaces</div>
           <div class=\\"children\\">
             <div class=\\"item active\\"><span class=\\"icon\\"><span class=\\"icon fa fa-dot-circle-o\\" aria-label=\\"dot-circle-o\\"></span></span><span>Sulu</span></div>
