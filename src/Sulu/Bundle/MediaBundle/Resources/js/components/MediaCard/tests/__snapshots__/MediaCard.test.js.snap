@@ -2,7 +2,7 @@
 
 exports[`Render a MediaCard with download list 1`] = `
 "<div>
-  <div class=\\"backdrop\\"></div>
+  <div class=\\"backdrop fixed\\"></div>
 </div>
 <div>
   <div class=\\"container\\">

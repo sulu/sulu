@@ -2,42 +2,61 @@
 import './global.scss';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
+import classNames from 'classnames';
 import React from 'react';
-import Overlay from '../../components/Overlay';
 import Router from '../../services/Router';
-import SplitView from '../SplitView';
 import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
+import {Navigation, Backdrop} from '../../components';
 import applicationStyles from './application.scss';
+
+const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
 
 const routes = [
     {
-        name: 'Accounts',
-        key: 'sulu_contact.accounts_list',
-    },
-    {
-        name: 'Contacts',
-        key: 'sulu_contact.contacts_list',
+        name: 'Webspaces',
+        key: 'sulu_content.webspaces',
+        icon: 'bullseye',
     },
     {
         name: 'Medias',
         key: 'sulu_media.overview',
-    },
-    {
-        name: 'Webspaces',
-        key: 'sulu_content.webspaces',
-    },
-    {
-        name: 'Roles',
-        key: 'sulu_security.list',
+        icon: 'image',
     },
     {
         name: 'Snippets',
         key: 'sulu_snippet.list',
+        icon: 'sticky-note-o',
     },
     {
-        name: 'Tags',
-        key: 'sulu_tag.list',
+        name: 'Contacts',
+        key: 'contacts',
+        icon: 'user',
+        items: [
+            {
+                name: 'Contacts',
+                key: 'sulu_contact.contacts_list',
+            },
+            {
+                name: 'Accounts',
+                key: 'sulu_contact.accounts_list',
+            },
+        ],
+    },
+    {
+        name: 'Settings',
+        icon: 'gear',
+        key: 'settings',
+        items: [
+            {
+                name: 'Tags',
+                key: 'sulu_tag.list',
+            },
+            {
+                name: 'Roles',
+                key: 'sulu_security.list',
+            },
+        ],
     },
 ];
 
@@ -47,80 +66,105 @@ type Props = {
 
 @observer
 export default class Application extends React.Component<Props> {
-    @observable navigationOverlayOpen: boolean =  false;
+    @observable navigationVisible: boolean =  false;
 
-    @action openNavigationOverlay() {
-        this.navigationOverlayOpen = true;
-    }
-
-    @action closeNavigationOverlay() {
-        this.navigationOverlayOpen = false;
+    @action toggleNavigation() {
+        this.navigationVisible = !this.navigationVisible;
     }
 
     handleNavigationButtonClick = () => {
-        this.openNavigationOverlay();
+        this.toggleNavigation();
     };
 
-    handleNavigationOverlayClose = () => {
-        this.closeNavigationOverlay();
+    handleNavigationItemClick = (value: *) => {
+        if (value && typeof value === 'string') {
+            this.props.router.navigate(value);
+        }
+        this.toggleNavigation();
     };
+
+    handleLogoutClick = () => {
+        // TODO: Logout user here.
+    };
+
+    handleProfileEditClick = () => {
+        // TODO: Open profile edit overlay here.
+    };
+
+    renderNavigation() {
+        const {router} = this.props;
+
+        return (
+            <Navigation
+                title="Sulu" // TODO: Get this data from logged in user
+                username="Hikaru Sulu" // TODO: Get this data from logged in user
+                suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
+                suluVersionLink={SULU_CHANGELOG_URL}
+                onLogoutClick={this.handleLogoutClick}
+                onProfileClick={this.handleProfileEditClick}
+            >
+                {routes.map((route) => (
+                    <Navigation.Item
+                        key={route.key ? route.key : ''}
+                        value={route.key ? route.key : ''}
+                        title={route.name}
+                        icon={route.icon}
+                        active={route.key && router.route ? (router.route.name === route.key) : false}
+                        onClick={this.handleNavigationItemClick}
+                    >
+                        {Array.isArray(route.items) &&
+                            route.items.map((subRoute) => (
+                                <Navigation.Item
+                                    key={subRoute.key}
+                                    value={subRoute.key}
+                                    title={subRoute.name}
+                                    active={router.route ? router.route.name === subRoute.key : false}
+                                    onClick={this.handleNavigationItemClick}
+                                />
+                            ))
+                        }
+                    </Navigation.Item>
+                ))}
+            </Navigation>
+        );
+    }
 
     render() {
         const {router} = this.props;
 
-        return (
-            <div>
-                <header className={applicationStyles.header}>
-                    <Toolbar onNavigationButtonClick={this.handleNavigationButtonClick} />
-                </header>
-                <main className={applicationStyles.main}>
-                    {router.route &&
-                        <ViewRenderer
-                            key={router.route.name}
-                            router={router}
-                        />
-                    }
-                </main>
-                <SplitView />
-                <Overlay
-                    title="Navigation"
-                    onClose={this.handleNavigationOverlayClose}
-                    confirmText="Close"
-                    onConfirm={this.handleNavigationOverlayClose}
-                    open={this.navigationOverlayOpen}
-                >
-                    <ul
-                        style={{
-                            listStyle: 'none',
-                            display: 'flex',
-                            alignItems: 'left',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                        }}
-                    >
-                        {routes.map((route, index) => {
-                            const handleClick = () => {
-                                router.navigate(route.key);
-                                this.closeNavigationOverlay();
-                            };
+        const rootClass = classNames(
+            applicationStyles.root,
+            {
+                [applicationStyles.navigationVisible]: this.navigationVisible,
+            }
+        );
 
-                            return (
-                                <li
-                                    key={index}
-                                    // eslint-disable-next-line react/jsx-no-bind
-                                    onClick={handleClick}
-                                    style={{
-                                        padding: 10,
-                                        color: '#52b6ca',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    {route.name}
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </Overlay>
+        return (
+            <div className={rootClass}>
+                <nav className={applicationStyles.navigation}>{this.renderNavigation()}</nav>
+                <div className={applicationStyles.content}>
+                    <Backdrop
+                        open={this.navigationVisible}
+                        visible={false}
+                        onClick={this.handleNavigationButtonClick}
+                        local={true}
+                        fixed={false}
+                    />
+                    <header className={applicationStyles.header}>
+                        <Toolbar
+                            navigationOpen={this.navigationVisible}
+                            onNavigationButtonClick={this.handleNavigationButtonClick}
+                        />
+                    </header>
+                    <main className={applicationStyles.main}>
+                        {router.route &&
+                            <ViewRenderer
+                                key={router.route.name}
+                                router={router}
+                            />
+                        }
+                    </main>
+                </div>
             </div>
         );
     }

@@ -1,5 +1,24 @@
 @import '../Toolbar/toolbar.scss';
 
+.root {
+    width: calc(100vw + 260px);
+    display: inline-flex;
+    left: -260px;
+    position: absolute;
+    transition: left .5s;
+    will-change: left;
+
+    &.navigation-visible {
+        left: 0;
+    }
+}
+
+.content {
+    width: 100vw;
+    flex-shrink: 0;
+    min-height: 500px;
+}
+
 .main {
     height: calc(100vh - $toolbarHeight);
     overflow-y: auto;
@@ -8,4 +27,10 @@
 .header {
     position: relative;
     z-index: 1;
+}
+
+.navigation {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100vh;
 }

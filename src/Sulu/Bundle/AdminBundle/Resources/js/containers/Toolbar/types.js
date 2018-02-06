@@ -14,6 +14,7 @@ export type ToolbarItem = ButtonItem | DropdownItem | SelectItem;
 export type ToolbarProps = {
     storeKey?: string,
     onNavigationButtonClick?: () => void,
+    navigationOpen?: boolean,
 };
 
 export type ToolbarConfig = {

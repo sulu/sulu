@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="title"
+  >
+    <span
+      aria-label="search"
+      class="fa fa-search"
+    />
+    Test
+  </div>
+</div>
+`;
+
+exports[`The component should render active 1`] = `
+<div
+  class="item active"
+>
+  <div
+    class="title"
+  >
+    <span
+      aria-label="search"
+      class="fa fa-search"
+    />
+    Test
+  </div>
+</div>
+`;
+
+exports[`The component should render with children 1`] = `
+<div
+  class="item hasChildren"
+>
+  <div
+    class="title"
+  >
+    <span
+      aria-label="gear"
+      class="fa fa-gear"
+    />
+    Settings
+  </div>
+  <span
+    aria-label="chevron-right"
+    class="childrenIndicator fa fa-chevron-right clickable"
+    role="button"
+    tabindex="0"
+  />
+</div>
+`;
+
+exports[`The component should render with children an active child and expanded 1`] = `
+<div
+  class="item active hasChildren"
+>
+  <div
+    class="title"
+  >
+    <span
+      aria-label="gear"
+      class="fa fa-gear"
+    />
+    Settings
+  </div>
+  <div>
+    <div
+      class="item"
+    >
+      <div
+        class="title"
+      >
+        Settings 1
+      </div>
+    </div>
+    <div
+      class="item active"
+    >
+      <div
+        class="title"
+      >
+        Settings 2
+      </div>
+    </div>
+  </div>
+  <span
+    aria-label="chevron-down"
+    class="childrenIndicator fa fa-chevron-down clickable"
+    role="button"
+    tabindex="0"
+  />
+</div>
+`;

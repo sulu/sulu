@@ -17,9 +17,18 @@ test('The component should render in body when open', () => {
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
-test('The component should not render in body when local property is set', () => {
-    const view = mount(<Backdrop local={true} />).render();
+test('The component should render normally when local property is set', () => {
+    const body = document.body;
+    const view = mount(<Backdrop local={true} open={true} />).render();
     expect(view).toMatchSnapshot();
+    expect(body ? body.innerHTML : '').toBe('');
+});
+
+test('The component should not render local when closed', () => {
+    const body = document.body;
+    const view = mount(<Backdrop local={true} open={false} />).render();
+    expect(view).toMatchSnapshot();
+    expect(body ? body.innerHTML : '').toBe('');
 });
 
 test('The component should not render in the body when closed', () => {

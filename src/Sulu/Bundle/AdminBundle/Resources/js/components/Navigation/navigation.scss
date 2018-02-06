@@ -1,0 +1,106 @@
+@import '../../containers/Application/colors.scss';
+
+$navigationBackgroundColor: $cloudBurst;
+$color: $white;
+$versionColor: $silver;
+$userBackgroundColor: $pickledBluewood;
+$buttonColor: $silver;
+
+.navigation {
+    width: 260px;
+    background-color: $navigationBackgroundColor;
+    color: $color;
+    min-height: 100%;
+    opacity: .94;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    height: 60px;
+    background-color: rgba(0, 0, 0, .15);
+}
+
+.header-content {
+    padding: 20px 40px;
+}
+
+.user {
+    min-height: 130px;
+    background-color: $userBackgroundColor;
+}
+
+.user-content {
+    padding: 40px;
+    display: flex;
+    font-size: 14px;
+    line-height: 16px;
+    align-items: center;
+
+    img,
+    .no-user-image {
+        width: 50px;
+        height: 50px;
+        flex-grow: 0;
+        flex-shrink: 0;
+        border-radius: 25px;
+        cursor: pointer;
+    }
+
+    .no-user-image {
+        background-color: $silver;
+
+        span {
+            font-size: 30px;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            display: block;
+            line-height: 50px;
+        }
+    }
+}
+
+.user-profile {
+    margin-left: 20px;
+    font-weight: 600;
+    cursor: pointer;
+
+    button {
+        background: none;
+        font-size: 12px;
+        line-height: 16px;
+        color: $buttonColor;
+        border: none;
+        margin-top: 10px;
+        padding: 0;
+        cursor: pointer;
+
+        span {
+            padding-right: 10px;
+        }
+    }
+}
+
+.items {
+    flex-grow: 1;
+}
+
+.versions {
+    font-size: 10px;
+    line-height: 14px;
+    padding: 13px 40px;
+    text-align: center;
+    width: 100%;
+    color: $versionColor;
+
+    a {
+        color: $versionColor;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

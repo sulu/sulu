@@ -52,7 +52,7 @@ exports[`Render WebspaceSelect opened 1`] = `
 
 exports[`Render WebspaceSelect opened 2`] = `
 "<div>
-  <div class=\\"backdrop\\"></div>
+  <div class=\\"backdrop fixed\\"></div>
 </div>
 <div>
   <div class=\\"container\\">

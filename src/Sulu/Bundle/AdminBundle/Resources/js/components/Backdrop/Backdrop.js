@@ -11,6 +11,7 @@ type Props = {
     /** If true, the backdrop gets rendered in the placed element and not in the body. */
     local: boolean,
     onClick?: () => void,
+    fixed: boolean,
 };
 
 export default class Backdrop extends React.PureComponent<Props> {
@@ -18,6 +19,7 @@ export default class Backdrop extends React.PureComponent<Props> {
         open: true,
         visible: true,
         local: false,
+        fixed: true,
     };
 
     handleClick = () => {
@@ -31,21 +33,23 @@ export default class Backdrop extends React.PureComponent<Props> {
             open,
             visible,
             local,
+            fixed,
         } = this.props;
         const backdropClass = classNames(
             backdropStyles.backdrop,
             {
                 [backdropStyles.visible]: visible,
+                [backdropStyles.fixed]: fixed,
             }
         );
         const backdrop = <div onClick={this.handleClick} className={backdropClass} />;
 
-        if (local) {
-            return backdrop;
-        }
-
         if (!open) {
             return null;
+        }
+
+        if (local) {
+            return backdrop;
         }
 
         return <Portal>{backdrop}</Portal>;

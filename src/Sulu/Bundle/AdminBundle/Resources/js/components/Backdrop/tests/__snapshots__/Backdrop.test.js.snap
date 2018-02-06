@@ -1,13 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should not render in body when local property is set 1`] = `
-<div
-  class="backdrop visible"
-/>
-`;
+exports[`The component should not render local when closed 1`] = `null`;
 
 exports[`The component should render in body when open 1`] = `
 "<div>
-  <div class=\\"backdrop visible\\"></div>
+  <div class=\\"backdrop visible fixed\\"></div>
 </div>"
+`;
+
+exports[`The component should render normally when local property is set 1`] = `
+<div
+  class="backdrop visible fixed"
+/>
 `;

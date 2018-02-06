@@ -2,7 +2,7 @@
 
 exports[`Render an open MediaSelectionOverlay 1`] = `
 "<div>
-  <div class=\\"backdrop visible\\"></div>
+  <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
   <div class=\\"container\\">

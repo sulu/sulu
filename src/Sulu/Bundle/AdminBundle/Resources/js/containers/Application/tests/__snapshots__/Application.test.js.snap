@@ -1,76 +1,751 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Application should not fail if current route does not exist 1`] = `
-<div>
-  <header
-    class="header"
+<div
+  class="root"
+>
+  <nav
+    class="navigation"
   >
-    <nav
-      class="toolbar"
+    <div
+      class="navigation"
     >
       <div
-        class="controls"
+        class="header"
       >
-        <button
-          class="button primary"
+        <div
+          class="headerContent"
         >
-          <span
-            aria-label="su-view"
-            class="icon su-view"
-          />
-        </button>
+          Sulu
+        </div>
       </div>
       <div
-        class="controls"
-      />
-    </nav>
-  </header>
-  <main
-    class="main"
-  />
-  <aside />
-  <div />
+        class="user"
+      >
+        <div
+          class="userContent"
+        >
+          <div
+            class="noUserImage"
+          >
+            <span
+              aria-label="user"
+              class="fa fa-user"
+            />
+          </div>
+          <div
+            class="userProfile"
+          >
+            <span>
+              Hikaru Sulu
+            </span>
+            <button>
+              <span
+                aria-label="sign-out"
+                class="fa fa-sign-out"
+              />
+              Log out
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="items"
+      >
+        <div
+          class="item"
+        >
+          <div
+            class="title"
+          >
+            <span
+              aria-label="bullseye"
+              class="fa fa-bullseye"
+            />
+            Webspaces
+          </div>
+        </div>
+        <div
+          class="item"
+        >
+          <div
+            class="title"
+          >
+            <span
+              aria-label="image"
+              class="fa fa-image"
+            />
+            Medias
+          </div>
+        </div>
+        <div
+          class="item"
+        >
+          <div
+            class="title"
+          >
+            <span
+              aria-label="sticky-note-o"
+              class="fa fa-sticky-note-o"
+            />
+            Snippets
+          </div>
+        </div>
+        <div
+          class="item hasChildren"
+        >
+          <div
+            class="title"
+          >
+            <span
+              aria-label="user"
+              class="fa fa-user"
+            />
+            Contacts
+          </div>
+          <span
+<<<<<<< HEAD
+            aria-label="su-view"
+            class="icon su-view"
+=======
+            aria-label="chevron-right"
+            class="childrenIndicator fa fa-chevron-right clickable"
+            role="button"
+            tabindex="0"
+>>>>>>> 9e81b134d... Add tests
+          />
+        </div>
+        <div
+          class="item hasChildren"
+        >
+          <div
+            class="title"
+          >
+            <span
+              aria-label="gear"
+              class="fa fa-gear"
+            />
+            Settings
+          </div>
+          <span
+            aria-label="chevron-right"
+            class="childrenIndicator fa fa-chevron-right clickable"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+      </div>
+      <div
+        class="versions"
+      >
+        <div>
+          Sulu (
+          <a
+            href="https://github.com/sulu/sulu/releases"
+            target="_blank"
+          >
+            2.0.0-RC1
+          </a>
+          )
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <nav
+        class="toolbar"
+      >
+        <div
+          class="controls"
+        >
+          <button
+            class="button primary"
+          >
+            <span
+              aria-label="bars"
+              class="icon fa fa-bars"
+            />
+          </button>
+        </div>
+        <div
+          class="controls"
+        />
+      </nav>
+    </header>
+    <main
+      class="main"
+    />
+  </div>
 </div>
 `;
 
 exports[`Application should render based on current route 1`] = `
-<div>
-  <header
-    class="header"
+<div
+  class="root"
+>
+  <nav
+    class="navigation"
   >
-    <nav
-      class="toolbar"
+    <div
+      class="navigation"
     >
       <div
-        class="controls"
+        class="header"
       >
-        <button
-          class="button primary"
+        <div
+          class="headerContent"
         >
-          <span
-            aria-label="su-view"
-            class="icon su-view"
-          />
-        </button>
+          Sulu
+        </div>
       </div>
       <div
-        class="controls"
-      />
-    </nav>
-  </header>
-  <main
-    class="main"
-  >
-    <div>
-      <h1>
-        Test
-      </h1>
-      <h2>
-        test
-      </h2>
+        class="user"
+      >
+        <div
+          class="userContent"
+        >
+          <div
+            class="noUserImage"
+          >
+            <span
+              aria-label="user"
+              class="fa fa-user"
+            />
+          </div>
+          <div
+            class="userProfile"
+          >
+            <span>
+              Hikaru Sulu
+            </span>
+            <button>
+              <span
+                aria-label="sign-out"
+                class="fa fa-sign-out"
+              />
+              Log out
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="items"
+      >
+        <div
+          class="item"
+        >
+          <div
+            class="title"
+          >
+            <span
+              aria-label="bullseye"
+              class="fa fa-bullseye"
+            />
+            Webspaces
+          </div>
+        </div>
+        <div
+          class="item"
+        >
+          <div
+            class="title"
+          >
+            <span
+              aria-label="image"
+              class="fa fa-image"
+            />
+            Medias
+          </div>
+        </div>
+        <div
+          class="item"
+        >
+          <div
+            class="title"
+          >
+            <span
+              aria-label="sticky-note-o"
+              class="fa fa-sticky-note-o"
+            />
+            Snippets
+          </div>
+        </div>
+        <div
+          class="item hasChildren"
+        >
+          <div
+            class="title"
+          >
+            <span
+              aria-label="user"
+              class="fa fa-user"
+            />
+            Contacts
+          </div>
+          <span
+            aria-label="chevron-right"
+            class="childrenIndicator fa fa-chevron-right clickable"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <div
+          class="item hasChildren"
+        >
+          <div
+            class="title"
+          >
+            <span
+              aria-label="gear"
+              class="fa fa-gear"
+            />
+            Settings
+          </div>
+          <span
+<<<<<<< HEAD
+            aria-label="su-view"
+            class="icon su-view"
+=======
+            aria-label="chevron-right"
+            class="childrenIndicator fa fa-chevron-right clickable"
+            role="button"
+            tabindex="0"
+>>>>>>> 9e81b134d... Add tests
+          />
+        </div>
+      </div>
+      <div
+        class="versions"
+      >
+        <div>
+          Sulu (
+          <a
+            href="https://github.com/sulu/sulu/releases"
+            target="_blank"
+          >
+            2.0.0-RC1
+          </a>
+          )
+        </div>
+      </div>
     </div>
-  </main>
-  <aside />
-  <div />
+  </nav>
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <nav
+        class="toolbar"
+      >
+        <div
+          class="controls"
+        >
+          <button
+            class="button primary"
+          >
+            <span
+              aria-label="bars"
+              class="icon fa fa-bars"
+            />
+          </button>
+        </div>
+        <div
+          class="controls"
+        />
+      </nav>
+    </header>
+    <main
+      class="main"
+    >
+      <div>
+        <h1>
+          Test
+        </h1>
+        <h2>
+          test
+        </h2>
+      </div>
+    </main>
+  </div>
 </div>
+`;
+
+exports[`Application should render opened navigation 1`] = `
+<Application
+  router={
+    Object {
+      "route": Object {
+        "attributeDefaults": Object {},
+        "children": Array [],
+        "name": "test",
+        "options": Object {},
+        "parent": null,
+        "path": "/webspaces",
+        "rerenderAttributes": Array [],
+        "view": "test",
+      },
+    }
+  }
+>
+  <div
+    className="root navigationVisible"
+  >
+    <nav
+      className="navigation"
+    >
+      <Navigation
+        onLogoutClick={[Function]}
+        onProfileClick={[Function]}
+        suluVersion="2.0.0-RC1"
+        suluVersionLink="https://github.com/sulu/sulu/releases"
+        title="Sulu"
+        username="Hikaru Sulu"
+      >
+        <div
+          className="navigation"
+        >
+          <div
+            className="header"
+          >
+            <div
+              className="headerContent"
+            >
+              Sulu
+            </div>
+          </div>
+          <div
+            className="user"
+          >
+            <div
+              className="userContent"
+            >
+              <div
+                className="noUserImage"
+                onClick={[Function]}
+              >
+                <Icon
+                  name="user"
+                >
+                  <span
+                    aria-label="user"
+                    className="fa fa-user"
+                  />
+                </Icon>
+              </div>
+              <div
+                className="userProfile"
+              >
+                <span
+                  onClick={[Function]}
+                >
+                  Hikaru Sulu
+                </span>
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="sign-out"
+                  >
+                    <span
+                      aria-label="sign-out"
+                      className="fa fa-sign-out"
+                    />
+                  </Icon>
+                  Log out
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            className="items"
+          >
+            <Item
+              active={false}
+              expanded={false}
+              icon="bullseye"
+              key=".$sulu_content.webspaces"
+              onClick={[Function]}
+              title="Webspaces"
+              value="sulu_content.webspaces"
+            >
+              <div
+                className="item"
+              >
+                <div
+                  className="title"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="bullseye"
+                  >
+                    <span
+                      aria-label="bullseye"
+                      className="fa fa-bullseye"
+                    />
+                  </Icon>
+                  Webspaces
+                </div>
+              </div>
+            </Item>
+            <Item
+              active={false}
+              expanded={false}
+              icon="image"
+              key=".$sulu_media.overview"
+              onClick={[Function]}
+              title="Medias"
+              value="sulu_media.overview"
+            >
+              <div
+                className="item"
+              >
+                <div
+                  className="title"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="image"
+                  >
+                    <span
+                      aria-label="image"
+                      className="fa fa-image"
+                    />
+                  </Icon>
+                  Medias
+                </div>
+              </div>
+            </Item>
+            <Item
+              active={false}
+              expanded={false}
+              icon="sticky-note-o"
+              key=".$sulu_snippet.list"
+              onClick={[Function]}
+              title="Snippets"
+              value="sulu_snippet.list"
+            >
+              <div
+                className="item"
+              >
+                <div
+                  className="title"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="sticky-note-o"
+                  >
+                    <span
+                      aria-label="sticky-note-o"
+                      className="fa fa-sticky-note-o"
+                    />
+                  </Icon>
+                  Snippets
+                </div>
+              </div>
+            </Item>
+            <Item
+              active={false}
+              expanded={false}
+              icon="user"
+              key=".$contacts"
+              onClick={[Function]}
+              title="Contacts"
+              value="contacts"
+            >
+              <div
+                className="item hasChildren"
+              >
+                <div
+                  className="title"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="user"
+                  >
+                    <span
+                      aria-label="user"
+                      className="fa fa-user"
+                    />
+                  </Icon>
+                  Contacts
+                </div>
+                <Icon
+                  className="childrenIndicator"
+                  name="chevron-right"
+                  onClick={[Function]}
+                >
+                  <span
+                    aria-label="chevron-right"
+                    className="childrenIndicator fa fa-chevron-right clickable"
+                    onClick={[Function]}
+                    role="button"
+                    tabIndex={0}
+                  />
+                </Icon>
+              </div>
+            </Item>
+            <Item
+              active={false}
+              expanded={false}
+              icon="gear"
+              key=".$settings"
+              onClick={[Function]}
+              title="Settings"
+              value="settings"
+            >
+              <div
+                className="item hasChildren"
+              >
+                <div
+                  className="title"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="gear"
+                  >
+                    <span
+                      aria-label="gear"
+                      className="fa fa-gear"
+                    />
+                  </Icon>
+                  Settings
+                </div>
+                <Icon
+                  className="childrenIndicator"
+                  name="chevron-right"
+                  onClick={[Function]}
+                >
+                  <span
+                    aria-label="chevron-right"
+                    className="childrenIndicator fa fa-chevron-right clickable"
+                    onClick={[Function]}
+                    role="button"
+                    tabIndex={0}
+                  />
+                </Icon>
+              </div>
+            </Item>
+          </div>
+          <div
+            className="versions"
+          >
+            <div>
+              Sulu (
+              <a
+                href="https://github.com/sulu/sulu/releases"
+                target="_blank"
+              >
+                2.0.0-RC1
+              </a>
+              )
+            </div>
+          </div>
+        </div>
+      </Navigation>
+    </nav>
+    <div
+      className="content"
+    >
+      <Backdrop
+        fixed={false}
+        local={true}
+        onClick={[Function]}
+        open={true}
+        visible={false}
+      >
+        <div
+          className="backdrop"
+          onClick={[Function]}
+        />
+      </Backdrop>
+      <header
+        className="header"
+      >
+        <Toolbar
+          navigationOpen={true}
+          onNavigationButtonClick={[Function]}
+        >
+          <Toolbar>
+            <nav
+              className="toolbar"
+            >
+              <Controls>
+                <div
+                  className="controls"
+                >
+                  <Button
+                    active={false}
+                    disabled={false}
+                    hasOptions={false}
+                    icon="times"
+                    onClick={[Function]}
+                    skin="primary"
+                  >
+                    <button
+                      className="button primary"
+                      disabled={false}
+                      onClick={[Function]}
+                    >
+                      <Icon
+                        className="icon"
+                        name="times"
+                      >
+                        <span
+                          aria-label="times"
+                          className="icon fa fa-times"
+                        />
+                      </Icon>
+                    </button>
+                  </Button>
+                </div>
+              </Controls>
+              <Controls>
+                <div
+                  className="controls"
+                />
+              </Controls>
+            </nav>
+          </Toolbar>
+        </Toolbar>
+      </header>
+      <main
+        className="main"
+      >
+        <Test
+          key="test"
+          router={
+            Object {
+              "route": Object {
+                "attributeDefaults": Object {},
+                "children": Array [],
+                "name": "test",
+                "options": Object {},
+                "parent": null,
+                "path": "/webspaces",
+                "rerenderAttributes": Array [],
+                "view": "test",
+              },
+            }
+          }
+        >
+          <div>
+            <h1>
+              Test
+            </h1>
+            <h2>
+              test
+            </h2>
+          </div>
+        </Test>
+      </main>
+    </div>
+  </div>
+</Application>
 `;
