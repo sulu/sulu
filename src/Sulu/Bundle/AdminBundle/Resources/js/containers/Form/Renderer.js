@@ -11,7 +11,7 @@ import type {Schema, SchemaEntry} from './types';
 type Props = {
     data: Object,
     schema: Schema,
-    onChange: (string, mixed) => void,
+    onChange: (string, *) => void,
     locale: ?IObservableValue<string>,
 };
 
