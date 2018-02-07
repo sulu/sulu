@@ -281,6 +281,7 @@ define([
          * Refresh the preview document.
          */
         refreshPreview: function() {
+            this.htmlFile = '';
             $(this.getPreviewDocument().documentElement).html('');
 
             this.events.render();
