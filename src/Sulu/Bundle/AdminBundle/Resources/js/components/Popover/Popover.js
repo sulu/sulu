@@ -15,6 +15,7 @@ type Props = {
     children?: (
         setPopoverElementRef: (ref: ElementRef<*>) => void,
         style: Object,
+        verticalPosition: string,
     ) => Node,
     onClose?: () => void,
     /** This element will be used to position the popover */
@@ -76,7 +77,7 @@ export default class Popover extends React.Component<Props> {
             height = 0,
         } = anchorElement.getBoundingClientRect();
         const centerChildOffsetTop = (centerChildElement) ? centerChildElement.offsetTop : 0;
-        const alignOnVerticalAnchorEdges = (!centerChildElement) ? true : false;
+        const alignOnVerticalAnchorEdges = !centerChildElement;
 
         return PopoverPositioner.getCroppedDimensions(
             this.popoverWidth,
@@ -148,6 +149,8 @@ export default class Popover extends React.Component<Props> {
             pointerEvents: 'auto',
         };
 
+        const verticalPosition = (dimensions.top > anchorElement.getBoundingClientRect().top) ? 'bottom' : 'top';
+
         return (
             // TODO: Use short syntax when eslint bug is fixed: https://github.com/babel/babel-eslint/issues/554
             <Fragment>
@@ -155,7 +158,7 @@ export default class Popover extends React.Component<Props> {
                 <Portal>
                     <div className={popoverStyles.container}>
                         {children &&
-                            children(this.setPopoverChildRef, styles)
+                            children(this.setPopoverChildRef, styles, verticalPosition)
                         }
                     </div>
                 </Portal>

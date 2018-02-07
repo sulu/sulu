@@ -46,6 +46,11 @@ class Route
      */
     private $parent;
 
+    /**
+     * @var array
+     */
+    private $rerenderAttributes;
+
     public function __construct(string $name, string $path, string $view)
     {
         $this->name = $name;
@@ -89,5 +94,12 @@ class Route
     public function getParent(): ?string
     {
         return $this->parent;
+    }
+
+    public function addRerenderAttribute(string $attribute): self
+    {
+        $this->rerenderAttributes[] = $attribute;
+
+        return $this;
     }
 }

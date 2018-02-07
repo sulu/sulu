@@ -1,0 +1,28 @@
+@import '../../containers/Application/colors.scss';
+
+$itemColor: $black;
+$itemColorActive: $blueZodiac;
+
+.item {
+    height: 22px;
+    color: $itemColor;
+    font-size: 12px;
+    line-height: 22px;
+    margin-bottom: 6px;
+    cursor: pointer;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &.active,
+    &:hover {
+        font-weight: bold;
+        color: $itemColorActive;
+    }
+}
+
+.icon {
+    display: inline-block;
+    width: 20px;
+}

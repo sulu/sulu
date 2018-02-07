@@ -1,0 +1,47 @@
+@import '../../containers/Application/colors.scss';
+
+$arrowMenuBackgroundColor: $white;
+$arrowMenuBoxShadow: 0 0 14px 0 rgba($doveGray, .5);
+
+.arrowMenuContainer {
+    margin: 0;
+    position: relative;
+}
+
+.arrowMenu {
+    background-color: $arrowMenuBackgroundColor;
+    border-radius: 2px;
+    font-size: 12px;
+    box-shadow: $arrowMenuBoxShadow;
+    overflow: auto;
+    min-width: 200px;
+    max-height: inherit;
+}
+
+.arrow {
+    width: 0;
+    height: 0;
+    position: absolute;
+
+    &.right {
+        right: 10px;
+    }
+
+    &.left {
+        left: 10px;
+    }
+
+    &.top {
+        top: -10px;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-bottom: 15px solid $arrowMenuBackgroundColor;
+    }
+
+    &.bottom {
+        bottom: -10px;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 15px solid $arrowMenuBackgroundColor;
+    }
+}

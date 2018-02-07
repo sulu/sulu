@@ -1,7 +1,7 @@
 // @flow
 import type {PopoverDimensions, PopoverStyle, VerticalCrop} from './types';
 
-const MIN_HEIGHT = 100;
+const MIN_HEIGHT = 200;
 const PADDING_TO_WINDOW = 10;
 
 /**

@@ -117,14 +117,14 @@ class ContentAdmin extends Admin
      */
     public function getRoutes(): array
     {
-        // TODO write correctly for all webspaces
+        /** @var Webspace $firstWebspace */
+        $firstWebspace = current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
+
         return [
-            (new Route('sulu_content.pages', '/pages/:locale', 'sulu_admin.list'))
-                ->addOption('resourceKey', 'nodes')
-                ->addOption('adapters', ['column_list'])
-                ->addOption('locales', ['en'])
-                ->addOption('apiOptions', ['webspace' => 'example'])
-                ->addAttributeDefault('locale', 'en'),
+            (new Route('sulu_content.webspaces', '/webspaces/:webspace/:locale', 'sulu_content.webspace_overview'))
+                ->addAttributeDefault('webspace', $firstWebspace->getKey())
+                ->addAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
+                ->addRerenderAttribute('webspace'),
         ];
     }
 

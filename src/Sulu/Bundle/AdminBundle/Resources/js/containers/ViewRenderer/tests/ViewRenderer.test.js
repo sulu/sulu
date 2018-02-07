@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {render} from 'enzyme';
+import {render, shallow} from 'enzyme';
 import ViewRenderer from '../ViewRenderer';
 import viewRegistry from '../registries/ViewRegistry';
 
@@ -180,4 +180,93 @@ test('Render view with not existing parent should throw', () => {
     });
 
     expect(() => render(<ViewRenderer router={router} />)).toThrow(/app/);
+});
+
+test('Render view with route that has no rerenderAttributes', () => {
+    const router = {
+        route: {
+            view: 'webspaceOverview',
+        },
+        attributes: {
+            webspace: 'test',
+        },
+    };
+
+    viewRegistry.get.mockImplementation((view) => {
+        switch (view) {
+            case 'webspaceOverview':
+                return function WebspaceOverview() {
+                    return (
+                        <div>
+                            <h3>Webspace</h3>
+                        </div>
+                    );
+                };
+        }
+    });
+
+    const viewRenderer = shallow(<ViewRenderer router={router} />);
+    expect(viewRenderer.key()).toBe(undefined);
+});
+
+test('Render view with route that has rerenderAttributes', () => {
+    const router = {
+        route: {
+            view: 'webspaceOverview',
+            rerenderAttributes: [
+                'webspace',
+            ],
+        },
+        attributes: {
+            webspace: 'test',
+        },
+    };
+
+    viewRegistry.get.mockImplementation((view) => {
+        switch (view) {
+            case 'webspaceOverview':
+                return function WebspaceOverview() {
+                    return (
+                        <div>
+                            <h3>Webspace</h3>
+                        </div>
+                    );
+                };
+        }
+    });
+
+    const viewRenderer = shallow(<ViewRenderer router={router} />);
+    expect(viewRenderer.key()).toBe('test');
+});
+
+test('Render view with route that has more than one rerenderAttributes', () => {
+    const router = {
+        route: {
+            view: 'webspaceOverview',
+            rerenderAttributes: [
+                'webspace',
+                'locale',
+            ],
+        },
+        attributes: {
+            webspace: 'test',
+            locale: 'de',
+        },
+    };
+
+    viewRegistry.get.mockImplementation((view) => {
+        switch (view) {
+            case 'webspaceOverview':
+                return function WebspaceOverview() {
+                    return (
+                        <div>
+                            <h3>Webspace</h3>
+                        </div>
+                    );
+                };
+        }
+    });
+
+    const viewRenderer = shallow(<ViewRenderer router={router} />);
+    expect(viewRenderer.key()).toBe('test__de');
 });

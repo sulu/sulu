@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render WebspaceOverview 1`] = `
+<div
+  class="webspaceOverview"
+>
+  <div
+    class="webspaceSelect"
+  >
+    <div
+      class="webspaceSelect"
+    >
+      <button
+        class="button"
+      >
+        <span
+          aria-label="dot-circle-o"
+          class="buttonIcon fa fa-dot-circle-o"
+        />
+        <span
+          class="buttonValue"
+        />
+        <span
+          aria-label="chevron-down"
+          class="buttonIcon fa fa-chevron-down"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="datagrid"
+  >
+    <div
+      class="columnListAdapter"
+    >
+      <div
+        class="columnListContainer"
+      >
+        <div
+          class="columnList"
+        >
+          <div
+            class="columnContainer active"
+          >
+            <div
+              class="toolbar active"
+            />
+            <div
+              class="column"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

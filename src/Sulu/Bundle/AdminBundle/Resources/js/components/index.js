@@ -1,5 +1,6 @@
 // @flow
 import {arrayMove} from 'react-sortable-hoc';
+import ArrowMenu from './ArrowMenu';
 import Breadcrumb from './Breadcrumb';
 import Checkbox from './Checkbox';
 import CircularProgressbar from './CircularProgressbar';
@@ -18,6 +19,7 @@ import withContainerSize from './withContainerSize';
 
 export {
     arrayMove,
+    ArrowMenu,
     Breadcrumb,
     Checkbox,
     CircularProgressbar,

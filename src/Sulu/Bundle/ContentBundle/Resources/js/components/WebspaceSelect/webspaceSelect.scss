@@ -1,0 +1,32 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$webspaceSelectBackgroundColor: $blueZodiac;
+$buttonColor: $silver;
+
+.webspace-select {
+    cursor: pointer;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.button {
+    border-radius: 3px;
+    background-color: $webspaceSelectBackgroundColor;
+    color: $silver;
+    cursor: pointer;
+    border: none;
+    padding: 12px 20px;
+    min-width: 300px;
+    display: flex;
+    align-items: center;
+}
+
+.button-icon {
+    font-size: 22px;
+}
+
+.button-value {
+    padding: 0 15px;
+    flex-grow: 1;
+    text-align: left;
+}
