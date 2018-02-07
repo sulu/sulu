@@ -2,12 +2,13 @@
 import React from 'react';
 import {toJS} from 'mobx';
 import BlockCollection from '../../components/BlockCollection';
+import type {BlockEntry} from '../../components/BlockCollection/types';
 import type {FieldTypeProps} from '../../types';
 import FormRenderer from './FormRenderer';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
 
-export default class FormBlockCollection extends React.Component<FieldTypeProps<Array<Object>>> {
+export default class FormBlockCollection extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     handleBlockChange = (index: number, name: string, value: Object) => {
         const {onChange, value: oldValues} = this.props;
 

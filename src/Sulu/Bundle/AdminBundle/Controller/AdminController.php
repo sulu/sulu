@@ -261,6 +261,30 @@ class AdminController
                 "media": {
                     "label": "Media",
                     "type": "media_selection"
+                },
+                "blocks": {
+                    "label": "Blocks",
+                    "type": "block",
+                    "types": {
+                        "default": {
+                            "title": "Default",
+                            "form": {
+                                "text": {
+                                    "label": "Text",
+                                    "type": "text_line"
+                                }
+                            }
+                        },
+                        "image": {
+                            "title": "Image",
+                            "form": {
+                                "image": {
+                                    "label": "Image",
+                                    "type": "media_selection"
+                                }
+                            }
+                        }
+                    }
                 }
             }
         },
