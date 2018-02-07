@@ -1,12 +1,10 @@
-$lineHeight: 1.2em;
-
 .cropped-text {
     width: 100%;
-    max-height: $lineHeight;
     overflow: hidden;
     display: inline-flex;
     flex-wrap: nowrap;
     position: relative;
+    line-height: normal;
 
     .whole {
         position: absolute;
