@@ -1,8 +1,13 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
 import BlockCollection from '../BlockCollection';
 import SortableContainer from '../SortableBlocks';
+
+beforeEach(() => {
+    BlockCollection.idCounter = 0;
+});
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn().mockImplementation((key) => {
@@ -60,8 +65,8 @@ test('Choosing a different type should call the onChange callback', () => {
     blockCollection.find('Block').at(0).find('SingleSelect').prop('onChange')('type2');
 
     expect(changeSpy).toBeCalledWith([
-        {content: 'Test 1', type: 'type2'},
-        {content: 'Test 2', type: 'type2'},
+        expect.objectContaining({content: 'Test 1', type: 'type2'}),
+        expect.objectContaining({content: 'Test 2', type: 'type2'}),
     ]);
 });
 
@@ -116,7 +121,11 @@ test('Should allow to reorder blocks by using drag and drop', () => {
     expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([true, false, false]);
 
     blockCollection.find(SortableContainer).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
-    expect(changeSpy).toBeCalledWith([{content: 'Test 2'}, {content: 'Test 3'}, {content: 'Test 1'}]);
+    expect(changeSpy).toBeCalledWith([
+        expect.objectContaining({content: 'Test 2'}),
+        expect.objectContaining({content: 'Test 3'}),
+        expect.objectContaining({content: 'Test 1'}),
+    ]);
 
     expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([false, false, true]);
 });
@@ -134,7 +143,9 @@ test('Should allow to add a new block', () => {
 });
 
 test('Should allow to remove an existing block', () => {
-    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+    // observable makes calling onChange with deleting an entry from expandedBlocks
+    // otherwise the value and BlockCollection.expandedBlocks variable get out of sync and emit a warning
+    const value: any = observable([{content: 'Test 1'}, {content: 'Test 2'}]);
     const changeSpy = jest.fn().mockImplementation((newValue) => {
         value.splice(0, value.length);
         value.push(...newValue);
@@ -146,7 +157,7 @@ test('Should allow to remove an existing block', () => {
     blockCollection.find('Block').at(0).simulate('click');
     blockCollection.find('Block').at(0).find('Icon[name="su-trash"]').simulate('click');
 
-    expect(changeSpy).toBeCalledWith([{content: 'Test 2'}]);
+    expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
 });
 
 test('Should apply renderBlockContent before rendering the block content', () => {

@@ -19,6 +19,8 @@ type Props = {
 
 @observer
 export default class BlockCollection extends React.Component<Props> {
+    static idCounter = 0;
+
     static defaultProps = {
         value: [],
     };
@@ -55,7 +57,9 @@ export default class BlockCollection extends React.Component<Props> {
 
         if (value) {
             this.expandedBlocks.push(false);
-            onChange([...value, {}]);
+
+            const newBlock = this.defaultType ? {type: this.defaultType} : {};
+            onChange([...value, newBlock]);
         }
     };
 
@@ -93,6 +97,14 @@ export default class BlockCollection extends React.Component<Props> {
     render() {
         const {renderBlockContent, types, value} = this.props;
 
+        const identifiedValues = value.map((block) => {
+            if (!block.__id) {
+                block.__id = ++BlockCollection.idCounter;
+            }
+
+            return block;
+        });
+
         return (
             <section className={blockCollectionStyles.blockCollection}>
                 <SortableBlocks
@@ -106,7 +118,7 @@ export default class BlockCollection extends React.Component<Props> {
                     renderBlockContent={renderBlockContent}
                     types={types}
                     useDragHandle={true}
-                    value={value}
+                    value={identifiedValues}
                 />
                 <Button skin="secondary" onClick={this.handleAddBlock}>
                     <Icon name="su-plus" className={blockCollectionStyles.addButtonIcon} />
