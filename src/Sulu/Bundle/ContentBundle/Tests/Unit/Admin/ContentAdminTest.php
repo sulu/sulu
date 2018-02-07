@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Admin;
 
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
