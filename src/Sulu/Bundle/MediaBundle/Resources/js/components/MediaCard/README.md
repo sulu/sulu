@@ -46,7 +46,7 @@ const handleDirectDownload = (url) => {
         onClick={handleClick}
         selected={state.selected}
         meta="image/png, 3,2 MB"
-        title="Lorempixel sdsdasdsd sdadasd asdasd"
+        title="This is a great title that is too too long"
         image={'http://lorempixel.com/300/200'}
         imageSizes={imageSizes}
         directDownload={{

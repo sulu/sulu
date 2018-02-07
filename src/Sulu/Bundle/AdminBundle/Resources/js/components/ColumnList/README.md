@@ -62,9 +62,9 @@ const toolbarItems = [
 <div style={{height: '60vh'}}>
     <ColumnList buttons={buttons} onItemClick={handleItemClick} toolbarItems={toolbarItems}>
         <Column>
-            <Item id="1" selected="true">Item 1</Item>
-            <Item id="2" hasChildren="true">Item 1</Item>
-            <Item id="3">Item 1</Item>
+            <Item id="1" selected="true">Google 1</Item>
+            <Item id="2" hasChildren="true">Apple 1</Item>
+            <Item id="3">Microsoft 1</Item>
         </Column>
         <Column>
             <Item id="1-1">Item 1</Item>
