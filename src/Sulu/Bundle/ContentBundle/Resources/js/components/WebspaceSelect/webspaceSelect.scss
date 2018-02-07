@@ -18,8 +18,7 @@ $buttonColor: $silver;
     padding: 12px 20px;
     min-width: 300px;
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
 }
 
 .button-icon {
@@ -28,5 +27,6 @@ $buttonColor: $silver;
 
 .button-value {
     padding: 0 15px;
-    justify-self: flex-start;
+    flex-grow: 1;
+    text-align: left;
 }

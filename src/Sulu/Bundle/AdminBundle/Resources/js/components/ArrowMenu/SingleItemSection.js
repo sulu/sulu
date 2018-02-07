@@ -12,7 +12,7 @@ type Props = {
     icon?: string,
 };
 
-export default class ItemSection extends React.PureComponent<Props> {
+export default class SingleItemSection extends React.PureComponent<Props> {
     handleItemClick = (value: *) => {
         this.props.onChange(value);
     };

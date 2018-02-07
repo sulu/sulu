@@ -24,15 +24,25 @@ test('Render ArrowMenu closed', () => {
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
             </ArrowMenu.Section>
-            <ArrowMenu.ItemSection icon="dot-circle-o" title="Webspaces" value={value1} onChange={handleChangeSection1}>
+            <ArrowMenu.SingleItemSection
+                icon="dot-circle-o"
+                title="Webspaces"
+                value={value1}
+                onChange={handleChangeSection1}
+            >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_doc">Sulu Doc</ArrowMenu.Item>
-            </ArrowMenu.ItemSection>
-            <ArrowMenu.ItemSection icon="check" title="Columns" value={value2} onChange={handleChangeSection2}>
+            </ArrowMenu.SingleItemSection>
+            <ArrowMenu.SingleItemSection
+                icon="check"
+                title="Columns"
+                value={value2}
+                onChange={handleChangeSection2}
+            >
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
-            </ArrowMenu.ItemSection>
+            </ArrowMenu.SingleItemSection>
         </ArrowMenu>
     );
 
@@ -54,15 +64,20 @@ test('Render ArrowMenu open', () => {
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
             </ArrowMenu.Section>
-            <ArrowMenu.ItemSection icon="dot-circle-o" title="Webspaces" value={value1} onChange={handleChangeSection1}>
+            <ArrowMenu.SingleItemSection
+                icon="dot-circle-o"
+                title="Webspaces"
+                value={value1}
+                onChange={handleChangeSection1}
+            >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_doc">Sulu Doc</ArrowMenu.Item>
-            </ArrowMenu.ItemSection>
-            <ArrowMenu.ItemSection icon="check" title="Columns" value={value2} onChange={handleChangeSection2}>
+            </ArrowMenu.SingleItemSection>
+            <ArrowMenu.SingleItemSection icon="check" title="Columns" value={value2} onChange={handleChangeSection2}>
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
-            </ArrowMenu.ItemSection>
+            </ArrowMenu.SingleItemSection>
         </ArrowMenu>
     );
 
@@ -84,22 +99,32 @@ test('Events should be called correctly', () => {
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
             </ArrowMenu.Section>
-            <ArrowMenu.ItemSection icon="dot-circle-o" title="Webspaces" value={value1} onChange={handleChangeSection1}>
+            <ArrowMenu.SingleItemSection
+                icon="dot-circle-o"
+                title="Webspaces"
+                value={value1}
+                onChange={handleChangeSection1}
+            >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_doc">Sulu Doc</ArrowMenu.Item>
-            </ArrowMenu.ItemSection>
-            <ArrowMenu.ItemSection icon="check" title="Columns" value={value2} onChange={handleChangeSection2}>
+            </ArrowMenu.SingleItemSection>
+            <ArrowMenu.SingleItemSection
+                icon="check"
+                title="Columns"
+                value={value2}
+                onChange={handleChangeSection2}
+            >
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
-            </ArrowMenu.ItemSection>
+            </ArrowMenu.SingleItemSection>
         </ArrowMenu>
     );
 
-    arrowMenu.find('ItemSection').at(0).find('Item').at(1).simulate('click');
+    arrowMenu.find('SingleItemSection').at(0).find('Item').at(1).simulate('click');
     expect(handleChangeSection1).toBeCalledWith('sulu_blog');
 
-    arrowMenu.find('ItemSection').at(1).find('Item').at(0).simulate('click');
+    arrowMenu.find('SingleItemSection').at(1).find('Item').at(0).simulate('click');
     expect(handleChangeSection2).toBeCalledWith('title');
 
     arrowMenu.find('Backdrop').simulate('click');

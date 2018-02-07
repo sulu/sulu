@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
 import {render, mount} from 'enzyme';
-import ItemSection from '../ItemSection';
+import SingleItemSection from '../SingleItemSection';
 import Item from '../Item';
 
 test('Render ItemSection', () => {
     const handleChange = jest.fn();
 
     expect(render(
-        <ItemSection
+        <SingleItemSection
             title="Select your house"
             value={undefined}
             icon="house"
@@ -17,7 +17,7 @@ test('Render ItemSection', () => {
             <Item value="villa">Villa</Item>
             <Item value="white_house">White House</Item>
             <Item value="flat">Flat</Item>
-        </ItemSection>
+        </SingleItemSection>
     )).toMatchSnapshot();
 });
 
@@ -25,7 +25,7 @@ test('Render ItemSection with value', () => {
     const handleChange = jest.fn();
 
     expect(render(
-        <ItemSection
+        <SingleItemSection
             title="Select your house"
             value="flat"
             icon="house"
@@ -34,7 +34,7 @@ test('Render ItemSection with value', () => {
             <Item value="villa">Villa</Item>
             <Item value="white_house">White House</Item>
             <Item value="flat">Flat</Item>
-        </ItemSection>
+        </SingleItemSection>
     )).toMatchSnapshot();
 });
 
@@ -42,7 +42,7 @@ test('Handle Item click', () => {
     const handleChange = jest.fn();
 
     const itemSection = mount(
-        <ItemSection
+        <SingleItemSection
             title="Select your house"
             value={undefined}
             icon="house"
@@ -51,7 +51,7 @@ test('Handle Item click', () => {
             <Item value="villa">Villa</Item>
             <Item value="white_house">White House</Item>
             <Item value="flat">Flat</Item>
-        </ItemSection>
+        </SingleItemSection>
     );
 
     itemSection.find('Item').at(1).simulate('click');

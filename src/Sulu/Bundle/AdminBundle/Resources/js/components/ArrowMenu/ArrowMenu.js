@@ -5,7 +5,7 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import Popover from '../Popover';
-import ItemSection from './ItemSection';
+import SingleItemSection from './SingleItemSection';
 import Section from './Section';
 import Item from './Item';
 import arrowMenuStyles from './arrowMenu.scss';
@@ -22,7 +22,7 @@ const VERTICAL_OFFSET = 20;
 @observer
 export default class ArrowMenu extends React.Component<Props> {
     static Section = Section;
-    static ItemSection = ItemSection;
+    static SingleItemSection = SingleItemSection;
     static Item = Item;
 
     @observable displayValueRef: ?ElementRef<*>;

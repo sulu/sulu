@@ -1,8 +1,8 @@
 The `ArrowMenu` is a component to stylize a list. Usage example of the `ArrowMenu` is the [`WebspaceSelect`](#webspaceselect) in the
 SuluContentBundle.
 
-Possible Children of this component are `Section`, for custom sections and the default `ItemSection`.
-The component `ItemSection` can receive `Item` as children.
+Possible Children of this component are `Section`, for custom sections and the default `SingleSingleItemSection`.
+The component `SingleSingleItemSection` can receive `Item` as children.
 
 Important for this component is the render prop `anchorElement`.
 This prop will be rendered into the component. Internally there is used an [`Popover`](#popover) to position the menu correctly.
@@ -10,7 +10,7 @@ This prop will be rendered into the component. Internally there is used an [`Pop
 Example with one section:
 
 ```javascript
-const ItemSection = ArrowMenu.ItemSection;
+const SingleItemSection = ArrowMenu.SingleItemSection;
 const Item = ArrowMenu.Item;
 
 initialState = {
@@ -48,11 +48,11 @@ const button = (<button onClick={handleButtonClick}>{state.value}</button>);
     </div>
     
     <ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
-        <ItemSection icon="dot-circle-o" title="Webspaces" value={state.value} onChange={handleChangeSection}>
+        <SingleItemSection icon="dot-circle-o" title="Webspaces" value={state.value} onChange={handleChangeSection}>
             <Item value="sulu">Sulu</Item>
             <Item value="sulu_blog">Sulu Blog</Item>
             <Item value="sulu_doc">Sulu Doc</Item>
-        </ItemSection>
+        </SingleItemSection>
     </ArrowMenu>
 </div>
 ```
@@ -60,7 +60,7 @@ const button = (<button onClick={handleButtonClick}>{state.value}</button>);
 Example with two sections:
 
 ```javascript
-const ItemSection = ArrowMenu.ItemSection;
+const SingleItemSection = ArrowMenu.SingleItemSection;
 const Item = ArrowMenu.Item;
 
 initialState = {
@@ -107,15 +107,15 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
     </div>
     
     <ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
-        <ItemSection icon="dot-circle-o" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
+        <SingleItemSection icon="dot-circle-o" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
             <Item value="sulu">Sulu</Item>
             <Item value="sulu_blog">Sulu Blog</Item>
             <Item value="sulu_doc">Sulu Doc</Item>
-        </ItemSection>
-        <ItemSection icon="check" title="Columns" value={state.value2} onChange={handleChangeSection2}>
+        </SingleItemSection>
+        <SingleItemSection icon="check" title="Columns" value={state.value2} onChange={handleChangeSection2}>
             <Item value="title">Title</Item>
             <Item value="description">Description</Item>
-        </ItemSection>
+        </SingleItemSection>
     </ArrowMenu>
 </div>
 ```
@@ -123,7 +123,7 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
 Example with an additional input sections:
 
 ```javascript
-const ItemSection = ArrowMenu.ItemSection;
+const SingleItemSection = ArrowMenu.SingleItemSection;
 const Section = ArrowMenu.Section;
 const Item = ArrowMenu.Item;
 
@@ -174,15 +174,15 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
         <Section title="Search Section">
             <input type="text" />
         </Section>
-        <ItemSection icon="dot-circle-o" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
+        <SingleItemSection icon="dot-circle-o" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
             <Item value="sulu">Sulu</Item>
             <Item value="sulu_blog">Sulu Blog</Item>
             <Item value="sulu_doc">Sulu Doc</Item>
-        </ItemSection>
-        <ItemSection icon="check" title="Columns" value={state.value2} onChange={handleChangeSection2}>
+        </SingleItemSection>
+        <SingleItemSection icon="check" title="Columns" value={state.value2} onChange={handleChangeSection2}>
             <Item value="title">Title</Item>
             <Item value="description">Description</Item>
-        </ItemSection>
+        </SingleItemSection>
     </ArrowMenu>
 </div>
 ```

@@ -71,14 +71,14 @@ export default class WebspaceSelect extends React.Component<Props> {
 
         return (
             <ArrowMenu onClose={this.handleMenuClose} open={this.open} anchorElement={this.renderButton()}>
-                <ArrowMenu.ItemSection
+                <ArrowMenu.SingleItemSection
                     icon="dot-circle-o"
                     title="Webspaces"
                     value={value}
                     onChange={this.handleChange}
                 >
                     {children}
-                </ArrowMenu.ItemSection>
+                </ArrowMenu.SingleItemSection>
             </ArrowMenu>
         );
     }
