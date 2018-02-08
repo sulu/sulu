@@ -102,7 +102,12 @@
         ],
         "react/jsx-wrap-multilines": "error",
         "react/jsx-pascal-case": "error",
-        "react/jsx-tag-spacing": "error",
+        "react/jsx-tag-spacing": [
+            "error",
+            {
+                "beforeClosing": "never"
+            }
+        ],
         "react/jsx-key": "error",
         "react/jsx-indent": "error",
         "react/jsx-no-bind": "error",
