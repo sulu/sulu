@@ -34,7 +34,26 @@ class Form extends React.PureComponent<Props> {
     }
 
     handleSubmit = () => {
-        this.formStore.save();
+        const {resourceStore, router} = this.props;
+
+        const {
+            route: {
+                options: {
+                    editRoute,
+                },
+            },
+        } = router;
+
+        if (editRoute) {
+            resourceStore.destroy();
+        }
+
+        this.formStore.save()
+            .then(() => {
+                if (editRoute) {
+                    router.navigate(editRoute, {id: resourceStore.id, locale: resourceStore.locale});
+                }
+            });
     };
 
     setFormRef = (form) => {

@@ -85,6 +85,7 @@ class SnippetAdminTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame([
             'tabTitle' => 'sulu_snippet.details',
             'backRoute' => 'sulu_snippet.list',
+            'editRoute' => 'sulu_snippet.edit_form.detail',
         ], 'options', $addDetailRoute);
         $this->assertAttributeEquals('sulu_snippet.edit_form', 'name', $editFormRoute);
         $this->assertAttributeEquals([

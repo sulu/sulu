@@ -110,7 +110,7 @@ export default class FormStore {
     }
 
     save() {
-        this.resourceStore.save();
+        return this.resourceStore.save();
     }
 
     set(name: string, value: mixed) {

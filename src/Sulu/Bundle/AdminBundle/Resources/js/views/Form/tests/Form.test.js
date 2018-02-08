@@ -34,6 +34,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
         then: jest.fn(),
     }),
     put: jest.fn(),
+    post: jest.fn().mockReturnValue(Promise.resolve()),
 }));
 
 jest.mock('../../../containers/Form/stores/MetadataStore', () => ({
@@ -429,10 +430,49 @@ test('Should save form when submitted', () => {
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise]).then(() => {
         form.find('Form').at(1).simulate('submit');
+        expect(resourceStore.destroy).not.toBeCalled();
         expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
+    });
+});
+
+test('Should save form when submitted and redirect to editRoute', () => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('snippets');
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const router = {
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route: {
+            options: {
+                editRoute: 'editRoute',
+                locales: [],
+            },
+        },
+    };
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    return Promise.all([schemaTypesPromise, schemaPromise]).then(() => {
+        form.find('Form').at(1).simulate('submit');
+        expect(resourceStore.destroy).toBeCalled();
+        expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
     });
 });
 
