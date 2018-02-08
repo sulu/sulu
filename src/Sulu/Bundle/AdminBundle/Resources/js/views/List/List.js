@@ -98,14 +98,17 @@ class List extends React.Component<ViewProps> {
 }
 
 export default withToolbar(List, function() {
+    const {router} = this.props;
+
     const {
         route: {
             options: {
-                resourceKey,
+                addRoute,
                 locales,
+                resourceKey,
             },
         },
-    } = this.props.router;
+    } = router;
 
     const locale = locales
         ? {
@@ -120,36 +123,43 @@ export default withToolbar(List, function() {
         }
         : undefined;
 
+    const items = [];
+
+    if (addRoute) {
+        items.push({
+            type: 'button',
+            value: translate('sulu_admin.add'),
+            icon: 'su-add',
+            onClick: () => {
+                router.navigate(addRoute, {locale: this.locale.get()});
+            },
+        });
+    }
+
+    items.push({
+        type: 'button',
+        value: translate('sulu_admin.delete'),
+        icon: 'su-trash',
+        disabled: this.datagridStore.selections.length === 0,
+        loading: this.deleting,
+        onClick: action(() => {
+            this.deleting = true;
+
+            const deletePromises = [];
+            this.datagridStore.selections.forEach((id) => {
+                deletePromises.push(ResourceRequester.delete(resourceKey, id));
+            });
+
+            return Promise.all(deletePromises).then(action(() => {
+                this.datagridStore.clearSelection();
+                this.datagridStore.sendRequest();
+                this.deleting = false;
+            }));
+        }),
+    });
+
     return {
         locale,
-        items: [
-            {
-                type: 'button',
-                value: translate('sulu_admin.add'),
-                icon: 'su-add',
-                onClick: () => {},
-            },
-            {
-                type: 'button',
-                value: translate('sulu_admin.delete'),
-                icon: 'su-trash',
-                disabled: this.datagridStore.selections.length === 0,
-                loading: this.deleting,
-                onClick: action(() => {
-                    this.deleting = true;
-
-                    const deletePromises = [];
-                    this.datagridStore.selections.forEach((id) => {
-                        deletePromises.push(ResourceRequester.delete(resourceKey, id));
-                    });
-
-                    return Promise.all(deletePromises).then(action(() => {
-                        this.datagridStore.clearSelection();
-                        this.datagridStore.sendRequest();
-                        this.deleting = false;
-                    }));
-                }),
-            },
-        ],
+        items,
     };
 });

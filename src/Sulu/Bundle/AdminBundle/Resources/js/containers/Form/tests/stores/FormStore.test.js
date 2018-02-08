@@ -4,7 +4,8 @@ import FormStore from '../../stores/FormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/MetadataStore';
 
-jest.mock('../../../../stores/ResourceStore', () => function(resourceKey) {
+jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id) {
+    this.id = id;
     this.resourceKey = resourceKey;
     this.save = jest.fn();
     this.set = jest.fn();
@@ -35,16 +36,61 @@ test('Create data object for schema', () => {
     const metadataPromise = Promise.resolve(metadata);
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
-    const formStore = new FormStore(new ResourceStore('snippets', '1'));
+    const resourceStore = new ResourceStore('snippets', '1');
+    const formStore = new FormStore(resourceStore);
     expect(formStore.schemaLoading).toEqual(true);
 
     return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(formStore.schemaLoading).toEqual(false);
         expect(Object.keys(formStore.data)).toHaveLength(2);
+        expect(resourceStore.set).not.toBeCalledWith('template', expect.anything());
         expect(formStore.data).toEqual({
             title: undefined,
             description: undefined,
         });
+        formStore.destroy();
+    });
+});
+
+test('Set template property of ResourceStore to first type be default', () => {
+    const metadata = {};
+
+    const schemaTypesPromise = Promise.resolve({
+        type1: {},
+        type2: {},
+    });
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets');
+    const formStore = new FormStore(resourceStore);
+
+    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
+        expect(resourceStore.set).toBeCalledWith('template', 'type1');
+        formStore.destroy();
+    });
+});
+
+test('Set template property of ResourceStore from the loaded data', () => {
+    const metadata = {};
+
+    const schemaTypesPromise = Promise.resolve({
+        type1: {},
+        type2: {},
+    });
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets', '1');
+    resourceStore.data = {template: 'type2'};
+    const formStore = new FormStore(resourceStore);
+
+    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
+        expect(resourceStore.set).toBeCalledWith('template', 'type2');
         formStore.destroy();
     });
 });

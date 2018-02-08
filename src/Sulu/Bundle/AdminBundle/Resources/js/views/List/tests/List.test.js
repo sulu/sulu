@@ -192,6 +192,87 @@ test('Should unbind the binding and destroy the store on unmount without locale'
     expect(router.unbind).not.toBeCalledWith('locale');
 });
 
+test('Should render the add button in the toolbar only if a addRoute has been passed in options', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                addRoute: 'addRoute',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />);
+
+    const toolbarConfig = toolbarFunction.call(list.instance());
+    expect(toolbarConfig.items).toEqual(
+        expect.arrayContaining(
+            [
+                expect.objectContaining({icon: 'plus-circle', value: 'Add'}),
+            ]
+        )
+    );
+});
+
+test('Should navigate when add button is clicked and locales have been passed in options', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                addRoute: 'addRoute',
+                resourceKey: 'test',
+                locales: ['de', 'en'],
+                adapters: ['table'],
+            },
+        },
+    };
+
+    const list= mount(<List router={router} />);
+    list.instance().locale = {
+        get: function() {
+            return 'de';
+        },
+    };
+    const toolbarConfig = toolbarFunction.call(list.instance());
+
+    toolbarConfig.items[0].onClick();
+
+    expect(router.navigate).toBeCalledWith('addRoute', {locale: 'de'});
+});
+
+test('Should navigate without locale when pencil button is clicked', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                addRoute: 'addRoute',
+                resourceKey: 'test',
+                adapters: ['table'],
+            },
+        },
+    };
+
+    const list= mount(<List router={router} />);
+    const toolbarConfig = toolbarFunction.call(list.instance());
+
+    toolbarConfig.items[0].onClick();
+
+    expect(router.navigate).toBeCalledWith('addRoute', {});
+});
+
 test('Should navigate when pencil button is clicked and locales have been passed in options', () => {
     const List = require('../List').default;
     const router = {
@@ -232,11 +313,6 @@ test('Should navigate without locale when pencil button is clicked', () => {
     };
 
     const list = mount(<List router={router} />);
-    list.instance().datagridStore.locale = {
-        get: function() {
-            return 'de';
-        },
-    };
     list.find('ButtonCell button').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
 });

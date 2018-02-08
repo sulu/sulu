@@ -56,11 +56,34 @@ class AdminPool
             $routes = array_merge($routes, $admin->getRoutes());
         });
 
+        $this->validateRoutes($routes);
+
         array_walk($routes, function(&$route, $index) {
             $route = clone $route;
         });
 
         return $this->mergeRouteOptions($routes);
+    }
+
+    private function validateRoutes(array $routes): void
+    {
+        $routeNames = array_map(function(Route $route) {
+            return $route->getName();
+        }, $routes);
+
+        foreach ($routes as $route) {
+            $routeParent = $route->getParent();
+            if ($routeParent && !in_array($routeParent, $routeNames)) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'The route "%s" was defined as the parent of "%s", but the route "%s" does not exist',
+                        $routeParent,
+                        $route->getName(),
+                        $routeParent
+                    )
+                );
+            }
+        }
     }
 
     private function mergeRouteOptions(array $routes, string $parent = null)
