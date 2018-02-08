@@ -108,6 +108,26 @@
             <tag name="sulu_media.image.transformation" alias="paste" />
         </service>
 
+        <service id="sulu_media.image.transformation.blur" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\BlurTransformation">
+            <tag name="sulu_media.image.transformation" alias="blur" />
+        </service>
+
+        <service id="sulu_media.image.transformation.gamma" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\GammaTransformation">
+            <tag name="sulu_media.image.transformation" alias="gamma" />
+        </service>
+
+        <service id="sulu_media.image.transformation.grayscale" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\GrayscaleTransformation">
+            <tag name="sulu_media.image.transformation" alias="grayscale" />
+        </service>
+
+        <service id="sulu_media.image.transformation.negative" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\NegativeTransformation">
+            <tag name="sulu_media.image.transformation" alias="negative" />
+        </service>
+
+        <service id="sulu_media.image.transformation.sharpen" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\SharpenTransformation">
+            <tag name="sulu_media.image.transformation" alias="sharpen" />
+        </service>
+
         <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
             <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.collection_repository" />
