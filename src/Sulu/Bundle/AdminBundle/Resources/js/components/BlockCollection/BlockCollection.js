@@ -56,7 +56,7 @@ export default class BlockCollection extends React.Component<Props> {
         const {onChange, value} = this.props;
 
         if (value) {
-            this.expandedBlocks.push(false);
+            this.expandedBlocks.push(true);
 
             const newBlock = this.defaultType ? {type: this.defaultType} : {};
             onChange([...value, newBlock]);
