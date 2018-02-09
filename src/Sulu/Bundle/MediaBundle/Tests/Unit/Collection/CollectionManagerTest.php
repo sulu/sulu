@@ -104,7 +104,7 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
             Argument::any(),
             Argument::any()
         )->willReturn(new \ArrayIterator([]));
-        $this->collectionRepository->count(
+        $this->collectionRepository->countCollections(
             0,
             ['search' => 'test', 'locale' => 'de', 'systemCollections' => true],
             null
@@ -123,7 +123,7 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
             Argument::any(),
             Argument::any()
         )->willReturn(new \ArrayIterator([]));
-        $this->collectionRepository->count(
+        $this->collectionRepository->countCollections(
             0,
             ['search' => 'test', 'locale' => 'de', 'systemCollections' => false],
             null

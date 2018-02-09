@@ -2,7 +2,17 @@
 
 ## dev-develop
 
-## Dependency updates
+### Deprecations
+
+Removed following Classes:
+
+* Sulu\Bundle\CoreBundle\Build\CacheBuilder
+
+Renamed following Methods:
+
+* Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface::count => Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface::countCollections
+
+### Dependency updates
 
 Follow upgrade path of following libraries:
 
@@ -75,7 +85,6 @@ in your twig template.
 {% set content = sulu_content_load('not-existing-guid') %}
 {# content is now null #}
 ```
->>>>>>> master
 
 ## 1.6.7
 
