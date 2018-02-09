@@ -47,6 +47,19 @@ test('The component should return the correct displayValue', () => {
     expect(displayValue).toBe('Option 2');
 });
 
+test('The component should return the correct displayValue and do not care if string or number', () => {
+    const select = shallow(
+        <SingleSelect value={2}>
+            <Option value="1">Option 1</Option>
+            <Option value="2">Option 2</Option>
+            <Divider />
+            <Option value="3">Option 3</Option>
+        </SingleSelect>
+    );
+    const displayValue = select.find(Select).props().displayValue;
+    expect(displayValue).toBe('Option 2');
+});
+
 test('The component should select the correct option', () => {
     const select = shallow(
         <SingleSelect value="option-2">
