@@ -454,11 +454,11 @@ exports[`The ColumnList component should render 1`] = `
                 </span>
                 <Icon
                   className="children"
-                  name="su-arrow-rightu"
+                  name="su-arrow-right"
                 >
                   <span
-                    aria-label="su-arrow-rightu"
-                    className="children su-arrow-rightu"
+                    aria-label="su-arrow-right"
+                    className="children su-arrow-right"
                   />
                 </Icon>
               </div>
@@ -974,11 +974,11 @@ exports[`The ColumnList component should render 1`] = `
                 </span>
                 <Icon
                   className="children"
-                  name="su-arrow-rightu"
+                  name="su-arrow-right"
                 >
                   <span
-                    aria-label="su-arrow-rightu"
-                    className="children su-arrow-rightu"
+                    aria-label="su-arrow-right"
+                    className="children su-arrow-right"
                   />
                 </Icon>
               </div>
