@@ -45,7 +45,7 @@ class DoctrineDescriptor
      */
     public function getSelect()
     {
-        return sprintf('%s.%s', $this->entityName, $this->fieldName);
+        return sprintf('%s.%s', str_replace(['\\', ':'], '_', $this->entityName), $this->fieldName);
     }
 
     /**

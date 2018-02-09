@@ -74,6 +74,15 @@ class FormatControllerTest extends SuluTestCase
         $fileVersion->setFile($file);
         $file->addFileVersion($fileVersion);
 
+        $this->em->persist($collection);
+        $this->em->persist($iconsType);
+        $this->em->persist($this->media);
+        $this->em->persist($imageType);
+        $this->em->persist($file);
+        $this->em->persist($fileVersion);
+
+        $this->em->flush();
+
         $this->formatOptions[] = new FormatOptions();
         $this->formatOptions[0]->setFormatKey('big-squared');
         $this->formatOptions[0]->setCropX(30);
@@ -92,15 +101,8 @@ class FormatControllerTest extends SuluTestCase
         $this->formatOptions[1]->setFileVersion($fileVersion);
         $fileVersion->addFormatOptions($this->formatOptions[1]);
 
-        $this->em->persist($collection);
-        $this->em->persist($iconsType);
-        $this->em->persist($this->media);
-        $this->em->persist($imageType);
-        $this->em->persist($file);
-        $this->em->persist($fileVersion);
-        $this->em->persist($this->formatOptions[0]);
         $this->em->persist($this->formatOptions[1]);
-
+        $this->em->persist($this->formatOptions[0]);
         $this->em->flush();
     }
 

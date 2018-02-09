@@ -200,6 +200,16 @@ class MediaRepositoryTest extends SuluTestCase
 
         $file->addFileVersion($fileVersion);
 
+        $media->addFile($file);
+        $media->setCollection($this->collections[$collection]);
+
+        $this->em->persist($media);
+        $this->em->persist($file);
+        $this->em->persist($fileVersionMeta);
+        $this->em->persist($fileVersion);
+
+        $this->em->flush();
+
         $formatOptions = new FormatOptions();
         $formatOptions->setFormatKey('my-format');
         $formatOptions->setFileVersion($fileVersion);
@@ -209,14 +219,7 @@ class MediaRepositoryTest extends SuluTestCase
         $formatOptions->setCropY(40);
         $fileVersion->addFormatOptions($formatOptions);
 
-        $media->addFile($file);
-        $media->setCollection($this->collections[$collection]);
-
-        $this->em->persist($media);
-        $this->em->persist($file);
-        $this->em->persist($fileVersionMeta);
         $this->em->persist($formatOptions);
-        $this->em->persist($fileVersion);
 
         $this->em->flush();
 

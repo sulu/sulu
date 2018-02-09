@@ -86,7 +86,7 @@ class DoctrineJoinDescriptor
      */
     public function getJoin()
     {
-        return $this->join;
+        return str_replace(['\\', ':'], '_', $this->join);
     }
 
     /**
@@ -94,7 +94,7 @@ class DoctrineJoinDescriptor
      */
     public function getJoinCondition()
     {
-        return $this->joinCondition;
+        return str_replace(['\\', ':'], '_', $this->joinCondition);
     }
 
     /**

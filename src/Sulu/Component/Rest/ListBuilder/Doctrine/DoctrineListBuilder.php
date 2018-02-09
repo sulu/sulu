@@ -159,7 +159,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // now select all data
         $this->queryBuilder = $this->em->createQueryBuilder()
-            ->from($this->entityName, $this->entityName);
+            ->from($this->entityName, str_replace(['\\', ':'], '_', $this->entityName));
         $this->assignJoins($this->queryBuilder);
 
         // Add all select fields
@@ -339,7 +339,7 @@ class DoctrineListBuilder extends AbstractListBuilder
                 $this->user,
                 $this->permissions[$this->permission],
                 $this->entityName,
-                $this->entityName
+                str_replace(['\\', ':'], '_', $this->entityName)
             );
         }
 
@@ -427,7 +427,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function createQueryBuilder($joins = null)
     {
         $this->queryBuilder = $this->em->createQueryBuilder()
-            ->from($this->entityName, $this->entityName);
+            ->from($this->entityName, str_replace(['\\', ':'], '_', $this->entityName));
 
         $this->assignJoins($this->queryBuilder, $joins);
 
@@ -470,7 +470,7 @@ class DoctrineListBuilder extends AbstractListBuilder
                 case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
                     $queryBuilder->leftJoin(
                         $join->getJoin(),
-                        $entity,
+                        str_replace(['\\', ':'], '_', $entity),
                         $join->getJoinConditionMethod(),
                         $join->getJoinCondition()
                     );
@@ -478,7 +478,7 @@ class DoctrineListBuilder extends AbstractListBuilder
                 case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
                     $queryBuilder->innerJoin(
                         $join->getJoin(),
-                        $entity,
+                        str_replace(['\\', ':'], '_', $entity),
                         $join->getJoinConditionMethod(),
                         $join->getJoinCondition()
                     );

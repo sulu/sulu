@@ -80,7 +80,7 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
      */
     public function getSelect()
     {
-        return sprintf('IDENTITY(%s.%s)', $this->entityName, $this->getFieldName());
+        return sprintf('IDENTITY(%s.%s)', str_replace(['\\', ':'], '_', $this->entityName), $this->getFieldName());
     }
 
     /**

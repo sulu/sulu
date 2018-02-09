@@ -80,7 +80,7 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
      */
     public function getSelect()
     {
-        return $this->entityName . '.' . $this->getFieldName();
+        return str_replace(['\\', ':'], '_', $this->entityName) . '.' . $this->getFieldName();
     }
 
     /**
