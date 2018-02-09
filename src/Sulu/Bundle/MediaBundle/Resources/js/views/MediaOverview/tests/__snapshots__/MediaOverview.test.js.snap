@@ -23,7 +23,7 @@ exports[`Render a simple MediaOverview 1`] = `
             </button>
             <span
               aria-label="su-right"
-              class="arrow su su-right"
+              class="arrow su-right"
             />
           </li>
           <li>
@@ -36,19 +36,19 @@ exports[`Render a simple MediaOverview 1`] = `
         <div>
           <span
             aria-label="su-plus"
-            class="su su-plus clickable"
+            class="su-plus clickable"
             role="button"
             tabindex="0"
           />
           <span
             aria-label="su-pen"
-            class="su su-pen clickable"
+            class="su-pen clickable"
             role="button"
             tabindex="0"
           />
           <span
             aria-label="su-trash"
-            class="su su-trash clickable"
+            class="su-trash clickable"
             role="button"
             tabindex="0"
           />
@@ -138,7 +138,7 @@ exports[`Render a simple MediaOverview 1`] = `
             >
               <span
                 aria-label="su-arrow-filled-left"
-                class="su su-arrow-filled-left"
+                class="su-arrow-filled-left"
               />
             </button>
             <button
@@ -146,7 +146,7 @@ exports[`Render a simple MediaOverview 1`] = `
             >
               <span
                 aria-label="su-arrow-filled-right"
-                class="su su-arrow-filled-right"
+                class="su-arrow-filled-right"
               />
             </button>
           </nav>
@@ -289,7 +289,7 @@ exports[`Render a simple MediaOverview 1`] = `
                   >
                     <span
                       aria-label="su-pen"
-                      class="mediaIcon su su-pen"
+                      class="mediaIcon su-pen"
                     />
                   </div>
                 </div>
@@ -408,7 +408,7 @@ exports[`Render a simple MediaOverview 1`] = `
                   >
                     <span
                       aria-label="su-pen"
-                      class="mediaIcon su su-pen"
+                      class="mediaIcon su-pen"
                     />
                   </div>
                 </div>

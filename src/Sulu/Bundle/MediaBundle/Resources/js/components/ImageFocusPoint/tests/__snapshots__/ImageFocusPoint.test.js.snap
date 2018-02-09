@@ -28,7 +28,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -41,7 +41,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -54,7 +54,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -67,7 +67,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -85,7 +85,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -125,7 +125,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -138,7 +138,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -160,7 +160,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -208,7 +208,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -221,7 +221,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -238,7 +238,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -271,7 +271,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -284,7 +284,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -297,7 +297,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -310,7 +310,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -328,7 +328,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -341,7 +341,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -354,7 +354,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -367,7 +367,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -395,7 +395,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -408,7 +408,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -430,7 +430,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -447,7 +447,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -460,7 +460,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -496,7 +496,7 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -509,7 +509,7 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -526,7 +526,7 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -548,7 +548,7 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -561,7 +561,7 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -589,7 +589,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -607,7 +607,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -620,7 +620,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -633,7 +633,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -646,7 +646,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -691,7 +691,7 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -708,7 +708,7 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -721,7 +721,7 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -769,7 +769,7 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -791,7 +791,7 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>
@@ -804,7 +804,7 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
       >
         <span
           aria-label="su-arrow-up"
-          class="su su-arrow-up"
+          class="su-arrow-up"
         />
       </div>
     </button>

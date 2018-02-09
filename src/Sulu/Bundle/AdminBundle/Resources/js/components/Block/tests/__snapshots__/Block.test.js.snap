@@ -18,7 +18,7 @@ exports[`Passing a onRemove callback should render the remove icon 1`] = `
       >
         <span
           aria-label="su-trash"
-          class="su su-trash clickable"
+          class="su-trash clickable"
           role="button"
           tabindex="0"
         />
@@ -131,7 +131,7 @@ exports[`Render an expanded block with a multiple types 1`] = `
           </div>
           <span
             aria-label="su-arrow-down"
-            class="toggle su su-arrow-down"
+            class="toggle su-arrow-down"
           />
         </button>
       </div>

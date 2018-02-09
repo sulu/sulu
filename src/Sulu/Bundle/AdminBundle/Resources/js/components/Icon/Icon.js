@@ -25,11 +25,14 @@ export default class Icon extends React.PureComponent<Props> {
 
     render() {
         const {className, name, onClick} = this.props;
+        let fontClass = '';
 
         switch (name.substr(0, 3)) {
             case 'su-':
+                fontClass = null;
                 break;
             case 'fa-':
+                fontClass = 'fa';
                 break;
             default:
                 throw new Error('Invalid icon given: ' + name);
@@ -37,7 +40,7 @@ export default class Icon extends React.PureComponent<Props> {
 
         const iconClass = classNames(
             className,
-            name.substr(0, 2),
+            fontClass ? fontClass : undefined,
             name,
             {
                 [iconStyles.clickable]: onClick,

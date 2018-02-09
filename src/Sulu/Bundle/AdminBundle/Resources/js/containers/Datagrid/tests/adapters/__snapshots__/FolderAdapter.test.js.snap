@@ -83,7 +83,7 @@ exports[`Render a basic Folder list with data 1`] = `
     >
       <span
         aria-label="su-arrow-filled-left"
-        class="su su-arrow-filled-left"
+        class="su-arrow-filled-left"
       />
     </button>
     <button
@@ -91,7 +91,7 @@ exports[`Render a basic Folder list with data 1`] = `
     >
       <span
         aria-label="su-arrow-filled-right"
-        class="su su-arrow-filled-right"
+        class="su-arrow-filled-right"
       />
     </button>
   </nav>

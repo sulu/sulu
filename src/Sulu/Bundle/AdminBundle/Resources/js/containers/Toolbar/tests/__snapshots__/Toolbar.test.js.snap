@@ -40,7 +40,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
             </span>
             <span
               aria-label="su-arrow-down"
-              class="dropdownIcon su su-arrow-down"
+              class="dropdownIcon su-arrow-down"
             />
           </button>
         </div>

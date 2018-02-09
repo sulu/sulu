@@ -134,7 +134,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
         >
           <span
             aria-label="su-arrow-filled-left"
-            class="su su-arrow-filled-left"
+            class="su-arrow-filled-left"
           />
         </button>
         <button
@@ -142,7 +142,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
         >
           <span
             aria-label="su-arrow-filled-right"
-            class="su su-arrow-filled-right"
+            class="su-arrow-filled-right"
           />
         </button>
       </nav>
@@ -175,7 +175,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
                 <span>
                   <span
                     aria-label="su-pen"
-                    class="su su-pen"
+                    class="su-pen"
                   />
                 </span>
               </th>
@@ -223,7 +223,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
                 <button>
                   <span
                     aria-label="su-pen"
-                    class="su su-pen"
+                    class="su-pen"
                   />
                 </button>
               </td>
@@ -264,7 +264,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
                 <button>
                   <span
                     aria-label="su-pen"
-                    class="su su-pen"
+                    class="su-pen"
                   />
                 </button>
               </td>
@@ -315,7 +315,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
         >
           <span
             aria-label="su-arrow-filled-left"
-            class="su su-arrow-filled-left"
+            class="su-arrow-filled-left"
           />
         </button>
         <button
@@ -323,7 +323,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
         >
           <span
             aria-label="su-arrow-filled-right"
-            class="su su-arrow-filled-right"
+            class="su-arrow-filled-right"
           />
         </button>
       </nav>
@@ -469,7 +469,7 @@ exports[`Should render the list with a title 1`] = `
         >
           <span
             aria-label="su-arrow-filled-left"
-            class="su su-arrow-filled-left"
+            class="su-arrow-filled-left"
           />
         </button>
         <button
@@ -477,7 +477,7 @@ exports[`Should render the list with a title 1`] = `
         >
           <span
             aria-label="su-arrow-filled-right"
-            class="su su-arrow-filled-right"
+            class="su-arrow-filled-right"
           />
         </button>
       </nav>

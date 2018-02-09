@@ -9,7 +9,7 @@ exports[`Render collapsed sortable block 1`] = `
   >
     <span
       aria-label="su-shift"
-      class="sortableHandle su su-shift"
+      class="sortableHandle su-shift"
     />
   </div>
   <div
@@ -29,7 +29,7 @@ exports[`Render expanded sortable block 1`] = `
   >
     <span
       aria-label="su-shift"
-      class="sortableHandle su su-shift"
+      class="sortableHandle su-shift"
     />
   </div>
   <div
@@ -43,7 +43,7 @@ exports[`Render expanded sortable block 1`] = `
       >
         <span
           aria-label="su-trash"
-          class="su su-trash clickable"
+          class="su-trash clickable"
           role="button"
           tabindex="0"
         />
@@ -71,7 +71,7 @@ exports[`Render expanded sortable block with types 1`] = `
   >
     <span
       aria-label="su-shift"
-      class="sortableHandle su su-shift"
+      class="sortableHandle su-shift"
     />
   </div>
   <div
@@ -113,7 +113,7 @@ exports[`Render expanded sortable block with types 1`] = `
           </div>
           <span
             aria-label="su-arrow-down"
-            class="toggle su su-arrow-down"
+            class="toggle su-arrow-down"
           />
         </button>
       </div>
@@ -122,7 +122,7 @@ exports[`Render expanded sortable block with types 1`] = `
       >
         <span
           aria-label="su-trash"
-          class="su su-trash clickable"
+          class="su-trash clickable"
           role="button"
           tabindex="0"
         />

@@ -56,7 +56,7 @@ exports[`Render data 1`] = `
             </span>
             <span
               aria-label="su-arrow-rightu"
-              class="children su su-arrow-rightu"
+              class="children su-arrow-rightu"
             />
           </div>
           <div
@@ -143,7 +143,7 @@ exports[`Render data 1`] = `
             </span>
             <span
               aria-label="su-arrow-rightu"
-              class="children su su-arrow-rightu"
+              class="children su-arrow-rightu"
             />
           </div>
         </div>
@@ -219,7 +219,7 @@ exports[`Render data with loading column 1`] = `
             </span>
             <span
               aria-label="su-arrow-rightu"
-              class="children su su-arrow-rightu"
+              class="children su-arrow-rightu"
             />
           </div>
           <div

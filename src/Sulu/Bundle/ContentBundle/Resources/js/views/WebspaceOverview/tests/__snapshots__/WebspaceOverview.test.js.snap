@@ -15,14 +15,14 @@ exports[`Render WebspaceOverview 1`] = `
       >
         <span
           aria-label="su-webspace"
-          class="buttonIcon su su-webspace"
+          class="buttonIcon su-webspace"
         />
         <span
           class="buttonValue"
         />
         <span
           aria-label="su-arrow-down"
-          class="buttonIcon su su-arrow-down"
+          class="buttonIcon su-arrow-down"
         />
       </button>
     </div>

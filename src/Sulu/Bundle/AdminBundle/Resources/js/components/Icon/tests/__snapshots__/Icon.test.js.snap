@@ -3,21 +3,21 @@
 exports[`Icon should render 1`] = `
 <span
   aria-label="su-save"
-  class="su su-save"
+  class="su-save"
 />
 `;
 
 exports[`Icon should render with class names 1`] = `
 <span
   aria-label="su-pen"
-  class="test su su-pen"
+  class="test su-pen"
 />
 `;
 
 exports[`Icon should render with onClick handler, role and tabindex 1`] = `
 <span
   aria-label="su-save"
-  class="test su su-save clickable"
+  class="test su-save clickable"
   role="button"
   tabindex="0"
 />

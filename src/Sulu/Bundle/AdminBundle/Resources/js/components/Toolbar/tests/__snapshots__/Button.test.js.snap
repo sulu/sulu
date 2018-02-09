@@ -41,7 +41,7 @@ exports[`Render button with dropdown indicator 1`] = `
 >
   <span
     aria-label="su-arrow-down"
-    class="dropdownIcon su su-arrow-down"
+    class="dropdownIcon su-arrow-down"
   />
 </button>
 `;

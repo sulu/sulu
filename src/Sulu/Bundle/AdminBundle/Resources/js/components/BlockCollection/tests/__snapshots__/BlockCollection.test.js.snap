@@ -15,7 +15,7 @@ exports[`Should render a filled block list 1`] = `
       >
         <span
           aria-label="su-shift"
-          class="sortableHandle su su-shift"
+          class="sortableHandle su-shift"
         />
       </div>
       <div
@@ -32,7 +32,7 @@ exports[`Should render a filled block list 1`] = `
       >
         <span
           aria-label="su-shift"
-          class="sortableHandle su su-shift"
+          class="sortableHandle su-shift"
         />
       </div>
       <div
@@ -50,7 +50,7 @@ exports[`Should render a filled block list 1`] = `
     >
       <span
         aria-label="su-plus"
-        class="addButtonIcon su su-plus"
+        class="addButtonIcon su-plus"
       />
       Add block
     </span>
@@ -73,7 +73,7 @@ exports[`Should render an empty block list 1`] = `
     >
       <span
         aria-label="su-plus"
-        class="addButtonIcon su su-plus"
+        class="addButtonIcon su-plus"
       />
       Add block
     </span>

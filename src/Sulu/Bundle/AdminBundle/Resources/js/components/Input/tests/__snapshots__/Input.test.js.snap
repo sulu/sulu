@@ -42,7 +42,7 @@ exports[`Input should render with icon 1`] = `
   >
     <span
       aria-label="su-pen"
-      class="icon su su-pen"
+      class="icon su-pen"
     />
   </div>
   <input

@@ -12,7 +12,7 @@ exports[`AutoComplete should render 1`] = `
     >
       <span
         aria-label="su-search"
-        class="icon su su-search"
+        class="icon su-search"
       />
     </div>
     <input
@@ -35,7 +35,7 @@ exports[`Render the AutoComplete with open suggestions list 1`] = `
     >
       <span
         aria-label="su-search"
-        class="icon su su-search"
+        class="icon su-search"
       />
     </div>
     <input

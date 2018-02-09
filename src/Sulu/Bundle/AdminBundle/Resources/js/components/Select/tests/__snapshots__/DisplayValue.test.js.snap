@@ -31,7 +31,7 @@ exports[`The component should render 1`] = `
   </div>
   <span
     aria-label="su-arrow-down"
-    class="toggle su su-arrow-down"
+    class="toggle su-arrow-down"
   />
 </button>
 `;
@@ -42,7 +42,7 @@ exports[`The component should render with an icon 1`] = `
 >
   <span
     aria-label="su-plus"
-    class="frontIcon su su-plus"
+    class="frontIcon su-plus"
   />
   <div
     aria-label="My value"
@@ -71,7 +71,7 @@ exports[`The component should render with an icon 1`] = `
   </div>
   <span
     aria-label="su-arrow-down"
-    class="toggle su su-arrow-down"
+    class="toggle su-arrow-down"
   />
 </button>
 `;

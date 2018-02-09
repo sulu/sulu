@@ -458,7 +458,7 @@ exports[`The ColumnList component should render 1`] = `
                 >
                   <span
                     aria-label="su-arrow-rightu"
-                    className="children su su-arrow-rightu"
+                    className="children su-arrow-rightu"
                   />
                 </Icon>
               </div>
@@ -978,7 +978,7 @@ exports[`The ColumnList component should render 1`] = `
                 >
                   <span
                     aria-label="su-arrow-rightu"
-                    className="children su su-arrow-rightu"
+                    className="children su-arrow-rightu"
                   />
                 </Icon>
               </div>

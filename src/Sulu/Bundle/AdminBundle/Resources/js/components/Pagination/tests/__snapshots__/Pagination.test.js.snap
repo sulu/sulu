@@ -21,7 +21,7 @@ exports[`Render disabled next link if current page is last page 1`] = `
     >
       <span
         aria-label="su-arrow-filled-left"
-        class="su su-arrow-filled-left"
+        class="su-arrow-filled-left"
       />
     </button>
     <button
@@ -30,7 +30,7 @@ exports[`Render disabled next link if current page is last page 1`] = `
     >
       <span
         aria-label="su-arrow-filled-right"
-        class="su su-arrow-filled-right"
+        class="su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -59,7 +59,7 @@ exports[`Render disabled previous link current page is first page 1`] = `
     >
       <span
         aria-label="su-arrow-filled-left"
-        class="su su-arrow-filled-left"
+        class="su-arrow-filled-left"
       />
     </button>
     <button
@@ -67,7 +67,7 @@ exports[`Render disabled previous link current page is first page 1`] = `
     >
       <span
         aria-label="su-arrow-filled-right"
-        class="su su-arrow-filled-right"
+        class="su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -121,7 +121,7 @@ exports[`Render pagination with loader 1`] = `
     >
       <span
         aria-label="su-arrow-filled-left"
-        class="su su-arrow-filled-left"
+        class="su-arrow-filled-left"
       />
     </button>
     <button
@@ -129,7 +129,7 @@ exports[`Render pagination with loader 1`] = `
     >
       <span
         aria-label="su-arrow-filled-right"
-        class="su su-arrow-filled-right"
+        class="su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -157,7 +157,7 @@ exports[`Render pagination with page numbers 1`] = `
     >
       <span
         aria-label="su-arrow-filled-left"
-        class="su su-arrow-filled-left"
+        class="su-arrow-filled-left"
       />
     </button>
     <button
@@ -165,7 +165,7 @@ exports[`Render pagination with page numbers 1`] = `
     >
       <span
         aria-label="su-arrow-filled-right"
-        class="su su-arrow-filled-right"
+        class="su-arrow-filled-right"
       />
     </button>
   </nav>

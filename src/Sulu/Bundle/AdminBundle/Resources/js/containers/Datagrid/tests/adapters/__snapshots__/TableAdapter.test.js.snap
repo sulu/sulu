@@ -18,7 +18,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <span>
               <span
                 aria-label="su-pen"
-                class="su su-pen"
+                class="su-pen"
               />
             </span>
           </th>
@@ -59,7 +59,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <button>
               <span
                 aria-label="su-pen"
-                class="su su-pen"
+                class="su-pen"
               />
             </button>
           </td>
@@ -95,7 +95,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <button>
               <span
                 aria-label="su-pen"
-                class="su su-pen"
+                class="su-pen"
               />
             </button>
           </td>
@@ -142,7 +142,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
     >
       <span
         aria-label="su-arrow-filled-left"
-        class="su su-arrow-filled-left"
+        class="su-arrow-filled-left"
       />
     </button>
     <button
@@ -150,7 +150,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
     >
       <span
         aria-label="su-arrow-filled-right"
-        class="su su-arrow-filled-right"
+        class="su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -285,7 +285,7 @@ exports[`Render data with schema 1`] = `
     >
       <span
         aria-label="su-arrow-filled-left"
-        class="su su-arrow-filled-left"
+        class="su-arrow-filled-left"
       />
     </button>
     <button
@@ -293,7 +293,7 @@ exports[`Render data with schema 1`] = `
     >
       <span
         aria-label="su-arrow-filled-right"
-        class="su su-arrow-filled-right"
+        class="su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -367,7 +367,7 @@ exports[`Render data with schema and selections 1`] = `
                 <span>
                   <span
                     aria-label="su-checkmark"
-                    class="su su-checkmark"
+                    class="su-checkmark"
                   />
                 </span>
               </span>
@@ -435,7 +435,7 @@ exports[`Render data with schema and selections 1`] = `
                 <span>
                   <span
                     aria-label="su-checkmark"
-                    class="su su-checkmark"
+                    class="su-checkmark"
                   />
                 </span>
               </span>
@@ -472,7 +472,7 @@ exports[`Render data with schema and selections 1`] = `
     >
       <span
         aria-label="su-arrow-filled-left"
-        class="su su-arrow-filled-left"
+        class="su-arrow-filled-left"
       />
     </button>
     <button
@@ -480,7 +480,7 @@ exports[`Render data with schema and selections 1`] = `
     >
       <span
         aria-label="su-arrow-filled-right"
-        class="su su-arrow-filled-right"
+        class="su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -615,7 +615,7 @@ exports[`Render data with schema in different order 1`] = `
     >
       <span
         aria-label="su-arrow-filled-left"
-        class="su su-arrow-filled-left"
+        class="su-arrow-filled-left"
       />
     </button>
     <button
@@ -623,7 +623,7 @@ exports[`Render data with schema in different order 1`] = `
     >
       <span
         aria-label="su-arrow-filled-right"
-        class="su su-arrow-filled-right"
+        class="su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -742,7 +742,7 @@ exports[`Render data with schema not containing all fields 1`] = `
     >
       <span
         aria-label="su-arrow-filled-left"
-        class="su su-arrow-filled-left"
+        class="su-arrow-filled-left"
       />
     </button>
     <button
@@ -750,7 +750,7 @@ exports[`Render data with schema not containing all fields 1`] = `
     >
       <span
         aria-label="su-arrow-filled-right"
-        class="su su-arrow-filled-right"
+        class="su-arrow-filled-right"
       />
     </button>
   </nav>
