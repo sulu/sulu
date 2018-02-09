@@ -270,7 +270,7 @@ test('Should send a request to add a new collection via the overlay', () => {
         />
     );
 
-    mediaCollection.find('CollectionSection Icon[name="plus"]').simulate('click');
+    mediaCollection.find('CollectionSection Icon[name="su-plus"]').simulate('click');
     expect(collectionStore.resourceStore.clone).not.toBeCalled();
     expect(field.mock.calls[0][0].value).toEqual(undefined);
 
@@ -326,7 +326,7 @@ test('Should send a request to update the collection via the overlay', () => {
         />
     );
 
-    mediaCollection.find('CollectionSection Icon[name="pencil"]').simulate('click');
+    mediaCollection.find('CollectionSection Icon[name="su-pen"]').simulate('click');
 
     const resourceStoreInstances = ResourceStore.mock.instances;
     const newResourceStore = resourceStoreInstances[resourceStoreInstances.length - 1];
@@ -377,7 +377,7 @@ test('Confirming the delete dialog should delete the item', () => {
         />
     );
 
-    mediaCollection.find('Icon[name="trash"]').simulate('click');
+    mediaCollection.find('Icon[name="su-trash"]').simulate('click');
 
     expect(mediaCollection.find('Dialog').prop('open')).toEqual(true);
     expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
@@ -431,7 +431,7 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
         />
     );
 
-    mediaCollection.find('Icon[name="trash"]').simulate('click');
+    mediaCollection.find('Icon[name="su-trash"]').simulate('click');
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
     document.querySelector('button.primary').click();

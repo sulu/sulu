@@ -16,7 +16,7 @@ exports[`Render a table with buttons 1`] = `
         >
           <span>
             <span
-              aria-label="pencil"
+              aria-label="fa-pencil"
               class="fa fa-pencil"
             />
           </span>
@@ -53,7 +53,7 @@ exports[`Render a table with buttons 1`] = `
         >
           <button>
             <span
-              aria-label="pencil"
+              aria-label="fa-pencil"
               class="fa fa-pencil"
             />
           </button>
@@ -119,8 +119,8 @@ exports[`Render an empty table 1`] = `
     class="tablePlaceholderArea"
   >
     <span
-      aria-label="battery-quarter"
-      class="tablePlaceholderIcon fa fa-battery-quarter"
+      aria-label="su-battery-low"
+      class="tablePlaceholderIcon su su-battery-low"
     />
     <div
       class="tablePlaceholderText"

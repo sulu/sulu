@@ -17,8 +17,8 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           >
             <span>
               <span
-                aria-label="pencil"
-                class="fa fa-pencil"
+                aria-label="su-pen"
+                class="su su-pen"
               />
             </span>
           </th>
@@ -58,8 +58,8 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           >
             <button>
               <span
-                aria-label="pencil"
-                class="fa fa-pencil"
+                aria-label="su-pen"
+                class="su su-pen"
               />
             </button>
           </td>
@@ -94,8 +94,8 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           >
             <button>
               <span
-                aria-label="pencil"
-                class="fa fa-pencil"
+                aria-label="su-pen"
+                class="su su-pen"
               />
             </button>
           </td>
@@ -141,16 +141,16 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
       disabled=""
     >
       <span
-        aria-label="angle-left"
-        class="fa fa-angle-left"
+        aria-label="su-arrow-filled-left"
+        class="su su-arrow-filled-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="angle-right"
-        class="fa fa-angle-right"
+        aria-label="su-arrow-filled-right"
+        class="su su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -284,16 +284,16 @@ exports[`Render data with schema 1`] = `
       class="previous"
     >
       <span
-        aria-label="angle-left"
-        class="fa fa-angle-left"
+        aria-label="su-arrow-filled-left"
+        class="su su-arrow-filled-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="angle-right"
-        class="fa fa-angle-right"
+        aria-label="su-arrow-filled-right"
+        class="su su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -366,8 +366,8 @@ exports[`Render data with schema and selections 1`] = `
                 />
                 <span>
                   <span
-                    aria-label="check"
-                    class="fa fa-check"
+                    aria-label="su-checkmark"
+                    class="su su-checkmark"
                   />
                 </span>
               </span>
@@ -434,8 +434,8 @@ exports[`Render data with schema and selections 1`] = `
                 />
                 <span>
                   <span
-                    aria-label="check"
-                    class="fa fa-check"
+                    aria-label="su-checkmark"
+                    class="su su-checkmark"
                   />
                 </span>
               </span>
@@ -471,16 +471,16 @@ exports[`Render data with schema and selections 1`] = `
       disabled=""
     >
       <span
-        aria-label="angle-left"
-        class="fa fa-angle-left"
+        aria-label="su-arrow-filled-left"
+        class="su su-arrow-filled-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="angle-right"
-        class="fa fa-angle-right"
+        aria-label="su-arrow-filled-right"
+        class="su su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -614,16 +614,16 @@ exports[`Render data with schema in different order 1`] = `
       class="previous"
     >
       <span
-        aria-label="angle-left"
-        class="fa fa-angle-left"
+        aria-label="su-arrow-filled-left"
+        class="su su-arrow-filled-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="angle-right"
-        class="fa fa-angle-right"
+        aria-label="su-arrow-filled-right"
+        class="su su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -741,16 +741,16 @@ exports[`Render data with schema not containing all fields 1`] = `
       disabled=""
     >
       <span
-        aria-label="angle-left"
-        class="fa fa-angle-left"
+        aria-label="su-arrow-filled-left"
+        class="su su-arrow-filled-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="angle-right"
-        class="fa fa-angle-right"
+        aria-label="su-arrow-filled-right"
+        class="su su-arrow-filled-right"
       />
     </button>
   </nav>

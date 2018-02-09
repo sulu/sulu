@@ -53,7 +53,7 @@ const handleAddItem = () => {
         label="Select an item"
         onItemRemove={handleRemove}
         leftButton={{
-            icon: 'plus',
+            icon: 'fa-plus',
             onClick: handleAddItem,
         }}
         onItemsSorted={handleItemsSorted}

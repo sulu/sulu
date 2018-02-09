@@ -1,5 +1,6 @@
 // @flow
 import 'font-awesome/css/font-awesome.min.css';
+import './icomoon.css';
 import React from 'react';
 import classNames from 'classnames';
 import iconStyles from './icon.scss';
@@ -24,10 +25,20 @@ export default class Icon extends React.PureComponent<Props> {
 
     render() {
         const {className, name, onClick} = this.props;
+
+        switch (name.substr(0, 3)) {
+            case 'su-':
+                break;
+            case 'fa-':
+                break;
+            default:
+                throw new Error('Invalid icon given: ' + name);
+        }
+
         const iconClass = classNames(
             className,
-            'fa',
-            'fa-' + name,
+            name.substr(0, 2),
+            name,
             {
                 [iconStyles.clickable]: onClick,
             }

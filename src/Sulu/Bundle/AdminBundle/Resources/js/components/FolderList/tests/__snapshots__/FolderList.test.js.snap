@@ -14,7 +14,7 @@ exports[`Render a FolderList with Folder components inside 1`] = `
         class="iconContainer"
       >
         <span
-          aria-label="folder-o"
+          aria-label="fa-folder-o"
           class="fa fa-folder-o"
         />
       </div>
@@ -44,7 +44,7 @@ exports[`Render a FolderList with Folder components inside 1`] = `
         class="iconContainer"
       >
         <span
-          aria-label="folder-o"
+          aria-label="fa-folder-o"
           class="fa fa-folder-o"
         />
       </div>
@@ -74,7 +74,7 @@ exports[`Render a FolderList with Folder components inside 1`] = `
         class="iconContainer"
       >
         <span
-          aria-label="folder-o"
+          aria-label="fa-folder-o"
           class="fa fa-folder-o"
         />
       </div>

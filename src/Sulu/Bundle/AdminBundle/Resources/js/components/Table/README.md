@@ -84,7 +84,7 @@ const Cell = Table.Cell;
 const HeaderCell = Table.HeaderCell;
 
 const buttons = [{
-    icon: 'heart',
+    icon: 'fa-heart',
     onClick: (rowId) => {
         state.rows[rowId] = state.rows[rowId].map((cell) => 'You are awesome 😘');
         const newRows = state.rows;
@@ -127,7 +127,7 @@ initialState = {
 };
 
 const buttons = [{
-    icon: 'heart',
+    icon: 'fa-heart',
     onClick: (rowId) => {
         state.rows[rowId] = state.rows[rowId].map((cell) => 'You are awesome 😘');
         const newRows = state.rows;
@@ -403,7 +403,7 @@ const handleAllSelectionChange = (allSelected) => {
 };
 
 const buttons = [{
-    icon: 'pencil',
+    icon: 'fa-pencil',
     onClick: (rowId) => {
         alert(`You selected the row with the id ${rowId}. Imagine you could edit this row now... Mind = blown!`);
     },

@@ -126,13 +126,13 @@ export default withToolbar(List, function() {
             {
                 type: 'button',
                 value: translate('sulu_admin.add'),
-                icon: 'plus-circle',
+                icon: 'su-plus',
                 onClick: () => {},
             },
             {
                 type: 'button',
                 value: translate('sulu_admin.delete'),
-                icon: 'trash-o',
+                icon: 'su-trash',
                 disabled: this.datagridStore.selections.length === 0,
                 loading: this.deleting,
                 onClick: action(() => {

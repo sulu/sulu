@@ -6,13 +6,13 @@ const Item = ColumnList.Item;
 
 const buttons = [
     {
-        icon: 'heart',
+        icon: 'fa-heart',
         onClick: (id) => {
             alert('Clicked heart button for item with id: ' + id);
         }, 
     },
     {
-        icon: 'pencil',
+        icon: 'fa-pencil',
         onClick: (id) => {
             alert('Clicked pencil button for item with id: ' + id);
         }, 
@@ -25,14 +25,14 @@ const handleItemClick = (id) => {
 
 const toolbarItems = [
     {
-        icon: 'plus',
+        icon: 'fa-plus',
         type: 'button',
         onClick: (index) => {
             alert('Clicked plus button for item with index: ' + index);
         },
     },
     {
-        icon: 'search',
+        icon: 'fa-search',
         type: 'button',
         skin: 'secondary',
         onClick: (index) => {
@@ -40,7 +40,7 @@ const toolbarItems = [
         },
     },
     {
-        icon: 'gear',
+        icon: 'fa-gear',
         type: 'dropdown',
         options: [
             {

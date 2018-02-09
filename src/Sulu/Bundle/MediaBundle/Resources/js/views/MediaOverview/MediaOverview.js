@@ -218,13 +218,13 @@ export default withToolbar(MediaOverview, function() {
             {
                 type: 'button',
                 value: translate('sulu_admin.add'),
-                icon: 'plus-circle',
+                icon: 'su-save',
                 onClick: () => {},
             },
             {
                 type: 'button',
                 value: translate('sulu_admin.delete'),
-                icon: 'trash-o',
+                icon: 'su-trash',
                 onClick: () => {},
             },
         ],

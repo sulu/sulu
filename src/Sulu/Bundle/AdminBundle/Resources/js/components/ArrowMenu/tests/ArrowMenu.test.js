@@ -25,7 +25,7 @@ test('Render ArrowMenu closed', () => {
                 <input type="text" />
             </ArrowMenu.Section>
             <ArrowMenu.SingleItemSection
-                icon="dot-circle-o"
+                icon="su-webspace"
                 title="Webspaces"
                 value={value1}
                 onChange={handleChangeSection1}
@@ -35,7 +35,7 @@ test('Render ArrowMenu closed', () => {
                 <ArrowMenu.Item value="sulu_doc">Sulu Doc</ArrowMenu.Item>
             </ArrowMenu.SingleItemSection>
             <ArrowMenu.SingleItemSection
-                icon="check"
+                icon="su-checkmark"
                 title="Columns"
                 value={value2}
                 onChange={handleChangeSection2}
@@ -65,7 +65,7 @@ test('Render ArrowMenu open', () => {
                 <input type="text" />
             </ArrowMenu.Section>
             <ArrowMenu.SingleItemSection
-                icon="dot-circle-o"
+                icon="su-webspace"
                 title="Webspaces"
                 value={value1}
                 onChange={handleChangeSection1}
@@ -74,7 +74,12 @@ test('Render ArrowMenu open', () => {
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_doc">Sulu Doc</ArrowMenu.Item>
             </ArrowMenu.SingleItemSection>
-            <ArrowMenu.SingleItemSection icon="check" title="Columns" value={value2} onChange={handleChangeSection2}>
+            <ArrowMenu.SingleItemSection
+                icon="su-checkmark"
+                title="Columns"
+                value={value2}
+                onChange={handleChangeSection2}
+            >
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
             </ArrowMenu.SingleItemSection>
@@ -100,7 +105,7 @@ test('Events should be called correctly', () => {
                 <input type="text" />
             </ArrowMenu.Section>
             <ArrowMenu.SingleItemSection
-                icon="dot-circle-o"
+                icon="su-webspace"
                 title="Webspaces"
                 value={value1}
                 onChange={handleChangeSection1}

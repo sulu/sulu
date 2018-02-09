@@ -4,7 +4,7 @@ import React from 'react';
 import Icon from '../Icon';
 import optionStyles from './option.scss';
 
-const ICON_CHECKMARK = 'check';
+const ICON_CHECKMARK = 'su-checkmark';
 
 type Props = {
     label: string | number,

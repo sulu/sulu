@@ -8,7 +8,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
   <div class=\\"container\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
-        <header>Select media<span class=\\"icon fa fa-times clickable\\" aria-label=\\"times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <header>Select media<span class=\\"icon fa fa-times clickable\\" aria-label=\\"fa-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <div class=\\"overlay\\">
             <div class=\\"dropzone\\" aria-disabled=\\"false\\">
@@ -19,7 +19,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                       <button disabled=\\"\\" class=\\"item\\">All Media</button>
                     </li>
                   </ul>
-                  <div><span class=\\"fa fa-plus clickable\\" aria-label=\\"plus\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"fa fa-pencil clickable\\" aria-label=\\"pencil\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"fa fa-trash clickable\\" aria-label=\\"trash\\"
+                  <div><span class=\\"su su-plus clickable\\" aria-label=\\"su-plus\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su su-pen clickable\\" aria-label=\\"su-pen\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su su-trash clickable\\" aria-label=\\"su-trash\\"
                       role=\\"button\\" tabindex=\\"0\\"></span></div>
                 </div>
                 <div class=\\"datagrid\\">
@@ -27,7 +27,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                     <ul class=\\"folderList\\">
                       <li>
                         <div class=\\"folder\\" role=\\"button\\" tabindex=\\"0\\">
-                          <div class=\\"iconContainer\\"><span class=\\"fa fa-folder-o\\" aria-label=\\"folder-o\\"></span></div>
+                          <div class=\\"iconContainer\\"><span class=\\"fa fa-folder-o\\" aria-label=\\"fa-folder-o\\"></span></div>
                           <div class=\\"description\\">
                             <h5 class=\\"title\\">Title 1</h5>
                             <div class=\\"info\\">1 Object</div>
@@ -36,7 +36,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                       </li>
                       <li>
                         <div class=\\"folder\\" role=\\"button\\" tabindex=\\"0\\">
-                          <div class=\\"iconContainer\\"><span class=\\"fa fa-folder-o\\" aria-label=\\"folder-o\\"></span></div>
+                          <div class=\\"iconContainer\\"><span class=\\"fa fa-folder-o\\" aria-label=\\"fa-folder-o\\"></span></div>
                           <div class=\\"description\\">
                             <h5 class=\\"title\\">Title 2</h5>
                             <div class=\\"info\\">0 Objects</div>
@@ -46,8 +46,8 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                     </ul>
                     <nav class=\\"pagination\\">
                       <div class=\\"loader\\"></div><span class=\\"display\\">Page: 2 of 3</span>
-                      <button class=\\"previous\\"><span class=\\"fa fa-angle-left\\" aria-label=\\"angle-left\\"></span></button>
-                      <button class=\\"next\\"><span class=\\"fa fa-angle-right\\" aria-label=\\"angle-right\\"></span></button>
+                      <button class=\\"previous\\"><span class=\\"su su-arrow-filled-left\\" aria-label=\\"su-arrow-filled-left\\"></span></button>
+                      <button class=\\"next\\"><span class=\\"su su-arrow-filled-right\\" aria-label=\\"su-arrow-filled-right\\"></span></button>
                     </nav>
                   </section>
                 </div>
@@ -85,12 +85,12 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                               </div>
                             </div>
                             <div>
-                              <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"cloud-download\\"></span></button>
+                              <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"fa-cloud-download\\"></span></button>
                             </div>
                           </div>
                           <div class=\\"media\\">
                             <img alt=\\"Title 1\\" src=\\"http://lorempixel.com/240/100\\">
-                            <div class=\\"cover\\"><span class=\\"mediaIcon fa fa-check\\" aria-label=\\"check\\"></span></div>
+                            <div class=\\"cover\\"><span class=\\"mediaIcon su su-checkmark\\" aria-label=\\"su-checkmark\\"></span></div>
                           </div>
                         </div>
                       </li>
@@ -120,12 +120,12 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                               </div>
                             </div>
                             <div>
-                              <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"cloud-download\\"></span></button>
+                              <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"fa-cloud-download\\"></span></button>
                             </div>
                           </div>
                           <div class=\\"media\\">
                             <img alt=\\"Title 2\\" src=\\"http://lorempixel.com/240/100\\">
-                            <div class=\\"cover\\"><span class=\\"mediaIcon fa fa-check\\" aria-label=\\"check\\"></span></div>
+                            <div class=\\"cover\\"><span class=\\"mediaIcon su su-checkmark\\" aria-label=\\"su-checkmark\\"></span></div>
                           </div>
                         </div>
                       </li>
@@ -161,8 +161,8 @@ exports[`Render a MediaSelection field 1`] = `
         type="button"
       >
         <span
-          aria-label="plus"
-          class="fa fa-plus"
+          aria-label="su-plus"
+          class="su su-plus"
         />
       </button>
       <div
@@ -184,7 +184,7 @@ exports[`Render a MediaSelection field 1`] = `
             class="dragHandle"
           >
             <span
-              aria-label="ellipsis-v"
+              aria-label="fa-ellipsis-v"
               class="fa fa-ellipsis-v"
             />
             <span
@@ -215,8 +215,8 @@ exports[`Render a MediaSelection field 1`] = `
             type="button"
           >
             <span
-              aria-label="trash"
-              class="fa fa-trash"
+              aria-label="su-trash"
+              class="su su-trash"
             />
           </button>
         </div>
@@ -231,7 +231,7 @@ exports[`Render a MediaSelection field 1`] = `
             class="dragHandle"
           >
             <span
-              aria-label="ellipsis-v"
+              aria-label="fa-ellipsis-v"
               class="fa fa-ellipsis-v"
             />
             <span
@@ -262,8 +262,8 @@ exports[`Render a MediaSelection field 1`] = `
             type="button"
           >
             <span
-              aria-label="trash"
-              class="fa fa-trash"
+              aria-label="su-trash"
+              class="su su-trash"
             />
           </button>
         </div>
@@ -278,7 +278,7 @@ exports[`Render a MediaSelection field 1`] = `
             class="dragHandle"
           >
             <span
-              aria-label="ellipsis-v"
+              aria-label="fa-ellipsis-v"
               class="fa fa-ellipsis-v"
             />
             <span
@@ -309,8 +309,8 @@ exports[`Render a MediaSelection field 1`] = `
             type="button"
           >
             <span
-              aria-label="trash"
-              class="fa fa-trash"
+              aria-label="su-trash"
+              class="su su-trash"
             />
           </button>
         </div>

@@ -11,8 +11,8 @@ exports[`Render a Breadcrumb 1`] = `
       Crumb 1
     </button>
     <span
-      aria-label="chevron-right"
-      class="arrow fa fa-chevron-right"
+      aria-label="su-right"
+      class="arrow su su-right"
     />
   </li>
   <li>
@@ -22,8 +22,8 @@ exports[`Render a Breadcrumb 1`] = `
       Crumb 2
     </button>
     <span
-      aria-label="chevron-right"
-      class="arrow fa fa-chevron-right"
+      aria-label="su-right"
+      class="arrow su su-right"
     />
   </li>
   <li>

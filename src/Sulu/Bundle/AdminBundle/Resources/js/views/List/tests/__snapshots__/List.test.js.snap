@@ -133,16 +133,16 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
           class="previous"
         >
           <span
-            aria-label="angle-left"
-            class="fa fa-angle-left"
+            aria-label="su-arrow-filled-left"
+            class="su su-arrow-filled-left"
           />
         </button>
         <button
           class="next"
         >
           <span
-            aria-label="angle-right"
-            class="fa fa-angle-right"
+            aria-label="su-arrow-filled-right"
+            class="su su-arrow-filled-right"
           />
         </button>
       </nav>
@@ -174,8 +174,8 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
               >
                 <span>
                   <span
-                    aria-label="pencil"
-                    class="fa fa-pencil"
+                    aria-label="su-pen"
+                    class="su su-pen"
                   />
                 </span>
               </th>
@@ -222,8 +222,8 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
               >
                 <button>
                   <span
-                    aria-label="pencil"
-                    class="fa fa-pencil"
+                    aria-label="su-pen"
+                    class="su su-pen"
                   />
                 </button>
               </td>
@@ -263,8 +263,8 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
               >
                 <button>
                   <span
-                    aria-label="pencil"
-                    class="fa fa-pencil"
+                    aria-label="su-pen"
+                    class="su su-pen"
                   />
                 </button>
               </td>
@@ -314,16 +314,16 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
           class="previous"
         >
           <span
-            aria-label="angle-left"
-            class="fa fa-angle-left"
+            aria-label="su-arrow-filled-left"
+            class="su su-arrow-filled-left"
           />
         </button>
         <button
           class="next"
         >
           <span
-            aria-label="angle-right"
-            class="fa fa-angle-right"
+            aria-label="su-arrow-filled-right"
+            class="su su-arrow-filled-right"
           />
         </button>
       </nav>
@@ -468,16 +468,16 @@ exports[`Should render the list with a title 1`] = `
           class="previous"
         >
           <span
-            aria-label="angle-left"
-            class="fa fa-angle-left"
+            aria-label="su-arrow-filled-left"
+            class="su su-arrow-filled-left"
           />
         </button>
         <button
           class="next"
         >
           <span
-            aria-label="angle-right"
-            class="fa fa-angle-right"
+            aria-label="su-arrow-filled-right"
+            class="su su-arrow-filled-right"
           />
         </button>
       </nav>

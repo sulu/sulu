@@ -40,11 +40,11 @@ test('Clicking the left and right button inside the header should call the right
     const leftClickHandler = jest.fn();
     const rightClickHandler = jest.fn();
     const leftButtonConfig = {
-        icon: 'plus',
+        icon: 'fa-plus',
         onClick: leftClickHandler,
     };
     const rightButtonConfig = {
-        icon: 'gear',
+        icon: 'fa-gear',
         onClick: rightClickHandler,
     };
     const multiItemSelection = mount(

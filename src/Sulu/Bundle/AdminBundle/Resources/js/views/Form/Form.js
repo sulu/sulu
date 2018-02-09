@@ -89,7 +89,7 @@ export default withToolbar(Form, function() {
         {
             type: 'button',
             value: translate('sulu_admin.save'),
-            icon: 'floppy-o',
+            icon: 'su-save',
             disabled: !this.props.resourceStore.dirty,
             loading: this.props.resourceStore.saving,
             onClick: () => {
@@ -101,7 +101,7 @@ export default withToolbar(Form, function() {
     if (this.formStore.typesLoading || Object.keys(formTypes).length > 0) {
         items.push({
             type: 'select',
-            icon: 'paint-brush',
+            icon: 'fa-paint-brush',
             onChange: (value) => {
                 this.formStore.changeType(value);
             },

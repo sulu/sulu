@@ -5,7 +5,7 @@ import {Icon} from 'sulu-admin-bundle/components';
 import type {ArrowDirection, Point} from './types';
 import imageFocusPointCellStyles from './imageFocusPointCell.scss';
 
-const ARROW_UP_ICON = 'arrow-up';
+const ARROW_UP_ICON = 'su-arrow-up';
 
 type Props = {
     size: number,

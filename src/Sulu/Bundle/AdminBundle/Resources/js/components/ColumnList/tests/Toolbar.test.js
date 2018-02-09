@@ -12,17 +12,17 @@ test('The Toolbar component should render with active', () => {
 
     const toolbarItems = [
         {
-            icon: 'plus',
+            icon: 'fa-plus',
             type: 'button',
             onClick: () => {},
         },
         {
-            icon: 'search',
+            icon: 'fa-search',
             type: 'button',
             onClick: () => {},
         },
         {
-            icon: 'gear',
+            icon: 'fa-gear',
             type: 'dropdown',
             options: [
                 {

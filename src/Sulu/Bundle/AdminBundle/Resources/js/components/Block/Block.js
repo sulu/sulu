@@ -79,8 +79,8 @@ export default class Block extends React.Component<Props> {
                                 </SingleSelect>
                             }
                             <div className={blockStyles.icons}>
-                                {onRemove && <Icon name="trash-o" onClick={this.handleRemove} />}
-                                <Icon name="times" onClick={this.handleCollapse} />
+                                {onRemove && <Icon name="su-trash" onClick={this.handleRemove} />}
+                                <Icon name="fa-times" onClick={this.handleCollapse} />
                             </div>
                         </header>
                     }

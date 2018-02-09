@@ -11,11 +11,11 @@ test('The ColumnList component should render', () => {
 
     const buttonsConfig = [
         {
-            icon: 'heart',
+            icon: 'fa-heart',
             onClick: () => {},
         },
         {
-            icon: 'pencil',
+            icon: 'fa-pencil',
             onClick: () => {},
         },
     ];
@@ -23,19 +23,19 @@ test('The ColumnList component should render', () => {
     const toolbarItems = [
         {
             index: 0,
-            icon: 'plus',
+            icon: 'fa-plus',
             type: 'button',
             onClick: () => {},
         },
         {
             index: 0,
-            icon: 'search',
+            icon: 'fa-search',
             type: 'button',
             onClick: () => {},
         },
         {
             index: 0,
-            icon: 'gear',
+            icon: 'fa-gear',
             type: 'dropdown',
             options: [
                 {
@@ -80,11 +80,11 @@ test('The ColumnList component should trigger the item callback', () => {
 
     const buttonsConfig = [
         {
-            icon: 'heart',
+            icon: 'fa-heart',
             onClick: () => {},
         },
         {
-            icon: 'pencil',
+            icon: 'fa-pencil',
             onClick: () => {},
         },
     ];
@@ -92,19 +92,19 @@ test('The ColumnList component should trigger the item callback', () => {
     const toolbarItems = [
         {
             index: 0,
-            icon: 'plus',
+            icon: 'fa-plus',
             type: 'button',
             onClick: () => {},
         },
         {
             index: 0,
-            icon: 'search',
+            icon: 'fa-search',
             type: 'button',
             onClick: () => {},
         },
         {
             index: 0,
-            icon: 'gear',
+            icon: 'fa-gear',
             type: 'dropdown',
             options: [
                 {
@@ -160,11 +160,11 @@ test('The ColumnList component should handle which toolbar is active on mouse en
 
     const buttonsConfig = [
         {
-            icon: 'heart',
+            icon: 'fa-heart',
             onClick: () => {},
         },
         {
-            icon: 'pencil',
+            icon: 'fa-pencil',
             onClick: () => {},
         },
     ];
@@ -172,19 +172,19 @@ test('The ColumnList component should handle which toolbar is active on mouse en
     const toolbarItems = [
         {
             index: 0,
-            icon: 'plus',
+            icon: 'fa-plus',
             type: 'button',
             onClick: () => {},
         },
         {
             index: 0,
-            icon: 'search',
+            icon: 'fa-search',
             type: 'button',
             onClick: () => {},
         },
         {
             index: 0,
-            icon: 'gear',
+            icon: 'fa-gear',
             type: 'dropdown',
             options: [
                 {

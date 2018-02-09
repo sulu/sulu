@@ -11,7 +11,7 @@ test('Render ItemSection', () => {
         <SingleItemSection
             title="Select your house"
             value={undefined}
-            icon="house"
+            icon="fa-home"
             onChange={handleChange}
         >
             <Item value="villa">Villa</Item>
@@ -28,7 +28,7 @@ test('Render ItemSection with value', () => {
         <SingleItemSection
             title="Select your house"
             value="flat"
-            icon="house"
+            icon="fa-home"
             onChange={handleChange}
         >
             <Item value="villa">Villa</Item>
@@ -45,7 +45,7 @@ test('Handle Item click', () => {
         <SingleItemSection
             title="Select your house"
             value={undefined}
-            icon="house"
+            icon="fa-home"
             onChange={handleChange}
         >
             <Item value="villa">Villa</Item>

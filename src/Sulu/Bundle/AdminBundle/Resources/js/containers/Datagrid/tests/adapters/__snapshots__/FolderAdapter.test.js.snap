@@ -15,7 +15,7 @@ exports[`Render a basic Folder list with data 1`] = `
           class="iconContainer"
         >
           <span
-            aria-label="folder-o"
+            aria-label="fa-folder-o"
             class="fa fa-folder-o"
           />
         </div>
@@ -45,7 +45,7 @@ exports[`Render a basic Folder list with data 1`] = `
           class="iconContainer"
         >
           <span
-            aria-label="folder-o"
+            aria-label="fa-folder-o"
             class="fa fa-folder-o"
           />
         </div>
@@ -82,16 +82,16 @@ exports[`Render a basic Folder list with data 1`] = `
       disabled=""
     >
       <span
-        aria-label="angle-left"
-        class="fa fa-angle-left"
+        aria-label="su-arrow-filled-left"
+        class="su su-arrow-filled-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="angle-right"
-        class="fa fa-angle-right"
+        aria-label="su-arrow-filled-right"
+        class="su su-arrow-filled-right"
       />
     </button>
   </nav>

@@ -48,7 +48,7 @@ export default class TableAdapter extends AbstractAdapter {
 
         if (onItemClick) {
             buttons.push({
-                icon: 'pencil',
+                icon: 'su-pen',
                 onClick: (rowId) => onItemClick(rowId),
             });
         }

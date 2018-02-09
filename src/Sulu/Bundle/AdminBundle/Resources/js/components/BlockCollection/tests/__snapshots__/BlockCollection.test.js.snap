@@ -14,8 +14,8 @@ exports[`Should render a filled block list 1`] = `
         class="handle"
       >
         <span
-          aria-label="ellipsis-v"
-          class="sortableHandle fa fa-ellipsis-v"
+          aria-label="su-shift"
+          class="sortableHandle su su-shift"
         />
       </div>
       <div
@@ -31,8 +31,8 @@ exports[`Should render a filled block list 1`] = `
         class="handle"
       >
         <span
-          aria-label="ellipsis-v"
-          class="sortableHandle fa fa-ellipsis-v"
+          aria-label="su-shift"
+          class="sortableHandle su su-shift"
         />
       </div>
       <div
@@ -49,8 +49,8 @@ exports[`Should render a filled block list 1`] = `
       class="text"
     >
       <span
-        aria-label="plus"
-        class="addButtonIcon fa fa-plus"
+        aria-label="su-plus"
+        class="addButtonIcon su su-plus"
       />
       Add block
     </span>
@@ -72,8 +72,8 @@ exports[`Should render an empty block list 1`] = `
       class="text"
     >
       <span
-        aria-label="plus"
-        class="addButtonIcon fa fa-plus"
+        aria-label="su-plus"
+        class="addButtonIcon su su-plus"
       />
       Add block
     </span>

@@ -20,8 +20,8 @@ exports[`Render disabled next link if current page is last page 1`] = `
       class="previous"
     >
       <span
-        aria-label="angle-left"
-        class="fa fa-angle-left"
+        aria-label="su-arrow-filled-left"
+        class="su su-arrow-filled-left"
       />
     </button>
     <button
@@ -29,8 +29,8 @@ exports[`Render disabled next link if current page is last page 1`] = `
       disabled=""
     >
       <span
-        aria-label="angle-right"
-        class="fa fa-angle-right"
+        aria-label="su-arrow-filled-right"
+        class="su su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -58,16 +58,16 @@ exports[`Render disabled previous link current page is first page 1`] = `
       disabled=""
     >
       <span
-        aria-label="angle-left"
-        class="fa fa-angle-left"
+        aria-label="su-arrow-filled-left"
+        class="su su-arrow-filled-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="angle-right"
-        class="fa fa-angle-right"
+        aria-label="su-arrow-filled-right"
+        class="su su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -120,16 +120,16 @@ exports[`Render pagination with loader 1`] = `
       class="previous"
     >
       <span
-        aria-label="angle-left"
-        class="fa fa-angle-left"
+        aria-label="su-arrow-filled-left"
+        class="su su-arrow-filled-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="angle-right"
-        class="fa fa-angle-right"
+        aria-label="su-arrow-filled-right"
+        class="su su-arrow-filled-right"
       />
     </button>
   </nav>
@@ -156,16 +156,16 @@ exports[`Render pagination with page numbers 1`] = `
       class="previous"
     >
       <span
-        aria-label="angle-left"
-        class="fa fa-angle-left"
+        aria-label="su-arrow-filled-left"
+        class="su su-arrow-filled-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="angle-right"
-        class="fa fa-angle-right"
+        aria-label="su-arrow-filled-right"
+        class="su su-arrow-filled-right"
       />
     </button>
   </nav>

@@ -5,11 +5,11 @@ exports[`The ColumnList component should render 1`] = `
   buttons={
     Array [
       Object {
-        "icon": "heart",
+        "icon": "fa-heart",
         "onClick": [Function],
       },
       Object {
-        "icon": "pencil",
+        "icon": "fa-pencil",
         "onClick": [Function],
       },
     ]
@@ -18,19 +18,19 @@ exports[`The ColumnList component should render 1`] = `
   toolbarItems={
     Array [
       Object {
-        "icon": "plus",
+        "icon": "fa-plus",
         "index": 0,
         "onClick": [Function],
         "type": "button",
       },
       Object {
-        "icon": "search",
+        "icon": "fa-search",
         "index": 0,
         "onClick": [Function],
         "type": "button",
       },
       Object {
-        "icon": "gear",
+        "icon": "fa-gear",
         "index": 0,
         "options": Array [
           Object {
@@ -58,11 +58,11 @@ exports[`The ColumnList component should render 1`] = `
         buttons={
           Array [
             Object {
-              "icon": "heart",
+              "icon": "fa-heart",
               "onClick": [Function],
             },
             Object {
-              "icon": "pencil",
+              "icon": "fa-pencil",
               "onClick": [Function],
             },
           ]
@@ -75,19 +75,19 @@ exports[`The ColumnList component should render 1`] = `
         toolbarItems={
           Array [
             Object {
-              "icon": "plus",
+              "icon": "fa-plus",
               "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
-              "icon": "search",
+              "icon": "fa-search",
               "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
-              "icon": "gear",
+              "icon": "fa-gear",
               "index": 0,
               "options": Array [
                 Object {
@@ -114,19 +114,19 @@ exports[`The ColumnList component should render 1`] = `
             toolbarItems={
               Array [
                 Object {
-                  "icon": "plus",
+                  "icon": "fa-plus",
                   "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
-                  "icon": "search",
+                  "icon": "fa-search",
                   "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
-                  "icon": "gear",
+                  "icon": "fa-gear",
                   "index": 0,
                   "options": Array [
                     Object {
@@ -148,7 +148,7 @@ exports[`The ColumnList component should render 1`] = `
             >
               <ToolbarButton
                 columnIndex={0}
-                icon="plus"
+                icon="fa-plus"
                 index={0}
                 key="0"
                 onClick={[Function]}
@@ -160,10 +160,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="plus"
+                    name="fa-plus"
                   >
                     <span
-                      aria-label="plus"
+                      aria-label="fa-plus"
                       className="fa fa-plus"
                     />
                   </Icon>
@@ -171,7 +171,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarButton
                 columnIndex={0}
-                icon="search"
+                icon="fa-search"
                 index={0}
                 key="1"
                 onClick={[Function]}
@@ -183,10 +183,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="search"
+                    name="fa-search"
                   >
                     <span
-                      aria-label="search"
+                      aria-label="fa-search"
                       className="fa fa-search"
                     />
                   </Icon>
@@ -194,7 +194,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarDropdown
                 columnIndex={0}
-                icon="gear"
+                icon="fa-gear"
                 index={0}
                 key="2"
                 options={
@@ -217,10 +217,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="gear"
+                    name="fa-gear"
                   >
                     <span
-                      aria-label="gear"
+                      aria-label="fa-gear"
                       className="fa fa-gear"
                     />
                   </Icon>
@@ -242,11 +242,11 @@ exports[`The ColumnList component should render 1`] = `
               buttons={
                 Array [
                   Object {
-                    "icon": "heart",
+                    "icon": "fa-heart",
                     "onClick": [Function],
                   },
                   Object {
-                    "icon": "pencil",
+                    "icon": "fa-pencil",
                     "onClick": [Function],
                   },
                 ]
@@ -267,7 +267,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "heart",
+                        "icon": "fa-heart",
                         "onClick": [Function],
                       }
                     }
@@ -276,11 +276,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="heart"
+                      name="fa-heart"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="heart"
+                        aria-label="fa-heart"
                         className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
@@ -291,7 +291,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "pencil",
+                        "icon": "fa-pencil",
                         "onClick": [Function],
                       }
                     }
@@ -300,11 +300,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="pencil"
+                      name="fa-pencil"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="pencil"
+                        aria-label="fa-pencil"
                         className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
@@ -351,11 +351,11 @@ exports[`The ColumnList component should render 1`] = `
               buttons={
                 Array [
                   Object {
-                    "icon": "heart",
+                    "icon": "fa-heart",
                     "onClick": [Function],
                   },
                   Object {
-                    "icon": "pencil",
+                    "icon": "fa-pencil",
                     "onClick": [Function],
                   },
                 ]
@@ -375,7 +375,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "heart",
+                        "icon": "fa-heart",
                         "onClick": [Function],
                       }
                     }
@@ -384,11 +384,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="heart"
+                      name="fa-heart"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="heart"
+                        aria-label="fa-heart"
                         className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
@@ -399,7 +399,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "pencil",
+                        "icon": "fa-pencil",
                         "onClick": [Function],
                       }
                     }
@@ -408,11 +408,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="pencil"
+                      name="fa-pencil"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="pencil"
+                        aria-label="fa-pencil"
                         className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
@@ -454,11 +454,11 @@ exports[`The ColumnList component should render 1`] = `
                 </span>
                 <Icon
                   className="children"
-                  name="chevron-right"
+                  name="su-arrow-rightu"
                 >
                   <span
-                    aria-label="chevron-right"
-                    className="children fa fa-chevron-right"
+                    aria-label="su-arrow-rightu"
+                    className="children su su-arrow-rightu"
                   />
                 </Icon>
               </div>
@@ -468,11 +468,11 @@ exports[`The ColumnList component should render 1`] = `
               buttons={
                 Array [
                   Object {
-                    "icon": "heart",
+                    "icon": "fa-heart",
                     "onClick": [Function],
                   },
                   Object {
-                    "icon": "pencil",
+                    "icon": "fa-pencil",
                     "onClick": [Function],
                   },
                 ]
@@ -492,7 +492,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "heart",
+                        "icon": "fa-heart",
                         "onClick": [Function],
                       }
                     }
@@ -501,11 +501,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="heart"
+                      name="fa-heart"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="heart"
+                        aria-label="fa-heart"
                         className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
@@ -516,7 +516,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "pencil",
+                        "icon": "fa-pencil",
                         "onClick": [Function],
                       }
                     }
@@ -525,11 +525,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="pencil"
+                      name="fa-pencil"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="pencil"
+                        aria-label="fa-pencil"
                         className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
@@ -579,11 +579,11 @@ exports[`The ColumnList component should render 1`] = `
         buttons={
           Array [
             Object {
-              "icon": "heart",
+              "icon": "fa-heart",
               "onClick": [Function],
             },
             Object {
-              "icon": "pencil",
+              "icon": "fa-pencil",
               "onClick": [Function],
             },
           ]
@@ -596,19 +596,19 @@ exports[`The ColumnList component should render 1`] = `
         toolbarItems={
           Array [
             Object {
-              "icon": "plus",
+              "icon": "fa-plus",
               "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
-              "icon": "search",
+              "icon": "fa-search",
               "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
-              "icon": "gear",
+              "icon": "fa-gear",
               "index": 0,
               "options": Array [
                 Object {
@@ -635,19 +635,19 @@ exports[`The ColumnList component should render 1`] = `
             toolbarItems={
               Array [
                 Object {
-                  "icon": "plus",
+                  "icon": "fa-plus",
                   "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
-                  "icon": "search",
+                  "icon": "fa-search",
                   "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
-                  "icon": "gear",
+                  "icon": "fa-gear",
                   "index": 0,
                   "options": Array [
                     Object {
@@ -669,7 +669,7 @@ exports[`The ColumnList component should render 1`] = `
             >
               <ToolbarButton
                 columnIndex={1}
-                icon="plus"
+                icon="fa-plus"
                 index={0}
                 key="0"
                 onClick={[Function]}
@@ -681,10 +681,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="plus"
+                    name="fa-plus"
                   >
                     <span
-                      aria-label="plus"
+                      aria-label="fa-plus"
                       className="fa fa-plus"
                     />
                   </Icon>
@@ -692,7 +692,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarButton
                 columnIndex={1}
-                icon="search"
+                icon="fa-search"
                 index={0}
                 key="1"
                 onClick={[Function]}
@@ -704,10 +704,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="search"
+                    name="fa-search"
                   >
                     <span
-                      aria-label="search"
+                      aria-label="fa-search"
                       className="fa fa-search"
                     />
                   </Icon>
@@ -715,7 +715,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarDropdown
                 columnIndex={1}
-                icon="gear"
+                icon="fa-gear"
                 index={0}
                 key="2"
                 options={
@@ -738,10 +738,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="gear"
+                    name="fa-gear"
                   >
                     <span
-                      aria-label="gear"
+                      aria-label="fa-gear"
                       className="fa fa-gear"
                     />
                   </Icon>
@@ -763,11 +763,11 @@ exports[`The ColumnList component should render 1`] = `
               buttons={
                 Array [
                   Object {
-                    "icon": "heart",
+                    "icon": "fa-heart",
                     "onClick": [Function],
                   },
                   Object {
-                    "icon": "pencil",
+                    "icon": "fa-pencil",
                     "onClick": [Function],
                   },
                 ]
@@ -787,7 +787,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "heart",
+                        "icon": "fa-heart",
                         "onClick": [Function],
                       }
                     }
@@ -796,11 +796,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="heart"
+                      name="fa-heart"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="heart"
+                        aria-label="fa-heart"
                         className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
@@ -811,7 +811,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "pencil",
+                        "icon": "fa-pencil",
                         "onClick": [Function],
                       }
                     }
@@ -820,11 +820,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="pencil"
+                      name="fa-pencil"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="pencil"
+                        aria-label="fa-pencil"
                         className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
@@ -871,11 +871,11 @@ exports[`The ColumnList component should render 1`] = `
               buttons={
                 Array [
                   Object {
-                    "icon": "heart",
+                    "icon": "fa-heart",
                     "onClick": [Function],
                   },
                   Object {
-                    "icon": "pencil",
+                    "icon": "fa-pencil",
                     "onClick": [Function],
                   },
                 ]
@@ -895,7 +895,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "heart",
+                        "icon": "fa-heart",
                         "onClick": [Function],
                       }
                     }
@@ -904,11 +904,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="heart"
+                      name="fa-heart"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="heart"
+                        aria-label="fa-heart"
                         className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
@@ -919,7 +919,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "pencil",
+                        "icon": "fa-pencil",
                         "onClick": [Function],
                       }
                     }
@@ -928,11 +928,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="pencil"
+                      name="fa-pencil"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="pencil"
+                        aria-label="fa-pencil"
                         className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
@@ -974,11 +974,11 @@ exports[`The ColumnList component should render 1`] = `
                 </span>
                 <Icon
                   className="children"
-                  name="chevron-right"
+                  name="su-arrow-rightu"
                 >
                   <span
-                    aria-label="chevron-right"
-                    className="children fa fa-chevron-right"
+                    aria-label="su-arrow-rightu"
+                    className="children su su-arrow-rightu"
                   />
                 </Icon>
               </div>
@@ -991,11 +991,11 @@ exports[`The ColumnList component should render 1`] = `
         buttons={
           Array [
             Object {
-              "icon": "heart",
+              "icon": "fa-heart",
               "onClick": [Function],
             },
             Object {
-              "icon": "pencil",
+              "icon": "fa-pencil",
               "onClick": [Function],
             },
           ]
@@ -1008,19 +1008,19 @@ exports[`The ColumnList component should render 1`] = `
         toolbarItems={
           Array [
             Object {
-              "icon": "plus",
+              "icon": "fa-plus",
               "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
-              "icon": "search",
+              "icon": "fa-search",
               "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
-              "icon": "gear",
+              "icon": "fa-gear",
               "index": 0,
               "options": Array [
                 Object {
@@ -1047,19 +1047,19 @@ exports[`The ColumnList component should render 1`] = `
             toolbarItems={
               Array [
                 Object {
-                  "icon": "plus",
+                  "icon": "fa-plus",
                   "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
-                  "icon": "search",
+                  "icon": "fa-search",
                   "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
-                  "icon": "gear",
+                  "icon": "fa-gear",
                   "index": 0,
                   "options": Array [
                     Object {
@@ -1081,7 +1081,7 @@ exports[`The ColumnList component should render 1`] = `
             >
               <ToolbarButton
                 columnIndex={2}
-                icon="plus"
+                icon="fa-plus"
                 index={0}
                 key="0"
                 onClick={[Function]}
@@ -1093,10 +1093,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="plus"
+                    name="fa-plus"
                   >
                     <span
-                      aria-label="plus"
+                      aria-label="fa-plus"
                       className="fa fa-plus"
                     />
                   </Icon>
@@ -1104,7 +1104,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarButton
                 columnIndex={2}
-                icon="search"
+                icon="fa-search"
                 index={0}
                 key="1"
                 onClick={[Function]}
@@ -1116,10 +1116,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="search"
+                    name="fa-search"
                   >
                     <span
-                      aria-label="search"
+                      aria-label="fa-search"
                       className="fa fa-search"
                     />
                   </Icon>
@@ -1127,7 +1127,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarDropdown
                 columnIndex={2}
-                icon="gear"
+                icon="fa-gear"
                 index={0}
                 key="2"
                 options={
@@ -1150,10 +1150,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="gear"
+                    name="fa-gear"
                   >
                     <span
-                      aria-label="gear"
+                      aria-label="fa-gear"
                       className="fa fa-gear"
                     />
                   </Icon>
@@ -1175,11 +1175,11 @@ exports[`The ColumnList component should render 1`] = `
               buttons={
                 Array [
                   Object {
-                    "icon": "heart",
+                    "icon": "fa-heart",
                     "onClick": [Function],
                   },
                   Object {
-                    "icon": "pencil",
+                    "icon": "fa-pencil",
                     "onClick": [Function],
                   },
                 ]
@@ -1199,7 +1199,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "heart",
+                        "icon": "fa-heart",
                         "onClick": [Function],
                       }
                     }
@@ -1208,11 +1208,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="heart"
+                      name="fa-heart"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="heart"
+                        aria-label="fa-heart"
                         className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
@@ -1223,7 +1223,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "pencil",
+                        "icon": "fa-pencil",
                         "onClick": [Function],
                       }
                     }
@@ -1232,11 +1232,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="pencil"
+                      name="fa-pencil"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="pencil"
+                        aria-label="fa-pencil"
                         className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
@@ -1283,11 +1283,11 @@ exports[`The ColumnList component should render 1`] = `
               buttons={
                 Array [
                   Object {
-                    "icon": "heart",
+                    "icon": "fa-heart",
                     "onClick": [Function],
                   },
                   Object {
-                    "icon": "pencil",
+                    "icon": "fa-pencil",
                     "onClick": [Function],
                   },
                 ]
@@ -1307,7 +1307,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "heart",
+                        "icon": "fa-heart",
                         "onClick": [Function],
                       }
                     }
@@ -1316,11 +1316,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="heart"
+                      name="fa-heart"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="heart"
+                        aria-label="fa-heart"
                         className="button fa fa-heart clickable"
                         onClick={[Function]}
                         role="button"
@@ -1331,7 +1331,7 @@ exports[`The ColumnList component should render 1`] = `
                   <ItemButton
                     config={
                       Object {
-                        "icon": "pencil",
+                        "icon": "fa-pencil",
                         "onClick": [Function],
                       }
                     }
@@ -1340,11 +1340,11 @@ exports[`The ColumnList component should render 1`] = `
                   >
                     <Icon
                       className="button"
-                      name="pencil"
+                      name="fa-pencil"
                       onClick={[Function]}
                     >
                       <span
-                        aria-label="pencil"
+                        aria-label="fa-pencil"
                         className="button fa fa-pencil clickable"
                         onClick={[Function]}
                         role="button"
@@ -1394,11 +1394,11 @@ exports[`The ColumnList component should render 1`] = `
         buttons={
           Array [
             Object {
-              "icon": "heart",
+              "icon": "fa-heart",
               "onClick": [Function],
             },
             Object {
-              "icon": "pencil",
+              "icon": "fa-pencil",
               "onClick": [Function],
             },
           ]
@@ -1411,19 +1411,19 @@ exports[`The ColumnList component should render 1`] = `
         toolbarItems={
           Array [
             Object {
-              "icon": "plus",
+              "icon": "fa-plus",
               "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
-              "icon": "search",
+              "icon": "fa-search",
               "index": 0,
               "onClick": [Function],
               "type": "button",
             },
             Object {
-              "icon": "gear",
+              "icon": "fa-gear",
               "index": 0,
               "options": Array [
                 Object {
@@ -1450,19 +1450,19 @@ exports[`The ColumnList component should render 1`] = `
             toolbarItems={
               Array [
                 Object {
-                  "icon": "plus",
+                  "icon": "fa-plus",
                   "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
-                  "icon": "search",
+                  "icon": "fa-search",
                   "index": 0,
                   "onClick": [Function],
                   "type": "button",
                 },
                 Object {
-                  "icon": "gear",
+                  "icon": "fa-gear",
                   "index": 0,
                   "options": Array [
                     Object {
@@ -1484,7 +1484,7 @@ exports[`The ColumnList component should render 1`] = `
             >
               <ToolbarButton
                 columnIndex={3}
-                icon="plus"
+                icon="fa-plus"
                 index={0}
                 key="0"
                 onClick={[Function]}
@@ -1496,10 +1496,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="plus"
+                    name="fa-plus"
                   >
                     <span
-                      aria-label="plus"
+                      aria-label="fa-plus"
                       className="fa fa-plus"
                     />
                   </Icon>
@@ -1507,7 +1507,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarButton
                 columnIndex={3}
-                icon="search"
+                icon="fa-search"
                 index={0}
                 key="1"
                 onClick={[Function]}
@@ -1519,10 +1519,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="search"
+                    name="fa-search"
                   >
                     <span
-                      aria-label="search"
+                      aria-label="fa-search"
                       className="fa fa-search"
                     />
                   </Icon>
@@ -1530,7 +1530,7 @@ exports[`The ColumnList component should render 1`] = `
               </ToolbarButton>
               <ToolbarDropdown
                 columnIndex={3}
-                icon="gear"
+                icon="fa-gear"
                 index={0}
                 key="2"
                 options={
@@ -1553,10 +1553,10 @@ exports[`The ColumnList component should render 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="gear"
+                    name="fa-gear"
                   >
                     <span
-                      aria-label="gear"
+                      aria-label="fa-gear"
                       className="fa fa-gear"
                     />
                   </Icon>

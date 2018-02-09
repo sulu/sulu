@@ -5,8 +5,8 @@ import classNames from 'classnames';
 import Icon from '../Icon';
 import tableStyles from './table.scss';
 
-const ASCENDING_ICON = 'chevron-up';
-const DESCENDING_ICON = 'chevron-down';
+const ASCENDING_ICON = 'su-arrow-up';
+const DESCENDING_ICON = 'su-arrow-down';
 
 type Props = {
     children?: Node,

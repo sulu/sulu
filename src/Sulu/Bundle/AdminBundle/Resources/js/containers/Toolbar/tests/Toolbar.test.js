@@ -48,12 +48,12 @@ test('Render the items from the ToolbarStore', () => {
                 type: 'button',
                 label: 'Delete',
                 disabled: true,
-                icon: 'trash-o',
+                icon: 'fa-trash-o',
             },
             {
                 type: 'dropdown',
                 label: 'Save',
-                icon: 'floppy-more',
+                icon: 'fa-floppy-more',
                 options: [
                     {
                         label: 'Save as draft',
@@ -93,13 +93,13 @@ test('Render the items as disabled if one is loading', () => {
             {
                 type: 'button',
                 label: 'Add',
-                icon: 'add-o',
+                icon: 'fa-add-o',
                 disabled: false,
             },
             {
                 type: 'button',
                 label: 'Delete',
-                icon: 'trash-o',
+                icon: 'fa-trash-o',
                 loading: true,
             },
         ]

@@ -69,14 +69,14 @@ export default class Pagination extends React.PureComponent<PaginationProps> {
                         disabled={!this.hasPreviousPage()}
                         onClick={this.handlePreviousClick}
                     >
-                        <Icon name="angle-left" />
+                        <Icon name="su-arrow-filled-left" />
                     </button>
                     <button
                         className={paginationStyles.next}
                         disabled={!this.hasNextPage()}
                         onClick={this.handleNextClick}
                     >
-                        <Icon name="angle-right" />
+                        <Icon name="su-arrow-filled-right" />
                     </button>
                 </nav>
             </section>

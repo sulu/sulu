@@ -11,8 +11,8 @@ exports[`AutoComplete should render 1`] = `
       class="prependedContainer"
     >
       <span
-        aria-label="search"
-        class="icon fa fa-search"
+        aria-label="su-search"
+        class="icon su su-search"
       />
     </div>
     <input
@@ -34,8 +34,8 @@ exports[`Render the AutoComplete with open suggestions list 1`] = `
       class="prependedContainer"
     >
       <span
-        aria-label="search"
-        class="icon fa fa-search"
+        aria-label="su-search"
+        class="icon su su-search"
       />
     </div>
     <input
@@ -54,13 +54,13 @@ exports[`Render the AutoComplete with open suggestions list 2`] = `
   <div class=\\"container\\">
     <ul style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\" class=\\"menu\\">
       <li style=\\"min-width: 0;\\" class=\\"suggestionItem\\">
-        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-label=\\"ticket\\"></span>Suggestion 1</button>
+        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-label=\\"fa-ticket\\"></span>Suggestion 1</button>
       </li>
       <li style=\\"min-width: 0;\\" class=\\"suggestionItem\\">
-        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-label=\\"ticket\\"></span>Suggestion 2</button>
+        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-label=\\"fa-ticket\\"></span>Suggestion 2</button>
       </li>
       <li style=\\"min-width: 0;\\" class=\\"suggestionItem\\">
-        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-label=\\"ticket\\"></span>Suggestion 3</button>
+        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-label=\\"fa-ticket\\"></span>Suggestion 3</button>
       </li>
     </ul>
   </div>

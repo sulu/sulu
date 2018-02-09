@@ -37,7 +37,7 @@ test('Render button with a different size', () => {
 });
 
 test('Render button with a prepended icon', () => {
-    expect(render(<Button icon="trash-o" />)).toMatchSnapshot();
+    expect(render(<Button icon="fa-trash-o" />)).toMatchSnapshot();
 });
 
 test('Render an active button', () => {

@@ -19,7 +19,7 @@ type Props = {
     selectedVisualization: OptionSelectedVisualization,
 };
 
-const SELECTED_ICON = 'check';
+const SELECTED_ICON = 'su-checkmark';
 
 export default class Option extends React.PureComponent<Props> {
     static defaultProps = {

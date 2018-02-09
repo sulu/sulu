@@ -130,7 +130,7 @@ define(function() {
                                 matchings: fields,
                                 viewOptions: {
                                     table: {
-                                        actionIcon: 'check',
+                                        actionIcon: 'su-checkmark',
                                         hideChildrenAtBeginning: false,
                                         cropContents: false,
                                         selectItem: {

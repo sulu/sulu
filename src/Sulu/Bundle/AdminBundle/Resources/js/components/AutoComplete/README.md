@@ -78,7 +78,7 @@ const handleChange = (value) => {
             return (
                 <Suggestion
                     key={index}
-                    icon="ticket"
+                    icon="fa-ticket"
                     value={suggestion}
                 >
                     {(highlight) => (

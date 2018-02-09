@@ -5,7 +5,7 @@ exports[`Should highlight the part of the suggestion text which matches the quer
   class="suggestion"
 >
   <span
-    aria-label="ticket"
+    aria-label="fa-ticket"
     class="icon fa fa-ticket"
   />
   <div>
@@ -24,7 +24,7 @@ exports[`Suggestion should render 1`] = `
   class="suggestion"
 >
   <span
-    aria-label="ticket"
+    aria-label="fa-ticket"
     class="icon fa fa-ticket"
   />
   Suggestion 1
@@ -36,7 +36,7 @@ exports[`Suggestion should render strong-tags around found chars 1`] = `
   class="suggestion"
 >
   <span
-    aria-label="ticket"
+    aria-label="fa-ticket"
     class="icon fa fa-ticket"
   />
   <span>

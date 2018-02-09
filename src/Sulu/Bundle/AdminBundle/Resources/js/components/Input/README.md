@@ -17,5 +17,5 @@ const onChange = (newValue) => {
 	setState({value: newValue});
 };
 
-<Input icon="key" type="password" placeholder="Password" value={state.value} onChange={onChange} />
+<Input icon="fa-key" type="password" placeholder="Password" value={state.value} onChange={onChange} />
 ```
