@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.5
+    * ENHANCEMENT #3764 [Component]             Allow dynamic order of elements in webspace xml
+
 * 1.5.10 (2018-02-06)
     * HOTFIX      #3739 [ContentBundle]         Added locale to content-teaser query
     * ENHANCEMENT #3735 [DocumentManager]       Set proper default locale for document-manager
