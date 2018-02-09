@@ -15,5 +15,6 @@ export type PaginationAdapter = ComponentType<PaginationProps>;
 export type FieldTypeProps<T> = {
     onChange: (value: T) => void,
     locale?: ?IObservableValue<string>,
+    options?: Object,
     value: ?T,
 };

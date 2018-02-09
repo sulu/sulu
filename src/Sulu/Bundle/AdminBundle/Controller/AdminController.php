@@ -294,7 +294,7 @@ EOL
         "fullName": {}
     },
     "form": {
-        "title": {
+        "formOfAddress": {
             "label": "Form of address",
             "type": "single_select",
             "size": 3,
