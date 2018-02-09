@@ -57,7 +57,7 @@ export default class PopoverPositioner {
 
         // If after making sure, the popover does not overflow the top and the bottom border of the screen, the
         // popover succeeds the minimum height, no more steps have to be taken.
-        if (crop.dimensions.height >= MIN_HEIGHT) {
+        if (!alignOnVerticalAnchorEdges && crop.dimensions.height >= MIN_HEIGHT) {
             return PopoverPositioner.cropHorizontalDimensions(crop.dimensions, windowWidth, popoverWidth);
         }
 
