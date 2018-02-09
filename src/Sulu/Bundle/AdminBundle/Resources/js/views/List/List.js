@@ -126,7 +126,7 @@ export default withToolbar(List, function() {
             {
                 type: 'button',
                 value: translate('sulu_admin.add'),
-                icon: 'su-plus',
+                icon: 'su-add',
                 onClick: () => {},
             },
             {
