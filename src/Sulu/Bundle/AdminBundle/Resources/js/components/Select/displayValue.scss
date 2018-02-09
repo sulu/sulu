@@ -3,6 +3,7 @@
 $lineHeight: 24px;
 $fontSize: 12px;
 $color: $blueZodiac;
+$backgroundColor: $white;
 $borderSize: 1px;
 $borderColor: $frenchGray;
 $iconSize: 10px;
@@ -19,7 +20,7 @@ $hoverColor: $shakespeare;
     font-size: $fontSize;
     color: $blueZodiac;
     cursor: pointer;
-    background: transparent;
+    background: $backgroundColor;
 
     &:hover {
         color: $hoverColor;
