@@ -4,6 +4,7 @@
 
 $bodyBackgroundColor: $wildSand;
 $h1TextColor: $blueZodiac;
+$inputBackgroundColor: $white;
 
 *,
 *::after,
@@ -35,4 +36,8 @@ h1 {
 
 button {
     border-radius: 0;
+}
+
+input {
+    background-color: $inputBackgroundColor;
 }
