@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_core.webspace.webspace_manager.class">Sulu\Component\Webspace\Manager\WebspaceManager</parameter>
-        <parameter key="sulu_core.webspace.cache_class">%sulu.context%WebspaceCollectionCache</parameter>
+        <parameter key="sulu_core.webspace.cache_class">WebspaceCollectionCache</parameter>
         <parameter key="sulu_core.webspace.base_class">WebspaceCollection</parameter>
         <parameter key="sulu_core.webspace.document_manager.webspace_initializer.class">Sulu\Component\Webspace\Document\Initializer\WebspaceInitializer</parameter>
     </parameters>

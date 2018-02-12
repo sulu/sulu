@@ -20,11 +20,7 @@ class AppKernel extends SuluTestKernel
     {
         parent::registerContainerConfiguration($loader);
 
-        if ('admin' === $this->getContext()) {
-            $loader->load(__DIR__ . '/config/config_admin.yml');
-        } else {
-            $loader->load(__DIR__ . '/config/config_website.yml');
-        }
+        $loader->load(__DIR__ . '/config/config.yml');
     }
 
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)

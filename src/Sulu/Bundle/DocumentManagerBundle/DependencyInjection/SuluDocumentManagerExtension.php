@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\DocumentManagerBundle\DependencyInjection;
 
 use Sulu\Bundle\DocumentManagerBundle\Session\Session;
-use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -26,7 +25,6 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
     public function prepend(ContainerBuilder $container)
     {
         $preview = $container->hasParameter('sulu.preview') ? $container->getParameter('sulu.preview') : false;
-        $context = $container->getParameter('sulu.context');
 
         $configs = $container->getExtensionConfig($this->getAlias());
         $parameterBag = $container->getParameterBag();
@@ -49,10 +47,6 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $defaultSession = 'default';
         if (!$preview && isset($config['default_session'])) {
             $defaultSession = $config['default_session'];
-        }
-
-        if (!$preview && SuluKernel::CONTEXT_WEBSITE === $context) {
-            $defaultSession = $liveSession;
         }
 
         $container->prependExtensionConfig(
@@ -172,14 +166,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 
         $container->setParameter(
             'sulu_document_manager.show_drafts',
-            SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')
-            || ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
-        );
-
-        $container->setParameter(
-            'sulu_document_manager.show_drafts',
-            SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')
-            || ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
+            ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
         );
     }
 

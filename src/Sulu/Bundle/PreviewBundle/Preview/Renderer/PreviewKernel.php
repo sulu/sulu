@@ -16,10 +16,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 /**
  * Extends website-kernel from sulu-installation and override configuration.
  */
-class PreviewKernel extends \WebsiteKernel
+class PreviewKernel extends \AppKernel
 {
-    const CONTEXT_PREVIEW = 'preview';
-
     /**
      * {@inheritdoc}
      */
@@ -42,41 +40,11 @@ class PreviewKernel extends \WebsiteKernel
     public function getRootDir()
     {
         if (null === $this->rootDir) {
-            $reflectionClass = new \ReflectionClass(\WebsiteKernel::class);
+            $reflectionClass = new \ReflectionClass(\AppKernel::class);
             $this->rootDir = dirname($reflectionClass->getFileName());
         }
 
         return $this->rootDir;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogDir()
-    {
-        $context = $this->getContext();
-        $this->setContext(static::CONTEXT_PREVIEW);
-
-        $logDirectory = parent::getLogDir();
-
-        $this->setContext($context);
-
-        return $logDirectory;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCacheDir()
-    {
-        $context = $this->getContext();
-        $this->setContext(static::CONTEXT_PREVIEW);
-
-        $cacheDirectory = parent::getCacheDir();
-
-        $this->setContext($context);
-
-        return $cacheDirectory;
     }
 
     public function getKernelParameters()

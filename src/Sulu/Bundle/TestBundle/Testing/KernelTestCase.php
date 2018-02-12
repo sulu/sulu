@@ -56,7 +56,7 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Create and return new test kernel and pass the sulu.context to it.
+     * Create and return new test kernel.
      *
      * All kernels created will be added to the kernel stack, at the end of
      * each test the stack will be cleared and all of the kernels will be
@@ -73,13 +73,11 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
         $options = array_merge([
             'environment' => 'test',
             'debug' => true,
-            'sulu_context' => 'admin',
         ], $this->getKernelConfiguration(), $options);
 
         $kernel = new \AppKernel(
             $options['environment'],
-            $options['debug'],
-            $options['sulu_context']
+            $options['debug']
         );
 
         if (!$kernel instanceof SuluTestKernel) {

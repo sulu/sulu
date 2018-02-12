@@ -32,7 +32,6 @@
             <argument type="service" id="sulu_document_manager.metadata_factory.base"/>
             <argument type="service" id="sulu_content.structure.factory" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
-            <argument>%sulu.context%</argument>
             <tag name="massive_search.reindex.provider" id="sulu_structure"/>
         </service>
 

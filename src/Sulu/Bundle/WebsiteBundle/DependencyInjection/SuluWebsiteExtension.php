@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 
-use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -61,11 +60,7 @@ class SuluWebsiteExtension extends Extension
             $loader->load('analytics.xml');
         }
 
-        if (SuluKernel::CONTEXT_WEBSITE == $container->getParameter('sulu.context')) {
-            $loader->load('website.xml');
-
-            // default local provider
-            $container->setAlias('sulu_website.default_locale.provider', $config['default_locale']['provider_service_id']);
-        }
+        $loader->load('website.xml');
+        $container->setAlias('sulu_website.default_locale.provider', $config['default_locale']['provider_service_id']);
     }
 }

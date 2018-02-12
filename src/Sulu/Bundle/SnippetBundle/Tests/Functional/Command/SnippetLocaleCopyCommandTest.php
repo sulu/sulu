@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SnippetBundle\Command;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -86,7 +85,7 @@ class SnippetLocaleCopyCommandTest extends SuluTestCase
         $this->assertEquals('This is a perfect description.', $resultDE->getStructure()->getProperty('description')->getValue());
         $this->assertEquals('This is a perfect description.', $resultEN->getStructure()->getProperty('description')->getValue());
 
-        $container = $this->getKernel(['context' => SuluKernel::CONTEXT_WEBSITE])->getContainer();
+        $container = $this->getKernel()->getContainer();
         $documentManager = $container->get('sulu_document_manager.document_manager');
 
         $resultEN = $documentManager->find($snippet->getUuid(), 'en');

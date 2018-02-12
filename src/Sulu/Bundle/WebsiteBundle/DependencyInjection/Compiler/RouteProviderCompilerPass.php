@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler;
 
-use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -27,14 +26,12 @@ class RouteProviderCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (SuluKernel::CONTEXT_WEBSITE === $container->getParameter('sulu.context')) {
-            $container->setDefinition(
-                'sulu_website.provider.content',
-                new Definition('Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider', [
-                    new Reference('sulu.content.mapper'),
-                    new Reference('sulu_core.webspace.request_analyzer'),
-                ])
-            );
-        }
+        $container->setDefinition(
+            'sulu_website.provider.content',
+            new Definition('Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider', [
+                new Reference('sulu.content.mapper'),
+                new Reference('sulu_core.webspace.request_analyzer'),
+            ])
+        );
     }
 }

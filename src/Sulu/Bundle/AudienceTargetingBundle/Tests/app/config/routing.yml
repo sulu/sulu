@@ -1,4 +1,9 @@
 sulu_category_api:
+    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.xml"
+    type: rest
+    prefix: /api
+
+sulu_category:
     path: "/"
     defaults:
         _controller: FrameworkBundle:Template:template

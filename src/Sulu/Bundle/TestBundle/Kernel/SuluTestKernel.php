@@ -12,13 +12,13 @@
 namespace Sulu\Bundle\TestBundle\Kernel;
 
 use Sulu\Bundle\TestBundle\SuluTestBundle;
-use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Represents a kernel for sulu-application tests.
  */
-class SuluTestKernel extends SuluKernel
+class SuluTestKernel extends Kernel
 {
     /**
      * {@inheritdoc}
@@ -66,18 +66,10 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
+            new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
+            new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
+            new \FOS\RestBundle\FOSRestBundle(),
         ];
-
-        if (self::CONTEXT_WEBSITE === $this->getContext()) {
-            // smyfony-cmf
-            $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
-        }
-
-        if (self::CONTEXT_ADMIN === $this->getContext()) {
-            // rest
-            $bundles[] = new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle();
-            $bundles[] = new \FOS\RestBundle\FOSRestBundle();
-        }
 
         return $bundles;
     }
@@ -95,23 +87,5 @@ class SuluTestKernel extends SuluKernel
         $loader->load(function ($container) use ($envParameters) {
             $container->getParameterBag()->add($envParameters);
         });
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCacheDir()
-    {
-        return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * Add the Sulu environment to the container name
-     */
-    protected function getContainerClass()
-    {
-        return $this->name . ucfirst($this->getContext()) . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'ProjectContainer';
     }
 }
