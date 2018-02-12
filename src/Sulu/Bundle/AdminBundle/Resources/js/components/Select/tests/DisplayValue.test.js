@@ -10,7 +10,7 @@ test('The component should render', () => {
 });
 
 test('The component should render with an icon', () => {
-    const displayValue = render(<DisplayValue icon="su-plus">My value</DisplayValue>);
+    const displayValue = render(<DisplayValue icon="su-plus" onClick={jest.fn()}>My value</DisplayValue>);
     expect(displayValue).toMatchSnapshot();
 });
 
