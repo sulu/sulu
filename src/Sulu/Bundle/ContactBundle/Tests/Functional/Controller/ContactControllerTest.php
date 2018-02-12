@@ -886,7 +886,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertEquals(
-            'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "contact"-argument',
+            'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "formOfAddress"-argument',
             $response->message
         );
     }

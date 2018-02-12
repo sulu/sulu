@@ -100,22 +100,31 @@ class SnippetAdmin extends Admin
                 ->addOption('title', 'sulu_snippet.snippets')
                 ->addOption('resourceKey', 'snippets')
                 ->addOption('adapters', ['table'])
-                ->addOption('editRoute', 'sulu_snippet.form.detail')
+                ->addOption('addRoute', 'sulu_snippet.add_form.detail')
+                ->addOption('editRoute', 'sulu_snippet.edit_form.detail')
                 ->addOption('locales', $snippetLocales)
                 ->addAttributeDefault('locale', $snippetLocales[0]),
-            (new Route('sulu_snippet.form', '/snippets/:locale/:id', 'sulu_admin.resource_tabs'))
+            (new Route('sulu_snippet.add_form', '/snippets/:locale/add', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'snippets')
                 ->addOption('locales', $snippetLocales),
-            (new Route('sulu_snippet.form.detail', '/details', 'sulu_admin.form'))
+            (new Route('sulu_snippet.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
                 ->addOption('backRoute', 'sulu_snippet.list')
-                ->setParent('sulu_snippet.form'),
-            (new Route('sulu_snippet.form.taxonomies', '/taxonomies', 'sulu_admin.list'))
+                ->addOption('editRoute', 'sulu_snippet.edit_form.detail')
+                ->setParent('sulu_snippet.add_form'),
+            (new Route('sulu_snippet.edit_form', '/snippets/:locale/:id', 'sulu_admin.resource_tabs'))
+                ->addOption('resourceKey', 'snippets')
+                ->addOption('locales', $snippetLocales),
+            (new Route('sulu_snippet.edit_form.detail', '/details', 'sulu_admin.form'))
+                ->addOption('tabTitle', 'sulu_snippet.details')
+                ->addOption('backRoute', 'sulu_snippet.list')
+                ->setParent('sulu_snippet.edit_form'),
+            (new Route('sulu_snippet.edit_form.taxonomies', '/taxonomies', 'sulu_admin.list'))
                 ->addOption('resourceKey', 'snippets')
                 ->addOption('tabTitle', 'sulu_snippet.taxonomies')
                 ->addOption('adapters', ['table'])
                 ->addOption('backRoute', 'sulu_snippet.list')
-                ->setParent('sulu_snippet.form'),
+                ->setParent('sulu_snippet.edit_form'),
         ];
     }
 

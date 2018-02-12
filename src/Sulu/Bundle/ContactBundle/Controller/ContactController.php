@@ -527,7 +527,7 @@ class ContactController extends RestController implements ClassResourceInterface
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'password');
         }
         if (null == $request->get('formOfAddress')) {
-            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'contact');
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'formOfAddress');
         }
     }
 

@@ -5,7 +5,7 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 
 type Props = SelectProps & {
-    value?: string | number,
+    value: ?string | number,
     onChange?: (value: string | number) => void,
 };
 

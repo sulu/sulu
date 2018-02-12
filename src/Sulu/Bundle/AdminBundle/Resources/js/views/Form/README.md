@@ -5,5 +5,6 @@ should be shown in the toolbar and an instance of the `ResourceStore`, which all
 | Option        | Description                                                                                         |
 |---------------|-----------------------------------------------------------------------------------------------------|
 | backRoute     | The route to which the user will be navigate when the back button is clicked.                       |
+| editRoute     | The optional route to which the user will be redirected after the form is saved.                    |
 | locales       | Defines which locales are available in the locale chooser of this form.                             |
 | resourceStore | The store which allows to save and load data from the given type of resources                       |

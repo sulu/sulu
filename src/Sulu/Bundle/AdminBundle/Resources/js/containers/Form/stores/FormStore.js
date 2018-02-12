@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, observable, observe, when} from 'mobx';
+import {action, autorun, computed, observable, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import ResourceStore from '../../../stores/ResourceStore';
 import type {Schema, SchemaTypes} from '../types';
@@ -58,10 +58,14 @@ export default class FormStore {
 
         if (this.hasTypes) {
             // this will set the correct type from the server response after it has been loaded
-            when(
-                () => !this.resourceStore.loading,
-                () => this.changeType(this.resourceStore.data[TYPE])
-            );
+            if (this.resourceStore.id) {
+                when(
+                    () => !this.resourceStore.loading,
+                    () => this.changeType(this.resourceStore.data[TYPE])
+                );
+            } else if (this.defaultType) {
+                this.changeType(this.defaultType);
+            }
         }
 
         this.schemaDisposer = autorun(() => {
@@ -80,20 +84,21 @@ export default class FormStore {
         this.schema = schema;
         const schemaFields = Object.keys(schema)
             .reduce((data, key) => addSchemaProperties(data, key, schema), {});
-        this.resourceStore.data = {...schemaFields, ...this.resourceStore.data};
+        const newData = {...schemaFields, ...this.resourceStore.data};
+        this.resourceStore.data = this.hasType ? {[TYPE]: this.defaultType, ...newData} : newData;
         this.schemaLoading = false;
-
-        if (this.hasTypes) {
-            this.typeDisposer = observe(this, (change) => {
-                if (change.name === 'type') {
-                    this.resourceStore.set(TYPE, change.newValue);
-                }
-            });
-        }
     };
 
     @computed get hasTypes(): boolean {
         return Object.keys(this.types).length > 0;
+    }
+
+    @computed get defaultType(): ?string {
+        if (!this.hasTypes) {
+            return undefined;
+        }
+
+        return Object.keys(this.types)[0];
     }
 
     @computed get loading(): boolean {
@@ -105,7 +110,7 @@ export default class FormStore {
     }
 
     save() {
-        this.resourceStore.save();
+        return this.resourceStore.save();
     }
 
     set(name: string, value: mixed) {
@@ -124,5 +129,6 @@ export default class FormStore {
         }
 
         this.type = type;
+        this.resourceStore.set(TYPE, type);
     }
 }

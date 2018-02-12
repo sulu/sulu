@@ -68,13 +68,21 @@ class ContactAdmin extends Admin
                 ->addOption('title', 'sulu_contact.persons')
                 ->addOption('adapters', ['table'])
                 ->addOption('resourceKey', 'contacts')
-                ->addOption('editRoute', 'sulu_contact.form.detail'),
-            (new Route('sulu_contact.form', '/contacts/:id', 'sulu_admin.resource_tabs'))
+                ->addOption('addRoute', 'sulu_contact.add_form.detail')
+                ->addOption('editRoute', 'sulu_contact.edit_form.detail'),
+            (new Route('sulu_contact.add_form', '/contacts/add', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'contacts'),
-            (new Route('sulu_contact.form.detail', '/details', 'sulu_admin.form'))
+            (new Route('sulu_contact.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_contact.details')
                 ->addOption('backRoute', 'sulu_contact.contacts_list')
-                ->setParent('sulu_contact.form'),
+                ->addOption('editRoute', 'sulu_contact.edit_form.detail')
+                ->setParent('sulu_contact.add_form'),
+            (new Route('sulu_contact.edit_form', '/contacts/:id', 'sulu_admin.resource_tabs'))
+                ->addOption('resourceKey', 'contacts'),
+            (new Route('sulu_contact.edit_form.detail', '/details', 'sulu_admin.form'))
+                ->addOption('tabTitle', 'sulu_contact.details')
+                ->addOption('backRoute', 'sulu_contact.contacts_list')
+                ->setParent('sulu_contact.edit_form'),
             (new Route('sulu_contact.accounts_list', '/accounts', 'sulu_admin.list'))
                 ->addOption('title', 'sulu_contact.organizations')
                 ->addOption('adapters', ['table'])

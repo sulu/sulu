@@ -75,6 +75,18 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($route3, $routes[2]);
     }
 
+    public function testRouteWithNonExistingParent()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $route = new Route('test1', '/test1', 'test1');
+        $route->setParent('not-existing');
+        $this->admin1->getRoutes()->willReturn([$route]);
+        $this->admin2->getRoutes()->willReturn([]);
+
+        $routes = $this->adminPool->getRoutes();
+    }
+
     public function testRoutesMergeOptions()
     {
         $route1 = new Route('test1', '/test1', 'test1');

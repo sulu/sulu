@@ -24,6 +24,7 @@ test('Pass props correctly to SingleSelect', () => {
 });
 
 test('Set default value if no value is passed', () => {
+    const changeSpy = jest.fn();
     const options = {
         default_value: 'mr',
         values: {
@@ -31,9 +32,9 @@ test('Set default value if no value is passed', () => {
             'ms': 'Miss',
         },
     };
-    const singleSelect = shallow(<SingleSelect onChange={jest.fn()} options={options} value={undefined} />);
+    shallow(<SingleSelect onChange={changeSpy} options={options} value={undefined} />);
 
-    expect(singleSelect.prop('value')).toBe('mr');
+    expect(changeSpy).toBeCalledWith('mr');
 });
 
 test('Throw error if no options are passed', () => {
