@@ -24,7 +24,7 @@ export default class SingleSelect extends React.PureComponent<Props> {
                 return;
             }
 
-            if (!displayValue || this.props.value === child.props.value) {
+            if (!displayValue || this.props.value == child.props.value) {
                 displayValue = child.props.children;
             }
         });
@@ -33,7 +33,13 @@ export default class SingleSelect extends React.PureComponent<Props> {
     }
 
     isOptionSelected = (option: Element<typeof SingleSelect.Option>): boolean => {
-        return option.props.value === this.props.value && !option.props.disabled;
+        const {value} = this.props;
+
+        if (!value) {
+            return false;
+        }
+
+        return option.props.value === value.toString() && !option.props.disabled;
     };
 
     handleSelect = (value: string | number) => {

@@ -10,7 +10,7 @@ import {setTranslations} from './utils/Translator';
 import Input from './components/Input';
 import TextArea from './components/TextArea';
 import Application from './containers/Application';
-import {fieldRegistry} from './containers/Form';
+import {fieldRegistry, SingleSelect} from './containers/Form';
 import {viewRegistry} from './containers/ViewRenderer';
 import {datagridAdapterRegistry, ColumnListAdapter, FolderAdapter, TableAdapter} from './containers/Datagrid';
 import Form from './views/Form';
@@ -34,6 +34,7 @@ datagridAdapterRegistry.add('column_list', ColumnListAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
 datagridAdapterRegistry.add('table', TableAdapter);
 
+fieldRegistry.add('single_select', SingleSelect);
 fieldRegistry.add('text_line', Input);
 fieldRegistry.add('text_area', TextArea);
 

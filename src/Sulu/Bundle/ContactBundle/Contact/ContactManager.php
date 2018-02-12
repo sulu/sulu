@@ -294,7 +294,16 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
         if (!$patch || $this->getProperty($data, 'formOfAddress')) {
             $formOfAddress = $this->getProperty($data, 'formOfAddress');
+
+            if (is_numeric($formOfAddress) || is_string($formOfAddress)) {
+                $contact->setFormOfAddress($formOfAddress);
+            }
+
             if (!is_null($formOfAddress) && is_array($formOfAddress) && array_key_exists('id', $formOfAddress)) {
+                @trigger_error(
+                    'Passing the "formOfAddress" as object is deprecated and will not be supported in Sulu 2.0',
+                    E_USER_DEPRECATED
+                );
                 $contact->setFormOfAddress($formOfAddress['id']);
             }
         }

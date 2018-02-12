@@ -10,7 +10,7 @@ type Props = {
     value?: mixed,
     schema: SchemaEntry,
     onChange: (string, mixed) => void,
-    locale: ?IObservableValue<string>,
+    locale?: ?IObservableValue<string>,
 };
 
 export default class Field extends React.PureComponent<Props> {
@@ -26,7 +26,7 @@ export default class Field extends React.PureComponent<Props> {
             locale,
             schema,
         } = this.props;
-        const {label, type} = schema;
+        const {label, options, type} = schema;
         const FieldType = fieldRegistry.get(type);
 
         return (
@@ -34,6 +34,7 @@ export default class Field extends React.PureComponent<Props> {
                 <label className={fieldStyles.label}>{label}</label>
                 <FieldType
                     onChange={this.handleChange}
+                    options={options}
                     value={value}
                     locale={locale}
                 />

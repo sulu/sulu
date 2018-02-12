@@ -14,6 +14,7 @@ export type SchemaEntry = {
     size?: Size,
     spaceAfter?: Size,
     items?: Schema,
+    options?: Object,
 };
 
 export type Schema = {

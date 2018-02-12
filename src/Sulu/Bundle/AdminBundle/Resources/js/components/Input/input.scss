@@ -24,6 +24,7 @@ $backgroundColor: $white;
         width: 100%;
         flex-grow: 1;
         border: none;
+        border-radius: $inputBorderRadius;
         line-height: calc($inputHeight - 2 * $inputBorderWidth);
         height: calc($inputHeight - 2 * $inputBorderWidth);
         padding-left: 10px;

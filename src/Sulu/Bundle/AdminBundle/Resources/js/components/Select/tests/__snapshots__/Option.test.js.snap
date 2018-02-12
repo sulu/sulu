@@ -4,6 +4,7 @@ exports[`The component should render 1`] = `
 <li>
   <button
     class="option icon"
+    style="min-width:10px"
   >
     My option
   </button>
@@ -15,6 +16,7 @@ exports[`The component should render in disabled state 1`] = `
   <button
     class="option icon"
     disabled=""
+    style="min-width:10px"
   >
     My option
   </button>
@@ -25,6 +27,7 @@ exports[`The component should render in selected state 1`] = `
 <li>
   <button
     class="option icon selected"
+    style="min-width:10px"
   >
     <span
       aria-label="su-checkmark"
@@ -39,6 +42,7 @@ exports[`The component should render with checkbox 1`] = `
 <li>
   <button
     class="option checkbox"
+    style="min-width:10px"
   >
     <label
       class="label"

@@ -18,6 +18,13 @@ const TOGGLE_ICON = 'su-arrow-down';
 export default class DisplayValue extends React.PureComponent<Props> {
     button: ElementRef<'button'>;
 
+    handleClick = (event: SyntheticEvent<HTMLButtonElement>) => {
+        const {onClick} = this.props;
+
+        event.preventDefault();
+        onClick();
+    };
+
     setButtonRef = (button: ?ElementRef<'button'>) => {
         const {displayValueRef} = this.props;
         if (displayValueRef && button) {
@@ -26,7 +33,7 @@ export default class DisplayValue extends React.PureComponent<Props> {
     };
 
     render() {
-        const {icon, onClick, children} = this.props;
+        const {icon, children} = this.props;
         const displayValueClass = classNames(
             displayValueStyles.displayValue,
             {
@@ -37,7 +44,7 @@ export default class DisplayValue extends React.PureComponent<Props> {
         return (
             <button
                 ref={this.setButtonRef}
-                onClick={onClick}
+                onClick={this.handleClick}
                 className={displayValueClass}
             >
                 {!!icon &&

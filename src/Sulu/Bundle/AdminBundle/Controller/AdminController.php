@@ -294,11 +294,18 @@ EOL
         "fullName": {}
     },
     "form": {
-        "title": {
-            "label": "Title",
-            "type": "text_line",
-            "size": 6,
-            "spaceAfter": 6
+        "formOfAddress": {
+            "label": "Form of address",
+            "type": "single_select",
+            "size": 3,
+            "spaceAfter": 9,
+            "options": {
+                "default_value": "0",
+                "values": {
+                    "0": "Herr",
+                    "1": "Frau"
+                }
+            }
         },
         "firstName": {
             "label": "First Name",
