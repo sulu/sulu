@@ -24,28 +24,20 @@
             <argument type="service" id="sulu_route.routing.defaults_provider"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="sulu_route.routing.proxy_factory"/>
-
-            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_route.routing.generator" class="Symfony\Cmf\Component\Routing\ProviderBasedGenerator">
             <argument type="service" id="sulu_route.routing.provider"/>
-
-            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_route.routing.final_matcher" class="Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher">
             <argument type="service" id="cmf_routing.matcher.dummy_collection"/>
             <argument type="service" id="cmf_routing.matcher.dummy_context"/>
-
-            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_route.routing.nested_matcher" class="Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher">
             <argument type="service" id="sulu_route.routing.provider"/>
             <argument type="service" id="sulu_route.routing.final_matcher"/>
-
-            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_route.routing.router" class="Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter">
@@ -55,8 +47,6 @@
             <argument>%sulu_route.routing.uri_filter_regexp%</argument>
             <argument type="service" id="event_dispatcher" on-invalid="ignore"/>
             <argument type="service" id="sulu_route.routing.provider"/>
-
-            <tag name="sulu.context" context="website"/>
             <tag name="router" priority="20"/>
         </service>
     </services>

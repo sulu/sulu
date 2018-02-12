@@ -44,7 +44,6 @@
         <service id="sulu_search.event_listener.hit" class="%sulu_search.event_listener.hit.class%">
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
             <tag name="kernel.event_listener" event="massive_search.hit" method="onHit" />
-            <tag name="sulu.context" context="website"/>
         </service>
     </services>
 </container>

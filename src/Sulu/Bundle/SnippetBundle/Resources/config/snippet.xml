@@ -32,8 +32,6 @@
             <argument type="service" id="sulu_hash.request_hash_checker"/>
             <argument type="service" id="sulu_core.list_rest_helper"/>
             <argument type="service" id="sulu_document_manager.metadata_factory.base"/>
-
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_snippet.twig.snippet" class="%sulu_snippet.twig.snippet.class%">

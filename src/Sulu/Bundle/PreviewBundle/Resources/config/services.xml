@@ -12,7 +12,6 @@
             <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_preview.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">

@@ -13,13 +13,11 @@
     <services>
         <service id="sulu_category.admin" class="%sulu_category.admin.class%">
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
         </service>
         <service id="sulu_category.content_navigation_provider" class="%sulu_category.content_navigation_provider.class%">
             <tag name="sulu_admin.content_navigation" alias="category"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_category.category_manager" class="%sulu_category.category_manager.class%">
             <argument type="service" id="sulu.repository.category"/>

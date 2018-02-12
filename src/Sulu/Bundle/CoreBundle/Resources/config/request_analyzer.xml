@@ -13,12 +13,10 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
 
-            <tag name="sulu.context" context="website"/>
             <tag name="sulu.request_attributes" priority="128"/>
         </service>
         <service id="sulu_core.request_processor.url"
                  class="Sulu\Component\Webspace\Analyzer\Attributes\UrlRequestProcessor">
-            <tag name="sulu.context" context="website"/>
             <tag name="sulu.request_attributes" priority="64"/>
         </service>
         <service id="sulu_core.request_processor.admin"
@@ -26,7 +24,6 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="string">%kernel.environment%</argument>
 
-            <tag name="sulu.context" context="admin"/>
             <tag name="sulu.request_attributes" priority="0"/>
         </service>
         <service id="sulu_core.request_processor.website"
@@ -36,12 +33,10 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
             <argument type="string">%kernel.environment%</argument>
 
-            <tag name="sulu.context" context="website"/>
             <tag name="sulu.request_attributes" priority="0"/>
         </service>
         <service id="sulu_core.request_processor.portal_information"
                  class="Sulu\Component\Webspace\Analyzer\Attributes\PortalInformationRequestProcessor">
-            <tag name="sulu.context" context="website"/>
             <tag name="sulu.request_attributes" priority="-128"/>
         </service>
     </services>

@@ -27,7 +27,6 @@
             <argument type="service" id="sulu_content.link_tag.provider_pool"/>
 
             <tag name="sulu.js_config"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

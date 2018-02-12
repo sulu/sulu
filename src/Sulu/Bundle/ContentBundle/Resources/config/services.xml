@@ -14,7 +14,6 @@
         <!-- admin class -->
         <service id="sulu_content.admin" class="%sulu_content.admin.class%">
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.phpcr.session"/>
@@ -32,7 +31,6 @@
         <service id="sulu_content.content_navigation_provider" class="%sulu_content.content_navigation_provider.class%">
             <argument type="service" id="sulu_security.security_checker"/>
             <tag name="sulu_admin.content_navigation" alias="content"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_content.twig_extension" class="%sulu_content.twig_extension.class%">
             <tag name="twig.extension"/>
@@ -48,7 +46,6 @@
         <service id="sulu_content.webspace_navigation_provider"
                  class="Sulu\Bundle\ContentBundle\Admin\WebspaceContentNavigationProvider">
             <tag name="sulu_admin.content_navigation" alias="webspace"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_content.webspace.serializer.event_subscriber"
                  class="Sulu\Bundle\ContentBundle\EventListener\WebspaceSerializeEventSubscriber">
@@ -57,14 +54,12 @@
             <argument type="string">%kernel.environment%</argument>
 
             <tag name="jms_serializer.event_subscriber" />
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- roles -->
         <service id="sulu_content.roles_content_navigation_provider"
                  class="Sulu\Bundle\ContentBundle\Admin\RolesContentNavigationProvider">
             <tag name="sulu_admin.content_navigation" alias="roles"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- nodes -->
@@ -120,7 +115,6 @@
             <argument type="service" id="security.token_storage"/>
 
             <tag name="sulu.js_config"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Content Repository -->
@@ -138,7 +132,6 @@
             <argument type="service" id="security.token_storage"/>
 
             <tag name="jms_serializer.event_subscriber" />
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- preview -->

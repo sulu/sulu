@@ -7,7 +7,6 @@
                  class="Sulu\Bundle\WebsiteBundle\Admin\WebspaceContentNavigationProvider">
             <argument type="service" id="sulu_security.security_checker"/>
             <tag name="sulu_admin.content_navigation" alias="webspace"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_website.analytics.repository"
@@ -43,14 +42,12 @@
             <argument>%kernel.environment%</argument>
             <argument type="expression">container.hasParameter('sulu.preview') ? parameter('sulu.preview') : ''</argument>
 
-            <tag name="sulu.context" context="website"/>
             <tag name="kernel.event_listener" event="kernel.response" method="onResponse" priority="-5"/>
         </service>
 
         <service id="sulu_website.analytics.event_subscriber"
                  class="Sulu\Bundle\WebsiteBundle\EventSubscriber\AnalyticsSerializeEventSubscriber">
             <tag name="jms_serializer.event_subscriber"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

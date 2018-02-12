@@ -22,7 +22,6 @@
             </argument>
 
             <tag name="sulu_admin.content_navigation" alias="content"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

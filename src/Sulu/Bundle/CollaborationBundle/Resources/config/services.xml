@@ -4,7 +4,6 @@
     <services>
         <service id="sulu_collaboration.admin" class="Sulu\Bundle\CollaborationBundle\Admin\CollaborationAdmin">
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
             <argument>%sulu_admin.name%</argument>
         </service>
 

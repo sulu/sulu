@@ -29,7 +29,6 @@
         <service id="sulu_location.admin" class="%sulu_location.admin.class%">
             <argument>%sulu_admin.name%</argument>
             <tag name="sulu.admin" />
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Map services -->

@@ -8,7 +8,6 @@
             <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

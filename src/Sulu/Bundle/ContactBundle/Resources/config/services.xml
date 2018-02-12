@@ -30,15 +30,12 @@
             <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_contact.contact_content_navigation_provider" class="%sulu_contact.contact_content_navigation_provider.class%">
             <tag name="sulu_admin.content_navigation" alias="contact"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_contact.account_content_navigation_provider" class="%sulu_contact.account_content_navigation_provider.class%">
             <tag name="sulu_admin.content_navigation" alias="account"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_contact.account_repository" class="%sulu_contact.account_repository.class%">
             <factory method="getRepository" service="doctrine"/>

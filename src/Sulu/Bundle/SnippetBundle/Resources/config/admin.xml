@@ -17,12 +17,10 @@
             <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_snippet.content_navigation_provider" class="%sulu_snippet.content_navigation_provider.class%">
             <tag name="sulu_admin.content_navigation" alias="snippet"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_snippet.webspace_navigation_provider"
@@ -31,7 +29,6 @@
             <argument>%sulu_snippet.content-type.default_enabled%</argument>
 
             <tag name="sulu_admin.content_navigation" alias="webspace"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- JsConfig -->

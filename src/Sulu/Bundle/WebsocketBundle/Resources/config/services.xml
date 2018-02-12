@@ -47,7 +47,6 @@
         <service id="sulu_websocket.admin.message_dispatcher" class="%sulu_websocket.admin.message_dispatcher.class%" public="false">
             <argument type="service" id="sulu_websocket.admin.message_builder"/>
 
-            <tag name="sulu.context" context="admin"/>
             <tag name="sulu.websocket.message.dispatcher" alias="admin"/>
         </service>
 
@@ -56,7 +55,6 @@
             <argument type="service" id="sulu_websocket.admin.message_dispatcher"/>
             <argument type="service" id="sulu_websocket.websocket.cache"/>
 
-            <tag name="sulu.context" context="admin"/>
             <tag name="sulu.websocket.app" route="/admin" />
         </service>
 

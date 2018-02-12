@@ -35,7 +35,6 @@
             <argument type="string">%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- navigation mapper -->
@@ -186,8 +185,6 @@
             <argument type="service" id="sulu_website.resolver.parameter" />
             <argument type="service" id="twig" />
             <argument>%kernel.debug%</argument>
-
-            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_website.exception.controller" alias="twig.controller.exception" />
@@ -223,7 +220,6 @@
 
             <tag name="kernel.event_listener" event="%sulu_preview.events.pre-render%"
                  method="setLocaleOnPreviewPreRender"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- reference-store -->

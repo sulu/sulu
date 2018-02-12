@@ -11,7 +11,6 @@
         <!-- request analyzer data collector -->
         <service id="sulu_website.data_collector.sulu_collector" class="%sulu_website.data_collector.sulu_collector.class%">
             <tag name="data_collector" template="SuluWebsiteBundle:Profiler:layout" id="sulu"/>
-            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_website.provider.content" class="Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider">
@@ -20,8 +19,6 @@
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-
-            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_website.redirect_exception_listener"
@@ -32,19 +29,15 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
 
             <tag name="kernel.event_subscriber"/>
-
-            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_website.default_locale.portal_provider" class="Sulu\Bundle\WebsiteBundle\Locale\PortalDefaultLocaleProvider">
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_website.default_locale.request_provider" class="Sulu\Bundle\WebsiteBundle\Locale\RequestDefaultLocaleProvider">
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="request_stack"/>
-            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_website.event_subscriber.generator"
@@ -52,7 +45,6 @@
             <argument>%sulu.version%</argument>
 
             <tag name="kernel.event_subscriber"/>
-            <tag name="sulu.context" context="website"/>
         </service>
     </services>
 </container>

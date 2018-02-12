@@ -9,7 +9,6 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
 
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_custom_urls.webspace_navigation_provider"
@@ -17,7 +16,6 @@
             <argument type="service" id="sulu_security.security_checker"/>
 
             <tag name="sulu_admin.content_navigation" alias="webspace"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

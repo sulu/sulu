@@ -26,7 +26,6 @@
     <services>
         <service id="sulu_resource.admin" class="%sulu_resource.admin.class%">
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
         </service>

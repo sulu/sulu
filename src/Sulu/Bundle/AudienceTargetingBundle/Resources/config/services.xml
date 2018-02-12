@@ -10,36 +10,30 @@
             <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_audience_targeting.admin.content_navigation_provider"
                  class="Sulu\Bundle\AudienceTargetingBundle\Admin\TargetGroupContentNavigationProvider">
             <tag name="sulu_admin.content_navigation" alias="target-group"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
         <!--SERIALIZER-->
         <service id="sulu_audience_targeting.serializer.target_group_subscriber"
                  class="Sulu\Bundle\AudienceTargetingBundle\Serializer\Subscriber\TargetGroupSerializeSubscriber">
             <tag name="jms_serializer.event_subscriber" />
-            <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_audience_targeting.serializer.target_group_rule_serializer"
                  class="Sulu\Bundle\AudienceTargetingBundle\Serializer\Subscriber\TargetGroupRuleSerializeSubscriber">
             <tag name="jms_serializer.event_subscriber" />
-            <tag name="sulu.context" context="admin"/>
         </service>
         <!--REQUEST-->
         <service id="sulu_audience_targeting.request_processor.forwarded_url"
                  class="Sulu\Bundle\AudienceTargetingBundle\Request\ForwardedUrlRequestProcessor">
             <argument>%sulu_audience_targeting.headers.url%</argument>
             <tag name="sulu.request_attributes" priority="96"/>
-            <tag name="sulu.context" context="website"/>
         </service>
         <service id="sulu_audience_targeting.device_detector" class="DeviceDetector\DeviceDetector"/>
         <service id="sulu_audience_targeting.device_detector_subscriber"
                  class="Sulu\Bundle\AudienceTargetingBundle\EventListener\DeviceDetectorSubscriber">
             <argument type="service" id="sulu_audience_targeting.device_detector"/>
-            <tag name="sulu.context" context="website" />
             <tag name="kernel.event_subscriber" />
         </service>
         <!--RULES-->
@@ -130,7 +124,6 @@
             <argument>%sulu_audience_targeting.cookies.target_group%</argument>
             <argument>%sulu_audience_targeting.cookies.session%</argument>
             <tag name="kernel.event_subscriber"/>
-            <tag name="sulu.context" context="website" />
         </service>
         <service id="sulu_audience_targeting.target_group_store"
                  class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore">
