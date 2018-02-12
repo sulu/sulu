@@ -1,11 +1,11 @@
 //@flow
-import {mount} from 'enzyme';
+import {render, mount} from 'enzyme';
 import React from 'react';
 import Item from '../Item';
 
 test('The component should render', () => {
     const handleClick = jest.fn();
-    const item = mount(
+    const item = render(
         <Item
             icon="su-search"
             value="test_1"
@@ -13,12 +13,12 @@ test('The component should render', () => {
             title="Test"
         />
     );
-    expect(item.render()).toMatchSnapshot();
+    expect(item).toMatchSnapshot();
 });
 
 test('The component should render active', () => {
     const handleClick = jest.fn();
-    const item = mount(
+    const item = render(
         <Item
             icon="su-search"
             value="test_1"
@@ -27,12 +27,12 @@ test('The component should render active', () => {
             active={true}
         />
     );
-    expect(item.render()).toMatchSnapshot();
+    expect(item).toMatchSnapshot();
 });
 
 test('The component should render with children', () => {
     const handleClick = jest.fn();
-    const item = mount(
+    const item = render(
         <Item
             icon="su-settings"
             value="settings"
@@ -50,12 +50,12 @@ test('The component should render with children', () => {
             />
         </Item>
     );
-    expect(item.render()).toMatchSnapshot();
+    expect(item).toMatchSnapshot();
 });
 
 test('The component should render with children an active child and expanded', () => {
     const handleClick = jest.fn();
-    const item = mount(
+    const item = render(
         <Item
             icon="su-settings"
             value="settings"
@@ -75,7 +75,7 @@ test('The component should render with children an active child and expanded', (
             />
         </Item>
     );
-    expect(item.render()).toMatchSnapshot();
+    expect(item).toMatchSnapshot();
 });
 
 test('The component should handle clicks correctly', () => {

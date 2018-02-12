@@ -96,7 +96,7 @@ export default class Application extends React.Component<Props> {
 
         return (
             <Navigation
-                title="Sulu" // TODO: Get this data from logged in user
+                title="Sulu" // TODO: Get this dynamically from server
                 username="Hikaru Sulu" // TODO: Get this data from logged in user
                 suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
                 suluVersionLink={SULU_CHANGELOG_URL}
