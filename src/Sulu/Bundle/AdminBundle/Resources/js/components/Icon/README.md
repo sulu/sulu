@@ -1,7 +1,8 @@
 This is a simple component which renders icons. It uses the [Font Awesome Icon Toolkit](http://fontawesome.io/)
-and .
+and our own icon font.
 
-Pass a name to the component, and it will render the corresponding icon:
+Pass a name (prefix `fa-` for Font Awesome or `su-` for Sulu) to the component,
+and it will render the corresponding icon:
 
 ```
 <Icon name="fa-floppy-o" />
@@ -22,6 +23,8 @@ function handleClick() {
 
 <Icon name="fa-bars" onClick={handleClick} />
 ```
+
+To use a Sulu icon just use the `su-` prefix:
 
 ```
 <Icon name="su-link" />
