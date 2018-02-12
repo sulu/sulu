@@ -8,9 +8,6 @@ import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 import toolbarStyles from './toolbar.scss';
 import type {ToolbarProps} from './types';
 
-const BACK_BUTTON_ICON = 'su-arrow-left';
-const NAVIGATION_BUTTON_ICON = 'su-view';
-
 const LOCALE_SELECT_SIZE = 'small';
 
 const ToolbarItemTypes = {
