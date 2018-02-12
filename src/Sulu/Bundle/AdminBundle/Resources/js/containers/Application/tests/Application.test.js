@@ -1,7 +1,10 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+//@flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render, mount} from 'enzyme';
 import Application from '../Application';
+import Router from '../../../services/Router';
+
+jest.mock('../../../services/Router', () => function() {});
 
 jest.mock('../../ViewRenderer', () => function Test(props) {
     return (
@@ -13,21 +16,45 @@ jest.mock('../../ViewRenderer', () => function Test(props) {
 });
 
 test('Application should not fail if current route does not exist', () => {
-    const router = jest.fn();
+    const router = new Router({});
     const view = render(<Application router={router} />);
 
     expect(view).toMatchSnapshot();
 });
 
 test('Application should render based on current route', () => {
-    const router = {
-        route: {
-            name: 'test',
-            view: 'test',
-        },
+    const router = new Router({});
+    router.route = {
+        name: 'test',
+        view: 'test',
+        attributeDefaults: {},
+        rerenderAttributes: [],
+        path: '/webspaces',
+        children: [],
+        options: {},
+        parent: null,
     };
 
     const view = render(<Application router={router} />);
+
+    expect(view).toMatchSnapshot();
+});
+
+test('Application should render opened navigation', () => {
+    const router = new Router({});
+    router.route = {
+        name: 'test',
+        view: 'test',
+        attributeDefaults: {},
+        rerenderAttributes: [],
+        path: '/webspaces',
+        children: [],
+        options: {},
+        parent: null,
+    };
+
+    const view = mount(<Application router={router} />);
+    view.find('Button[icon="su-menu"]').simulate('click');
 
     expect(view).toMatchSnapshot();
 });

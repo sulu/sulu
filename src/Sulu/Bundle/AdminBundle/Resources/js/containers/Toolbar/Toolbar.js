@@ -8,9 +8,7 @@ import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 import toolbarStyles from './toolbar.scss';
 import type {ToolbarProps} from './types';
 
-const BACK_BUTTON_ICON = 'su-arrow-left';
 const LOCALE_SELECT_SIZE = 'small';
-const NAVIGATION_BUTTON_ICON = 'su-view';
 
 const ToolbarItemTypes = {
     Button: 'button',
@@ -37,6 +35,10 @@ function getItemComponentByType(itemConfig, key) {
 
 @observer
 export default class Toolbar extends React.Component<*> {
+    static defaultProps = {
+        navigationOpen: false,
+    };
+
     props: ToolbarProps;
 
     toolbarStore: ToolbarStore;
@@ -66,7 +68,7 @@ export default class Toolbar extends React.Component<*> {
     };
 
     render() {
-        const {onNavigationButtonClick} = this.props;
+        const {onNavigationButtonClick, navigationOpen} = this.props;
         const loadingItems = this.toolbarStore.getItemsConfig().filter((item) => item.loading);
         const disableAllButtons = this.toolbarStore.disableAll || loadingItems.length > 0;
         const backButtonConfig = this.toolbarStore.getBackButtonConfig();
@@ -89,13 +91,13 @@ export default class Toolbar extends React.Component<*> {
                     <ToolbarComponent.Button
                         onClick={this.handleNavigationButtonClick}
                         skin="primary"
-                        icon={NAVIGATION_BUTTON_ICON}
+                        icon={navigationOpen ? 'su-x' : 'su-menu'}
                     />
                     }
                     {this.toolbarStore.hasBackButtonConfig() &&
                     <ToolbarComponent.Button
                         {...backButtonConfig}
-                        icon={BACK_BUTTON_ICON}
+                        icon="su-arrow-long-left"
                     />
                     }
                     {this.toolbarStore.hasItemsConfig() &&

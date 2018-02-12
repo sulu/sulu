@@ -24,23 +24,44 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.su-user-1:before {
+.su-settings:before {
   content: "\e900";
 }
-.su-user-2:before {
+.su-x:before {
   content: "\e901";
 }
-.su-envalope:before {
+.su-arrow-long-up:before {
   content: "\e902";
+}
+.su-arrow-long-down:before {
+  content: "\e903";
+}
+.su-arrow-long-right:before {
+  content: "\e904";
+}
+.su-arrow-long-left:before {
+  content: "\e905";
+}
+.su-user-1:before {
+  content: "\e918";
+}
+.su-user-2:before {
+  content: "\e919";
+}
+.su-envalope:before {
+  content: "\e91a";
 }
 .su-document:before {
   content: "\e949";
 }
 .su-focus:before {
-  content: "\e903";
+  content: "\e91b";
 }
 .su-folder:before {
-  content: "\e904";
+  content: "\e91c";
+}
+.su-checkbox:before {
+  content: "\e91d";
 }
 .su-circle:before {
   content: "\e906";
@@ -106,31 +127,31 @@
   content: "\e917";
 }
 .su-battery-empty:before {
-  content: "\e918";
+  content: "\e931";
 }
 .su-battery-full:before {
-  content: "\e919";
+  content: "\e930";
 }
 .su-battery-low:before {
-  content: "\e91a";
+  content: "\e92f";
 }
 .su-calender:before {
-  content: "\e91b";
+  content: "\e92d";
 }
 .su-checkmark:before {
-  content: "\e91c";
+  content: "\e92a";
 }
 .su-circle-filled:before {
   content: "\e92c";
 }
 .su-clock:before {
-  content: "\e928";
+  content: "\e929";
 }
 .su-close:before {
   content: "\e92b";
 }
 .su-cloud:before {
-  content: "\e91d";
+  content: "\e928";
 }
 .su-code:before {
   content: "\e91e";
@@ -147,6 +168,9 @@
 .su-cut:before {
   content: "\e922";
 }
+.su-dashboard:before {
+  content: "\e923";
+}
 .su-desktop:before {
   content: "\e924";
 }
@@ -154,76 +178,82 @@
   content: "\e927";
 }
 .su-flag:before {
-  content: "\e929";
-}
-.su-flash:before {
-  content: "\e92a";
-}
-.su-hashtag:before {
-  content: "\e92d";
-}
-.su-iPhone:before {
-  content: "\e92f";
-}
-.su-link:before {
-  content: "\e930";
-}
-.su-list:before {
-  content: "\e931";
-}
-.su-lock:before {
   content: "\e932";
 }
-.su-media:before {
+.su-flash:before {
   content: "\e933";
 }
-.su-menu:before {
+.su-hashtag:before {
   content: "\e934";
 }
-.su-more:before {
+.su-iPhone:before {
   content: "\e935";
 }
-.su-news:before {
+.su-link:before {
   content: "\e936";
 }
-.su-paper:before {
+.su-list:before {
   content: "\e937";
 }
-.su-pen:before {
+.su-lock:before {
   content: "\e938";
 }
-.su-pin:before {
+.su-media:before {
   content: "\e939";
 }
-.su-process:before {
+.su-menu:before {
   content: "\e93a";
 }
-.su-save:before {
+.su-more:before {
   content: "\e93b";
 }
-.su-search:before {
+.su-news:before {
   content: "\e93c";
 }
-.su-shift:before {
+.su-paper:before {
   content: "\e93d";
 }
-.su-size:before {
+.su-pen:before {
   content: "\e93e";
 }
-.su-smaller:before {
+.su-pin:before {
   content: "\e93f";
 }
-.su-storage:before {
+.su-process:before {
   content: "\e940";
 }
-.su-sulu:before {
+.su-save:before {
   content: "\e941";
 }
-.su-time:before {
+.su-search:before {
   content: "\e942";
+}
+.su-shift:before {
+  content: "\e94f";
+}
+.su-size:before {
+  content: "\e94e";
+}
+.su-smaller:before {
+  content: "\e94d";
+}
+.su-storage:before {
+  content: "\e94c";
+}
+.su-sulu:before {
+  content: "\e94b";
+}
+.su-time:before {
+  content: "\e94a";
 }
 .su-trash:before {
   content: "\e943";
+}
+.su-user-12:before {
+  content: "\e944";
+}
+.su-user-22:before {
+  content: "\e945";
 }
 .su-view:before {
   content: "\e946";

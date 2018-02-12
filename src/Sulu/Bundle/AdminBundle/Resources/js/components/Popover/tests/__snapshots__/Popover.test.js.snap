@@ -6,13 +6,13 @@ exports[`The popover should not render in body when not open 2`] = `""`;
 
 exports[`The popover should render in body when open 1`] = `
 <div
-  class="backdrop"
+  class="backdrop fixed"
 />
 `;
 
 exports[`The popover should render in body when open 2`] = `
 "<div>
-  <div class=\\"backdrop\\"></div>
+  <div class=\\"backdrop fixed\\"></div>
 </div>
 <div>
   <div class=\\"container\\">
@@ -27,7 +27,7 @@ exports[`The popover should render in body when open 2`] = `
 
 exports[`The popover should take its dimensions from the positioner 1`] = `
 "<div>
-  <div class=\\"backdrop\\"></div>
+  <div class=\\"backdrop fixed\\"></div>
 </div>
 <div>
   <div class=\\"container\\">

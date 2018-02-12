@@ -3,6 +3,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import './icomoon.css';
 import React from 'react';
 import classNames from 'classnames';
+import log from 'loglevel';
 import iconStyles from './icon.scss';
 
 type Props = {
@@ -35,7 +36,7 @@ export default class Icon extends React.PureComponent<Props> {
                 fontClass = 'fa';
                 break;
             default:
-                throw new Error('Invalid icon given: ' + name);
+                log.warn('Invalid icon given: ' + name);
         }
 
         const iconClass = classNames(

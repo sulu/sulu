@@ -6,7 +6,7 @@ exports[`The component should render in body when open 1`] = `<div />`;
 
 exports[`The component should render in body when open 2`] = `
 "<div>
-  <div class=\\"backdrop visible\\"></div>
+  <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
   <div class=\\"dialogContainer\\">
@@ -30,7 +30,7 @@ exports[`The component should render in body with loader instead of confirm butt
 
 exports[`The component should render in body with loader instead of confirm button 2`] = `
 "<div>
-  <div class=\\"backdrop visible\\"></div>
+  <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
   <div class=\\"dialogContainer\\">

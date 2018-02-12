@@ -1,0 +1,293 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render and handle clicks correctly 1`] = `
+<div
+  class="navigation"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="headerContent"
+    >
+      sulu.io
+    </div>
+  </div>
+  <div
+    class="user"
+  >
+    <div
+      class="userContent"
+    >
+      <div
+        class="noUserImage"
+      >
+        <span
+          aria-label="fa-user"
+          class="fa fa-user"
+        />
+      </div>
+      <div
+        class="userProfile"
+      >
+        <span>
+          John Terence Maximilian Travolta
+        </span>
+        <button>
+          <span
+            aria-label="su-exit"
+            class="su-exit"
+          />
+          Log out
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="items"
+  >
+    <div
+      class="item"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="su-search"
+          class="su-search"
+        />
+        Search
+      </div>
+    </div>
+    <div
+      class="item"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="fa-bullseye"
+          class="fa fa-bullseye"
+        />
+        Webspaces
+      </div>
+    </div>
+  </div>
+  <div
+    class="versions"
+  >
+    <div>
+      Sulu (
+      <a
+        href="http://link.com"
+        target="_blank"
+      >
+        2.0.0-RC1
+      </a>
+      )
+    </div>
+  </div>
+</div>
+`;
+
+exports[`The component should render with all available props and handle clicks correctly 1`] = `
+<div
+  class="navigation"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="headerContent"
+    >
+      sulu.io
+    </div>
+  </div>
+  <div
+    class="user"
+  >
+    <div
+      class="userContent"
+    >
+      <img
+        src="http://lorempixel.com/200/200"
+        title="John Travolta"
+      />
+      <div
+        class="userProfile"
+      >
+        <span>
+          John Travolta
+        </span>
+        <button>
+          <span
+            aria-label="su-exit"
+            class="su-exit"
+          />
+          Log out
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="items"
+  >
+    <div
+      class="item"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="su-search"
+          class="su-search"
+        />
+        Search
+      </div>
+    </div>
+    <div
+      class="item"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="su-webspace"
+          class="su-webspace"
+        />
+        Webspaces
+      </div>
+    </div>
+    <div
+      class="item"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="fa-image"
+          class="fa fa-image"
+        />
+        Media
+      </div>
+    </div>
+    <div
+      class="item"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="fa-newspaper-o"
+          class="fa fa-newspaper-o"
+        />
+        Article
+      </div>
+    </div>
+    <div
+      class="item"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="fa-sticky-note-o"
+          class="fa fa-sticky-note-o"
+        />
+        Snippets
+      </div>
+    </div>
+    <div
+      class="item active hasChildren"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="su-user-1"
+          class="su-user-1"
+        />
+        Contact
+      </div>
+      <div>
+        <div
+          class="item"
+        >
+          <div
+            class="title"
+          >
+            Contact 1
+          </div>
+        </div>
+        <div
+          class="item active"
+        >
+          <div
+            class="title"
+          >
+            Contact 2
+          </div>
+        </div>
+        <div
+          class="item"
+        >
+          <div
+            class="title"
+          >
+            Contact 3
+          </div>
+        </div>
+      </div>
+      <span
+        aria-label="su-arrow-down"
+        class="childrenIndicator su-arrow-down clickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+    <div
+      class="item hasChildren"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="fa-gear"
+          class="fa fa-gear"
+        />
+        Settings
+      </div>
+      <span
+        aria-label="su-arrow-right"
+        class="childrenIndicator su-arrow-right clickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+  </div>
+  <div
+    class="versions"
+  >
+    <div>
+      sulu.io (
+      <a
+        href="http://link.com"
+        target="_blank"
+      >
+        1.0.0
+      </a>
+      )
+    </div>
+    <div>
+      Sulu (
+      <a
+        href="http://link.com"
+        target="_blank"
+      >
+        2.0.0-RC1
+      </a>
+      )
+    </div>
+  </div>
+</div>
+`;

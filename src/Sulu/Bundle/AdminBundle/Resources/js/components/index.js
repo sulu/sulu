@@ -15,11 +15,14 @@ import Masonry from './Masonry';
 import MultiItemSelection from './MultiItemSelection';
 import Overlay from './Overlay';
 import Popover from './Popover';
+import Navigation from './Navigation';
+import Backdrop from './Backdrop';
 import withContainerSize from './withContainerSize';
 
 export {
     arrayMove,
     ArrowMenu,
+    Backdrop,
     Breadcrumb,
     Checkbox,
     CircularProgressbar,
@@ -32,6 +35,7 @@ export {
     Menu,
     Masonry,
     MultiItemSelection,
+    Navigation,
     Overlay,
     Popover,
     withContainerSize,

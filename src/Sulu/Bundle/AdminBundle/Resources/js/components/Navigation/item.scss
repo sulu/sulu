@@ -1,0 +1,64 @@
+@import '../../containers/Application/colors.scss';
+
+$color: $silver;
+$backgroundColor: $ebonyClay;
+$activeColor: $java;
+$activeBackgroundColor: $ebonyClayDark;
+
+.item {
+    color: $color;
+    font-size: 14px;
+    line-height: 16px;
+    cursor: pointer;
+    background: $backgroundColor;
+    box-sizing: border-box;
+    padding-left: 4px;
+    position: relative;
+
+    &:hover {
+        color: $java;
+    }
+
+    &.active {
+        border-left: 4px solid $activeColor;
+        background: $activeBackgroundColor;
+        font-weight: bold;
+        padding-left: 0;
+    }
+
+    .title {
+        padding: 20px 40px 20px 36px;
+
+        span {
+            margin-right: 20px;
+            width: 15px;
+        }
+    }
+
+    .children-indicator {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+    }
+
+    /** Child **/
+    .item {
+        font-size: 12px;
+        background: inherit;
+        font-weight: normal;
+        margin-left: 30px;
+        padding-left: 0;
+
+        .title {
+            padding-top: 0;
+            padding-bottom: 15px;
+            padding-left: 41px;
+        }
+
+        &.active {
+            border-left: none;
+            font-weight: bold;
+            background: inherit;
+        }
+    }
+}
