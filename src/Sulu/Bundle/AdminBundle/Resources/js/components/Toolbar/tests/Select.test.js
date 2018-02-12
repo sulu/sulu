@@ -35,7 +35,7 @@ test('Render select with a prepended icon', () => {
     expect(render(
         <Select
             {...selectPropsMock}
-            icon="floppy-o"
+            icon="fa-floppy-o"
         />
     )).toMatchSnapshot();
 });

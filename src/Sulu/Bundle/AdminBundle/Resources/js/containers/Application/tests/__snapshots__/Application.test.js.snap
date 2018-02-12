@@ -15,8 +15,8 @@ exports[`Application should not fail if current route does not exist 1`] = `
           class="button primary"
         >
           <span
-            aria-label="bars"
-            class="icon fa fa-bars"
+            aria-label="su-view"
+            class="icon su-view"
           />
         </button>
       </div>
@@ -48,8 +48,8 @@ exports[`Application should render based on current route 1`] = `
           class="button primary"
         >
           <span
-            aria-label="bars"
-            class="icon fa fa-bars"
+            aria-label="su-view"
+            class="icon su-view"
           />
         </button>
       </div>

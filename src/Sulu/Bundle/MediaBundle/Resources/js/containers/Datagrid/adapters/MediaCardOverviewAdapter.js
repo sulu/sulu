@@ -4,7 +4,7 @@ import React from 'react';
 import {AbstractAdapter, FlatStructureStrategy, InfiniteLoadingStrategy} from 'sulu-admin-bundle/containers';
 import MediaCardAdapter from './MediaCardAdapter';
 
-const EDIT_ICON = 'pencil';
+const EDIT_ICON = 'su-pen';
 
 @observer
 export default class MediaCardOverviewAdapter extends AbstractAdapter {

@@ -152,7 +152,7 @@ export default withToolbar(MediaDetail, function() {
             {
                 type: 'button',
                 value: translate('sulu_admin.save'),
-                icon: 'floppy-o',
+                icon: 'su-save',
                 disabled: !resourceStore.dirty,
                 loading: resourceStore.saving,
                 onClick: () => {

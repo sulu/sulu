@@ -55,9 +55,9 @@ export default class WebspaceSelect extends React.Component<Props> {
                     className={webspaceSelectStyles.button}
                     onClick={this.handleButtonClick}
                 >
-                    <Icon className={webspaceSelectStyles.buttonIcon} name="dot-circle-o" />
+                    <Icon className={webspaceSelectStyles.buttonIcon} name="su-webspace" />
                     <span className={webspaceSelectStyles.buttonValue}>{this.displayValue}</span>
-                    <Icon className={webspaceSelectStyles.buttonIcon} name="chevron-down" />
+                    <Icon className={webspaceSelectStyles.buttonIcon} name="su-arrow-down" />
                 </button>
             </div>
         );
@@ -72,7 +72,7 @@ export default class WebspaceSelect extends React.Component<Props> {
         return (
             <ArrowMenu onClose={this.handleMenuClose} open={this.open} anchorElement={this.renderButton()}>
                 <ArrowMenu.SingleItemSection
-                    icon="dot-circle-o"
+                    icon="su-webspace"
                     title="Webspaces"
                     value={value}
                     onChange={this.handleChange}

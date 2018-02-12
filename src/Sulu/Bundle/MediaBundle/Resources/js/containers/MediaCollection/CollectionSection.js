@@ -148,12 +148,12 @@ export default class CollectionSection extends React.Component<Props> {
                             onNavigate={this.handleBreadcrumbNavigate}
                         />
                         <div>
-                            <Icon name="plus" onClick={this.handleAddCollectionClick} />
+                            <Icon name="su-plus" onClick={this.handleAddCollectionClick} />
                             {!!resourceStore.id &&
-                                <Icon name="pencil" onClick={this.handleEditCollectionClick} />
+                                <Icon name="su-pen" onClick={this.handleEditCollectionClick} />
                             }
                             {!!resourceStore.id &&
-                                <Icon name="trash" onClick={this.handleRemoveCollectionClick} />
+                                <Icon name="su-trash" onClick={this.handleRemoveCollectionClick} />
                             }
                         </div>
                     </div>

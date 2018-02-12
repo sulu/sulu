@@ -7,7 +7,7 @@ import {Icon} from 'sulu-admin-bundle/components';
 import MediaItem from './MediaItem';
 import dropzoneOverlayStyles from './dropzoneOverlay.scss';
 
-const UPLOAD_ICON = 'cloud-upload';
+const UPLOAD_ICON = 'fa-cloud-upload';
 
 type Props = {
     children?: ChildrenArray<Element<typeof MediaItem>>,

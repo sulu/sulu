@@ -101,7 +101,7 @@ exports[`Render a basic Masonry view with the MediaCardOverviewAdapter 1`] = `
                 class="downloadButton"
               >
                 <span
-                  aria-label="cloud-download"
+                  aria-label="fa-cloud-download"
                   class="fa fa-cloud-download"
                 />
               </button>
@@ -118,8 +118,8 @@ exports[`Render a basic Masonry view with the MediaCardOverviewAdapter 1`] = `
               class="cover"
             >
               <span
-                aria-label="pencil"
-                class="mediaIcon fa fa-pencil"
+                aria-label="su-pen"
+                class="mediaIcon su-pen"
               />
             </div>
           </div>
@@ -220,7 +220,7 @@ exports[`Render a basic Masonry view with the MediaCardOverviewAdapter 1`] = `
                 class="downloadButton"
               >
                 <span
-                  aria-label="cloud-download"
+                  aria-label="fa-cloud-download"
                   class="fa fa-cloud-download"
                 />
               </button>
@@ -237,8 +237,8 @@ exports[`Render a basic Masonry view with the MediaCardOverviewAdapter 1`] = `
               class="cover"
             >
               <span
-                aria-label="pencil"
-                class="mediaIcon fa fa-pencil"
+                aria-label="su-pen"
+                class="mediaIcon su-pen"
               />
             </div>
           </div>

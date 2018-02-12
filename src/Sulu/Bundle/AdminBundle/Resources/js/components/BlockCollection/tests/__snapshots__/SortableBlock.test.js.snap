@@ -8,8 +8,8 @@ exports[`Render collapsed sortable block 1`] = `
     class="handle"
   >
     <span
-      aria-label="ellipsis-v"
-      class="sortableHandle fa fa-ellipsis-v"
+      aria-label="su-shift"
+      class="sortableHandle su-shift"
     />
   </div>
   <div
@@ -28,8 +28,8 @@ exports[`Render expanded sortable block 1`] = `
     class="handle"
   >
     <span
-      aria-label="ellipsis-v"
-      class="sortableHandle fa fa-ellipsis-v"
+      aria-label="su-shift"
+      class="sortableHandle su-shift"
     />
   </div>
   <div
@@ -42,13 +42,13 @@ exports[`Render expanded sortable block 1`] = `
         class="icons"
       >
         <span
-          aria-label="trash-o"
-          class="fa fa-trash-o clickable"
+          aria-label="su-trash"
+          class="su-trash clickable"
           role="button"
           tabindex="0"
         />
         <span
-          aria-label="times"
+          aria-label="fa-times"
           class="fa fa-times clickable"
           role="button"
           tabindex="0"
@@ -70,8 +70,8 @@ exports[`Render expanded sortable block with types 1`] = `
     class="handle"
   >
     <span
-      aria-label="ellipsis-v"
-      class="sortableHandle fa fa-ellipsis-v"
+      aria-label="su-shift"
+      class="sortableHandle su-shift"
     />
   </div>
   <div
@@ -112,8 +112,8 @@ exports[`Render expanded sortable block with types 1`] = `
             </div>
           </div>
           <span
-            aria-label="chevron-down"
-            class="toggle fa fa-chevron-down"
+            aria-label="su-arrow-down"
+            class="toggle su-arrow-down"
           />
         </button>
       </div>
@@ -121,13 +121,13 @@ exports[`Render expanded sortable block with types 1`] = `
         class="icons"
       >
         <span
-          aria-label="trash-o"
-          class="fa fa-trash-o clickable"
+          aria-label="su-trash"
+          class="su-trash clickable"
           role="button"
           tabindex="0"
         />
         <span
-          aria-label="times"
+          aria-label="fa-times"
           class="fa fa-times clickable"
           role="button"
           tabindex="0"

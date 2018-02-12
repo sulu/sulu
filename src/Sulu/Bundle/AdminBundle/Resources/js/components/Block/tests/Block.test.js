@@ -79,7 +79,7 @@ test('Clicking the close icon in an expanded block should collapse it', () => {
     const collapseSpy = jest.fn();
     const block = shallow(<Block expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()}>Block content</Block>);
 
-    const closeIcon = block.find('Icon[name="times"]');
+    const closeIcon = block.find('Icon[name="fa-times"]');
     expect(closeIcon).toHaveLength(1);
 
     closeIcon.simulate('click');
@@ -93,7 +93,7 @@ test('Clicking the remove icon in an expanded block should remove it', () => {
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={removeSpy}>Block content</Block>
     );
 
-    const removeIcon = block.find('Icon[name="trash-o"]');
+    const removeIcon = block.find('Icon[name="su-trash"]');
     expect(removeIcon).toHaveLength(1);
 
     removeIcon.simulate('click');

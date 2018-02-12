@@ -21,19 +21,19 @@ test('AutoComplete should render', () => {
             onSearch={searchSpy}
         >
             <Suggestion
-                icon="ticket"
+                icon="fa-ticket"
                 value="suggestion-1"
             >
                 Suggestion 1
             </Suggestion>
             <Suggestion
-                icon="ticket"
+                icon="fa-ticket"
                 value="suggestion-2"
             >
                 Suggestion 2
             </Suggestion>
             <Suggestion
-                icon="ticket"
+                icon="fa-ticket"
                 value="suggestion-3"
             >
                 Suggestion 3
@@ -52,19 +52,19 @@ test('Render the AutoComplete with open suggestions list', () => {
             onSearch={searchSpy}
         >
             <Suggestion
-                icon="ticket"
+                icon="fa-ticket"
                 value="suggestion-1"
             >
                 Suggestion 1
             </Suggestion>
             <Suggestion
-                icon="ticket"
+                icon="fa-ticket"
                 value="suggestion-2"
             >
                 Suggestion 2
             </Suggestion>
             <Suggestion
-                icon="ticket"
+                icon="fa-ticket"
                 value="suggestion-3"
             >
                 Suggestion 3
@@ -87,19 +87,19 @@ test('Clicking on a suggestion should call the onChange handler with the value o
             onSearch={searchSpy}
         >
             <Suggestion
-                icon="ticket"
+                icon="fa-ticket"
                 value={testValue}
             >
                 Suggestion 1
             </Suggestion>
             <Suggestion
-                icon="ticket"
+                icon="fa-ticket"
                 value="suggestion-2"
             >
                 Suggestion 2
             </Suggestion>
             <Suggestion
-                icon="ticket"
+                icon="fa-ticket"
                 value="suggestion-3"
             >
                 Suggestion 3

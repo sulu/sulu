@@ -6,7 +6,7 @@ import Suggestion from '../Suggestion';
 test('Suggestion should render', () => {
     expect(render(
         <Suggestion
-            icon="ticket"
+            icon="fa-ticket"
             value="suggestion-1"
         >
             Suggestion 1
@@ -18,7 +18,7 @@ test('Suggestion should render strong-tags around found chars', () => {
     expect(render(
         <Suggestion
             query="sug"
-            icon="ticket"
+            icon="fa-ticket"
             value="suggestion-1"
         >
             Suggestion 2
@@ -31,7 +31,7 @@ test('Clicking on a suggestion should call the onClick handler', () => {
     const suggestion = shallow(
         <Suggestion
             query="sug"
-            icon="ticket"
+            icon="fa-ticket"
             value="suggestion-1"
             onSelection={onClickSpy}
         >
@@ -50,7 +50,7 @@ test('Should highlight the part of the suggestion text which matches the query p
     const suggestion = shallow(
         <Suggestion
             query="sug"
-            icon="ticket"
+            icon="fa-ticket"
             value="suggestion-1"
             onSelection={onClickSpy}
         >

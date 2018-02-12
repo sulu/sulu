@@ -53,7 +53,7 @@ define([
                         },
                         moveSelected: {
                             options: {
-                                icon: 'arrows',
+                                icon: 'fa-arrows',
                                 title: 'sulu.category.move',
                                 disabled: true,
                                 callback: function() {
@@ -148,7 +148,7 @@ define([
                             icons: [
                                 {
                                     column: 'name',
-                                    icon: 'plus-circle',
+                                    icon: 'su-plus',
                                     callback: this.addNewCategory.bind(this)
                                 }
                             ],

@@ -41,8 +41,8 @@ exports[`Input should render with icon 1`] = `
     class="prependedContainer"
   >
     <span
-      aria-label="my-icon"
-      class="icon fa fa-my-icon"
+      aria-label="su-pen"
+      class="icon su-pen"
     />
   </div>
   <input

@@ -10,8 +10,8 @@ exports[`Render a Folder component 1`] = `
     class="iconContainer"
   >
     <span
-      aria-label="folder-o"
-      class="fa fa-folder-o"
+      aria-label="su-folder"
+      class="su-folder"
     />
   </div>
   <div

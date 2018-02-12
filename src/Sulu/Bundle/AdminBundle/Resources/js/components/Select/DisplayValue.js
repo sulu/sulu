@@ -13,7 +13,7 @@ type Props = {
     displayValueRef?: (button: ElementRef<'button'>) => void,
 };
 
-const TOGGLE_ICON = 'chevron-down';
+const TOGGLE_ICON = 'su-arrow-down';
 
 export default class DisplayValue extends React.PureComponent<Props> {
     button: ElementRef<'button'>;

@@ -34,7 +34,7 @@ test('Render dropdown with a prepended icon', () => {
     expect(render(
         <Dropdown
             {...dropdownPropsMock}
-            icon="floppy-o"
+            icon="fa-floppy-o"
         />
     )).toMatchSnapshot();
 });

@@ -48,7 +48,7 @@ const button = (<button onClick={handleButtonClick}>{state.value}</button>);
     </div>
     
     <ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
-        <SingleItemSection icon="dot-circle-o" title="Webspaces" value={state.value} onChange={handleChangeSection}>
+        <SingleItemSection icon="su-webspace" title="Webspaces" value={state.value} onChange={handleChangeSection}>
             <Item value="sulu">Sulu</Item>
             <Item value="sulu_blog">Sulu Blog</Item>
             <Item value="sulu_doc">Sulu Doc</Item>
@@ -107,12 +107,12 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
     </div>
     
     <ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
-        <SingleItemSection icon="dot-circle-o" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
+        <SingleItemSection icon="su-webspace" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
             <Item value="sulu">Sulu</Item>
             <Item value="sulu_blog">Sulu Blog</Item>
             <Item value="sulu_doc">Sulu Doc</Item>
         </SingleItemSection>
-        <SingleItemSection icon="check" title="Columns" value={state.value2} onChange={handleChangeSection2}>
+        <SingleItemSection icon="su-checkmark" title="Columns" value={state.value2} onChange={handleChangeSection2}>
             <Item value="title">Title</Item>
             <Item value="description">Description</Item>
         </SingleItemSection>
@@ -174,12 +174,12 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
         <Section title="Search Section">
             <input type="text" />
         </Section>
-        <SingleItemSection icon="dot-circle-o" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
+        <SingleItemSection icon="su-webspace" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
             <Item value="sulu">Sulu</Item>
             <Item value="sulu_blog">Sulu Blog</Item>
             <Item value="sulu_doc">Sulu Doc</Item>
         </SingleItemSection>
-        <SingleItemSection icon="check" title="Columns" value={state.value2} onChange={handleChangeSection2}>
+        <SingleItemSection icon="su-checkmark" title="Columns" value={state.value2} onChange={handleChangeSection2}>
             <Item value="title">Title</Item>
             <Item value="description">Description</Item>
         </SingleItemSection>

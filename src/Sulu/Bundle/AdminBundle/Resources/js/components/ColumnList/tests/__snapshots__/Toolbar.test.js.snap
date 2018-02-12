@@ -8,7 +8,7 @@ exports[`The Toolbar component should render with active 1`] = `
     class="item primary"
   >
     <span
-      aria-label="plus"
+      aria-label="fa-plus"
       class="fa fa-plus"
     />
   </div>
@@ -16,7 +16,7 @@ exports[`The Toolbar component should render with active 1`] = `
     class="item primary"
   >
     <span
-      aria-label="search"
+      aria-label="fa-search"
       class="fa fa-search"
     />
   </div>
@@ -24,7 +24,7 @@ exports[`The Toolbar component should render with active 1`] = `
     class="item primary"
   >
     <span
-      aria-label="gear"
+      aria-label="fa-gear"
       class="fa fa-gear"
     />
   </div>
@@ -41,7 +41,7 @@ exports[`The Toolbar component should render with active 3`] = `
     class="item primary"
   >
     <span
-      aria-label="plus"
+      aria-label="fa-plus"
       class="fa fa-plus"
     />
   </div>
@@ -49,7 +49,7 @@ exports[`The Toolbar component should render with active 3`] = `
     class="item primary"
   >
     <span
-      aria-label="search"
+      aria-label="fa-search"
       class="fa fa-search"
     />
   </div>
@@ -57,7 +57,7 @@ exports[`The Toolbar component should render with active 3`] = `
     class="item primary"
   >
     <span
-      aria-label="gear"
+      aria-label="fa-gear"
       class="fa fa-gear"
     />
   </div>

@@ -25,7 +25,7 @@ type Props = {
     onClose: () => void,
 };
 
-const CLOSE_ICON = 'times';
+const CLOSE_ICON = 'fa-times';
 
 @observer
 export default class Overlay extends React.Component<Props> {

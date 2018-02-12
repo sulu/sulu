@@ -15,8 +15,8 @@ exports[`Render disabled dropdown 1`] = `
       Click to open
     </span>
     <span
-      aria-label="chevron-down"
-      class="dropdownIcon fa fa-chevron-down"
+      aria-label="su-arrow-down"
+      class="dropdownIcon su-arrow-down"
     />
   </button>
 </div>
@@ -36,8 +36,8 @@ exports[`Render dropdown 1`] = `
       Click to open
     </span>
     <span
-      aria-label="chevron-down"
-      class="dropdownIcon fa fa-chevron-down"
+      aria-label="su-arrow-down"
+      class="dropdownIcon su-arrow-down"
     />
   </button>
 </div>
@@ -57,8 +57,8 @@ exports[`Render dropdown with a different size 1`] = `
       Click to open
     </span>
     <span
-      aria-label="chevron-down"
-      class="dropdownIcon fa fa-chevron-down"
+      aria-label="su-arrow-down"
+      class="dropdownIcon su-arrow-down"
     />
   </button>
 </div>
@@ -73,7 +73,7 @@ exports[`Render dropdown with a prepended icon 1`] = `
     value="Click to open"
   >
     <span
-      aria-label="floppy-o"
+      aria-label="fa-floppy-o"
       class="icon fa fa-floppy-o"
     />
     <span
@@ -82,8 +82,8 @@ exports[`Render dropdown with a prepended icon 1`] = `
       Click to open
     </span>
     <span
-      aria-label="chevron-down"
-      class="dropdownIcon fa fa-chevron-down"
+      aria-label="su-arrow-down"
+      class="dropdownIcon su-arrow-down"
     />
   </button>
 </div>
@@ -114,8 +114,8 @@ exports[`Render loading dropdown 1`] = `
       Click to open
     </span>
     <span
-      aria-label="chevron-down"
-      class="dropdownIcon fa fa-chevron-down"
+      aria-label="su-arrow-down"
+      class="dropdownIcon su-arrow-down"
     />
   </button>
 </div>

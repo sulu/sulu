@@ -16,7 +16,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
           disabled=""
         >
           <span
-            aria-label="trash-o"
+            aria-label="fa-trash-o"
             class="icon fa fa-trash-o"
           />
         </button>
@@ -30,7 +30,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
             value="Save"
           >
             <span
-              aria-label="floppy-more"
+              aria-label="fa-floppy-more"
               class="icon fa fa-floppy-more"
             />
             <span
@@ -39,8 +39,8 @@ exports[`Render the items from the ToolbarStore 1`] = `
               Save
             </span>
             <span
-              aria-label="chevron-down"
-              class="dropdownIcon fa fa-chevron-down"
+              aria-label="su-arrow-down"
+              class="dropdownIcon su-arrow-down"
             />
           </button>
         </div>

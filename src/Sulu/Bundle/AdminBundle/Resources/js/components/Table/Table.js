@@ -11,7 +11,7 @@ import HeaderCell from './HeaderCell';
 import type {ButtonConfig, SelectMode} from './types';
 import tableStyles from './table.scss';
 
-const PLACEHOLDER_ICON = 'battery-quarter';
+const PLACEHOLDER_ICON = 'su-battery-low';
 
 type Props = {
     children: ChildrenArray<Element<typeof Header | typeof Body>>,

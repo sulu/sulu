@@ -113,7 +113,7 @@ export default class BlockCollection extends React.Component<Props> {
                     value={value}
                 />
                 <Button skin="secondary" onClick={this.handleAddBlock}>
-                    <Icon name="plus" className={blockCollectionStyles.addButtonIcon} />
+                    <Icon name="su-plus" className={blockCollectionStyles.addButtonIcon} />
                     {translate('sulu_admin.add_block')}
                 </Button>
             </section>

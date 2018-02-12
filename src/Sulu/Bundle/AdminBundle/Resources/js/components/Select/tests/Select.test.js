@@ -35,7 +35,7 @@ test('The component should render with an icon', () => {
     const onSelect = jest.fn();
     const select = mount(
         <Select
-            icon="plus"
+            icon="su-plus"
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
             displayValue="My text"

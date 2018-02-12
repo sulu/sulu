@@ -4,4 +4,4 @@ import {SortableHandle} from 'react-sortable-hoc';
 import Icon from '../Icon';
 import sortableHandleStyles from './sortableHandle.scss';
 
-export default SortableHandle(() => <Icon className={sortableHandleStyles.sortableHandle} name="ellipsis-v" />);
+export default SortableHandle(() => <Icon className={sortableHandleStyles.sortableHandle} name="su-shift" />);

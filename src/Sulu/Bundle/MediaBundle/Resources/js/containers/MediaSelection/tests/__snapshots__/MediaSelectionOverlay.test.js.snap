@@ -8,7 +8,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
   <div class=\\"container\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
-        <header>Select media<span class=\\"icon fa fa-times clickable\\" aria-label=\\"times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <header>Select media<span class=\\"icon fa fa-times clickable\\" aria-label=\\"fa-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <div class=\\"overlay\\">
             <div class=\\"dropzone\\" aria-disabled=\\"false\\">
@@ -19,15 +19,15 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                       <button disabled=\\"\\" class=\\"item\\"></button>
                     </li>
                   </ul>
-                  <div><span class=\\"fa fa-plus clickable\\" aria-label=\\"plus\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"fa fa-pencil clickable\\" aria-label=\\"pencil\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"fa fa-trash clickable\\" aria-label=\\"trash\\"
-                      role=\\"button\\" tabindex=\\"0\\"></span></div>
+                  <div><span class=\\"su-plus clickable\\" aria-label=\\"su-plus\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-pen clickable\\" aria-label=\\"su-pen\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\"
+                      tabindex=\\"0\\"></span></div>
                 </div>
                 <div class=\\"datagrid\\">
                   <section>
                     <ul class=\\"folderList\\">
                       <li>
                         <div class=\\"folder\\" role=\\"button\\" tabindex=\\"0\\">
-                          <div class=\\"iconContainer\\"><span class=\\"fa fa-folder-o\\" aria-label=\\"folder-o\\"></span></div>
+                          <div class=\\"iconContainer\\"><span class=\\"su-folder\\" aria-label=\\"su-folder\\"></span></div>
                           <div class=\\"description\\">
                             <h5 class=\\"title\\">Title 1</h5>
                             <div class=\\"info\\">1 Object</div>
@@ -36,7 +36,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                       </li>
                       <li>
                         <div class=\\"folder\\" role=\\"button\\" tabindex=\\"0\\">
-                          <div class=\\"iconContainer\\"><span class=\\"fa fa-folder-o\\" aria-label=\\"folder-o\\"></span></div>
+                          <div class=\\"iconContainer\\"><span class=\\"su-folder\\" aria-label=\\"su-folder\\"></span></div>
                           <div class=\\"description\\">
                             <h5 class=\\"title\\">Title 2</h5>
                             <div class=\\"info\\">0 Objects</div>
@@ -46,8 +46,8 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                     </ul>
                     <nav class=\\"pagination\\">
                       <div class=\\"loader\\"></div><span class=\\"display\\">Page: 2 of 3</span>
-                      <button class=\\"previous\\"><span class=\\"fa fa-angle-left\\" aria-label=\\"angle-left\\"></span></button>
-                      <button class=\\"next\\"><span class=\\"fa fa-angle-right\\" aria-label=\\"angle-right\\"></span></button>
+                      <button class=\\"previous\\"><span class=\\"su-arrow-left\\" aria-label=\\"su-arrow-left\\"></span></button>
+                      <button class=\\"next\\"><span class=\\"su-arrow-right\\" aria-label=\\"su-arrow-right\\"></span></button>
                     </nav>
                   </section>
                 </div>
@@ -87,7 +87,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                           </div>
                           <div class=\\"media\\">
                             <img alt=\\"Title 1\\" src=\\"http://lorempixel.com/240/100\\">
-                            <div class=\\"cover\\"><span class=\\"mediaIcon fa fa-check\\" aria-label=\\"check\\"></span></div>
+                            <div class=\\"cover\\"><span class=\\"mediaIcon su-checkmark\\" aria-label=\\"su-checkmark\\"></span></div>
                           </div>
                         </div>
                       </li>
@@ -119,7 +119,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                           </div>
                           <div class=\\"media\\">
                             <img alt=\\"Title 2\\" src=\\"http://lorempixel.com/240/100\\">
-                            <div class=\\"cover\\"><span class=\\"mediaIcon fa fa-check\\" aria-label=\\"check\\"></span></div>
+                            <div class=\\"cover\\"><span class=\\"mediaIcon su-checkmark\\" aria-label=\\"su-checkmark\\"></span></div>
                           </div>
                         </div>
                       </li>

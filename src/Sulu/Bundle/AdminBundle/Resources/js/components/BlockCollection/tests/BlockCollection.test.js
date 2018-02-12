@@ -86,7 +86,7 @@ test('Should allow to collapse blocks', () => {
     expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(true);
     expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
 
-    blockCollection.find('Block').at(0).find('Icon[name="times"]').simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="fa-times"]').simulate('click');
 
     expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
     expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
@@ -155,7 +155,7 @@ test('Should allow to remove an existing block', () => {
     );
 
     blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="trash-o"]').simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-trash"]').simulate('click');
 
     expect(changeSpy).toBeCalledWith([{content: 'Test 2'}]);
 });

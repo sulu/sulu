@@ -4,7 +4,7 @@ import React from 'react';
 import {AbstractAdapter, FlatStructureStrategy, InfiniteLoadingStrategy} from 'sulu-admin-bundle/containers';
 import MediaCardAdapter from './MediaCardAdapter';
 
-const SELECT_ICON = 'check';
+const SELECT_ICON = 'su-checkmark';
 
 @observer
 export default class MediaCardSelectionAdapter extends AbstractAdapter {

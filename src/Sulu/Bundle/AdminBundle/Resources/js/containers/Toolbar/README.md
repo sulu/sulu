@@ -27,7 +27,7 @@ const PageWithToolbar = withToolbar(Page, function() {
             {
                 type: 'button',
                 value: 'Click me!',
-                icon: 'plus-circle',
+                icon: 'fa-plus-circle',
                 onClick: () => {
                     alert('Hi!');
                 },
@@ -70,7 +70,7 @@ const PageWithToolbar = withToolbar(Page, function() {
             {
                 type: 'button',
                 value: 'I\'m a Button',
-                icon: 'smile-o',
+                icon: 'fa-smile-o',
                 onClick: () => {
                     alert('What do you expect me to do?!');
                 },
@@ -78,7 +78,7 @@ const PageWithToolbar = withToolbar(Page, function() {
             {
                 type: 'dropdown',
                 label: 'Mr. Dropdown',                
-                icon: 'smile-o',
+                icon: 'fa-smile-o',
                 options: [
                     {
                         label: 'Now click me!',
@@ -99,7 +99,7 @@ const PageWithToolbar = withToolbar(Page, function() {
                 type: 'select',
                 label: 'Mrs. Select',
                 value: state.selectVal,
-                icon: 'venus',
+                icon: 'fa-venus',
                 onChange: (value) => {
                     setState({selectVal: value});
                 },
@@ -149,7 +149,7 @@ const PageWithToolbar = withToolbar(Page, function() {
             {
                 type: 'button',
                 value: 'Simple button',
-                icon: 'star',
+                icon: 'fa-star',
                 onClick: () => {
                     alert(':)');
                 },
@@ -223,7 +223,7 @@ const PageWithToolbar = withToolbar(Page, function() {
             {
                 type: 'button',
                 value: 'Save',
-                icon: 'floppy-o',
+                icon: 'fa-floppy-o',
                 loading: this.loadingSave.get(),
                 onClick: () => {
                     this.loadingSave.set(true);
@@ -236,7 +236,7 @@ const PageWithToolbar = withToolbar(Page, function() {
                 type: 'select',
                 label: 'Template',
                 value: this.template.get(),
-                icon: 'pencil',
+                icon: 'fa-pencil',
                 loading: this.loadingTemplate.get(),
                 onChange: (value) => {
                     this.loadingTemplate.set(true);
@@ -259,7 +259,7 @@ const PageWithToolbar = withToolbar(Page, function() {
             {
                 type: 'dropdown',
                 label: 'Actions',
-                icon: 'ellipsis-h',
+                icon: 'fa-ellipsis-h',
                 loading: this.loadingActions.get(),
                 options: [
                     {

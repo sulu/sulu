@@ -8,7 +8,7 @@ import {CircularProgressbar, Icon} from 'sulu-admin-bundle/components';
 import MimeTypeIndicator from '../MimeTypeIndicator';
 import singleMediaDropzoneStyles from './singleMediaDropzone.scss';
 
-const UPLOAD_ICON = 'cloud-upload';
+const UPLOAD_ICON = 'fa-cloud-upload';
 
 type Props = {
     image: ?string,

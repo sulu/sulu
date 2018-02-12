@@ -10,8 +10,8 @@ exports[`Clicking the left and right button inside the header should call the ri
       type="button"
     >
       <span
-        aria-label="plus"
-        class="fa fa-plus"
+        aria-label="su-plus"
+        class="su-plus"
       />
     </button>
     <div
@@ -24,7 +24,7 @@ exports[`Clicking the left and right button inside the header should call the ri
       type="button"
     >
       <span
-        aria-label="gear"
+        aria-label="fa-gear"
         class="fa fa-gear"
       />
     </button>
@@ -42,8 +42,8 @@ exports[`Clicking the left and right button inside the header should call the ri
           class="dragHandle"
         >
           <span
-            aria-label="ellipsis-v"
-            class="fa fa-ellipsis-v"
+            aria-label="su-shift"
+            class="su-shift"
           />
           <span
             class="index"
@@ -68,8 +68,8 @@ exports[`Clicking the left and right button inside the header should call the ri
           class="dragHandle"
         >
           <span
-            aria-label="ellipsis-v"
-            class="fa fa-ellipsis-v"
+            aria-label="su-shift"
+            class="su-shift"
           />
           <span
             class="index"
@@ -94,8 +94,8 @@ exports[`Clicking the left and right button inside the header should call the ri
           class="dragHandle"
         >
           <span
-            aria-label="ellipsis-v"
-            class="fa fa-ellipsis-v"
+            aria-label="su-shift"
+            class="su-shift"
           />
           <span
             class="index"
@@ -170,8 +170,8 @@ exports[`Render an MultiItemSelection with children 1`] = `
           class="dragHandle"
         >
           <span
-            aria-label="ellipsis-v"
-            class="fa fa-ellipsis-v"
+            aria-label="su-shift"
+            class="su-shift"
           />
           <span
             class="index"
@@ -196,8 +196,8 @@ exports[`Render an MultiItemSelection with children 1`] = `
           class="dragHandle"
         >
           <span
-            aria-label="ellipsis-v"
-            class="fa fa-ellipsis-v"
+            aria-label="su-shift"
+            class="su-shift"
           />
           <span
             class="index"
@@ -222,8 +222,8 @@ exports[`Render an MultiItemSelection with children 1`] = `
           class="dragHandle"
         >
           <span
-            aria-label="ellipsis-v"
-            class="fa fa-ellipsis-v"
+            aria-label="su-shift"
+            class="su-shift"
           />
           <span
             class="index"

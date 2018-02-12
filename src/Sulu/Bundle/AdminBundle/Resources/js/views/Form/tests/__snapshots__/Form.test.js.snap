@@ -6,7 +6,7 @@ Object {
   "items": Array [
     Object {
       "disabled": true,
-      "icon": "floppy-o",
+      "icon": "su-save",
       "loading": false,
       "onClick": [Function],
       "type": "button",
@@ -23,14 +23,14 @@ Object {
   "items": Array [
     Object {
       "disabled": true,
-      "icon": "floppy-o",
+      "icon": "su-save",
       "loading": false,
       "onClick": [Function],
       "type": "button",
       "value": "Save",
     },
     Object {
-      "icon": "paint-brush",
+      "icon": "fa-paint-brush",
       "loading": true,
       "onChange": [Function],
       "options": Array [],
@@ -48,14 +48,14 @@ Object {
   "items": Array [
     Object {
       "disabled": true,
-      "icon": "floppy-o",
+      "icon": "su-save",
       "loading": false,
       "onClick": [Function],
       "type": "button",
       "value": "Save",
     },
     Object {
-      "icon": "paint-brush",
+      "icon": "fa-paint-brush",
       "loading": false,
       "onChange": [Function],
       "options": Array [

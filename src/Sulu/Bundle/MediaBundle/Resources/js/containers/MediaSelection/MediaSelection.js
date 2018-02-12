@@ -10,7 +10,7 @@ import MediaSelectionOverlay from './MediaSelectionOverlay';
 import MediaSelectionItem from './MediaSelectionItem';
 import type {Value} from './types';
 
-const ADD_ICON = 'plus';
+const ADD_ICON = 'su-plus';
 
 @observer
 export default class MediaSelection extends React.Component<FieldTypeProps<Value>> {

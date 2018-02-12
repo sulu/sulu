@@ -22,8 +22,8 @@ exports[`Render a simple MediaOverview 1`] = `
               All Media
             </button>
             <span
-              aria-label="chevron-right"
-              class="arrow fa fa-chevron-right"
+              aria-label="su-arrow-right"
+              class="arrow su-arrow-right"
             />
           </li>
           <li>
@@ -35,20 +35,20 @@ exports[`Render a simple MediaOverview 1`] = `
         </ul>
         <div>
           <span
-            aria-label="plus"
-            class="fa fa-plus clickable"
+            aria-label="su-plus"
+            class="su-plus clickable"
             role="button"
             tabindex="0"
           />
           <span
-            aria-label="pencil"
-            class="fa fa-pencil clickable"
+            aria-label="su-pen"
+            class="su-pen clickable"
             role="button"
             tabindex="0"
           />
           <span
-            aria-label="trash"
-            class="fa fa-trash clickable"
+            aria-label="su-trash"
+            class="su-trash clickable"
             role="button"
             tabindex="0"
           />
@@ -71,8 +71,8 @@ exports[`Render a simple MediaOverview 1`] = `
                   class="iconContainer"
                 >
                   <span
-                    aria-label="folder-o"
-                    class="fa fa-folder-o"
+                    aria-label="su-folder"
+                    class="su-folder"
                   />
                 </div>
                 <div
@@ -101,8 +101,8 @@ exports[`Render a simple MediaOverview 1`] = `
                   class="iconContainer"
                 >
                   <span
-                    aria-label="folder-o"
-                    class="fa fa-folder-o"
+                    aria-label="su-folder"
+                    class="su-folder"
                   />
                 </div>
                 <div
@@ -137,16 +137,16 @@ exports[`Render a simple MediaOverview 1`] = `
               class="previous"
             >
               <span
-                aria-label="angle-left"
-                class="fa fa-angle-left"
+                aria-label="su-arrow-left"
+                class="su-arrow-left"
               />
             </button>
             <button
               class="next"
             >
               <span
-                aria-label="angle-right"
-                class="fa fa-angle-right"
+                aria-label="su-arrow-right"
+                class="su-arrow-right"
               />
             </button>
           </nav>
@@ -271,7 +271,7 @@ exports[`Render a simple MediaOverview 1`] = `
                       class="downloadButton"
                     >
                       <span
-                        aria-label="cloud-download"
+                        aria-label="fa-cloud-download"
                         class="fa fa-cloud-download"
                       />
                     </button>
@@ -288,8 +288,8 @@ exports[`Render a simple MediaOverview 1`] = `
                     class="cover"
                   >
                     <span
-                      aria-label="pencil"
-                      class="mediaIcon fa fa-pencil"
+                      aria-label="su-pen"
+                      class="mediaIcon su-pen"
                     />
                   </div>
                 </div>
@@ -390,7 +390,7 @@ exports[`Render a simple MediaOverview 1`] = `
                       class="downloadButton"
                     >
                       <span
-                        aria-label="cloud-download"
+                        aria-label="fa-cloud-download"
                         class="fa fa-cloud-download"
                       />
                     </button>
@@ -407,8 +407,8 @@ exports[`Render a simple MediaOverview 1`] = `
                     class="cover"
                   >
                     <span
-                      aria-label="pencil"
-                      class="mediaIcon fa fa-pencil"
+                      aria-label="su-pen"
+                      class="mediaIcon su-pen"
                     />
                   </div>
                 </div>

@@ -37,7 +37,7 @@ test('Bind toolbar method to component instance', () => {
             items: [
                 {
                     label: 'Save',
-                    icon: 'save',
+                    icon: 'su-save',
                     disabled: this.test,
                 },
             ],
@@ -49,7 +49,7 @@ test('Bind toolbar method to component instance', () => {
         items: [
             {
                 label: 'Save',
-                icon: 'save',
+                icon: 'su-save',
                 disabled: true,
             },
         ],

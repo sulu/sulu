@@ -30,8 +30,8 @@ exports[`The component should render 1`] = `
     </div>
   </div>
   <span
-    aria-label="chevron-down"
-    class="toggle fa fa-chevron-down"
+    aria-label="su-arrow-down"
+    class="toggle su-arrow-down"
   />
 </button>
 `;
@@ -41,8 +41,8 @@ exports[`The component should render with an icon 1`] = `
   class="displayValue hasIcon"
 >
   <span
-    aria-label="plus"
-    class="frontIcon fa fa-plus"
+    aria-label="su-plus"
+    class="frontIcon su-plus"
   />
   <div
     aria-label="My value"
@@ -70,8 +70,8 @@ exports[`The component should render with an icon 1`] = `
     </div>
   </div>
   <span
-    aria-label="chevron-down"
-    class="toggle fa fa-chevron-down"
+    aria-label="su-arrow-down"
+    class="toggle su-arrow-down"
   />
 </button>
 `;

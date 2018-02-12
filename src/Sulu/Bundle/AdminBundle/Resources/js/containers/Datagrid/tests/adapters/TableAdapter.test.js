@@ -210,7 +210,7 @@ test('Click on pencil should execute onItemEdit callback', () => {
     );
     const buttons = tableAdapter.find('Table').prop('buttons');
     expect(buttons).toHaveLength(1);
-    expect(buttons[0].icon).toBe('pencil');
+    expect(buttons[0].icon).toBe('su-pen');
 
     buttons[0].onClick(1);
     expect(rowEditClickSpy).toBeCalledWith(1);

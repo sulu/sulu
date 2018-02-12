@@ -10,7 +10,7 @@ import Menu from '../Menu';
 import Suggestion from './Suggestion';
 import autoCompleteStyles from './autoComplete.scss';
 
-const LENS_ICON = 'search';
+const LENS_ICON = 'su-search';
 const DEBOUNCE_TIME = 300;
 const POPOVER_HORIZONTAL_OFFSET = 5;
 const POPOVER_VERTICAL_OFFSET = -2;

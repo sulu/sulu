@@ -8,8 +8,8 @@ exports[`Render WebspaceSelect closed 1`] = `
     class="button"
   >
     <span
-      aria-label="dot-circle-o"
-      class="buttonIcon fa fa-dot-circle-o"
+      aria-label="su-webspace"
+      class="buttonIcon su-webspace"
     />
     <span
       class="buttonValue"
@@ -17,8 +17,8 @@ exports[`Render WebspaceSelect closed 1`] = `
       Sulu
     </span>
     <span
-      aria-label="chevron-down"
-      class="buttonIcon fa fa-chevron-down"
+      aria-label="su-arrow-down"
+      class="buttonIcon su-arrow-down"
     />
   </button>
 </div>
@@ -34,8 +34,8 @@ exports[`Render WebspaceSelect opened 1`] = `
     class="button"
   >
     <span
-      aria-label="dot-circle-o"
-      class="buttonIcon fa fa-dot-circle-o"
+      aria-label="su-webspace"
+      class="buttonIcon su-webspace"
     />
     <span
       class="buttonValue"
@@ -43,8 +43,8 @@ exports[`Render WebspaceSelect opened 1`] = `
       Sulu
     </span>
     <span
-      aria-label="chevron-down"
-      class="buttonIcon fa fa-chevron-down"
+      aria-label="su-arrow-down"
+      class="buttonIcon su-arrow-down"
     />
   </button>
 </div>
@@ -62,7 +62,7 @@ exports[`Render WebspaceSelect opened 2`] = `
         <div class=\\"section\\">
           <div class=\\"title\\">Webspaces</div>
           <div class=\\"children\\">
-            <div class=\\"item active\\"><span class=\\"icon\\"><span class=\\"icon fa fa-dot-circle-o\\" aria-label=\\"dot-circle-o\\"></span></span><span>Sulu</span></div>
+            <div class=\\"item active\\"><span class=\\"icon\\"><span class=\\"icon su-webspace\\" aria-label=\\"su-webspace\\"></span></span><span>Sulu</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Blog</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Doc</span></div>
           </div>

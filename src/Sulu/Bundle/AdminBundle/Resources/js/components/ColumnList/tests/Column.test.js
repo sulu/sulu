@@ -6,11 +6,11 @@ import Column from '../Column';
 test('The Column component should render', () => {
     const buttonsConfig = [
         {
-            icon: 'heart',
+            icon: 'fa-heart',
             onClick: () => {},
         },
         {
-            icon: 'pencil',
+            icon: 'fa-pencil',
             onClick: () => {},
         },
     ];
@@ -18,19 +18,19 @@ test('The Column component should render', () => {
     const toolbarItems = [
         {
             index: 0,
-            icon: 'plus',
+            icon: 'fa-plus',
             type: 'button',
             onClick: () => {},
         },
         {
             index: 0,
-            icon: 'search',
+            icon: 'fa-search',
             type: 'button',
             onClick: () => {},
         },
         {
             index: 0,
-            icon: 'gear',
+            icon: 'fa-gear',
             type: 'dropdown',
             options: [
                 {

@@ -51,7 +51,7 @@ test('Render an empty table', () => {
 
 test('Render a table with buttons', () => {
     const buttons = [{
-        icon: 'pencil',
+        icon: 'fa-pencil',
         onClick: jest.fn(),
     }];
 
@@ -76,7 +76,7 @@ test('Render a table with buttons', () => {
 test('Table buttons should implement an onClick handler', () => {
     const onClickSpy = jest.fn();
     const buttons = [{
-        icon: 'pencil',
+        icon: 'fa-pencil',
         onClick: onClickSpy,
     }];
 

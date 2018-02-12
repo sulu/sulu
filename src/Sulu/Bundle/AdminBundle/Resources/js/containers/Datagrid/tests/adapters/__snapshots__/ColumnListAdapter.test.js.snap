@@ -55,8 +55,8 @@ exports[`Render data 1`] = `
               </div>
             </span>
             <span
-              aria-label="chevron-right"
-              class="children fa fa-chevron-right"
+              aria-label="su-arrow-right"
+              class="children su-arrow-right"
             />
           </div>
           <div
@@ -142,8 +142,8 @@ exports[`Render data 1`] = `
               </div>
             </span>
             <span
-              aria-label="chevron-right"
-              class="children fa fa-chevron-right"
+              aria-label="su-arrow-right"
+              class="children su-arrow-right"
             />
           </div>
         </div>
@@ -218,8 +218,8 @@ exports[`Render data with loading column 1`] = `
               </div>
             </span>
             <span
-              aria-label="chevron-right"
-              class="children fa fa-chevron-right"
+              aria-label="su-arrow-right"
+              class="children su-arrow-right"
             />
           </div>
           <div

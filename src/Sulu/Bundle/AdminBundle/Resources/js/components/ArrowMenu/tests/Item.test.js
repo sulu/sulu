@@ -8,14 +8,14 @@ test('Render default Item', () => {
 });
 
 test('Render active Item', () => {
-    expect(render(<Item active={true} icon="house" value="house">My House</Item>)).toMatchSnapshot();
+    expect(render(<Item active={true} icon="fa-home" value="house">My House</Item>)).toMatchSnapshot();
 });
 
 test('Clicking the left and right button inside the header should call the right handler', () => {
     const clickHandler = jest.fn();
 
     const item = mount(
-        <Item active={true} icon="house" value="house" onClick={clickHandler}>My House</Item>
+        <Item active={true} icon="fa-home" value="house" onClick={clickHandler}>My House</Item>
     );
 
     item.simulate('click');

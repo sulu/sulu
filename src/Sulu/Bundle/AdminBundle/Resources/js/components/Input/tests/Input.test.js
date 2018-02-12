@@ -10,7 +10,7 @@ test('Input should render', () => {
 
 test('Input should render with icon', () => {
     const onChange = jest.fn();
-    expect(render(<Input icon="my-icon" value="My value" onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<Input icon="su-pen" value="My value" onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Input should render with type', () => {
