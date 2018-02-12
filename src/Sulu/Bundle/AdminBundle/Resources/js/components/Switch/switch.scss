@@ -10,6 +10,7 @@ $marginBottom: 10px;
         font-size: $fontSize;
         margin-left: 10px;
         overflow: hidden;
+        line-height: normal;
     }
 
     & + .label {
