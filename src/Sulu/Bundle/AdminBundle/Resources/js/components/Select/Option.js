@@ -9,6 +9,7 @@ import type {OptionSelectedVisualization} from './types';
 import optionStyles from './option.scss';
 
 type Props = {
+    anchorWidth: number,
     selected: boolean,
     disabled: boolean,
     focus: boolean,
@@ -19,10 +20,11 @@ type Props = {
     selectedVisualization: OptionSelectedVisualization,
 };
 
-const SELECTED_ICON = 'su-checkmark';
+const ANCHOR_WIDTH_DIFFERENCE = 10;
 
 export default class Option extends React.PureComponent<Props> {
     static defaultProps = {
+        anchorWidth: 0,
         disabled: false,
         selected: false,
         focus: false,
@@ -63,7 +65,7 @@ export default class Option extends React.PureComponent<Props> {
 
     renderSelectedVisualization() {
         if (this.props.selectedVisualization === 'icon') {
-            return this.props.selected ? <Icon className={optionStyles.icon} name={SELECTED_ICON} /> : null;
+            return this.props.selected ? <Icon className={optionStyles.icon} name={'su-checkmark'} /> : null;
         }
 
         return (
@@ -77,6 +79,7 @@ export default class Option extends React.PureComponent<Props> {
 
     render() {
         const {
+            anchorWidth,
             selected,
             children,
             disabled,
@@ -94,6 +97,7 @@ export default class Option extends React.PureComponent<Props> {
             <li ref={this.setItemRef}>
                 <button
                     className={optionClass}
+                    style={{minWidth: anchorWidth + ANCHOR_WIDTH_DIFFERENCE}}
                     ref={this.setButtonRef}
                     onClick={this.handleButtonClick}
                     disabled={disabled}

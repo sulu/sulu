@@ -61,7 +61,10 @@ export default class Select extends React.Component<Props> {
     };
 
     cloneOption(originalOption: Element<typeof Option>) {
+        const anchorWidth = this.displayValueRef ? this.displayValueRef.getBoundingClientRect().width : 0;
+
         return React.cloneElement(originalOption, {
+            anchorWidth,
             onClick: this.handleOptionClick,
             selected: this.props.isOptionSelected(originalOption),
             selectedVisualization: this.props.selectedVisualization,

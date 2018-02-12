@@ -66,6 +66,11 @@ test('The component should open the popover when the display value is clicked', 
             <Option value="option-3">Option 3</Option>
         </Select>
     );
+    select.instance().displayValueRef = {
+        getBoundingClientRect: jest.fn().mockReturnValue({
+            width: 200,
+        }),
+    };
     select.instance().handleDisplayValueClick();
     expect(select.render()).toMatchSnapshot();
     expect(pretty(body.innerHTML)).toMatchSnapshot();
