@@ -52,7 +52,12 @@ test('The component should render with all available props and handle clicks cor
             <Navigation.Item value="webspaces" title="Webspaces" icon="su-webspace" onClick={handleNavigationClick} />
             <Navigation.Item value="media" title="Media" icon="fa-image" onClick={handleNavigationClick} />
             <Navigation.Item value="articles" title="Article" icon="fa-newspaper-o" onClick={handleNavigationClick} />
-            <Navigation.Item value="snippets" title="Snippets" icon="fa-sticky-note-o" onClick={handleNavigationClick} />
+            <Navigation.Item
+                value="snippets"
+                title="Snippets"
+                icon="fa-sticky-note-o"
+                onClick={handleNavigationClick}
+            />
             <Navigation.Item value="contact" title="Contact" icon="su-user-1">
                 <Navigation.Item value="contact_1" onClick={handleNavigationClick} title="Contact 1" />
                 <Navigation.Item value="contact_2" onClick={handleNavigationClick} title="Contact 2" active={true} />
@@ -96,7 +101,12 @@ test('The expanded prop should be set correct automatically', () => {
             <Navigation.Item value="webspaces" title="Webspaces" icon="su-webspace" onClick={handleNavigationClick} />
             <Navigation.Item value="media" title="Media" icon="fa-image" onClick={handleNavigationClick} />
             <Navigation.Item value="articles" title="Article" icon="fa-newspaper-o" onClick={handleNavigationClick} />
-            <Navigation.Item value="snippets" title="Snippets" icon="fa-sticky-note-o" onClick={handleNavigationClick} />
+            <Navigation.Item
+                value="snippets"
+                title="Snippets"
+                icon="fa-sticky-note-o"
+                onClick={handleNavigationClick}
+            />
             <Navigation.Item value="contact" title="Contact" icon="su-user-1">
                 <Navigation.Item value="contact_1" onClick={handleNavigationClick} title="Contact 1" />
                 <Navigation.Item value="contact_2" onClick={handleNavigationClick} title="Contact 2" active={true} />
