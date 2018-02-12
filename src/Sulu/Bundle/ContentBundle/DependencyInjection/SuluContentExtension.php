@@ -227,6 +227,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             'sulu.content.type.teaser_selection.template',
             $config['types']['teaser_selection']['template']
         );
+        $container->setParameter(
+            'sulu.content.type.number.template',
+            $config['types']['number']['template']
+        );
     }
 
     private function processSearch($config, LoaderInterface $loader, ContainerBuilder $container)
