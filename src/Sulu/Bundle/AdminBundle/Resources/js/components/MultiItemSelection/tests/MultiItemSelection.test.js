@@ -40,7 +40,7 @@ test('Clicking the left and right button inside the header should call the right
     const leftClickHandler = jest.fn();
     const rightClickHandler = jest.fn();
     const leftButtonConfig = {
-        icon: 'fa-plus',
+        icon: 'su-plus',
         onClick: leftClickHandler,
     };
     const rightButtonConfig = {

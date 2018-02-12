@@ -5,7 +5,7 @@ import Icon from '../Icon';
 import Item from './Item';
 import breadcrumbStyles from './breadcrumb.scss';
 
-const ARROW_RIGHT = 'su-right';
+const ARROW_RIGHT = 'su-arrow-right';
 
 type Props = {
     children: ChildrenArray<Element<typeof Item>>,

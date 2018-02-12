@@ -141,16 +141,16 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
       disabled=""
     >
       <span
-        aria-label="su-arrow-filled-left"
-        class="su-arrow-filled-left"
+        aria-label="su-arrow-left"
+        class="su-arrow-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="su-arrow-filled-right"
-        class="su-arrow-filled-right"
+        aria-label="su-arrow-right"
+        class="su-arrow-right"
       />
     </button>
   </nav>
@@ -284,16 +284,16 @@ exports[`Render data with schema 1`] = `
       class="previous"
     >
       <span
-        aria-label="su-arrow-filled-left"
-        class="su-arrow-filled-left"
+        aria-label="su-arrow-left"
+        class="su-arrow-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="su-arrow-filled-right"
-        class="su-arrow-filled-right"
+        aria-label="su-arrow-right"
+        class="su-arrow-right"
       />
     </button>
   </nav>
@@ -471,16 +471,16 @@ exports[`Render data with schema and selections 1`] = `
       disabled=""
     >
       <span
-        aria-label="su-arrow-filled-left"
-        class="su-arrow-filled-left"
+        aria-label="su-arrow-left"
+        class="su-arrow-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="su-arrow-filled-right"
-        class="su-arrow-filled-right"
+        aria-label="su-arrow-right"
+        class="su-arrow-right"
       />
     </button>
   </nav>
@@ -614,16 +614,16 @@ exports[`Render data with schema in different order 1`] = `
       class="previous"
     >
       <span
-        aria-label="su-arrow-filled-left"
-        class="su-arrow-filled-left"
+        aria-label="su-arrow-left"
+        class="su-arrow-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="su-arrow-filled-right"
-        class="su-arrow-filled-right"
+        aria-label="su-arrow-right"
+        class="su-arrow-right"
       />
     </button>
   </nav>
@@ -741,16 +741,16 @@ exports[`Render data with schema not containing all fields 1`] = `
       disabled=""
     >
       <span
-        aria-label="su-arrow-filled-left"
-        class="su-arrow-filled-left"
+        aria-label="su-arrow-left"
+        class="su-arrow-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="su-arrow-filled-right"
-        class="su-arrow-filled-right"
+        aria-label="su-arrow-right"
+        class="su-arrow-right"
       />
     </button>
   </nav>

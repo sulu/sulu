@@ -59,8 +59,8 @@ exports[`Render the MediaCollection 1`] = `
                 class="iconContainer"
               >
                 <span
-                  aria-label="fa-folder-o"
-                  class="fa fa-folder-o"
+                  aria-label="su-folder"
+                  class="su-folder"
                 />
               </div>
               <div
@@ -89,8 +89,8 @@ exports[`Render the MediaCollection 1`] = `
                 class="iconContainer"
               >
                 <span
-                  aria-label="fa-folder-o"
-                  class="fa fa-folder-o"
+                  aria-label="su-folder"
+                  class="su-folder"
                 />
               </div>
               <div
@@ -125,16 +125,16 @@ exports[`Render the MediaCollection 1`] = `
             class="previous"
           >
             <span
-              aria-label="su-arrow-filled-left"
-              class="su-arrow-filled-left"
+              aria-label="su-arrow-left"
+              class="su-arrow-left"
             />
           </button>
           <button
             class="next"
           >
             <span
-              aria-label="su-arrow-filled-right"
-              class="su-arrow-filled-right"
+              aria-label="su-arrow-right"
+              class="su-arrow-right"
             />
           </button>
         </nav>

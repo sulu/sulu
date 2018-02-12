@@ -133,16 +133,16 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
           class="previous"
         >
           <span
-            aria-label="su-arrow-filled-left"
-            class="su-arrow-filled-left"
+            aria-label="su-arrow-left"
+            class="su-arrow-left"
           />
         </button>
         <button
           class="next"
         >
           <span
-            aria-label="su-arrow-filled-right"
-            class="su-arrow-filled-right"
+            aria-label="su-arrow-right"
+            class="su-arrow-right"
           />
         </button>
       </nav>
@@ -314,16 +314,16 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
           class="previous"
         >
           <span
-            aria-label="su-arrow-filled-left"
-            class="su-arrow-filled-left"
+            aria-label="su-arrow-left"
+            class="su-arrow-left"
           />
         </button>
         <button
           class="next"
         >
           <span
-            aria-label="su-arrow-filled-right"
-            class="su-arrow-filled-right"
+            aria-label="su-arrow-right"
+            class="su-arrow-right"
           />
         </button>
       </nav>
@@ -468,16 +468,16 @@ exports[`Should render the list with a title 1`] = `
           class="previous"
         >
           <span
-            aria-label="su-arrow-filled-left"
-            class="su-arrow-filled-left"
+            aria-label="su-arrow-left"
+            class="su-arrow-left"
           />
         </button>
         <button
           class="next"
         >
           <span
-            aria-label="su-arrow-filled-right"
-            class="su-arrow-filled-right"
+            aria-label="su-arrow-right"
+            class="su-arrow-right"
           />
         </button>
       </nav>

@@ -3,7 +3,7 @@ import React from 'react';
 import Icon from '../Icon';
 import folderStyles from './folder.scss';
 
-const FOLDER_ICON = 'fa-folder-o';
+const FOLDER_ICON = 'su-folder';
 
 type Props = {
     /** The id which will be passed as an argument inside the onClick handler */
