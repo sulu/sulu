@@ -8,8 +8,8 @@ exports[`The component should render 1`] = `
     class="title"
   >
     <span
-      aria-label="search"
-      class="fa fa-search"
+      aria-label="su-search"
+      class="su-search"
     />
     Test
   </div>
@@ -24,8 +24,8 @@ exports[`The component should render active 1`] = `
     class="title"
   >
     <span
-      aria-label="search"
-      class="fa fa-search"
+      aria-label="su-search"
+      class="su-search"
     />
     Test
   </div>
@@ -40,14 +40,14 @@ exports[`The component should render with children 1`] = `
     class="title"
   >
     <span
-      aria-label="gear"
-      class="fa fa-gear"
+      aria-label="su-settings"
+      class="su-settings"
     />
     Settings
   </div>
   <span
-    aria-label="chevron-right"
-    class="childrenIndicator fa fa-chevron-right clickable"
+    aria-label="su-arrow-right"
+    class="childrenIndicator su-arrow-right clickable"
     role="button"
     tabindex="0"
   />
@@ -62,8 +62,8 @@ exports[`The component should render with children an active child and expanded 
     class="title"
   >
     <span
-      aria-label="gear"
-      class="fa fa-gear"
+      aria-label="su-settings"
+      class="su-settings"
     />
     Settings
   </div>
@@ -88,8 +88,8 @@ exports[`The component should render with children an active child and expanded 
     </div>
   </div>
   <span
-    aria-label="chevron-down"
-    class="childrenIndicator fa fa-chevron-down clickable"
+    aria-label="su-arrow-down"
+    class="childrenIndicator su-arrow-down clickable"
     role="button"
     tabindex="0"
   />

@@ -30,17 +30,17 @@ const handleNavigationClick = (value) => {
         appVersion="1.0.0"
         appVersionLink="http://link.com"
     >
-        <Navigation.Item value="search" title="Search" icon="search" onClick={handleNavigationClick} />
-        <Navigation.Item value="webspaces" title="Webspaces" icon="bullseye" onClick={handleNavigationClick} />
-        <Navigation.Item value="media" title="Media" icon="image" onClick={handleNavigationClick} />
-        <Navigation.Item value="articles" title="Article" icon="newspaper-o" onClick={handleNavigationClick} />
-        <Navigation.Item value="snippets" title="Snippets" icon="sticky-note-o" onClick={handleNavigationClick} />
-        <Navigation.Item value="contact" title="Contact" icon="user">
+        <Navigation.Item value="search" title="Search" icon="su-search" onClick={handleNavigationClick} />
+        <Navigation.Item value="webspaces" title="Webspaces" icon="su-webspace" onClick={handleNavigationClick} />
+        <Navigation.Item value="media" title="Media" icon="fa-image" onClick={handleNavigationClick} />
+        <Navigation.Item value="articles" title="Article" icon="fa-newspaper-o" onClick={handleNavigationClick} />
+        <Navigation.Item value="snippets" title="Snippets" icon="fa-sticky-note-o" onClick={handleNavigationClick} />
+        <Navigation.Item value="contact" title="Contact" icon="fa-user">
             <Navigation.Item value="contact_1" onClick={handleNavigationClick} title="Contact 1" />
             <Navigation.Item value="contact_2" onClick={handleNavigationClick} title="Contact 2" active={true} />
             <Navigation.Item value="contact_3" onClick={handleNavigationClick} title="Contact 3" />
         </Navigation.Item>
-        <Navigation.Item value="settings" title="Settings" icon="gear">
+        <Navigation.Item value="settings" title="Settings" icon="fa-gear">
             <Navigation.Item value="setting_1" onClick={handleNavigationClick} title="Setting 1" />
             <Navigation.Item value="setting_2" onClick={handleNavigationClick} title="Setting 2" />
             <Navigation.Item value="setting_3" onClick={handleNavigationClick} title="Setting 3" />
@@ -76,8 +76,8 @@ const handleNavigationClick = (value) => {
         suluVersion="2.0.0-RC1"
         suluVersionLink="http://link.com"
     >
-        <Navigation.Item value="search" title="Search" icon="search" onClick={handleNavigationClick} />
-        <Navigation.Item value="webspaces" title="Webspaces" icon="bullseye" onClick={handleNavigationClick} />
+        <Navigation.Item value="search" title="Search" icon="su-search" onClick={handleNavigationClick} />
+        <Navigation.Item value="webspaces" title="Webspaces" icon="su-webspace" onClick={handleNavigationClick} />
     </Navigation>
 </div>
 ```

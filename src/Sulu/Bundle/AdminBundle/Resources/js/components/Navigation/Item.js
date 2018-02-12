@@ -60,7 +60,7 @@ export default class Item extends React.PureComponent<Props> {
                     <Icon
                         onClick={this.handleClick}
                         className={itemStyles.childrenIndicator}
-                        name={expanded ? 'chevron-down' : 'chevron-right'}
+                        name={expanded ? 'su-arrow-down' : 'su-arrow-right'}
                     />
                 }
             </div>

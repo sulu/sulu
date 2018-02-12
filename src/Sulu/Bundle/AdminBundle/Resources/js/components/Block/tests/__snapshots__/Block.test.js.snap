@@ -23,8 +23,8 @@ exports[`Passing a onRemove callback should render the remove icon 1`] = `
           tabindex="0"
         />
         <span
-          aria-label="fa-times"
-          class="fa fa-times clickable"
+          aria-label="su-x"
+          class="su-x clickable"
           role="button"
           tabindex="0"
         />
@@ -71,8 +71,8 @@ exports[`Render an expanded block 1`] = `
         class="icons"
       >
         <span
-          aria-label="fa-times"
-          class="fa fa-times clickable"
+          aria-label="su-x"
+          class="su-x clickable"
           role="button"
           tabindex="0"
         />
@@ -139,8 +139,8 @@ exports[`Render an expanded block with a multiple types 1`] = `
         class="icons"
       >
         <span
-          aria-label="fa-times"
-          class="fa fa-times clickable"
+          aria-label="su-x"
+          class="su-x clickable"
           role="button"
           tabindex="0"
         />
@@ -170,8 +170,8 @@ exports[`Render an expanded block with a single type 1`] = `
         class="icons"
       >
         <span
-          aria-label="fa-times"
-          class="fa fa-times clickable"
+          aria-label="su-x"
+          class="su-x clickable"
           role="button"
           tabindex="0"
         />

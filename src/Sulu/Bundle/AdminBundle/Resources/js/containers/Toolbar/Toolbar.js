@@ -91,7 +91,7 @@ export default class Toolbar extends React.Component<*> {
                     <ToolbarComponent.Button
                         onClick={this.handleNavigationButtonClick}
                         skin="primary"
-                        icon={navigationOpen ? 'times' : 'bars'}
+                        icon={navigationOpen ? 'su-x' : 'su-menu'}
                     />
                     }
                     {this.toolbarStore.hasBackButtonConfig() &&

@@ -29,7 +29,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
             class="noUserImage"
           >
             <span
-              aria-label="user"
+              aria-label="fa-user"
               class="fa fa-user"
             />
           </div>
@@ -41,8 +41,8 @@ exports[`Application should not fail if current route does not exist 1`] = `
             </span>
             <button>
               <span
-                aria-label="sign-out"
-                class="fa fa-sign-out"
+                aria-label="su-exit"
+                class="su-exit"
               />
               Log out
             </button>
@@ -59,8 +59,8 @@ exports[`Application should not fail if current route does not exist 1`] = `
             class="title"
           >
             <span
-              aria-label="bullseye"
-              class="fa fa-bullseye"
+              aria-label="su-webspace"
+              class="su-webspace"
             />
             Webspaces
           </div>
@@ -72,8 +72,8 @@ exports[`Application should not fail if current route does not exist 1`] = `
             class="title"
           >
             <span
-              aria-label="image"
-              class="fa fa-image"
+              aria-label="su-image"
+              class="su-image"
             />
             Medias
           </div>
@@ -85,7 +85,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
             class="title"
           >
             <span
-              aria-label="sticky-note-o"
+              aria-label="fa-sticky-note-o"
               class="fa fa-sticky-note-o"
             />
             Snippets
@@ -98,21 +98,16 @@ exports[`Application should not fail if current route does not exist 1`] = `
             class="title"
           >
             <span
-              aria-label="user"
+              aria-label="fa-user"
               class="fa fa-user"
             />
             Contacts
           </div>
           <span
-<<<<<<< HEAD
-            aria-label="su-view"
-            class="icon su-view"
-=======
-            aria-label="chevron-right"
-            class="childrenIndicator fa fa-chevron-right clickable"
+            aria-label="su-arrow-right"
+            class="childrenIndicator su-arrow-right clickable"
             role="button"
             tabindex="0"
->>>>>>> 9e81b134d... Add tests
           />
         </div>
         <div
@@ -122,14 +117,14 @@ exports[`Application should not fail if current route does not exist 1`] = `
             class="title"
           >
             <span
-              aria-label="gear"
-              class="fa fa-gear"
+              aria-label="su-settings"
+              class="su-settings"
             />
             Settings
           </div>
           <span
-            aria-label="chevron-right"
-            class="childrenIndicator fa fa-chevron-right clickable"
+            aria-label="su-arrow-right"
+            class="childrenIndicator su-arrow-right clickable"
             role="button"
             tabindex="0"
           />
@@ -167,8 +162,8 @@ exports[`Application should not fail if current route does not exist 1`] = `
             class="button primary"
           >
             <span
-              aria-label="bars"
-              class="icon fa fa-bars"
+              aria-label="su-menu"
+              class="icon su-menu"
             />
           </button>
         </div>
@@ -213,7 +208,7 @@ exports[`Application should render based on current route 1`] = `
             class="noUserImage"
           >
             <span
-              aria-label="user"
+              aria-label="fa-user"
               class="fa fa-user"
             />
           </div>
@@ -225,8 +220,8 @@ exports[`Application should render based on current route 1`] = `
             </span>
             <button>
               <span
-                aria-label="sign-out"
-                class="fa fa-sign-out"
+                aria-label="su-exit"
+                class="su-exit"
               />
               Log out
             </button>
@@ -243,8 +238,8 @@ exports[`Application should render based on current route 1`] = `
             class="title"
           >
             <span
-              aria-label="bullseye"
-              class="fa fa-bullseye"
+              aria-label="su-webspace"
+              class="su-webspace"
             />
             Webspaces
           </div>
@@ -256,8 +251,8 @@ exports[`Application should render based on current route 1`] = `
             class="title"
           >
             <span
-              aria-label="image"
-              class="fa fa-image"
+              aria-label="su-image"
+              class="su-image"
             />
             Medias
           </div>
@@ -269,7 +264,7 @@ exports[`Application should render based on current route 1`] = `
             class="title"
           >
             <span
-              aria-label="sticky-note-o"
+              aria-label="fa-sticky-note-o"
               class="fa fa-sticky-note-o"
             />
             Snippets
@@ -282,14 +277,14 @@ exports[`Application should render based on current route 1`] = `
             class="title"
           >
             <span
-              aria-label="user"
+              aria-label="fa-user"
               class="fa fa-user"
             />
             Contacts
           </div>
           <span
-            aria-label="chevron-right"
-            class="childrenIndicator fa fa-chevron-right clickable"
+            aria-label="su-arrow-right"
+            class="childrenIndicator su-arrow-right clickable"
             role="button"
             tabindex="0"
           />
@@ -301,21 +296,16 @@ exports[`Application should render based on current route 1`] = `
             class="title"
           >
             <span
-              aria-label="gear"
-              class="fa fa-gear"
+              aria-label="su-settings"
+              class="su-settings"
             />
             Settings
           </div>
           <span
-<<<<<<< HEAD
-            aria-label="su-view"
-            class="icon su-view"
-=======
-            aria-label="chevron-right"
-            class="childrenIndicator fa fa-chevron-right clickable"
+            aria-label="su-arrow-right"
+            class="childrenIndicator su-arrow-right clickable"
             role="button"
             tabindex="0"
->>>>>>> 9e81b134d... Add tests
           />
         </div>
       </div>
@@ -351,8 +341,8 @@ exports[`Application should render based on current route 1`] = `
             class="button primary"
           >
             <span
-              aria-label="bars"
-              class="icon fa fa-bars"
+              aria-label="su-menu"
+              class="icon su-menu"
             />
           </button>
         </div>
@@ -431,10 +421,10 @@ exports[`Application should render opened navigation 1`] = `
                 onClick={[Function]}
               >
                 <Icon
-                  name="user"
+                  name="fa-user"
                 >
                   <span
-                    aria-label="user"
+                    aria-label="fa-user"
                     className="fa fa-user"
                   />
                 </Icon>
@@ -451,11 +441,11 @@ exports[`Application should render opened navigation 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="sign-out"
+                    name="su-exit"
                   >
                     <span
-                      aria-label="sign-out"
-                      className="fa fa-sign-out"
+                      aria-label="su-exit"
+                      className="su-exit"
                     />
                   </Icon>
                   Log out
@@ -469,7 +459,7 @@ exports[`Application should render opened navigation 1`] = `
             <Item
               active={false}
               expanded={false}
-              icon="bullseye"
+              icon="su-webspace"
               key=".$sulu_content.webspaces"
               onClick={[Function]}
               title="Webspaces"
@@ -483,11 +473,11 @@ exports[`Application should render opened navigation 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="bullseye"
+                    name="su-webspace"
                   >
                     <span
-                      aria-label="bullseye"
-                      className="fa fa-bullseye"
+                      aria-label="su-webspace"
+                      className="su-webspace"
                     />
                   </Icon>
                   Webspaces
@@ -497,7 +487,7 @@ exports[`Application should render opened navigation 1`] = `
             <Item
               active={false}
               expanded={false}
-              icon="image"
+              icon="su-image"
               key=".$sulu_media.overview"
               onClick={[Function]}
               title="Medias"
@@ -511,11 +501,11 @@ exports[`Application should render opened navigation 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="image"
+                    name="su-image"
                   >
                     <span
-                      aria-label="image"
-                      className="fa fa-image"
+                      aria-label="su-image"
+                      className="su-image"
                     />
                   </Icon>
                   Medias
@@ -525,7 +515,7 @@ exports[`Application should render opened navigation 1`] = `
             <Item
               active={false}
               expanded={false}
-              icon="sticky-note-o"
+              icon="fa-sticky-note-o"
               key=".$sulu_snippet.list"
               onClick={[Function]}
               title="Snippets"
@@ -539,10 +529,10 @@ exports[`Application should render opened navigation 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="sticky-note-o"
+                    name="fa-sticky-note-o"
                   >
                     <span
-                      aria-label="sticky-note-o"
+                      aria-label="fa-sticky-note-o"
                       className="fa fa-sticky-note-o"
                     />
                   </Icon>
@@ -553,7 +543,7 @@ exports[`Application should render opened navigation 1`] = `
             <Item
               active={false}
               expanded={false}
-              icon="user"
+              icon="fa-user"
               key=".$contacts"
               onClick={[Function]}
               title="Contacts"
@@ -567,10 +557,10 @@ exports[`Application should render opened navigation 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="user"
+                    name="fa-user"
                   >
                     <span
-                      aria-label="user"
+                      aria-label="fa-user"
                       className="fa fa-user"
                     />
                   </Icon>
@@ -578,12 +568,12 @@ exports[`Application should render opened navigation 1`] = `
                 </div>
                 <Icon
                   className="childrenIndicator"
-                  name="chevron-right"
+                  name="su-arrow-right"
                   onClick={[Function]}
                 >
                   <span
-                    aria-label="chevron-right"
-                    className="childrenIndicator fa fa-chevron-right clickable"
+                    aria-label="su-arrow-right"
+                    className="childrenIndicator su-arrow-right clickable"
                     onClick={[Function]}
                     role="button"
                     tabIndex={0}
@@ -594,7 +584,7 @@ exports[`Application should render opened navigation 1`] = `
             <Item
               active={false}
               expanded={false}
-              icon="gear"
+              icon="su-settings"
               key=".$settings"
               onClick={[Function]}
               title="Settings"
@@ -608,23 +598,23 @@ exports[`Application should render opened navigation 1`] = `
                   onClick={[Function]}
                 >
                   <Icon
-                    name="gear"
+                    name="su-settings"
                   >
                     <span
-                      aria-label="gear"
-                      className="fa fa-gear"
+                      aria-label="su-settings"
+                      className="su-settings"
                     />
                   </Icon>
                   Settings
                 </div>
                 <Icon
                   className="childrenIndicator"
-                  name="chevron-right"
+                  name="su-arrow-right"
                   onClick={[Function]}
                 >
                   <span
-                    aria-label="chevron-right"
-                    className="childrenIndicator fa fa-chevron-right clickable"
+                    aria-label="su-arrow-right"
+                    className="childrenIndicator su-arrow-right clickable"
                     onClick={[Function]}
                     role="button"
                     tabIndex={0}
@@ -684,7 +674,7 @@ exports[`Application should render opened navigation 1`] = `
                     active={false}
                     disabled={false}
                     hasOptions={false}
-                    icon="times"
+                    icon="su-x"
                     onClick={[Function]}
                     skin="primary"
                   >
@@ -695,11 +685,11 @@ exports[`Application should render opened navigation 1`] = `
                     >
                       <Icon
                         className="icon"
-                        name="times"
+                        name="su-x"
                       >
                         <span
-                          aria-label="times"
-                          className="icon fa fa-times"
+                          aria-label="su-x"
+                          className="icon su-x"
                         />
                       </Icon>
                     </button>

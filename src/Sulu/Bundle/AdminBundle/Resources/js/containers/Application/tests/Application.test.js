@@ -54,7 +54,7 @@ test('Application should render opened navigation', () => {
     };
 
     const view = mount(<Application router={router} />);
-    view.find('Button[icon="bars"]').simulate('click');
+    view.find('Button[icon="su-menu"]').simulate('click');
 
     expect(view).toMatchSnapshot();
 });

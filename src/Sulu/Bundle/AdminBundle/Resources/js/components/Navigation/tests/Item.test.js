@@ -7,7 +7,7 @@ test('The component should render', () => {
     const handleClick = jest.fn();
     const item = mount(
         <Item
-            icon="search"
+            icon="su-search"
             value="test_1"
             onClick={handleClick}
             title="Test"
@@ -20,7 +20,7 @@ test('The component should render active', () => {
     const handleClick = jest.fn();
     const item = mount(
         <Item
-            icon="search"
+            icon="su-search"
             value="test_1"
             onClick={handleClick}
             title="Test"
@@ -34,7 +34,7 @@ test('The component should render with children', () => {
     const handleClick = jest.fn();
     const item = mount(
         <Item
-            icon="gear"
+            icon="su-settings"
             value="settings"
             title="Settings"
         >
@@ -57,7 +57,7 @@ test('The component should render with children an active child and expanded', (
     const handleClick = jest.fn();
     const item = mount(
         <Item
-            icon="gear"
+            icon="su-settings"
             value="settings"
             title="Settings"
             expanded={true}
@@ -84,7 +84,7 @@ test('The component should handle clicks correctly', () => {
 
     const item = mount(
         <Item
-            icon="gear"
+            icon="su-settings"
             value="settings"
             title="Settings"
             onClick={handleItemClick}

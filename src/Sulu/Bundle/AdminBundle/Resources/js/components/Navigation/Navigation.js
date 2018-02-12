@@ -81,7 +81,7 @@ export default class Navigation extends React.Component<Props> {
 
         return (
             <div onClick={onProfileClick} className={navigationStyles.noUserImage}>
-                <Icon name="user" />
+                <Icon name="fa-user" />
             </div>
         );
     }
@@ -127,7 +127,7 @@ export default class Navigation extends React.Component<Props> {
                         {userImage}
                         <div className={navigationStyles.userProfile}>
                             <span onClick={onProfileClick}>{username}</span>
-                            <button onClick={onLogoutClick}><Icon name="sign-out" />Log out</button>
+                            <button onClick={onLogoutClick}><Icon name="su-exit" />Log out</button>
                         </div>
                     </div>
                 </div>

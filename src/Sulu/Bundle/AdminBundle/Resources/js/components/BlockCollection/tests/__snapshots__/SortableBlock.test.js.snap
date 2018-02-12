@@ -48,8 +48,8 @@ exports[`Render expanded sortable block 1`] = `
           tabindex="0"
         />
         <span
-          aria-label="fa-times"
-          class="fa fa-times clickable"
+          aria-label="su-x"
+          class="su-x clickable"
           role="button"
           tabindex="0"
         />
@@ -127,8 +127,8 @@ exports[`Render expanded sortable block with types 1`] = `
           tabindex="0"
         />
         <span
-          aria-label="fa-times"
-          class="fa fa-times clickable"
+          aria-label="su-x"
+          class="su-x clickable"
           role="button"
           tabindex="0"
         />

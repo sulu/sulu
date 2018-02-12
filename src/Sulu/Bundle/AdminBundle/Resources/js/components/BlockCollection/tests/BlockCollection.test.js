@@ -86,7 +86,7 @@ test('Should allow to collapse blocks', () => {
     expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(true);
     expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
 
-    blockCollection.find('Block').at(0).find('Icon[name="fa-times"]').simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-x"]').simulate('click');
 
     expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
     expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);

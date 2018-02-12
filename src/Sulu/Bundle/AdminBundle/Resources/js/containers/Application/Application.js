@@ -16,22 +16,22 @@ const routes = [
     {
         name: 'Webspaces',
         key: 'sulu_content.webspaces',
-        icon: 'bullseye',
+        icon: 'su-webspace',
     },
     {
         name: 'Medias',
         key: 'sulu_media.overview',
-        icon: 'image',
+        icon: 'su-image',
     },
     {
         name: 'Snippets',
         key: 'sulu_snippet.list',
-        icon: 'sticky-note-o',
+        icon: 'fa-sticky-note-o',
     },
     {
         name: 'Contacts',
         key: 'contacts',
-        icon: 'user',
+        icon: 'fa-user',
         items: [
             {
                 name: 'Contacts',
@@ -45,7 +45,7 @@ const routes = [
     },
     {
         name: 'Settings',
-        icon: 'gear',
+        icon: 'su-settings',
         key: 'settings',
         items: [
             {

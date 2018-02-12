@@ -23,7 +23,7 @@ exports[`The component should render and handle clicks correctly 1`] = `
         class="noUserImage"
       >
         <span
-          aria-label="user"
+          aria-label="fa-user"
           class="fa fa-user"
         />
       </div>
@@ -35,8 +35,8 @@ exports[`The component should render and handle clicks correctly 1`] = `
         </span>
         <button>
           <span
-            aria-label="sign-out"
-            class="fa fa-sign-out"
+            aria-label="su-exit"
+            class="su-exit"
           />
           Log out
         </button>
@@ -53,8 +53,8 @@ exports[`The component should render and handle clicks correctly 1`] = `
         class="title"
       >
         <span
-          aria-label="search"
-          class="fa fa-search"
+          aria-label="su-search"
+          class="su-search"
         />
         Search
       </div>
@@ -66,7 +66,7 @@ exports[`The component should render and handle clicks correctly 1`] = `
         class="title"
       >
         <span
-          aria-label="bullseye"
+          aria-label="fa-bullseye"
           class="fa fa-bullseye"
         />
         Webspaces
@@ -121,8 +121,8 @@ exports[`The component should render with all available props and handle clicks 
         </span>
         <button>
           <span
-            aria-label="sign-out"
-            class="fa fa-sign-out"
+            aria-label="su-exit"
+            class="su-exit"
           />
           Log out
         </button>
@@ -139,8 +139,8 @@ exports[`The component should render with all available props and handle clicks 
         class="title"
       >
         <span
-          aria-label="search"
-          class="fa fa-search"
+          aria-label="su-search"
+          class="su-search"
         />
         Search
       </div>
@@ -152,8 +152,8 @@ exports[`The component should render with all available props and handle clicks 
         class="title"
       >
         <span
-          aria-label="bullseye"
-          class="fa fa-bullseye"
+          aria-label="su-webspace"
+          class="su-webspace"
         />
         Webspaces
       </div>
@@ -165,7 +165,7 @@ exports[`The component should render with all available props and handle clicks 
         class="title"
       >
         <span
-          aria-label="image"
+          aria-label="fa-image"
           class="fa fa-image"
         />
         Media
@@ -178,7 +178,7 @@ exports[`The component should render with all available props and handle clicks 
         class="title"
       >
         <span
-          aria-label="newspaper-o"
+          aria-label="fa-newspaper-o"
           class="fa fa-newspaper-o"
         />
         Article
@@ -191,7 +191,7 @@ exports[`The component should render with all available props and handle clicks 
         class="title"
       >
         <span
-          aria-label="sticky-note-o"
+          aria-label="fa-sticky-note-o"
           class="fa fa-sticky-note-o"
         />
         Snippets
@@ -204,8 +204,8 @@ exports[`The component should render with all available props and handle clicks 
         class="title"
       >
         <span
-          aria-label="user"
-          class="fa fa-user"
+          aria-label="su-user-1"
+          class="su-user-1"
         />
         Contact
       </div>
@@ -239,8 +239,8 @@ exports[`The component should render with all available props and handle clicks 
         </div>
       </div>
       <span
-        aria-label="chevron-down"
-        class="childrenIndicator fa fa-chevron-down clickable"
+        aria-label="su-arrow-down"
+        class="childrenIndicator su-arrow-down clickable"
         role="button"
         tabindex="0"
       />
@@ -252,14 +252,14 @@ exports[`The component should render with all available props and handle clicks 
         class="title"
       >
         <span
-          aria-label="gear"
+          aria-label="fa-gear"
           class="fa fa-gear"
         />
         Settings
       </div>
       <span
-        aria-label="chevron-right"
-        class="childrenIndicator fa fa-chevron-right clickable"
+        aria-label="su-arrow-right"
+        class="childrenIndicator su-arrow-right clickable"
         role="button"
         tabindex="0"
       />
