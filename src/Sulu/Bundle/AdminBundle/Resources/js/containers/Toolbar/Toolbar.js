@@ -97,7 +97,7 @@ export default class Toolbar extends React.Component<*> {
                     {this.toolbarStore.hasBackButtonConfig() &&
                     <ToolbarComponent.Button
                         {...backButtonConfig}
-                        icon="su-arrow-left"
+                        icon="su-arrow-long-left"
                     />
                     }
                     {this.toolbarStore.hasItemsConfig() &&
