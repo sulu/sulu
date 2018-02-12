@@ -911,9 +911,7 @@ class ContactControllerTest extends SuluTestCase
                 'notes' => [],
                 'addresses' => [],
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
+                'formOfAddress' => '0',
             ]
         );
 
