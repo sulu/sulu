@@ -12,6 +12,7 @@
         <parameter key="sulu.content.type.time.class">Sulu\Bundle\ContentBundle\Content\Types\Time</parameter>
         <parameter key="sulu.content.type.color.class">Sulu\Bundle\ContentBundle\Content\Types\Color</parameter>
         <parameter key="sulu.content.type.checkbox.class">Sulu\Bundle\ContentBundle\Content\Types\Checkbox</parameter>
+        <parameter key="sulu.content.type.number.class">Sulu\Bundle\ContentBundle\Content\Types\Number</parameter>
     </parameters>
     <services>
         <!-- content-types -->
@@ -82,6 +83,11 @@
         <service id="sulu.content.type.single_select" class="Sulu\Bundle\ContentBundle\Content\Types\SingleSelect">
             <argument>%sulu.content.type.single_select.template%</argument>
             <tag name="sulu.content.type" alias="single_select"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.number" class="%sulu.content.type.number.class%">
+            <argument>%sulu.content.type.number.template%</argument>
+            <tag name="sulu.content.type" alias="number"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
     </services>
