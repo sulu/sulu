@@ -103,3 +103,22 @@ test('The positioner should return the correct dimensions when the popover overf
         }))
     )).toEqual({top: 302, left: 1310, height: 500, scrollTop: 0});
 });
+
+test('The positioner should return the correct dimensions when the popover undercuts the min height at the bottom 2',
+    () => {
+        window.innerWidth = 800;
+        window.innerHeight = 800;
+
+        expect(PopoverPositioner.getCroppedDimensions(
+            ...(getCroppedDimensionsArguments({
+                popoverWidth: 200,
+                popoverHeight: 400,
+                anchorTop: 550,
+                anchorLeft: 250,
+                anchorWidth: 150,
+                anchorHeight: 30,
+                alignOnVerticalEdges: true,
+            }))
+        )).toEqual({top: 148, left: 230, height: 400, scrollTop: 0});
+    }
+);
