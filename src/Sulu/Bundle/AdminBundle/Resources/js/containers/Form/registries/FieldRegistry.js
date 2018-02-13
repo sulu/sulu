@@ -28,6 +28,10 @@ class FieldRegistry {
 
         return this.fields[name];
     }
+
+    has(name: string) {
+        return name in this.fields;
+    }
 }
 
 export default new FieldRegistry();

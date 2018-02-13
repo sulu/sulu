@@ -40,3 +40,12 @@ test('Get field with existing key', () => {
 test('Get field of not existing key', () => {
     expect(() => fieldRegistry.get('XXX')).toThrow();
 });
+
+test('Has a field with an existing key', () => {
+    fieldRegistry.add('test', () => null);
+    expect(fieldRegistry.has('test')).toEqual(true);
+});
+
+test('Has a field with an not existing key', () => {
+    expect(fieldRegistry.has('test')).toEqual(false);
+});
