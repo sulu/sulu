@@ -2,7 +2,7 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import pretty from 'pretty';
-import FormBlockCollection from '../FormBlockCollection';
+import FieldBlocks from '../FieldBlocks';
 
 jest.mock('../../Form/registries/FieldRegistry', () => ({
     get: jest.fn((type) => {
@@ -52,20 +52,20 @@ test('Render block with schema', () => {
         },
     ];
 
-    const formBlockCollection = mount(<FormBlockCollection onChange={jest.fn()} types={types} value={value} />);
+    const fieldBlocks = mount(<FieldBlocks onChange={jest.fn()} types={types} value={value} />);
 
-    formBlockCollection.find('Block').at(0).simulate('click');
-    formBlockCollection.find('Block').at(1).simulate('click');
+    fieldBlocks.find('Block').at(0).simulate('click');
+    fieldBlocks.find('Block').at(1).simulate('click');
 
-    expect(pretty(formBlockCollection.html())).toMatchSnapshot();
+    expect(pretty(fieldBlocks.html())).toMatchSnapshot();
 });
 
 test('Throw error if no types are passed', () => {
-    expect(() => shallow(<FormBlockCollection onChange={jest.fn()} value={undefined} />))
+    expect(() => shallow(<FieldBlocks onChange={jest.fn()} value={undefined} />))
         .toThrow('The "block" field type needs at least one type to be configured!');
 });
 
 test('Throw error if empty type array is passed', () => {
-    expect(() => shallow(<FormBlockCollection onChange={jest.fn()} value={[]} />))
+    expect(() => shallow(<FieldBlocks onChange={jest.fn()} value={[]} />))
         .toThrow('The "block" field type needs at least one type to be configured!');
 });
