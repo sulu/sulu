@@ -4,7 +4,7 @@ import {toJS} from 'mobx';
 import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
 import type {FieldTypeProps} from '../../types';
-import FormRenderer from './FormRenderer';
+import FieldRenderer from './FieldRenderer';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
 
@@ -28,7 +28,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         const blockType = type ? types[type] : types[Object.keys(types)[0]]; // TODO replace with a default type
 
         return (
-            <FormRenderer
+            <FieldRenderer
                 data={value}
                 index={index}
                 locale={locale}

@@ -47,7 +47,6 @@ export default class Form extends React.Component<Props> {
             : (
                 <form onSubmit={this.handleSubmit}>
                     <Renderer
-                        onSubmit={this.handleSubmit}
                         onChange={this.handleChange}
                         schema={store.schema}
                         data={store.data}

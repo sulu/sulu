@@ -12,7 +12,7 @@ type Props = {
     schema: Schema,
 };
 
-export default class FormRenderer extends React.Component<Props> {
+export default class FieldRenderer extends React.Component<Props> {
     handleChange = (name: string, value: *) => {
         const {index, onChange} = this.props;
         onChange(index, name, value);

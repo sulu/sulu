@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {shallow} from 'enzyme';
-import FormRenderer from '../FormRenderer';
+import FieldRenderer from '../FieldRenderer';
 
 test('Should pass props correctly to Renderer', () => {
     const changeSpy = jest.fn();
@@ -15,7 +15,7 @@ test('Should pass props correctly to Renderer', () => {
     };
 
     const formRenderer = shallow(
-        <FormRenderer data={data} index={1} locale={locale} onChange={changeSpy} schema={schema} />
+        <FieldRenderer data={data} index={1} locale={locale} onChange={changeSpy} schema={schema} />
     );
 
     expect(formRenderer.find('Renderer').props()).toEqual(expect.objectContaining({
@@ -29,7 +29,7 @@ test('Should call onChange callback with correct index', () => {
     const changeSpy = jest.fn();
 
     const formRenderer = shallow(
-        <FormRenderer data={{}} index={2} locale={undefined} onChange={changeSpy} schema={{}} />
+        <FieldRenderer data={{}} index={2} locale={undefined} onChange={changeSpy} schema={{}} />
     );
 
     formRenderer.find('Renderer').prop('onChange')('test', 'value');
