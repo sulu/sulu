@@ -5,6 +5,7 @@ import React from 'react';
 import Loader from '../../components/Loader';
 import Renderer from './Renderer';
 import FormStore from './stores/FormStore';
+import formStyles from './form.scss';
 
 type Props = {
     store: FormStore,
@@ -13,27 +14,29 @@ type Props = {
 
 @observer
 export default class Form extends React.Component<Props> {
-    renderer: ?ElementRef<typeof Renderer>;
+    submitButton: ?ElementRef<'button'>;
 
     /** @public */
     submit = () => {
-        if (!this.renderer) {
+        const {submitButton} = this;
+        if (!submitButton) {
             return;
         }
 
-        this.renderer.submit();
+        submitButton.click();
     };
 
-    handleSubmit = () => {
+    handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
         this.props.onSubmit();
+        event.preventDefault();
     };
 
     handleChange = (name: string, value: mixed) => {
         this.props.store.set(name, value);
     };
 
-    setRenderer = (renderer: ?ElementRef<typeof Renderer>) => {
-        this.renderer = renderer;
+    setSubmitButtonRef = (submitButton: ?ElementRef<'button'>) => {
+        this.submitButton = submitButton;
     };
 
     render() {
@@ -41,13 +44,16 @@ export default class Form extends React.Component<Props> {
 
         return store.loading
             ? <Loader />
-            : <Renderer
-                ref={this.setRenderer}
-                onSubmit={this.handleSubmit}
-                onChange={this.handleChange}
-                schema={store.schema}
-                data={store.data}
-                locale={store.locale}
-            />;
+            : (
+                <form onSubmit={this.handleSubmit}>
+                    <Renderer
+                        onChange={this.handleChange}
+                        schema={store.schema}
+                        data={store.data}
+                        locale={store.locale}
+                    />
+                    <button ref={this.setSubmitButtonRef} type="submit" className={formStyles.submit}>Submit</button>
+                </form>
+            );
     }
 }

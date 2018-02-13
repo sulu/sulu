@@ -1,8 +1,13 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
 import BlockCollection from '../BlockCollection';
 import SortableContainer from '../SortableBlocks';
+
+beforeEach(() => {
+    BlockCollection.idCounter = 0;
+});
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn().mockImplementation((key) => {
@@ -29,14 +34,25 @@ test('Should render a filled block list', () => {
     )).toMatchSnapshot();
 });
 
-test('Choosing a different type should change the type', () => {
+test('Choosing a different type should call the onChange callback', () => {
+    const changeSpy = jest.fn();
     const renderBlockContent = jest.fn();
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+    ];
     const blockCollection = mount(
         <BlockCollection
-            onChange={jest.fn()}
+            onChange={changeSpy}
             renderBlockContent={renderBlockContent}
             types={{type1: 'Type 1', type2: 'Type2'}}
-            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+            value={value}
         />
     );
 
@@ -44,13 +60,14 @@ test('Choosing a different type should change the type', () => {
     blockCollection.find('Block').at(1).simulate('click');
 
     expect(blockCollection.find('Block').at(0).find('SingleSelect').prop('value')).toEqual('type1');
-    expect(blockCollection.find('Block').at(1).find('SingleSelect').prop('value')).toEqual('type1');
+    expect(blockCollection.find('Block').at(1).find('SingleSelect').prop('value')).toEqual('type2');
 
     blockCollection.find('Block').at(0).find('SingleSelect').prop('onChange')('type2');
-    blockCollection.update();
 
-    expect(blockCollection.find('Block').at(0).find('SingleSelect').prop('value')).toEqual('type2');
-    expect(blockCollection.find('Block').at(1).find('SingleSelect').prop('value')).toEqual('type1');
+    expect(changeSpy).toBeCalledWith([
+        expect.objectContaining({content: 'Test 1', type: 'type2'}),
+        expect.objectContaining({content: 'Test 2', type: 'type2'}),
+    ]);
 });
 
 test('Should allow to expand blocks', () => {
@@ -104,32 +121,13 @@ test('Should allow to reorder blocks by using drag and drop', () => {
     expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([true, false, false]);
 
     blockCollection.find(SortableContainer).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
-    expect(changeSpy).toBeCalledWith([{content: 'Test 2'}, {content: 'Test 3'}, {content: 'Test 1'}]);
+    expect(changeSpy).toBeCalledWith([
+        expect.objectContaining({content: 'Test 2'}),
+        expect.objectContaining({content: 'Test 3'}),
+        expect.objectContaining({content: 'Test 1'}),
+    ]);
 
     expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([false, false, true]);
-});
-
-test('Should keep types when reordering blocks by using drag and drop', () => {
-    const changeSpy = jest.fn();
-    const value = [{content: 'Test 1'}, {content: 'Test 2'}, {content: 'Test 3'}];
-    const blockCollection = mount(
-        <BlockCollection
-            onChange={changeSpy}
-            renderBlockContent={jest.fn()}
-            types={{type1: 'Type 1', type2: 'Type 2'}}
-            value={value}
-        />
-    );
-
-    expect(blockCollection.instance().blockTypes.toJS()).toEqual(['type1', 'type1', 'type1']);
-
-    blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('SingleSelect').prop('onChange')('type2');
-    expect(blockCollection.instance().blockTypes.toJS()).toEqual(['type2', 'type1', 'type1']);
-
-    blockCollection.find(SortableContainer).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
-
-    expect(blockCollection.instance().blockTypes.toJS()).toEqual(['type1', 'type1', 'type2']);
 });
 
 test('Should allow to add a new block', () => {
@@ -145,7 +143,9 @@ test('Should allow to add a new block', () => {
 });
 
 test('Should allow to remove an existing block', () => {
-    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+    // observable makes calling onChange with deleting an entry from expandedBlocks
+    // otherwise the value and BlockCollection.expandedBlocks variable get out of sync and emit a warning
+    const value: any = observable([{content: 'Test 1'}, {content: 'Test 2'}]);
     const changeSpy = jest.fn().mockImplementation((newValue) => {
         value.splice(0, value.length);
         value.push(...newValue);
@@ -157,7 +157,7 @@ test('Should allow to remove an existing block', () => {
     blockCollection.find('Block').at(0).simulate('click');
     blockCollection.find('Block').at(0).find('Icon[name="su-trash"]').simulate('click');
 
-    expect(changeSpy).toBeCalledWith([{content: 'Test 2'}]);
+    expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
 });
 
 test('Should apply renderBlockContent before rendering the block content', () => {
@@ -182,7 +182,16 @@ test('Should apply renderBlockContent before rendering the block content', () =>
 test('Should apply renderBlockContent before rendering the block content including the type', () => {
     const prefix = 'This is the test for ';
     const typePrefix = ' which has a type of ';
-    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+    const value = [
+        {
+            type: 'type2',
+            content: 'Test 1',
+        },
+        {
+            type: 'type1',
+            content: 'Test 2',
+        },
+    ];
     const renderBlockContent = jest.fn().mockImplementation(
         (value, type) => prefix + value.content + (type ? typePrefix + type : '')
     );
@@ -204,20 +213,7 @@ test('Should apply renderBlockContent before rendering the block content includi
     blockCollection.find('Block').at(1).simulate('click');
 
     expect(blockCollection.find('Block').at(0).prop('children'))
-        .toEqual(prefix + value[0].content + typePrefix + 'type1');
+        .toEqual(prefix + value[0].content + typePrefix + 'type2');
     expect(blockCollection.find('Block').at(1).prop('children'))
         .toEqual(prefix + value[1].content + typePrefix + 'type1');
-
-    expect(blockCollection.find('Block').at(0).prop('children'))
-        .toEqual(prefix + value[0].content + typePrefix + 'type1');
-    expect(blockCollection.find('Block').at(1).prop('children'))
-        .toEqual(prefix + value[1].content + typePrefix + 'type1');
-
-    blockCollection.find('Block').at(1).find('SingleSelect').prop('onChange')('type2');
-    blockCollection.update();
-
-    expect(blockCollection.find('Block').at(0).prop('children'))
-        .toEqual(prefix + value[0].content + typePrefix + 'type1');
-    expect(blockCollection.find('Block').at(1).prop('children'))
-        .toEqual(prefix + value[1].content + typePrefix + 'type2');
 });

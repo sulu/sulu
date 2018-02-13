@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {SortableContainer} from 'react-sortable-hoc';
 import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
-import type {RenderBlockContentCallback} from './types';
+import type {BlockEntry, RenderBlockContentCallback} from './types';
 
 type Props = {
     blockTypes: Array<string>,
@@ -15,7 +15,7 @@ type Props = {
     onTypeChange?: (type: string | number, index: number) => void,
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
-    value: Array<*>,
+    value: Array<BlockEntry>,
 };
 
 @observer
@@ -44,16 +44,16 @@ class SortableBlocks extends React.Component<Props> {
     };
 
     render() {
-        const {blockTypes, expandedBlocks, renderBlockContent, types, value} = this.props;
+        const {expandedBlocks, renderBlockContent, types, value} = this.props;
 
         return (
             <div className={sortableBlockListStyles.sortableBlockList}>
                 {value && value.map((block, index) => (
                     <SortableBlock
-                        activeType={blockTypes[index]}
+                        activeType={block.type}
                         expanded={expandedBlocks[index]}
                         index={index}
-                        key={index}
+                        key={block.__id}
                         onExpand={this.handleExpand}
                         onCollapse={this.handleCollapse}
                         onRemove={this.handleRemove}

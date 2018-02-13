@@ -99,41 +99,45 @@ exports[`Render an expanded block with a multiple types 1`] = `
       class="header"
     >
       <div
-        class="select"
+        class="types"
       >
-        <button
-          class="displayValue"
+        <div
+          class="select"
         >
-          <div
-            aria-label="Type1"
-            class="croppedText"
-            title="Type1"
+          <button
+            class="displayValue"
           >
             <div
-              aria-hidden="true"
-              class="front"
+              aria-label="Type1"
+              class="croppedText"
+              title="Type1"
             >
-              Typ
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Typ
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  e1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Type1
+              </div>
             </div>
-            <div
-              aria-hidden="true"
-              class="back"
-            >
-              <span>
-                e1
-              </span>
-            </div>
-            <div
-              class="whole"
-            >
-              Type1
-            </div>
-          </div>
-          <span
-            aria-label="su-arrow-down"
-            class="toggle su-arrow-down"
-          />
-        </button>
+            <span
+              aria-label="su-arrow-down"
+              class="toggle su-arrow-down"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="icons"

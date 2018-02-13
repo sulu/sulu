@@ -1,6 +1,7 @@
 // @flow
 import {render, shallow} from 'enzyme';
 import React from 'react';
+import {observable} from 'mobx';
 import Field from '../Field';
 import fieldRegistry from '../registries/FieldRegistry';
 
@@ -22,24 +23,26 @@ test('Render correct label with correct field type', () => {
         .toMatchSnapshot();
 });
 
-test('Pass correct props to FieldTypes', () => {
-    const fieldType = jest.fn();
-    fieldRegistry.get.mockReturnValue(fieldType);
+test('Pass correct props to FieldType', () => {
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="date" />;
+    });
 
-    const value = 7;
-    const schema = {
-        label: '',
-        type: 'test',
-        options: {
-            defaultValue: 3,
-        },
-    };
+    const locale = observable('de');
+    const field = shallow(
+        <Field
+            locale={locale}
+            name="text"
+            onChange={jest.fn()}
+            schema={{label: 'Text', type: 'text_line', types: {}}}
+            value="test"
+        />
+    );
 
-    const field = shallow(<Field name="test" onChange={jest.fn()} schema={schema} value={value} />);
-
-    expect(field.find(fieldType).props()).toEqual(expect.objectContaining({
-        value,
-        options: schema.options,
+    expect(field.find('Text').props()).toEqual(expect.objectContaining({
+        locale: locale,
+        types: {},
+        value: 'test',
     }));
 });
 
@@ -49,7 +52,9 @@ test('Call onChange callback when value of Field changes', () => {
     });
 
     const changeSpy = jest.fn();
-    const field = shallow(<Field schema={{label: 'label', type: 'text'}} name="test" onChange={changeSpy} />);
+    const field = shallow(
+        <Field schema={{label: 'label', type: 'text'}} locale={undefined} name="test" onChange={changeSpy} />
+    );
 
     field.find('Text').simulate('change', 'test value');
 

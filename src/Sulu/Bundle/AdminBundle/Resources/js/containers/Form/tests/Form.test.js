@@ -43,7 +43,7 @@ test('Should call onSubmit callback on submit', () => {
     const form = mount(<Form onSubmit={submitSpy} store={store} />);
 
     const submitButtonClick = jest.fn();
-    form.find('Renderer').instance().submitButton.click = submitButtonClick;
+    form.instance().submitButton.click = submitButtonClick;
 
     form.instance().submit();
 

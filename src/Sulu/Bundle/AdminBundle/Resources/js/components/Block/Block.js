@@ -72,11 +72,15 @@ export default class Block extends React.Component<Props> {
                     {expanded &&
                         <header className={blockStyles.header}>
                             {types && Object.keys(types).length > 1 &&
-                                <SingleSelect onChange={this.handleTypeChange} value={activeType}>
-                                    {Object.keys(types).map((key) => (
-                                        <SingleSelect.Option key={key} value={key}>{types[key]}</SingleSelect.Option>
-                                    ))}
-                                </SingleSelect>
+                                <div className={blockStyles.types}>
+                                    <SingleSelect onChange={this.handleTypeChange} value={activeType}>
+                                        {Object.keys(types).map((key) => (
+                                            <SingleSelect.Option key={key} value={key}>
+                                                {types[key]}
+                                            </SingleSelect.Option>
+                                        ))}
+                                    </SingleSelect>
+                                </div>
                             }
                             <div className={blockStyles.icons}>
                                 {onRemove && <Icon name="su-trash" onClick={this.handleRemove} />}

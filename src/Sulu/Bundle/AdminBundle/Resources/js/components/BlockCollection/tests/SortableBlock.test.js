@@ -150,3 +150,42 @@ test('Should call onTypeChange when the block has changed its type', () => {
 
     expect(typeChangeSpy).toBeCalledWith('type1', 1);
 });
+
+test('Should call renderBlockContent with the correct arguments', () => {
+    const renderBlockContentSpy = jest.fn();
+    const value = {content: 'Test 1'};
+
+    shallow(
+        <SortableBlock
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            onRemove={jest.fn()}
+            renderBlockContent={renderBlockContentSpy}
+            sortIndex={7}
+            value={value}
+        />
+    );
+
+    expect(renderBlockContentSpy).toBeCalledWith(value, undefined, 7);
+});
+
+test('Should call renderBlockContent with the correct arguments when types are involved', () => {
+    const renderBlockContentSpy = jest.fn();
+    const value = {content: 'Test 2'};
+
+    shallow(
+        <SortableBlock
+            activeType="test"
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            onRemove={jest.fn()}
+            renderBlockContent={renderBlockContentSpy}
+            sortIndex={7}
+            value={value}
+        />
+    );
+
+    expect(renderBlockContentSpy).toBeCalledWith(value, 'test', 7);
+});

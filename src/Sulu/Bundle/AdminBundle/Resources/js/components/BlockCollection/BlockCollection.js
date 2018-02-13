@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {arrayMove} from 'react-sortable-hoc';
 import {translate} from '../../utils/Translator';
@@ -8,24 +8,24 @@ import Button from '../Button';
 import Icon from '../Icon';
 import SortableBlocks from './SortableBlocks';
 import blockCollectionStyles from './blockCollection.scss';
-import type {RenderBlockContentCallback} from './types';
+import type {BlockEntry, RenderBlockContentCallback} from './types';
 
 type Props = {
-    onChange: (value: *) => void,
+    onChange: (value: Array<BlockEntry>) => void,
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
-    value: Array<*>,
+    value: Array<BlockEntry>,
 };
 
 @observer
 export default class BlockCollection extends React.Component<Props> {
+    static idCounter = 0;
+
     static defaultProps = {
         value: [],
     };
 
     @observable expandedBlocks: Array<boolean> = [];
-
-    @observable blockTypes: Array<?string | number> = [];
 
     @computed get defaultType(): ?string {
         const {types} = this.props;
@@ -43,23 +43,23 @@ export default class BlockCollection extends React.Component<Props> {
 
     fillArrays() {
         const {value} = this.props;
-        const {blockTypes, expandedBlocks} = this;
+        const {expandedBlocks} = this;
 
         if (!value) {
             return;
         }
 
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(false));
-        blockTypes.push(...new Array(value.length - blockTypes.length).fill(this.defaultType));
     }
 
     @action handleAddBlock = () => {
         const {onChange, value} = this.props;
 
         if (value) {
-            this.expandedBlocks.push(false);
-            this.blockTypes.push(this.defaultType);
-            onChange([...value, {}]);
+            this.expandedBlocks.push(true);
+
+            const newBlock = this.defaultType ? {type: this.defaultType} : {};
+            onChange([...value, newBlock]);
         }
     };
 
@@ -68,7 +68,6 @@ export default class BlockCollection extends React.Component<Props> {
 
         if (value) {
             this.expandedBlocks.splice(index, 1);
-            this.blockTypes.splice(index, 1);
             onChange(value.filter((element, arrayIndex) => arrayIndex != index));
         }
     };
@@ -77,7 +76,6 @@ export default class BlockCollection extends React.Component<Props> {
         const {onChange, value} = this.props;
 
         this.expandedBlocks = arrayMove(this.expandedBlocks, oldIndex, newIndex);
-        this.blockTypes = arrayMove(this.blockTypes, oldIndex, newIndex);
         onChange(arrayMove(value, oldIndex, newIndex));
     };
 
@@ -90,16 +88,26 @@ export default class BlockCollection extends React.Component<Props> {
     };
 
     @action handleTypeChange = (type: string | number, index: number) => {
-        this.blockTypes[index] = type;
+        const {onChange, value} = this.props;
+        const newValue = toJS(value);
+        newValue[index].type = type;
+        onChange(newValue);
     };
 
     render() {
         const {renderBlockContent, types, value} = this.props;
 
+        const identifiedValues = value.map((block) => {
+            if (!block.__id) {
+                block.__id = ++BlockCollection.idCounter;
+            }
+
+            return block;
+        });
+
         return (
             <section className={blockCollectionStyles.blockCollection}>
                 <SortableBlocks
-                    blockTypes={this.blockTypes}
                     expandedBlocks={this.expandedBlocks}
                     lockAxis="y"
                     onExpand={this.handleExpand}
@@ -110,7 +118,7 @@ export default class BlockCollection extends React.Component<Props> {
                     renderBlockContent={renderBlockContent}
                     types={types}
                     useDragHandle={true}
-                    value={value}
+                    value={identifiedValues}
                 />
                 <Button skin="secondary" onClick={this.handleAddBlock}>
                     <Icon name="su-plus" className={blockCollectionStyles.addButtonIcon} />

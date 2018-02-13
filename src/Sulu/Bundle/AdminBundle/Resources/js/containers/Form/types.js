@@ -8,6 +8,12 @@ export type SchemaType = {
 
 export type SchemaTypes = {[key: string]: SchemaType};
 
+export type Type = {
+    title: string,
+    form: Schema,
+};
+export type Types = {[key: string]: Type};
+
 export type SchemaEntry = {
     label: string,
     type: string,
@@ -15,6 +21,7 @@ export type SchemaEntry = {
     spaceAfter?: Size,
     items?: Schema,
     options?: Object,
+    types?: Types,
 };
 
 export type Schema = {

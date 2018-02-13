@@ -32,6 +32,7 @@ module.exports = { // eslint-disable-line
     require: [
         'core-js/fn/array/includes',
         'core-js/fn/array/from',
+        'core-js/fn/array/fill',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/global.scss',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/styleguidist.scss',
     ],

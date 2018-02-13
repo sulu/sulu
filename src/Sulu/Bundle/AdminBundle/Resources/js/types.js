@@ -1,6 +1,7 @@
 // @flow
 import type {ComponentType, Element} from 'react';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {Types} from './containers/Form';
 
 export type PaginationProps = {
     children: Element<*>,
@@ -16,5 +17,6 @@ export type FieldTypeProps<T> = {
     onChange: (value: T) => void,
     locale?: ?IObservableValue<string>,
     options?: Object,
+    types?: Types,
     value: ?T,
 };

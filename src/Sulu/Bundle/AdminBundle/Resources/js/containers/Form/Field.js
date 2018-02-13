@@ -7,14 +7,14 @@ import type {SchemaEntry} from './types';
 
 type Props = {
     name: string,
-    value?: mixed,
+    value?: *,
     schema: SchemaEntry,
-    onChange: (string, mixed) => void,
+    onChange: (string, *) => void,
     locale?: ?IObservableValue<string>,
 };
 
 export default class Field extends React.PureComponent<Props> {
-    handleChange = (value: mixed) => {
+    handleChange = (value: *) => {
         const {name, onChange} = this.props;
 
         onChange(name, value);
@@ -26,17 +26,18 @@ export default class Field extends React.PureComponent<Props> {
             locale,
             schema,
         } = this.props;
-        const {label, options, type} = schema;
+        const {label, options, type, types} = schema;
         const FieldType = fieldRegistry.get(type);
 
         return (
             <div>
                 <label className={fieldStyles.label}>{label}</label>
                 <FieldType
+                    locale={locale}
                     onChange={this.handleChange}
                     options={options}
+                    types={types}
                     value={value}
-                    locale={locale}
                 />
             </div>
         );
