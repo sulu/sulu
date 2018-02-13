@@ -343,6 +343,22 @@ EOL
             "type": "text_line",
             "size": 6
         }
+    },
+    "schema": {
+        "required": ["formOfAddress", "firstName", "lastName"],
+        "properties": {
+            "formOfAddress": {
+                "enum": ["0", "1"]
+            },
+            "firstName": {
+                "type": "string",
+                "minLength": 1
+            },
+            "lastName": {
+                "type": "string",
+                "minLength": 1
+            }
+        }
     }
 }
 EOL
