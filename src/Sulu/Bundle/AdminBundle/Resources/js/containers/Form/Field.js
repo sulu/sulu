@@ -26,12 +26,12 @@ export default class Field extends React.PureComponent<Props> {
             locale,
             schema,
         } = this.props;
-        const {label, maxOccurs, minOccurs, options, type, types} = schema;
+        const {label, maxOccurs, minOccurs, options, required, type, types} = schema;
         const FieldType = fieldRegistry.get(type);
 
         return (
             <div>
-                <label className={fieldStyles.label}>{label}</label>
+                <label className={fieldStyles.label}>{label}{required && ' *'}</label>
                 <FieldType
                     maxOccurs={maxOccurs}
                     minOccurs={minOccurs}

@@ -23,6 +23,14 @@ test('Render correct label with correct field type', () => {
         .toMatchSnapshot();
 });
 
+test('Render a required field with correct field type', () => {
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+    expect(render(<Field name="test" onChange={jest.fn()} schema={{label: 'label1', required: true, type: 'text'}} />))
+        .toMatchSnapshot();
+});
+
 test('Pass correct props to FieldType', () => {
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="date" />;

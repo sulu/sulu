@@ -1,5 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render a required field with correct field type 1`] = `
+<div>
+  <label
+    class="label"
+  >
+    label1 *
+  </label>
+  <input
+    type="text"
+  />
+</div>
+`;
+
 exports[`Render correct label with correct field type 1`] = `
 <div>
   <label

@@ -322,6 +322,7 @@ EOL
     "form": {
         "formOfAddress": {
             "label": "Form of address",
+            "required": true,
             "type": "single_select",
             "size": 3,
             "spaceAfter": 9,
@@ -335,13 +336,21 @@ EOL
         },
         "firstName": {
             "label": "First Name",
+            "required": true,
             "type": "text_line",
             "size": 6
         },
         "lastName": {
             "label": "Last Name",
+            "required": true,
             "type": "text_line",
             "size": 6
+        },
+        "salutation": {
+            "label": "Salutation",
+            "required": false,
+            "type": "text_line",
+            "size": 12
         }
     },
     "schema": {
