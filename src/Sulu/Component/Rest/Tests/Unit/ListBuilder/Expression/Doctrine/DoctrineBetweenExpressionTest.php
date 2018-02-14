@@ -54,8 +54,10 @@ class DoctrineBetweenExpressionTest extends \PHPUnit_Framework_TestCase
 
         $statement = $whereExpression->getStatement($this->queryBuilder);
         $result = preg_match(
-            '/^SuluCoreBundle:Example\.name BETWEEN :name[\S]{' . $this->uniqueIdLength .
-            '} AND :name[\S]{' . $this->uniqueIdLength . '}/',
+            sprintf(
+                '/^SuluCoreBundle_Example\.name BETWEEN :name[\S]{%1$s} AND :name[\S]{%1$s}/',
+                $this->uniqueIdLength
+            ),
             $statement
         );
 
