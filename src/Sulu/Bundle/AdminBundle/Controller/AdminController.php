@@ -252,7 +252,8 @@ class AdminController
             "form": {
                 "title": {
                     "label": "Title",
-                    "type": "text_line"
+                    "type": "text_line",
+                    "required": true
                 },
                 "description": {
                     "label": "Description",
@@ -273,7 +274,8 @@ class AdminController
                             "form": {
                                 "text": {
                                     "label": "Text",
-                                    "type": "text_line"
+                                    "type": "text_line",
+                                    "required": true
                                 }
                             }
                         },
@@ -288,6 +290,53 @@ class AdminController
                         }
                     }
                 }
+            },
+            "schema": {
+                "required": ["title", "blocks"],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "blocks": {
+                        "type": "array",
+                        "minItems": 3,
+                        "items": {
+                            "type": "object",
+                            "oneOf": [
+                                {
+                                    "required": ["text"],
+                                    "properties": {
+                                        "type": {
+                                            "const": "default"
+                                        },
+                                        "text": {
+                                            "type": "string",
+                                            "minLength": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "required": ["image"],
+                                    "properties": {
+                                        "type": {
+                                            "const": "image"
+                                        },
+                                        "image": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ids": {
+                                                    "type": "array",
+                                                    "minItems": 3
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
             }
         },
         "footer": {
@@ -295,11 +344,21 @@ class AdminController
             "form": {
                 "title": {
                     "label": "Title",
-                    "type": "text_line"
+                    "type": "text_line",
+                    "required": true
                 },
                 "description": {
                     "label": "Description",
                     "type": "text_line"
+                }
+            },
+            "schema": {
+                "required": ["title"],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "minLength": 1
+                    }
                 }
             }
         }
