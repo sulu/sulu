@@ -1,11 +1,14 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, computed} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
-import React from 'react';
+import React, {Fragment} from 'react';
 import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers';
+import {Loader} from 'sulu-admin-bundle/components';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import WebspaceSelect from '../../components/WebspaceSelect';
+import WebspaceStore from '../../stores/WebspaceStore';
+import type {Webspace} from '../../stores/WebspaceStore/types';
 import webspaceOverviewStyles from './webspaceOverview.scss';
 
 @observer
@@ -14,10 +17,44 @@ class WebspaceOverview extends React.Component<ViewProps> {
     locale: IObservableValue<string> = observable();
     webspace: IObservableValue<string> = observable();
     datagridStore: DatagridStore;
+    @observable webspaces: Array<Webspace>;
 
     @action handleWebspaceChange = (value: string) => {
         this.webspace.set(value);
+        this.setDefaultLocaleForWebspace();
     };
+
+    @action setDefaultLocaleForWebspace = () => {
+        if (!this.selectedWebspace) {
+            return;
+        }
+
+        const localization = this.selectedWebspace.localizations.find((localizations) => {
+            if (localizations.children) {
+                localizations.children.find((localizations) => {
+                    return localizations.default;
+                });
+            }
+
+            return localizations.default;
+        });
+
+        if (!localization) {
+            return;
+        }
+
+        this.locale.set(localization.locale);
+    };
+
+    @computed get selectedWebspace(): ?Webspace {
+        if (!this.webspaces || !this.webspace.get()) {
+            return null;
+        }
+
+        return this.webspaces.find((webspace) => {
+            return webspace.key === this.webspace.get();
+        });
+    }
 
     componentWillMount() {
         const router = this.props.router;
@@ -34,6 +71,10 @@ class WebspaceOverview extends React.Component<ViewProps> {
         apiOptions.webspace = this.webspace;
 
         this.datagridStore = new DatagridStore('nodes', observableOptions, apiOptions);
+        WebspaceStore.loadWebspaces()
+            .then(action((webspaces) => {
+                this.webspaces = webspaces;
+            }));
     }
 
     componentWillUnmount() {
@@ -47,44 +88,54 @@ class WebspaceOverview extends React.Component<ViewProps> {
     }
 
     render() {
-        // TODO: Load this data dynamically from server!
-        const webspaces: Array<Object> = [
-            {key: 'sulu', name: 'Sulu'},
-            {key: 'sulu_blog', name: 'Sulu Blog'},
-            {key: 'sulu_doc', name: 'Sulu Doc'},
-        ];
-
         return (
             <div className={webspaceOverviewStyles.webspaceOverview}>
-                <div className={webspaceOverviewStyles.webspaceSelect}>
-                    <WebspaceSelect value={this.webspace.get()} onChange={this.handleWebspaceChange}>
-                        {webspaces.map((webspace) => (
-                            <WebspaceSelect.Item key={webspace.key} value={webspace.key}>
-                                {webspace.name}
-                            </WebspaceSelect.Item>
-                        ))}
-                    </WebspaceSelect>
-                </div>
-                <Datagrid
-                    store={this.datagridStore}
-                    adapters={['column_list']}
-                />
+                {!this.webspaces &&
+                    <div>
+                        <Loader />
+                    </div>
+                }
+
+                {!!this.webspaces &&
+                    <Fragment>
+                        <div className={webspaceOverviewStyles.webspaceSelect}>
+                            <WebspaceSelect value={this.webspace.get()} onChange={this.handleWebspaceChange}>
+                                {this.webspaces.map((webspace) => (
+                                    <WebspaceSelect.Item key={webspace.key} value={webspace.key}>
+                                        {webspace.name}
+                                    </WebspaceSelect.Item>
+                                ))}
+                            </WebspaceSelect>
+                        </div>
+                        <Datagrid
+                            store={this.datagridStore}
+                            adapters={['column_list']}
+                        />
+                    </Fragment>
+                }
             </div>
         );
     }
 }
 
 export default withToolbar(WebspaceOverview, function() {
-    // TODO: Load this data dynamically from server!
+    if (!this.selectedWebspace) {
+        return {};
+    }
+
+    const options = this.selectedWebspace.allLocalizations.map(function (localization) {
+        return {
+            value: localization.localization,
+            label: localization.name,
+        };
+    });
+
     const locale = {
         value: this.locale.get(),
         onChange: action((locale) => {
             this.locale.set(locale);
         }),
-        options: [{
-            value: 'en',
-            label: 'en',
-        }],
+        options: options,
     };
 
     return {
