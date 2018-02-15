@@ -127,12 +127,10 @@ export default withToolbar(WebspaceOverview, function() {
         return {};
     }
 
-    const options = this.selectedWebspace.allLocalizations.map((localization) => {
-        return {
-            value: localization.localization,
-            label: localization.name,
-        };
-    });
+    const options = this.selectedWebspace.allLocalizations.map((localization) => ({
+        value: localization.localization,
+        label: localization.name,
+    }));
 
     const locale = {
         value: this.locale.get(),
