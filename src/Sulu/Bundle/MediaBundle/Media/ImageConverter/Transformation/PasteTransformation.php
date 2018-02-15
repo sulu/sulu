@@ -47,7 +47,7 @@ class PasteTransformation implements TransformationInterface
         $maskPath = isset($parameters['image']) ? $this->fileLocator->locate($parameters['image']) : null;
 
         if (!$maskPath) {
-            return $image;
+            throw new \RuntimeException('The parameter "image" is required for "paste" transformation.');
         }
 
         $originalWidth = $image->getSize()->getWidth();

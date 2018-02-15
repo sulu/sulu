@@ -67,14 +67,12 @@ class PasteTransformationTest extends SuluTestCase
     public function testNoPaste()
     {
         $image = $this->prophesize(ImageInterface::class);
-        $image->getSize()->willReturn(new Box(700, 500));
-        $image->paste(Argument::any(), Argument::any())->shouldNotBeCalled();
+
+        $this->setExpectedException(\RuntimeException::class);
 
         $returnImage = $this->pasteTransformation->execute(
             $image->reveal(),
             []
         );
-
-        $this->assertInstanceOf(ImageInterface::class, $returnImage);
     }
 }
