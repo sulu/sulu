@@ -142,10 +142,12 @@ export default class BlockCollection extends React.Component<Props> {
                     useDragHandle={true}
                     value={identifiedValues}
                 />
-                <Button skin="secondary" onClick={this.handleAddBlock}>
-                    <Icon name="su-plus" className={blockCollectionStyles.addButtonIcon} />
-                    {translate('sulu_admin.add_block')}
-                </Button>
+                {!this.hasMaximumReached() &&
+                    <Button skin="secondary" onClick={this.handleAddBlock}>
+                        <Icon name="su-plus" className={blockCollectionStyles.addButtonIcon} />
+                        {translate('sulu_admin.add_block')}
+                    </Button>
+                }
             </section>
         );
     }

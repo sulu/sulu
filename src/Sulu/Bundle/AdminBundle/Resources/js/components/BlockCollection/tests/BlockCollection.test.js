@@ -22,9 +22,20 @@ test('Should render an empty block list', () => {
     expect(render(<BlockCollection onChange={jest.fn()} renderBlockContent={jest.fn()} />)).toMatchSnapshot();
 });
 
-test('Should render a filled block list', () => {
+test('Should render a block list', () => {
     expect(render(
         <BlockCollection
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+        />
+    )).toMatchSnapshot();
+});
+
+test('Should render a fully filled block list without add button', () => {
+    expect(render(
+        <BlockCollection
+            maxOccurs={2}
             onChange={jest.fn()}
             renderBlockContent={jest.fn()}
             value={[{content: 'Test 1'}, {content: 'Test 2'}]}
