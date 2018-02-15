@@ -6,7 +6,6 @@ export type Webspace = {
     urls: Array<Url>,
     allLocalizations: Array<LocalizationItem>,
     portalInformation: Array<PortalInformation>,
-    children: Array<Localization>,
 };
 
 export type Localization = {

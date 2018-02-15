@@ -8,7 +8,7 @@ import {Loader} from 'sulu-admin-bundle/components';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import WebspaceSelect from '../../components/WebspaceSelect';
 import WebspaceStore from '../../stores/WebspaceStore';
-import type {Webspace} from '../../stores/WebspaceStore/types';
+import type {Webspace, Localization} from '../../stores/WebspaceStore/types';
 import webspaceOverviewStyles from './webspaceOverview.scss';
 
 @observer
@@ -25,25 +25,29 @@ class WebspaceOverview extends React.Component<ViewProps> {
     };
 
     @action setDefaultLocaleForWebspace = () => {
-        if (!this.selectedWebspace) {
+        if (!this.selectedWebspace || !this.selectedWebspace.localizations) {
             return;
         }
 
-        const localization = this.selectedWebspace.localizations.find((localizations) => {
-            if (localizations.children) {
-                localizations.children.find((localizations) => {
-                    return localizations.default;
-                });
+        this.locale.set(this.findDefaultLocale(this.selectedWebspace.localizations));
+    };
+
+    findDefaultLocale = (localizations: Array<Localization>): string => {
+        for (let localization of localizations) {
+            if (localization.default) {
+                return localization.locale;
             }
 
-            return localizations.default;
-        });
+            if (localization.children) {
+                const locale = this.findDefaultLocale(localization.children);
 
-        if (!localization) {
-            return;
+                if (locale) {
+                    return locale;
+                }
+            }
         }
 
-        this.locale.set(localization.locale);
+        throw new Error('Default locale in webspace not found');
     };
 
     @computed get selectedWebspace(): ?Webspace {
@@ -135,7 +139,7 @@ export default withToolbar(WebspaceOverview, function() {
         onChange: action((locale) => {
             this.locale.set(locale);
         }),
-        options: options,
+        options,
     };
 
     return {

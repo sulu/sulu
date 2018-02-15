@@ -5,6 +5,6 @@ import Requester from './Requester';
 
 export {
     bundleReady,
-    ResourceRequester,
     Requester,
+    ResourceRequester,
 };
