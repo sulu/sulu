@@ -55,9 +55,9 @@ export default class BlockCollection extends React.Component<Props> {
     }
 
     @action handleAddBlock = () => {
-        const {maxOccurs, onChange, value} = this.props;
+        const {onChange, value} = this.props;
 
-        if (maxOccurs && value.length >= maxOccurs) {
+        if (this.hasMaximumReached()) {
             throw new Error('The maximum amount of blocks has already been reached!');
         }
 
@@ -70,9 +70,9 @@ export default class BlockCollection extends React.Component<Props> {
     };
 
     @action handleRemoveBlock = (index: number) => {
-        const {minOccurs, onChange, value} = this.props;
+        const {onChange, value} = this.props;
 
-        if (minOccurs && value.length <= minOccurs) {
+        if (this.hasMinimumReached()) {
             throw new Error('The minimum amount of blocks has already been reached!');
         }
 
@@ -104,6 +104,18 @@ export default class BlockCollection extends React.Component<Props> {
         onChange(newValue);
     };
 
+    hasMaximumReached() {
+        const {maxOccurs, value} = this.props;
+
+        return maxOccurs && value.length >= maxOccurs;
+    }
+
+    hasMinimumReached() {
+        const {minOccurs, value} = this.props;
+
+        return minOccurs && value.length <= minOccurs;
+    }
+
     render() {
         const {renderBlockContent, types, value} = this.props;
 
@@ -122,7 +134,7 @@ export default class BlockCollection extends React.Component<Props> {
                     lockAxis="y"
                     onExpand={this.handleExpand}
                     onCollapse={this.handleCollapse}
-                    onRemove={this.handleRemoveBlock}
+                    onRemove={this.hasMinimumReached() ? undefined : this.handleRemoveBlock}
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}
                     renderBlockContent={renderBlockContent}

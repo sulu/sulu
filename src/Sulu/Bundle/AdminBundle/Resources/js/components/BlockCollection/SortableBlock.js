@@ -11,7 +11,7 @@ type Props = {
     expanded: boolean,
     onCollapse: (index: number) => void,
     onExpand: (index: number) => void,
-    onRemove: (index: number) => void,
+    onRemove?: (index: number) => void,
     onTypeChange?: (type: string | number, index: number) => void,
     renderBlockContent: RenderBlockContentCallback,
     sortIndex: number,
@@ -35,7 +35,9 @@ class SortableBlock extends React.Component<Props> {
     handleRemove = () => {
         const {sortIndex, onRemove} = this.props;
 
-        onRemove(sortIndex);
+        if (onRemove) {
+            onRemove(sortIndex);
+        }
     };
 
     handleTypeChange = (type) => {
@@ -47,7 +49,7 @@ class SortableBlock extends React.Component<Props> {
     };
 
     render() {
-        const {activeType, expanded, renderBlockContent, sortIndex, types, value} = this.props;
+        const {activeType, expanded, onRemove, renderBlockContent, sortIndex, types, value} = this.props;
 
         return (
             <Block
@@ -56,7 +58,7 @@ class SortableBlock extends React.Component<Props> {
                 expanded={expanded}
                 onCollapse={this.handleCollapse}
                 onExpand={this.handleExpand}
-                onRemove={this.handleRemove}
+                onRemove={onRemove ? this.handleRemove : undefined}
                 onTypeChange={this.handleTypeChange}
                 types={types}
             >

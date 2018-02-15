@@ -23,12 +23,10 @@ test('Should render an empty block list', () => {
 });
 
 test('Should render a filled block list', () => {
-    const renderBlockContent = jest.fn();
-
     expect(render(
         <BlockCollection
             onChange={jest.fn()}
-            renderBlockContent={renderBlockContent}
+            renderBlockContent={jest.fn()}
             value={[{content: 'Test 1'}, {content: 'Test 2'}]}
         />
     )).toMatchSnapshot();
@@ -169,6 +167,18 @@ test('Should allow to remove an existing block', () => {
     blockCollection.find('Block').at(0).find('Icon[name="su-trash"]').simulate('click');
 
     expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
+});
+
+test('Should not render the remove icon if less or the exact amount of items are passed', () => {
+    const value = [{content: 'Value 1'}, {content: 'Value 2'}];
+
+    const blockCollection = mount(
+        <BlockCollection onChange={jest.fn()} minOccurs={2} renderBlockContent={jest.fn()} value={value} />
+    );
+
+    blockCollection.find('Block').at(0).simulate('click');
+
+    expect(blockCollection.find('Block Icon[name="su-trash"]')).toHaveLength(0);
 });
 
 test('Should throw an exception if a block is removed and the minimum has already been reached', () => {

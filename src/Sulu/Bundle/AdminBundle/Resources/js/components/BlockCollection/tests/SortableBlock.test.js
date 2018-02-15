@@ -38,6 +38,21 @@ test('Render expanded sortable block', () => {
     )).toMatchSnapshot();
 });
 
+test('Render expanded sortable block without remove icon', () => {
+    const renderBlockContent = jest.fn().mockImplementation((value) => 'Test for ' + value.content);
+
+    expect(render(
+        <SortableBlock
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            renderBlockContent={renderBlockContent}
+            sortIndex={1}
+            value={{content: 'Test Content'}}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render expanded sortable block with types', () => {
     const renderBlockContent = jest.fn().mockImplementation(
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
