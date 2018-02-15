@@ -11,6 +11,8 @@ import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
 type Props = {
+    maxOccurs?: number,
+    minOccurs?: number,
     onChange: (value: Array<BlockEntry>) => void,
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
@@ -53,7 +55,11 @@ export default class BlockCollection extends React.Component<Props> {
     }
 
     @action handleAddBlock = () => {
-        const {onChange, value} = this.props;
+        const {maxOccurs, onChange, value} = this.props;
+
+        if (maxOccurs && value.length >= maxOccurs) {
+            throw new Error('The maximum amount of blocks has already been reached!');
+        }
 
         if (value) {
             this.expandedBlocks.push(true);
@@ -63,8 +69,12 @@ export default class BlockCollection extends React.Component<Props> {
         }
     };
 
-    @action handleRemove = (index: number) => {
-        const {onChange, value} = this.props;
+    @action handleRemoveBlock = (index: number) => {
+        const {minOccurs, onChange, value} = this.props;
+
+        if (minOccurs && value.length <= minOccurs) {
+            throw new Error('The minimum amount of blocks has already been reached!');
+        }
 
         if (value) {
             this.expandedBlocks.splice(index, 1);
@@ -112,7 +122,7 @@ export default class BlockCollection extends React.Component<Props> {
                     lockAxis="y"
                     onExpand={this.handleExpand}
                     onCollapse={this.handleCollapse}
-                    onRemove={this.handleRemove}
+                    onRemove={this.handleRemoveBlock}
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}
                     renderBlockContent={renderBlockContent}

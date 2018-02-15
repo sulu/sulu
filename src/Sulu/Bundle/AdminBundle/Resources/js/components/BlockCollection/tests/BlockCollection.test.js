@@ -142,6 +142,17 @@ test('Should allow to add a new block', () => {
     expect(changeSpy).toBeCalledWith([...value, {}]);
 });
 
+test('Should throw an exception if a new block is added and the maximum has already been reached', () => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+
+    const blockCollection = shallow(
+        <BlockCollection maxOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />
+    );
+
+    expect(() => blockCollection.instance().handleAddBlock()).toThrow(/maximum amount of blocks/);
+});
+
 test('Should allow to remove an existing block', () => {
     // observable makes calling onChange with deleting an entry from expandedBlocks
     // otherwise the value and BlockCollection.expandedBlocks variable get out of sync and emit a warning
@@ -158,6 +169,17 @@ test('Should allow to remove an existing block', () => {
     blockCollection.find('Block').at(0).find('Icon[name="su-trash"]').simulate('click');
 
     expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
+});
+
+test('Should throw an exception if a block is removed and the minimum has already been reached', () => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+
+    const blockCollection = shallow(
+        <BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />
+    );
+
+    expect(() => blockCollection.instance().handleRemoveBlock()).toThrow(/minimum amount of blocks/);
 });
 
 test('Should apply renderBlockContent before rendering the block content', () => {
