@@ -127,7 +127,7 @@ export default withToolbar(WebspaceOverview, function() {
         return {};
     }
 
-    const options = this.selectedWebspace.allLocalizations.map(function (localization) {
+    const options = this.selectedWebspace.allLocalizations.map((localization) => {
         return {
             value: localization.localization,
             label: localization.name,
