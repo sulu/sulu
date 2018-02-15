@@ -354,4 +354,33 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(0, $collection);
     }
+
+    public function testGetRouteCollectionForRequestWithoutFormatExtension()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getPathInfo()->willReturn('/de/test');
+        $request->getLocale()->willReturn('de');
+        $request->getRequestFormat()->willReturn('json');
+
+        $routeEntity = $this->prophesize(RouteInterface::class);
+        $routeEntity->getEntityClass()->willReturn('Example');
+        $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
+        $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getLocale()->willReturn('de');
+
+        $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
+        $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
+        $this->defaultsProvider->getByEntity('Example', '1', 'de')->willReturn(['test' => 1]);
+
+        $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
+
+        $this->assertCount(1, $collection);
+        $routes = array_values(iterator_to_array($collection->getIterator()));
+
+        $this->assertEquals('/de/test', $routes[0]->getPath());
+        $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
+    }
 }
