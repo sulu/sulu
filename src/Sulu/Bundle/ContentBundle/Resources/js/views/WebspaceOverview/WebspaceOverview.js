@@ -25,14 +25,24 @@ class WebspaceOverview extends React.Component<ViewProps> {
     };
 
     @action setDefaultLocaleForWebspace = () => {
-        if (!this.selectedWebspace || !this.selectedWebspace.localizations) {
+        const selectedWebspace = this.selectedWebspace;
+
+        if (!selectedWebspace || !selectedWebspace.localizations) {
             return;
         }
 
-        this.locale.set(this.findDefaultLocale(this.selectedWebspace.localizations));
+        const locale = this.findDefaultLocale(selectedWebspace.localizations);
+
+        if (!locale) {
+            throw new Error(
+                'Default locale in webspace "' + selectedWebspace.key + '" not found'
+            );
+        }
+
+        this.locale.set(locale);
     };
 
-    findDefaultLocale = (localizations: Array<Localization>): string => {
+    findDefaultLocale = (localizations: Array<Localization>): ?string => {
         for (let localization of localizations) {
             if (localization.default) {
                 return localization.locale;
@@ -46,8 +56,6 @@ class WebspaceOverview extends React.Component<ViewProps> {
                 }
             }
         }
-
-        throw new Error('Default locale in webspace not found');
     };
 
     @computed get selectedWebspace(): ?Webspace {
