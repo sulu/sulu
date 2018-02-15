@@ -15,12 +15,14 @@ export type Type = {
 export type Types = {[key: string]: Type};
 
 export type SchemaEntry = {
+    items?: Schema,
     label: string,
-    type: string,
+    maxOccurs?: number,
+    minOccurs?: number,
+    options?: Object,
     size?: Size,
     spaceAfter?: Size,
-    items?: Schema,
-    options?: Object,
+    type: string,
     types?: Types,
 };
 
