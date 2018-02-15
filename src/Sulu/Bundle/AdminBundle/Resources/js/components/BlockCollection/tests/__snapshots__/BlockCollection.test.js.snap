@@ -58,7 +58,7 @@ exports[`Should render a block list 1`] = `
 </section>
 `;
 
-exports[`Should render a fully filled block list without add button 1`] = `
+exports[`Should render a fully filled block list without add button if maxOccurs is reached 1`] = `
 <section
   class="blockCollection"
 >

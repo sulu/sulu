@@ -32,7 +32,7 @@ test('Should render a block list', () => {
     )).toMatchSnapshot();
 });
 
-test('Should render a fully filled block list without add button', () => {
+test('Should render a fully filled block list without add button if maxOccurs is reached', () => {
     expect(render(
         <BlockCollection
             maxOccurs={2}
@@ -41,6 +41,50 @@ test('Should render a fully filled block list without add button', () => {
             value={[{content: 'Test 1'}, {content: 'Test 2'}]}
         />
     )).toMatchSnapshot();
+});
+
+test('Should add at least the minOccurs amount of blocks', () => {
+    const changeSpy = jest.fn();
+    const value = [{}];
+
+    shallow(<BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />);
+
+    expect(changeSpy).toBeCalledWith([
+        expect.objectContaining({}),
+        expect.objectContaining({}),
+    ]);
+});
+
+test('Should add at least the minOccurs amount of blocks with empty starting value', () => {
+    const changeSpy = jest.fn();
+    const value = [];
+
+    shallow(<BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />);
+
+    expect(changeSpy).toBeCalledWith([
+        expect.objectContaining({}),
+        expect.objectContaining({}),
+    ]);
+});
+
+test('Should add at least the minOccurs amount of blocks with types', () => {
+    const changeSpy = jest.fn();
+    const value = [{type: 'default'}];
+
+    shallow(
+        <BlockCollection
+            minOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={{default: 'Default'}}
+            value={value}
+        />
+    );
+
+    expect(changeSpy).toBeCalledWith([
+        expect.objectContaining({type: 'default'}),
+        expect.objectContaining({type: 'default'}),
+    ]);
 });
 
 test('Choosing a different type should call the onChange callback', () => {

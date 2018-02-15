@@ -44,7 +44,7 @@ export default class BlockCollection extends React.Component<Props> {
     }
 
     fillArrays() {
-        const {value} = this.props;
+        const {onChange, minOccurs, value} = this.props;
         const {expandedBlocks} = this;
 
         if (!value) {
@@ -52,6 +52,13 @@ export default class BlockCollection extends React.Component<Props> {
         }
 
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(false));
+        if (minOccurs && value.length < minOccurs) {
+            expandedBlocks.push(...new Array(minOccurs - value.length).fill(true));
+            onChange([
+                ...value,
+                ...new Array(minOccurs - value.length).fill(this.defaultType ? {type: this.defaultType} : {}),
+            ]);
+        }
     }
 
     @action handleAddBlock = () => {
