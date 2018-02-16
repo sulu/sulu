@@ -109,9 +109,7 @@ class RouteProvider implements RouteProviderInterface
             return $collection;
         }
 
-        if ('html' !== $format) {
-            $path = substr($path, 0, strpos($path, $format) - 1);
-        }
+        $path = $this->stripFormatExtension($path, $format);
 
         $route = $this->findRouteByPath($path, $request->getLocale());
         if ($route && array_key_exists($route->getId(), $this->symfonyRouteCache)) {
@@ -260,5 +258,23 @@ class RouteProvider implements RouteProviderInterface
         }
 
         return '/' . ltrim(rawurldecode($pathInfo), '/');
+    }
+
+    /**
+     * Return the given path without the format extension.
+     *
+     * @param string $path
+     * @param string $format
+     *
+     * @return string
+     */
+    private function stripFormatExtension($path, $format)
+    {
+        $extension = '.' . $format;
+        if (substr($path, -strlen($extension)) === $extension) {
+            $path = substr($path, 0, strlen($path) - strlen($extension));
+        }
+
+        return $path;
     }
 }

@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * FEATURE     #3028 [MediaBundle]             Added blur, grayscale, gamma, negative and sharpen transformation to media
     * HOTFIX      #3750 [PreviewBundle]           Fixed refresh preview
     * HOTFIX      #3747 [RouteBundle]             Added empty array as default value to histories property.
+    * BUGFIX      #3755 [RouteBundle]             Fixed how the route provider strips format extensions from the path
 
 * 1.6.14 (2018-02-06)
     * ENHANCEMENT #3717 [ContentBundle]           ResourceLocator: Show whole url in history overlay
