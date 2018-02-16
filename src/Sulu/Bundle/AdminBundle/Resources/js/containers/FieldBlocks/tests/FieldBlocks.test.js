@@ -60,6 +60,36 @@ test('Render block with schema', () => {
     expect(pretty(fieldBlocks.html())).toMatchSnapshot();
 });
 
+test('Should correctly pass props to the BlockCollection', () => {
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+    const value = [];
+    const changeSpy = jest.fn();
+
+    const fieldBlocks = shallow(
+        <FieldBlocks maxOccurs={2} minOccurs={1} onChange={changeSpy} types={types} value={value} />
+    );
+
+    expect(fieldBlocks.find('BlockCollection').props()).toEqual(expect.objectContaining({
+        maxOccurs: 2,
+        minOccurs: 1,
+        onChange: changeSpy,
+        types: {
+            default: 'Default',
+        },
+        value,
+    }));
+});
+
 test('Throw error if no types are passed', () => {
     expect(() => shallow(<FieldBlocks onChange={jest.fn()} value={undefined} />))
         .toThrow('The "block" field type needs at least one type to be configured!');

@@ -22,16 +22,69 @@ test('Should render an empty block list', () => {
     expect(render(<BlockCollection onChange={jest.fn()} renderBlockContent={jest.fn()} />)).toMatchSnapshot();
 });
 
-test('Should render a filled block list', () => {
-    const renderBlockContent = jest.fn();
-
+test('Should render a block list', () => {
     expect(render(
         <BlockCollection
             onChange={jest.fn()}
-            renderBlockContent={renderBlockContent}
+            renderBlockContent={jest.fn()}
             value={[{content: 'Test 1'}, {content: 'Test 2'}]}
         />
     )).toMatchSnapshot();
+});
+
+test('Should render a fully filled block list without add button if maxOccurs is reached', () => {
+    expect(render(
+        <BlockCollection
+            maxOccurs={2}
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+        />
+    )).toMatchSnapshot();
+});
+
+test('Should add at least the minOccurs amount of blocks', () => {
+    const changeSpy = jest.fn();
+    const value = [{}];
+
+    shallow(<BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />);
+
+    expect(changeSpy).toBeCalledWith([
+        expect.objectContaining({}),
+        expect.objectContaining({}),
+    ]);
+});
+
+test('Should add at least the minOccurs amount of blocks with empty starting value', () => {
+    const changeSpy = jest.fn();
+    const value = [];
+
+    shallow(<BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />);
+
+    expect(changeSpy).toBeCalledWith([
+        expect.objectContaining({}),
+        expect.objectContaining({}),
+    ]);
+});
+
+test('Should add at least the minOccurs amount of blocks with types', () => {
+    const changeSpy = jest.fn();
+    const value = [{type: 'default'}];
+
+    shallow(
+        <BlockCollection
+            minOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={{default: 'Default'}}
+            value={value}
+        />
+    );
+
+    expect(changeSpy).toBeCalledWith([
+        expect.objectContaining({type: 'default'}),
+        expect.objectContaining({type: 'default'}),
+    ]);
 });
 
 test('Choosing a different type should call the onChange callback', () => {
@@ -142,6 +195,17 @@ test('Should allow to add a new block', () => {
     expect(changeSpy).toBeCalledWith([...value, {}]);
 });
 
+test('Should throw an exception if a new block is added and the maximum has already been reached', () => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+
+    const blockCollection = shallow(
+        <BlockCollection maxOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />
+    );
+
+    expect(() => blockCollection.instance().handleAddBlock()).toThrow(/maximum amount of blocks/);
+});
+
 test('Should allow to remove an existing block', () => {
     // observable makes calling onChange with deleting an entry from expandedBlocks
     // otherwise the value and BlockCollection.expandedBlocks variable get out of sync and emit a warning
@@ -158,6 +222,29 @@ test('Should allow to remove an existing block', () => {
     blockCollection.find('Block').at(0).find('Icon[name="su-trash"]').simulate('click');
 
     expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
+});
+
+test('Should not render the remove icon if less or the exact amount of items are passed', () => {
+    const value = [{content: 'Value 1'}, {content: 'Value 2'}];
+
+    const blockCollection = mount(
+        <BlockCollection onChange={jest.fn()} minOccurs={2} renderBlockContent={jest.fn()} value={value} />
+    );
+
+    blockCollection.find('Block').at(0).simulate('click');
+
+    expect(blockCollection.find('Block Icon[name="su-trash"]')).toHaveLength(0);
+});
+
+test('Should throw an exception if a block is removed and the minimum has already been reached', () => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+
+    const blockCollection = shallow(
+        <BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />
+    );
+
+    expect(() => blockCollection.instance().handleRemoveBlock()).toThrow(/minimum amount of blocks/);
 });
 
 test('Should apply renderBlockContent before rendering the block content', () => {

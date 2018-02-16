@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should render a filled block list 1`] = `
+exports[`Should render a block list 1`] = `
 <section
   class="blockCollection"
 >
@@ -44,6 +44,65 @@ exports[`Should render a filled block list 1`] = `
   </div>
   <button
     class="button secondary"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-plus"
+        class="addButtonIcon su-plus"
+      />
+      Add block
+    </span>
+  </button>
+</section>
+`;
+
+exports[`Should render a fully filled block list without add button if maxOccurs is reached 1`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-shift"
+          class="sortableHandle su-shift"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article />
+      </div>
+    </section>
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-shift"
+          class="sortableHandle su-shift"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article />
+      </div>
+    </section>
+  </div>
+  <button
+    class="button secondary"
+    disabled=""
   >
     <span
       class="text"

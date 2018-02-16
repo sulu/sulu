@@ -29,18 +29,27 @@ test('Pass correct props to FieldType', () => {
     });
 
     const locale = observable('de');
+    const schema = {
+        label: 'Text',
+        maxOccurs: 4,
+        minOccurs: 2,
+        type: 'text_line',
+        types: {},
+    };
     const field = shallow(
         <Field
             locale={locale}
             name="text"
             onChange={jest.fn()}
-            schema={{label: 'Text', type: 'text_line', types: {}}}
+            schema={schema}
             value="test"
         />
     );
 
     expect(field.find('Text').props()).toEqual(expect.objectContaining({
         locale: locale,
+        maxOccurs: 4,
+        minOccurs: 2,
         types: {},
         value: 'test',
     }));

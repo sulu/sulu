@@ -9,12 +9,17 @@ $primaryColor: $white;
 $secondaryBorder: $silver;
 $secondaryBackground: $wildSand;
 $secondaryColor: $black;
+$secondaryDisabledColor: $silver;
 
 $linkFontSize: 14px;
 $linkColor: $black;
 
 .button {
     position: relative;
+
+    &:disabled {
+        cursor: default;
+    }
 }
 
 .primary,
@@ -39,6 +44,10 @@ $linkColor: $black;
     border-color: $secondaryBorder;
     background: $secondaryBackground;
     color: $secondaryColor;
+
+    &:disabled {
+        color: $secondaryDisabledColor;
+    }
 }
 
 .link {

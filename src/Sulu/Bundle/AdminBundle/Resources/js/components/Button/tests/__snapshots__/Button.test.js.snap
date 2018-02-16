@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Button should render with skin link 1`] = `
+exports[`Should render with skin link 1`] = `
 <button
   class="button link"
 >
@@ -10,7 +10,7 @@ exports[`Button should render with skin link 1`] = `
 </button>
 `;
 
-exports[`Button should render with skin primary 1`] = `
+exports[`Should render with skin primary 1`] = `
 <button
   class="button primary"
 >
@@ -20,9 +20,20 @@ exports[`Button should render with skin primary 1`] = `
 </button>
 `;
 
-exports[`Button should render with skin secondary 1`] = `
+exports[`Should render with skin secondary 1`] = `
 <button
   class="button secondary"
+>
+  <span
+    class="text"
+  />
+</button>
+`;
+
+exports[`should render disabled with skin secondary 1`] = `
+<button
+  class="button secondary"
+  disabled=""
 >
   <span
     class="text"

@@ -42,3 +42,24 @@ const renderBlockContent = (value, type) => 'This block does not really care abo
     value={state.value}
 />
 ```
+
+It is also possible to set the minimum and maximum amount of blocks on the `BlockCollection`, so it does not allow to
+have more or less blocks.
+
+```javascript
+initialState = {value: []};
+
+const onChange = (value) => {
+    setState({value});
+};
+
+const renderBlockContent = (value) => 'A not so unique block';
+
+<BlockCollection
+    maxOccurs={5}
+    minOccurs={2}
+    onChange={onChange}
+    renderBlockContent={renderBlockContent}
+    value={state.value}
+/>
+```

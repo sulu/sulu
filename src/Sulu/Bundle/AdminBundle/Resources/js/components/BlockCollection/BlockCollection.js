@@ -11,6 +11,8 @@ import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
 type Props = {
+    maxOccurs?: number,
+    minOccurs?: number,
     onChange: (value: Array<BlockEntry>) => void,
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
@@ -42,7 +44,7 @@ export default class BlockCollection extends React.Component<Props> {
     }
 
     fillArrays() {
-        const {value} = this.props;
+        const {onChange, minOccurs, value} = this.props;
         const {expandedBlocks} = this;
 
         if (!value) {
@@ -50,10 +52,21 @@ export default class BlockCollection extends React.Component<Props> {
         }
 
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(false));
+        if (minOccurs && value.length < minOccurs) {
+            expandedBlocks.push(...new Array(minOccurs - value.length).fill(true));
+            onChange([
+                ...value,
+                ...new Array(minOccurs - value.length).fill(this.defaultType ? {type: this.defaultType} : {}),
+            ]);
+        }
     }
 
     @action handleAddBlock = () => {
         const {onChange, value} = this.props;
+
+        if (this.hasMaximumReached()) {
+            throw new Error('The maximum amount of blocks has already been reached!');
+        }
 
         if (value) {
             this.expandedBlocks.push(true);
@@ -63,8 +76,12 @@ export default class BlockCollection extends React.Component<Props> {
         }
     };
 
-    @action handleRemove = (index: number) => {
+    @action handleRemoveBlock = (index: number) => {
         const {onChange, value} = this.props;
+
+        if (this.hasMinimumReached()) {
+            throw new Error('The minimum amount of blocks has already been reached!');
+        }
 
         if (value) {
             this.expandedBlocks.splice(index, 1);
@@ -94,6 +111,18 @@ export default class BlockCollection extends React.Component<Props> {
         onChange(newValue);
     };
 
+    hasMaximumReached() {
+        const {maxOccurs, value} = this.props;
+
+        return !!maxOccurs && value.length >= maxOccurs;
+    }
+
+    hasMinimumReached() {
+        const {minOccurs, value} = this.props;
+
+        return !!minOccurs && value.length <= minOccurs;
+    }
+
     render() {
         const {renderBlockContent, types, value} = this.props;
 
@@ -112,7 +141,7 @@ export default class BlockCollection extends React.Component<Props> {
                     lockAxis="y"
                     onExpand={this.handleExpand}
                     onCollapse={this.handleCollapse}
-                    onRemove={this.handleRemove}
+                    onRemove={this.hasMinimumReached() ? undefined : this.handleRemoveBlock}
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}
                     renderBlockContent={renderBlockContent}
@@ -120,7 +149,7 @@ export default class BlockCollection extends React.Component<Props> {
                     useDragHandle={true}
                     value={identifiedValues}
                 />
-                <Button skin="secondary" onClick={this.handleAddBlock}>
+                <Button skin="secondary" onClick={this.handleAddBlock} disabled={this.hasMaximumReached()}>
                     <Icon name="su-plus" className={blockCollectionStyles.addButtonIcon} />
                     {translate('sulu_admin.add_block')}
                 </Button>

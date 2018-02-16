@@ -44,7 +44,7 @@ class SortableBlocks extends React.Component<Props> {
     };
 
     render() {
-        const {expandedBlocks, renderBlockContent, types, value} = this.props;
+        const {expandedBlocks, onRemove, renderBlockContent, types, value} = this.props;
 
         return (
             <div className={sortableBlockListStyles.sortableBlockList}>
@@ -56,7 +56,7 @@ class SortableBlocks extends React.Component<Props> {
                         key={block.__id}
                         onExpand={this.handleExpand}
                         onCollapse={this.handleCollapse}
-                        onRemove={this.handleRemove}
+                        onRemove={onRemove ? this.handleRemove : undefined}
                         onTypeChange={this.handleTypeChange}
                         renderBlockContent={renderBlockContent}
                         sortIndex={index}

@@ -264,6 +264,8 @@ class AdminController
                 },
                 "blocks": {
                     "label": "Blocks",
+                    "maxOccurs": 5,
+                    "minOccurs": 2,
                     "type": "block",
                     "types": {
                         "default": {

@@ -39,7 +39,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
     };
 
     render() {
-        const {onChange, types, value} = this.props;
+        const {maxOccurs, minOccurs, onChange, types, value} = this.props;
 
         if (!types) {
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
@@ -52,6 +52,8 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         return (
             <BlockCollection
+                maxOccurs={maxOccurs}
+                minOccurs={minOccurs}
                 onChange={onChange}
                 renderBlockContent={this.renderBlockContent}
                 types={blockTypes}

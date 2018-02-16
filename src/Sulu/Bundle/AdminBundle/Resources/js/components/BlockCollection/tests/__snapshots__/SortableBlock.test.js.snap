@@ -144,3 +144,39 @@ exports[`Render expanded sortable block with types 1`] = `
   </div>
 </section>
 `;
+
+exports[`Render expanded sortable block without remove icon 1`] = `
+<section
+  class="block expanded"
+>
+  <div
+    class="handle"
+  >
+    <span
+      aria-label="su-shift"
+      class="sortableHandle su-shift"
+    />
+  </div>
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <div
+        class="icons"
+      >
+        <span
+          aria-label="su-x"
+          class="su-x clickable"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </header>
+    <article>
+      Test for Test Content
+    </article>
+  </div>
+</section>
+`;
