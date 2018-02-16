@@ -9,6 +9,7 @@ const LOADER_SIZE = 25;
 
 type Props = {
     children: Node,
+    disabled: boolean,
     skin: 'primary' | 'secondary' | 'link',
     onClick: () => void,
     loading: boolean,
@@ -16,6 +17,7 @@ type Props = {
 
 export default class Button extends React.PureComponent<Props> {
     static defaultProps = {
+        disabled: false,
         loading: false,
     };
 
@@ -27,6 +29,7 @@ export default class Button extends React.PureComponent<Props> {
     render() {
         const {
             children,
+            disabled,
             loading,
             skin,
         } = this.props;
@@ -39,7 +42,7 @@ export default class Button extends React.PureComponent<Props> {
         );
 
         return (
-            <button className={buttonClass} onClick={this.handleClick} disabled={loading}>
+            <button className={buttonClass} onClick={this.handleClick} disabled={loading || disabled}>
                 <span className={buttonStyles.text}>{children}</span>
                 {loading &&
                     <div className={buttonStyles.loader}>

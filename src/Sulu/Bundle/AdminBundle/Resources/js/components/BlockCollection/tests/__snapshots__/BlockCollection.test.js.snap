@@ -100,6 +100,20 @@ exports[`Should render a fully filled block list without add button if maxOccurs
       </div>
     </section>
   </div>
+  <button
+    class="button secondary"
+    disabled=""
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-plus"
+        class="addButtonIcon su-plus"
+      />
+      Add block
+    </span>
+  </button>
 </section>
 `;
 

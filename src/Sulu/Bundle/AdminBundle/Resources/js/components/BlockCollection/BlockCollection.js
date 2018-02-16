@@ -114,13 +114,13 @@ export default class BlockCollection extends React.Component<Props> {
     hasMaximumReached() {
         const {maxOccurs, value} = this.props;
 
-        return maxOccurs && value.length >= maxOccurs;
+        return !!maxOccurs && value.length >= maxOccurs;
     }
 
     hasMinimumReached() {
         const {minOccurs, value} = this.props;
 
-        return minOccurs && value.length <= minOccurs;
+        return !!minOccurs && value.length <= minOccurs;
     }
 
     render() {
@@ -149,12 +149,10 @@ export default class BlockCollection extends React.Component<Props> {
                     useDragHandle={true}
                     value={identifiedValues}
                 />
-                {!this.hasMaximumReached() &&
-                    <Button skin="secondary" onClick={this.handleAddBlock}>
-                        <Icon name="su-plus" className={blockCollectionStyles.addButtonIcon} />
-                        {translate('sulu_admin.add_block')}
-                    </Button>
-                }
+                <Button skin="secondary" onClick={this.handleAddBlock} disabled={this.hasMaximumReached()}>
+                    <Icon name="su-plus" className={blockCollectionStyles.addButtonIcon} />
+                    {translate('sulu_admin.add_block')}
+                </Button>
             </section>
         );
     }

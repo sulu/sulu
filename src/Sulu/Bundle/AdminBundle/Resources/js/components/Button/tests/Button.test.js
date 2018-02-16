@@ -3,19 +3,23 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import Button from '../Button';
 
-test('Button should render with skin primary', () => {
+test('Should render with skin primary', () => {
     expect(render(<Button skin="primary" />)).toMatchSnapshot();
 });
 
-test('Button should render with skin secondary', () => {
+test('Should render with skin secondary', () => {
     expect(render(<Button skin="secondary" />)).toMatchSnapshot();
 });
 
-test('Button should render with skin link', () => {
+test('should render disabled with skin secondary', () => {
+    expect(render(<Button disabled={true} skin="secondary" />)).toMatchSnapshot();
+});
+
+test('Should render with skin link', () => {
     expect(render(<Button skin="link" />)).toMatchSnapshot();
 });
 
-test('Button should call the callback on click', () => {
+test('Should call the callback on click', () => {
     const preventDefaultSpy = jest.fn();
     const onClick = jest.fn();
     const button = shallow(<Button skin="primary" onClick={onClick} />);
