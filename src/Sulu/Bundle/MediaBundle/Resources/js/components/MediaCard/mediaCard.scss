@@ -72,6 +72,7 @@ $downloadButtonBorderColorActive: $shakespeare;
 
 .checkbox {
     margin-left: -26px;
+    will-change: margin-left;
     transition: margin-left .15s linear;
 }
 
@@ -106,6 +107,7 @@ $downloadButtonBorderColorActive: $shakespeare;
         margin: 0 auto;
         display: block;
         transform: scale(1);
+        will-change: transform;
         transition: transform .2s linear;
     }
 
@@ -132,6 +134,7 @@ $downloadButtonBorderColorActive: $shakespeare;
     height: 100%;
     opacity: 0;
     background-color: $coverBackgroundColor;
+    will-change: opacity;
     transition: opacity .2s linear;
 }
 

@@ -17,6 +17,7 @@ $color: $scorpion;
     position: absolute;
     top: 0;
     left: 0;
+    will-change: transform;
     animation: bounce 2s infinite ease-in-out;
 }
 
