@@ -187,7 +187,7 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service id="sulu_media.video_thumbnail_generator" class="%sulu_media.video_thumbnail_generator.class%" lazy="true">
+        <service id="sulu_media.video_thumbnail_generator" class="%sulu_media.video_thumbnail_generator.class%">
             <argument type="service" id="dubture_ffmpeg.ffmpeg" on-invalid="null"/>
         </service>
 

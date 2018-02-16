@@ -11,7 +11,6 @@
     </parameters>
 
     <services>
-
         <service id="sulu_core.build.builder.database" class="%sulu_core.build.builder.database.class%">
             <tag name="massive_build.builder" />
         </service>
@@ -21,6 +20,10 @@
         </service>
 
         <service id="sulu_core.build.builder.phpcr_migrations" class="%sulu_core.build.builder.phpcr_migrations.class%">
+            <tag name="massive_build.builder" />
+        </service>
+
+        <service id="sulu_core.build.builder.fixtures" class="%sulu_core.build.builder.fixtures.class%">
             <tag name="massive_build.builder" />
         </service>
     </services>

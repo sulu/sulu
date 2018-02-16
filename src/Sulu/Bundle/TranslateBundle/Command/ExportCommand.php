@@ -77,11 +77,8 @@ EOD
 
     /**
      * Detect public/web path.
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function getPath(InputInterface $input)
     {
         if ($input->getOption('path')) {
             return;
@@ -92,7 +89,7 @@ EOD
             $webDirectory = $this->getContainer()->getParameter('kernel.public_dir');
         }
 
-        $input->setOption('path', $webDirectory . '/admin/translations');
+        return $webDirectory . '/admin/translations';
     }
 
     /**
@@ -135,7 +132,7 @@ EOD
         $formatInput = $input->getArgument('format');
         $backend = $input->getOption('backend');
         $frontend = $input->getOption('frontend');
-        $path = $input->getOption('path');
+        $path = $this->getPath($input);
         $filename = $input->getOption('filename');
 
         $export = new Export($this->getContainer()->get('translator.default'), $output);

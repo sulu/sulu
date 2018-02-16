@@ -25,6 +25,6 @@ class DoctrineCountFieldDescriptor extends DoctrineFieldDescriptor
      */
     public function getSelect()
     {
-        return 'COUNT(' . str_replace(['\\', ':'], '_', $this->getEntityName()) . '.' . $this->getFieldName() . ')';
+        return 'COUNT(' . $this->encodeAlias($this->getEntityName()) . '.' . $this->getFieldName() . ')';
     }
 }
