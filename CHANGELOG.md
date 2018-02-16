@@ -1,7 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
-* release/1.5
+* dev-release/1.5
+    * HOTFIX      #3752 [ContentBundle]         Overwrite 'doctrine:phpcr:workspace:import' set default to throw
     * ENHANCEMENT #3775 [Component]             Use is iterable instead of custom is_array twig function in webspace dumper
 
 * 1.5.10 (2018-02-06)
