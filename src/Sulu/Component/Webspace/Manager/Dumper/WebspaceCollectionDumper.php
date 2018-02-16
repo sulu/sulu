@@ -18,14 +18,6 @@ class WebspaceCollectionDumper
         //TODO set path in a more elegant way
         $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__ . '/../../Resources/skeleton/'));
 
-        $twig->addFunction(
-            new \Twig_SimpleFunction(
-                'is_array', function ($value) {
-                    return is_array($value);
-                }
-            )
-        );
-
         return $twig->render($template, $parameters);
     }
 }

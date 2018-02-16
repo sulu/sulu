@@ -185,7 +185,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% macro renderArray(array) %}{% import _self as self %}
     array(
     {% for key, value in array %}
-        {% if is_array(value) %}
+        {% if value is iterable %}
             '{{ key }}' => {{ self.renderArray(value) }},
         {% else %}
             '{{ key }}' => '{{ value }}',
