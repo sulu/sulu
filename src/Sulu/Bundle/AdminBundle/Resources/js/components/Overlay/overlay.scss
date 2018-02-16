@@ -29,6 +29,7 @@ $transitionDuration: 300ms;
 
     & > * {
         opacity: 0;
+        will-change: opacity;
         transition: opacity $transitionDuration;
     }
 }
@@ -37,6 +38,7 @@ $transitionDuration: 300ms;
     position: relative;
     top: -100%;
     opacity: 0;
+    will-change: top, opacity;
     transition: top $transitionDuration, opacity $transitionDuration;
     pointer-events: none;
 

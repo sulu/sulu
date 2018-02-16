@@ -22,18 +22,14 @@ $transitionDuration: 300ms;
     justify-content: center;
     align-items: center;
     z-index: 100;
-
-    & > * {
-        opacity: 0;
-        transition: opacity $transitionDuration;
-    }
 }
 
 .dialog {
     width: 500px;
     position: relative;
     opacity: 0;
-    transition: top $transitionDuration, opacity $transitionDuration;
+    will-change: opacity;
+    transition: opacity $transitionDuration;
     z-index: 1;
     pointer-events: none;
 
