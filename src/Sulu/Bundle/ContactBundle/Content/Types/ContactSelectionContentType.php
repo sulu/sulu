@@ -19,6 +19,7 @@ use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Util\IdConverterInterface;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
@@ -59,13 +60,25 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
      */
     private $comparator;
 
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $accountReferenceStore;
+
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $contactReferenceStore;
+
     public function __construct(
         $template,
         ContactManagerInterface $contactManager,
         ContactManagerInterface $accountManager,
         SerializerInterface $serializer,
         IdConverterInterface $converter,
-        IndexComparatorInterface $comparator
+        IndexComparatorInterface $comparator,
+        ReferenceStoreInterface $accountReferenceStore,
+        ReferenceStoreInterface $contactReferenceStore
     ) {
         $this->template = $template;
         $this->contactManager = $contactManager;
@@ -73,6 +86,8 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $this->serializer = $serializer;
         $this->converter = $converter;
         $this->comparator = $comparator;
+        $this->accountReferenceStore = $accountReferenceStore;
+        $this->contactReferenceStore = $contactReferenceStore;
     }
 
     /**
@@ -139,7 +154,14 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $ids = $this->converter->convertIdsToGroupedIds($value, ['a' => [], 'c' => []]);
 
         $accounts = $this->accountManager->getByIds($ids['a'], $locale);
+        foreach ($accounts as $account) {
+            $this->accountReferenceStore->add($account->getId());
+        }
+
         $contacts = $this->contactManager->getByIds($ids['c'], $locale);
+        foreach ($contacts as $contact) {
+            $this->contactReferenceStore->add($contact->getId());
+        }
 
         $result = array_merge($accounts, $contacts);
         @usort(
