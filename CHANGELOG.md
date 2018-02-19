@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * ENHANCEMENT #3777 [ContentBundle]           Added tag/category reference-store
     * FEATURE     #3028 [MediaBundle]             Added blur, grayscale, gamma, negative and sharpen transformation to media
     * HOTFIX      #3750 [PreviewBundle]           Fixed refresh preview
     * HOTFIX      #3747 [RouteBundle]             Added empty array as default value to histories property.
