@@ -14,6 +14,7 @@ namespace Sulu\Component\SmartContent;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -72,6 +73,16 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     private $targetGroupStore;
 
     /**
+     * @var ReferenceStoreInterface
+     */
+    private $tagReferenceStore;
+
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $categoryReferenceStore;
+
+    /**
      * SmartContentType constructor.
      *
      * @param DataProviderPoolInterface $dataProviderPool
@@ -79,6 +90,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
      * @param RequestStack $requestStack
      * @param TagRequestHandlerInterface $tagRequestHandler
      * @param CategoryRequestHandlerInterface $categoryRequestHandler
+     * @param ReferenceStoreInterface $tagReferenceStore
+     * @param ReferenceStoreInterface $categoryReferenceStore
      * @param string $template
      * @param TargetGroupStoreInterface $targetGroupStore
      */
@@ -88,6 +101,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         RequestStack $requestStack,
         TagRequestHandlerInterface $tagRequestHandler,
         CategoryRequestHandlerInterface $categoryRequestHandler,
+        ReferenceStoreInterface $tagReferenceStore,
+        ReferenceStoreInterface $categoryReferenceStore,
         $template,
         TargetGroupStoreInterface $targetGroupStore = null
     ) {
@@ -96,6 +111,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $this->requestStack = $requestStack;
         $this->tagRequestHandler = $tagRequestHandler;
         $this->categoryRequestHandler = $categoryRequestHandler;
+        $this->tagReferenceStore = $tagReferenceStore;
+        $this->categoryReferenceStore = $categoryReferenceStore;
         $this->template = $template;
         $this->targetGroupStore = $targetGroupStore;
     }
@@ -270,6 +287,14 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         // resolve website tags to id
         $this->resolveTags($filters, 'websiteTags');
+
+        foreach (array_merge($filters['tags'], $filters['websiteTags']) as $item) {
+            $this->tagReferenceStore->add($item);
+        }
+
+        foreach (array_merge($filters['categories'], $filters['websiteCategories']) as $item) {
+            $this->categoryReferenceStore->add($item);
+        }
 
         // get provider
         $provider = $this->getProvider($property);
