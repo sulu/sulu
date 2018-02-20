@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
+import classNames from 'classnames';
 import Icon from '../Icon';
 import Loader from '../Loader';
 import type {FieldTypeProps} from '../../types';
@@ -35,17 +36,25 @@ export default class Input extends React.PureComponent<Props> {
 
     render() {
         const {
-            name,
+            error,
             icon,
+            loading,
+            name,
+            placeholder,
             type,
             value,
-            loading,
-            placeholder,
         } = this.props;
+
+        const labelClass = classNames(
+            inputStyles.input,
+            {
+                [inputStyles.error]: error,
+            }
+        );
 
         return (
             <label
-                className={inputStyles.input}
+                className={labelClass}
                 ref={this.setRef}
             >
                 {!loading && icon &&

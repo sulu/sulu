@@ -52,6 +52,17 @@ exports[`Input should render with icon 1`] = `
 </label>
 `;
 
+exports[`Input should render with invalid value 1`] = `
+<label
+  class="input error"
+>
+  <input
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
 exports[`Input should render with placeholder 1`] = `
 <label
   class="input"

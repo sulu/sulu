@@ -1,6 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
 $inputBorderColor: $silver;
+$inputErrorBorderColor: $persianRed;
 $inputBorderWidth: 1px;
 $inputBorderRadius: 3px;
 $inputHeight: 30px;
@@ -35,6 +36,10 @@ $backgroundColor: $white;
             color: $placeholderColor;
             font-size: $inputFontSize;
         }
+    }
+
+    &.error {
+        border-color: $inputErrorBorderColor;
     }
 }
 

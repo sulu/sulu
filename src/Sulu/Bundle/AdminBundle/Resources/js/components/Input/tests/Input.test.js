@@ -8,6 +8,11 @@ test('Input should render', () => {
     expect(render(<Input value="My value" onChange={onChange} />)).toMatchSnapshot();
 });
 
+test('Input should render with invalid value', () => {
+    const onChange = jest.fn();
+    expect(render(<Input error={{}} value="My value" onChange={onChange} />)).toMatchSnapshot();
+});
+
 test('Input should render with icon', () => {
     const onChange = jest.fn();
     expect(render(<Input icon="su-pen" value="My value" onChange={onChange} />)).toMatchSnapshot();
