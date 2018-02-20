@@ -108,7 +108,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function count($depth = 0, $filter = [], CollectionInterface $collection = null)
+    public function countCollections($depth = 0, $filter = [], CollectionInterface $collection = null)
     {
         $ids = $this->getIdsQuery($depth, $filter, [], $collection, 'DISTINCT collection.id')->getScalarResult();
 

@@ -50,7 +50,7 @@ class SystemCollectionBuilder implements BuilderInterface, ContainerAwareInterfa
      */
     public function getDependencies()
     {
-        return ['cache', 'database', 'fixtures'];
+        return ['database', 'fixtures'];
     }
 
     /**

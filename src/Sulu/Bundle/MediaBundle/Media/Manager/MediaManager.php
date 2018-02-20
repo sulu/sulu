@@ -184,7 +184,7 @@ class MediaManager implements MediaManagerInterface
         PathCleanupInterface $pathCleaner,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
-        FFProbe $ffprobe,
+        FFProbe $ffprobe = null,
         $permissions,
         $downloadPath,
         $maxFileSize,
@@ -308,7 +308,7 @@ class MediaManager implements MediaManagerInterface
 
         try {
             // if the file is a video we add the duration
-            if (fnmatch('video/*', $mimeType)) {
+            if (fnmatch('video/*', $mimeType) && $this->ffprobe) {
                 $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
             }
         } catch (ExecutableNotFoundException $e) {

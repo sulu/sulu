@@ -54,8 +54,7 @@ class ExportCommand extends ContainerAwareCommand
                 'path',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                'Sets the path to which the file should be exported',
-                'web/admin/translations'
+                'Sets the path to which the file should be exported'
             )
             ->addOption(
                 'filename',
@@ -74,6 +73,23 @@ corresponding to that locale get exported. Otherwise the translation
 files get exported for all locales defined in the system
 EOD
         );
+    }
+
+    /**
+     * Detect public/web path.
+     */
+    protected function getPath(InputInterface $input)
+    {
+        if ($input->getOption('path')) {
+            return;
+        }
+
+        $webDirectory = 'web';
+        if ($this->getContainer()->hasParameter('kernel.public_dir')) {
+            $webDirectory = $this->getContainer()->getParameter('kernel.public_dir');
+        }
+
+        return $webDirectory . '/admin/translations';
     }
 
     /**
@@ -116,7 +132,7 @@ EOD
         $formatInput = $input->getArgument('format');
         $backend = $input->getOption('backend');
         $frontend = $input->getOption('frontend');
-        $path = $input->getOption('path');
+        $path = $this->getPath($input);
         $filename = $input->getOption('filename');
 
         $export = new Export($this->getContainer()->get('translator.default'), $output);

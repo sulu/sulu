@@ -58,8 +58,10 @@ class DoctrineOrExpressionTest extends \PHPUnit_Framework_TestCase
 
         $statement = $andExpression->getStatement($this->queryBuilder);
         $result = preg_match(
-            '/^SuluCoreBundle:Example\.name1 = :name1[\S]{' . $this->uniqueIdLength .
-            '} OR SuluCoreBundle:Example\.name2 = :name2[\S]{' . $this->uniqueIdLength . '}/',
+            sprintf(
+                '/^SuluCoreBundle_Example\.name1 = :name1[\S]{%1$s} OR SuluCoreBundle_Example\.name2 = :name2[\S]{%1$s}/',
+                $this->uniqueIdLength
+            ),
             $statement
         );
 

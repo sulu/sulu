@@ -54,7 +54,7 @@ class DoctrineNotExpressionTest extends \PHPUnit_Framework_TestCase
 
         $notExpression = new DoctrineNotExpression($whereExpression);
         $result = preg_match(
-            '/^NOT\(SuluCoreBundle:Example\.name IN \(:name\S{' . $this->uniqueIdLength . '}\)\)/',
+            sprintf('/^NOT\(SuluCoreBundle_Example\.name IN \(:name\S{%s}\)\)/', $this->uniqueIdLength),
             $notExpression->getStatement($this->queryBuilder)
         );
 
