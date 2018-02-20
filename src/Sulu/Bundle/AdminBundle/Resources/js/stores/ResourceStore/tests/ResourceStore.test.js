@@ -10,7 +10,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
     delete: jest.fn(),
 }));
 
-test('Should be not marked dirty when value is set', () => {
+test('Should not be marked dirty when value is set', () => {
     ResourceRequester.get.mockReturnValue(Promise.resolve());
 
     const resourceStore = new ResourceStore('snippets', '1');
