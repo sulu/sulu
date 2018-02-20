@@ -9,6 +9,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id) {
     this.resourceKey = resourceKey;
     this.save = jest.fn();
     this.set = jest.fn();
+    this.change = jest.fn();
     this.data = {};
     this.loading = false;
 });
