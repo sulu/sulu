@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-release/1.5
+    * ENHANCEMENT #3764 [Component]             Allow dynamic order of elements in webspace xml
     * HOTFIX      #3752 [ContentBundle]         Overwrite 'doctrine:phpcr:workspace:import' set default to throw
     * ENHANCEMENT #3775 [Component]             Use is iterable instead of custom is_array twig function in webspace dumper
 
