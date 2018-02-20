@@ -11,22 +11,21 @@
 
 namespace Sulu\Component\HttpCache;
 
-use Sulu\Component\Content\Compat\StructureInterface;
-
 /**
- * Handlers implementing will invalidate the given structure with the
+ * Handlers implementing will invalidate the given reference with the
  * caching proxy server.
  *
  * Note that this is called during the request therefore the task of this
  * interfaces method should normally be to record references to the structures
  * which should later be invalidated in the `flush` interface.
  */
-interface HandlerInvalidateStructureInterface extends HandlerInterface
+interface HandlerInvalidateReferenceInterface extends HandlerInvalidateStructureInterface
 {
     /**
-     * Invalidate the given structure.
+     * Invalidate the given reference.
      *
-     * @param StructureInterface $structure
+     * @param string $alias
+     * @param string $id
      */
-    public function invalidateStructure(StructureInterface $structure);
+    public function invalidateReference($alias, $id);
 }

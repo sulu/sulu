@@ -17,6 +17,7 @@
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
             <argument>%kernel.environment%</argument>
 
             <tag name="sulu_document_manager.event_subscriber"/>

@@ -12,7 +12,9 @@
 namespace Sulu\Component\HttpCache\EventSubscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
@@ -25,7 +27,7 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
-use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
+use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -44,9 +46,9 @@ class InvalidationSubscriber implements EventSubscriberInterface
     private $pathHandler;
 
     /**
-     * @var HandlerInvalidateStructureInterface
+     * @var HandlerInvalidateReferenceInterface
      */
-    private $structureHandler;
+    private $invalidationHandler;
 
     /**
      * @var StructureManagerInterface
@@ -74,37 +76,45 @@ class InvalidationSubscriber implements EventSubscriberInterface
     private $requestStack;
 
     /**
+     * @var TagManagerInterface
+     */
+    private $tagManager;
+
+    /**
      * @var string
      */
     private $environment;
 
     /**
      * @param HandlerInvalidatePathInterface $pathHandler
-     * @param HandlerInvalidateStructureInterface $structureHandler
+     * @param HandlerInvalidateReferenceInterface $invalidationHandler
      * @param StructureManagerInterface $structureManager
      * @param DocumentInspector $documentInspector
      * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
      * @param WebspaceManagerInterface $webspaceManager
      * @param RequestStack $requestStack
+     * @param TagManagerInterface $tagManager
      * @param string $environment - kernel envionment, dev, prod, etc
      */
     public function __construct(
         HandlerInvalidatePathInterface $pathHandler,
-        HandlerInvalidateStructureInterface $structureHandler,
+        HandlerInvalidateReferenceInterface $invalidationHandler,
         StructureManagerInterface $structureManager,
         DocumentInspector $documentInspector,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         WebspaceManagerInterface $webspaceManager,
         RequestStack $requestStack,
+        TagManagerInterface $tagManager,
         $environment
     ) {
         $this->pathHandler = $pathHandler;
-        $this->structureHandler = $structureHandler;
+        $this->invalidationHandler = $invalidationHandler;
         $this->structureManager = $structureManager;
         $this->documentInspector = $documentInspector;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->webspaceManager = $webspaceManager;
         $this->requestStack = $requestStack;
+        $this->tagManager = $tagManager;
         $this->environment = $environment;
     }
 
@@ -140,6 +150,10 @@ class InvalidationSubscriber implements EventSubscriberInterface
             && $document->getPublished()
         ) {
             $this->invalidateDocumentUrls($document, $this->documentInspector->getLocale($document));
+        }
+
+        if ($document instanceof ExtensionBehavior) {
+            $this->invalidateDocumentExcerpt($document);
         }
     }
 
@@ -201,7 +215,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
         );
         $structureBridge->setDocument($document);
 
-        $this->structureHandler->invalidateStructure($structureBridge);
+        $this->invalidationHandler->invalidateStructure($structureBridge);
     }
 
     /**
@@ -214,6 +228,33 @@ class InvalidationSubscriber implements EventSubscriberInterface
     {
         foreach ($this->getLocaleUrls($document, $locale) as $url) {
             $this->pathHandler->invalidatePath($url);
+        }
+    }
+
+    /**
+     * Invalidates all tags and categories from excerpt extension.
+     *
+     * @param ExtensionBehavior $document
+     */
+    private function invalidateDocumentExcerpt(ExtensionBehavior $document)
+    {
+        $extensionData = $document->getExtensionsData();
+        if (!isset($extensionData['excerpt'])) {
+            return;
+        }
+
+        $excerpt = $extensionData['excerpt'];
+
+        if (isset($excerpt['tags'])) {
+            foreach ($this->tagManager->resolveTagNames($excerpt['tags']) as $tag) {
+                $this->invalidationHandler->invalidateReference('tag', $tag);
+            }
+        }
+
+        if (isset($excerpt['categories'])) {
+            foreach ($excerpt['categories'] as $category) {
+                $this->invalidationHandler->invalidateReference('category', $category);
+            }
         }
     }
 
