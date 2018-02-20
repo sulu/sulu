@@ -147,11 +147,19 @@ export default class ResourceStore {
 
     @action set(name: string, value: mixed) {
         this.data[name] = value;
-        this.dirty = true;
     }
 
     @action setMultiple(data: Object) {
         this.data = {...this.data, ...data};
+    }
+
+    @action change(name: string, value: mixed) {
+        this.set(name, value);
+        this.dirty = true;
+    }
+
+    @action changeMultiple(data: Object) {
+        this.setMultiple(data);
         this.dirty = true;
     }
 

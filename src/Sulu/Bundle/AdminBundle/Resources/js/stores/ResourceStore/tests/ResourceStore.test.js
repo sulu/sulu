@@ -10,12 +10,23 @@ jest.mock('../../../services/ResourceRequester', () => ({
     delete: jest.fn(),
 }));
 
-test('Should be marked dirty when value is changed', () => {
+test('Should be not marked dirty when value is set', () => {
     ResourceRequester.get.mockReturnValue(Promise.resolve());
 
     const resourceStore = new ResourceStore('snippets', '1');
     expect(resourceStore.dirty).toBe(false);
     resourceStore.set('test', 'value');
+
+    expect(resourceStore.data.test).toBe('value');
+    expect(resourceStore.dirty).toBe(false);
+});
+
+test('Should be marked dirty when value is changed', () => {
+    ResourceRequester.get.mockReturnValue(Promise.resolve());
+
+    const resourceStore = new ResourceStore('snippets', '1');
+    expect(resourceStore.dirty).toBe(false);
+    resourceStore.change('test', 'value');
 
     expect(resourceStore.data.test).toBe('value');
     expect(resourceStore.dirty).toBe(true);

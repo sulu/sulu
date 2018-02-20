@@ -117,6 +117,10 @@ export default class FormStore {
         this.resourceStore.set(name, value);
     }
 
+    change(name: string, value: mixed) {
+        this.resourceStore.change(name, value);
+    }
+
     @computed get locale(): ?IObservableValue<string> {
         return this.resourceStore.locale;
     }
@@ -129,6 +133,6 @@ export default class FormStore {
         }
 
         this.type = type;
-        this.resourceStore.set(TYPE, type);
+        this.set(TYPE, type);
     }
 }
