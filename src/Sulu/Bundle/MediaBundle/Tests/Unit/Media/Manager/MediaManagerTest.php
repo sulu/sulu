@@ -33,11 +33,13 @@ use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
+use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class MediaManagerTest extends \PHPUnit_Framework_TestCase
@@ -186,6 +188,32 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
 
         $this->mediaManager->get(1);
+    }
+
+    public function testGetWithoutSuluUser()
+    {
+        $user = $this->prophesize(UserInterface::class);
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+
+        $this->tokenStorage->getToken()->willReturn($token);
+        $this->mediaRepository->findMedia([], null, null, null, 64)->willReturn([])->shouldBeCalled();
+        $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
+
+        $this->mediaManager->get('de', [], null, null);
+    }
+
+    public function testGetWithSuluUser()
+    {
+        $user = $this->prophesize(SuluUserInterface::class);
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+
+        $this->tokenStorage->getToken()->willReturn($token->reveal());
+        $this->mediaRepository->findMedia([], null, null, $user->reveal(), 64)->willReturn([])->shouldBeCalled();
+        $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
+
+        $this->mediaManager->get('de', [], null, null);
     }
 
     public function testDeleteWithSecurity()
