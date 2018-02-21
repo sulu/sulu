@@ -14,6 +14,7 @@ namespace Sulu\Component\HttpCache\Tests\Unit\EventListener;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
@@ -30,7 +31,7 @@ use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\HttpCache\EventSubscriber\InvalidationSubscriber;
 use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
-use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
+use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -48,9 +49,9 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
     private $pathHandler;
 
     /**
-     * @var HandlerInvalidateStructureInterface
+     * @var HandlerInvalidateReferenceInterface
      */
-    private $structureHandler;
+    private $invalidationHandler;
 
     /**
      * @var StructureManagerInterface
@@ -83,6 +84,11 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
     private $requestStack;
 
     /**
+     * @var TagManagerInterface
+     */
+    private $tagManager;
+
+    /**
      * @var string
      */
     private $env = 'prod';
@@ -90,25 +96,26 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->pathHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
-        $this->structureHandler = $this->prophesize(HandlerInvalidateStructureInterface::class);
+        $this->invalidationHandler = $this->prophesize(HandlerInvalidateReferenceInterface::class);
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->documentInspector = $this->prophesize(DocumentInspector::class);
         $this->resourceLocatorStrategy = $this->prophesize(ResourceLocatorStrategyInterface::class);
         $this->resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->tagManager = $this->prophesize(TagManagerInterface::class);
 
         $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())
             ->willReturn($this->resourceLocatorStrategy->reveal());
 
         $this->invalidationSubscriber = new InvalidationSubscriber(
-            $this->pathHandler->reveal(),
-            $this->structureHandler->reveal(),
+            $this->pathHandler->reveal(), $this->invalidationHandler->reveal(),
             $this->structureManager->reveal(),
             $this->documentInspector->reveal(),
             $this->resourceLocatorStrategyPool->reveal(),
             $this->webspaceManager->reveal(),
             $this->requestStack->reveal(),
+            $this->tagManager->reveal(),
             $this->env
         );
     }
@@ -147,6 +154,7 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $document->getPublished()->willReturn(true);
         $document->getUuid()->willReturn($documentUuid);
         $document->getWebspaceName()->willReturn($documentWebspace);
+        $document->getExtensionsData()->willReturn([]);
         $this->documentInspector->getLocale($document)->willReturn($documentLocale);
 
         $event = $this->prophesize(PublishEvent::class);
@@ -161,7 +169,7 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $structureBridge = $this->prophesize(StructureBridge::class);
         $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
         $structureBridge->setDocument($document)->shouldBeCalled();
-        $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+        $this->invalidationHandler->invalidateStructure($structureBridge)->shouldBeCalled();
 
         $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocale)
             ->willReturn($resourceLocator2);
@@ -199,6 +207,7 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $document = $this->prophesize(BasePageDocument::class);
         $document->getPublished()->willReturn(false);
+        $document->getExtensionsData()->willReturn([]);
 
         $event = $this->prophesize(PublishEvent::class);
         $event->getDocument()->willReturn($document);
@@ -212,7 +221,39 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $structureBridge = $this->prophesize(StructureBridge::class);
         $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
         $structureBridge->setDocument($document)->shouldBeCalled();
-        $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+        $this->invalidationHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+
+        $this->pathHandler->invalidatePath(Argument::any())->shouldNotBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforePublishingExcerpt()
+    {
+        $document = $this->prophesize(BasePageDocument::class);
+        $document->getPublished()->willReturn(false);
+        $document->getExtensionsData()->willReturn(['excerpt' => ['tags' => ['Tag1', 'Tag2'], 'categories' => [3, 4]]]);
+
+        $this->tagManager->resolveTagNames(['Tag1', 'Tag2'])->willReturn([1, 2]);
+
+        $this->invalidationHandler->invalidateReference('tag', 1)->shouldBeCalled();
+        $this->invalidationHandler->invalidateReference('tag', 2)->shouldBeCalled();
+        $this->invalidationHandler->invalidateReference('category', 3)->shouldBeCalled();
+        $this->invalidationHandler->invalidateReference('category', 4)->shouldBeCalled();
+
+        $event = $this->prophesize(PublishEvent::class);
+        $event->getDocument()->willReturn($document);
+
+        $structureMetadata = $this->prophesize(StructureMetadata::class);
+        $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('alias');
+        $this->documentInspector->getMetadata($document)->willReturn($metadata);
+
+        $structureBridge = $this->prophesize(StructureBridge::class);
+        $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
+        $structureBridge->setDocument($document)->shouldBeCalled();
+        $this->invalidationHandler->invalidateStructure($structureBridge)->shouldBeCalled();
 
         $this->pathHandler->invalidatePath(Argument::any())->shouldNotBeCalled();
 
@@ -268,7 +309,7 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $structureBridge = $this->prophesize(StructureBridge::class);
         $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
         $structureBridge->setDocument($document)->shouldBeCalled();
-        $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+        $this->invalidationHandler->invalidateStructure($structureBridge)->shouldBeCalled();
 
         $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocale)
             ->willReturn($resourceLocator2);
@@ -318,7 +359,7 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $structureBridge = $this->prophesize(StructureBridge::class);
         $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
         $structureBridge->setDocument($document)->shouldBeCalled();
-        $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+        $this->invalidationHandler->invalidateStructure($structureBridge)->shouldBeCalled();
 
         $this->pathHandler->invalidatePath(Argument::any())->shouldNotBeCalled();
 
@@ -376,7 +417,7 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $structureBridge = $this->prophesize(StructureBridge::class);
         $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
         $structureBridge->setDocument($document)->shouldBeCalled();
-        $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+        $this->invalidationHandler->invalidateStructure($structureBridge)->shouldBeCalled();
 
         $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocales[0])
             ->willReturn($resourceLocatorEn1);

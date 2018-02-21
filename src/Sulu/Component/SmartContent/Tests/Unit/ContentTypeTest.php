@@ -14,6 +14,7 @@ namespace Sulu\Component\SmartContent\Tests\Unit;
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -79,6 +80,16 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
      */
     private $targetGroupStore;
 
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $categoryReferenceStore;
+
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $tagReferenceStore;
+
     public function setUp()
     {
         $this->contentDataProvider = $this->prophesize(DataProviderInterface::class);
@@ -119,15 +130,20 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->tagManager->expects($this->any())->method('resolveTagName')->will(
+        $this->tagManager->expects($this->any())->method('resolveTagNames')->will(
             $this->returnValueMap(
                 [
                     [['Tag1', 'Tag2'], [1, 2]],
+                    [['Tag1'], [1]],
+                    [['Tag2'], [2]],
                 ]
             )
         );
 
         $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
+
+        $this->categoryReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $this->tagReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
     }
 
     private function getProviderConfiguration()
@@ -150,6 +166,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -167,6 +185,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -230,6 +250,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -284,6 +306,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -387,10 +411,29 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
-        $property = $this->getContentDataProperty();
+        $property = $this->getContentDataProperty(
+            [
+                'dataSource' => '123-123-123',
+                'categories' => [1],
+                'websiteCategories' => [2],
+                'tags' => [1],
+                'websiteTags' => [2],
+            ]
+        );
+
+        $this->tagRequestHandler->getTags('tags')->willReturn(['Tag2']);
+        $this->categoryRequestHandler->getCategories('categories')->willReturn([2]);
+
+        $this->categoryReferenceStore->add(1)->shouldBeCalled();
+        $this->categoryReferenceStore->add(2)->shouldBeCalled();
+        $this->tagReferenceStore->add(1)->shouldBeCalled();
+        $this->tagReferenceStore->add(2)->shouldBeCalled();
+
         $contentData = $smartContent->getContentData($property);
 
         $this->assertEquals(
@@ -414,6 +457,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -538,6 +583,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -649,6 +696,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -793,14 +842,14 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->contentDataProvider->resolveResourceItems(
             [
-                'tags' => [],
-                'categories' => [],
-                'websiteTags' => [],
-                'websiteTagsOperator' => 'OR',
-                'websiteCategories' => [],
+                'categories' => array_key_exists('categories', $value) ? $value['categories'] : [],
+                'websiteCategories' => array_key_exists('websiteCategories', $value) ? $value['websiteCategories'] : [],
                 'websiteCategoriesOperator' => 'OR',
-                'dataSource' => '123-123-123',
-                'excluded' => ['123-123-123'],
+                'tags' => array_key_exists('tags', $value) ? $value['tags'] : [],
+                'websiteTags' => array_key_exists('websiteTags', $value) ? $value['websiteTags'] : [],
+                'websiteTagsOperator' => 'OR',
+                'dataSource' => $value['dataSource'],
+                'excluded' => [$value['dataSource']],
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
@@ -868,6 +917,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig',
             $this->targetGroupStore->reveal()
         );
@@ -906,6 +957,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig',
             $this->targetGroupStore->reveal()
         );

@@ -17,6 +17,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
 use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
+use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AggregateHandler implements
     HandlerFlushInterface,
     HandlerUpdateResponseInterface,
-    HandlerInvalidateStructureInterface,
+    HandlerInvalidateReferenceInterface,
     HandlerInvalidatePathInterface
 {
     /**
@@ -60,13 +61,37 @@ class AggregateHandler implements
                 continue;
             }
 
-            $this->logger->debug(sprintf(
-                '[CACHE] INVALIDATING [%s]: %s (%s)',
-                get_class($handler),
-                get_class($structure),
-                $structure->getUuid()
-            ));
+            $this->logger->debug(
+                sprintf(
+                    '[CACHE] INVALIDATING [%s]: %s (%s)',
+                    get_class($handler),
+                    get_class($structure),
+                    $structure->getUuid()
+                )
+            );
             $handler->invalidateStructure($structure);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function invalidateReference($alias, $id)
+    {
+        foreach ($this->handlers as $handler) {
+            if (!$handler instanceof HandlerInvalidateReferenceInterface) {
+                continue;
+            }
+
+            $this->logger->debug(
+                sprintf(
+                    '[CACHE] INVALIDATING [%s]: %s (%s)',
+                    get_class($handler),
+                    $alias,
+                    $id
+                )
+            );
+            $handler->invalidateReference($alias, $id);
         }
     }
 
