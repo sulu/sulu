@@ -79,7 +79,7 @@ class AggregateHandler implements
     public function invalidateReference($alias, $id)
     {
         foreach ($this->handlers as $handler) {
-            if (!$handler instanceof HandlerInvalidateStructureInterface) {
+            if (!$handler instanceof HandlerInvalidateReferenceInterface) {
                 continue;
             }
 
