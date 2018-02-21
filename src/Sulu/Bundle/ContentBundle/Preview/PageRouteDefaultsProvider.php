@@ -68,8 +68,8 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
         $metadata = $this->structureMetadataFactory->getStructureMetadata('page', $object->getStructureType());
 
         return [
-            '_controller' => $metadata->controller,
-            'view' => $metadata->view,
+            '_controller' => $metadata->getController(),
+            'view' => $metadata->getView(),
             'object' => $object,
             'structure' => $this->documentToStructure($object),
         ];

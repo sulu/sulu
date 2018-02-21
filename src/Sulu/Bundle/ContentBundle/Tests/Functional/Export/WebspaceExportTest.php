@@ -80,8 +80,28 @@ class WebspaceExportTest extends SuluTestCase
         unset($exportData['documents'][1]['uuid']);
 
         $this->assertEquals(
-            $expectedResult,
-            $exportData
+            array_keys($expectedResult),
+            array_keys($exportData)
+        );
+
+        $this->assertEquals(
+            $expectedResult['webspaceKey'],
+            $exportData['webspaceKey']
+        );
+
+        $this->assertEquals(
+            $expectedResult['format'],
+            $exportData['format']
+        );
+
+        $this->assertEquals(
+            $expectedResult['locale'],
+            $exportData['locale']
+        );
+
+        $this->assertEquals(
+            $expectedResult['documents'],
+            $exportData['documents']
         );
     }
 
@@ -472,6 +492,7 @@ class WebspaceExportTest extends SuluTestCase
 
             $data[] = [
                 'locale' => 'en',
+                'content' => $contentData,
                 'settings' => [
                     'structureType' => $this->createItemArray('structureType', '', false, 'overview'),
                     'created' => $this->createItemArray(
@@ -507,7 +528,6 @@ class WebspaceExportTest extends SuluTestCase
                     'permissions' => $this->createItemArray('permissions', '', false, '[]'),
                     'webspaceName' => $this->createItemArray('webspaceName', '', false, 'sulu_io'),
                 ],
-                'content' => $contentData,
                 'extensions' => $extensionData,
             ];
         }

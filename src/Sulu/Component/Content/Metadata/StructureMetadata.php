@@ -13,219 +13,91 @@ namespace Sulu\Component\Content\Metadata;
 
 /**
  * Represents metadata for a structure.
- *
- * TODO: resource, cacheLifetime and view should be removed. They
- *       should instead be options.
  */
-class StructureMetadata extends ItemMetadata
+class StructureMetadata extends PropertiesMetadata
 {
     /**
-     * The resource from which this structure was loaded
-     * (useful for debugging).
-     *
-     * @var string
-     */
-    public $resource;
-
-    /**
      * @var array
      */
-    public $cacheLifetime;
+    protected $cacheLifetime;
 
     /**
      * @var string
      */
-    public $controller;
+    protected $controller;
 
     /**
      * @var string
      */
-    public $view;
-
-    /**
-     * Same as ItemMetadata::$children but without Sections.
-     *
-     * @see StructureMetadata::burnProperties()
-     *
-     * @var array
-     */
-    public $properties;
+    protected $view;
 
     /**
      * @var bool
      */
-    public $internal;
+    protected $internal;
 
     /**
      * @var array
      */
-    public $areas;
+    protected $areas;
 
-    /**
-     * Return a model property.
-     *
-     * @see StructureMetadata::getProperties()
-     *
-     * @param string $name
-     *
-     * @return PropertyMetadata
-     */
-    public function getProperty($name)
+    public function getCacheLifetime(): array
     {
-        if (!isset($this->properties[$name])) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Unknown model property "%s", in structure "%s". Known model properties: "%s". Loaded from "%s"',
-                    $name,
-                    $this->getName(),
-                    implode('", "', array_keys($this->properties)),
-                    $this->resource
-                )
-            );
-        }
-
-        return $this->properties[$name];
+        return $this->cacheLifetime;
     }
 
-    /**
-     * Return all model properties.
-     *
-     * The "model" set of properties does not include UI elements
-     * such as sections.
-     *
-     * @return PropertyMetadata[]
-     */
-    public function getProperties()
+    public function setCacheLifetime(array $cacheLifetime): self
     {
-        return $this->properties;
+        $this->cacheLifetime = $cacheLifetime;
+
+        return $this;
     }
 
-    /**
-     * Populate the $properties property with only those propertires
-     * which are not related to the UI (i.e. the sections).
-     *
-     * The data is therefore duplicated, but this does not matter as we
-     * only create this data once.
-     *
-     * This should be called once after creating the structure and (therefore
-     * before writing to the cache).
-     */
-    public function burnProperties()
+    public function getController(): ?string
     {
-        $properties = [];
-        foreach ($this->children as $child) {
-            if ($child instanceof SectionMetadata) {
-                $properties = array_merge($properties, $child->getChildren());
-
-                continue;
-            }
-
-            $properties[$child->name] = $child;
-        }
-
-        $this->properties = $properties;
+        return $this->controller;
     }
 
-    /**
-     * Return true if a property with the given name exists.
-     *
-     * @return bool
-     */
-    public function hasProperty($name)
+    public function setController(string $controller = null): self
     {
-        return array_key_exists($name, $this->properties);
+        $this->controller = $controller;
+
+        return $this;
     }
 
-    /**
-     * Return true if the structure contains a property with the given
-     * tag name.
-     *
-     * @param string $tagName
-     *
-     * @return PropertyMetadata
-     */
-    public function getPropertyByTagName($tagName, $highest = true)
+    public function getView(): ?string
     {
-        $properties = $this->getPropertiesByTagName($tagName);
-
-        if (!$properties) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'No property with tag "%s" exists. In structure "%s" loaded from "%s"',
-                    $tagName,
-                    $this->name,
-                    $this->resource
-                )
-            );
-        }
-
-        return reset($properties);
+        return $this->view;
     }
 
-    /**
-     * Return true if the structure contains a property with the given
-     * tag name.
-     *
-     * @param string $tagName
-     *
-     * @return bool
-     */
-    public function hasPropertyWithTagName($tagName)
+    public function setView(string $view = null): self
     {
-        return (bool) count($this->getPropertiesByTagName($tagName));
+        $this->view = $view;
+
+        return $this;
     }
 
-    /**
-     * Return all properties with the given tag name.
-     *
-     * @param string $tagName
-     *
-     * @return PropertyMetadata[]
-     */
-    public function getPropertiesByTagName($tagName)
-    {
-        $properties = [];
-
-        foreach ($this->properties as $property) {
-            foreach ($property->tags as $tag) {
-                if ($tag['name'] == $tagName) {
-                    $properties[$property->name] = $property;
-                }
-            }
-        }
-
-        return $properties;
-    }
-
-    /**
-     * Return the resource from which this structure was loaded.
-     *
-     * @return string
-     */
-    public function getResource()
-    {
-        return $this->resource;
-    }
-
-    /**
-     * Return if this is an internal structure.
-     *
-     * TODO: Refactor this: https://github.com/sulu-io/sulu/issues/1220
-     *
-     * @return bool
-     */
-    public function isInternal()
+    public function isInternal(): bool
     {
         return $this->internal;
     }
 
-    /**
-     * Return the structure areas.
-     *
-     * @return array
-     */
-    public function getAreas()
+    public function setInternal(bool $internal): self
+    {
+        $this->internal = $internal;
+
+        return $this;
+    }
+
+    public function getAreas(): array
     {
         return $this->areas;
+    }
+
+    public function setAreas(array $areas): self
+    {
+        $this->areas = $areas;
+
+        return $this;
     }
 }

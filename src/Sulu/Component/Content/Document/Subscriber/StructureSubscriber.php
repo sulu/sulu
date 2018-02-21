@@ -341,12 +341,12 @@ class StructureSubscriber implements EventSubscriberInterface
                         'Property "%s" in structure "%s" is required but no value was given. Loaded from "%s"',
                         $propertyName,
                         $metadata->getName(),
-                        $metadata->resource
+                        $metadata->getResource()
                     )
                 );
             }
 
-            $contentTypeName = $structureProperty->getContentTypeName();
+            $contentTypeName = $structureProperty->getType();
             $contentType = $this->contentTypeManager->get($contentTypeName);
 
             // TODO: Only write if the property has been modified.

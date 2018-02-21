@@ -22,7 +22,6 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -477,7 +476,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         }
 
         foreach ($structureArray[$property->getName()] as &$structure) {
-            /** @var ComponentMetadata $component */
+            /** @var ItemMetadata $component */
             $component = $property->getComponentByName($structure['type']);
             /** @var PropertyMetadata $child */
             foreach ($component->getChildren() as $child) {

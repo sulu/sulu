@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
+use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatOptionsMissingParameterException;
@@ -71,6 +72,24 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                             FileVersionNotFoundException::class => 404,
                             FormatNotFoundException::class => 404,
                             FormatOptionsMissingParameterException::class => 400,
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'media' => [
+                            'form' => ['@SuluMediaBundle/Resources/templates/media.xml'],
+                            'list' => '%sulu.model.media.class%',
+                        ],
+                        'collections' => [
+                            'form' => ['@SuluMediaBundle/Resources/templates/collections.xml'],
+                            'list' => Collection::class,
                         ],
                     ],
                 ]

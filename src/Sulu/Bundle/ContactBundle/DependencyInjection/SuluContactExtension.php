@@ -70,6 +70,24 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                 ]
             );
         }
+
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'contacts' => [
+                            'form' => ['@SuluContactBundle/Resources/templates/contacts.xml'],
+                            'list' => '%sulu.model.contact.class%',
+                        ],
+                        'accounts' => [
+                            'form' => ['@SuluContactBundle/Resources/templates/accounts.xml'],
+                            'list' => '%sulu.model.contact.class%',
+                        ],
+                    ],
+                ]
+            );
+        }
     }
 
     /**

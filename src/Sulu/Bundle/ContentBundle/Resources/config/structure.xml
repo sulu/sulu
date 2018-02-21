@@ -11,8 +11,14 @@
         <!-- structure manager -->
         <service id="sulu_content.structure.loader.xml" class="%sulu_content.structure.loader.xml.class%"
                  public="false">
-            <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
+            <argument type="service" id="sulu_content.structure.properties_xml_parser"/>
+        </service>
+
+        <service id="sulu_content.structure.properties_xml_parser"
+                 class="Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser"
+                 public="false">
+            <argument type="service" id="sulu.content.type_manager"/>
         </service>
 
         <service id="sulu_content.structure.factory" class="%sulu_content.structure.factory.class%">

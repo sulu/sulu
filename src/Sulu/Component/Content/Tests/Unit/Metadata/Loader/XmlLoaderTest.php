@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Metadata\Loader;
 use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\XmlLoader;
+use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 
 class XmlLoaderTest extends \PHPUnit_Framework_TestCase
@@ -37,7 +38,10 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolverInterface::class);
-        $this->loader = new XmlLoader($this->contentTypeManager->reveal(), $this->cacheLifetimeResolver->reveal());
+
+        $propertiesXmlParser = new PropertiesXmlParser($this->contentTypeManager->reveal());
+
+        $this->loader = new XmlLoader($this->cacheLifetimeResolver->reveal(), $propertiesXmlParser);
     }
 
     public function testLoadTemplate()
@@ -53,7 +57,7 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->load('template.xml');
 
-        $this->assertFalse($result->internal);
+        $this->assertFalse($result->isInternal());
     }
 
     public function testLoadInternalTemplate()
@@ -69,7 +73,7 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->load('template_load_internal.xml');
 
-        $this->assertTrue($result->internal);
+        $this->assertTrue($result->isInternal());
     }
 
     public function testLoadBlockMetaTitles()
@@ -130,7 +134,7 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
         $this->contentTypeManager->has('test')->willReturn(false);
         $this->contentTypeManager->getAll()->willReturn(['text_line' => [], 'resource_locator' => []]);
-        $result = $this->load('template_without_invalid_ignore.xml');
+        $this->load('template_without_invalid_ignore.xml');
     }
 
     private function load($name)

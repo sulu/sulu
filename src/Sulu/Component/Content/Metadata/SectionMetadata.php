@@ -25,12 +25,44 @@ class SectionMetadata extends ItemMetadata
     public $colSpan = null;
 
     /**
+     * The number of grid columns the property should use in the admin interface.
+     *
+     * @var int
+     */
+    protected $size = null;
+
+    /**
      * Return the colspan.
      *
      * @return int
      */
     public function getColSpan()
     {
+        @trigger_error(
+            sprintf('Do not use getter "%s" from "%s"', 'getColSpan', __CLASS__),
+            E_USER_DEPRECATED
+        );
+
         return $this->colSpan;
+    }
+
+    public function getSize(): ?int
+    {
+        if ($this->size) {
+            return $this->size;
+        }
+
+        if ($this->colSpan) {
+            return $this->getColSpan();
+        }
+
+        return null;
+    }
+
+    public function setSize(int $size = null): self
+    {
+        $this->size = $size;
+
+        return $this;
     }
 }

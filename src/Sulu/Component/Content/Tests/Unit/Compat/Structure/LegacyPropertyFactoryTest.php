@@ -112,9 +112,10 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->property1->getMinOccurs()->willReturn($minOccurs);
         $this->property1->getColSpan()->willReturn($colSpan);
         $this->property1->getParameters()->willReturn($parameters);
-        $this->property1->title = $title;
-        $this->property1->description = $description;
-        $this->property1->placeholder = $placeholder;
+        $this->property1->getTitles()->willReturn($title);
+        $this->property1->getDescriptions()->willReturn($description);
+        $this->property1->getPlaceholders()->willReturn($placeholder);
+        $this->property1->getTags()->willReturn([]);
 
         $legacyProperty = $this->factory->createProperty($this->property1->reveal());
 
@@ -166,8 +167,8 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->section->getName()->willReturn($name);
         $this->section->getColSpan()->willReturn($colSpan);
         $this->section->getParameters()->willReturn($parameters);
-        $this->section->title = $title;
-        $this->section->description = $description;
+        $this->section->getTitles()->willReturn($title);
+        $this->section->getDescriptions()->willReturn($description);
         $this->section->getChildren()->willReturn([
             $property->reveal(),
         ]);
@@ -195,10 +196,15 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->component->getChildren()->willReturn([
             $property->reveal(),
         ]);
-        $this->component->title = [
+        $this->component->getTitles()->willReturn([
             'de' => 'Testtitel',
             'en' => 'Test title',
-        ];
+        ]);
+        $this->component->getDescriptions()->willReturn([
+            'de' => 'Test Beschreibung',
+            'en' => 'Test description',
+        ]);
+
         $this->block->getComponents()->willReturn([
             $this->component->reveal(),
         ]);
@@ -251,9 +257,10 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $property->getMinOccurs()->willReturn($minOccurs);
         $property->getColSpan()->willReturn($colSpan);
         $property->getParameters()->willReturn($parameters);
-        $property->title = $title;
-        $property->description = $description;
-        $property->placeholder = $placeholder;
+        $property->getTitles()->willReturn($title);
+        $property->getDescriptions()->willReturn($description);
+        $property->getPlaceholders()->willReturn($placeholder);
+        $property->getTags()->willReturn([]);
         $property->getChildren()->willReturn([
             $this->component->reveal(),
         ]);

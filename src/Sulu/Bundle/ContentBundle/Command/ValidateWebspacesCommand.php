@@ -267,8 +267,8 @@ class ValidateWebspacesCommand extends ContainerAwareCommand
             }
         }
 
-        $this->validateTwigTemplate($metadata->view . '.html.twig');
-        $this->validateControllerAction($metadata->controller);
+        $this->validateTwigTemplate($metadata->getView() . '.html.twig');
+        $this->validateControllerAction($metadata->getController());
 
         return $valid;
     }

@@ -22,6 +22,7 @@
             <argument type="service" id="templating"/>
             <argument type="service" id="sulu.core.localization_manager"/>
             <argument type="service" id="translator.default"/>
+            <argument type="service" id="sulu_admin.metadata.resource_metadata_pool"/>
             <argument>%kernel.environment%</argument>
             <argument>%sulu_admin.name%</argument>
             <argument>%sulu_core.locales%</argument>
@@ -54,6 +55,42 @@
             <argument type="service" id="fos_rest.view_handler"/>
 
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_admin.metadata.resource_metadata_pool" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool" />
+
+        <service id="sulu_admin.metadata.resource_metadata_provider.form"
+                 class="Sulu\Bundle\AdminBundle\ResourceMetadata\FormResourceMetadataProvider"
+        >
+            <argument type="string">%sulu_admin.resources%</argument>
+            <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
+            <argument type="service" id="sulu_admin.metadata.resource_metadata_mapper"/>
+            <argument>%sulu_core.locales%</argument>
+            <argument type="service" id="kernel"/>
+            <argument>%kernel.cache_dir%/sulu/resourcemetadata</argument>
+            <argument>%kernel.debug%</argument>
+
+            <tag name="sulu.resource_metadata_provider"/>
+        </service>
+
+        <service id="sulu_admin.metadata.resource_metadata_provider.structure"
+                 class="Sulu\Bundle\AdminBundle\ResourceMetadata\StructureResourceMetadataProvider"
+        >
+            <argument type="service" id="sulu_content.structure.factory"/>
+            <argument type="service" id="sulu_admin.metadata.resource_metadata_mapper"/>
+            <argument type="string">%sulu.content.structure.resources%</argument>
+
+            <tag name="sulu.resource_metadata_provider"/>
+        </service>
+
+        <service id="sulu_admin.metadata.resource_metadata_mapper" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper">
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="translator.default"/>
+        </service>
+
+        <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader">
+            <argument type="service" id="sulu_content.structure.properties_xml_parser"/>
         </service>
     </services>
 </container>
