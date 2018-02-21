@@ -1,12 +1,16 @@
 // @flow
-import {action, autorun, computed, observable, when} from 'mobx';
+import {action, autorun, computed, observable, toJS, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import Ajv from 'ajv';
+import jsonpointer from 'jsonpointer';
 import ResourceStore from '../../../stores/ResourceStore';
 import type {Schema, SchemaTypes} from '../types';
 import metadataStore from './MetadataStore';
 
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE = 'template';
+
+const ajv = new Ajv({allErrors: true, jsonPointers: true});
 
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
@@ -28,6 +32,8 @@ function addSchemaProperties(data: Object, key: string, schema: Schema) {
 export default class FormStore {
     resourceStore: ResourceStore;
     schema: Schema;
+    validator: ?(data: Object) => boolean;
+    @observable errors: Object;
     @observable type: string;
     @observable types: SchemaTypes = {};
     @observable schemaLoading: boolean = true;
@@ -75,12 +81,16 @@ export default class FormStore {
                 return;
             }
 
-            metadataStore.getSchema(this.resourceStore.resourceKey, type)
-                .then(this.handleSchemaResponse);
+            Promise.all([
+                metadataStore.getSchema(this.resourceStore.resourceKey, type),
+                metadataStore.getJsonSchema(this.resourceStore.resourceKey, type),
+            ]).then(this.handleSchemaResponse);
         });
     };
 
-    @action handleSchemaResponse = (schema: Schema) => {
+    @action handleSchemaResponse = ([schema, jsonSchema]: [Schema, Object]) => {
+        this.validator = ajv.compile(jsonSchema);
+
         this.schema = schema;
         const schemaFields = Object.keys(schema)
             .reduce((data, key) => addSchemaProperties(data, key, schema), {});
@@ -109,7 +119,42 @@ export default class FormStore {
         return this.resourceStore.data;
     }
 
-    save() {
+    validate() {
+        const {validator} = this;
+        const errors = {};
+
+        if (validator && !validator(toJS(this.data))) {
+            for (const error of validator.errors) {
+                switch (error.keyword) {
+                    case 'oneOf':
+                        break;
+                    case 'required':
+                        jsonpointer.set(
+                            errors,
+                            error.dataPath + '/' + error.params.missingProperty,
+                            {keyword: error.keyword, parameters: error.params}
+                        );
+                        break;
+                    default:
+                        jsonpointer.set(
+                            errors,
+                            error.dataPath,
+                            {keyword: error.keyword, parameters: error.params}
+                        );
+                }
+            }
+        }
+
+        this.errors = errors;
+    }
+
+    @action save(): Promise<Object> {
+        this.validate();
+
+        if (Object.keys(this.errors).length > 0) {
+            return Promise.reject('Errors occured when trying to save the data from the FormStore');
+        }
+
         return this.resourceStore.save();
     }
 

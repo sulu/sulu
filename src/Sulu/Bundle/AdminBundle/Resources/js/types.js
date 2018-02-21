@@ -13,8 +13,19 @@ export type PaginationProps = {
 
 export type PaginationAdapter = ComponentType<PaginationProps>;
 
+export type PropertyError = {
+    keyword: string,
+    parameters: {[key: string]: mixed},
+};
+
+export type BlockError = Array<?{[key: string]: Error}>;
+
+export type Error = BlockError | PropertyError;
+
+export type ErrorCollection = {[key: string]: Error};
+
 export type FieldTypeProps<T> = {
-    error?: Object,
+    error?: Error,
     onChange: (value: T) => void,
     locale?: ?IObservableValue<string>,
     maxOccurs?: number,

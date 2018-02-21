@@ -4,12 +4,14 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import Divider from '../../components/Divider';
 import Grid from '../../components/Grid';
+import type {ErrorCollection} from '../../types';
 import Field from './Field';
 import rendererStyles from './renderer.scss';
 import type {Schema, SchemaEntry} from './types';
 
 type Props = {
     data: Object,
+    errors?: ErrorCollection,
     schema: Schema,
     onChange: (string, *) => void,
     locale: ?IObservableValue<string>,
@@ -34,7 +36,9 @@ export default class Renderer extends React.Component<Props> {
     }
 
     renderGridItem(schemaField: SchemaEntry, schemaKey: string) {
-        const {data, locale, onChange} = this.props;
+        const {data, errors, locale, onChange} = this.props;
+
+        const error = errors && errors[schemaKey] ? errors[schemaKey] : undefined;
 
         return (
             <Grid.Item
@@ -44,6 +48,7 @@ export default class Renderer extends React.Component<Props> {
                 spaceAfter={schemaField.spaceAfter}
             >
                 <Field
+                    error={error}
                     name={schemaKey}
                     schema={schemaField}
                     onChange={onChange}

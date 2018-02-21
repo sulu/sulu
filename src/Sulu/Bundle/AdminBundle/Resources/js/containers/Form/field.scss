@@ -1,6 +1,7 @@
 @import '../Application/colors.scss';
 
 $labelColor: $scorpion;
+$labelErrorColor: $roman;
 
 .label {
     display: block;
@@ -9,4 +10,8 @@ $labelColor: $scorpion;
     line-height: 19px;
     margin-bottom: 10px;
     text-align: left;
+
+    &.error {
+        color: $labelErrorColor;
+    }
 }

@@ -25,7 +25,9 @@
         "whatwg-fetch": "^2.0.3"
     },
     "devDependencies": {
+        "ajv": "^6.1.1",
         "enzyme": "^3.3.0",
+        "jsonpointer": "^4.0.1",
         "pretty": "^2.0.0"
     },
     "peerDependencies": {

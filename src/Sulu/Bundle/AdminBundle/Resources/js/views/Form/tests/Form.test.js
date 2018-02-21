@@ -39,6 +39,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
 
 jest.mock('../../../containers/Form/stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
+    getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
     getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
@@ -191,7 +192,7 @@ test('Should show loading templates chooser in toolbar while types are loading',
     expect(toolbarConfig).toMatchSnapshot();
 });
 
-test('Should change template on click in template chooser', () => {
+test('Should change template on click in template chooser', (done) => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
@@ -239,19 +240,28 @@ test('Should change template on click in template chooser', () => {
         }
     });
 
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
     const form = mount(<Form router={router} resourceStore={resourceStore} />);
 
-    return Promise.all([typesPromise, sidebarPromise, footerPromise]).then(() => {
+    Promise.all([typesPromise, sidebarPromise, footerPromise, jsonSchemaPromise]).then(() => {
         const toolbarOptions = withToolbar.mock.calls[0][1].call(form.instance());
         toolbarOptions.items[1].onChange('footer');
         const schemaPromise = Promise.resolve(footerMetadata);
         metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-        return schemaPromise.then(() => {
+        Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
             form.update();
             expect(form.find('Item')).toHaveLength(1);
+            done();
         });
     });
+
+    jsonSchemaResolve({});
 });
 
 test('Should show templates chooser in toolbar if types are available', () => {
@@ -399,7 +409,7 @@ test('Should render save button disabled only if form is not dirty', () => {
     expect(getSaveItem().disabled).toBe(false);
 });
 
-test('Should save form when submitted', () => {
+test('Should save form when submitted', (done) => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     const Form = require('../Form').default;
@@ -412,6 +422,12 @@ test('Should save form when submitted', () => {
 
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const router = {
         bind: jest.fn(),
@@ -432,14 +448,19 @@ test('Should save form when submitted', () => {
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    return Promise.all([schemaTypesPromise, schemaPromise]).then(() => {
-        form.find('Form').at(1).simulate('submit');
-        expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
+    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            form.find('Form').at(1).simulate('submit');
+            expect(resourceStore.destroy).not.toBeCalled();
+            expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
+            done();
+        });
     });
+
+    jsonSchemaResolve({});
 });
 
-test('Should save form when submitted and redirect to editRoute', () => {
+test('Should save form when submitted and redirect to editRoute', (done) => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     const Form = require('../Form').default;
@@ -452,6 +473,12 @@ test('Should save form when submitted and redirect to editRoute', () => {
 
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const router = {
         bind: jest.fn(),
@@ -469,11 +496,16 @@ test('Should save form when submitted and redirect to editRoute', () => {
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    return Promise.all([schemaTypesPromise, schemaPromise]).then(() => {
-        form.find('Form').at(1).simulate('submit');
-        expect(resourceStore.destroy).toBeCalled();
-        expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
+    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            form.find('Form').at(1).simulate('submit');
+            expect(resourceStore.destroy).toBeCalled();
+            expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
+            done();
+        });
     });
+
+    jsonSchemaResolve({});
 });
 
 test('Should pass store and schema handler to FormContainer', () => {

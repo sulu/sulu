@@ -19,7 +19,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
     };
 
     renderBlockContent = (value: Object, type: ?string, index: number) => {
-        const {locale, types} = this.props;
+        const {error, locale, types} = this.props;
 
         if (!types) {
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
@@ -30,6 +30,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         return (
             <FieldRenderer
                 data={value}
+                errors={error && error[index] ? error[index] : undefined}
                 index={index}
                 locale={locale}
                 onChange={this.handleBlockChange}

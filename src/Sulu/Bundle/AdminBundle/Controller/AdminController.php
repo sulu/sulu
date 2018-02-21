@@ -300,7 +300,7 @@ class AdminController
                     },
                     "blocks": {
                         "type": "array",
-                        "minItems": 3,
+                        "minItems": 2,
                         "items": {
                             "type": "object",
                             "oneOf": [

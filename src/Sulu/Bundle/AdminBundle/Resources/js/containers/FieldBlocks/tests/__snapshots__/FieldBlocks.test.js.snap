@@ -56,3 +56,66 @@ exports[`Render block with schema 1`] = `
   </button>
 </section>"
 `;
+
+exports[`Render block with schema and error 1`] = `
+"<section class=\\"blockCollection\\">
+  <div class=\\"sortableBlockList\\">
+    <section class=\\"block expanded\\">
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"content\\">
+        <header class=\\"header\\">
+          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+        </header>
+        <article>
+          <div class=\\"grid\\">
+            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+              <div>
+                <label class=\\"label\\">Text</label>
+                <input type=\\"text\\" value=\\"Test1\\">
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class=\\"block expanded\\">
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"content\\">
+        <header class=\\"header\\">
+          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+        </header>
+        <article>
+          <div class=\\"grid\\">
+            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+              <div>
+                <label class=\\"label error\\">Text</label>
+                <input type=\\"text\\" class=\\"minLength\\" value=\\"T2\\">
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class=\\"block expanded\\">
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"content\\">
+        <header class=\\"header\\">
+          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+        </header>
+        <article>
+          <div class=\\"grid\\">
+            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+              <div>
+                <label class=\\"label error\\">Text</label>
+                <input type=\\"text\\" class=\\"minLength\\" value=\\"T3\\">
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+  <button class=\\"button secondary\\"><span class=\\"text\\"><span class=\\"addButtonIcon su-plus\\" aria-label=\\"su-plus\\"></span>Add block</span>
+  </button>
+</section>"
+`;

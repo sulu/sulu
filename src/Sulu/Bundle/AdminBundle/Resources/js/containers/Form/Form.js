@@ -50,6 +50,7 @@ export default class Form extends React.Component<Props> {
                         onChange={this.handleChange}
                         schema={store.schema}
                         data={store.data}
+                        errors={store.errors}
                         locale={store.locale}
                     />
                     <button ref={this.setSubmitButtonRef} type="submit" className={formStyles.submit}>Submit</button>

@@ -8,8 +8,8 @@ jest.mock('../../Form/registries/FieldRegistry', () => ({
     get: jest.fn((type) => {
         switch (type) {
             case 'text_line':
-                return function TextLine({value}) {
-                    return <input type="text" defaultValue={value} />;
+                return function TextLine({error, value}) {
+                    return <input className={error && error.keyword} type="text" defaultValue={value} />;
                 };
         }
     }),
@@ -56,6 +56,56 @@ test('Render block with schema', () => {
 
     fieldBlocks.find('Block').at(0).simulate('click');
     fieldBlocks.find('Block').at(1).simulate('click');
+
+    expect(pretty(fieldBlocks.html())).toMatchSnapshot();
+});
+
+test('Render block with schema and error', () => {
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    const value = [
+        {
+            text: 'Test1',
+        },
+        {
+            text: 'T2',
+        },
+        {
+            text: 'T3',
+        },
+    ];
+
+    const error = [
+        undefined,
+        {
+            text: {
+                keyword: 'minLength',
+                parameters: {},
+            },
+        },
+        {
+            text: {
+                keyword: 'minLength',
+                parameters: {},
+            },
+        },
+    ];
+
+    const fieldBlocks = mount(<FieldBlocks error={error} onChange={jest.fn()} types={types} value={value} />);
+
+    fieldBlocks.find('Block').at(0).simulate('click');
+    fieldBlocks.find('Block').at(1).simulate('click');
+    fieldBlocks.find('Block').at(2).simulate('click');
 
     expect(pretty(fieldBlocks.html())).toMatchSnapshot();
 });

@@ -31,6 +31,22 @@ test('Render a required field with correct field type', () => {
         .toMatchSnapshot();
 });
 
+test('Render a field with an error', () => {
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+    expect(
+        render(
+            <Field
+                error={{keyword: 'minLength', parameters: {}}}
+                name="test"
+                onChange={jest.fn()}
+                schema={{label: 'label1', type: 'text'}}
+            />
+        )
+    ).toMatchSnapshot();
+});
+
 test('Pass correct props to FieldType', () => {
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="date" />;

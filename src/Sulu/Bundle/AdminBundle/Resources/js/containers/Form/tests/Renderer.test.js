@@ -83,8 +83,55 @@ test('Should pass name and schema to fields', () => {
 
     expect(fields.at(0).prop('name')).toBe('text');
     expect(fields.at(0).prop('onChange')).toBe(changeSpy);
+    expect(fields.at(0).prop('error')).toBe(undefined);
     expect(fields.at(1).prop('name')).toBe('datetime');
     expect(fields.at(1).prop('onChange')).toBe(changeSpy);
+    expect(fields.at(1).prop('error')).toBe(undefined);
+});
+
+test('Should pass errors to fields', () => {
+    const schema = {
+        text: {
+            label: 'Text',
+            type: 'text_line',
+        },
+        datetime: {
+            label: 'Datetime',
+            type: 'datetime',
+        },
+    };
+
+    const textError = {
+        keyword: 'required',
+        parameters: {},
+    };
+    const datetimeError = {
+        keyword: 'minLength',
+        parameters: {},
+    };
+    const errors = {
+        text: textError,
+        datetime: datetimeError,
+    };
+
+    const changeSpy = jest.fn();
+    const submitSpy = jest.fn();
+
+    const renderer = shallow(
+        <Renderer
+            schema={schema}
+            data={{}}
+            errors={errors}
+            locale={undefined}
+            onChange={changeSpy}
+            onSubmit={submitSpy}
+        />
+    );
+
+    const fields = renderer.find('Field');
+
+    expect(fields.at(0).prop('error')).toBe(textError);
+    expect(fields.at(1).prop('error')).toBe(datetimeError);
 });
 
 test('Should render nested sections', () => {

@@ -9,19 +9,26 @@ test('Should pass props correctly to Renderer', () => {
     const data = {
         content: 'test',
     };
+    const errors = {
+        content: {
+            keyword: 'minLength',
+            parameters: {},
+        },
+    };
     const locale = observable('de');
     const schema = {
         text: {label: 'Label', type: 'text_line'},
     };
 
     const formRenderer = shallow(
-        <FieldRenderer data={data} index={1} locale={locale} onChange={changeSpy} schema={schema} />
+        <FieldRenderer data={data} errors={errors} index={1} locale={locale} onChange={changeSpy} schema={schema} />
     );
 
     expect(formRenderer.find('Renderer').props()).toEqual(expect.objectContaining({
-        data: data,
-        locale: locale,
-        schema: schema,
+        data,
+        errors,
+        locale,
+        schema,
     }));
 });
 
