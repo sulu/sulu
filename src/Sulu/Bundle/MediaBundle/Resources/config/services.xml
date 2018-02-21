@@ -291,5 +291,12 @@
         <service id="sulu_media.reference_store.media" class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
             <tag name="sulu_website.reference_store" alias="media"/>
         </service>
+
+        <service id="sulu_media.doctrine.invalidation_listener"
+                 class="Sulu\Bundle\MediaBundle\EventListener\CacheInvalidationListener">
+            <argument type="service" id="sulu_http_cache.handler.aggregate"/>
+
+            <tag name="doctrine.event_listener" event="postPersist"/>
+        </service>
     </services>
 </container>
