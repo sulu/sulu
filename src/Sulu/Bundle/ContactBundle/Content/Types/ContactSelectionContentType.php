@@ -24,11 +24,12 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
 /**
  * ContentType for Contact.
  */
-class ContactSelectionContentType extends ComplexContentType implements ContentTypeExportInterface
+class ContactSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
     /**
      * @var string
@@ -154,14 +155,7 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $ids = $this->converter->convertIdsToGroupedIds($value, ['a' => [], 'c' => []]);
 
         $accounts = $this->accountManager->getByIds($ids['a'], $locale);
-        foreach ($accounts as $account) {
-            $this->accountReferenceStore->add($account->getId());
-        }
-
         $contacts = $this->contactManager->getByIds($ids['c'], $locale);
-        foreach ($contacts as $contact) {
-            $this->contactReferenceStore->add($contact->getId());
-        }
 
         $result = array_merge($accounts, $contacts);
         @usort(
@@ -246,5 +240,26 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
     ) {
         $property->setValue(json_decode($value));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preResolve(PropertyInterface $property)
+    {
+        $value = $property->getValue();
+        if (null === $value || !is_array($value) || 0 === count($value)) {
+            return [];
+        }
+
+        $ids = $this->converter->convertIdsToGroupedIds($value, ['a' => [], 'c' => []]);
+
+        foreach ($ids['a'] as $account) {
+            $this->accountReferenceStore->add($account);
+        }
+
+        foreach ($ids['c'] as $contact) {
+            $this->contactReferenceStore->add($contact);
+        }
     }
 }

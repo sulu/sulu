@@ -17,6 +17,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Media\SmartContent\MediaDataItem;
 use Sulu\Component\Media\SmartContent\MediaDataProvider;
@@ -34,11 +35,13 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->prophesize(SerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new MediaDataProvider(
             $this->getRepository(),
             $collectionManager->reveal(),
             $serializer->reveal(),
-            $requestStack->reveal()
+            $requestStack->reveal(),
+            $referenceStore->reveal()
         );
 
         $configuration = $provider->getConfiguration();
@@ -52,11 +55,13 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->prophesize(SerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new MediaDataProvider(
             $this->getRepository(),
             $collectionManager->reveal(),
             $serializer->reveal(),
-            $requestStack->reveal()
+            $requestStack->reveal(),
+            $referenceStore->reveal()
         );
 
         $parameter = $provider->getDefaultPropertyParameter();
@@ -99,11 +104,13 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->prophesize(SerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new MediaDataProvider(
             $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
             $collectionManager->reveal(),
             $serializer->reveal(),
-            $requestStack->reveal()
+            $requestStack->reveal(),
+            $referenceStore->reveal()
         );
 
         $result = $provider->resolveDataItems(
@@ -168,11 +175,13 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
 
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new MediaDataProvider(
             $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
             $collectionManager->reveal(),
             $serializer->reveal(),
-            $requestStack->reveal()
+            $requestStack->reveal(),
+            $referenceStore->reveal()
         );
 
         $result = $provider->resolveResourceItems(
@@ -195,11 +204,13 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->prophesize(SerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new MediaDataProvider(
             $this->getRepository(),
             $collectionManager->reveal(),
             $serializer->reveal(),
-            $requestStack->reveal()
+            $requestStack->reveal(),
+            $referenceStore->reveal()
         );
 
         $collection = $this->prophesize(Collection::class);

@@ -206,9 +206,16 @@ abstract class BaseDataProvider implements DataProviderInterface
         );
     }
 
-    protected function getIdForItem($item)
+    /**
+     * Returns id for given entity.
+     *
+     * @param object $entity
+     *
+     * @return int
+     */
+    protected function getIdForItem($entity)
     {
-        return $item->getId();
+        return $entity->getId();
     }
 
     /**
