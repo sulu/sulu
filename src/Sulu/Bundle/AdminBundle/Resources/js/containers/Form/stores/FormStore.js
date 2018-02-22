@@ -125,23 +125,23 @@ export default class FormStore {
         return this.resourceStore.locale;
     }
 
-    setType(type: string) {
-        this.saveType(type);
+    @action setType(type: string) {
+        this.validateTypes();
+        this.type = type;
         this.set(TYPE, type);
     }
 
-    changeType(type: string) {
-        this.saveType(type);
+    @action changeType(type: string) {
+        this.validateTypes();
+        this.type = type;
         this.change(TYPE, type);
     }
 
-    @action saveType(type: string) {
+    validateTypes() {
         if (Object.keys(this.types).length === 0) {
             throw new Error(
                 'The resource "' + this.resourceStore.resourceKey + '" handled by this FormStore cannot handle types'
             );
         }
-
-        this.type = type;
     }
 }
