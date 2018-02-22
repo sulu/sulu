@@ -133,5 +133,5 @@ test('Call onFinish callback after editing the field has finished', () => {
 
     field.find('Text').simulate('finish');
 
-    expect(finishSpy).toBeCalledWith();
+    expect(finishSpy).toBeCalledWith('test');
 });

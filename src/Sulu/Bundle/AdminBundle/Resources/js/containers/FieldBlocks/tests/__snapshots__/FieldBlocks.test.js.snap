@@ -57,7 +57,7 @@ exports[`Render block with schema 1`] = `
 </section>"
 `;
 
-exports[`Render block with schema and error 1`] = `
+exports[`Render block with schema and error on fields already being modified 1`] = `
 "<section class=\\"blockCollection\\">
   <div class=\\"sortableBlockList\\">
     <section class=\\"block expanded\\">
@@ -106,8 +106,8 @@ exports[`Render block with schema and error 1`] = `
           <div class=\\"grid\\">
             <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
               <div>
-                <label class=\\"label error\\">Text</label>
-                <input type=\\"text\\" class=\\"minLength\\" value=\\"T3\\">
+                <label class=\\"label\\">Text</label>
+                <input type=\\"text\\" value=\\"T3\\">
               </div>
             </div>
           </div>

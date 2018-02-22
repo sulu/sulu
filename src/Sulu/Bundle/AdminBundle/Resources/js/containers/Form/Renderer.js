@@ -1,4 +1,5 @@
 // @flow
+import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React from 'react';
@@ -20,6 +21,19 @@ type Props = {
 
 @observer
 export default class Renderer extends React.Component<Props> {
+    @observable modifiedFields: Array<string> = [];
+
+    @action handleFieldFinish = (name: string) => {
+        const {onFieldFinish} = this.props;
+        const {modifiedFields} = this;
+
+        if (!modifiedFields.includes(name)) {
+            modifiedFields.push(name);
+        }
+
+        onFieldFinish();
+    };
+
     renderGridSection(schemaField: SchemaEntry, schemaKey: string) {
         const {items} = schemaField;
         return (
@@ -37,9 +51,11 @@ export default class Renderer extends React.Component<Props> {
     }
 
     renderGridItem(schemaField: SchemaEntry, schemaKey: string) {
-        const {data, errors, locale, onChange, onFieldFinish} = this.props;
+        const {data, errors, locale, onChange} = this.props;
 
-        const error = errors && errors[schemaKey] ? errors[schemaKey] : undefined;
+        const error = this.modifiedFields.includes(schemaKey) && errors && errors[schemaKey]
+            ? errors[schemaKey]
+            : undefined;
 
         return (
             <Grid.Item
@@ -53,7 +69,7 @@ export default class Renderer extends React.Component<Props> {
                     name={schemaKey}
                     schema={schemaField}
                     onChange={onChange}
-                    onFinish={onFieldFinish}
+                    onFinish={this.handleFieldFinish}
                     value={data[schemaKey]}
                     locale={locale}
                 />

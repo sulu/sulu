@@ -143,15 +143,15 @@ test('Should pass name and schema to fields', () => {
 
     expect(fields.at(0).prop('name')).toBe('text');
     expect(fields.at(0).prop('onChange')).toBe(changeSpy);
-    expect(fields.at(0).prop('onFinish')).toBe(fieldFinishSpy);
+    expect(fields.at(0).prop('onFinish')).toBeInstanceOf(Function);
     expect(fields.at(0).prop('error')).toBe(undefined);
     expect(fields.at(1).prop('name')).toBe('datetime');
     expect(fields.at(1).prop('onChange')).toBe(changeSpy);
-    expect(fields.at(1).prop('onFinish')).toBe(fieldFinishSpy);
+    expect(fields.at(1).prop('onFinish')).toBeInstanceOf(Function);
     expect(fields.at(1).prop('error')).toBe(undefined);
 });
 
-test('Should pass errors to fields', () => {
+test('Should pass errors to fields that have already been modified at least once', () => {
     const schema = {
         text: {
             label: 'Text',
@@ -191,10 +191,12 @@ test('Should pass errors to fields', () => {
         />
     );
 
+    renderer.find('Field').at(0).simulate('finish', 'text');
+
     const fields = renderer.find('Field');
 
     expect(fields.at(0).prop('error')).toBe(textError);
-    expect(fields.at(1).prop('error')).toBe(datetimeError);
+    expect(fields.at(1).prop('error')).toBe(undefined);
 });
 
 test('Should render nested sections', () => {

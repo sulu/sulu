@@ -60,7 +60,7 @@ test('Render block with schema', () => {
     expect(pretty(fieldBlocks.html())).toMatchSnapshot();
 });
 
-test('Render block with schema and error', () => {
+test('Render block with schema and error on fields already being modified', () => {
     const types = {
         default: {
             title: 'Default',
@@ -108,6 +108,9 @@ test('Render block with schema and error', () => {
     fieldBlocks.find('Block').at(0).simulate('click');
     fieldBlocks.find('Block').at(1).simulate('click');
     fieldBlocks.find('Block').at(2).simulate('click');
+
+    fieldBlocks.find('Block').at(0).find('Field').at(0).prop('onFinish')('text');
+    fieldBlocks.find('Block').at(1).find('Field').at(0).prop('onFinish')('text');
 
     expect(pretty(fieldBlocks.html())).toMatchSnapshot();
 });

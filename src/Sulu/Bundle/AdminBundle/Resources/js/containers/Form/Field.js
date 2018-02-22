@@ -13,7 +13,7 @@ type Props = {
     value?: *,
     schema: SchemaEntry,
     onChange: (string, *) => void,
-    onFinish: () => void,
+    onFinish: (name: string) => void,
     locale?: ?IObservableValue<string>,
 };
 
@@ -25,7 +25,7 @@ export default class Field extends React.PureComponent<Props> {
     };
 
     handleFinish = () => {
-        this.props.onFinish();
+        this.props.onFinish(this.props.name);
     };
 
     render() {
