@@ -18,6 +18,10 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         onChange(newValues);
     };
 
+    handleSortEnd = () => {
+        this.props.onFinish();
+    };
+
     renderBlockContent = (value: Object, type: ?string, index: number) => {
         const {error, locale, onFinish, types} = this.props;
 
@@ -57,6 +61,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
                 maxOccurs={maxOccurs}
                 minOccurs={minOccurs}
                 onChange={onChange}
+                onSortEnd={this.handleSortEnd}
                 renderBlockContent={this.renderBlockContent}
                 types={blockTypes}
                 value={value || []}

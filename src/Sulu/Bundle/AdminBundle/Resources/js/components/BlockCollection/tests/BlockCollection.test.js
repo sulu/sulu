@@ -164,9 +164,10 @@ test('Should allow to collapse blocks', () => {
 
 test('Should allow to reorder blocks by using drag and drop', () => {
     const changeSpy = jest.fn();
+    const sortEndSpy = jest.fn();
     const value = [{content: 'Test 1'}, {content: 'Test 2'}, {content: 'Test 3'}];
     const blockCollection = mount(
-        <BlockCollection onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />
+        <BlockCollection onChange={changeSpy} onSortEnd={sortEndSpy} renderBlockContent={jest.fn()} value={value} />
     );
 
     blockCollection.find('Block').at(0).simulate('click');
@@ -179,6 +180,7 @@ test('Should allow to reorder blocks by using drag and drop', () => {
         expect.objectContaining({content: 'Test 3'}),
         expect.objectContaining({content: 'Test 1'}),
     ]);
+    expect(sortEndSpy).toBeCalledWith(0, 2);
 
     expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([false, false, true]);
 });

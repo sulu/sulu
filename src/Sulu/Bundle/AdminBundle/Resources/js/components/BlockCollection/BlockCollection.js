@@ -14,6 +14,7 @@ type Props = {
     maxOccurs?: number,
     minOccurs?: number,
     onChange: (value: Array<BlockEntry>) => void,
+    onSortEnd?: (oldIndex: number, newIndex: number) => void,
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
     value: Array<BlockEntry>,
@@ -90,10 +91,14 @@ export default class BlockCollection extends React.Component<Props> {
     };
 
     @action handleSortEnd = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
-        const {onChange, value} = this.props;
+        const {onChange, onSortEnd, value} = this.props;
 
         this.expandedBlocks = arrayMove(this.expandedBlocks, oldIndex, newIndex);
         onChange(arrayMove(value, oldIndex, newIndex));
+
+        if (onSortEnd) {
+            onSortEnd(oldIndex, newIndex);
+        }
     };
 
     @action handleCollapse = (index: number) => {

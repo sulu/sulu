@@ -172,6 +172,28 @@ test('Should call onFinish when a field from the child renderer has finished edi
     expect(finishSpy).toBeCalledWith();
 });
 
+test('Should call onFinish when the order of the blocks has changed', () => {
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+    const value = [{}];
+
+    const finishSpy = jest.fn();
+    const fieldBlocks = mount(<FieldBlocks onChange={jest.fn()} onFinish={finishSpy} types={types} value={value} />);
+
+    fieldBlocks.find('BlockCollection').prop('onSortEnd')(0, 2);
+
+    expect(finishSpy).toBeCalledWith();
+});
+
 test('Throw error if no types are passed', () => {
     expect(() => shallow(<FieldBlocks onChange={jest.fn()} onFinish={jest.fn()} value={undefined} />))
         .toThrow('The "block" field type needs at least one type to be configured!');
