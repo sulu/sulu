@@ -27,6 +27,8 @@
         </service>
 
         <service id="sulu.content.type.single_internal_link" class="%sulu.content.type.single_internal_link.class%">
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu_content.reference_store.content"/>
             <argument>%sulu.content.type.single_internal_link.template%</argument>
 

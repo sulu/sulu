@@ -13,9 +13,12 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
 /**
  * ContentType for SingleInternalLink.
@@ -23,9 +26,14 @@ use Sulu\Component\Content\SimpleContentType;
 class SingleInternalLink extends SimpleContentType implements PreResolvableContentTypeInterface
 {
     /**
-     * @var string
+     * @var ContentMapperInterface
      */
-    private $template;
+    private $contentMapper;
+
+    /**
+     * @var StructureResolverInterface
+     */
+    private $structureResolver;
 
     /**
      * @var ReferenceStoreInterface
@@ -33,13 +41,24 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
     private $referenceStore;
 
     /**
+     * @var string
+     */
+    private $template;
+
+    /**
      * @param ReferenceStoreInterface $referenceStore
      * @param string $template
      */
-    public function __construct(ReferenceStoreInterface $referenceStore, $template)
-    {
+    public function __construct(
+        ContentMapperInterface $contentMapper,
+        StructureResolverInterface $structureResolver,
+        ReferenceStoreInterface $referenceStore,
+        $template
+    ) {
         parent::__construct('SingleInternalLink', '');
 
+        $this->contentMapper = $contentMapper;
+        $this->structureResolver = $structureResolver;
         $this->referenceStore = $referenceStore;
         $this->template = $template;
     }
@@ -95,6 +114,14 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
     /**
      * {@inheritdoc}
      */
+    public function getContentData(PropertyInterface $property)
+    {
+        return $this->loadStructure($property->getValue(), $property->getStructure()->getLanguageCode());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function preResolve(PropertyInterface $property)
     {
         $uuid = $property->getValue();
@@ -103,5 +130,35 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
         }
 
         $this->referenceStore->add($uuid);
+    }
+
+    /**
+     * Load structure by uuid and locale.
+     *
+     * @param string $uuid
+     * @param string $locale
+     * @param string $webspaceKey
+     *
+     * @return array|null
+     */
+    private function loadStructure($uuid, $locale, $webspaceKey = null)
+    {
+        if (!$uuid) {
+            return null;
+        }
+
+        try {
+            $contentStructure = $this->contentMapper->load(
+                $uuid,
+                $webspaceKey,
+                $locale
+            );
+
+            return $this->structureResolver->resolve($contentStructure);
+        } catch (DocumentNotFoundException $e) {
+            $this->logger->error((string) $e);
+        }
+
+        return null;
     }
 }

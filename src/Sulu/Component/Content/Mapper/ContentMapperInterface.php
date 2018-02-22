@@ -16,6 +16,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
 /**
  * Interface of ContentMapper.
@@ -77,6 +78,8 @@ interface ContentMapperInterface
      * @param bool   $loadGhostContent True if also a ghost page should be returned, otherwise false
      *
      * @return StructureInterface
+     *
+     * @throws DocumentNotFoundException
      */
     public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false);
 
