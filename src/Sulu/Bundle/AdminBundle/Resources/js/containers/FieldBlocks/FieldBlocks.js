@@ -31,10 +31,12 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         const blockType = type ? types[type] : types[Object.keys(types)[0]]; // TODO replace with a default type
 
+        const errors: Array<Error> = toJS(error);
+
         return (
             <FieldRenderer
                 data={value}
-                errors={error && error[index] ? error[index] : undefined}
+                errors={errors && errors.length > index && errors[index] ? errors[index] : undefined}
                 index={index}
                 locale={locale}
                 onChange={this.handleBlockChange}
