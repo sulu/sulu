@@ -239,10 +239,14 @@ test('Should remove media from the selection', () => {
     });
 
     const changeSpy = jest.fn();
-    const mediaSelectionInstance = shallow(<MediaSelection locale="de" onChange={changeSpy} />).instance();
+    const finishSpy = jest.fn();
+    const mediaSelectionInstance = shallow(
+        <MediaSelection locale="de" onChange={changeSpy} onFinish={finishSpy} />
+    ).instance();
 
     mediaSelectionInstance.handleRemove(1);
     expect(changeSpy).toBeCalled();
+    expect(finishSpy).toBeCalled();
     expect(mediaSelectionInstance.mediaSelectionStore.removeById).toBeCalledWith(1);
 });
 
@@ -254,10 +258,14 @@ test('Should move media inside the selection', () => {
     });
 
     const changeSpy = jest.fn();
-    const mediaSelectionInstance = shallow(<MediaSelection locale="en" onChange={changeSpy} />).instance();
+    const finishSpy = jest.fn();
+    const mediaSelectionInstance = shallow(
+        <MediaSelection locale="en" onChange={changeSpy} onFinish={finishSpy} />
+    ).instance();
 
     mediaSelectionInstance.handleSorted(1, 3);
     expect(changeSpy).toBeCalled();
+    expect(finishSpy).toBeCalled();
     expect(mediaSelectionInstance.mediaSelectionStore.move).toBeCalledWith(1, 3);
 });
 
@@ -273,7 +281,10 @@ test('Should add the selected medias to the selection store on confirm', () => {
         'sulu-25x25': 'http://lorempixel.com/25/25',
     };
     const changeSpy = jest.fn();
-    const mediaSelectionInstance = shallow(<MediaSelection locale="de" onChange={changeSpy} />).instance();
+    const finishSpy = jest.fn();
+    const mediaSelectionInstance = shallow(
+        <MediaSelection locale="de" onChange={changeSpy} onFinish={finishSpy} />
+    ).instance();
 
     mediaSelectionInstance.openMediaOverlay();
     mediaSelectionInstance.handleOverlayConfirm([
@@ -299,5 +310,6 @@ test('Should add the selected medias to the selection store on confirm', () => {
     expect(mediaSelectionInstance.mediaSelectionStore.add.mock.calls[1][0].id).toBe(2);
     expect(mediaSelectionInstance.mediaSelectionStore.add.mock.calls[1][0].title).toBe('Title 2');
     expect(changeSpy).toBeCalled();
+    expect(finishSpy).toBeCalled();
     expect(mediaSelectionInstance.overlayOpen).toBe(false);
 });

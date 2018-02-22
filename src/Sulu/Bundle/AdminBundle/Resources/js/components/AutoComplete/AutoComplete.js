@@ -24,6 +24,7 @@ type Props = {
     loading?: boolean,
     /** Called when a suggestion is set */
     onChange: (value: string | number) => void,
+    onFinish: () => void,
     /** Called with a debounce when text is entered inside the input */
     onSearch: (query: string) => void,
 };
@@ -118,6 +119,7 @@ export default class AutoComplete extends React.Component<Props> {
         const {
             loading,
             children,
+            onFinish,
             placeholder,
         } = this.props;
         const suggestions = this.createSuggestions(children);
@@ -131,6 +133,7 @@ export default class AutoComplete extends React.Component<Props> {
                     loading={loading}
                     inputRef={this.setInputRef}
                     onChange={this.handleInputChange}
+                    onFinish={onFinish}
                     placeholder={placeholder}
                 />
                 <Popover

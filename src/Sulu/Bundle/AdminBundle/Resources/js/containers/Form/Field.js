@@ -13,6 +13,7 @@ type Props = {
     value?: *,
     schema: SchemaEntry,
     onChange: (string, *) => void,
+    onFinish: () => void,
     locale?: ?IObservableValue<string>,
 };
 
@@ -21,6 +22,10 @@ export default class Field extends React.PureComponent<Props> {
         const {name, onChange} = this.props;
 
         onChange(name, value);
+    };
+
+    handleFinish = () => {
+        this.props.onFinish();
     };
 
     render() {
@@ -50,6 +55,7 @@ export default class Field extends React.PureComponent<Props> {
                     minOccurs={minOccurs}
                     locale={locale}
                     onChange={this.handleChange}
+                    onFinish={this.handleFinish}
                     options={options}
                     types={types}
                     value={value}

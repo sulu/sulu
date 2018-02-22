@@ -20,8 +20,15 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
         }
     }
 
+    handleChange = (value: string | number) => {
+        const {onChange, onFinish} = this.props;
+
+        onChange(value);
+        onFinish();
+    };
+
     render() {
-        const {onChange, options, value} = this.props;
+        const {options, value} = this.props;
         if (!options) {
             throw new Error(MISSING_VALUES_OPTIONS);
         }
@@ -33,7 +40,7 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
         }
 
         return (
-            <SingleSelectComponent onChange={onChange} value={value}>
+            <SingleSelectComponent onChange={this.handleChange} value={value}>
                 {Object.keys(values).map((key) => (
                     <SingleSelectComponent.Option key={key} value={key}>{values[key]}</SingleSelectComponent.Option>
                 ))}

@@ -35,6 +35,10 @@ export default class Form extends React.Component<Props> {
         this.props.store.change(name, value);
     };
 
+    handleFieldFinish = () => {
+        this.props.store.validate();
+    };
+
     setSubmitButtonRef = (submitButton: ?ElementRef<'button'>) => {
         this.submitButton = submitButton;
     };
@@ -47,11 +51,12 @@ export default class Form extends React.Component<Props> {
             : (
                 <form onSubmit={this.handleSubmit}>
                     <Renderer
-                        onChange={this.handleChange}
-                        schema={store.schema}
                         data={store.data}
                         errors={store.errors}
                         locale={store.locale}
+                        onChange={this.handleChange}
+                        onFieldFinish={this.handleFieldFinish}
+                        schema={store.schema}
                     />
                     <button ref={this.setSubmitButtonRef} type="submit" className={formStyles.submit}>Submit</button>
                 </form>

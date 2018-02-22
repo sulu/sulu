@@ -10,7 +10,14 @@ test('Pass props correctly to SingleSelect', () => {
             'ms': 'Miss',
         },
     };
-    const singleSelect = shallow(<SingleSelect onChange={jest.fn()} options={options} value="test" />);
+    const singleSelect = shallow(
+        <SingleSelect
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            options={options}
+            value="test"
+        />
+    );
 
     expect(singleSelect.prop('value')).toBe('test');
     expect(singleSelect.find('Option').at(0).props()).toEqual(expect.objectContaining({
@@ -23,6 +30,29 @@ test('Pass props correctly to SingleSelect', () => {
     }));
 });
 
+test('Should call onFinish callback on every onChange', () => {
+    const finishSpy = jest.fn();
+    const options = {
+        values: {
+            'mr': 'Mister',
+            'ms': 'Miss',
+        },
+    };
+
+    const singleSelect = shallow(
+        <SingleSelect
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            options={options}
+            value="test"
+        />
+    );
+
+    singleSelect.simulate('change');
+
+    expect(finishSpy).toBeCalledWith();
+});
+
 test('Set default value if no value is passed', () => {
     const changeSpy = jest.fn();
     const options = {
@@ -32,15 +62,17 @@ test('Set default value if no value is passed', () => {
             'ms': 'Miss',
         },
     };
-    shallow(<SingleSelect onChange={changeSpy} options={options} value={undefined} />);
+    shallow(<SingleSelect onChange={changeSpy} onFinish={jest.fn()} options={options} value={undefined} />);
 
     expect(changeSpy).toBeCalledWith('mr');
 });
 
 test('Throw error if no options are passed', () => {
-    expect(() => shallow(<SingleSelect onChange={jest.fn()} value={undefined} />)).toThrow(/"values"/);
+    expect(() => shallow(<SingleSelect onChange={jest.fn()} onFinish={jest.fn()} value={undefined} />))
+        .toThrow(/"values"/);
 });
 
 test('Throw error if no value option is passed', () => {
-    expect(() => shallow(<SingleSelect onChange={jest.fn()} value={undefined} />)).toThrow(/"values"/);
+    expect(() => shallow(<SingleSelect onChange={jest.fn()} onFinish={jest.fn()} value={undefined} />))
+        .toThrow(/"values"/);
 });

@@ -19,7 +19,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
     };
 
     renderBlockContent = (value: Object, type: ?string, index: number) => {
-        const {error, locale, types} = this.props;
+        const {error, locale, onFinish, types} = this.props;
 
         if (!types) {
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
@@ -34,6 +34,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
                 index={index}
                 locale={locale}
                 onChange={this.handleBlockChange}
+                onFieldFinish={onFinish}
                 schema={blockType.form}
             />
         );

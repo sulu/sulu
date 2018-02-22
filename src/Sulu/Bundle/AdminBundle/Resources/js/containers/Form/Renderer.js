@@ -14,6 +14,7 @@ type Props = {
     errors?: ErrorCollection,
     schema: Schema,
     onChange: (string, *) => void,
+    onFieldFinish: () => void,
     locale: ?IObservableValue<string>,
 };
 
@@ -36,7 +37,7 @@ export default class Renderer extends React.Component<Props> {
     }
 
     renderGridItem(schemaField: SchemaEntry, schemaKey: string) {
-        const {data, errors, locale, onChange} = this.props;
+        const {data, errors, locale, onChange, onFieldFinish} = this.props;
 
         const error = errors && errors[schemaKey] ? errors[schemaKey] : undefined;
 
@@ -52,6 +53,7 @@ export default class Renderer extends React.Component<Props> {
                     name={schemaKey}
                     schema={schemaField}
                     onChange={onChange}
+                    onFinish={onFieldFinish}
                     value={data[schemaKey]}
                     locale={locale}
                 />

@@ -34,6 +34,10 @@ export default class Input extends React.PureComponent<Props> {
         this.props.onChange(event.currentTarget.value);
     };
 
+    handleBlur = () => {
+        this.props.onFinish();
+    };
+
     render() {
         const {
             error,
@@ -72,6 +76,7 @@ export default class Input extends React.PureComponent<Props> {
                     type={type}
                     value={value || ''}
                     placeholder={placeholder}
+                    onBlur={this.handleBlur}
                     onChange={this.handleChange}
                 />
             </label>

@@ -52,7 +52,7 @@ test('Render block with schema', () => {
         },
     ];
 
-    const fieldBlocks = mount(<FieldBlocks onChange={jest.fn()} types={types} value={value} />);
+    const fieldBlocks = mount(<FieldBlocks onChange={jest.fn()} onFinish={jest.fn()} types={types} value={value} />);
 
     fieldBlocks.find('Block').at(0).simulate('click');
     fieldBlocks.find('Block').at(1).simulate('click');
@@ -101,7 +101,9 @@ test('Render block with schema and error', () => {
         },
     ];
 
-    const fieldBlocks = mount(<FieldBlocks error={error} onChange={jest.fn()} types={types} value={value} />);
+    const fieldBlocks = mount(
+        <FieldBlocks error={error} onChange={jest.fn()} onFinish={jest.fn()} types={types} value={value} />
+    );
 
     fieldBlocks.find('Block').at(0).simulate('click');
     fieldBlocks.find('Block').at(1).simulate('click');
@@ -126,7 +128,14 @@ test('Should correctly pass props to the BlockCollection', () => {
     const changeSpy = jest.fn();
 
     const fieldBlocks = shallow(
-        <FieldBlocks maxOccurs={2} minOccurs={1} onChange={changeSpy} types={types} value={value} />
+        <FieldBlocks
+            maxOccurs={2}
+            minOccurs={1}
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            types={types}
+            value={value}
+        />
     );
 
     expect(fieldBlocks.find('BlockCollection').props()).toEqual(expect.objectContaining({
@@ -140,12 +149,35 @@ test('Should correctly pass props to the BlockCollection', () => {
     }));
 });
 
+test('Should call onFinish when a field from the child renderer has finished editing', () => {
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+    const value = [{}];
+
+    const finishSpy = jest.fn();
+    const fieldBlocks = mount(<FieldBlocks onChange={jest.fn()} onFinish={finishSpy} types={types} value={value} />);
+
+    fieldBlocks.find('Block').simulate('click');
+    fieldBlocks.find('FieldRenderer').prop('onFieldFinish')();
+
+    expect(finishSpy).toBeCalledWith();
+});
+
 test('Throw error if no types are passed', () => {
-    expect(() => shallow(<FieldBlocks onChange={jest.fn()} value={undefined} />))
+    expect(() => shallow(<FieldBlocks onChange={jest.fn()} onFinish={jest.fn()} value={undefined} />))
         .toThrow('The "block" field type needs at least one type to be configured!');
 });
 
 test('Throw error if empty type array is passed', () => {
-    expect(() => shallow(<FieldBlocks onChange={jest.fn()} value={[]} />))
+    expect(() => shallow(<FieldBlocks onChange={jest.fn()} onFinish={jest.fn()} value={[]} />))
         .toThrow('The "block" field type needs at least one type to be configured!');
 });

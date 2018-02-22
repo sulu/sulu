@@ -6,6 +6,7 @@ import resourceLocatorStyles from './resourceLocator.scss';
 type Props = {
     value: string,
     onChange: (value: string) => void,
+    onFinish: () => void,
     mode: 'full' | 'leaf',
 };
 
@@ -44,10 +45,12 @@ export default class ResourceLocator extends React.PureComponent<Props> {
     };
 
     render() {
+        const {onFinish} = this.props;
+
         return (
             <div className={resourceLocatorStyles.resourceLocator}>
                 <span className={resourceLocatorStyles.fixed}>{this.fixed}</span>
-                <Input onChange={this.handleChange} value={this.changeable} />
+                <Input onChange={this.handleChange} onFinish={onFinish} value={this.changeable} />
             </div>
         );
     }

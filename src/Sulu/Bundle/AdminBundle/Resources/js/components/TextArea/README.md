@@ -1,4 +1,5 @@
-A simple textarea component.
+A simple textarea component. The `onChange` callback is called whenever a change happens and the `onFinish` callback is
+called as soon as the component loses its focus.
 
 ```javascript
 initialState = {
@@ -15,5 +16,6 @@ const handleChange = (value) => {
     value={state.value}
     placeholder="Tell me something about yourself..."
     onChange={handleChange}
+    onFinish={() => alert('TextArea lost focus!')}
 />
 ```

@@ -119,7 +119,7 @@ export default class FormStore {
         return this.resourceStore.data;
     }
 
-    validate() {
+    @action validate() {
         const {validator} = this;
         const errors = {};
 

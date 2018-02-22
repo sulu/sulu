@@ -16,8 +16,9 @@ jest.mock('../registries/FieldRegistry', () => ({
 }));
 
 jest.mock('../stores/FormStore', () => jest.fn(function() {
-    this.schema = {};
     this.data = {};
+    this.validate = jest.fn();
+    this.schema = {};
     this.set = jest.fn();
     this.change = jest.fn();
 }));
@@ -54,6 +55,17 @@ test('Should call onSubmit callback on submit', () => {
     expect(submitButtonClick).toBeCalled();
     expect(preventDefault).toBeCalled();
     expect(submitSpy).toBeCalled();
+});
+
+test('Should validate form when a field has finished being edited', () => {
+    const store = new FormStore(new ResourceStore('snippet', '1'));
+    metadataStore.getSchema.mockReturnValue({});
+
+    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
+
+    form.find('Renderer').prop('onFieldFinish')();
+
+    expect(store.validate).toBeCalledWith();
 });
 
 test('Should pass schema and data to renderer', () => {

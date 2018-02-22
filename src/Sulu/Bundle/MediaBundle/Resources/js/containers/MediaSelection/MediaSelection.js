@@ -40,9 +40,12 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
     }
 
     callChangeHandler() {
-        this.props.onChange({
+        const {onChange, onFinish} = this.props;
+
+        onChange({
             ids: this.mediaSelectionStore.selectedMediaIds,
         });
+        onFinish();
     }
 
     getLabel(itemCount: number) {

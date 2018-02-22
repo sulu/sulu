@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import pretty from 'pretty';
 import AutoComplete from '../AutoComplete';
 import Suggestion from '../Suggestion';
@@ -18,6 +18,7 @@ test('AutoComplete should render', () => {
         <AutoComplete
             value="Test"
             onChange={changeSpy}
+            onFinish={jest.fn()}
             onSearch={searchSpy}
         >
             <Suggestion
@@ -49,6 +50,7 @@ test('Render the AutoComplete with open suggestions list', () => {
         <AutoComplete
             value="Test"
             onChange={changeSpy}
+            onFinish={jest.fn()}
             onSearch={searchSpy}
         >
             <Suggestion
@@ -84,6 +86,7 @@ test('Clicking on a suggestion should call the onChange handler with the value o
         <AutoComplete
             value="Test"
             onChange={changeSpy}
+            onFinish={jest.fn()}
             onSearch={searchSpy}
         >
             <Suggestion
@@ -114,4 +117,24 @@ test('Clicking on a suggestion should call the onChange handler with the value o
     }
 
     expect(changeSpy).toHaveBeenCalledWith(testValue);
+});
+
+test('Should call the onFinish callback when the Input lost focus', () => {
+    const finishSpy = jest.fn();
+    const autoComplete = shallow(
+        <AutoComplete
+            value="Test"
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            onSearch={jest.fn()}
+        >
+            <Suggestion value="suggestion-1">
+                Suggestion 1
+            </Suggestion>
+        </AutoComplete>
+    );
+
+    autoComplete.find('Input').simulate('finish');
+
+    expect(finishSpy).toBeCalledWith();
 });

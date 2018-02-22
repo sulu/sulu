@@ -11,6 +11,7 @@ type Props = {
     index: number,
     locale: ?IObservableValue<string>,
     onChange: (index: number, name: string, value: *) => void,
+    onFieldFinish: () => void,
     schema: Schema,
 };
 
@@ -21,8 +22,17 @@ export default class FieldRenderer extends React.Component<Props> {
     };
 
     render() {
-        const {data, errors, locale, schema} = this.props;
+        const {data, errors, locale, onFieldFinish, schema} = this.props;
 
-        return <Renderer data={data} errors={errors} locale={locale} onChange={this.handleChange} schema={schema} />;
+        return (
+            <Renderer
+                data={data}
+                errors={errors}
+                locale={locale}
+                onChange={this.handleChange}
+                onFieldFinish={onFieldFinish}
+                schema={schema}
+            />
+        );
     }
 }
