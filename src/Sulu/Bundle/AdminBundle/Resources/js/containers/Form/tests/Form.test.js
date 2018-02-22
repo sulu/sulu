@@ -68,16 +68,26 @@ test('Should validate form when a field has finished being edited', () => {
     expect(store.validate).toBeCalledWith();
 });
 
-test('Should pass schema and data to renderer', () => {
-    const submitSpy = jest.fn();
+test('Should pass schema, data and showAllErrors flag to Renderer', () => {
     const store = new FormStore(new ResourceStore('snippet', '1'));
     store.schema = {};
     store.data.title = 'Title';
     store.data.description = 'Description';
-    const form = shallow(<Form onSubmit={submitSpy} store={store} />);
+    const form = shallow(<Form onSubmit={jest.fn()} store={store} />);
 
-    expect(form.find('Renderer').props().schema).toBe(store.schema);
-    expect(form.find('Renderer').props().data).toBe(store.data);
+    expect(form.find('Renderer').props()).toEqual(expect.objectContaining({
+        data: store.data,
+        schema: store.schema,
+    }));
+});
+
+test('Should apss showAllErrors flag to Renderer when form has been submitted', () => {
+    const store = new FormStore(new ResourceStore('snippet', '1'));
+    const form = shallow(<Form onSubmit={jest.fn()} store={store} />);
+
+    expect(form.find('Renderer').prop('showAllErrors')).toEqual(false);
+    form.find('form').simulate('submit', {preventDefault: jest.fn()});
+    expect(form.find('Renderer').prop('showAllErrors')).toEqual(true);
 });
 
 test('Should change data on store when changed', () => {

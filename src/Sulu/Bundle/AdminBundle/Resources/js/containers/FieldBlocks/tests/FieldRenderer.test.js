@@ -38,7 +38,24 @@ test('Should pass props correctly to Renderer', () => {
         locale,
         onFieldFinish: fieldFinishSpy,
         schema,
+        showAllErrors: false,
     }));
+});
+
+test('Should pass showAllErrors prop to Renderer', () => {
+    const formRenderer = shallow(
+        <FieldRenderer
+            data={{}}
+            index={2}
+            locale={observable('de')}
+            onChange={jest.fn()}
+            onFieldFinish={jest.fn()}
+            showAllErrors={true}
+            schema={{}}
+        />
+    );
+
+    expect(formRenderer.find('Renderer').prop('showAllErrors')).toEqual(true);
 });
 
 test('Should call onChange callback with correct index', () => {

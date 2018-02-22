@@ -115,6 +115,68 @@ test('Render block with schema and error on fields already being modified', () =
     expect(pretty(fieldBlocks.html())).toMatchSnapshot();
 });
 
+test('Render block with schema and error on fields already being modified', () => {
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    const value = [
+        {
+            text: 'Test1',
+        },
+        {
+            text: 'T2',
+        },
+        {
+            text: 'T3',
+        },
+    ];
+
+    const error = [
+        undefined,
+        {
+            text: {
+                keyword: 'minLength',
+                parameters: {},
+            },
+        },
+        {
+            text: {
+                keyword: 'minLength',
+                parameters: {},
+            },
+        },
+    ];
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            error={error}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            showAllErrors={true}
+            types={types}
+            value={value}
+        />
+    );
+
+    fieldBlocks.find('Block').at(0).simulate('click');
+    fieldBlocks.find('Block').at(1).simulate('click');
+    fieldBlocks.find('Block').at(2).simulate('click');
+
+    fieldBlocks.find('Block').at(0).find('Field').at(0).prop('onFinish')('text');
+    fieldBlocks.find('Block').at(1).find('Field').at(0).prop('onFinish')('text');
+
+    expect(pretty(fieldBlocks.html())).toMatchSnapshot();
+});
+
 test('Should correctly pass props to the BlockCollection', () => {
     const types = {
         default: {

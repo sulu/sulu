@@ -199,6 +199,55 @@ test('Should pass errors to fields that have already been modified at least once
     expect(fields.at(1).prop('error')).toBe(undefined);
 });
 
+test('Should pass all errors to fields if showAllErrors is set to true', () => {
+    const schema = {
+        text: {
+            label: 'Text',
+            type: 'text_line',
+        },
+        datetime: {
+            label: 'Datetime',
+            type: 'datetime',
+        },
+    };
+
+    const textError = {
+        keyword: 'required',
+        parameters: {},
+    };
+    const datetimeError = {
+        keyword: 'minLength',
+        parameters: {},
+    };
+    const errors = {
+        text: textError,
+        datetime: datetimeError,
+    };
+
+    const changeSpy = jest.fn();
+    const submitSpy = jest.fn();
+
+    const renderer = shallow(
+        <Renderer
+            data={{}}
+            errors={errors}
+            locale={undefined}
+            onChange={changeSpy}
+            onFieldFinish={jest.fn()}
+            onSubmit={submitSpy}
+            schema={schema}
+            showAllErrors={true}
+        />
+    );
+
+    renderer.find('Field').at(0).simulate('finish', 'text');
+
+    const fields = renderer.find('Field');
+
+    expect(fields.at(0).prop('error')).toBe(textError);
+    expect(fields.at(1).prop('error')).toBe(datetimeError);
+});
+
 test('Should render nested sections', () => {
     const changeSpy = jest.fn();
     const submitSpy = jest.fn();

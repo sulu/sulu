@@ -13,16 +13,21 @@ type Props = {
     onChange: (index: number, name: string, value: *) => void,
     onFieldFinish: () => void,
     schema: Schema,
+    showAllErrors: boolean,
 };
 
 export default class FieldRenderer extends React.Component<Props> {
+    static defaultProps = {
+        showAllErrors: false,
+    };
+
     handleChange = (name: string, value: *) => {
         const {index, onChange} = this.props;
         onChange(index, name, value);
     };
 
     render() {
-        const {data, errors, locale, onFieldFinish, schema} = this.props;
+        const {data, errors, locale, onFieldFinish, schema, showAllErrors} = this.props;
 
         return (
             <Renderer
@@ -32,6 +37,7 @@ export default class FieldRenderer extends React.Component<Props> {
                 onChange={this.handleChange}
                 onFieldFinish={onFieldFinish}
                 schema={schema}
+                showAllErrors={showAllErrors}
             />
         );
     }

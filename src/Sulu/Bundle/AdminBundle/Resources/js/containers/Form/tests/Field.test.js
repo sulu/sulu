@@ -81,6 +81,7 @@ test('Pass correct props to FieldType', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={schema}
+            showAllErrors={true}
             value="test"
         />
     );
@@ -89,6 +90,7 @@ test('Pass correct props to FieldType', () => {
         locale: locale,
         maxOccurs: 4,
         minOccurs: 2,
+        showAllErrors: true,
         types: {},
         value: 'test',
     }));

@@ -9,15 +9,20 @@ import type {SchemaEntry} from './types';
 
 type Props = {
     error?: Error,
+    locale?: ?IObservableValue<string>,
     name: string,
-    value?: *,
-    schema: SchemaEntry,
     onChange: (string, *) => void,
     onFinish: (name: string) => void,
-    locale?: ?IObservableValue<string>,
+    schema: SchemaEntry,
+    showAllErrors: boolean,
+    value?: *,
 };
 
 export default class Field extends React.PureComponent<Props> {
+    static defaultProps = {
+        showAllErrors: false,
+    };
+
     handleChange = (value: *) => {
         const {name, onChange} = this.props;
 
@@ -29,12 +34,7 @@ export default class Field extends React.PureComponent<Props> {
     };
 
     render() {
-        const {
-            error,
-            value,
-            locale,
-            schema,
-        } = this.props;
+        const {error, value, locale, schema, showAllErrors} = this.props;
         const {label, maxOccurs, minOccurs, options, required, type, types} = schema;
         const FieldType = fieldRegistry.get(type);
 
@@ -57,6 +57,7 @@ export default class Field extends React.PureComponent<Props> {
                     onChange={this.handleChange}
                     onFinish={this.handleFinish}
                     options={options}
+                    showAllErrors={showAllErrors}
                     types={types}
                     value={value}
                 />

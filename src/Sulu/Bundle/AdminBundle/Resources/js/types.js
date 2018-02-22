@@ -32,6 +32,7 @@ export type FieldTypeProps<T> = {
     maxOccurs?: number,
     minOccurs?: number,
     options?: Object,
+    showAllErrors?: boolean,
     types?: Types,
     value: ?T,
 };
