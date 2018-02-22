@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3793 [PreviewBundle]           Set context data (token, locale) before render can fail
     * ENHANCEMENT #3779 [ContentBundle]           Improved cache-invalidation for categories/tags in excerpt tab
     * ENHANCEMENT #3777 [ContentBundle]           Added tag/category reference-store
     * FEATURE     #3028 [MediaBundle]             Added blur, grayscale, gamma, negative and sharpen transformation to media

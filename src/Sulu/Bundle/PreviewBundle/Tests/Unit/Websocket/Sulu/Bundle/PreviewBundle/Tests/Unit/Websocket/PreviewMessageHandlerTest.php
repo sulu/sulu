@@ -14,9 +14,11 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Websocket;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Ratchet\ConnectionInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\WebspaceNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
 use Sulu\Bundle\PreviewBundle\Websocket\PreviewMessageHandler;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
+use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerException;
 
 class PreviewMessageHandlerTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,6 +53,71 @@ class PreviewMessageHandlerTest extends \PHPUnit_Framework_TestCase
         $this->previewMessageHandler = new PreviewMessageHandler(
             $this->entityManager->reveal(),
             $this->preview->reveal()
+        );
+    }
+
+    public function testHandleStart()
+    {
+        $connection = $this->prophesize(ConnectionInterface::class);
+        $context = $this->prophesize(MessageHandlerContext::class);
+
+        $this->preview->start(self::class, '123-123-123', 1, 'sulu_io', 'de', ['test' => 'asdf'])->willReturn('token');
+
+        $context->has('previewToken')->willReturn(false);
+        $context->set('previewToken', 'token')->shouldBeCalled();
+        $context->set('locale', 'de')->shouldBeCalled();
+
+        $this->preview->render('token', 'sulu_io', 'de')->willReturn('<h1>Hello World</h1>');
+
+        $result = $this->previewMessageHandler->handle(
+            $connection->reveal(),
+            [
+                'command' => 'start',
+                'class' => self::class,
+                'id' => '123-123-123',
+                'user' => 1,
+                'webspaceKey' => 'sulu_io',
+                'locale' => 'de',
+                'data' => ['test' => 'asdf'],
+            ],
+            $context->reveal()
+        );
+
+        $this->assertEquals(
+            ['command' => 'start', 'token' => 'token', 'response' => '<h1>Hello World</h1>', 'msg' => 'OK'],
+            $result
+        );
+    }
+
+    public function testHandleStartException()
+    {
+        $this->setExpectedException(MessageHandlerException::class);
+
+        $connection = $this->prophesize(ConnectionInterface::class);
+        $context = $this->prophesize(MessageHandlerContext::class);
+
+        $this->preview->start(self::class, '123-123-123', 1, 'sulu_io', 'de', ['test' => 'asdf'])->willReturn('token');
+
+        $context->has('previewToken')->willReturn(false);
+        $context->set('previewToken', 'token')->shouldBeCalled();
+        $context->set('locale', 'de')->shouldBeCalled();
+
+        $this->preview->render('token', 'sulu_io', 'de')->willThrow(
+            new WebspaceNotFoundException(self::class, '123-123-123', 'sulu_io', 'de')
+        );
+
+        $this->previewMessageHandler->handle(
+            $connection->reveal(),
+            [
+                'command' => 'start',
+                'class' => self::class,
+                'id' => '123-123-123',
+                'user' => 1,
+                'webspaceKey' => 'sulu_io',
+                'locale' => 'de',
+                'data' => ['test' => 'asdf'],
+            ],
+            $context->reveal()
         );
     }
 
