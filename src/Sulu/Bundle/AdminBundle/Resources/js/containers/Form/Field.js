@@ -39,8 +39,8 @@ export default class Field extends React.PureComponent<Props> {
         const {label, maxOccurs, minOccurs, options, required, type, types} = schema;
         const FieldType = fieldRegistry.get(type);
 
-        const labelClass = classNames(
-            fieldStyles.label,
+        const fieldClass = classNames(
+            fieldStyles.field,
             {
                 [fieldStyles.error]: !!error,
             }
@@ -49,8 +49,8 @@ export default class Field extends React.PureComponent<Props> {
         const errorKeyword = error && !Array.isArray(error) && error.keyword;
 
         return (
-            <div>
-                <label className={labelClass}>{label}{required && ' *'}</label>
+            <div className={fieldClass}>
+                <label className={fieldStyles.label}>{label}{required && ' *'}</label>
                 <FieldType
                     error={error}
                     maxOccurs={maxOccurs}

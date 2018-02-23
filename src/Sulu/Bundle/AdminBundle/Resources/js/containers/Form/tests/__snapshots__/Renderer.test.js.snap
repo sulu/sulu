@@ -14,7 +14,9 @@ exports[`Should render field types based on schema 1`] = `
     class="item gridItem"
     style="width:100%;margin-left:0%;margin-right:0%"
   >
-    <div>
+    <div
+      class="field"
+    >
       <label
         class="label"
       >
@@ -29,7 +31,9 @@ exports[`Should render field types based on schema 1`] = `
     class="item gridItem"
     style="width:100%;margin-left:0%;margin-right:0%"
   >
-    <div>
+    <div
+      class="field"
+    >
       <label
         class="label"
       >
@@ -65,7 +69,9 @@ exports[`Should render nested sections 1`] = `
       class="item gridItem"
       style="width:100%;margin-left:0%;margin-right:0%"
     >
-      <div>
+      <div
+        class="field"
+      >
         <label
           class="label"
         >
@@ -110,7 +116,9 @@ exports[`Should render nested sections 1`] = `
       class="item gridItem"
       style="width:100%;margin-left:0%;margin-right:0%"
     >
-      <div>
+      <div
+        class="field"
+      >
         <label
           class="label"
         >
