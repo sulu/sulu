@@ -10,5 +10,7 @@
     "sulu_admin.reached_end_of_list": "Sie haben das Ende der Liste erreicht",
     "sulu_admin.confirm": "Bestätigen",
     "sulu_admin.ok": "Ok",
-    "sulu_admin.cancel": "Abbrechen"
+    "sulu_admin.cancel": "Abbrechen",
+    "sulu_admin.error_required": "Dieses Feld muss ausgefüllt werden",
+    "sulu_admin.error_minlength": "Die minimale Länge dieses Feldes wurde unterschritten"
 }

@@ -9,6 +9,10 @@ jest.mock('../registries/FieldRegistry', () => ({
     get: jest.fn(),
 }));
 
+jest.mock('../../../utils', () => ({
+    translate: (key) => key,
+}));
+
 test('Render correct label with correct field type', () => {
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;

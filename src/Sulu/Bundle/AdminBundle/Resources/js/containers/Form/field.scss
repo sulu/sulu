@@ -2,6 +2,7 @@
 
 $labelColor: $scorpion;
 $labelErrorColor: $roman;
+$errorLabelColor: $persianRed;
 
 .label {
     display: block;
@@ -14,4 +15,11 @@ $labelErrorColor: $roman;
     &.error {
         color: $labelErrorColor;
     }
+}
+
+.error-label {
+    color: $errorLabelColor;
+    font-size: 10px;
+    line-height: 20px;
+    margin-top: 5px;
 }

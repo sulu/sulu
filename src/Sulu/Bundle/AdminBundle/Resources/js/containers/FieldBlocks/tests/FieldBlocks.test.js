@@ -16,12 +16,7 @@ jest.mock('../../Form/registries/FieldRegistry', () => ({
 }));
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn().mockImplementation((key) => {
-        switch (key) {
-            case 'sulu_admin.add_block':
-                return 'Add block';
-        }
-    }),
+    translate: (key) => key,
 }));
 
 test('Render block with schema', () => {
