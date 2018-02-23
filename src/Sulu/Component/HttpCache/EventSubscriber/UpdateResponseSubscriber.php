@@ -32,7 +32,7 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::RESPONSE => 'onResponse',
+            KernelEvents::RESPONSE => ['onResponse', 10],
         ];
     }
 
