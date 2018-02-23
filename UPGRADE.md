@@ -1,5 +1,12 @@
 # Upgrade
 
+## dev-master
+
+### Priority of UpdateResponseSubscriber
+
+If you had hooked into response-event of symfony to change the cache behavior of Sulu, be aware of changed priority
+and update yours if required.
+
 ## 1.6.11
 
 ### SEO Description
