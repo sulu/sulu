@@ -16,12 +16,14 @@ use PHPCR\NodeInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
+use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Types\BlockContentType;
 use Sulu\Component\Content\Types\TextArea;
@@ -59,23 +61,35 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
      */
     private $contentTypeManager;
 
+    /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
+    /**
+     * @var StructureResolverInterface
+     */
+    private $structureResolver;
+
     protected function setUp()
     {
         parent::setUp();
 
         $this->contentTypeManager = $this->prophesize(ContentTypeManager::class);
+        $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
+        $this->structureResolver = $this->prophesize(StructureResolverInterface::class);
         $this->blockContentType = new BlockContentType($this->contentTypeManager->reveal(), 'not in use', 'i18n:');
 
         $this->contentTypeValueMap = [
             ['text_line', new TextLine('not in use')],
             ['text_area', new TextArea('not in use')],
-            ['internal_link', new SingleInternalLink(new ReferenceStore(), 'not in use')],
+            ['internal_link', new SingleInternalLink($this->contentMapper->reveal(), $this->structureResolver->reveal(), new ReferenceStore(), 'not in use')],
             ['block', $this->blockContentType],
         ];
 
         $this->contentTypeManager->get('text_line')->willReturn(new TextLine('not in use'));
         $this->contentTypeManager->get('text_area')->willReturn(new TextArea('not in use'));
-        $this->contentTypeManager->get('internal_link')->willReturn(new SingleInternalLink(new ReferenceStore(), 'not in use'));
+        $this->contentTypeManager->get('internal_link')->willReturn(new SingleInternalLink($this->contentMapper->reveal(), $this->structureResolver->reveal(), new ReferenceStore(), 'not in use'));
         $this->contentTypeManager->get('block')->willReturn($this->blockContentType);
     }
 
