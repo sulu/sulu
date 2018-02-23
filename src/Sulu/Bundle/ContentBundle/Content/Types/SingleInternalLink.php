@@ -116,7 +116,27 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
      */
     public function getContentData(PropertyInterface $property)
     {
-        return $this->loadStructure($property->getValue(), $property->getStructure()->getLanguageCode());
+        $data = $this->loadStructure($property->getValue(), $property->getStructure()->getLanguageCode());
+
+        if (isset($data['content'])) {
+            $content = $data['content'];
+            unset($data['view']);
+            unset($data['content']);
+
+            return array_merge($data, $content);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewData(PropertyInterface $property)
+    {
+        $data = $this->loadStructure($property->getValue(), $property->getStructure()->getLanguageCode());
+
+        if (isset($data['view'])) {
+            return $data['view'];
+        }
     }
 
     /**
@@ -153,12 +173,10 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
                 $webspaceKey,
                 $locale
             );
-
-            return $this->structureResolver->resolve($contentStructure);
         } catch (DocumentNotFoundException $e) {
-            $this->logger->error((string) $e);
+            return null;
         }
 
-        return null;
+        return $this->structureResolver->resolve($contentStructure);
     }
 }
