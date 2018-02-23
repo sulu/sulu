@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render a field with a error collection 1`] = `
+<div
+  class="field error"
+>
+  <label
+    class="label"
+  >
+    label1
+  </label>
+  <input
+    type="text"
+  />
+  <label
+    class="errorLabel"
+  >
+    sulu_admin.error_minitems
+  </label>
+</div>
+`;
+
 exports[`Render a field with an error 1`] = `
 <div
   class="field error"

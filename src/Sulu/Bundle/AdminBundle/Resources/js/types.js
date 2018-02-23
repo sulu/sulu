@@ -25,7 +25,7 @@ export type Error = BlockError | PropertyError;
 export type ErrorCollection = {[key: string]: Error};
 
 export type FieldTypeProps<T> = {
-    error?: Error,
+    error?: Error | ErrorCollection,
     onChange: (value: T) => void,
     onFinish: () => void,
     locale?: ?IObservableValue<string>,

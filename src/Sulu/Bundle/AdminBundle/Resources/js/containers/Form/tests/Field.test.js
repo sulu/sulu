@@ -65,6 +65,29 @@ test('Render a field with an error', () => {
     ).toMatchSnapshot();
 });
 
+test('Render a field with a error collection', () => {
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+    const error = {
+        ids: {
+            keyword: 'minItems',
+            parameters: {},
+        },
+    };
+    expect(
+        render(
+            <Field
+                error={error}
+                name="test"
+                onChange={jest.fn()}
+                onFinish={jest.fn()}
+                schema={{label: 'label1', type: 'text'}}
+            />
+        )
+    ).toMatchSnapshot();
+});
+
 test('Pass correct props to FieldType', () => {
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="date" />;

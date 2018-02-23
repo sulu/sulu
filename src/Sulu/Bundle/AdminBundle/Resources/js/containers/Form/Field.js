@@ -3,13 +3,13 @@ import React from 'react';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import classNames from 'classnames';
 import {translate} from '../../utils';
-import type {Error} from '../../types';
+import type {Error, ErrorCollection} from '../../types';
 import fieldRegistry from './registries/FieldRegistry';
 import fieldStyles from './field.scss';
 import type {SchemaEntry} from './types';
 
 type Props = {
-    error?: Error,
+    error?: Error | ErrorCollection,
     locale?: ?IObservableValue<string>,
     name: string,
     onChange: (string, *) => void,
@@ -34,6 +34,24 @@ export default class Field extends React.PureComponent<Props> {
         this.props.onFinish(this.props.name);
     };
 
+    findErrorKeyword(error: ?Error | ErrorCollection): ?string {
+        if (!error) {
+            return;
+        }
+
+        if (Array.isArray(error)) {
+            return;
+        }
+
+        if (typeof error.keyword === 'string') {
+            return error.keyword;
+        }
+
+        for (const childKey in error) {
+            return this.findErrorKeyword(error[childKey]);
+        }
+    }
+
     render() {
         const {error, value, locale, schema, showAllErrors} = this.props;
         const {label, maxOccurs, minOccurs, options, required, type, types} = schema;
@@ -46,7 +64,7 @@ export default class Field extends React.PureComponent<Props> {
             }
         );
 
-        const errorKeyword = error && !Array.isArray(error) && error.keyword;
+        const errorKeyword = this.findErrorKeyword(error);
 
         return (
             <div className={fieldClass}>

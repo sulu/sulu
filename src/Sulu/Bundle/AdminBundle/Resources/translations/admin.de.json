@@ -12,5 +12,6 @@
     "sulu_admin.ok": "Ok",
     "sulu_admin.cancel": "Abbrechen",
     "sulu_admin.error_required": "Dieses Feld muss ausgefüllt werden",
-    "sulu_admin.error_minlength": "Die minimale Länge dieses Feldes wurde unterschritten"
+    "sulu_admin.error_minlength": "Die minimale Länge dieses Feldes wurde unterschritten",
+    "sulu_admin.error_minitems": "Diesem Feld hat zu wenig Zuweisungen"
 }
