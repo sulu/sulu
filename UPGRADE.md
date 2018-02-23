@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+### Dependencies
+
+Removed required dependency `pulse00/ffmpeg-bundle`. If you want to use preview images for videos, run following 
+command:
+
+```bash
+composer require pulse00/ffmpeg-bundle:^0.6
+```
+
 ### Deprecations
 
 Removed following Classes:

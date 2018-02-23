@@ -38,7 +38,6 @@
         "oro/doctrine-extensions": "^1.0",
         "pagerfanta/pagerfanta": "^1.0.4",
         "piwik/device-detector": "^3.7",
-        "pulse00/ffmpeg-bundle": "^0.6",
         "ramsey/uuid": "^3.1",
         "sensio/framework-extra-bundle": "^3.0",
         "stof/doctrine-extensions-bundle": "^1.2.2",
@@ -85,6 +84,7 @@
         "phpdocumentor/reflection-docblock": "~3.1",
         "phpspec/prophecy": "^1.4",
         "phpunit/phpunit": "^4.8.31",
+        "pulse00/ffmpeg-bundle": "^0.6",
         "symfony/browser-kit": "^3.0",
         "symfony/css-selector": "^3.0",
         "symfony/debug": "^3.0",
@@ -118,6 +118,7 @@
         "sulu/content-bundle": "self.version"
     },
     "suggest": {
+        "pulse00/ffmpeg-bundle": "Needed (as in require-dev) to generate preview images for videos",
         "symfony/monolog-bundle": "^3.0",
         "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch",
         "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)"
