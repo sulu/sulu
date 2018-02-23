@@ -63,11 +63,9 @@ export default class Field extends React.PureComponent<Props> {
                     types={types}
                     value={value}
                 />
-                {errorKeyword &&
-                    <label className={fieldStyles.errorLabel}>
-                        {translate('sulu_admin.error_' + errorKeyword.toLowerCase())}
-                    </label>
-                }
+                <label className={fieldStyles.errorLabel}>
+                    {errorKeyword && translate('sulu_admin.error_' + errorKeyword.toLowerCase())}
+                </label>
             </div>
         );
     }

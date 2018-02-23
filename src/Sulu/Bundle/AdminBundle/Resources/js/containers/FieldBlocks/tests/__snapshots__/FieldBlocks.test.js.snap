@@ -15,12 +15,14 @@ exports[`Render block with schema 1`] = `
               <div class=\\"field\\">
                 <label class=\\"label\\">Text 1</label>
                 <input type=\\"text\\" value=\\"Test 1\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
             <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
               <div class=\\"field\\">
                 <label class=\\"label\\">Text 2</label>
                 <input type=\\"text\\" value=\\"Test 2\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
           </div>
@@ -39,12 +41,14 @@ exports[`Render block with schema 1`] = `
               <div class=\\"field\\">
                 <label class=\\"label\\">Text 1</label>
                 <input type=\\"text\\" value=\\"Test 3\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
             <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
               <div class=\\"field\\">
                 <label class=\\"label\\">Text 2</label>
                 <input type=\\"text\\" value=\\"Test 4\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
           </div>
@@ -72,6 +76,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
               <div class=\\"field\\">
                 <label class=\\"label\\">Text</label>
                 <input type=\\"text\\" value=\\"Test1\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
           </div>
@@ -109,6 +114,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
               <div class=\\"field\\">
                 <label class=\\"label\\">Text</label>
                 <input type=\\"text\\" value=\\"T3\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
           </div>
@@ -136,6 +142,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
               <div class=\\"field\\">
                 <label class=\\"label\\">Text</label>
                 <input type=\\"text\\" value=\\"Test1\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
           </div>

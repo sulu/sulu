@@ -137,7 +137,7 @@ exports[`Render a Grid with Sections 1`] = `
 
 exports[`Render a Grid with class names attached 1`] = `
 <div
-  class="grid"
+  class="grid test-grid"
 >
   <div
     class="section test-section"

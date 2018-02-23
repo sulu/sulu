@@ -25,6 +25,9 @@ exports[`Should render field types based on schema 1`] = `
       <input
         type="text"
       />
+      <label
+        class="errorLabel"
+      />
     </div>
   </div>
   <div
@@ -41,6 +44,9 @@ exports[`Should render field types based on schema 1`] = `
       </label>
       <input
         type="datetime"
+      />
+      <label
+        class="errorLabel"
       />
     </div>
   </div>
@@ -79,6 +85,9 @@ exports[`Should render nested sections 1`] = `
         </label>
         <input
           type="text"
+        />
+        <label
+          class="errorLabel"
         />
       </div>
     </div>
@@ -126,6 +135,9 @@ exports[`Should render nested sections 1`] = `
         </label>
         <input
           type="text"
+        />
+        <label
+          class="errorLabel"
         />
       </div>
     </div>

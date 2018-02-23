@@ -56,7 +56,7 @@ test('Render a Grid with Items having spaces between them', () => {
 
 test('Render a Grid with class names attached', () => {
     expect(render(
-        <Grid>
+        <Grid className="test-grid">
             <Grid.Section className="test-section">
                 <Grid.Item className="test-item" />
             </Grid.Section>

@@ -12,10 +12,6 @@
     }
 }
 
-.grid-item {
-    margin-bottom: $fieldMarginBottom;
-
-    & + .grid-section {
-        margin-top: -$fieldMarginBottom;
-    }
+.grid-item + .grid-section {
+    margin-top: -$fieldMarginBottom;
 }
