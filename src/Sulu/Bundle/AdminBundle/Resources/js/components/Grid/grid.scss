@@ -4,6 +4,7 @@ $sectionMarginBottom: 30px;
 .grid {
     margin-right: -$itemMarginRight;
     margin-bottom: -$sectionMarginBottom;
+    overflow: hidden;
 
     &::after {
         content: '';
