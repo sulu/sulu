@@ -3,6 +3,8 @@ CHANGELOG for Sulu
 
 * dev-master
     * BUGFIX      #3805 [ContentBundle]           Fix spacing between rows and section in content template generation
+    * HOTFIX      #3797 [CategoryBundle]          Fixed category csv-export
+    * HOTFIX      #3797 [Rest]                    Fixed issue with large amount of ids in doctrine list-builder query
 
 * 1.6.15 (2018-02-27)
     * HOTFIX      #3802 [ContentBundle]           Fixed XmlLoader internal flag

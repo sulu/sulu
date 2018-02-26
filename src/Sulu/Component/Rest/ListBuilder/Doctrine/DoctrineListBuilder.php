@@ -146,7 +146,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
         $this->expressionFields = $this->getUniqueExpressionFieldDescriptors($this->expressions);
 
-        if (!$this->limit) {
+        if (!$this->limit && empty($this->expressions)) {
             return $this->createFullQueryBuilder($this->createQueryBuilder())->getQuery()->getArrayResult();
         }
 

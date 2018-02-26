@@ -326,6 +326,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $parentIdsToExpand = array_merge($parentIdsToExpand, $pathIds);
         }
 
+        if ('csv' === $request->getRequestFormat()) {
+            $parentIdsToExpand = array_filter($parentIdsToExpand);
+        }
+
         // generate expressions for collected parent-categories
         $parentExpressions = [];
         foreach ($parentIdsToExpand as $parentId) {
