@@ -112,6 +112,9 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             $this->eventDispatcher->reveal(),
             [PermissionTypes::VIEW => 64]
         );
+        $this->doctrineListBuilder->limit(10);
+        $this->queryBuilder->setFirstResult(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->setMaxResults(Argument::any())->willReturn($this->queryBuilder->reveal());
 
         $event = new ListBuilderCreateEvent($this->doctrineListBuilder);
         $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event)->willReturn($event);
