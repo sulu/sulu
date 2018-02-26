@@ -12,10 +12,12 @@
 namespace Sulu\Bundle\MediaBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 
 /**
@@ -35,20 +37,41 @@ class CacheInvalidationListener
 
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
-        $object = $eventArgs->getObject();
+        $this->invalidateEntity($eventArgs->getObject());
+    }
+
+    private function invalidateEntity($object)
+    {
         if ($object instanceof MediaInterface) {
-            $this->invalidate($object);
+            $this->invalidationHandler->invalidateReference('media', $object->getId());
         } elseif ($object instanceof File) {
-            $this->invalidate($object->getMedia());
+            $this->invalidateEntity($object->getMedia());
         } elseif ($object instanceof FileVersion) {
-            $this->invalidate($object->getFile()->getMedia());
+            $this->invalidateEntity($object->getFile());
+            $this->invalidateTags($object->getTags());
+            $this->invalidateCategories($object->getCategories());
         } elseif ($object instanceof FileVersionMeta) {
-            $this->invalidate($object->getFileVersion()->getFile()->getMedia());
+            $this->invalidateEntity($object->getFileVersion());
         }
     }
 
-    private function invalidate(MediaInterface $media)
+    /**
+     * @param TagInterface[] $tags
+     */
+    private function invalidateTags($tags)
     {
-        $this->invalidationHandler->invalidateReference('media', $media->getId());
+        foreach ($tags as $tag) {
+            $this->invalidationHandler->invalidateReference('tag', $tag->getId());
+        }
+    }
+
+    /**
+     * @param CategoryInterface[] $categories
+     */
+    private function invalidateCategories($categories)
+    {
+        foreach ($categories as $category) {
+            $this->invalidationHandler->invalidateReference('category', $category->getId());
+        }
     }
 }

@@ -12,8 +12,11 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Prophecy\Argument;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\EventListener\CacheInvalidationListener;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Contact\Model\ContactInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 
@@ -57,8 +60,51 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
 
         if ($alias) {
             $entity->getId()->willReturn(1);
+            $entity->getTags()->willReturn([]);
+            $entity->getCategories()->willReturn([]);
+
             $this->invalidationHandler->invalidateReference($alias, 1)->shouldBeCalled();
+        } else {
+            $this->invalidationHandler->invalidateReference(Argument::cetera())->shouldNotBeCalled();
         }
+
+        $this->listener->postPersist($eventArgs->reveal());
+    }
+
+    public function provideDataPostPersistWithTagsAndCategories()
+    {
+        return [
+            [ContactInterface::class, 'contact'],
+            [AccountInterface::class, 'account'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideDataPostPersistWithTagsAndCategories
+     */
+    public function testPostPersistWithTagsAndCategories($class, $alias)
+    {
+        $entity = $this->prophesize($class);
+        $entity->getId()->willReturn(1);
+
+        $tags = [$this->prophesize(TagInterface::class), $this->prophesize(TagInterface::class)];
+        $tags[0]->getId()->willReturn(1);
+        $tags[1]->getId()->willReturn(2);
+        $entity->getTags()->willReturn($tags);
+        $this->invalidationHandler->invalidateReference('tag', 1)->shouldBeCalled();
+        $this->invalidationHandler->invalidateReference('tag', 2)->shouldBeCalled();
+
+        $categories = [$this->prophesize(CategoryInterface::class), $this->prophesize(CategoryInterface::class)];
+        $categories[0]->getId()->willReturn(1);
+        $categories[1]->getId()->willReturn(2);
+        $entity->getCategories()->willReturn($categories);
+        $this->invalidationHandler->invalidateReference('category', 1)->shouldBeCalled();
+        $this->invalidationHandler->invalidateReference('category', 2)->shouldBeCalled();
+
+        $eventArgs = $this->prophesize(LifecycleEventArgs::class);
+        $eventArgs->getObject()->willReturn($entity->reveal());
+
+        $this->invalidationHandler->invalidateReference($alias, 1)->shouldBeCalled();
 
         $this->listener->postPersist($eventArgs->reveal());
     }

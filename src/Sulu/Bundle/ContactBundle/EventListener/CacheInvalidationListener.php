@@ -12,7 +12,9 @@
 namespace Sulu\Bundle\ContactBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Contact\Model\ContactInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 
@@ -36,8 +38,32 @@ class CacheInvalidationListener
         $object = $eventArgs->getObject();
         if ($object instanceof ContactInterface) {
             $this->invalidationHandler->invalidateReference('contact', $object->getId());
+            $this->invalidateTags($object->getTags());
+            $this->invalidateCategories($object->getCategories());
         } elseif ($object instanceof AccountInterface) {
             $this->invalidationHandler->invalidateReference('account', $object->getId());
+            $this->invalidateTags($object->getTags());
+            $this->invalidateCategories($object->getCategories());
+        }
+    }
+
+    /**
+     * @param TagInterface[] $tags
+     */
+    private function invalidateTags($tags)
+    {
+        foreach ($tags as $tag) {
+            $this->invalidationHandler->invalidateReference('tag', $tag->getId());
+        }
+    }
+
+    /**
+     * @param CategoryInterface[] $categories
+     */
+    private function invalidateCategories($categories)
+    {
+        foreach ($categories as $category) {
+            $this->invalidationHandler->invalidateReference('category', $category->getId());
         }
     }
 }

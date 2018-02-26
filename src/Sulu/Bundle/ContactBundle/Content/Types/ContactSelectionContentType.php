@@ -31,6 +31,10 @@ use Sulu\Component\Content\PreResolvableContentTypeInterface;
  */
 class ContactSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
+    const PREFIX_CONTACT = 'c';
+
+    const PREFIX_ACCOUNT = 'a';
+
     /**
      * @var string
      */
@@ -152,17 +156,20 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
             return [];
         }
 
-        $ids = $this->converter->convertIdsToGroupedIds($value, ['a' => [], 'c' => []]);
+        $ids = $this->converter->convertIdsToGroupedIds(
+            $value,
+            [self::PREFIX_ACCOUNT => [], self::PREFIX_CONTACT => []]
+        );
 
-        $accounts = $this->accountManager->getByIds($ids['a'], $locale);
-        $contacts = $this->contactManager->getByIds($ids['c'], $locale);
+        $accounts = $this->accountManager->getByIds($ids[self::PREFIX_ACCOUNT], $locale);
+        $contacts = $this->contactManager->getByIds($ids[self::PREFIX_CONTACT], $locale);
 
         $result = array_merge($accounts, $contacts);
         @usort(
             $result,
             function ($a, $b) use ($value) {
-                $typeA = $a instanceof Contact ? 'c' : 'a';
-                $typeB = $b instanceof Contact ? 'c' : 'a';
+                $typeA = $a instanceof Contact ? self::PREFIX_CONTACT : self::PREFIX_ACCOUNT;
+                $typeB = $b instanceof Contact ? self::PREFIX_CONTACT : self::PREFIX_ACCOUNT;
 
                 return $this->comparator->compare($typeA . $a->getId(), $typeB . $b->getId(), $value);
             }
@@ -252,13 +259,16 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
             return [];
         }
 
-        $ids = $this->converter->convertIdsToGroupedIds($value, ['a' => [], 'c' => []]);
+        $ids = $this->converter->convertIdsToGroupedIds(
+            $value,
+            [self::PREFIX_ACCOUNT => [], self::PREFIX_CONTACT => []]
+        );
 
-        foreach ($ids['a'] as $account) {
+        foreach ($ids[self::PREFIX_ACCOUNT] as $account) {
             $this->accountReferenceStore->add($account);
         }
 
-        foreach ($ids['c'] as $contact) {
+        foreach ($ids[self::PREFIX_CONTACT] as $contact) {
             $this->contactReferenceStore->add($contact);
         }
     }
