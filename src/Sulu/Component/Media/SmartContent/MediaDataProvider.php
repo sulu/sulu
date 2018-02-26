@@ -13,6 +13,7 @@ namespace Sulu\Component\Media\SmartContent;
 
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
@@ -38,9 +39,10 @@ class MediaDataProvider extends BaseDataProvider
         DataProviderRepositoryInterface $repository,
         CollectionManagerInterface $collectionManager,
         SerializerInterface $serializer,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        ReferenceStoreInterface $referenceStore
     ) {
-        parent::__construct($repository, $serializer);
+        parent::__construct($repository, $serializer, $referenceStore);
 
         $this->configuration = self::createConfigurationBuilder()
             ->enableTags()

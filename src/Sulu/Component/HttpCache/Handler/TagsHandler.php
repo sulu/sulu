@@ -42,7 +42,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
     /**
      * @var array
      */
-    private $referencesToInvalidate;
+    private $referencesToInvalidate = [];
 
     /**
      * @param ProxyClientInterface $proxyClient
@@ -67,13 +67,16 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
      */
     public function invalidateReference($alias, $id)
     {
-        if (Uuid::isValid($id)) {
-            $this->referencesToInvalidate[] = $id;
+        $reference = $id;
+        if (!Uuid::isValid($id)) {
+            $reference = sprintf('%s-%s', $alias, $id);
+        }
 
+        if (in_array($reference, $this->referencesToInvalidate)) {
             return;
         }
 
-        $this->referencesToInvalidate[] = sprintf('%s-%s', $alias, $id);
+        $this->referencesToInvalidate[] = $reference;
     }
 
     /**
@@ -91,7 +94,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
      */
     public function flush()
     {
-        if (!$this->referencesToInvalidate) {
+        if (0 === count($this->referencesToInvalidate)) {
             return false;
         }
 
@@ -104,6 +107,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
         }
 
         $this->proxyClient->flush();
+        $this->referencesToInvalidate = [];
 
         return true;
     }

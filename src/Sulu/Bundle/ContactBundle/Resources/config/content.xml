@@ -15,6 +15,8 @@
             <argument type="service" id="serializer" />
             <argument type="service" id="sulu_contact.util.id_converter" />
             <argument type="service" id="sulu_contact.util.index_comparator" />
+            <argument type="service" id="sulu_contact.reference_store.account" />
+            <argument type="service" id="sulu_contact.reference_store.contact" />
 
             <tag name="sulu.content.type" alias="contact"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false"/>

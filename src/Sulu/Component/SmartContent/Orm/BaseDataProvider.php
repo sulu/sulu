@@ -13,6 +13,7 @@ namespace Sulu\Component\SmartContent\Orm;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
@@ -53,10 +54,19 @@ abstract class BaseDataProvider implements DataProviderInterface
      */
     private $serializer;
 
-    public function __construct(DataProviderRepositoryInterface $repository, SerializerInterface $serializer)
-    {
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
+    public function __construct(
+        DataProviderRepositoryInterface $repository,
+        SerializerInterface $serializer,
+        ReferenceStoreInterface $referenceStore = null
+    ) {
         $this->repository = $repository;
         $this->serializer = $serializer;
+        $this->referenceStore = $referenceStore;
     }
 
     /**
@@ -184,11 +194,28 @@ abstract class BaseDataProvider implements DataProviderInterface
         return array_map(
             function ($item) use ($locale) {
                 $itemData = $this->serializer->serialize($item, 'array', $this->getSerializationContext());
+                $id = $this->getIdForItem($item);
 
-                return new ArrayAccessItem($item->getId(), $itemData, $item);
+                if ($this->referenceStore) {
+                    $this->referenceStore->add($id);
+                }
+
+                return new ArrayAccessItem($id, $itemData, $item);
             },
             $data
         );
+    }
+
+    /**
+     * Returns id for given entity.
+     *
+     * @param object $entity
+     *
+     * @return int
+     */
+    protected function getIdForItem($entity)
+    {
+        return $entity->getId();
     }
 
     /**

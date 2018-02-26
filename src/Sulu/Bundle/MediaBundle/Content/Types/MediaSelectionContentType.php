@@ -14,16 +14,18 @@ namespace Sulu\Bundle\MediaBundle\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * content type for image selection.
  */
-class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface
+class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
     /**
      * @var MediaManagerInterface
@@ -35,9 +37,15 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
      */
     private $template;
 
-    public function __construct($mediaManager, $template)
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
+    public function __construct(MediaManagerInterface $mediaManager, ReferenceStoreInterface $referenceStore, $template)
     {
         $this->mediaManager = $mediaManager;
+        $this->referenceStore = $referenceStore;
         $this->template = $template;
     }
 
@@ -201,5 +209,20 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     ) {
         $property->setValue(json_decode($value, true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preResolve(PropertyInterface $property)
+    {
+        $data = $property->getValue();
+        if (!isset($data['ids']) || !is_array($data['ids'])) {
+            return;
+        }
+
+        foreach ($data['ids'] as $id) {
+            $this->referenceStore->add($id);
+        }
     }
 }
