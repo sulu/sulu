@@ -21,7 +21,7 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 
 /**
- * Invalidate references when account/contact are persisted.
+ * Invalidate references when media is persisted.
  */
 class CacheInvalidationListener
 {
@@ -36,6 +36,16 @@ class CacheInvalidationListener
     }
 
     public function postPersist(LifecycleEventArgs $eventArgs)
+    {
+        $this->invalidateEntity($eventArgs->getObject());
+    }
+
+    public function postUpdate(LifecycleEventArgs $eventArgs)
+    {
+        $this->invalidateEntity($eventArgs->getObject());
+    }
+
+    public function preRemove(LifecycleEventArgs $eventArgs)
     {
         $this->invalidateEntity($eventArgs->getObject());
     }

@@ -99,6 +99,21 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->handler->flush();
     }
 
+    public function testInvalidateReferenceDuplicated()
+    {
+        $this->proxyCache->ban(
+            [
+                TagsHandler::TAGS_HEADER => '(' . preg_quote('test-1') . ')(,.+)?$',
+            ]
+        )->shouldBeCalledTimes(1);
+        $this->proxyCache->flush()->shouldBeCalled();
+
+        $this->handler->invalidateReference('test', 1);
+        $this->handler->invalidateReference('test', 1);
+
+        $this->handler->flush();
+    }
+
     public function testUpdateResponse()
     {
         $id = Uuid::uuid4()->toString();

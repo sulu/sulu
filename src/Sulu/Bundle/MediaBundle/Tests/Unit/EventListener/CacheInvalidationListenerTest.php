@@ -41,18 +41,19 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener = new CacheInvalidationListener($this->invalidationHandler->reveal());
     }
 
-    public function provideDataPostPersist()
+    public function provideFunctionName()
     {
         return [
-            [MediaInterface::class, 'media'],
-            [File::class, 'media'],
-            [FileVersion::class, 'media'],
-            [FileVersionMeta::class, 'media'],
-            [\stdClass::class, null],
+            ['postPersist'],
+            ['postUpdate'],
+            ['preRemove'],
         ];
     }
 
-    public function testPostPersist()
+    /**
+     * @dataProvider provideFunctionName
+     */
+    public function testPostUpdate($functionName)
     {
         $entity = $this->prophesize(MediaInterface::class);
 
@@ -62,10 +63,13 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
         $entity->getId()->willReturn(1);
         $this->invalidationHandler->invalidateReference('media', 1)->shouldBeCalled();
 
-        $this->listener->postPersist($eventArgs->reveal());
+        $this->listener->{$functionName}($eventArgs->reveal());
     }
 
-    public function testPostPersistFile()
+    /**
+     * @dataProvider provideFunctionName
+     */
+    public function testPostUpdateFile($functionName)
     {
         $media = $this->prophesize(MediaInterface::class);
         $entity = $this->prophesize(File::class);
@@ -77,10 +81,13 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
         $media->getId()->willReturn(1);
         $this->invalidationHandler->invalidateReference('media', 1)->shouldBeCalled();
 
-        $this->listener->postPersist($eventArgs->reveal());
+        $this->listener->{$functionName}($eventArgs->reveal());
     }
 
-    public function testPostPersistFileVersion()
+    /**
+     * @dataProvider provideFunctionName
+     */
+    public function testPostUpdateFileVersion($functionName)
     {
         $media = $this->prophesize(MediaInterface::class);
         $file = $this->prophesize(File::class);
@@ -108,10 +115,13 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
         $media->getId()->willReturn(1);
         $this->invalidationHandler->invalidateReference('media', 1)->shouldBeCalled();
 
-        $this->listener->postPersist($eventArgs->reveal());
+        $this->listener->{$functionName}($eventArgs->reveal());
     }
 
-    public function testPostPersistFileVersionMeta()
+    /**
+     * @dataProvider provideFunctionName
+     */
+    public function testPostUpdateFileVersionMeta($functionName)
     {
         $media = $this->prophesize(MediaInterface::class);
         $file = $this->prophesize(File::class);
@@ -129,10 +139,13 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
         $media->getId()->willReturn(1);
         $this->invalidationHandler->invalidateReference('media', 1)->shouldBeCalled();
 
-        $this->listener->postPersist($eventArgs->reveal());
+        $this->listener->{$functionName}($eventArgs->reveal());
     }
 
-    public function testPostPersistOther()
+    /**
+     * @dataProvider provideFunctionName
+     */
+    public function testPostUpdateOther($functionName)
     {
         $entity = $this->prophesize(\stdClass::class);
 
@@ -141,6 +154,6 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->invalidationHandler->invalidateReference(Argument::cetera())->shouldNotBeCalled();
 
-        $this->listener->postPersist($eventArgs->reveal());
+        $this->listener->{$functionName}($eventArgs->reveal());
     }
 }

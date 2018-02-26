@@ -35,7 +35,21 @@ class CacheInvalidationListener
 
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
-        $object = $eventArgs->getObject();
+        $this->invalidateEntity($eventArgs->getObject());
+    }
+
+    public function postUpdate(LifecycleEventArgs $eventArgs)
+    {
+        $this->invalidateEntity($eventArgs->getObject());
+    }
+
+    public function preRemove(LifecycleEventArgs $eventArgs)
+    {
+        $this->invalidateEntity($eventArgs->getObject());
+    }
+
+    private function invalidateEntity($object)
+    {
         if ($object instanceof ContactInterface) {
             $this->invalidationHandler->invalidateReference('contact', $object->getId());
             $this->invalidateTags($object->getTags());
