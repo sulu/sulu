@@ -558,13 +558,12 @@ test('Should render save button loading only if form is saving', () => {
     expect(getSaveItem().loading).toBe(true);
 });
 
-test('Should unbind the binding and destroy the store on unmount', () => {
+test('Should destroy the store on unmount', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12, {locale: observable()});
     const router = {
         bind: jest.fn(),
-        unbind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'snippets',
@@ -579,8 +578,11 @@ test('Should unbind the binding and destroy the store on unmount', () => {
 
     expect(router.bind).toBeCalledWith('locale', locale);
 
+    const formStore = form.instance().formStore;
+    formStore.destroy = jest.fn();
+
     form.unmount();
-    expect(router.unbind).toBeCalledWith('locale', locale);
+    expect(formStore.destroy).toBeCalled();
 });
 
 test('Should not bind the locale if no locales have been passed via options', () => {

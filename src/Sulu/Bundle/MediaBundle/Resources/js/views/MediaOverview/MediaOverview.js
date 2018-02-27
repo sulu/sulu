@@ -41,10 +41,6 @@ class MediaOverview extends React.Component<ViewProps> {
     }
 
     componentWillUnmount() {
-        const {router} = this.props;
-
-        router.unbind('collectionPage', this.collectionPage);
-        router.unbind('locale', this.locale);
         this.mediaDatagridStore.destroy();
         this.collectionDatagridStore.destroy();
         this.collectionStore.destroy();

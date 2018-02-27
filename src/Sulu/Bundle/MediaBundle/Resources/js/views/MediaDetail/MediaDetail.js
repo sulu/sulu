@@ -40,6 +40,10 @@ class MediaDetail extends React.Component<Props> {
         this.mediaUploadStore = new MediaUploadStore(locale);
     }
 
+    componentWillUnmount() {
+        this.formStore.destroy();
+    }
+
     @computed get thumbnail(): ?string {
         const {resourceStore} = this.props;
         const {
@@ -58,14 +62,6 @@ class MediaDetail extends React.Component<Props> {
     @computed get mimeType(): string {
         const {resourceStore} = this.props;
         return resourceStore.data.mimeType;
-    }
-
-    componentWillUnmount() {
-        const {resourceStore, router} = this.props;
-
-        if (resourceStore.locale) {
-            router.unbind('locale', resourceStore.locale);
-        }
     }
 
     setFormRef = (form) => {

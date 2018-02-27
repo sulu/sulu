@@ -53,19 +53,7 @@ class List extends React.Component<ViewProps> {
     }
 
     componentWillUnmount() {
-        const {router} = this.props;
-        const {
-            route: {
-                options: {
-                    locales,
-                },
-            },
-        } = router;
         this.datagridStore.destroy();
-        router.unbind('page', this.page);
-        if (locales) {
-            router.unbind('locale', this.locale);
-        }
     }
 
     handleEditClick = (rowId) => {

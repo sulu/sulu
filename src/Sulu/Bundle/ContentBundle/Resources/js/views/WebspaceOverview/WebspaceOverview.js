@@ -93,12 +93,6 @@ class WebspaceOverview extends React.Component<ViewProps> {
     }
 
     componentWillUnmount() {
-        const {router} = this.props;
-
-        router.unbind('page', this.page);
-        router.unbind('webspace', this.webspace);
-        router.unbind('locale', this.locale);
-
         this.datagridStore.destroy();
     }
 

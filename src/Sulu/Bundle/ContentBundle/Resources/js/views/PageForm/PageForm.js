@@ -36,11 +36,6 @@ class PageForm extends React.Component<Props> {
 
     componentWillUnmount() {
         this.formStore.destroy();
-        const {resourceStore, router} = this.props;
-
-        if (resourceStore.locale) {
-            router.unbind('locale', resourceStore.locale);
-        }
     }
 
     handleSubmit = (action) => {

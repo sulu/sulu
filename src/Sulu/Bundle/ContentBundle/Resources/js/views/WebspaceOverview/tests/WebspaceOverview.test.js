@@ -129,11 +129,10 @@ test('Should change webspace when value of webspace select is changed', () => {
     });
 });
 
-test('Should bind/unbind router', () => {
+test('Should bind router', () => {
     const WebspaceOverview = require('../WebspaceOverview').default;
     const router = {
         bind: jest.fn(),
-        unbind: jest.fn(),
         attributes: {},
     };
 
@@ -146,9 +145,4 @@ test('Should bind/unbind router', () => {
     expect(router.bind).toBeCalledWith('page', page, '1');
     expect(router.bind).toBeCalledWith('locale', locale);
     expect(router.bind).toBeCalledWith('webspace', webspace);
-
-    webspaceOverview.unmount();
-    expect(router.unbind).toBeCalledWith('page', page);
-    expect(router.unbind).toBeCalledWith('locale', locale);
-    expect(router.unbind).toBeCalledWith('webspace', webspace);
 });

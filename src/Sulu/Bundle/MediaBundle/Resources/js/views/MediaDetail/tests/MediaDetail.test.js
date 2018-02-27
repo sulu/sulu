@@ -156,7 +156,6 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
-        unbind: jest.fn(),
         route: {
             options: {
                 locales: [],
@@ -265,7 +264,6 @@ test('Should save form when submitted', (done) => {
 
     const router = {
         bind: jest.fn(),
-        unbind: jest.fn(),
         navigate: jest.fn(),
         route: {
             options: {
@@ -289,13 +287,12 @@ test('Should save form when submitted', (done) => {
     jsonSchemaResolve({});
 });
 
-test('Should unbind the binding and destroy the store on unmount', () => {
+test('Should destroy the store on unmount', () => {
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const resourceStore = new ResourceStore('media', 12, {locale: observable()});
     const router = {
         bind: jest.fn(),
-        unbind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'snippets',
@@ -310,6 +307,9 @@ test('Should unbind the binding and destroy the store on unmount', () => {
 
     expect(router.bind).toBeCalledWith('locale', locale);
 
+    const formStore = mediaDetail.instance().formStore;
+    formStore.destroy = jest.fn();
+
     mediaDetail.unmount();
-    expect(router.unbind).toBeCalledWith('locale', locale);
+    expect(formStore.destroy).toBeCalled();
 });

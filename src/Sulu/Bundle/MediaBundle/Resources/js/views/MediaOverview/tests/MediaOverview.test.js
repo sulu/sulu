@@ -164,11 +164,10 @@ test('Render a simple MediaOverview', () => {
     expect(mediaOverview).toMatchSnapshot();
 });
 
-test('Unbind all query params and destroy all stores on unmount', () => {
+test('Destroy all stores on unmount', () => {
     const MediaOverview = require('../MediaOverview').default;
     const router = {
         bind: jest.fn(),
-        unbind: jest.fn(),
         attributes: {},
     };
 
@@ -186,8 +185,6 @@ test('Unbind all query params and destroy all stores on unmount', () => {
     expect(mediaOverviewInstance.mediaDatagridStore.destroy).toBeCalled();
     expect(mediaOverviewInstance.collectionDatagridStore.destroy).toBeCalled();
     expect(mediaOverviewInstance.collectionStore.resourceStore.destroy).toBeCalled();
-    expect(router.unbind).toBeCalledWith('collectionPage', page);
-    expect(router.unbind).toBeCalledWith('locale', locale);
 });
 
 test('Should navigate to defined route on back button click', () => {

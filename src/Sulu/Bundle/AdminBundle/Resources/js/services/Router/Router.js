@@ -52,13 +52,9 @@ export default class Router {
         this.bindingDefaults.set(key, defaultValue);
     }
 
-    @action unbind(key: string, value: IObservableValue<*>) {
-        if (this.bindings.get(key) !== value) {
-            return;
-        }
-
-        this.bindings.delete(key);
-        this.bindingDefaults.delete(key);
+    @action clearBindings() {
+        this.bindings.clear();
+        this.bindingDefaults.clear();
     }
 
     match(path: string, queryString: string) {
@@ -81,19 +77,24 @@ export default class Router {
                 attributes[key] = Router.tryParseNumber(value);
             });
 
-            this.navigate(name, attributes);
+            this.handleNavigation(name, attributes);
 
             break;
         }
     }
 
-    navigate(name: string, attributes: Object = {}) {
+    handleNavigation(name: string, attributes: Object) {
         if (!this.isRouteChanging(name, attributes)) {
             return;
         }
 
         this.createAttributesHistory();
         this.update(name, attributes);
+    }
+
+    navigate(name: string, attributes: Object = {}) {
+        this.clearBindings();
+        this.handleNavigation(name, attributes);
     }
 
     restore(name: string, attributes: Object = {}) {
