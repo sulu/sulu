@@ -30,7 +30,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
     mediaPage: IObservableValue<number> = observable();
     collectionPage: IObservableValue<number> = observable();
-    @observable collectionId: ?string | number;
+    collectionId: IObservableValue<?string | number> = observable();
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;
     collectionStore: CollectionStore;
@@ -84,7 +84,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         }
 
         this.selectedMedia = [];
-        this.collectionId = undefined;
+        this.collectionId.set(undefined);
     }
 
     @action setMediaPage(page: number) {
@@ -95,17 +95,15 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         this.collectionPage.set(page);
     }
 
-    @action setCollectionId(id: ?string | number) {
-        this.collectionId = id;
-    }
-
     createStores = () => {
         this.setMediaPage(1);
         this.setCollectionPage(1);
 
-        this.createCollectionStore(this.collectionId, this.locale);
-        this.createMediaDatagridStore(this.collectionId, this.mediaPage, this.locale);
-        this.createCollectionDatagridStore(this.collectionId, this.collectionPage, this.locale);
+        const collectionId = this.collectionId.get();
+
+        this.createCollectionStore(collectionId, this.locale);
+        this.createMediaDatagridStore(collectionId, this.mediaPage, this.locale);
+        this.createCollectionDatagridStore(collectionId, this.collectionPage, this.locale);
     };
 
     @action createCollectionDatagridStore(
@@ -202,7 +200,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     };
 
     handleCollectionNavigate = (collectionId: ?string | number) => {
-        this.setCollectionId(collectionId);
+        this.collectionId.set(collectionId);
     };
 
     handleClose = () => {

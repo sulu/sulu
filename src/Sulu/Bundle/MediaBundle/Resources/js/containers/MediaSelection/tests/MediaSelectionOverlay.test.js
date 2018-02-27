@@ -330,9 +330,9 @@ test('Should destroy the stores and cleanup all states when the overlay is close
         added: [2],
         removed: [],
     }));
-    mediaSelectionOverlayInstance.setCollectionId(1);
+    mediaSelectionOverlayInstance.collectionId.set(1);
 
-    expect(mediaSelectionOverlayInstance.collectionId).toBe(1);
+    expect(mediaSelectionOverlayInstance.collectionId.get()).toBe(1);
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
         {
             id: 1,
@@ -353,7 +353,7 @@ test('Should destroy the stores and cleanup all states when the overlay is close
     ]);
 
     mediaSelectionOverlayInstance.handleClose();
-    expect(mediaSelectionOverlayInstance.collectionId).toBe(undefined);
+    expect(mediaSelectionOverlayInstance.collectionId.get()).toBe(undefined);
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([]);
     expect(mediaSelectionOverlayInstance.collectionStore.resourceStore.destroy).toBeCalled();
     expect(mediaSelectionOverlayInstance.mediaDatagridStore.destroy).toBeCalled();

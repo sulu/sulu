@@ -20,7 +20,7 @@ class MediaOverview extends React.Component<ViewProps> {
     mediaPage: IObservableValue<number> = observable();
     collectionPage: IObservableValue<number> = observable();
     locale: IObservableValue<string> = observable();
-    @observable collectionId: ?number;
+    collectionId: IObservableValue<?number> = observable();
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;
     collectionStore: CollectionStore;
@@ -33,6 +33,7 @@ class MediaOverview extends React.Component<ViewProps> {
 
         router.bind('collectionPage', this.collectionPage, '1');
         router.bind('locale', this.locale);
+        router.bind('id', this.collectionId);
 
         this.disposer = autorun(this.createStores);
     }
@@ -48,31 +49,13 @@ class MediaOverview extends React.Component<ViewProps> {
         this.disposer();
     }
 
-    getCollectionId() {
-        const {router} = this.props;
-        const {
-            attributes: {
-                id,
-            },
-        } = router;
-
-        return id;
-    }
-
     createStores = () => {
-        const collectionId = this.getCollectionId();
+        const collectionId = this.collectionId.get();
 
-        if (collectionId !== this.collectionId || !this.collectionDatagridStore) {
-            this.setCollectionId(collectionId);
-            this.createCollectionStore(collectionId, this.locale);
-            this.createMediaDatagridStore(collectionId, this.mediaPage, this.locale);
-            this.createCollectionDatagridStore(collectionId, this.collectionPage, this.locale);
-        }
+        this.createCollectionStore(collectionId, this.locale);
+        this.createMediaDatagridStore(collectionId, this.mediaPage, this.locale);
+        this.createCollectionDatagridStore(collectionId, this.collectionPage, this.locale);
     };
-
-    @action setCollectionId(id) {
-        this.collectionId = id;
-    }
 
     @action createCollectionDatagridStore(collectionId, page, locale) {
         if (this.collectionDatagridStore) {
@@ -200,7 +183,7 @@ export default withToolbar(MediaOverview, function() {
     return {
         locale,
         disableAll: loading,
-        backButton: (this.collectionId)
+        backButton: this.collectionId.get()
             ? {
                 onClick: () => {
                     router.restore(

@@ -472,7 +472,8 @@ EOL
             "label": "Description",
             "type": "text_area"
         }
-    }
+    },
+    "schema": {}
 }
 EOL
             );
@@ -507,7 +508,8 @@ EOL
                 }
             }
         }
-    }
+    },
+    "schema": {}
 }
 EOL
             );

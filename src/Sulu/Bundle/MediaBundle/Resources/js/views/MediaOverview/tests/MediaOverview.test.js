@@ -207,7 +207,7 @@ test('Should navigate to defined route on back button click', () => {
         },
     };
     const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
-    mediaOverview.collectionId = 4;
+    mediaOverview.collectionId.set(4);
     mediaOverview.locale.set('de');
 
     const toolbarConfig = toolbarFunction.call(mediaOverview);
