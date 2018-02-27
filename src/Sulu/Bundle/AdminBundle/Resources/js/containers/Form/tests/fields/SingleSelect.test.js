@@ -5,10 +5,16 @@ import SingleSelect from '../../fields/SingleSelect';
 
 test('Pass props correctly to SingleSelect', () => {
     const options = {
-        values: {
-            'mr': 'Mister',
-            'ms': 'Miss',
-        },
+        values: [
+            {
+                value: 'mr',
+                name: 'Mister',
+            },
+            {
+                value: 'ms',
+                name: 'Miss',
+            },
+        ],
     };
     const singleSelect = shallow(
         <SingleSelect
@@ -33,10 +39,16 @@ test('Pass props correctly to SingleSelect', () => {
 test('Should call onFinish callback on every onChange', () => {
     const finishSpy = jest.fn();
     const options = {
-        values: {
-            'mr': 'Mister',
-            'ms': 'Miss',
-        },
+        values: [
+            {
+                value: 'mr',
+                name: 'Mister',
+            },
+            {
+                value: 'ms',
+                name: 'Miss',
+            },
+        ],
     };
 
     const singleSelect = shallow(
@@ -57,10 +69,16 @@ test('Set default value if no value is passed', () => {
     const changeSpy = jest.fn();
     const options = {
         default_value: 'mr',
-        values: {
-            'mr': 'Mister',
-            'ms': 'Miss',
-        },
+        values: [
+            {
+                value: 'mr',
+                name: 'Mister',
+            },
+            {
+                value: 'ms',
+                name: 'Miss',
+            },
+        ],
     };
     shallow(<SingleSelect onChange={changeSpy} onFinish={jest.fn()} options={options} value={undefined} />);
 

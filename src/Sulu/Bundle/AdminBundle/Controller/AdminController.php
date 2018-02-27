@@ -372,11 +372,17 @@ EOL
             "size": 3,
             "spaceAfter": 9,
             "options": {
-                "default_value": "0",
-                "values": {
-                    "0": "Herr",
-                    "1": "Frau"
-                }
+                "default_value": 0,
+                "values": [
+                    {
+                        "value": 0,
+                        "name": "Herr"
+                    },
+                    {
+                        "value": 1,
+                        "name": "Frau"
+                    }
+                ]
             }
         },
         "firstName": {
@@ -402,7 +408,7 @@ EOL
         "required": ["formOfAddress", "firstName", "lastName"],
         "properties": {
             "formOfAddress": {
-                "enum": ["0", "1"]
+                "enum": [0, 1, "0", "1"]
             }
         }
     }
