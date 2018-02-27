@@ -99,10 +99,9 @@ export default class DatagridStore {
         }
 
         const observableOptions = {};
-        observableOptions.page = this.observableOptions.page.get();
 
-        if (this.observableOptions.locale) {
-            observableOptions.locale = this.observableOptions.locale.get();
+        for (const key in this.observableOptions) {
+            observableOptions[key] = this.observableOptions[key].get();
         }
 
         this.setDataLoading(true);

@@ -27,11 +27,13 @@ test('The loading strategy should be called when a request is sent', () => {
     const structureStrategy = new StructureStrategy();
     const page = observable(1);
     const locale = observable();
+    const additionalValue = observable(5);
     const datagridStore = new DatagridStore(
         'tests',
         {
             page,
             locale,
+            additionalValue,
         },
         {
             test: 'value',
@@ -45,6 +47,7 @@ test('The loading strategy should be called when a request is sent', () => {
         toJS(datagridStore.data),
         'tests',
         {
+            additionalValue: 5,
             locale: undefined,
             page: 1,
             test: 'value',
