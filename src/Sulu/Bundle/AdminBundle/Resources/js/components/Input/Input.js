@@ -35,7 +35,11 @@ export default class Input extends React.PureComponent<Props> {
     };
 
     handleBlur = () => {
-        this.props.onFinish();
+        const {onFinish} = this.props;
+
+        if (onFinish) {
+            onFinish();
+        }
     };
 
     render() {

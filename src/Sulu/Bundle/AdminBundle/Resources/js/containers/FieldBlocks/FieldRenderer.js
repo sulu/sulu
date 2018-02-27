@@ -11,7 +11,7 @@ type Props = {
     index: number,
     locale: ?IObservableValue<string>,
     onChange: (index: number, name: string, value: *) => void,
-    onFieldFinish: () => void,
+    onFieldFinish: ?() => void,
     schema: Schema,
     showAllErrors: boolean,
 };

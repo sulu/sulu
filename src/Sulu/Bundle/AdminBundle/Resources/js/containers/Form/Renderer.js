@@ -16,7 +16,7 @@ type Props = {
     schema: Schema,
     showAllErrors: boolean,
     onChange: (string, *) => void,
-    onFieldFinish: () => void,
+    onFieldFinish: ?() => void,
     locale: ?IObservableValue<string>,
 };
 
@@ -36,7 +36,9 @@ export default class Renderer extends React.Component<Props> {
             modifiedFields.push(name);
         }
 
-        onFieldFinish();
+        if(onFieldFinish) {
+            onFieldFinish();
+        }
     };
 
     renderGridSection(schemaField: SchemaEntry, schemaKey: string) {

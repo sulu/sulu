@@ -24,7 +24,10 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
         const {onChange, onFinish} = this.props;
 
         onChange(value);
-        onFinish();
+
+        if (onFinish) {
+            onFinish();
+        }
     };
 
     render() {

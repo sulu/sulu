@@ -19,7 +19,10 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
     };
 
     handleSortEnd = () => {
-        this.props.onFinish();
+        const {onFinish} = this.props;
+        if (onFinish) {
+            onFinish();
+        }
     };
 
     renderBlockContent = (value: Object, type: ?string, index: number) => {
