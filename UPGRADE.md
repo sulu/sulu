@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-master
+## 1.6.15
 
 ### Priority of UpdateResponseSubscriber
 
