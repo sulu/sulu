@@ -1,19 +1,17 @@
+@import './variables.scss';
+
 .grid-section {
-    margin-bottom: -30px;
+    margin-bottom: -$fieldMarginBottom;
 
     & .grid-section:last-child {
         margin-bottom: 0;
     }
 
     & + .grid-item {
-        margin-top: 30px;
+        margin-top: $fieldMarginBottom;
     }
 }
 
-.grid-item {
-    margin-bottom: 30px;
-
-    & + .grid-section {
-        margin-top: -30px;
-    }
+.grid-item + .grid-section {
+    margin-top: -$fieldMarginBottom;
 }

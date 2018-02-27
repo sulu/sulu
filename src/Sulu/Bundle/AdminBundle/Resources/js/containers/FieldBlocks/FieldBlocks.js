@@ -18,8 +18,16 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         onChange(newValues);
     };
 
+    handleSortEnd = () => {
+        const {onFinish} = this.props;
+
+        if (onFinish) {
+            onFinish();
+        }
+    };
+
     renderBlockContent = (value: Object, type: ?string, index: number) => {
-        const {locale, types} = this.props;
+        const {error, locale, onFinish, showAllErrors, types} = this.props;
 
         if (!types) {
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
@@ -27,13 +35,18 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         const blockType = type ? types[type] : types[Object.keys(types)[0]]; // TODO replace with a default type
 
+        const errors: Array<Error> = toJS(error);
+
         return (
             <FieldRenderer
                 data={value}
+                errors={errors && errors.length > index && errors[index] ? errors[index] : undefined}
                 index={index}
                 locale={locale}
                 onChange={this.handleBlockChange}
+                onFieldFinish={onFinish}
                 schema={blockType.form}
+                showAllErrors={showAllErrors}
             />
         );
     };
@@ -55,6 +68,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
                 maxOccurs={maxOccurs}
                 minOccurs={minOccurs}
                 onChange={onChange}
+                onSortEnd={this.handleSortEnd}
                 renderBlockContent={this.renderBlockContent}
                 types={blockTypes}
                 value={value || []}

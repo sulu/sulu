@@ -27,3 +27,19 @@ const onChange = (newValue) => {
     <ResourceLocator onChange={onChange} value={state.value} mode="leaf"/>
 </div>
 ```
+
+The ResourceLocator also calls its `onFinish` callback when the input loses focus.
+
+```javascript
+initialState = {value: '/parent'};
+const onChange = (newValue) => {
+	setState({value: newValue});
+};
+
+<ResourceLocator
+    onChange={onChange}
+    onFinish={() => alert('The ResourceLocator lost its focus')}
+    value={state.value}
+    mode="full"
+/>
+```

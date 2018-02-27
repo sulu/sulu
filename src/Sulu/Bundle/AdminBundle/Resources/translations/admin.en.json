@@ -10,5 +10,8 @@
     "sulu_admin.reached_end_of_list": "You reached the end of the list",
     "sulu_admin.confirm": "Confirm",
     "sulu_admin.ok": "Ok",
-    "sulu_admin.cancel": "Cancel"
+    "sulu_admin.cancel": "Cancel",
+    "sulu_admin.error_required": "This field must have a value",
+    "sulu_admin.error_minlength": "The minimal length of this field was undershot",
+    "sulu_admin.error_minitems": "This field has too few assignments"
 }

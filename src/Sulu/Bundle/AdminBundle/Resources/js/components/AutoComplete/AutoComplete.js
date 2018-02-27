@@ -24,6 +24,7 @@ type Props = {
     loading?: boolean,
     /** Called when a suggestion is set */
     onChange: (value: string | number) => void,
+    onFinish: () => void,
     /** Called with a debounce when text is entered inside the input */
     onSearch: (query: string) => void,
 };
@@ -38,7 +39,7 @@ export default class AutoComplete extends React.Component<Props> {
 
     @observable inputRef: ElementRef<'label'>;
 
-    @observable inputValue: string = this.props.value;
+    @observable inputValue: ?string = this.props.value;
 
     overrideValue: boolean = false;
 
@@ -80,7 +81,7 @@ export default class AutoComplete extends React.Component<Props> {
         });
     }
 
-    @action setInputValue(value: string) {
+    @action setInputValue(value: ?string) {
         this.inputValue = value;
     }
 
@@ -99,7 +100,7 @@ export default class AutoComplete extends React.Component<Props> {
         this.props.onChange(value);
     };
 
-    handleInputChange = (value: string) => {
+    handleInputChange = (value: ?string) => {
         this.setInputValue(value);
         this.debouncedSearch(this.inputValue);
     };
@@ -118,19 +119,22 @@ export default class AutoComplete extends React.Component<Props> {
         const {
             loading,
             children,
+            onFinish,
             placeholder,
         } = this.props;
+        const {inputValue} = this;
         const suggestions = this.createSuggestions(children);
-        const showSuggestionList = (this.inputValue.length > 0) && React.Children.count(children) > 0;
+        const showSuggestionList = (!!inputValue && inputValue.length > 0) && React.Children.count(children) > 0;
 
         return (
             <div className={autoCompleteStyles.autoComplete}>
                 <Input
                     icon={LENS_ICON}
-                    value={this.inputValue}
+                    value={inputValue}
                     loading={loading}
                     inputRef={this.setInputRef}
                     onChange={this.handleInputChange}
+                    onFinish={onFinish}
                     placeholder={placeholder}
                 />
                 <Popover

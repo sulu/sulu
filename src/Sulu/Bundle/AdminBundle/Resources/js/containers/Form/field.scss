@@ -1,6 +1,21 @@
 @import '../Application/colors.scss';
+@import './variables.scss';
 
 $labelColor: $scorpion;
+$labelErrorColor: $roman;
+$errorLabelColor: $persianRed;
+
+$errorLabelHeight: 20px;
+
+.field {
+    margin-bottom: calc($fieldMarginBottom - $errorLabelHeight);
+}
+
+.error {
+    & > .label {
+        color: $labelErrorColor;
+    }
+}
 
 .label {
     display: block;
@@ -9,4 +24,12 @@ $labelColor: $scorpion;
     line-height: 19px;
     margin-bottom: 10px;
     text-align: left;
+}
+
+.error-label {
+    display: block;
+    color: $errorLabelColor;
+    font-size: 10px;
+    line-height: $errorLabelHeight;
+    height: $errorLabelHeight;
 }

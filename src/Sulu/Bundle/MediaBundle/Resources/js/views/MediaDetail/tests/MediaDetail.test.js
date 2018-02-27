@@ -18,6 +18,7 @@ jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
+    getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
     getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve([])),
 }));
 
@@ -240,7 +241,7 @@ test('Should render save button disabled only if form is not dirty', () => {
     expect(getSaveItem().disabled).toBe(false);
 });
 
-test('Should save form when submitted', () => {
+test('Should save form when submitted', (done) => {
     const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const MediaDetail = require('../MediaDetail').default;
@@ -257,6 +258,11 @@ test('Should save form when submitted', () => {
     const metadataPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+
     const router = {
         bind: jest.fn(),
         unbind: jest.fn(),
@@ -272,10 +278,15 @@ test('Should save form when submitted', () => {
     };
     const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
 
-    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
-        mediaDetail.find('Form').simulate('submit');
-        expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
+    Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            mediaDetail.find('Form').simulate('submit');
+            expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
+            done();
+        });
     });
+
+    jsonSchemaResolve({});
 });
 
 test('Should unbind the binding and destroy the store on unmount', () => {

@@ -1,14 +1,21 @@
 @import '../../containers/Application/colors.scss';
 
 $textareaBorderColor: $silver;
+$textareaErrorBorderColor: $persianRed;
+$textareaBackgroundColor: $white;
 
 .text-area {
     width: 100%;
     min-height: 75px;
+    background-color: $textareaBackgroundColor;
     padding: 10px;
     border: 1px solid $textareaBorderColor;
     border-radius: 3px;
     resize: vertical;
     font-size: 12px;
     line-height: 20px;
+
+    &.error {
+        border-color: $textareaErrorBorderColor;
+    }
 }

@@ -6,7 +6,7 @@ import suggestionStyles from './suggestion.scss';
 
 type Props = {
     value: string | number,
-    query: string,
+    query: ?string,
     icon?: string,
     children: string | (highlight: (text: string) => Node) => Node,
     onSelection?: (value: string | number) => void,
@@ -22,7 +22,7 @@ export default class Suggestion extends React.PureComponent<Props> {
             return;
         }
 
-        const {query} = this.props;
+        const query = this.props.query || '';
         const regex = new RegExp(query, 'gi');
         const matches = text.match(regex);
 

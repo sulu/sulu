@@ -53,6 +53,9 @@ class Form extends React.PureComponent<Props> {
                 if (editRoute) {
                     router.navigate(editRoute, {id: resourceStore.id, locale: resourceStore.locale});
                 }
+            })
+            .catch(() => {
+                // TODO show an error label
             });
     };
 

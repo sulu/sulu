@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
+import classNames from 'classnames';
 import Icon from '../Icon';
 import Loader from '../Loader';
 import type {FieldTypeProps} from '../../types';
@@ -8,7 +9,7 @@ import inputStyles from './input.scss';
 
 const LOADER_SIZE = 20;
 
-type Props = FieldTypeProps<string> & {
+type Props = FieldTypeProps<?string> & {
     name?: string,
     icon?: string,
     type: string,
@@ -30,22 +31,38 @@ export default class Input extends React.PureComponent<Props> {
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        this.props.onChange(event.currentTarget.value);
+        this.props.onChange(event.currentTarget.value || undefined);
+    };
+
+    handleBlur = () => {
+        const {onFinish} = this.props;
+
+        if (onFinish) {
+            onFinish();
+        }
     };
 
     render() {
         const {
-            name,
+            error,
             icon,
+            loading,
+            name,
+            placeholder,
             type,
             value,
-            loading,
-            placeholder,
         } = this.props;
+
+        const labelClass = classNames(
+            inputStyles.input,
+            {
+                [inputStyles.error]: error,
+            }
+        );
 
         return (
             <label
-                className={inputStyles.input}
+                className={labelClass}
                 ref={this.setRef}
             >
                 {!loading && icon &&
@@ -63,6 +80,7 @@ export default class Input extends React.PureComponent<Props> {
                     type={type}
                     value={value || ''}
                     placeholder={placeholder}
+                    onBlur={this.handleBlur}
                     onChange={this.handleChange}
                 />
             </label>

@@ -252,11 +252,12 @@ class AdminController
             "form": {
                 "title": {
                     "label": "Title",
-                    "type": "text_line"
+                    "type": "text_line",
+                    "required": true
                 },
                 "description": {
                     "label": "Description",
-                    "type": "text_line"
+                    "type": "text_area"
                 },
                 "media": {
                     "label": "Media",
@@ -273,7 +274,8 @@ class AdminController
                             "form": {
                                 "text": {
                                     "label": "Text",
-                                    "type": "text_line"
+                                    "type": "text_line",
+                                    "required": true
                                 }
                             }
                         },
@@ -288,6 +290,45 @@ class AdminController
                         }
                     }
                 }
+            },
+            "schema": {
+                "required": ["title", "blocks"],
+                "properties": {
+                    "blocks": {
+                        "type": "array",
+                        "minItems": 2,
+                        "items": {
+                            "type": "object",
+                            "oneOf": [
+                                {
+                                    "required": ["text"],
+                                    "properties": {
+                                        "type": {
+                                            "const": "default"
+                                        }
+                                    }
+                                },
+                                {
+                                    "required": ["image"],
+                                    "properties": {
+                                        "type": {
+                                            "const": "image"
+                                        },
+                                        "image": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ids": {
+                                                    "type": "array",
+                                                    "minItems": 3
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
             }
         },
         "footer": {
@@ -295,12 +336,16 @@ class AdminController
             "form": {
                 "title": {
                     "label": "Title",
-                    "type": "text_line"
+                    "type": "text_line",
+                    "required": true
                 },
                 "description": {
                     "label": "Description",
                     "type": "text_line"
                 }
+            },
+            "schema": {
+                "required": ["title"]
             }
         }
     }
@@ -322,26 +367,49 @@ EOL
     "form": {
         "formOfAddress": {
             "label": "Form of address",
+            "required": true,
             "type": "single_select",
             "size": 3,
             "spaceAfter": 9,
             "options": {
-                "default_value": "0",
-                "values": {
-                    "0": "Herr",
-                    "1": "Frau"
-                }
+                "default_value": 0,
+                "values": [
+                    {
+                        "value": 0,
+                        "name": "Herr"
+                    },
+                    {
+                        "value": 1,
+                        "name": "Frau"
+                    }
+                ]
             }
         },
         "firstName": {
             "label": "First Name",
+            "required": true,
             "type": "text_line",
             "size": 6
         },
         "lastName": {
             "label": "Last Name",
+            "required": true,
             "type": "text_line",
             "size": 6
+        },
+        "salutation": {
+            "label": "Salutation",
+            "required": false,
+            "type": "text_line",
+            "size": 12
+        }
+    },
+    "schema": {
+        "required": ["formOfAddress", "firstName", "lastName"],
+        "properties": {
+            "formOfAddress": {
+                "enum": [0, 1, "0", "1"]
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 // @flow
-import {observable, toJS} from 'mobx';
+import {observable, toJS, when} from 'mobx';
 import FormStore from '../../stores/FormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/MetadataStore';
@@ -7,7 +7,7 @@ import metadataStore from '../../stores/MetadataStore';
 jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id) {
     this.id = id;
     this.resourceKey = resourceKey;
-    this.save = jest.fn();
+    this.save = jest.fn().mockReturnValue(Promise.resolve());
     this.set = jest.fn();
     this.change = jest.fn();
     this.data = {};
@@ -16,6 +16,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id) {
 
 jest.mock('../../stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
+    getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
     getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
@@ -41,7 +42,7 @@ test('Create data object for schema', () => {
     const formStore = new FormStore(resourceStore);
     expect(formStore.schemaLoading).toEqual(true);
 
-    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
+    setTimeout(() => {
         expect(formStore.schemaLoading).toEqual(false);
         expect(Object.keys(formStore.data)).toHaveLength(2);
         expect(resourceStore.set).not.toBeCalledWith('template', expect.anything());
@@ -50,7 +51,7 @@ test('Create data object for schema', () => {
             description: undefined,
         });
         formStore.destroy();
-    });
+    }, 0);
 });
 
 test('Set template property of ResourceStore to first type be default', () => {
@@ -167,7 +168,7 @@ test('Change schema should keep data', () => {
 
     const formStore = new FormStore(resourceStore);
 
-    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
+    setTimeout(() => {
         expect(Object.keys(formStore.data)).toHaveLength(3);
         expect(formStore.data).toEqual({
             title: 'Title',
@@ -175,10 +176,10 @@ test('Change schema should keep data', () => {
             slogan: 'Slogan',
         });
         formStore.destroy();
-    });
+    }, 0);
 });
 
-test('Change type should update schema and data', () => {
+test('Change type should update schema and data', (done) => {
     const schemaTypesPromise = Promise.resolve({});
     const sidebarMetadata = {
         title: {
@@ -191,6 +192,7 @@ test('Change type should update schema and data', () => {
         },
     };
     const sidebarPromise = Promise.resolve(sidebarMetadata);
+    const jsonSchemaPromise = Promise.resolve({});
 
     const resourceStore = new ResourceStore('snippets', '1');
     resourceStore.data = {
@@ -200,9 +202,10 @@ test('Change type should update schema and data', () => {
 
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
     metadataStore.getSchema.mockReturnValue(sidebarPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const formStore = new FormStore(resourceStore);
 
-    return Promise.all([schemaTypesPromise, sidebarPromise]).then(() => {
+    setTimeout(() => {
         expect(formStore.schema).toBe(sidebarMetadata);
         expect(formStore.data).toEqual({
             title: 'Title',
@@ -210,7 +213,8 @@ test('Change type should update schema and data', () => {
             slogan: 'Slogan',
         });
         formStore.destroy();
-    });
+        done();
+    }, 0);
 });
 
 test('Change type should throw an error if no types are available', () => {
@@ -348,6 +352,73 @@ test('Save the store should call the resourceStore save function', () => {
     formStore.save();
     expect(formStore.resourceStore.save).toBeCalled();
     formStore.destroy();
+});
+
+test('Save the store should validate the current data', (done) => {
+    const jsonSchemaPromise = Promise.resolve({
+        required: ['title', 'blocks'],
+        properties: {
+            blocks: {
+                type: 'array',
+                items: {
+                    type: 'object',
+                    oneOf: [
+                        {
+                            properties: {
+                                text: {
+                                    type: 'string',
+                                    minLength: 3,
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+        },
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const resourceStore = new ResourceStore('snippets', '3');
+    const formStore = new FormStore(resourceStore);
+
+    resourceStore.data = {
+        blocks: [
+            {
+                text: 'Test',
+            },
+            {
+                text: 'T',
+            },
+        ],
+    };
+
+    when(
+        () => !formStore.schemaLoading,
+        () => {
+            formStore.save().catch(() => {
+                expect(toJS(formStore.errors)).toEqual({
+                    title: {
+                        keyword: 'required',
+                        parameters: {
+                            missingProperty: 'title',
+                        },
+                    },
+                    blocks: [
+                        undefined,
+                        {
+                            text: {
+                                keyword: 'minLength',
+                                parameters: {
+                                    limit: 3,
+                                },
+                            },
+                        },
+                    ],
+                });
+                done();
+            });
+        }
+    );
 });
 
 test('Data attribute should return the data from the resourceStore', () => {

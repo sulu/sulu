@@ -12,15 +12,17 @@ exports[`Render block with schema 1`] = `
         <article>
           <div class=\\"grid\\">
             <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
-              <div>
+              <div class=\\"field\\">
                 <label class=\\"label\\">Text 1</label>
                 <input type=\\"text\\" value=\\"Test 1\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
             <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
-              <div>
+              <div class=\\"field\\">
                 <label class=\\"label\\">Text 2</label>
                 <input type=\\"text\\" value=\\"Test 2\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
           </div>
@@ -36,15 +38,17 @@ exports[`Render block with schema 1`] = `
         <article>
           <div class=\\"grid\\">
             <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
-              <div>
+              <div class=\\"field\\">
                 <label class=\\"label\\">Text 1</label>
                 <input type=\\"text\\" value=\\"Test 3\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
             <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
-              <div>
+              <div class=\\"field\\">
                 <label class=\\"label\\">Text 2</label>
                 <input type=\\"text\\" value=\\"Test 4\\">
+                <label class=\\"errorLabel\\"></label>
               </div>
             </div>
           </div>
@@ -52,7 +56,139 @@ exports[`Render block with schema 1`] = `
       </div>
     </section>
   </div>
-  <button class=\\"button secondary\\"><span class=\\"text\\"><span class=\\"addButtonIcon su-plus\\" aria-label=\\"su-plus\\"></span>Add block</span>
+  <button class=\\"button secondary\\"><span class=\\"text\\"><span class=\\"addButtonIcon su-plus\\" aria-label=\\"su-plus\\"></span>sulu_admin.add_block</span>
+  </button>
+</section>"
+`;
+
+exports[`Render block with schema and error on fields already being modified 1`] = `
+"<section class=\\"blockCollection\\">
+  <div class=\\"sortableBlockList\\">
+    <section class=\\"block expanded\\">
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"content\\">
+        <header class=\\"header\\">
+          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+        </header>
+        <article>
+          <div class=\\"grid\\">
+            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+              <div class=\\"field\\">
+                <label class=\\"label\\">Text</label>
+                <input type=\\"text\\" value=\\"Test1\\">
+                <label class=\\"errorLabel\\"></label>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class=\\"block expanded\\">
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"content\\">
+        <header class=\\"header\\">
+          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+        </header>
+        <article>
+          <div class=\\"grid\\">
+            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+              <div class=\\"field error\\">
+                <label class=\\"label\\">Text</label>
+                <input type=\\"text\\" class=\\"minLength\\" value=\\"T2\\">
+                <label class=\\"errorLabel\\">sulu_admin.error_minlength</label>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class=\\"block expanded\\">
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"content\\">
+        <header class=\\"header\\">
+          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+        </header>
+        <article>
+          <div class=\\"grid\\">
+            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+              <div class=\\"field\\">
+                <label class=\\"label\\">Text</label>
+                <input type=\\"text\\" value=\\"T3\\">
+                <label class=\\"errorLabel\\"></label>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+  <button class=\\"button secondary\\"><span class=\\"text\\"><span class=\\"addButtonIcon su-plus\\" aria-label=\\"su-plus\\"></span>sulu_admin.add_block</span>
+  </button>
+</section>"
+`;
+
+exports[`Render block with schema and error on fields already being modified 2`] = `
+"<section class=\\"blockCollection\\">
+  <div class=\\"sortableBlockList\\">
+    <section class=\\"block expanded\\">
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"content\\">
+        <header class=\\"header\\">
+          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+        </header>
+        <article>
+          <div class=\\"grid\\">
+            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+              <div class=\\"field\\">
+                <label class=\\"label\\">Text</label>
+                <input type=\\"text\\" value=\\"Test1\\">
+                <label class=\\"errorLabel\\"></label>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class=\\"block expanded\\">
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"content\\">
+        <header class=\\"header\\">
+          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+        </header>
+        <article>
+          <div class=\\"grid\\">
+            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+              <div class=\\"field error\\">
+                <label class=\\"label\\">Text</label>
+                <input type=\\"text\\" class=\\"minLength\\" value=\\"T2\\">
+                <label class=\\"errorLabel\\">sulu_admin.error_minlength</label>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class=\\"block expanded\\">
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"content\\">
+        <header class=\\"header\\">
+          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+        </header>
+        <article>
+          <div class=\\"grid\\">
+            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+              <div class=\\"field error\\">
+                <label class=\\"label\\">Text</label>
+                <input type=\\"text\\" class=\\"minLength\\" value=\\"T3\\">
+                <label class=\\"errorLabel\\">sulu_admin.error_minlength</label>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+  <button class=\\"button secondary\\"><span class=\\"text\\"><span class=\\"addButtonIcon su-plus\\" aria-label=\\"su-plus\\"></span>sulu_admin.add_block</span>
   </button>
 </section>"
 `;

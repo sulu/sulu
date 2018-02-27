@@ -1,22 +1,46 @@
 // @flow
+import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React from 'react';
 import Divider from '../../components/Divider';
 import Grid from '../../components/Grid';
+import type {ErrorCollection} from '../../types';
 import Field from './Field';
 import rendererStyles from './renderer.scss';
 import type {Schema, SchemaEntry} from './types';
 
 type Props = {
     data: Object,
+    errors?: ErrorCollection,
     schema: Schema,
+    showAllErrors: boolean,
     onChange: (string, *) => void,
+    onFieldFinish: ?() => void,
     locale: ?IObservableValue<string>,
 };
 
 @observer
 export default class Renderer extends React.Component<Props> {
+    static defaultProps = {
+        showAllErrors: false,
+    };
+
+    @observable modifiedFields: Array<string> = [];
+
+    @action handleFieldFinish = (name: string) => {
+        const {onFieldFinish} = this.props;
+        const {modifiedFields} = this;
+
+        if (!modifiedFields.includes(name)) {
+            modifiedFields.push(name);
+        }
+
+        if(onFieldFinish) {
+            onFieldFinish();
+        }
+    };
+
     renderGridSection(schemaField: SchemaEntry, schemaKey: string) {
         const {items} = schemaField;
         return (
@@ -34,7 +58,11 @@ export default class Renderer extends React.Component<Props> {
     }
 
     renderGridItem(schemaField: SchemaEntry, schemaKey: string) {
-        const {data, locale, onChange} = this.props;
+        const {data, errors, locale, onChange, showAllErrors} = this.props;
+
+        const error = (showAllErrors || this.modifiedFields.includes(schemaKey)) && errors && errors[schemaKey]
+            ? errors[schemaKey]
+            : undefined;
 
         return (
             <Grid.Item
@@ -44,9 +72,12 @@ export default class Renderer extends React.Component<Props> {
                 spaceAfter={schemaField.spaceAfter}
             >
                 <Field
+                    error={error}
                     name={schemaKey}
                     schema={schemaField}
                     onChange={onChange}
+                    onFinish={this.handleFieldFinish}
+                    showAllErrors={showAllErrors}
                     value={data[schemaKey]}
                     locale={locale}
                 />

@@ -1,4 +1,5 @@
 // @flow
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
@@ -14,6 +15,8 @@ type Props = {
 
 @observer
 export default class Form extends React.Component<Props> {
+    @observable showAllErrors = false;
+
     submitButton: ?ElementRef<'button'>;
 
     /** @public */
@@ -26,13 +29,18 @@ export default class Form extends React.Component<Props> {
         submitButton.click();
     };
 
-    handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
+    @action handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
+        this.showAllErrors = true;
         this.props.onSubmit();
         event.preventDefault();
     };
 
     handleChange = (name: string, value: mixed) => {
         this.props.store.change(name, value);
+    };
+
+    handleFieldFinish = () => {
+        this.props.store.validate();
     };
 
     setSubmitButtonRef = (submitButton: ?ElementRef<'button'>) => {
@@ -47,10 +55,13 @@ export default class Form extends React.Component<Props> {
             : (
                 <form onSubmit={this.handleSubmit}>
                     <Renderer
-                        onChange={this.handleChange}
-                        schema={store.schema}
                         data={store.data}
+                        errors={store.errors}
                         locale={store.locale}
+                        onChange={this.handleChange}
+                        onFieldFinish={this.handleFieldFinish}
+                        schema={store.schema}
+                        showAllErrors={this.showAllErrors}
                     />
                     <button ref={this.setSubmitButtonRef} type="submit" className={formStyles.submit}>Submit</button>
                 </form>

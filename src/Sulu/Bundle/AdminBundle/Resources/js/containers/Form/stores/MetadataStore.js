@@ -27,20 +27,7 @@ class MetadataStore {
     getSchema(resourceKey: string, type: ?string): Promise<Schema> {
         return resourceMetadataStore.loadConfiguration(resourceKey)
             .then((configuration) => {
-                if (configuration.types && !type) {
-                    throw new Error(
-                        'The "' + resourceKey + '" configuration requires a type for loading the form schema'
-                    );
-                }
-
-                if (!configuration.types && type) {
-                    throw new Error(
-                        'The "' + resourceKey + '" configuration does not support types,'
-                        + ' but a type of "' + type + '" was given'
-                    );
-                }
-
-                const typeConfiguration = configuration.types ? configuration.types[type] : configuration;
+                const typeConfiguration = this.getTypeConfiguration(configuration, type, resourceKey);
 
                 if (!('form' in typeConfiguration)) {
                     let errorMessage = 'There is no form schema for the resourceKey "' + resourceKey + '"';
@@ -53,6 +40,41 @@ class MetadataStore {
 
                 return typeConfiguration.form;
             });
+    }
+
+    getJsonSchema(resourceKey: string, type: ?string): Promise<Object> {
+        return resourceMetadataStore.loadConfiguration(resourceKey)
+            .then((configuration) => {
+                const typeConfiguration = this.getTypeConfiguration(configuration, type, resourceKey);
+
+                if (!('schema' in typeConfiguration)) {
+                    let errorMessage = 'There is no json schema for the resourceKey "' + resourceKey + '"';
+                    if (type) {
+                        errorMessage += ' for the type "' + type + '"';
+                    }
+
+                    throw new Error(errorMessage);
+                }
+
+                return typeConfiguration.schema;
+            });
+    }
+
+    getTypeConfiguration(configuration: Object, type: ?string, resourceKey: string) {
+        if (configuration.types && !type) {
+            throw new Error(
+                'The "' + resourceKey + '" configuration requires a type for loading the form schema'
+            );
+        }
+
+        if (!configuration.types && type) {
+            throw new Error(
+                'The "' + resourceKey + '" configuration does not support types,'
+                + ' but a type of "' + type + '" was given'
+            );
+        }
+
+        return configuration.types ? configuration.types[type] : configuration;
     }
 }
 

@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import classNames from 'classnames';
 import type {FieldTypeProps} from '../../types';
 import textAreaStyles from './textArea.scss';
 
@@ -15,17 +16,27 @@ export default class TextArea extends React.PureComponent<Props> {
 
     render() {
         const {
+            error,
             name,
-            value,
+            onFinish,
             placeholder,
+            value,
         } = this.props;
+
+        const textareaClass = classNames(
+            textAreaStyles.textArea,
+            {
+                [textAreaStyles.error]: error,
+            }
+        );
 
         return (
             <textarea
                 name={name}
-                className={textAreaStyles.textArea}
+                className={textareaClass}
                 value={value || ''}
                 placeholder={placeholder}
+                onBlur={onFinish}
                 onChange={this.handleChange}
             />
         );

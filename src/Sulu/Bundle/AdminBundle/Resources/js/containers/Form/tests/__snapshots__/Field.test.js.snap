@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render correct label with correct field type 1`] = `
-<div>
+exports[`Render a field with a error collection 1`] = `
+<div
+  class="field error"
+>
   <label
     class="label"
   >
@@ -10,11 +12,74 @@ exports[`Render correct label with correct field type 1`] = `
   <input
     type="text"
   />
+  <label
+    class="errorLabel"
+  >
+    sulu_admin.error_minitems
+  </label>
+</div>
+`;
+
+exports[`Render a field with an error 1`] = `
+<div
+  class="field error"
+>
+  <label
+    class="label"
+  >
+    label1
+  </label>
+  <input
+    type="text"
+  />
+  <label
+    class="errorLabel"
+  >
+    sulu_admin.error_minlength
+  </label>
+</div>
+`;
+
+exports[`Render a required field with correct field type 1`] = `
+<div
+  class="field"
+>
+  <label
+    class="label"
+  >
+    label1 *
+  </label>
+  <input
+    type="text"
+  />
+  <label
+    class="errorLabel"
+  />
+</div>
+`;
+
+exports[`Render correct label with correct field type 1`] = `
+<div
+  class="field"
+>
+  <label
+    class="label"
+  >
+    label1
+  </label>
+  <input
+    type="text"
+  />
+  <label
+    class="errorLabel"
+  />
 </div>
 `;
 
 exports[`Render correct label with correct field type 2`] = `
-<div>
+<div
+  class="field"
+>
   <label
     class="label"
   >
@@ -22,6 +87,9 @@ exports[`Render correct label with correct field type 2`] = `
   </label>
   <input
     type="date"
+  />
+  <label
+    class="errorLabel"
   />
 </div>
 `;

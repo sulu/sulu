@@ -14,6 +14,14 @@ exports[`TextArea should render null value as empty string 1`] = `
 />
 `;
 
+exports[`TextArea should render with error 1`] = `
+<textarea
+  class="textArea error"
+>
+  My value
+</textarea>
+`;
+
 exports[`TextArea should render with placeholder 1`] = `
 <textarea
   class="textArea"

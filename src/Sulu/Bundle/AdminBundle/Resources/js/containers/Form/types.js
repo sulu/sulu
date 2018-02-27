@@ -20,6 +20,7 @@ export type SchemaEntry = {
     maxOccurs?: number,
     minOccurs?: number,
     options?: Object,
+    required?: boolean,
     size?: Size,
     spaceAfter?: Size,
     type: string,
