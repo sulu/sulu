@@ -294,10 +294,6 @@ class AdminController
             "schema": {
                 "required": ["title", "blocks"],
                 "properties": {
-                    "title": {
-                        "type": "string",
-                        "minLength": 1
-                    },
                     "blocks": {
                         "type": "array",
                         "minItems": 2,
@@ -309,10 +305,6 @@ class AdminController
                                     "properties": {
                                         "type": {
                                             "const": "default"
-                                        },
-                                        "text": {
-                                            "type": "string",
-                                            "minLength": 1
                                         }
                                     }
                                 },
@@ -353,13 +345,7 @@ class AdminController
                 }
             },
             "schema": {
-                "required": ["title"],
-                "properties": {
-                    "title": {
-                        "type": "string",
-                        "minLength": 1
-                    }
-                }
+                "required": ["title"]
             }
         }
     }
@@ -417,14 +403,6 @@ EOL
         "properties": {
             "formOfAddress": {
                 "enum": ["0", "1"]
-            },
-            "firstName": {
-                "type": "string",
-                "minLength": 1
-            },
-            "lastName": {
-                "type": "string",
-                "minLength": 1
             }
         }
     }

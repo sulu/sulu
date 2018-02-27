@@ -50,6 +50,13 @@ test('Input should call the callback when the input changes', () => {
     expect(onChange).toHaveBeenCalledWith('my-value');
 });
 
+test('Input should call the callback with undefined if the input is removed', () => {
+    const onChange = jest.fn();
+    const input = shallow(<Input value="My value" onChange={onChange} onFinish={jest.fn()} />);
+    input.find('input').simulate('change', {currentTarget: {value: ''}});
+    expect(onChange).toHaveBeenCalledWith(undefined);
+});
+
 test('Input should render with a loader', () => {
     const onChange = jest.fn();
     expect(render(<Input value={null} loader={true} onChange={onChange} onFinish={jest.fn()} />)).toMatchSnapshot();

@@ -9,7 +9,7 @@ import inputStyles from './input.scss';
 
 const LOADER_SIZE = 20;
 
-type Props = FieldTypeProps<string> & {
+type Props = FieldTypeProps<?string> & {
     name?: string,
     icon?: string,
     type: string,
@@ -31,7 +31,7 @@ export default class Input extends React.PureComponent<Props> {
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        this.props.onChange(event.currentTarget.value);
+        this.props.onChange(event.currentTarget.value || undefined);
     };
 
     handleBlur = () => {
