@@ -495,4 +495,11 @@ class XmlFileLoader11Test extends WebspaceTestCase
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart_invalid_custom_url.xml'
         );
     }
+
+    public function testLoadDynamicOrder()
+    {
+        $this->loader->load(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_dynamicOrder.xml'
+        );
+    }
 }

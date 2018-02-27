@@ -135,4 +135,11 @@ class XmlFileLoader10Test extends WebspaceTestCase
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/sulu.io_deprecated_invalid_webspace_key.xml'
         );
     }
+
+    public function testLoadDynamicOrder()
+    {
+        $this->loader->load(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_deprecatedDynamicOrder.xml'
+        );
+    }
 }

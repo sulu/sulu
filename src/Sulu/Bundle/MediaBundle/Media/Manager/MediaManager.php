@@ -914,7 +914,13 @@ class MediaManager implements MediaManagerInterface
             return;
         }
 
-        return $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user instanceof UserInterface) {
+            return $user;
+        }
+
+        return;
     }
 
     /**
