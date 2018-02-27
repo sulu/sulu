@@ -1,5 +1,8 @@
-<div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating m-top-20">
-    <h2 class="light">{{ property.getTitle(userLocale) }}</h2>
+<div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating">
+    {% set blockTitle = property.getTitle(userLocale) %}
+    {% if blockTitle %}
+        <h2 class="light">{{ blockTitle }}</h2>
+    {% endif %}
 
     <div class="grid">
         <div id="text-block-header-{{ id|raw }}" class="text-blocks-header">
@@ -11,7 +14,7 @@
             </div>
             <div class="clear"></div>
         </div>
-        <div class="grid-row small"
+        <div class="grid-row m-bottom-0"
              id="{{ id|raw }}"
              data-form="true"
              data-type="block"
@@ -64,7 +67,7 @@
             {% endfor %}
         </div>
 
-        <div class="text-block-footer" id="{{ id|raw }}-add" style="width: 200px">
+        <div class="text-block-footer m-bottom-0" id="{{ id|raw }}-add" style="width: 200px">
 
         </div>
     </div>
