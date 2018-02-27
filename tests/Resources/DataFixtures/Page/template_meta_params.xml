@@ -8,6 +8,7 @@
     <view>page.html.twig</view>
     <controller>SuluContentBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
+    <internal>false</internal>
 
     <properties>
         <property name="title" type="text_line" mandatory="true">

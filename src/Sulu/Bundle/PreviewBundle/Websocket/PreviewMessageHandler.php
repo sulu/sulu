@@ -131,10 +131,11 @@ class PreviewMessageHandler implements MessageHandlerInterface
             $message['locale'],
             $message['data'] ?: []
         );
-        $response = $this->preview->render($token, $message['webspaceKey'], $message['locale']);
 
         $context->set('previewToken', $token);
         $context->set('locale', $message['locale']);
+
+        $response = $this->preview->render($token, $message['webspaceKey'], $message['locale']);
 
         return ['command' => 'start', 'token' => $token, 'response' => $response, 'msg' => 'OK'];
     }

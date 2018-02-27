@@ -55,5 +55,10 @@
             <argument type="service" id="sulu.repository.category_translation"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
+
+        <service id="sulu_category.reference_store.category"
+                 class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
+            <tag name="sulu_website.reference_store" alias="category"/>
+        </service>
     </services>
 </container>

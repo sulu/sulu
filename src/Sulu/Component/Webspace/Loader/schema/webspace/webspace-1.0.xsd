@@ -3,7 +3,7 @@
            targetNamespace="http://schemas.sulu.io/webspace/webspace" xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns="http://schemas.sulu.io/webspace/webspace">
     <xs:complexType name="webspaceType">
-        <xs:sequence>
+        <xs:all>
             <xs:element type="xs:string" name="name"/>
             <xs:element name="key">
                 <xs:simpleType>
@@ -18,7 +18,7 @@
             <xs:element type="themeType" name="theme"/>
             <xs:element type="navigationType" name="navigation"/>
             <xs:element type="portalsType" name="portals"/>
-        </xs:sequence>
+        </xs:all>
     </xs:complexType>
 
     <xs:complexType name="security">

@@ -12,6 +12,7 @@
 namespace Sulu\Component\Contact\SmartContent;
 
 use JMS\Serializer\SerializerInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
@@ -20,9 +21,12 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
  */
 class ContactDataProvider extends BaseDataProvider
 {
-    public function __construct(DataProviderRepositoryInterface $repository, SerializerInterface $serializer)
-    {
-        parent::__construct($repository, $serializer);
+    public function __construct(
+        DataProviderRepositoryInterface $repository,
+        SerializerInterface $serializer,
+        ReferenceStoreInterface $referenceStore
+    ) {
+        parent::__construct($repository, $serializer, $referenceStore);
 
         $this->configuration = self::createConfigurationBuilder()
             ->enableTags()

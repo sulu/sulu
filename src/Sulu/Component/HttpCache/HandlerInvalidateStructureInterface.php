@@ -26,7 +26,7 @@ interface HandlerInvalidateStructureInterface extends HandlerInterface
     /**
      * Invalidate the given structure.
      *
-     * @param StructureInterface
+     * @param StructureInterface $structure
      */
     public function invalidateStructure(StructureInterface $structure);
 }

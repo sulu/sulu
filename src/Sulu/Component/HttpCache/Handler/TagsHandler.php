@@ -17,6 +17,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
+use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Invalidation service for sulu structures.
  */
-class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateResponseInterface, HandlerFlushInterface
+class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalidateReferenceInterface, HandlerUpdateResponseInterface, HandlerFlushInterface
 {
     const TAGS_HEADER = 'X-Cache-Tags';
 
@@ -41,7 +42,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
     /**
      * @var array
      */
-    private $structuresToInvalidate;
+    private $referencesToInvalidate = [];
 
     /**
      * @param ProxyClientInterface $proxyClient
@@ -58,7 +59,24 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
      */
     public function invalidateStructure(StructureInterface $structure)
     {
-        $this->structuresToInvalidate[$structure->getUuid()] = $structure;
+        $this->referencesToInvalidate[] = $structure->getUuid();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function invalidateReference($alias, $id)
+    {
+        $reference = $id;
+        if (!Uuid::isValid($id)) {
+            $reference = sprintf('%s-%s', $alias, $id);
+        }
+
+        if (in_array($reference, $this->referencesToInvalidate)) {
+            return;
+        }
+
+        $this->referencesToInvalidate[] = $reference;
     }
 
     /**
@@ -76,19 +94,20 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
      */
     public function flush()
     {
-        if (!$this->structuresToInvalidate) {
+        if (0 === count($this->referencesToInvalidate)) {
             return false;
         }
 
-        foreach ($this->structuresToInvalidate as $structure) {
+        foreach ($this->referencesToInvalidate as $reference) {
             $this->proxyClient->ban(
                 [
-                    self::TAGS_HEADER => sprintf('(%s)(,.+)?$', preg_quote($structure->getUuid())),
+                    self::TAGS_HEADER => sprintf('(%s)(,.+)?$', preg_quote($reference)),
                 ]
             );
         }
 
         $this->proxyClient->flush();
+        $this->referencesToInvalidate = [];
 
         return true;
     }

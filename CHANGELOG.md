@@ -1,6 +1,19 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.15 (2018-02-27)
+    * HOTFIX      #3796 [HttpCache]               Increased priority of update-response-subscriber 
+    * HOTFIX      #3793 [PreviewBundle]           Set context data (token, locale) before render can fail
+    * ENHANCEMENT #3779 [ContentBundle]           Improved cache-invalidation for categories/tags in excerpt tab
+    * ENHANCEMENT #3777 [ContentBundle]           Added tag/category reference-store
+    * ENHANCEMENT #3778 [ContactBundle]           Improved cache-invalidation for media/contact/account
+    * ENHANCEMENT #3778 [ContactBundle]           Added reference-store to contact/account
+    * ENHANCEMENT #3778 [MediaBundle]             Added reference-store to media
+    * FEATURE     #3028 [MediaBundle]             Added blur, grayscale, gamma, negative and sharpen transformation to media
+    * HOTFIX      #3750 [PreviewBundle]           Fixed refresh preview
+    * HOTFIX      #3747 [RouteBundle]             Added empty array as default value to histories property.
+    * BUGFIX      #3755 [RouteBundle]             Fixed how the route provider strips format extensions from the path
+
 * 1.6.14 (2018-02-06)
     * ENHANCEMENT #3717 [ContentBundle]           ResourceLocator: Show whole url in history overlay
     * HOTFIX      #3739 [ContentBundle]           Added locale to content-teaser query
@@ -160,6 +173,13 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.11 (2018-02-27)
+    * HOTFIX      #3789 [MediaBundle]           Check if current user is sulu user to avoid errors
+    * BUGFIX      #3639 [ContentBundle]         Fix structure internal flag and add webspace validate command
+    * ENHANCEMENT #3764 [Component]             Allow dynamic order of elements in webspace xml
+    * HOTFIX      #3752 [ContentBundle]         Overwrite 'doctrine:phpcr:workspace:import' set default to throw
+    * ENHANCEMENT #3775 [Component]             Use is iterable instead of custom is_array twig function in webspace dumper
 
 * 1.5.10 (2018-02-06)
     * HOTFIX      #3739 [ContentBundle]         Added locale to content-teaser query

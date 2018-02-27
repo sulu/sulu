@@ -514,7 +514,7 @@ class Webspace implements ArrayableInterface
     /**
      * Returns a array of default template.
      *
-     * @return string
+     * @return string[]
      */
     public function getDefaultTemplates()
     {

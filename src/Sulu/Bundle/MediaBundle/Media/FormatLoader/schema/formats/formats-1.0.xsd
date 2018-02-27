@@ -27,7 +27,7 @@
     <xs:complexType name="commandType">
         <xs:sequence>
             <xs:element type="xs:string" name="action"/>
-            <xs:element type="parametersType" name="parameters"/>
+            <xs:element type="parametersType" name="parameters" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 

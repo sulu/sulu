@@ -54,5 +54,8 @@
             <tag name="massive_search.converter" from="tags"/>
         </service>
 
+        <service id="sulu_tag.reference_store.tag" class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
+            <tag name="sulu_website.reference_store" alias="tag"/>
+        </service>
     </services>
 </container>

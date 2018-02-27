@@ -99,7 +99,11 @@
         "zendframework/zendsearch": "@dev"
     },
     "conflict": {
-        "jackalope/jackalope": "1.2.8 || 1.3.0 || 1.3.1"
+        "symfony/symfony": "2.8.10",
+        "symfony/phpunit-bridge": "2.8.10",
+        "symfony/monolog-bundle": "2.8.10",
+        "jackalope/jackalope": "1.2.8 || 1.3.0 || 1.3.1",
+        "phpcr/phpcr-utils": "1.2.1 - 1.2.10 || 1.3.1 || 1.3.2"
     },
     "replace": {
         "sulu/media-bundle": "self.version",

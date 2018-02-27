@@ -59,6 +59,13 @@ ALTER TABLE me_file_version_meta CHANGE title title VARCHAR(191) NOT NULL;
 ALTER TABLE me_file_versions CHANGE name name VARCHAR(191) NOT NULL;
 ```
 
+## 1.6.15
+
+### Priority of UpdateResponseSubscriber
+
+If you had hooked into response-event of symfony to change the cache behavior of Sulu, be aware of changed priority
+and update yours if required.
+
 ## 1.6.11
 
 ### SEO Description

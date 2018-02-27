@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Teaser;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -110,7 +111,32 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
             return [];
         }
 
-        return $this->teaserManager->find($items, $property->getStructure()->getLanguageCode());
+        $result = $this->teaserManager->find($items, $property->getStructure()->getLanguageCode());
+
+        $mediaReferenceStore = $this->getMediaReferenceStore();
+        if (!$mediaReferenceStore) {
+            return $result;
+        }
+
+        foreach ($result as $item) {
+            if ($item->getMediaId()) {
+                $mediaReferenceStore->add($item->getMediaId());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return ReferenceStoreInterface|null
+     */
+    private function getMediaReferenceStore()
+    {
+        try {
+            return $this->referenceStorePool->getStore('media');
+        } catch (ReferenceStoreNotExistsException $exception) {
+            return null;
+        }
     }
 
     /**

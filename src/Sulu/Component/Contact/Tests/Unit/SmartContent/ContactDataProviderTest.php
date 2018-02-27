@@ -15,6 +15,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Contact\SmartContent\ContactDataItem;
 use Sulu\Component\Contact\SmartContent\ContactDataProvider;
 use Sulu\Component\SmartContent\ArrayAccessItem;
@@ -27,9 +28,11 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetConfiguration()
     {
         $serializer = $this->prophesize(SerializerInterface::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository(),
-            $serializer->reveal()
+            $serializer->reveal(),
+            $referenceStore->reveal()
         );
 
         $configuration = $provider->getConfiguration();
@@ -40,9 +43,11 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetDefaultParameter()
     {
         $serializer = $this->prophesize(SerializerInterface::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository(),
-            $serializer->reveal()
+            $serializer->reveal(),
+            $referenceStore->reveal()
         );
 
         $parameter = $provider->getDefaultPropertyParameter();
@@ -77,9 +82,11 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
     {
         $serializer = $this->prophesize(SerializerInterface::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
-            $serializer->reveal()
+            $serializer->reveal(),
+            $referenceStore->reveal()
         );
 
         $result = $provider->resolveDataItems(
@@ -111,9 +118,11 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
         }
 
         $serializer = $this->prophesize(SerializerInterface::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository(['sortBy' => null], 1, null, null, $contacts),
-            $serializer->reveal()
+            $serializer->reveal(),
+            $referenceStore->reveal()
         );
 
         $result = $provider->resolveDataItems(['sortBy' => null], [], ['webspace' => 'sulu_io', 'locale' => 'en']);
@@ -169,9 +178,11 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
                 }
             );
 
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
-            $serializer->reveal()
+            $serializer->reveal(),
+            $referenceStore->reveal()
         );
 
         $result = $provider->resolveResourceItems(
@@ -192,9 +203,11 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
     public function testResolveDataSource()
     {
         $serializer = $this->prophesize(SerializerInterface::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository(),
-            $serializer->reveal()
+            $serializer->reveal(),
+            $referenceStore->reveal()
         );
 
         $this->assertNull($provider->resolveDatasource('', [], []));

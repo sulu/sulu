@@ -104,9 +104,30 @@
         </service>
 
         <service id="sulu_media.image.transformation.paste" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\PasteTransformation">
+            <argument type="service" id="sulu_media.adapter"/>
             <argument type="service" id="file_locator"/>
 
             <tag name="sulu_media.image.transformation" alias="paste" />
+        </service>
+
+        <service id="sulu_media.image.transformation.blur" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\BlurTransformation">
+            <tag name="sulu_media.image.transformation" alias="blur" />
+        </service>
+
+        <service id="sulu_media.image.transformation.gamma" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\GammaTransformation">
+            <tag name="sulu_media.image.transformation" alias="gamma" />
+        </service>
+
+        <service id="sulu_media.image.transformation.grayscale" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\GrayscaleTransformation">
+            <tag name="sulu_media.image.transformation" alias="grayscale" />
+        </service>
+
+        <service id="sulu_media.image.transformation.negative" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\NegativeTransformation">
+            <tag name="sulu_media.image.transformation" alias="negative" />
+        </service>
+
+        <service id="sulu_media.image.transformation.sharpen" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\SharpenTransformation">
+            <tag name="sulu_media.image.transformation" alias="sharpen" />
         </service>
 
         <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
@@ -161,7 +182,9 @@
 
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="service" id="sulu_media.reference_store.media"/>
             <argument type="string">%sulu_media.media_selection.template%</argument>
+
             <tag name="sulu.content.type" alias="media_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
@@ -231,6 +254,7 @@
             <argument type="service" id="sulu_media.collection_manager"/>
             <argument type="service" id="jms_serializer"/>
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_media.reference_store.media"/>
 
             <tag name="sulu.smart_content.data_provider" alias="media"/>
         </service>
@@ -264,6 +288,19 @@
             <argument>%sulu_media.disposition_type.default%</argument>
             <argument>%sulu_media.disposition_type.mime_types_inline%</argument>
             <argument>%sulu_media.disposition_type.mime_types_attachment%</argument>
+        </service>
+
+        <service id="sulu_media.reference_store.media" class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
+            <tag name="sulu_website.reference_store" alias="media"/>
+        </service>
+
+        <service id="sulu_media.doctrine.invalidation_listener"
+                 class="Sulu\Bundle\MediaBundle\EventListener\CacheInvalidationListener">
+            <argument type="service" id="sulu_http_cache.handler.aggregate"/>
+
+            <tag name="doctrine.event_listener" event="postPersist"/>
+            <tag name="doctrine.event_listener" event="postUpdate"/>
+            <tag name="doctrine.event_listener" event="preRemove"/>
         </service>
     </services>
 </container>

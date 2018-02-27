@@ -46,6 +46,11 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
     private $referenceStorePool;
 
     /**
+     * @var ReferenceStoreInterface
+     */
+    private $mediaReferenceStore;
+
+    /**
      * @var TeaserContentType
      */
     private $contentType;
@@ -55,6 +60,9 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
         $this->teaserManager = $this->prophesize(TeaserManagerInterface::class);
         $this->referenceStorePool = $this->prophesize(ReferenceStorePoolInterface::class);
+        $this->mediaReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
+
+        $this->referenceStorePool->getStore('media')->willReturn($this->mediaReferenceStore->reveal());
 
         $this->contentType = new TeaserContentType(
             $this->template,
@@ -93,13 +101,17 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetContentData()
     {
-        $items = [['type' => 'content', 'id' => '123-123-123'], ['type' => 'media', 'id' => 1]];
+        $items = [
+            ['type' => 'content', 'id' => '123-123-123', 'mediaId' => 15],
+            ['type' => 'media', 'id' => 1, 'mediaId' => null],
+        ];
 
         $teasers = array_map(
             function ($item) {
                 $teaser = $this->prophesize(Teaser::class);
                 $teaser->getType()->willReturn($item['type']);
                 $teaser->getId()->willReturn($item['id']);
+                $teaser->getMediaId()->willReturn($item['mediaId']);
 
                 return $teaser->reveal();
             },
@@ -112,6 +124,8 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn(['items' => $items]);
         $property->getStructure()->willReturn($structure);
+
+        $this->mediaReferenceStore->add(15);
 
         $this->teaserManager->find($items, 'de')->shouldBeCalled()->willReturn($teasers);
 
