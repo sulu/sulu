@@ -309,12 +309,23 @@ class StructureSubscriber implements EventSubscriberInterface
      * @param bool $ignoreRequired
      *
      * @throws MandatoryPropertyException
+     * @throws \RuntimeException
      */
     private function mapContentToNode($document, NodeInterface $node, $locale, $ignoreRequired)
     {
         $structure = $document->getStructure();
         $webspaceName = $this->inspector->getWebspace($document);
         $metadata = $this->inspector->getStructureMetadata($document);
+
+        if (!$metadata) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Metadata for Structure Type "%s" was not found, does the file "%s.xml" exists?',
+                    $document->getStructureType(),
+                    $document->getStructureType()
+                )
+            );
+        }
 
         foreach ($metadata->getProperties() as $propertyName => $structureProperty) {
             if (TitleSubscriber::PROPERTY_NAME === $propertyName) {
