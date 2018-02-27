@@ -127,6 +127,8 @@ export default class FormStore {
             for (const error of validator.errors) {
                 switch (error.keyword) {
                     case 'oneOf':
+                        // this only happens if a block has an invalid child field
+                        // child fields already show error messages so we do not have to do it again for blocks
                         break;
                     case 'required':
                         jsonpointer.set(

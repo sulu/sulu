@@ -40,6 +40,8 @@ export default class Field extends React.PureComponent<Props> {
         }
 
         if (Array.isArray(error)) {
+            // this happens when the error is in a block field type
+            // since the error is shown on the child elements of the block we do not have to mark the block separately
             return;
         }
 
@@ -48,6 +50,8 @@ export default class Field extends React.PureComponent<Props> {
         }
 
         for (const childKey in error) {
+            // this happens when it is an error collection and not a single error
+            // we will find the first child error with a keyword recursively
             return this.findErrorKeyword(error[childKey]);
         }
     }
