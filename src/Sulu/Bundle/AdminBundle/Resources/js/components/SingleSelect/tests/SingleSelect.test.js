@@ -75,6 +75,21 @@ test('The component should select the correct option', () => {
     expect(isOptionSelected({props: {value: 'option-3', disabled: false}})).toBe(false);
 });
 
+test('The component should also select the option with the value 0', () => {
+    const select = shallow(
+        <SingleSelect value={0}>
+            <Option value={0}>Option 1</Option>
+            <Option value={1}>Option 2</Option>
+            <Divider />
+            <Option value={2}>Option 3</Option>
+        </SingleSelect>
+    );
+    const isOptionSelected = select.find(Select).props().isOptionSelected;
+    expect(isOptionSelected({props: {value: 0}})).toBe(true);
+    expect(isOptionSelected({props: {value: 1}})).toBe(false);
+    expect(isOptionSelected({props: {value: 2}})).toBe(false);
+});
+
 test('The component should trigger the change callback on select', () => {
     const onChangeSpy = jest.fn();
     const select = shallow(
