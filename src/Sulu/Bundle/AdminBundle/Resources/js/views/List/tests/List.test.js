@@ -159,7 +159,7 @@ test('Should unbind the binding and destroy the store on unmount', () => {
 
     expect(page.get()).toBe(undefined);
     expect(locale.get()).toBe(undefined);
-    expect(router.bind).toBeCalledWith('page', page, '1');
+    expect(router.bind).toBeCalledWith('page', page, 1);
     expect(router.bind).toBeCalledWith('locale', locale);
 
     list.unmount();
@@ -184,7 +184,7 @@ test('Should unbind the binding and destroy the store on unmount without locale'
     const page = router.bind.mock.calls[0][1];
 
     expect(page.get()).toBe(undefined);
-    expect(router.bind).toBeCalledWith('page', page, '1');
+    expect(router.bind).toBeCalledWith('page', page, 1);
     expect(router.bind).not.toBeCalledWith('locale');
 
     list.unmount();

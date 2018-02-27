@@ -41,7 +41,7 @@ class List extends React.Component<ViewProps> {
 
         const observableOptions = {};
 
-        router.bind('page', this.page, '1');
+        router.bind('page', this.page, 1);
         observableOptions.page = this.page;
 
         if (locales) {

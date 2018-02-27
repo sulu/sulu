@@ -98,10 +98,8 @@ export default class DatagridStore {
             return;
         }
 
-        const page = this.getPage();
-
         const observableOptions = {};
-        observableOptions.page = page;
+        observableOptions.page = this.observableOptions.page.get();
 
         if (this.observableOptions.locale) {
             observableOptions.locale = this.observableOptions.locale.get();
@@ -138,13 +136,8 @@ export default class DatagridStore {
         this.dataLoading = dataLoading;
     }
 
-    getPage(): ?number {
-        const page = parseInt(this.observableOptions.page.get());
-        if (!page) {
-            return undefined;
-        }
-
-        return page;
+    getPage() {
+        return this.observableOptions.page.get();
     }
 
     @action setPage(page: number) {
