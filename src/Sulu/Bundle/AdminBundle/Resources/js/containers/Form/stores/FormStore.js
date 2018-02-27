@@ -61,10 +61,10 @@ export default class FormStore {
             if (this.resourceStore.id) {
                 when(
                     () => !this.resourceStore.loading,
-                    () => this.changeType(this.resourceStore.data[TYPE])
+                    () => this.setType(this.resourceStore.data[TYPE])
                 );
             } else if (this.defaultType) {
-                this.changeType(this.defaultType);
+                this.setType(this.defaultType);
             }
         }
 
@@ -117,18 +117,31 @@ export default class FormStore {
         this.resourceStore.set(name, value);
     }
 
+    change(name: string, value: mixed) {
+        this.resourceStore.change(name, value);
+    }
+
     @computed get locale(): ?IObservableValue<string> {
         return this.resourceStore.locale;
     }
 
+    @action setType(type: string) {
+        this.validateTypes();
+        this.type = type;
+        this.set(TYPE, type);
+    }
+
     @action changeType(type: string) {
+        this.validateTypes();
+        this.type = type;
+        this.change(TYPE, type);
+    }
+
+    validateTypes() {
         if (Object.keys(this.types).length === 0) {
             throw new Error(
                 'The resource "' + this.resourceStore.resourceKey + '" handled by this FormStore cannot handle types'
             );
         }
-
-        this.type = type;
-        this.resourceStore.set(TYPE, type);
     }
 }

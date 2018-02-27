@@ -32,7 +32,7 @@ export default class Form extends React.Component<Props> {
     };
 
     handleChange = (name: string, value: mixed) => {
-        this.props.store.set(name, value);
+        this.props.store.change(name, value);
     };
 
     setSubmitButtonRef = (submitButton: ?ElementRef<'button'>) => {

@@ -19,6 +19,7 @@ jest.mock('../stores/FormStore', () => jest.fn(function() {
     this.schema = {};
     this.data = {};
     this.set = jest.fn();
+    this.change = jest.fn();
 }));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
@@ -67,16 +68,16 @@ test('Should pass schema and data to renderer', () => {
     expect(form.find('Renderer').props().data).toBe(store.data);
 });
 
-test('Should set data on store when changed', () => {
+test('Should change data on store when changed', () => {
     const submitSpy = jest.fn();
     const store = new FormStore(new ResourceStore('snippet', '1'));
     const form = shallow(<Form onSubmit={submitSpy} store={store} />);
 
     form.find('Renderer').simulate('change', 'field', 'value');
-    expect(store.set).toBeCalledWith('field', 'value');
+    expect(store.change).toBeCalledWith('field', 'value');
 });
 
-test('Should set data on store without sections', () => {
+test('Should change data on store without sections', () => {
     const submitSpy = jest.fn();
     const store = new FormStore(new ResourceStore('snippet', '1'));
     store.schema = {
@@ -109,5 +110,5 @@ test('Should set data on store without sections', () => {
     const form = mount(<Form store={store} onSubmit={submitSpy} />);
     form.find('Input').at(0).instance().handleChange({currentTarget: {value: 'value!'}});
 
-    expect(store.set).toBeCalledWith('item11', 'value!');
+    expect(store.change).toBeCalledWith('item11', 'value!');
 });
