@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 1.6.15 (2018-02-27)
+    * HOTFIX      #3802 [ContentBundle]           Fixed XmlLoader internal flag
     * HOTFIX      #3796 [HttpCache]               Increased priority of update-response-subscriber 
     * HOTFIX      #3793 [PreviewBundle]           Set context data (token, locale) before render can fail
     * ENHANCEMENT #3779 [ContentBundle]           Improved cache-invalidation for categories/tags in excerpt tab
@@ -13,6 +14,11 @@ CHANGELOG for Sulu
     * HOTFIX      #3750 [PreviewBundle]           Fixed refresh preview
     * HOTFIX      #3747 [RouteBundle]             Added empty array as default value to histories property.
     * BUGFIX      #3755 [RouteBundle]             Fixed how the route provider strips format extensions from the path
+    * HOTFIX      #3789 [MediaBundle]             Check if current user is sulu user to avoid errors
+    * BUGFIX      #3639 [ContentBundle]           Fix structure internal flag and add webspace validate command
+    * ENHANCEMENT #3764 [Component]               Allow dynamic order of elements in webspace xml
+    * HOTFIX      #3752 [ContentBundle]           Overwrite 'doctrine:phpcr:workspace:import' set default to throw
+    * ENHANCEMENT #3775 [Component]               Use is iterable instead of custom is_array twig function in webspace dumper
 
 * 1.6.14 (2018-02-06)
     * ENHANCEMENT #3717 [ContentBundle]           ResourceLocator: Show whole url in history overlay

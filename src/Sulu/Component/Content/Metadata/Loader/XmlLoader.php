@@ -52,7 +52,7 @@ class XmlLoader extends XmlLegacyLoader
         $structure->name = $data['key'];
         $structure->cacheLifetime = $data['cacheLifetime'];
         $structure->controller = $data['controller'];
-        $structure->internal = 'true' === $data['internal'];
+        $structure->internal = $data['internal'];
         $structure->areas = $data['areas'];
         $structure->view = $data['view'];
         $structure->tags = $data['tags'];
@@ -88,7 +88,7 @@ class XmlLoader extends XmlLegacyLoader
                 throw new \InvalidArgumentException(sprintf(
                     'Content type with alias "%s" has not been registered. Known content types are: "%s"',
                     $propertyData['type'],
-                    implode('", "', array_keys($this->contentTypeManager->getAll()))
+                    implode('", "', array_keys($this->contentTypeManager->getAll() ?: []))
                 ));
             }
 
