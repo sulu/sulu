@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.5
+* 1.5.11 (2018-02-27)
     * HOTFIX      #3789 [MediaBundle]           Check if current user is sulu user to avoid errors
     * BUGFIX      #3639 [ContentBundle]         Fix structure internal flag and add webspace validate command
     * ENHANCEMENT #3764 [Component]             Allow dynamic order of elements in webspace xml
