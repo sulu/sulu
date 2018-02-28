@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle';
@@ -100,7 +100,7 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
         const label = (loading) ? '' : this.getLabel(selectedMedia.length);
 
         return (
-            <div>
+            <Fragment>
                 <MultiItemSelection
                     label={label}
                     loading={loading}
@@ -139,7 +139,7 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                 />
-            </div>
+            </Fragment>
         );
     }
 }
