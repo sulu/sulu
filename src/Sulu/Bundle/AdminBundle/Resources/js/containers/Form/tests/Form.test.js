@@ -37,23 +37,15 @@ test('Should render form using renderer', () => {
     expect(form).toMatchSnapshot();
 });
 
-test('Should call onSubmit callback on submit', () => {
+test('Should call onSubmit callback', () => {
     const submitSpy = jest.fn();
     const store = new FormStore(new ResourceStore('snippet', '1'));
     metadataStore.getSchema.mockReturnValue({});
 
     const form = mount(<Form onSubmit={submitSpy} store={store} />);
 
-    const submitButtonClick = jest.fn();
-    form.instance().submitButton.click = submitButtonClick;
-
     form.instance().submit();
 
-    const preventDefault = jest.fn();
-    form.find('form').prop('onSubmit')({preventDefault});
-
-    expect(submitButtonClick).toBeCalled();
-    expect(preventDefault).toBeCalled();
     expect(submitSpy).toBeCalled();
 });
 
@@ -81,12 +73,13 @@ test('Should pass schema, data and showAllErrors flag to Renderer', () => {
     }));
 });
 
-test('Should apss showAllErrors flag to Renderer when form has been submitted', () => {
+test('Should pass showAllErrors flag to Renderer when form has been submitted', () => {
     const store = new FormStore(new ResourceStore('snippet', '1'));
-    const form = shallow(<Form onSubmit={jest.fn()} store={store} />);
+    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
 
     expect(form.find('Renderer').prop('showAllErrors')).toEqual(false);
-    form.find('form').simulate('submit', {preventDefault: jest.fn()});
+    form.find('Form').instance().submit();
+    form.update();
     expect(form.find('Renderer').prop('showAllErrors')).toEqual(true);
 });
 

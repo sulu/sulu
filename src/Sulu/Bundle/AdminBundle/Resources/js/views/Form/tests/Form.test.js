@@ -450,11 +450,11 @@ test('Should save form when submitted', (done) => {
 
     Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).simulate('submit');
+            form.find('Form').at(1).instance().submit();
             expect(resourceStore.destroy).not.toBeCalled();
             expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
             done();
-        });
+        })
     });
 
     jsonSchemaResolve({});
@@ -498,7 +498,7 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
 
     Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).simulate('submit');
+            form.find('Form').at(1).instance().submit();
             expect(resourceStore.destroy).toBeCalled();
             expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
             done();

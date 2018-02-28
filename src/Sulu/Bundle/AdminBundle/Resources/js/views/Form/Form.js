@@ -70,6 +70,7 @@ class Form extends React.PureComponent<Props> {
                     ref={this.setFormRef}
                     store={this.formStore}
                     onSubmit={this.handleSubmit}
+                    actions={['save_xxx','save_publish']}
                 />
             </div>
         );

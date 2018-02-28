@@ -280,7 +280,7 @@ test('Should save form when submitted', (done) => {
 
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
-            mediaDetail.find('Form').simulate('submit');
+            mediaDetail.find('Form').instance().submit();
             expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
             done();
         });
