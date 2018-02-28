@@ -43,7 +43,7 @@ class PageForm extends React.Component<Props> {
         }
     }
 
-    handleSubmit = (options: ?Object) => {
+    handleSubmit = (action) => {
         const {resourceStore, router} = this.props;
 
         const {
@@ -56,7 +56,7 @@ class PageForm extends React.Component<Props> {
 
         const saveOptions = {
             webspace: router.attributes.webspace,
-            action: options ? options.action : undefined,
+            action,
             parent: undefined,
         };
 
@@ -132,14 +132,14 @@ export default withToolbar(PageForm, function() {
                     label: translate('sulu_admin.save_draft'),
                     disabled: !this.props.resourceStore.dirty,
                     onClick: () => {
-                        this.form.submit({action: 'draft'});
+                        this.form.submit('draft');
                     },
                 },
                 {
                     label: translate('sulu_admin.save_publish'),
                     disabled: !this.props.resourceStore.dirty,
                     onClick: () => {
-                        this.form.submit({action: 'publish'});
+                        this.form.submit('publish');
                     },
                 },
             ],

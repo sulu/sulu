@@ -446,7 +446,7 @@ test('Should save form when submitted and redirect to editRoute when creating a 
 
     return Promise.all([webspacePromise, schemaTypesPromise, schemaPromise]).then(() => {
         pageForm.update();
-        pageForm.find('Form').at(0).instance().props.onSubmit({action: 'publish'});
+        pageForm.find('Form').at(0).instance().props.onSubmit('publish');
         expect(resourceStore.destroy).toBeCalled();
         expect(pageForm.instance().formStore.save).toBeCalledWith(
             {

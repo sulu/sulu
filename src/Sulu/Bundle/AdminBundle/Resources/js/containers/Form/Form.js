@@ -8,7 +8,7 @@ import FormStore from './stores/FormStore';
 
 type Props = {
     store: FormStore,
-    onSubmit: (action?: string) => void,
+    onSubmit: (action: ?string) => void,
 };
 
 @observer
@@ -16,7 +16,7 @@ export default class Form extends React.Component<Props> {
     @observable showAllErrors = false;
 
     /** @public */
-    @action submit = (action?: string) => {
+    @action submit = (action: ?string) => {
         this.showAllErrors = true;
         this.props.onSubmit(action);
     };

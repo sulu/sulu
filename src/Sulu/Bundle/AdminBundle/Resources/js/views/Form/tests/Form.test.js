@@ -454,7 +454,7 @@ test('Should save form when submitted', (done) => {
             expect(resourceStore.destroy).not.toBeCalled();
             expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
             done();
-        })
+        });
     });
 
     jsonSchemaResolve({});
