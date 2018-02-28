@@ -3,6 +3,7 @@
 exports[`Should render with skin link 1`] = `
 <button
   class="button link"
+  type="button"
 >
   <span
     class="text"
@@ -13,6 +14,7 @@ exports[`Should render with skin link 1`] = `
 exports[`Should render with skin primary 1`] = `
 <button
   class="button primary"
+  type="button"
 >
   <span
     class="text"
@@ -23,6 +25,7 @@ exports[`Should render with skin primary 1`] = `
 exports[`Should render with skin secondary 1`] = `
 <button
   class="button secondary"
+  type="button"
 >
   <span
     class="text"
@@ -34,6 +37,7 @@ exports[`should render disabled with skin secondary 1`] = `
 <button
   class="button secondary"
   disabled=""
+  type="button"
 >
   <span
     class="text"

@@ -3,6 +3,7 @@
 exports[`The component should render 1`] = `
 <button
   class="displayValue"
+  type="button"
 >
   <div
     aria-label="My value"
@@ -39,6 +40,7 @@ exports[`The component should render 1`] = `
 exports[`The component should render with an icon 1`] = `
 <button
   class="displayValue hasIcon"
+  type="button"
 >
   <span
     aria-label="su-plus"

@@ -134,9 +134,9 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
         </article>
         <footer>
           <div class=\\"actions\\">
-            <button class=\\"button link\\"><span class=\\"text\\">Reset fields</span></button>
+            <button class=\\"button link\\" type=\\"button\\"><span class=\\"text\\">Reset fields</span></button>
           </div>
-          <button class=\\"button primary\\"><span class=\\"text\\">Confirm</span></button>
+          <button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">Confirm</span></button>
         </footer>
       </section>
     </div>

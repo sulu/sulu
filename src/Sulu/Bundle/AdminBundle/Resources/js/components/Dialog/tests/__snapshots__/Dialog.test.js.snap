@@ -17,8 +17,8 @@ exports[`The component should render in body when open 2`] = `
           <div>My dialog content</div>
         </article>
         <footer>
-          <button class=\\"button secondary\\"><span class=\\"text\\">Cancel</span></button>
-          <button class=\\"button primary\\"><span class=\\"text\\">Confirm</span></button>
+          <button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\">Cancel</span></button>
+          <button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">Confirm</span></button>
         </footer>
       </section>
     </div>
@@ -41,8 +41,8 @@ exports[`The component should render in body with loader instead of confirm butt
           <div>My dialog content</div>
         </article>
         <footer>
-          <button class=\\"button secondary\\"><span class=\\"text\\">Cancel</span></button>
-          <button class=\\"button primary loading\\" disabled=\\"\\"><span class=\\"text\\">Confirm</span>
+          <button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\">Cancel</span></button>
+          <button class=\\"button primary loading\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Confirm</span>
             <div class=\\"loader\\">
               <div style=\\"width: 25px; height: 25px;\\" class=\\"spinner\\">
                 <div class=\\"doubleBounce1\\"></div>
