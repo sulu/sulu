@@ -49,12 +49,12 @@ Object {
       "loading": false,
       "options": Array [
         Object {
-          "disabled": false,
+          "disabled": true,
           "label": "Save as draft",
           "onClick": [Function],
         },
         Object {
-          "disabled": false,
+          "disabled": true,
           "label": "Save and publish",
           "onClick": [Function],
         },

@@ -39,6 +39,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
     getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({})),
+    getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
 beforeEach(() => {
@@ -306,21 +307,36 @@ test('Should change template on click in template chooser', () => {
                 return defaultTemplatePromise;
         }
     });
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
 
-    return Promise.all([webspacePromise, typesPromise, homepageTemplatePromise, defaultTemplatePromise]).then(() => {
-        pageForm.update();
-        expect(pageForm.find('Item')).toHaveLength(2);
+    jsonSchemaResolve({});
 
-        const toolbarOptions = withToolbar.mock.calls[0][1].call(pageForm.instance());
-        toolbarOptions.items[1].onChange('default');
-        const schemaPromise = Promise.resolve(defaultTemplateMetadata);
-        metadataStore.getSchema.mockReturnValue(schemaPromise);
-
-        return schemaPromise.then(() => {
+    return Promise.all([
+        webspacePromise,
+        typesPromise,
+        homepageTemplatePromise,
+        defaultTemplatePromise,
+        jsonSchemaPromise]
+    ).then(() => {
+        return jsonSchemaPromise.then(() => {
             pageForm.update();
-            expect(pageForm.find('Item')).toHaveLength(1);
+            expect(pageForm.find('Item')).toHaveLength(2);
+
+            const toolbarOptions = withToolbar.mock.calls[0][1].call(pageForm.instance());
+            toolbarOptions.items[1].onChange('default');
+            const schemaPromise = Promise.resolve(defaultTemplateMetadata);
+            metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+            return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
+                pageForm.update();
+                expect(pageForm.find('Item')).toHaveLength(1);
+            });
         });
     });
 });

@@ -6,7 +6,7 @@ import resourceLocatorStyles from './resourceLocator.scss';
 type Props = {
     value: string,
     onChange: (value: string) => void,
-    onFinish: () => void,
+    onFinish?: () => void,
     mode: 'full' | 'leaf',
 };
 

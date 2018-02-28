@@ -13,7 +13,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
     }
 
     render() {
-        const {onChange, value, options} = this.props;
+        const {onChange, value, options, onFinish} = this.props;
         const mode = options && options.mode ? options.mode : 'leaf';
 
         if (!value) {
@@ -21,7 +21,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
         }
 
         return (
-            <ResourceLocatorComponent value={value} onChange={onChange} mode={mode} />
+            <ResourceLocatorComponent value={value} onChange={onChange} mode={mode} onFinish={onFinish} />
         );
     }
 }

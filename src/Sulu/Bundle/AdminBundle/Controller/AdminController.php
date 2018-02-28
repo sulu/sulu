@@ -537,7 +537,8 @@ EOL
                     "label": "Article",
                     "type": "text_area"
                 }
-            }
+            },
+            "schema": {}
         },
         "new": {
             "title": "New",
@@ -551,7 +552,8 @@ EOL
                     "type": "resource_locator",
                     "size": 3
                 }
-            }
+            },
+            "schema": {}
         }
     }
 }
