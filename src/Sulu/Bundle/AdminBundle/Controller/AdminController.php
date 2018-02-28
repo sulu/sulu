@@ -526,34 +526,42 @@ EOL
             "form": {
                 "title": {
                     "label": "Title",
-                    "type": "text_line"
+                    "type": "text_line",
+                    "required": true
                 },
                 "url": {
                     "label": "Resourcelocator",
                     "type": "resource_locator",
-                    "size": 3
+                    "size": 3,
+                    "required": true
                 },
                 "article": {
                     "label": "Article",
                     "type": "text_area"
                 }
             },
-            "schema": {}
+            "schema": {
+                "required": ["title", "url"]
+            }
         },
         "new": {
             "title": "New",
             "form": {
                 "title": {
                     "label": "Title",
-                    "type": "text_line"
+                    "type": "text_line",
+                    "required": true
                 },
                 "url": {
                     "label": "Resourcelocator",
                     "type": "resource_locator",
-                    "size": 3
+                    "size": 3,
+                    "required": true
                 }
             },
-            "schema": {}
+            "schema": {
+                "required": ["title", "url"]
+            }
         }
     }
 }
