@@ -44,7 +44,16 @@ exports[`Render WebspaceOverview 1`] = `
           >
             <div
               class="toolbar active"
-            />
+            >
+              <div
+                class="item primary"
+              >
+                <span
+                  aria-label="su-add"
+                  class="su-add"
+                />
+              </div>
+            </div>
             <div
               class="column"
             />

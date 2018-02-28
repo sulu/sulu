@@ -150,14 +150,14 @@ export default class FormStore {
         this.errors = errors;
     }
 
-    @action save(): Promise<Object> {
+    @action save(options: Object = {}): Promise<Object> {
         this.validate();
 
         if (Object.keys(this.errors).length > 0) {
             return Promise.reject('Errors occured when trying to save the data from the FormStore');
         }
 
-        return this.resourceStore.save();
+        return this.resourceStore.save(options);
     }
 
     set(name: string, value: mixed) {

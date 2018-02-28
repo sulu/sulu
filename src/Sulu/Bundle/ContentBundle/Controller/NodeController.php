@@ -53,7 +53,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     const WEBSPACE_NODES_ALL = 'all';
 
-    private static $relationName = 'nodes';
+    protected static $relationName = 'nodes';
+
+    public function __construct()
+    {
+        if (self::class === get_class($this)) {
+            @trigger_error('Controller "' . self::class . '" is deprecated. Use "' . PageController::class . '" instead.');
+        }
+    }
 
     /**
      * returns language code from request.
@@ -456,15 +463,19 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @throws MissingParameterException
      * @throws ParameterDataTypeException
      */
-    private function cgetContent(Request $request)
+    protected function cgetContent(Request $request)
     {
         $parent = $request->get('parent');
         $properties = array_filter(explode(',', $request->get('fields', '')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
         $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
-        $locale = $this->getRequestParameter($request, 'language', true);
+        $locale = $this->getLocale($request);
         $webspaceKey = $this->getRequestParameter($request, 'webspace', false);
+
+        if (!$locale) {
+            throw new MissingParameterException(get_class($this), 'locale');
+        }
 
         if (!$webspaceKey && !$webspaceNodes) {
             throw new MissingParameterChoiceException(get_class($this), ['webspace', 'webspace-nodes']);

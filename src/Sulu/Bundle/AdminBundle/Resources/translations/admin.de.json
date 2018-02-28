@@ -5,6 +5,8 @@
     "sulu_admin.of": "von",
     "sulu_admin.page": "Seite",
     "sulu_admin.save": "Speichern",
+    "sulu_admin.save_draft": "Als Entwurf speichern",
+    "sulu_admin.save_publish": "Speichern und veröffentlichen",
     "sulu_admin.object": "Objekt",
     "sulu_admin.objects": "Objekte",
     "sulu_admin.reached_end_of_list": "Sie haben das Ende der Liste erreicht",

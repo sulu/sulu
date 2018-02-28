@@ -82,7 +82,10 @@ class WebspaceOverview extends React.Component<ViewProps> {
         router.bind('webspace', this.webspace);
         apiOptions.webspace = this.webspace;
 
-        this.datagridStore = new DatagridStore('nodes', observableOptions, apiOptions);
+        // TODO: Make this changeable for user
+        apiOptions.fields = 'title,published';
+
+        this.datagridStore = new DatagridStore('pages', observableOptions, apiOptions);
         WebspaceStore.loadWebspaces()
             .then(action((webspaces) => {
                 this.webspaces = webspaces;
@@ -98,6 +101,30 @@ class WebspaceOverview extends React.Component<ViewProps> {
 
         this.datagridStore.destroy();
     }
+
+    handleEditClick = (id: string | number) => {
+        const {router} = this.props;
+        router.navigate(
+            'sulu_content.page_edit_form.detail',
+            {
+                id,
+                locale: this.locale.get(),
+                webspace: router.attributes.webspace,
+            }
+        );
+    };
+
+    handleAddClick = (id: ?string | number) => {
+        const {router} = this.props;
+        router.navigate(
+            'sulu_content.page_add_form.detail',
+            {
+                parentId: id,
+                locale: this.locale.get(),
+                webspace: router.attributes.webspace,
+            }
+        );
+    };
 
     render() {
         return (
@@ -122,6 +149,8 @@ class WebspaceOverview extends React.Component<ViewProps> {
                         <Datagrid
                             store={this.datagridStore}
                             adapters={['column_list']}
+                            onItemClick={this.handleEditClick}
+                            onAddClick={this.handleAddClick}
                         />
                     </Fragment>
                 }

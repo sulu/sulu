@@ -4,8 +4,8 @@ import Datagrid, {
     datagridAdapterRegistry,
     AbstractAdapter,
     FlatStructureStrategy,
-    PaginatedLoadingStrategy,
     InfiniteLoadingStrategy,
+    PaginatedLoadingStrategy,
 } from './Datagrid';
 import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './Datagrid';
 import {viewRegistry} from './ViewRenderer';

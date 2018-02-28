@@ -8,7 +8,7 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
     }),
 }));
 
-test('Load configuration for given key', () => {
+test('Load webspaces', () => {
     const response = {
         _embedded: {
             webspaces: [
@@ -34,5 +34,35 @@ test('Load configuration for given key', () => {
         // check if promise have been cached
         expect(webspaceStore.webspacePromise).toEqual(promise);
         expect(webspaces).toBe(response._embedded.webspaces);
+    });
+});
+
+test('Load webspace with given key', () => {
+    const response = {
+        _embedded: {
+            webspaces: [
+                {
+                    name: 'sulu',
+                    key: 'sulu',
+                },
+                {
+                    name: 'Sulu Blog',
+                    key: 'sulu_blog',
+                },
+            ],
+        },
+    };
+
+    const promise = Promise.resolve(response);
+
+    Requester.get.mockReturnValue(promise);
+
+    const webspacePromise = webspaceStore.loadWebspace('sulu');
+
+    return webspacePromise.then((webspace) => {
+        // check if promise have been cached
+        expect(webspaceStore.webspacePromise).toEqual(promise);
+        expect(webspace.name).toBe(response._embedded.webspaces[0].name);
+        expect(webspace.key).toBe(response._embedded.webspaces[0].key);
     });
 });

@@ -29,6 +29,10 @@ class MetadataStore {
             .then((configuration) => {
                 const typeConfiguration = this.getTypeConfiguration(configuration, type, resourceKey);
 
+                if (!typeConfiguration && type) {
+                    throw new Error('Type "' + type + '" not found for the resourceKey "' + resourceKey + '"');
+                }
+
                 if (!('form' in typeConfiguration)) {
                     let errorMessage = 'There is no form schema for the resourceKey "' + resourceKey + '"';
                     if (type) {

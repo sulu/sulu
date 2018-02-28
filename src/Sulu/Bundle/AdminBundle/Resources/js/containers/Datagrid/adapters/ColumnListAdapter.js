@@ -26,6 +26,26 @@ export default class ColumnListAdapter extends AbstractAdapter {
         }
     };
 
+    handleEditClick = (id: string | number) => {
+        const {onItemClick} = this.props;
+        if (onItemClick) {
+            onItemClick(id);
+        }
+    };
+
+    handleColumnAdd = (index?: string | number) => {
+        if (!index || typeof index !== 'number') {
+            return;
+        }
+
+        const activeItemPath = this.activeItemPath;
+        const {onAddClick} = this.props;
+
+        if (onAddClick && activeItemPath[index-1]) {
+            onAddClick(activeItemPath[index-1]);
+        }
+    };
+
     @computed get activeItemPath(): Array<string | number> {
         const {data} = this.props;
         const tree: Array<TreeItem> = data;
@@ -92,18 +112,35 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
     render() {
         const {loading} = this.props;
+        const buttons = [
+            {
+                icon: 'su-pen',
+                onClick: this.handleEditClick,
+            },
+        ];
+
+        const toolbarItems = [
+            {
+                icon: 'su-add',
+                type: 'button',
+                onClick: this.handleColumnAdd,
+            },
+        ];
 
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
-                <ColumnList onItemClick={this.handleItemClick} toolbarItems={[]}>
+                <ColumnList buttons={buttons} onItemClick={this.handleItemClick} toolbarItems={toolbarItems}>
                     {this.columnData.map((items, index) => (
-                        <ColumnList.Column key={index} loading={index >= this.columnData.length - 1 && loading}>
+                        <ColumnList.Column
+                            key={index}
+                            loading={index >= this.columnData.length - 1 && loading}
+                        >
                             {items.map((item: Object) => (
-                                // TODO: Don't access properties like "hasSub" or "title" directly
+                                // TODO: Don't access properties like "hasChildren" or "title" directly
                                 <ColumnList.Item
                                     id={item.id}
                                     key={item.id}
-                                    hasChildren={item.hasSub}
+                                    hasChildren={item.hasChildren}
                                     active={this.activeItemPath.includes(item.id)}
                                 >
                                     {item.title}

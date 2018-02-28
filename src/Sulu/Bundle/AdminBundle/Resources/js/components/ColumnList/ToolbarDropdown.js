@@ -1,8 +1,8 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ElementRef} from 'react';
 import classNames from 'classnames';
-import {observable} from 'mobx';
+import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import Icon from '../Icon';
 import Popover from '../Popover';
@@ -19,12 +19,12 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
     @observable popoverOpen: boolean = false;
     @observable popoverAnchorElement: ?ElementRef<*>;
 
-    handleOptionClick = (event: SyntheticEvent<HTMLOptionElement>) => {
+    @action handleOptionClick = (event: SyntheticEvent<HTMLOptionElement>) => {
         this.popoverAnchorElement = event.currentTarget;
         this.popoverOpen = true;
     };
 
-    handlePopoverClose = () => {
+    @action handlePopoverClose = () => {
         this.popoverOpen = false;
     };
 
@@ -37,8 +37,10 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
         );
 
         return (
-            <div onClick={this.handleOptionClick} className={className}>
-                <Icon name={icon} />
+            <Fragment>
+                <div onClick={this.handleOptionClick} className={className}>
+                    <Icon name={icon} />
+                </div>
                 <Popover
                     open={this.popoverOpen}
                     anchorElement={this.popoverAnchorElement}
@@ -59,7 +61,7 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
                         )
                     }
                 </Popover>
-            </div>
+            </Fragment>
         );
     };
 }

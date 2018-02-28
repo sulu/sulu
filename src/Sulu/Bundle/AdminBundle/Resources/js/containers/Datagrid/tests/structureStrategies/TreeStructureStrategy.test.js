@@ -14,7 +14,7 @@ test('Should return the correct child array on a getData call', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasSub: false,
+            hasChildren: false,
         },
         children: [],
     };
@@ -22,7 +22,7 @@ test('Should return the correct child array on a getData call', () => {
         data: {
             id: 4,
             title: 'Test2.1',
-            hasSub: false,
+            hasChildren: false,
         },
         children: [],
     };
@@ -30,7 +30,7 @@ test('Should return the correct child array on a getData call', () => {
         data: {
             id: 5,
             title: 'Test2.2',
-            hasSub: false,
+            hasChildren: false,
         },
         children: [],
     };
@@ -38,7 +38,7 @@ test('Should return the correct child array on a getData call', () => {
         data: {
             id: 3,
             title: 'Test2',
-            hasSub: true,
+            hasChildren: true,
         },
         children: [
             test21,
@@ -49,7 +49,7 @@ test('Should return the correct child array on a getData call', () => {
         data: {
             id: 7,
             title: 'Test3.1',
-            hasSub: false,
+            hasChildren: false,
         },
         children: [],
     };
@@ -57,7 +57,7 @@ test('Should return the correct child array on a getData call', () => {
         data: {
             id: 8,
             title: 'Test3.2',
-            hasSub: false,
+            hasChildren: false,
         },
         children: [],
     };
@@ -65,7 +65,7 @@ test('Should return the correct child array on a getData call', () => {
         data: {
             id: 6,
             title: 'Test3',
-            hasSub: true,
+            hasChildren: true,
         },
         children: [
             test31,
@@ -78,7 +78,7 @@ test('Should return the correct child array on a getData call', () => {
             data: {
                 id: 1,
                 title: 'Homepage',
-                hasSub: true,
+                hasChildren: true,
             },
             children: [
                 test1,

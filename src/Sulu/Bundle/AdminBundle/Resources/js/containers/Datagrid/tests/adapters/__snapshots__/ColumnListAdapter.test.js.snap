@@ -15,7 +15,16 @@ exports[`Render data 1`] = `
       >
         <div
           class="toolbar active"
-        />
+        >
+          <div
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
         <div
           class="column"
         >
@@ -24,7 +33,14 @@ exports[`Render data 1`] = `
           >
             <span
               class="buttons"
-            />
+            >
+              <span
+                aria-label="su-pen"
+                class="button su-pen clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
             <span
               class="text"
             >
@@ -64,7 +80,14 @@ exports[`Render data 1`] = `
           >
             <span
               class="buttons"
-            />
+            >
+              <span
+                aria-label="su-pen"
+                class="button su-pen clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
             <span
               class="text"
             >
@@ -102,7 +125,16 @@ exports[`Render data 1`] = `
       >
         <div
           class="toolbar"
-        />
+        >
+          <div
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
         <div
           class="column"
         >
@@ -111,7 +143,14 @@ exports[`Render data 1`] = `
           >
             <span
               class="buttons"
-            />
+            >
+              <span
+                aria-label="su-pen"
+                class="button su-pen clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
             <span
               class="text"
             >
@@ -153,7 +192,16 @@ exports[`Render data 1`] = `
       >
         <div
           class="toolbar"
-        />
+        >
+          <div
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
         <div
           class="column"
         />
@@ -178,7 +226,16 @@ exports[`Render data with loading column 1`] = `
       >
         <div
           class="toolbar active"
-        />
+        >
+          <div
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
         <div
           class="column"
         >
@@ -187,7 +244,14 @@ exports[`Render data with loading column 1`] = `
           >
             <span
               class="buttons"
-            />
+            >
+              <span
+                aria-label="su-pen"
+                class="button su-pen clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
             <span
               class="text"
             >
@@ -227,7 +291,14 @@ exports[`Render data with loading column 1`] = `
           >
             <span
               class="buttons"
-            />
+            >
+              <span
+                aria-label="su-pen"
+                class="button su-pen clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
             <span
               class="text"
             >
@@ -265,7 +336,16 @@ exports[`Render data with loading column 1`] = `
       >
         <div
           class="toolbar"
-        />
+        >
+          <div
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
         <div
           class="column loading"
         >

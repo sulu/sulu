@@ -12,14 +12,14 @@ test('Render data', () => {
                     data: {
                         id: 3,
                         title: 'Page 1.1',
-                        hasSub: false,
+                        hasChildren: false,
                     },
                 },
             ],
             data: {
                 id: 1,
                 title: 'Page 1',
-                hasSub: true,
+                hasChildren: true,
             },
         },
         {
@@ -29,14 +29,14 @@ test('Render data', () => {
                     data: {
                         id: 4,
                         title: 'Page 2.1',
-                        hasSub: true,
+                        hasChildren: true,
                     },
                 },
             ],
             data: {
                 id: 2,
                 title: 'Page 2',
-                hasSub: false,
+                hasChildren: false,
             },
         },
     ];
@@ -64,7 +64,7 @@ test('Render data with loading column', () => {
             data: {
                 id: 1,
                 title: 'Page 1',
-                hasSub: true,
+                hasChildren: true,
             },
         },
         {
@@ -72,7 +72,7 @@ test('Render data with loading column', () => {
             data: {
                 id: 2,
                 title: 'Page 2',
-                hasSub: false,
+                hasChildren: false,
             },
         },
     ];
@@ -104,14 +104,14 @@ test('Execute onItemActivation callback when an item is clicked with the correct
                     data: {
                         id: 3,
                         title: 'Page 1.1',
-                        hasSub: false,
+                        hasChildren: false,
                     },
                 },
             ],
             data: {
                 id: 1,
                 title: 'Page 1',
-                hasSub: true,
+                hasChildren: true,
             },
         },
         {
@@ -121,14 +121,14 @@ test('Execute onItemActivation callback when an item is clicked with the correct
                     data: {
                         id: 4,
                         title: 'Page 2.1',
-                        hasSub: true,
+                        hasChildren: true,
                     },
                 },
             ],
             data: {
                 id: 2,
                 title: 'Page 2',
-                hasSub: false,
+                hasChildren: false,
             },
         },
     ];

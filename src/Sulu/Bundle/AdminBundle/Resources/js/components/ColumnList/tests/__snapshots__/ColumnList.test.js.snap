@@ -224,13 +224,13 @@ exports[`The ColumnList component should render 1`] = `
                       className="fa fa-gear"
                     />
                   </Icon>
-                  <Popover
-                    horizontalOffset={0}
-                    onClose={[Function]}
-                    open={false}
-                    verticalOffset={0}
-                  />
                 </div>
+                <Popover
+                  horizontalOffset={0}
+                  onClose={[Function]}
+                  open={false}
+                  verticalOffset={0}
+                />
               </ToolbarDropdown>
             </div>
           </Toolbar>
@@ -745,13 +745,13 @@ exports[`The ColumnList component should render 1`] = `
                       className="fa fa-gear"
                     />
                   </Icon>
-                  <Popover
-                    horizontalOffset={0}
-                    onClose={[Function]}
-                    open={false}
-                    verticalOffset={0}
-                  />
                 </div>
+                <Popover
+                  horizontalOffset={0}
+                  onClose={[Function]}
+                  open={false}
+                  verticalOffset={0}
+                />
               </ToolbarDropdown>
             </div>
           </Toolbar>
@@ -1157,13 +1157,13 @@ exports[`The ColumnList component should render 1`] = `
                       className="fa fa-gear"
                     />
                   </Icon>
-                  <Popover
-                    horizontalOffset={0}
-                    onClose={[Function]}
-                    open={false}
-                    verticalOffset={0}
-                  />
                 </div>
+                <Popover
+                  horizontalOffset={0}
+                  onClose={[Function]}
+                  open={false}
+                  verticalOffset={0}
+                />
               </ToolbarDropdown>
             </div>
           </Toolbar>
@@ -1560,13 +1560,13 @@ exports[`The ColumnList component should render 1`] = `
                       className="fa fa-gear"
                     />
                   </Icon>
-                  <Popover
-                    horizontalOffset={0}
-                    onClose={[Function]}
-                    open={false}
-                    verticalOffset={0}
-                  />
                 </div>
+                <Popover
+                  horizontalOffset={0}
+                  onClose={[Function]}
+                  open={false}
+                  verticalOffset={0}
+                />
               </ToolbarDropdown>
             </div>
           </Toolbar>

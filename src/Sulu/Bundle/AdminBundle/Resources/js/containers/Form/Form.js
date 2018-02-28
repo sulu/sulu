@@ -10,28 +10,30 @@ import formStyles from './form.scss';
 
 type Props = {
     store: FormStore,
-    onSubmit: () => void,
+    onSubmit: (options: ?Object) => void,
 };
 
 @observer
 export default class Form extends React.Component<Props> {
     @observable showAllErrors = false;
-
+    options: ?Object; // TODO: Change this to a better solution
     submitButton: ?ElementRef<'button'>;
 
     /** @public */
-    submit = () => {
+    submit = (options: ?Object) => {
         const {submitButton} = this;
         if (!submitButton) {
             return;
         }
 
+        this.options = options;
         submitButton.click();
     };
 
     @action handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
         this.showAllErrors = true;
-        this.props.onSubmit();
+        this.props.onSubmit(this.options);
+        this.options = undefined;
         event.preventDefault();
     };
 

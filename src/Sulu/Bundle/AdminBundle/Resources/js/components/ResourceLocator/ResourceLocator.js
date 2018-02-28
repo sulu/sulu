@@ -6,7 +6,7 @@ import resourceLocatorStyles from './resourceLocator.scss';
 type Props = {
     value: string,
     onChange: (value: string) => void,
-    onFinish: () => void,
+    onFinish?: () => void,
     mode: 'full' | 'leaf',
 };
 
@@ -31,6 +31,8 @@ export default class ResourceLocator extends React.PureComponent<Props> {
                 this.changeable = parts.pop();
                 this.fixed = parts.join('/') + '/';
                 break;
+            default:
+                throw new Error('Unknown mode given: "' + mode + '"');
         }
     };
 
