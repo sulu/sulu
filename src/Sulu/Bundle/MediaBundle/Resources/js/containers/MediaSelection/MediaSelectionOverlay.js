@@ -28,12 +28,12 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         excludedIds: [],
     };
 
-    mediaPage: IObservableValue<number> = observable();
-    collectionPage: IObservableValue<number> = observable();
+    mediaPage: IObservableValue<number> = observable(1);
+    collectionPage: IObservableValue<number> = observable(1);
     collectionId: IObservableValue<?string | number> = observable();
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;
-    collectionStore: CollectionStore;
+    @observable collectionStore: CollectionStore;
     selectedMedia: Array<Object> = [];
     overlayDisposer: () => void;
     mediaSelectionsObservationDisposer: () => void;
@@ -42,7 +42,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         const {open} = this.props;
 
         if (open) {
-            this.overlayDisposer = autorun(this.createStores);
+            this.initialize();
         }
     }
 
@@ -54,12 +54,20 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         const {open} = this.props;
 
         if (!open && nextProps.open) {
-            this.overlayDisposer = autorun(this.createStores);
+            this.initialize();
         }
     }
 
     @computed get locale(): IObservableValue<string> {
         return this.props.locale;
+    }
+
+    @action initialize() {
+        this.createCollectionDatagridStore();
+        this.createMediaDatagridStore();
+        this.overlayDisposer = autorun(this.createCollectionStore);
+        this.mediaPage.set(1);
+        this.collectionPage.set(1);
     }
 
     @action destroy() {
@@ -95,49 +103,30 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         this.collectionPage.set(page);
     }
 
-    createStores = () => {
-        this.setMediaPage(1);
-        this.setCollectionPage(1);
-
-        const collectionId = this.collectionId.get();
-
-        this.createCollectionStore(collectionId, this.locale);
-        this.createMediaDatagridStore(collectionId, this.mediaPage, this.locale);
-        this.createCollectionDatagridStore(collectionId, this.collectionPage, this.locale);
-    };
-
-    @action createCollectionDatagridStore(
-        collectionId: ?string | number,
-        page: IObservableValue<number>,
-        locale: IObservableValue<string>
-    ) {
-        if (this.collectionDatagridStore) {
-            this.collectionDatagridStore.destroy();
-        }
-
+    @action createCollectionDatagridStore() {
         this.collectionDatagridStore = new DatagridStore(
             COLLECTIONS_RESOURCE_KEY,
             {
-                page,
-                locale,
-            },
-            (collectionId) ? {parent: collectionId} : undefined
+                page: this.collectionPage,
+                locale: this.locale,
+                parent: this.collectionId,
+            }
         );
     }
 
-    createCollectionStore = (collectionId: ?string | number, locale: IObservableValue<string>) => {
+    createCollectionStore = () => {
+        this.setCollectionStore(new CollectionStore(this.collectionId.get(), this.locale));
+    };
+
+    @action setCollectionStore(collectionStore: CollectionStore) {
         if (this.collectionStore) {
             this.collectionStore.destroy();
         }
 
-        this.collectionStore = new CollectionStore(collectionId, locale);
-    };
+        this.collectionStore = collectionStore;
+    }
 
-    @action createMediaDatagridStore(
-        collectionId: ?string | number,
-        page: IObservableValue<number>,
-        locale: IObservableValue<string>
-    ) {
+    @action createMediaDatagridStore() {
         const {excludedIds} = this.props;
         const options = {};
 
@@ -153,25 +142,16 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             'thumbnails',
         ].join(',');
 
-        page.set(1);
-
-        if (collectionId) {
-            options.collection = collectionId;
-        }
-
         if (excludedIds.length) {
             options.excluded = excludedIds.join(',');
-        }
-
-        if (this.mediaDatagridStore) {
-            this.mediaDatagridStore.destroy();
         }
 
         this.mediaDatagridStore = new DatagridStore(
             MEDIA_RESOURCE_KEY,
             {
-                page,
-                locale,
+                page: this.mediaPage,
+                locale: this.locale,
+                collection: this.collectionId,
             },
             options
         );
@@ -199,7 +179,11 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         }
     };
 
-    handleCollectionNavigate = (collectionId: ?string | number) => {
+    @action handleCollectionNavigate = (collectionId: ?string | number) => {
+        this.mediaDatagridStore.clearData();
+        this.collectionDatagridStore.clearData();
+        this.setMediaPage(1);
+        this.setCollectionPage(1);
         this.collectionId.set(collectionId);
     };
 

@@ -1,5 +1,5 @@
 // @flow
-import {observable} from 'mobx';
+import {action, observable} from 'mobx';
 import type {StructureStrategyInterface} from '../types';
 
 export default class FlatStructureStrategy implements StructureStrategyInterface {
@@ -13,7 +13,7 @@ export default class FlatStructureStrategy implements StructureStrategyInterface
         return this.data;
     }
 
-    clear() {
+    @action clear() {
         this.data.splice(0, this.data.length);
     }
 

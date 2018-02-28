@@ -100,7 +100,7 @@ class MediaOverview extends React.Component<ViewProps> {
         );
     }
 
-    @action handleCollectionOpen = (collectionId) => {
+    @action handleCollectionNavigate = (collectionId) => {
         this.mediaDatagridStore.clearData();
         this.mediaDatagridStore.clearSelection();
         this.collectionDatagridStore.clearData();
@@ -130,7 +130,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     mediaDatagridAdapters={['media_card_overview', 'table']}
                     mediaDatagridStore={this.mediaDatagridStore}
                     collectionDatagridStore={this.collectionDatagridStore}
-                    onCollectionNavigate={this.handleCollectionOpen}
+                    onCollectionNavigate={this.handleCollectionNavigate}
                     onMediaNavigate={this.handleMediaNavigate}
                 />
             </div>
