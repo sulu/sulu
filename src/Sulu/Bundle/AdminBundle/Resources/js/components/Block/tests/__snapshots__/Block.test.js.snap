@@ -106,6 +106,7 @@ exports[`Render an expanded block with a multiple types 1`] = `
         >
           <button
             class="displayValue"
+            type="button"
           >
             <div
               aria-label="Type1"

@@ -44,6 +44,7 @@ exports[`Should render a block list 1`] = `
   </div>
   <button
     class="button secondary"
+    type="button"
   >
     <span
       class="text"
@@ -103,6 +104,7 @@ exports[`Should render a fully filled block list without add button if maxOccurs
   <button
     class="button secondary"
     disabled=""
+    type="button"
   >
     <span
       class="text"
@@ -126,6 +128,7 @@ exports[`Should render an empty block list 1`] = `
   />
   <button
     class="button secondary"
+    type="button"
   >
     <span
       class="text"

@@ -6,6 +6,7 @@ exports[`The component should render 1`] = `
 >
   <button
     class="button link"
+    type="button"
   >
     <span
       class="text"
@@ -15,6 +16,7 @@ exports[`The component should render 1`] = `
   </button>
   <button
     class="button link"
+    type="button"
   >
     <span
       class="text"

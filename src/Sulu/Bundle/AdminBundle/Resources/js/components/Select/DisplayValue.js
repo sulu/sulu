@@ -46,6 +46,7 @@ export default class DisplayValue extends React.PureComponent<Props> {
                 ref={this.setButtonRef}
                 onClick={this.handleClick}
                 className={displayValueClass}
+                type="button"
             >
                 {!!icon &&
                     <Icon className={displayValueStyles.frontIcon} name={icon} />

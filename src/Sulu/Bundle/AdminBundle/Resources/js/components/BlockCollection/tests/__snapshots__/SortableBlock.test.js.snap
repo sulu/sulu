@@ -88,6 +88,7 @@ exports[`Render expanded sortable block with types 1`] = `
         >
           <button
             class="displayValue"
+            type="button"
           >
             <div
               aria-label="Type 2"
