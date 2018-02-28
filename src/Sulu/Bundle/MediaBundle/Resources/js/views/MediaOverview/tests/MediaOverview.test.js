@@ -66,6 +66,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
+            this.clearData = jest.fn();
             this.updateStrategies = jest.fn();
         }),
         FlatStructureStrategy: require(
@@ -219,7 +220,7 @@ test('Should navigate to defined route on back button click', () => {
     });
 });
 
-test('Router navigate should be called when a collection or media was clicked', () => {
+test('Router navigate should be called when a media was clicked', () => {
     const MediaOverview = require('../MediaOverview').default;
     const locale = 'de';
     const router = {
@@ -236,18 +237,44 @@ test('Router navigate should be called when a collection or media was clicked', 
         navigate: jest.fn(),
     };
     const mediaOverview = mount(<MediaOverview router={router} />);
-    mediaOverview.instance().collectionId = 4;
     mediaOverview.instance().locale.set(locale);
-
-    mediaOverview.find('Folder').at(1).simulate('click');
-    expect(router.navigate).toBeCalledWith(
-        'sulu_media.overview',
-        {'collectionPage': '1', 'id': 2, 'locale': locale}
-    );
 
     mediaOverview.find('.media').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith(
         'sulu_media.form.detail',
         {'id': 1, 'locale': locale}
     );
+});
+
+test('The collectionId should be update along with the content when a collection was clicked', () => {
+    const MediaOverview = require('../MediaOverview').default;
+    const locale = 'de';
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: [locale],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+        navigate: jest.fn(),
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />);
+    mediaOverview.instance().locale.set(locale);
+    mediaOverview.instance().mediaPage.set(3);
+    mediaOverview.instance().collectionPage.set(2);
+    mediaOverview.instance().collectionId.set(4);
+
+    mediaOverview.find('Folder').at(0).simulate('click');
+
+    expect(mediaOverview.instance().collectionId.get()).toEqual(1);
+    expect(mediaOverview.instance().collectionPage.get()).toEqual(1);
+    expect(mediaOverview.instance().mediaPage.get()).toEqual(1);
+    expect(mediaOverview.instance().mediaDatagridStore.clearSelection).toBeCalled();
+    expect(mediaOverview.instance().mediaDatagridStore.clearData).toBeCalled();
+    expect(mediaOverview.instance().collectionDatagridStore.clearSelection).toBeCalled();
+    expect(mediaOverview.instance().collectionDatagridStore.clearData).toBeCalled();
 });

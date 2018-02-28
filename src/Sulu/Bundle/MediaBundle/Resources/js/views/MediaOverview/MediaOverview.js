@@ -20,10 +20,10 @@ class MediaOverview extends React.Component<ViewProps> {
     mediaPage: IObservableValue<number> = observable();
     collectionPage: IObservableValue<number> = observable();
     locale: IObservableValue<string> = observable();
-    collectionId: IObservableValue<?number> = observable();
+    collectionId: IObservableValue<?number | string> = observable();
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;
-    collectionStore: CollectionStore;
+    @observable collectionStore: CollectionStore;
     disposer: () => void;
 
     componentWillMount() {
@@ -35,7 +35,9 @@ class MediaOverview extends React.Component<ViewProps> {
         router.bind('locale', this.locale);
         router.bind('id', this.collectionId);
 
-        this.disposer = autorun(this.createStores);
+        this.disposer = autorun(this.createCollectionStore);
+        this.createCollectionDatagridStore();
+        this.createMediaDatagridStore();
     }
 
     componentWillUnmount() {
@@ -49,38 +51,30 @@ class MediaOverview extends React.Component<ViewProps> {
         this.disposer();
     }
 
-    createStores = () => {
-        const collectionId = this.collectionId.get();
-
-        this.createCollectionStore(collectionId, this.locale);
-        this.createMediaDatagridStore(collectionId, this.mediaPage, this.locale);
-        this.createCollectionDatagridStore(collectionId, this.collectionPage, this.locale);
+    createCollectionStore = () => {
+        this.setCollectionStore(new CollectionStore(this.collectionId.get(), this.locale));
     };
 
-    @action createCollectionDatagridStore(collectionId, page, locale) {
-        if (this.collectionDatagridStore) {
-            this.collectionDatagridStore.destroy();
-        }
-
-        this.collectionDatagridStore = new DatagridStore(
-            COLLECTIONS_RESOURCE_KEY,
-            {
-                page,
-                locale,
-            },
-            (collectionId) ? {parent: collectionId} : undefined
-        );
-    }
-
-    createCollectionStore = (collectionId, locale) => {
+    @action setCollectionStore(collectionStore) {
         if (this.collectionStore) {
             this.collectionStore.destroy();
         }
 
-        this.collectionStore = new CollectionStore(collectionId, locale);
+        this.collectionStore = collectionStore;
+    }
+
+    createCollectionDatagridStore = () => {
+        this.collectionDatagridStore = new DatagridStore(
+            COLLECTIONS_RESOURCE_KEY,
+            {
+                page: this.collectionPage,
+                locale: this.locale,
+                parent: this.collectionId,
+            }
+        );
     };
 
-    @action createMediaDatagridStore(collectionId, page, locale) {
+    createMediaDatagridStore() {
         const options = {};
 
         options.limit = 50;
@@ -95,36 +89,25 @@ class MediaOverview extends React.Component<ViewProps> {
             'thumbnails',
         ].join(',');
 
-        page.set(1);
-
-        if (collectionId) {
-            options.collection = collectionId;
-        }
-
-        if (this.mediaDatagridStore) {
-            this.mediaDatagridStore.destroy();
-        }
-
         this.mediaDatagridStore = new DatagridStore(
             MEDIA_RESOURCE_KEY,
             {
-                page,
-                locale,
+                page: this.mediaPage,
+                locale: this.locale,
+                collection: this.collectionId,
             },
             options
         );
     }
 
-    handleCollectionOpen = (collectionId) => {
-        const {router} = this.props;
-        router.navigate(
-            COLLECTION_ROUTE,
-            {
-                id: collectionId,
-                collectionPage: '1',
-                locale: this.locale.get(),
-            }
-        );
+    @action handleCollectionOpen = (collectionId) => {
+        this.mediaDatagridStore.clearData();
+        this.mediaDatagridStore.clearSelection();
+        this.collectionDatagridStore.clearData();
+        this.collectionDatagridStore.clearSelection();
+        this.mediaPage.set(1);
+        this.collectionPage.set(1);
+        this.collectionId.set(collectionId);
     };
 
     handleMediaNavigate = (mediaId) => {

@@ -382,6 +382,17 @@ test('Clear the selection', () => {
     expect(datagridStore.selections).toHaveLength(0);
 });
 
+test('Clear the data', () => {
+    const datagridStore = new DatagridStore('tests', {
+        page: observable(),
+    });
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(new LoadingStrategy(), structureStrategy);
+
+    datagridStore.clearData();
+    expect(structureStrategy.clear).toBeCalled();
+});
+
 test('Nothing should happen when to the same loading strategy is changed', () => {
     const loadingStrategy = new LoadingStrategy();
 
