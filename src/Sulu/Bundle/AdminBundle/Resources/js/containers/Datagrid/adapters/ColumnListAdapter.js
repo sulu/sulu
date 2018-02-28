@@ -136,11 +136,11 @@ export default class ColumnListAdapter extends AbstractAdapter {
                             loading={index >= this.columnData.length - 1 && loading}
                         >
                             {items.map((item: Object) => (
-                                // TODO: Don't access properties like "hasSub" or "title" directly
+                                // TODO: Don't access properties like "hasChildren" or "title" directly
                                 <ColumnList.Item
                                     id={item.id}
                                     key={item.id}
-                                    hasChildren={item.hasSub}
+                                    hasChildren={item.hasChildren}
                                     active={this.activeItemPath.includes(item.id)}
                                 >
                                     {item.title}
