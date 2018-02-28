@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * BUGFIX      #3805 [ContentBundle]           Fix spacing between rows and section in content template generation
+
 * 1.6.15 (2018-02-27)
     * HOTFIX      #3802 [ContentBundle]           Fixed XmlLoader internal flag
     * HOTFIX      #3796 [HttpCache]               Increased priority of update-response-subscriber 
