@@ -512,13 +512,47 @@ EOL
 EOL
             );
             break;
-        case 'nodes':
+        case 'pages':
             $response = new Response(
                 <<<'EOL'
 {
     "list": {
         "id": {},
         "title": {}
+    },
+    "types": {
+        "default": {
+            "title": "Default",
+            "form": {
+                "title": {
+                    "label": "Title",
+                    "type": "text_line"
+                },
+                "url": {
+                    "label": "Resourcelocator",
+                    "type": "resource_locator",
+                    "size": 3
+                },
+                "article": {
+                    "label": "Article",
+                    "type": "text_area"
+                }
+            }
+        },
+        "new": {
+            "title": "New",
+            "form": {
+                "title": {
+                    "label": "Title",
+                    "type": "text_line"
+                },
+                "url": {
+                    "label": "Resourcelocator",
+                    "type": "resource_locator",
+                    "size": 3
+                }
+            }
+        }
     }
 }
 EOL

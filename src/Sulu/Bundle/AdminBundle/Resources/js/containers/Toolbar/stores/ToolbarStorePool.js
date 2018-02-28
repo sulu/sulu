@@ -45,7 +45,7 @@ class ToolbarStorePool {
         return this.stores[key];
     };
 
-    setToolbarConfig = (key: string, config: ToolbarConfig = {}) => {
+    setToolbarConfig = (key: string, config: ToolbarConfig) => {
         const toolbar = this.getStore(key);
 
         toolbar.setConfig(config);

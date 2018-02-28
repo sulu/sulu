@@ -36,7 +36,13 @@ $itemColorHover: $white;
 .button {
     height: 20px;
     width: 20px;
+    font-size: 20px;
+    text-align: center;
     visibility: hidden;
+
+    &:last-child {
+        margin-right: 5px;
+    }
 }
 
 .item:hover {

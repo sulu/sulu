@@ -11,6 +11,7 @@ import datagridStyles from './datagrid.scss';
 
 type Props = {
     onItemClick?: (itemId: string | number) => void,
+    onAddClick?: (id: string | number) => void,
     store: DatagridStore,
     adapters: Array<string>,
 };
@@ -91,6 +92,7 @@ export default class Datagrid extends React.Component<Props> {
         const {
             store,
             onItemClick,
+            onAddClick,
             adapters,
         } = this.props;
         const Adapter = this.currentAdapter;
@@ -110,6 +112,7 @@ export default class Datagrid extends React.Component<Props> {
                     onItemActivation={this.handleItemActivation}
                     onItemClick={onItemClick}
                     onItemSelectionChange={this.handleItemSelectionChange}
+                    onAddClick={onAddClick}
                     onPageChange={this.handlePageChange}
                     page={store.getPage()}
                     pageCount={store.pageCount}

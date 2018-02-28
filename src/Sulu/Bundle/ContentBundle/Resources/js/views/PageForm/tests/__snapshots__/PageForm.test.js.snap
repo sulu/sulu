@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should show loading templates chooser in toolbar while types are loading 1`] = `
+Object {
+  "backButton": Object {
+    "onClick": [Function],
+  },
+  "items": Array [
+    Object {
+      "icon": "su-save",
+      "label": "Save",
+      "loading": false,
+      "options": Array [
+        Object {
+          "disabled": true,
+          "label": "Save as draft",
+          "onClick": [Function],
+        },
+        Object {
+          "disabled": true,
+          "label": "Save and publish",
+          "onClick": [Function],
+        },
+      ],
+      "type": "dropdown",
+    },
+    Object {
+      "icon": "fa-paint-brush",
+      "loading": true,
+      "onChange": [Function],
+      "options": Array [],
+      "type": "select",
+      "value": undefined,
+    },
+  ],
+  "locale": undefined,
+}
+`;
+
+exports[`Should show templates chooser in toolbar if types are available 1`] = `
+Object {
+  "backButton": Object {
+    "onClick": [Function],
+  },
+  "items": Array [
+    Object {
+      "icon": "su-save",
+      "label": "Save",
+      "loading": false,
+      "options": Array [
+        Object {
+          "disabled": false,
+          "label": "Save as draft",
+          "onClick": [Function],
+        },
+        Object {
+          "disabled": false,
+          "label": "Save and publish",
+          "onClick": [Function],
+        },
+      ],
+      "type": "dropdown",
+    },
+    Object {
+      "icon": "fa-paint-brush",
+      "loading": false,
+      "onChange": [Function],
+      "options": Array [
+        Object {
+          "label": "Sidebar",
+          "value": "sidebar",
+        },
+        Object {
+          "label": "Footer",
+          "value": "footer",
+        },
+      ],
+      "type": "select",
+      "value": "homepage",
+    },
+  ],
+  "locale": Object {
+    "onChange": [Function],
+    "options": Array [
+      Object {
+        "label": "en",
+        "value": "en",
+      },
+      Object {
+        "label": "de",
+        "value": "de",
+      },
+    ],
+    "value": "de",
+  },
+}
+`;

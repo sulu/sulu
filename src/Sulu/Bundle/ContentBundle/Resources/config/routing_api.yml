@@ -6,6 +6,10 @@ sulu_content.node:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\NodeController
 
+sulu_content.page:
+    type: rest
+    resource: Sulu\Bundle\ContentBundle\Controller\PageController
+
 sulu_content.node.seo:
     type: rest
     parent: sulu_content.node

@@ -11,7 +11,7 @@ class ResourceMetadataStore {
         tags: '/admin/api/tags',
         collections: '/admin/api/collections',
         media: '/admin/api/media',
-        nodes: '/admin/api/nodes', // TODO rename nodes to pages
+        pages: '/admin/api/pages',
     };
 
     configurationPromises: {[string]: Promise<Object>} = {};

@@ -31,6 +31,8 @@ export default class ResourceLocator extends React.PureComponent<Props> {
                 this.changeable = parts.pop();
                 this.fixed = parts.join('/') + '/';
                 break;
+            default:
+                throw new Error('Unknown mode given: "' + mode + '"');
         }
     };
 
