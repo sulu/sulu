@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-release/1.5
+    * FEATURE     #3816 [All]                   Validate if grunt build was run for all bundles with circleci
     * BUGFIX      #3806 [All]                   Fix compatibility on lowest and fix appveyor
     * BUGFIX      #3351 [ContentBundle]         Fix spacing between rows and section in content template generation
 
