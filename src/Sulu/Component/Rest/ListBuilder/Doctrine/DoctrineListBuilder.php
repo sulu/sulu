@@ -162,7 +162,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         $this->queryBuilder = $this->createFullQueryBuilder(
-            $this->em->createQueryBuilder()->from($this->entityName, $this->entityName)
+            $this->em->createQueryBuilder()->from($this->entityName, $this->encodeAlias($this->entityName))
         );
 
         // now select all data
