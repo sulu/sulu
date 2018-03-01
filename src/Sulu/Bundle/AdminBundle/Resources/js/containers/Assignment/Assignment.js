@@ -1,8 +1,30 @@
 // @flow
 import React from 'react';
+import {MultiItemSelection} from '../../components';
 
-export default class Assignment extends React.Component<{}> {
+type Props = {
+    icon: string,
+};
+
+export default class Assignment extends React.Component<Props> {
+    static defaultProps = {
+        icon: 'su-plus',
+    };
+
+    handleOverlayOpen = () => {
+        // TODO implement overlay
+    };
+
     render() {
-        return null;
+        const {icon} = this.props;
+
+        return (
+            <MultiItemSelection
+                leftButton={{
+                    icon,
+                    onClick: this.handleOverlayOpen,
+                }}
+            />
+        );
     }
 }

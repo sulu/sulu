@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Show with default plus icon 1`] = `
+<div>
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>
+  <ul
+    class="list"
+  />
+</div>
+`;
+
+exports[`Show with passed icon 1`] = `
+<div>
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-document"
+        class="su-document"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>
+  <ul
+    class="list"
+  />
+</div>
+`;
