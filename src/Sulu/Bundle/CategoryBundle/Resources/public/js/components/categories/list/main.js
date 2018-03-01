@@ -67,7 +67,8 @@ define([
                         export: {
                             options: {
                                 urlParameter: {
-                                    flat: true
+                                    flat: true,
+                                    locale: this.options.locale
                                 },
                                 url: '/admin/api/categories.csv'
                             }

@@ -6,5 +6,7 @@
 
     {% include type.template %}
 
-    <div class="input-description">{{ property.getInfoText(userLocale) }}</div>
+    {% if property.getInfoText(userLocale) %}
+        <div class="input-description">{{ property.getInfoText(userLocale) }}</div>
+    {% endif %}
 </div>
