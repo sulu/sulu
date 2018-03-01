@@ -10,8 +10,6 @@ import MediaSelectionOverlay from './MediaSelectionOverlay';
 import MediaSelectionItem from './MediaSelectionItem';
 import type {Value} from './types';
 
-const ADD_ICON = 'su-plus';
-
 @observer
 export default class MediaSelection extends React.Component<FieldTypeProps<Value>> {
     mediaSelectionStore: MediaSelectionStore;
@@ -106,7 +104,7 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
                     loading={loading}
                     onItemRemove={this.handleRemove}
                     leftButton={{
-                        icon: ADD_ICON,
+                        icon: 'su-image',
                         onClick: this.handleOverlayOpen,
                     }}
                     onItemsSorted={this.handleSorted}

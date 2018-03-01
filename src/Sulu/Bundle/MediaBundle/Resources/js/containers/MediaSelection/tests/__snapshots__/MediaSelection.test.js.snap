@@ -161,8 +161,8 @@ Array [
         type="button"
       >
         <span
-          aria-label="su-plus"
-          class="su-plus"
+          aria-label="su-image"
+          class="su-image"
         />
       </button>
       <div
