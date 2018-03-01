@@ -65,6 +65,7 @@ install:
   - echo extension=php_intl.dll >> php.ini
   - echo extension=php_pdo_mysql.dll >> php.ini
   - echo extension=php_fileinfo.dll >> php.ini
+  - php -i
 
 before_test:
   - cd %APPVEYOR_BUILD_FOLDER%

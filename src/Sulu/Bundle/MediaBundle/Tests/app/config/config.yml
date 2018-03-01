@@ -8,6 +8,9 @@ sulu_media:
         response_headers:
             Expires: "+1 month"
 
+framework:
+    assets: ~
+
 # Doctrine Configuration
 doctrine:
     orm:

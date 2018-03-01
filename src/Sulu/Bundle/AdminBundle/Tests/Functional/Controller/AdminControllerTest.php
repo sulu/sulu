@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -26,6 +27,8 @@ class AdminControllerTest extends SuluTestCase
     {
         $this->purgeDatabase();
         $this->em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+        $collectionType = new LoadCollectionTypes();
+        $collectionType->load($this->getEntityManager());
     }
 
     public function testIndexAction()

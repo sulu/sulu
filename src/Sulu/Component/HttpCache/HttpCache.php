@@ -134,7 +134,7 @@ class HttpCache extends AbstractHttpCache
             $visitorTargetGroup = $this->requestTargetGroup($request, $visitorTargetGroup);
         }
 
-        if ($request->isMethodCacheable()) {
+        if ($request->isMethodSafe()) {
             // add the target group as separate header to vary on it
             $request->headers->set(static::TARGET_GROUP_HEADER, (string) $visitorTargetGroup);
         }
