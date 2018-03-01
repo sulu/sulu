@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-release/1.5
+    * BUGFIX      #3806 [All]                   Fix compatibility on lowest and fix appveyor
     * BUGFIX      #3351 [ContentBundle]         Fix spacing between rows and section in content template generation
 
 * 1.5.11 (2018-02-27)
