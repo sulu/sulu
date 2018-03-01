@@ -179,7 +179,7 @@ test('Unbind all query params and destroy all stores on unmount', () => {
 
     expect(page.get()).toBe(undefined);
     expect(locale.get()).toBe(undefined);
-    expect(router.bind).toBeCalledWith('collectionPage', page, '1');
+    expect(router.bind).toBeCalledWith('collectionPage', page, 1);
     expect(router.bind).toBeCalledWith('locale', locale);
 
     mediaOverview.unmount();

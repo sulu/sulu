@@ -31,7 +31,7 @@ class MediaOverview extends React.Component<ViewProps> {
 
         this.mediaPage.set(1);
 
-        router.bind('collectionPage', this.collectionPage, '1');
+        router.bind('collectionPage', this.collectionPage, 1);
         router.bind('locale', this.locale);
         router.bind('id', this.collectionId);
 
