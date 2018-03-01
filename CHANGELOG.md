@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * BUGFIX      #3806 [All]                     Fix compatibility on lowest and fix appveyor
     * BUGFIX      #3805 [ContentBundle]           Fix spacing between rows and section in content template generation
     * HOTFIX      #3797 [CategoryBundle]          Fixed category csv-export
     * HOTFIX      #3797 [Rest]                    Fixed issue with large amount of ids in doctrine list-builder query
@@ -184,6 +185,10 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* dev-release/1.5
+    * BUGFIX      #3806 [All]                   Fix compatibility on lowest and fix appveyor
+    * BUGFIX      #3351 [ContentBundle]         Fix spacing between rows and section in content template generation
 
 * 1.5.11 (2018-02-27)
     * HOTFIX      #3789 [MediaBundle]           Check if current user is sulu user to avoid errors

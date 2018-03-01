@@ -1,64 +1,83 @@
 build: false
 
-init:
-  - SET PATH=%PATH%;C:\Program Files\OpenSSL;c:\tools\php;c:\cygwin\bin
+platform:
+  - x64
 
-  # uncomment to allow remote desktop connection
-  #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-on_finish:
-  # uncomment to show remote desktop connection details and block build
-  #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+environment:
+  matrix:
+    # see http://windows.php.net/downloads/releases/ for available versions
+    - PHP_VERSION: 5.6.33
+      SYMFONY__DATABASE__PASSWORD: Password12!
+    - PHP_VERSION: 7.1.14
+      JACKRABBIT_VERSION: 2.12.0
+      SYMFONY__PHPCR__TRANSPORT: jackrabbit
+      SYMFONY__DATABASE__PASSWORD: Password12!
 
 services:
   - mysql
 
-environment:
-  JACKRABBIT_VERSION: '2.12.0'
-  SYMFONY__DATABASE__PASSWORD: Password12!
+hosts:
+  localhost: 127.0.0.1
 
-platform: x86
+init:
+  - SET PATH=C:\tools\php;%PATH%
 
 cache:
-  # cache composer downloads
-  - '%LOCALAPPDATA%\Composer\files'
-
-  # jackrabbit will be re-downloaded when jackrabbit.sh is modified.
-  - jackrabbit-standalone-%JACKRABBIT_VERSION%.jar -> bin\jackrabbit.sh
-
+  - '%APPDATA%\Composer'
+  - '%LOCALAPPDATA%\Composer'
+  - jackrabbit-standalone-%JACKRABBIT_VERSION%.jar
+  # Redownload when appveyor.yml changed
+  - C:\tools\php -> appveyor.yml
+  - C:\tools\composer.phar -> appveyor.yml
 
 install:
-  # install SSL and php
-  - cinst -y OpenSSL.Light
-  - cinst -y php --version 7.0.9 --allow-empty-checksums
+  # disable wuauserv service
+  - ps: Set-Service wuauserv -StartupType Manual
+
+  # install jackrabbit
+  - IF NOT EXIST jackrabbit-standalone-%JACKRABBIT_VERSION%.jar (
+        IF "%SYMFONY__PHPCR__TRANSPORT%" == "jackrabbit" (
+            cd %APPVEYOR_BUILD_FOLDER%
+            && appveyor DownloadFile http://archive.apache.org/dist/jackrabbit/%JACKRABBIT_VERSION%/jackrabbit-standalone-%JACKRABBIT_VERSION%.jar
+        )
+    )
+
+  # install composer
+  - IF NOT EXIST C:\tools\composer.phar (
+        cd C:\tools
+        && appveyor DownloadFile https://getcomposer.org/composer.phar
+    )
+
+  # install php
+  - IF NOT EXIST C:\tools\php (
+        cinst --yes --allow-empty-checksums php --version %PHP_VERSION% --params '/InstallDir:C:\tools\php'
+    )
 
   # configure PHP and enable extensions.
-  - cd c:\tools\php
-  - copy php.ini-production php.ini /Y
+  - cd C:\tools\php
+  - ps: cat php.ini-production | %{$_ -replace "memory_limit = 128M","memory_limit = 2048M"} | Out-File -Encoding "Default" php.ini
   - echo date.timezone="UTC" >> php.ini
   - echo extension_dir=ext >> php.ini
-  - echo extension=php_gd2.dll >> php.ini
+  - echo extension=php_curl.dll >> php.ini
   - echo extension=php_openssl.dll >> php.ini
   - echo extension=php_mbstring.dll >> php.ini
+  - echo extension=php_gd2.dll >> php.ini
   - echo extension=php_intl.dll >> php.ini
-  - echo extension=php_pdo_sqlite.dll >> php.ini
   - echo extension=php_pdo_mysql.dll >> php.ini
-  - echo extension=php_curl.dll >> php.ini
   - echo extension=php_fileinfo.dll >> php.ini
-  - echo memory_limit=1G >> php.ini
-  - appveyor DownloadFile https://phar.phpunit.de/phpunit.phar
-  - ps: echo ("@php c:\tools\php\phpunit.phar %*") | Out-File phpunit.bat -encoding ascii
 
-  # install and start jackrabbit
+before_test:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - ls
-  - if not exist jackrabbit-standalone-%JACKRABBIT_VERSION%.jar appveyor DownloadFile http://archive.apache.org/dist/jackrabbit/%JACKRABBIT_VERSION%/jackrabbit-standalone-%JACKRABBIT_VERSION%.jar
-  - ls
-  - ps: Start-Process ("jackrabbit-standalone-" + $env:JACKRABBIT_VERSION + ".jar")
 
-  # install composer and phpunit
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - php -r "readfile('http://getcomposer.org/installer');" | php
-  - php composer.phar install --no-interaction --no-progress --prefer-dist
+  # Start Jackrabbit
+  - java -version
+  - ps: if ($env:SYMFONY__PHPCR__TRANSPORT -MATCH "jackrabbit") { $argumentList='-jar jackrabbit-standalone-' + $env:JACKRABBIT_VERSION + '.jar'; Start-Process -FilePath java -ArgumentList $argumentList }
+
+  # Composer install
+  - php -dmemory_limit=-1 C:\tools\composer.phar update --no-interaction --no-progress --prefer-dist --no-ansi
+  - IF "%SYMFONY__PHPCR__TRANSPORT%" == "jackrabbit" (
+        php -dmemory_limit=-1 C:\tools\composer.phar require jackalope/jackalope-jackrabbit:~1.2
+    )
 
 test_script:
    - cd %APPVEYOR_BUILD_FOLDER%
