@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
+use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -54,11 +55,17 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
                 'key' => $key,
                 'template' => $area['template'],
                 'title' => $area['title'],
+                'defaultUuid' => null,
+                'defaultTitle' => null,
             ];
 
-            $snippet = $defaultSnippetManager->load($webspaceKey, $key, $this->getUser()->getLocale());
-            $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
-            $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
+            try {
+                $snippet = $defaultSnippetManager->load($webspaceKey, $key, $this->getUser()->getLocale());
+                $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
+                $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
+            } catch (WrongSnippetTypeException $exception) {
+                // ignore wrong snippet-type
+            }
 
             $dataList[] = $areaData;
         }
