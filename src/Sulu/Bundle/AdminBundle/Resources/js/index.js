@@ -9,7 +9,7 @@ import Router, {routeRegistry} from './services/Router';
 import {setTranslations} from './utils/Translator';
 import TextArea from './components/TextArea';
 import Application from './containers/Application';
-import {fieldRegistry, Input, ResourceLocator, SingleSelect} from './containers/Form';
+import {fieldRegistry, Assignment, Input, ResourceLocator, SingleSelect} from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
 import {viewRegistry} from './containers/ViewRenderer';
 import {ColumnListAdapter, datagridAdapterRegistry, FolderAdapter, TableAdapter} from './containers/Datagrid';
@@ -37,6 +37,7 @@ datagridAdapterRegistry.add('table', TableAdapter);
 fieldRegistry.add('block', FieldBlocks);
 fieldRegistry.add('resource_locator', ResourceLocator);
 fieldRegistry.add('single_select', SingleSelect);
+fieldRegistry.add('snippet', Assignment); // TODO replace with registration in bundle or configuration from server
 fieldRegistry.add('text_line', Input);
 fieldRegistry.add('text_area', TextArea);
 
