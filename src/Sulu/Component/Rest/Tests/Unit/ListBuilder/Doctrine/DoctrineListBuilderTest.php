@@ -112,6 +112,9 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             $this->eventDispatcher->reveal(),
             [PermissionTypes::VIEW => 64]
         );
+        $this->doctrineListBuilder->limit(10);
+        $this->queryBuilder->setFirstResult(Argument::any())->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->setMaxResults(Argument::any())->willReturn($this->queryBuilder->reveal());
 
         $event = new ListBuilderCreateEvent($this->doctrineListBuilder);
         $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event)->willReturn($event);
@@ -870,6 +873,17 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->setParameter('entityClass', 'SuluCoreBundle:Example')->shouldBeCalled();
         $this->queryBuilder->setParameter('permission', 64)->shouldBeCalled();
 
+        $this->doctrineListBuilder->execute();
+    }
+
+    /**
+     * Check if only one query is executed when no limit and no expressions.
+     */
+    public function testSingleQuery()
+    {
+        $this->entityManager->createQueryBuilder()->shouldBeCalledTimes(1)->willReturn($this->queryBuilder->reveal());
+
+        $this->doctrineListBuilder->limit(null);
         $this->doctrineListBuilder->execute();
     }
 }

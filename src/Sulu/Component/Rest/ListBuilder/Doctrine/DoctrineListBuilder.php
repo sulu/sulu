@@ -146,6 +146,10 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
         $this->expressionFields = $this->getUniqueExpressionFieldDescriptors($this->expressions);
 
+        if (!$this->limit && empty($this->expressions)) {
+            return $this->createFullQueryBuilder($this->createQueryBuilder())->getQuery()->getArrayResult();
+        }
+
         // first create simplified id query
         // select ids with all necessary filter data
         $ids = $this->findIdsByGivenCriteria();
@@ -155,28 +159,39 @@ class DoctrineListBuilder extends AbstractListBuilder
             return [];
         }
 
-        // now select all data
-        $this->queryBuilder = $this->em->createQueryBuilder()
-            ->from($this->entityName, $this->entityName);
-        $this->assignJoins($this->queryBuilder);
+        $this->queryBuilder = $this->createFullQueryBuilder(
+            $this->em->createQueryBuilder()->from($this->entityName, $this->entityName)
+        );
 
-        // Add all select fields
-        foreach ($this->selectFields as $field) {
-            $this->queryBuilder->addSelect($this->getSelectAs($field));
-        }
-        // group by
-        $this->assignGroupBy($this->queryBuilder);
-        // assign sort-fields
-        $this->assignSortFields($this->queryBuilder);
+        // now select all data
+        $this->assignJoins($this->queryBuilder);
 
         // use ids previously selected ids for query
         $select = $this->idField->getSelect();
-        $this->queryBuilder->where($select . ' IN (:ids)')
-            ->setParameter('ids', $ids);
-
-        $this->queryBuilder->distinct($this->distinct);
+        $this->queryBuilder->where($select . ' IN (:ids)')->setParameter('ids', $ids);
 
         return $this->queryBuilder->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    protected function createFullQueryBuilder(QueryBuilder $queryBuilder)
+    {
+        // Add all select fields
+        foreach ($this->selectFields as $field) {
+            $queryBuilder->addSelect($this->getSelectAs($field));
+        }
+
+        // group by
+        $this->assignGroupBy($queryBuilder);
+
+        // assign sort-fields
+        $this->assignSortFields($queryBuilder);
+
+        $queryBuilder->distinct($this->distinct);
+
+        return $queryBuilder;
     }
 
     /**
