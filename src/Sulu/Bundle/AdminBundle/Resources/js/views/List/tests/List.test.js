@@ -139,11 +139,10 @@ test('Should throw an error when no resourceKey is defined in the route options'
     expect(() => render(<List router={router} />)).toThrow(/mandatory resourceKey option/);
 });
 
-test('Should unbind the binding and destroy the store on unmount', () => {
+test('Should destroy the store on unmount', () => {
     const List = require('../List').default;
     const router = {
         bind: jest.fn(),
-        unbind: jest.fn(),
         route: {
             options: {
                 resourceKey: 'snippets',
@@ -162,34 +161,10 @@ test('Should unbind the binding and destroy the store on unmount', () => {
     expect(router.bind).toBeCalledWith('page', page, 1);
     expect(router.bind).toBeCalledWith('locale', locale);
 
+    const datagridStore = list.instance().datagridStore;
     list.unmount();
-    expect(router.unbind).toBeCalledWith('page', page);
-    expect(router.unbind).toBeCalledWith('locale', locale);
-});
 
-test('Should unbind the binding and destroy the store on unmount without locale', () => {
-    const List = require('../List').default;
-    const router = {
-        bind: jest.fn(),
-        unbind: jest.fn(),
-        route: {
-            options: {
-                resourceKey: 'snippets',
-                adapters: ['table'],
-            },
-        },
-    };
-
-    const list = mount(<List router={router} />);
-    const page = router.bind.mock.calls[0][1];
-
-    expect(page.get()).toBe(undefined);
-    expect(router.bind).toBeCalledWith('page', page, 1);
-    expect(router.bind).not.toBeCalledWith('locale');
-
-    list.unmount();
-    expect(router.unbind).toBeCalledWith('page', page);
-    expect(router.unbind).not.toBeCalledWith('locale');
+    expect(datagridStore.destroy).toBeCalled();
 });
 
 test('Should render the add button in the toolbar only if a addRoute has been passed in options', () => {

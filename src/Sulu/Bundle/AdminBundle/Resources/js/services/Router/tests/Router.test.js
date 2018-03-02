@@ -121,7 +121,7 @@ test('Navigate to route without default attribute when observable is changed', (
 
     router.bind('locale', locale);
 
-    router.navigate('list');
+    router.handleNavigation('list', {});
     expect(router.attributes.locale).toBe('en');
     expect(history.location.pathname).toBe('/list/en');
 
@@ -414,7 +414,7 @@ test('Binding should update passed observable', () => {
     const router = new Router(history);
 
     router.bind('page', value);
-    router.navigate('list', {page: 2});
+    router.handleNavigation('list', {page: 2});
 
     expect(value.get()).toBe(2);
 });
@@ -458,7 +458,7 @@ test('Binding should set default attribute', () => {
     const router = new Router(history);
 
     router.bind('locale', locale, 'en');
-    router.navigate('page');
+    router.handleNavigation('page', {});
     expect(router.attributes.locale).toBe('en');
     expect(router.url).toBe('/page/en');
 });
@@ -529,38 +529,11 @@ test('Binding should update state in router with other default bindings', () => 
 
     router.bind('page', page, '1');
     router.bind('locale', locale);
-    router.navigate('list');
+    router.handleNavigation('list', {});
 
     locale.set('de');
     expect(history.location.search).toBe('?locale=de');
     expect(router.attributes.locale).toBe('de');
-});
-
-test('Unbind should remove binding', () => {
-    const value = observable();
-
-    const history = createHistory();
-    const router = new Router(history);
-
-    router.bind('remove', value);
-    expect(router.bindings.has('remove')).toBe(true);
-
-    router.unbind('remove', value);
-    expect(router.bindings.has('remove')).toBe(false);
-});
-
-test('Unbind query should not remove binding if it is assigned to a new observable', () => {
-    const history = createHistory();
-    const router = new Router(history);
-
-    const value = observable();
-    router.bind('remove', value);
-    expect(router.bindings.get('remove')).toBe(value);
-
-    const newValue = observable();
-    router.bind('remove', newValue);
-    router.unbind('remove', value);
-    expect(router.bindings.get('remove')).toBe(newValue);
 });
 
 test('Do not add parameter to URL if undefined', () => {
