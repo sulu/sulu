@@ -14,6 +14,7 @@ jest.mock('../../../containers/Datagrid', () => function Datagrid() {
 
 jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey) {
     this.resourceKey = resourceKey;
+    this.destroy = jest.fn();
 }));
 
 beforeEach(() => {
@@ -69,10 +70,14 @@ test('Should close an overlay using the confirm button', () => {
     expect(assignment.find('DatagridOverlay').prop('open')).toEqual(false);
 });
 
-test('Should instantiate the DatagridStore with the correct resourceKey', () => {
+test('Should instantiate the DatagridStore with the correct resourceKey and destroy it on unmount', () => {
     const assignment = mount(<Assignment resourceKey="pages" />);
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
-    expect(assignment.find('DatagridOverlay').instance().datagridStore.resourceKey).toEqual('pages');
+    const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
+    expect(datagridStore.resourceKey).toEqual('pages');
+
+    assignment.unmount();
+    expect(datagridStore.destroy).toBeCalled();
 });

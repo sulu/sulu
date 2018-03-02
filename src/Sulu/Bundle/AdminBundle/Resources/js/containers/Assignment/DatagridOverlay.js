@@ -24,6 +24,10 @@ export default class DatagridOverlay extends React.Component<Props> {
         this.datagridStore = new DatagridStore(resourceKey, {page: this.page}, {});
     }
 
+    componentWillUnmount() {
+        this.datagridStore.destroy();
+    }
+
     render() {
         const {onClose, onConfirm, open, title} = this.props;
 
