@@ -1,49 +1,74 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Show with default plus icon 1`] = `
-<div>
-  <div
-    class="header emptyList"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-plus"
-        class="su-plus"
-      />
-    </button>
-    <div
-      class="label"
-    />
-  </div>
-  <ul
-    class="list"
-  />
+exports[`Should open an overlay 1`] = `
+"<div>
+  <div class=\\"backdrop visible fixed\\"></div>
 </div>
+<div>
+  <div class=\\"container\\">
+    <div class=\\"overlay\\">
+      <section class=\\"content\\">
+        <header>Assignment<span class=\\"icon su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <article>The datagrid will appear here</article>
+        <footer>
+          <button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">sulu_admin.confirm</span></button>
+        </footer>
+      </section>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Show with default plus icon 1`] = `
+Array [
+  <div>
+    <div
+      class="header emptyList"
+    >
+      <button
+        class="button left"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus"
+        />
+      </button>
+      <div
+        class="label"
+      />
+    </div>
+    <ul
+      class="list"
+    />
+  </div>,
+  <div />,
+]
 `;
 
 exports[`Show with passed icon 1`] = `
-<div>
-  <div
-    class="header emptyList"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-document"
-        class="su-document"
-      />
-    </button>
+Array [
+  <div>
     <div
-      class="label"
+      class="header emptyList"
+    >
+      <button
+        class="button left"
+        type="button"
+      >
+        <span
+          aria-label="su-document"
+          class="su-document"
+        />
+      </button>
+      <div
+        class="label"
+      />
+    </div>
+    <ul
+      class="list"
     />
-  </div>
-  <ul
-    class="list"
-  />
-</div>
+  </div>,
+  <div />,
+]
 `;

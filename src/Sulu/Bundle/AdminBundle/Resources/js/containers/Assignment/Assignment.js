@@ -1,30 +1,62 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
+import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import {MultiItemSelection} from '../../components';
+import DatagridOverlay from './DatagridOverlay';
 
 type Props = {
     icon: string,
+    title: string,
 };
 
+@observer
 export default class Assignment extends React.Component<Props> {
     static defaultProps = {
         icon: 'su-plus',
+        title: 'Assignment', // TODO remove, only here for testing purposes
     };
 
-    handleOverlayOpen = () => {
-        // TODO implement overlay
+    @observable overlayOpen: boolean = false;
+
+    @action closeOverlay() {
+        this.overlayOpen = false;
+    }
+
+    @action openOverlay() {
+        this.overlayOpen = true;
+    }
+
+    @action handleOverlayOpen = () => {
+        this.openOverlay();
+    };
+
+    @action handleOverlayClose = () => {
+        this.closeOverlay();
+    };
+
+    handleOverlayConfirm = () => {
+        this.closeOverlay();
     };
 
     render() {
-        const {icon} = this.props;
+        const {icon, title} = this.props;
 
         return (
-            <MultiItemSelection
-                leftButton={{
-                    icon,
-                    onClick: this.handleOverlayOpen,
-                }}
-            />
+            <Fragment>
+                <MultiItemSelection
+                    leftButton={{
+                        icon,
+                        onClick: this.handleOverlayOpen,
+                    }}
+                />
+                <DatagridOverlay
+                    onClose={this.handleOverlayClose}
+                    onConfirm={this.handleOverlayConfirm}
+                    open={this.overlayOpen}
+                    title={title}
+                />
+            </Fragment>
         );
     }
 }
