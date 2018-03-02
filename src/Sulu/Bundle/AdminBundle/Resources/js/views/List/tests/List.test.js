@@ -236,7 +236,7 @@ test('Should navigate when add button is clicked and locales have been passed in
         },
     };
 
-    const list= mount(<List router={router} />);
+    const list = mount(<List router={router} />);
     list.instance().locale = {
         get: function() {
             return 'de';
@@ -265,7 +265,7 @@ test('Should navigate without locale when pencil button is clicked', () => {
         },
     };
 
-    const list= mount(<List router={router} />);
+    const list = mount(<List router={router} />);
     const toolbarConfig = toolbarFunction.call(list.instance());
 
     toolbarConfig.items[0].onClick();
@@ -288,7 +288,7 @@ test('Should navigate when pencil button is clicked and locales have been passed
         },
     };
 
-    const list= mount(<List router={router} />);
+    const list = mount(<List router={router} />);
     list.instance().locale = {
         get: function() {
             return 'de';

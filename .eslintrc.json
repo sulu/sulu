@@ -81,6 +81,8 @@
         "no-trailing-spaces": "error",
         "curly": "error",
         "no-case-declarations": "off",
+        "no-multi-spaces": "error",
+        "space-infix-ops": "error",
         "import/order": "error",
         "import/no-dynamic-require": "error",
         "import/no-webpack-loader-syntax": "error",

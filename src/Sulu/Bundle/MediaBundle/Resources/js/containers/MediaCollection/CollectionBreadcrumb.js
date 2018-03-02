@@ -65,8 +65,8 @@ export default class CollectionBreadcrumb extends React.Component<Props> {
             );
         }
 
-        const lastItem = breadcrumb[breadcrumb.length -1];
-        const penultimateItem = breadcrumb[breadcrumb.length -2];
+        const lastItem = breadcrumb[breadcrumb.length - 1];
+        const penultimateItem = breadcrumb[breadcrumb.length - 2];
 
         return (
             <Breadcrumb onItemClick={this.handleNavigate}>

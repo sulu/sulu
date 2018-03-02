@@ -41,8 +41,8 @@ export default class ColumnListAdapter extends AbstractAdapter {
         const activeItemPath = this.activeItemPath;
         const {onAddClick} = this.props;
 
-        if (onAddClick && activeItemPath[index-1]) {
-            onAddClick(activeItemPath[index-1]);
+        if (onAddClick && activeItemPath[index - 1]) {
+            onAddClick(activeItemPath[index - 1]);
         }
     };
 

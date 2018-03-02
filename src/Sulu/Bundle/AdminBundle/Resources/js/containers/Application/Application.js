@@ -66,7 +66,7 @@ type Props = {
 
 @observer
 export default class Application extends React.Component<Props> {
-    @observable navigationVisible: boolean =  false;
+    @observable navigationVisible: boolean = false;
 
     @action toggleNavigation() {
         this.navigationVisible = !this.navigationVisible;
