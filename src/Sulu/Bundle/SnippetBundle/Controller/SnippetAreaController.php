@@ -47,6 +47,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
         );
 
         $defaultSnippetManager = $this->get('sulu_snippet.default_snippet.manager');
+        $documentManager = $this->get('sulu_document_manager.document_manager');
         $areas = $this->getLocalizedAreas();
 
         $dataList = [];
@@ -67,6 +68,11 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
             } catch (WrongSnippetTypeException $exception) {
                 // ignore wrong snippet-type
                 $areaData['valid'] = false;
+
+                $uuid = $defaultSnippetManager->loadIdentifier($webspaceKey, $key);
+                $snippet = $documentManager->find($uuid, $this->getUser()->getLocale());
+                $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
+                $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
             }
 
             $dataList[] = $areaData;
