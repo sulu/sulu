@@ -73,6 +73,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
+            this.clearData = jest.fn();
             this.setAppendRequestData = jest.fn();
             this.deselectEntirePage = jest.fn();
             this.select = jest.fn();
@@ -178,10 +179,10 @@ test('Should instantiate the needed stores when the overlay opens', () => {
     expect(mediaSelectionOverlayInstance.mediaPage.get()).toBe(1);
     expect(mediaSelectionOverlayInstance.collectionPage.get()).toBe(1);
 
-    expect(DatagridStore.mock.calls[0][0]).toBe(mediaResourceKey);
-    expect(DatagridStore.mock.calls[0][1].locale).toBe(locale);
-    expect(DatagridStore.mock.calls[0][1].page.get()).toBe(1);
-    expect(DatagridStore.mock.calls[0][2].fields).toEqual([
+    expect(DatagridStore.mock.calls[1][0]).toBe(mediaResourceKey);
+    expect(DatagridStore.mock.calls[1][1].locale).toBe(locale);
+    expect(DatagridStore.mock.calls[1][1].page.get()).toBe(1);
+    expect(DatagridStore.mock.calls[1][2].fields).toEqual([
         'id',
         'type',
         'name',
@@ -192,9 +193,9 @@ test('Should instantiate the needed stores when the overlay opens', () => {
         'thumbnails',
     ].join(','));
 
-    expect(DatagridStore.mock.calls[1][0]).toBe(collectionResourceKey);
-    expect(DatagridStore.mock.calls[1][1].locale).toBe(locale);
-    expect(DatagridStore.mock.calls[1][1].page.get()).toBe(1);
+    expect(DatagridStore.mock.calls[0][0]).toBe(collectionResourceKey);
+    expect(DatagridStore.mock.calls[0][1].locale).toBe(locale);
+    expect(DatagridStore.mock.calls[0][1].page.get()).toBe(1);
 });
 
 test('Should add and remove media ids', () => {
@@ -330,9 +331,9 @@ test('Should destroy the stores and cleanup all states when the overlay is close
         added: [2],
         removed: [],
     }));
-    mediaSelectionOverlayInstance.setCollectionId(1);
+    mediaSelectionOverlayInstance.collectionId.set(1);
 
-    expect(mediaSelectionOverlayInstance.collectionId).toBe(1);
+    expect(mediaSelectionOverlayInstance.collectionId.get()).toBe(1);
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
         {
             id: 1,
@@ -353,9 +354,54 @@ test('Should destroy the stores and cleanup all states when the overlay is close
     ]);
 
     mediaSelectionOverlayInstance.handleClose();
-    expect(mediaSelectionOverlayInstance.collectionId).toBe(undefined);
+    expect(mediaSelectionOverlayInstance.collectionId.get()).toBe(undefined);
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([]);
     expect(mediaSelectionOverlayInstance.collectionStore.resourceStore.destroy).toBeCalled();
     expect(mediaSelectionOverlayInstance.mediaDatagridStore.destroy).toBeCalled();
     expect(mediaSelectionOverlayInstance.collectionDatagridStore.destroy).toBeCalled();
+});
+
+test('Should change collection with selected media', () => {
+    const locale = observable();
+    const mediaSelectionOverlay = mount(
+        <MediaSelectionOverlay
+            open={true}
+            locale={locale}
+            excludedIds={[]}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+        />
+    );
+
+    mediaSelectionOverlay.instance().mediaPage.set(4);
+    mediaSelectionOverlay.instance().collectionPage.set(3);
+
+    mediaSelectionOverlay.find('Folder').at(0).simulate('click');
+
+    expect(mediaSelectionOverlay.instance().mediaPage.get()).toEqual(1);
+    expect(mediaSelectionOverlay.instance().collectionPage.get()).toEqual(1);
+    expect(mediaSelectionOverlay.instance().collectionId.get()).toEqual(1);
+    expect(mediaSelectionOverlay.instance().mediaDatagridStore.clearSelection).not.toBeCalled();
+});
+
+test('Should reset both datagrid to first page after reopening overlay', () => {
+    const locale = observable();
+    const mediaSelectionOverlay = mount(
+        <MediaSelectionOverlay
+            open={true}
+            locale={locale}
+            excludedIds={[]}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+        />
+    );
+
+    mediaSelectionOverlay.instance().mediaPage.set(3);
+    mediaSelectionOverlay.instance().collectionPage.set(2);
+
+    mediaSelectionOverlay.setProps({open: false});
+    mediaSelectionOverlay.setProps({open: true});
+
+    expect(mediaSelectionOverlay.instance().mediaPage.get()).toEqual(1);
+    expect(mediaSelectionOverlay.instance().collectionPage.get()).toEqual(1);
 });

@@ -27,11 +27,13 @@ test('The loading strategy should be called when a request is sent', () => {
     const structureStrategy = new StructureStrategy();
     const page = observable(1);
     const locale = observable();
+    const additionalValue = observable(5);
     const datagridStore = new DatagridStore(
         'tests',
         {
             page,
             locale,
+            additionalValue,
         },
         {
             test: 'value',
@@ -45,6 +47,7 @@ test('The loading strategy should be called when a request is sent', () => {
         toJS(datagridStore.data),
         'tests',
         {
+            additionalValue: 5,
             locale: undefined,
             page: 1,
             test: 'value',
@@ -377,6 +380,17 @@ test('Clear the selection', () => {
 
     datagridStore.clearSelection();
     expect(datagridStore.selections).toHaveLength(0);
+});
+
+test('Clear the data', () => {
+    const datagridStore = new DatagridStore('tests', {
+        page: observable(),
+    });
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(new LoadingStrategy(), structureStrategy);
+
+    datagridStore.clearData();
+    expect(structureStrategy.clear).toBeCalled();
 });
 
 test('Nothing should happen when to the same loading strategy is changed', () => {

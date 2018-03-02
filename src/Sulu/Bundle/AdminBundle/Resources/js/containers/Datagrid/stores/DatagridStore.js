@@ -98,13 +98,10 @@ export default class DatagridStore {
             return;
         }
 
-        const page = this.getPage();
-
         const observableOptions = {};
-        observableOptions.page = page;
 
-        if (this.observableOptions.locale) {
-            observableOptions.locale = this.observableOptions.locale.get();
+        for (const key in this.observableOptions) {
+            observableOptions[key] = this.observableOptions[key].get();
         }
 
         this.setDataLoading(true);
@@ -138,13 +135,8 @@ export default class DatagridStore {
         this.dataLoading = dataLoading;
     }
 
-    getPage(): ?number {
-        const page = parseInt(this.observableOptions.page.get());
-        if (!page) {
-            return undefined;
-        }
-
-        return page;
+    getPage() {
+        return this.observableOptions.page.get();
     }
 
     @action setPage(page: number) {
@@ -186,6 +178,10 @@ export default class DatagridStore {
 
     @action clearSelection() {
         this.selections = [];
+    }
+
+    clearData() {
+        this.structureStrategy.clear();
     }
 
     destroy() {

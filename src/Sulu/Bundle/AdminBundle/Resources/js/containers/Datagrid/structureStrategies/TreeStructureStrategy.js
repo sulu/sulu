@@ -35,7 +35,7 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
         };
     }
 
-    clear() {
+    @action clear() {
         this.data.splice(0, this.data.length);
     }
 }
