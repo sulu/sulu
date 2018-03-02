@@ -7,6 +7,7 @@ import DatagridOverlay from './DatagridOverlay';
 
 type Props = {
     icon: string,
+    resourceKey: string,
     title: string,
 };
 
@@ -14,6 +15,7 @@ type Props = {
 export default class Assignment extends React.Component<Props> {
     static defaultProps = {
         icon: 'su-plus',
+        resourceKey: 'snippets', // TODO remove, only here for testing purposes
         title: 'Assignment', // TODO remove, only here for testing purposes
     };
 
@@ -40,7 +42,7 @@ export default class Assignment extends React.Component<Props> {
     };
 
     render() {
-        const {icon, title} = this.props;
+        const {icon, resourceKey, title} = this.props;
 
         return (
             <Fragment>
@@ -54,6 +56,7 @@ export default class Assignment extends React.Component<Props> {
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
+                    resourceKey={resourceKey}
                     title={title}
                 />
             </Fragment>

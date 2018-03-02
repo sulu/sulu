@@ -8,6 +8,14 @@ jest.mock('../../../utils', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('../../../containers/Datagrid', () => function Datagrid() {
+    return <div className="datagrid" />;
+});
+
+jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey) {
+    this.resourceKey = resourceKey;
+}));
+
 beforeEach(() => {
     const body = document.body;
 
@@ -59,4 +67,12 @@ test('Should close an overlay using the confirm button', () => {
 
     assignment.update();
     expect(assignment.find('DatagridOverlay').prop('open')).toEqual(false);
+});
+
+test('Should instantiate the DatagridStore with the correct resourceKey', () => {
+    const assignment = mount(<Assignment resourceKey="pages" />);
+
+    assignment.find('Button[icon="su-plus"]').simulate('click');
+
+    expect(assignment.find('DatagridOverlay').instance().datagridStore.resourceKey).toEqual('pages');
 });
