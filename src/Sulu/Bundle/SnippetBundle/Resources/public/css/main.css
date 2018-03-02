@@ -1,0 +1,9 @@
+/*----------------------------------------*/
+/* line 2, ../scss/modules/webspace.scss */
+#snippet-types .valid {
+  background: transparent;
+}
+/* line 5, ../scss/modules/webspace.scss */
+#snippet-types .valid .fa-ban {
+  color: #EA524E;
+}

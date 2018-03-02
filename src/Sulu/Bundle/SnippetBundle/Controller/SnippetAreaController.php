@@ -57,6 +57,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
                 'title' => $area['title'],
                 'defaultUuid' => null,
                 'defaultTitle' => null,
+                'valid' => true,
             ];
 
             try {
@@ -65,6 +66,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
                 $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
             } catch (WrongSnippetTypeException $exception) {
                 // ignore wrong snippet-type
+                $areaData['valid'] = false;
             }
 
             $dataList[] = $areaData;

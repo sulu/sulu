@@ -69,7 +69,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build', [
-        // 'build:css', TODO uncomment if css is not empty
+        'build:css',
         'build:js'
     ]);
 };

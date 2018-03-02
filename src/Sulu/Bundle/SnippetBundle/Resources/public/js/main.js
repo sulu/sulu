@@ -10,12 +10,13 @@
 require.config({
     paths: {
         sulusnippet: '../../sulusnippet/js',
+        sulusnippetcss: '../../sulusnippet/css',
 
         "type/snippet": '../../sulusnippet/js/validation/type/snippet'
     }
 });
 
-define(['config'], function(Config) {
+define(['config', 'css!sulusnippetcss/main'], function(Config) {
     return {
 
         name: "Sulu Snippet Bundle",
