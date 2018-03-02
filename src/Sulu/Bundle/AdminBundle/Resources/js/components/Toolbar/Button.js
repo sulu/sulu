@@ -6,7 +6,7 @@ import Loader from '../Loader';
 import type {Button as ButtonProps} from './types';
 import buttonStyles from './button.scss';
 
-const LOADER_SIZE= 20;
+const LOADER_SIZE = 20;
 const ICON_ARROW_DOWN = 'su-arrow-down';
 
 export default class Button extends React.PureComponent<ButtonProps> {

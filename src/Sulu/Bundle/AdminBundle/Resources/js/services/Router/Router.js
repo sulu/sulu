@@ -72,7 +72,7 @@ export default class Router {
             }
 
             const attributes = {};
-            for (let i= 1; i < match.length; i++) {
+            for (let i = 1; i < match.length; i++) {
                 attributes[names[i - 1].name] = Router.tryParseNumber(match[i]);
             }
 

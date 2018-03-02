@@ -55,7 +55,7 @@ export default class AutoComplete extends React.Component<Props> {
     }
 
     @computed get suggestionStyle(): Object {
-        const suggestionListMinWidth = (this.inputRef) ? this.inputRef.scrollWidth - POPOVER_HORIZONTAL_OFFSET * 2: 0;
+        const suggestionListMinWidth = (this.inputRef) ? this.inputRef.scrollWidth - POPOVER_HORIZONTAL_OFFSET * 2 : 0;
 
         return {
             minWidth: Math.max(suggestionListMinWidth, 0),

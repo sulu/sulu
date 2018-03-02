@@ -19,7 +19,7 @@ jest.mock('../PopoverPositioner', () => {
     };
 });
 
-const getMockedAnchorEl = () =>  ({
+const getMockedAnchorEl = () => ({
     getBoundingClientRect() {
         return {
             x: 10,

@@ -94,7 +94,7 @@ export default class InfiniteScroller extends React.PureComponent<PaginationProp
             bottom: elementOffsetBottom,
         } = elementRef.getBoundingClientRect();
 
-        if ((elementOffsetBottom - scrollContainerOffsetBottom) < THRESHOLD)  {
+        if ((elementOffsetBottom - scrollContainerOffsetBottom) < THRESHOLD) {
             const nextPage = current + 1;
 
             onChange(nextPage);
