@@ -71,7 +71,7 @@ before_test:
 
   # Start Jackrabbit
   - java -version
-  - ps: if ($env:SYMFONY__PHPCR__TRANSPORT -MATCH "jackrabbit") { $argumentList='-jar jackrabbit-standalone-' + $env:JACKRABBIT_VERSION + '.jar -Xms512m -Xmx1024m'; Start-Process -FilePath java -ArgumentList $argumentList }
+  - ps: if ($env:SYMFONY__PHPCR__TRANSPORT -MATCH "jackrabbit") { $argumentList='-jar jackrabbit-standalone-' + $env:JACKRABBIT_VERSION + '.jar'; Start-Process -FilePath java -ArgumentList $argumentList }
 
   # Composer install
   - php -dmemory_limit=-1 C:\tools\composer.phar update --no-interaction --no-progress --prefer-dist --no-ansi
