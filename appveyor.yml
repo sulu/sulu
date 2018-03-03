@@ -55,7 +55,7 @@ install:
 
   # configure PHP and enable extensions.
   - cd C:\tools\php
-  - ps: cat php.ini-production | %{$_ -replace "memory_limit = 128M","memory_limit = 2048M"} | Out-File -Encoding "Default" php.ini
+  - ps: cat php.ini-production | %{$_ -replace "memory_limit = 128M","memory_limit = 4096M"} | Out-File -Encoding "Default" php.ini
   - echo date.timezone="UTC" >> php.ini
   - echo extension_dir=ext >> php.ini
   - echo extension=php_curl.dll >> php.ini
@@ -71,7 +71,7 @@ before_test:
 
   # Start Jackrabbit
   - java -version
-  - ps: if ($env:SYMFONY__PHPCR__TRANSPORT -MATCH "jackrabbit") { $argumentList='-jar jackrabbit-standalone-' + $env:JACKRABBIT_VERSION + '.jar'; Start-Process -FilePath java -ArgumentList $argumentList }
+  - ps: if ($env:SYMFONY__PHPCR__TRANSPORT -MATCH "jackrabbit") { $argumentList='-jar jackrabbit-standalone-' + $env:JACKRABBIT_VERSION + '.jar -Xms512m -Xmx1024m'; Start-Process -FilePath java -ArgumentList $argumentList }
 
   # Composer install
   - php -dmemory_limit=-1 C:\tools\composer.phar update --no-interaction --no-progress --prefer-dist --no-ansi
