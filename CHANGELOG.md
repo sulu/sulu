@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #3843 [CustomUrlBundle]         Show custom url tab only when configured
     * BUGFIX      #3828 [Husky]                   Avoid expand ids parameter to be added to datagrid request without content
     * BUGFIX      #3828 [Husky]                   Fixed paragraphs and breaks in paste from word plugin
+    * HOTFIX      #3813 [SnippetBundle]           Ignore wrong template exception
     * BUGFIX      #3806 [All]                     Fix compatibility on lowest and fix appveyor
     * HOTFIX      #3820 [CustomUrlBundle]         Added base-domains to query for custom-urls
     * HOTFIX      #3810 [ContentBundle]           Fixed rename and publish exception if page has link to a child

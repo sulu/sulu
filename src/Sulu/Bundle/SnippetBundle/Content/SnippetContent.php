@@ -16,6 +16,7 @@ use PHPCR\PropertyType;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -203,15 +204,25 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         }
 
         if (empty($ids) && $snippetArea && $this->defaultEnabled) {
-            $ids = [
-                $this->defaultSnippetManager->loadIdentifier($webspaceKey, $snippetArea),
-            ];
-
-            // to filter null default snippet
-            $ids = array_filter($ids);
+            $ids = $this->loadSnippetAreaIds($webspaceKey, $snippetArea, $locale);
         }
 
         return $this->snippetResolver->resolve($ids, $webspaceKey, $locale, $shadowLocale);
+    }
+
+    private function loadSnippetAreaIds($webspaceKey, $snippetArea, $locale)
+    {
+        try {
+            $snippet = $this->defaultSnippetManager->load($webspaceKey, $snippetArea, $locale);
+        } catch (WrongSnippetTypeException $exception) {
+            return [];
+        }
+
+        if (!$snippet) {
+            return [];
+        }
+
+        return [$snippet->getUuid()];
     }
 
     /**
