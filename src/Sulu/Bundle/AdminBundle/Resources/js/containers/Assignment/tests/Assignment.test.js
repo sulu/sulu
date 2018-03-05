@@ -34,6 +34,10 @@ test('Show with passed icon', () => {
     expect(render(<Assignment onChange={jest.fn()} icon="su-document" />)).toMatchSnapshot();
 });
 
+test('Show with passed values as items', () => {
+    expect(render(<Assignment onChange={jest.fn()} value={[1, 2, 5]} />)).toMatchSnapshot();
+});
+
 test('Should open an overlay', () => {
     const assignment = mount(<Assignment onChange={jest.fn()} />);
 
@@ -100,7 +104,7 @@ test('Should instantiate the DatagridStore with the correct resourceKey and dest
 });
 
 test('Should instantiate the DatagridStore with the preselected ids', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} preSelectedIds={[1, 5, 8]} resourceKey="pages" />);
+    const assignment = mount(<Assignment onChange={jest.fn()} value={[1, 5, 8]} resourceKey="pages" />);
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 

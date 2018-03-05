@@ -7,6 +7,6 @@ export default class Assignment extends React.Component<FieldTypeProps<Array<str
     render() {
         const {onChange, value} = this.props;
 
-        return <AssignmentComponent onChange={onChange} preSelectedIds={value || []} />;
+        return <AssignmentComponent onChange={onChange} value={value || []} />;
     }
 }

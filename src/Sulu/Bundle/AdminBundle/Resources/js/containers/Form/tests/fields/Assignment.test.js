@@ -5,12 +5,12 @@ import Assignment from '../../fields/Assignment';
 
 test('Should pass props correctly to component', () => {
     const changeSpy = jest.fn();
-    const preSelectedIds = [1, 6, 8];
-    const assignment = shallow(<Assignment onChange={changeSpy} value={preSelectedIds} />);
+    const value = [1, 6, 8];
+    const assignment = shallow(<Assignment onChange={changeSpy} value={value} />);
 
     expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
         onChange: changeSpy,
-        preSelectedIds,
+        value,
     }));
 });
 
@@ -20,6 +20,6 @@ test('Should pass empty array if value is not given', () => {
 
     expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
         onChange: changeSpy,
-        preSelectedIds: [],
+        value: [],
     }));
 });

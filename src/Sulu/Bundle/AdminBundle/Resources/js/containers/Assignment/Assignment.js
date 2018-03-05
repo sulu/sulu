@@ -9,7 +9,7 @@ type Props = {
     onChange: (selectedIds: Array<string | number>) => void,
     icon: string,
     resourceKey: string,
-    preSelectedIds?: Array<string | number>,
+    value?: Array<string | number>,
     title: string,
 };
 
@@ -17,7 +17,7 @@ type Props = {
 export default class Assignment extends React.Component<Props> {
     static defaultProps = {
         icon: 'su-plus',
-        preSelectedIds: [],
+        value: [],
         resourceKey: 'snippets', // TODO remove, only here for testing purposes
         title: 'Assignment', // TODO remove, only here for testing purposes
     };
@@ -46,7 +46,7 @@ export default class Assignment extends React.Component<Props> {
     };
 
     render() {
-        const {icon, resourceKey, title, preSelectedIds} = this.props;
+        const {icon, resourceKey, title, value} = this.props;
 
         return (
             <Fragment>
@@ -55,13 +55,17 @@ export default class Assignment extends React.Component<Props> {
                         icon,
                         onClick: this.handleOverlayOpen,
                     }}
-                />
+                >
+                    {value && value.map((id, index) => (
+                        <MultiItemSelection.Item key={id} id={id} index={index}>{id}</MultiItemSelection.Item>
+                    ))}
+                </MultiItemSelection>
                 <DatagridOverlay
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
                     resourceKey={resourceKey}
-                    preSelectedIds={preSelectedIds}
+                    preSelectedIds={value}
                     title={title}
                 />
             </Fragment>
