@@ -45,6 +45,16 @@ export default class Assignment extends React.Component<Props> {
         this.closeOverlay();
     };
 
+    handleRemove = (id: number | string) => {
+        const {onChange, value} = this.props;
+
+        if (!value) {
+            return;
+        }
+
+        onChange(value.filter((element) => element !== id));
+    };
+
     render() {
         const {icon, resourceKey, title, value} = this.props;
 
@@ -55,6 +65,7 @@ export default class Assignment extends React.Component<Props> {
                         icon,
                         onClick: this.handleOverlayOpen,
                     }}
+                    onItemRemove={this.handleRemove}
                 >
                     {value && value.map((id, index) => (
                         <MultiItemSelection.Item key={id} id={id} index={index}>{id}</MultiItemSelection.Item>

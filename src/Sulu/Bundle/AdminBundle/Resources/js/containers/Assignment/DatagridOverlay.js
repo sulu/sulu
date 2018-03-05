@@ -33,6 +33,14 @@ export default class DatagridOverlay extends React.Component<Props> {
         });
     }
 
+    componentWillReceiveProps(nextProps: Props) {
+        this.datagridStore.clearSelection();
+
+        nextProps.preSelectedIds.forEach((preSelectedId) => {
+            this.datagridStore.select(preSelectedId);
+        });
+    }
+
     componentWillUnmount() {
         this.datagridStore.destroy();
     }

@@ -121,6 +121,15 @@ Array [
           >
             1
           </div>
+          <button
+            class="removeButton"
+            type="button"
+          >
+            <span
+              aria-label="su-trash"
+              class="su-trash"
+            />
+          </button>
         </div>
       </li>
       <li
@@ -147,6 +156,15 @@ Array [
           >
             2
           </div>
+          <button
+            class="removeButton"
+            type="button"
+          >
+            <span
+              aria-label="su-trash"
+              class="su-trash"
+            />
+          </button>
         </div>
       </li>
       <li
@@ -173,6 +191,15 @@ Array [
           >
             5
           </div>
+          <button
+            class="removeButton"
+            type="button"
+          >
+            <span
+              aria-label="su-trash"
+              class="su-trash"
+            />
+          </button>
         </div>
       </li>
     </ul>
