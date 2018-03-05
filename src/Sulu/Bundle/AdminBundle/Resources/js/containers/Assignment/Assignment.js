@@ -2,7 +2,7 @@
 import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {MultiItemSelection} from '../../components';
+import {arrayMove, MultiItemSelection} from '../../components';
 import DatagridOverlay from './DatagridOverlay';
 
 type Props = {
@@ -55,6 +55,11 @@ export default class Assignment extends React.Component<Props> {
         onChange(value.filter((element) => element !== id));
     };
 
+    handleSorted = (oldItemIndex: number, newItemIndex: number) => {
+        const {onChange, value} = this.props;
+        onChange(arrayMove(value, oldItemIndex, newItemIndex));
+    };
+
     render() {
         const {icon, resourceKey, title, value} = this.props;
 
@@ -66,6 +71,7 @@ export default class Assignment extends React.Component<Props> {
                         onClick: this.handleOverlayOpen,
                     }}
                     onItemRemove={this.handleRemove}
+                    onItemsSorted={this.handleSorted}
                 >
                     {value && value.map((id, index) => (
                         <MultiItemSelection.Item key={id} id={id} index={index}>{id}</MultiItemSelection.Item>

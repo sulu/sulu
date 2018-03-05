@@ -136,3 +136,12 @@ test('Should remove an item when the remove button is clicked', () => {
     assignment.find('MultiItemSelection').prop('onItemRemove')(7);
     expect(changeSpy).toBeCalledWith([3, 9]);
 });
+
+test('Should reorder the items on drag and drop', () => {
+    const changeSpy = jest.fn();
+    const assignment = shallow(<Assignment onChange={changeSpy} value={[3, 7, 9]} />);
+
+    assignment.find('MultiItemSelection').prop('onItemsSorted')(1, 2);
+
+    expect(changeSpy).toBeCalledWith([3, 9, 7]);
+});
