@@ -6,8 +6,10 @@ import {MultiItemSelection} from '../../components';
 import DatagridOverlay from './DatagridOverlay';
 
 type Props = {
+    onChange: (selectedIds: Array<string | number>) => void,
     icon: string,
     resourceKey: string,
+    preSelectedIds?: Array<string | number>,
     title: string,
 };
 
@@ -15,6 +17,7 @@ type Props = {
 export default class Assignment extends React.Component<Props> {
     static defaultProps = {
         icon: 'su-plus',
+        preSelectedIds: [],
         resourceKey: 'snippets', // TODO remove, only here for testing purposes
         title: 'Assignment', // TODO remove, only here for testing purposes
     };
@@ -37,12 +40,13 @@ export default class Assignment extends React.Component<Props> {
         this.closeOverlay();
     };
 
-    handleOverlayConfirm = () => {
+    handleOverlayConfirm = (selectedIds: Array<string | number>) => {
+        this.props.onChange(selectedIds);
         this.closeOverlay();
     };
 
     render() {
-        const {icon, resourceKey, title} = this.props;
+        const {icon, resourceKey, title, preSelectedIds} = this.props;
 
         return (
             <Fragment>
@@ -57,6 +61,7 @@ export default class Assignment extends React.Component<Props> {
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
                     resourceKey={resourceKey}
+                    preSelectedIds={preSelectedIds}
                     title={title}
                 />
             </Fragment>

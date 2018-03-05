@@ -9,9 +9,10 @@ import {translate} from '../../utils';
 
 type Props = {
     onClose: () => void,
-    onConfirm: () => void,
+    onConfirm: (selectedIds: Array<string | number>) => void,
     open: boolean,
     resourceKey: string,
+    preSelectedIds: Array<string | number>,
     title: string,
 };
 
@@ -19,23 +20,35 @@ export default class DatagridOverlay extends React.Component<Props> {
     datagridStore: DatagridStore;
     page: IObservableValue<number> = observable(1);
 
+    static defaultProps = {
+        preSelectedIds: [],
+    };
+
     componentWillMount() {
-        const {resourceKey} = this.props;
+        const {resourceKey, preSelectedIds} = this.props;
         this.datagridStore = new DatagridStore(resourceKey, {page: this.page}, {});
+
+        preSelectedIds.forEach((preSelectedId) => {
+            this.datagridStore.select(preSelectedId);
+        });
     }
 
     componentWillUnmount() {
         this.datagridStore.destroy();
     }
 
+    handleConfirm = () => {
+        this.props.onConfirm(this.datagridStore.selections);
+    };
+
     render() {
-        const {onClose, onConfirm, open, title} = this.props;
+        const {onClose, open, title} = this.props;
 
         return (
             <Overlay
                 confirmText={translate('sulu_admin.confirm')}
                 onClose={onClose}
-                onConfirm={onConfirm}
+                onConfirm={this.handleConfirm}
                 open={open}
                 title={title}
             >
