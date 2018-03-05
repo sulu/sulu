@@ -974,7 +974,7 @@ define([
          */
         toggleDescriptions: function() {
             var checked = this.sandbox.dom.is(
-                    this.sandbox.dom.find(constants.descriptionCheckboxSelector, this.$multiple), ':checked'
+                this.sandbox.dom.find(constants.descriptionCheckboxSelector, this.$multiple), ':checked'
                 ),
                 $elements = this.sandbox.dom.find(constants.multipleEditDescSelector, this.$multiple);
             if (checked === true) {
@@ -989,7 +989,7 @@ define([
          */
         toggleTags: function() {
             var checked = this.sandbox.dom.is(
-                    this.sandbox.dom.find(constants.tagsCheckboxSelector, this.$multiple), ':checked'
+                this.sandbox.dom.find(constants.tagsCheckboxSelector, this.$multiple), ':checked'
                 ),
                 $elements = this.sandbox.dom.find(constants.multipleEditTagsSelector, this.$multiple);
             if (checked === true) {
@@ -1037,7 +1037,7 @@ define([
             var mediaId = this.media.id;
 
             $.ajax({
-                url: resetPreviewUrl(mediaId),
+                url: resetPreviewUrl.call(this, mediaId),
                 type: 'DELETE',
                 success: function() {
                     this.previewImageChangeHandler.call(this);
