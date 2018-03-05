@@ -1,0 +1,14 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.1-node-browsers
+    steps:
+      - checkout
+      # Node
+      - run: sudo apt-get install ruby ruby-all-dev
+      - run: sudo gem update --system
+      - run: sudo gem install compass
+      - run: bin/build-bundles.sh
+      - run: bin/ci/validate-build-bundles.sh
