@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render, mount, shallow} from 'enzyme';
 import Input from '../Input';
 
 test('Input should render', () => {
@@ -45,15 +45,25 @@ test('Input should render null value as empty string', () => {
 test('Input should call the callback when the input changes', () => {
     const onChange = jest.fn();
     const input = shallow(<Input value="My value" onChange={onChange} onBlur={jest.fn()} />);
-    input.find('input').simulate('change', {currentTarget: {value: 'my-value'}});
-    expect(onChange).toHaveBeenCalledWith('my-value');
+    const event = {currentTarget: {value: 'my-value'}};
+    input.find('input').simulate('change', event);
+    expect(onChange).toHaveBeenCalledWith('my-value', event);
 });
 
 test('Input should call the callback with undefined if the input is removed', () => {
     const onChange = jest.fn();
     const input = shallow(<Input value="My value" onChange={onChange} onBlur={jest.fn()} />);
-    input.find('input').simulate('change', {currentTarget: {value: ''}});
-    expect(onChange).toHaveBeenCalledWith(undefined);
+    const event = {currentTarget: {value: ''}};
+    input.find('input').simulate('change', event);
+    expect(onChange).toHaveBeenCalledWith(undefined, event);
+});
+
+test('Input should call the callback when icon was clicked', () => {
+    const onChange = jest.fn();
+    const handleIconClick = jest.fn();
+    const input = mount(<Input icon="su-pen" value="My value" onChange={onChange} onIconClick={handleIconClick} />);
+    input.find('Icon').simulate('click');
+    expect(handleIconClick).toHaveBeenCalled();
 });
 
 test('Input should render with a loader', () => {

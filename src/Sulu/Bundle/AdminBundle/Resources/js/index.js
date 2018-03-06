@@ -9,7 +9,7 @@ import Router, {routeRegistry} from './services/Router';
 import {setTranslations, translate} from './utils/Translator';
 import TextArea from './components/TextArea';
 import Application from './containers/Application';
-import {fieldRegistry, Assignment, Input, ResourceLocator, SingleSelect} from './containers/Form';
+import {fieldRegistry, Assignment, DatePicker, Input, ResourceLocator, SingleSelect} from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
 import {viewRegistry} from './containers/ViewRenderer';
 import {ColumnListAdapter, datagridAdapterRegistry, FolderAdapter, TableAdapter} from './containers/Datagrid';
@@ -36,6 +36,7 @@ datagridAdapterRegistry.add('table', TableAdapter);
 
 function registerFieldTypes() {
     fieldRegistry.add('block', FieldBlocks);
+    fieldRegistry.add('date', DatePicker);
     fieldRegistry.add('resource_locator', ResourceLocator);
     fieldRegistry.add('single_select', SingleSelect);
     fieldRegistry.add('text_line', Input);

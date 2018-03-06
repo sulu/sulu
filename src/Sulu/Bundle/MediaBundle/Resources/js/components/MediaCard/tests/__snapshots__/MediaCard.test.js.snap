@@ -6,7 +6,7 @@ exports[`Render a MediaCard with download list 1`] = `
 </div>
 <div>
   <div class=\\"container\\">
-    <ul style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\" class=\\"menu\\">
+    <ul style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\" class=\\"menu\\">
       <li class=\\"item\\">
         <button><span class=\\"content\\">Direct download<span class=\\"copyText\\"></span></span>
         </button>

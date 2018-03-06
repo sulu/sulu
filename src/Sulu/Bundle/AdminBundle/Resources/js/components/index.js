@@ -5,6 +5,7 @@ import Breadcrumb from './Breadcrumb';
 import Checkbox from './Checkbox';
 import CircularProgressbar from './CircularProgressbar';
 import CroppedText from './CroppedText';
+import DatePicker from './DatePicker';
 import Dialog from './Dialog';
 import Divider from './Divider';
 import Icon from './Icon';
@@ -27,6 +28,7 @@ export {
     Checkbox,
     CircularProgressbar,
     CroppedText,
+    DatePicker,
     Dialog,
     Divider,
     Icon,
