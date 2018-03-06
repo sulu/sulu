@@ -10,7 +10,9 @@ exports[`Should open an overlay 1`] = `
       <section class=\\"content\\">
         <header>Assignment<span class=\\"icon su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
-          <div class=\\"datagrid\\"></div>
+          <div class=\\"datagrid\\">
+            <div class=\\"datagrid\\"></div>
+          </div>
         </article>
         <footer>
           <button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">sulu_admin.confirm</span></button>

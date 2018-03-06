@@ -6,6 +6,7 @@ import Overlay from '../../components/Overlay';
 import Datagrid from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import {translate} from '../../utils';
+import datagridOverlayStyles from './datagridOverlay.scss';
 
 type Props = {
     onClose: () => void,
@@ -60,7 +61,9 @@ export default class DatagridOverlay extends React.Component<Props> {
                 open={open}
                 title={title}
             >
-                <Datagrid adapters={['table']} store={this.datagridStore} />
+                <div className={datagridOverlayStyles.datagrid}>
+                    <Datagrid adapters={['table']} store={this.datagridStore} />
+                </div>
             </Overlay>
         );
     }
