@@ -14,12 +14,14 @@ adapterStore.add('table', TableAdapter);
 
 <Datagrid store={store} views={['table']} />
 
-store.selections; // returns the IDs of the selected items
+store.selections; // returns the the selected items
+store.selectionIds; // returns the IDs of the selected items
 store.destroy();
 ```
 
-The `Datagrid` also takes control of the store, and handles loading other pages and selecting of items. The `selections`
-property can be used to retrieve the IDs of the currently selected items.
+The `Datagrid` also takes control of the store, and handles loading other pages and selecting of items. The
+`selectionIds` property can be used to retrieve the IDs of the currently selected items and the `selections` property
+will return the selected items themselves.
 
 After the store is not used anymore, its `destroy` method should be called, because there are some observations, which
 have to be cancelled.
