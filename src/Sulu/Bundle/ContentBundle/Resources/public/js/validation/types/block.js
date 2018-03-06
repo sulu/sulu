@@ -358,8 +358,17 @@ define([
                 },
 
                 validate: function() {
-                    // TODO validate
-                    return true;
+                    var valid = true;
+
+                    this.getChildren().each(function(i, block) {
+                        if ($(block).length) {
+                            if (!Husky.form.validate($(block))) {
+                                valid = false;
+                            }
+                        }
+                    }.bind(this));
+
+                    return valid;
                 },
 
                 //TODO: make cleaner
