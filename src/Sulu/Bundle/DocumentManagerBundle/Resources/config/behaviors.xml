@@ -18,6 +18,8 @@
             <argument type="service" id="sulu_document_manager.node_name_slugifier" />
             <argument type="service" id="sulu_document_manager.name_resolver" />
             <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="sulu_document_manager.live_session"/>
+            <argument type="service" id="sulu_document_manager.default_session"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
