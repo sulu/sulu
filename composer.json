@@ -28,7 +28,7 @@
         "imagine/imagine": "~0.6.1 || ~0.7.0",
         "massive/search-bundle": "0.16.*",
         "sensio/framework-extra-bundle": "^3.0",
-        "sulu/document-manager": "~0.10.0",
+        "sulu/document-manager": "dev-master as 0.10.1",
         "stof/doctrine-extensions-bundle": "^1.2.2",
         "gedmo/doctrine-extensions": "~2.4",
         "symfony-cmf/routing-bundle": "^1.2 || ^2.0",

@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * BUGFIX      #3806 [All]                     Fix compatibility on lowest and fix appveyor
+    * HOTFIX      #3810 [ContentBundle]           Fixed rename and publish exception if page has link to a child
     * BUGFIX      #3805 [ContentBundle]           Fix spacing between rows and section in content template generation
     * HOTFIX      #3797 [CategoryBundle]          Fixed category csv-export
     * HOTFIX      #3797 [Rest]                    Fixed issue with large amount of ids in doctrine list-builder query
