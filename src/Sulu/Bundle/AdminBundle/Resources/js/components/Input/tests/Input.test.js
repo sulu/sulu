@@ -10,8 +10,7 @@ test('Input should render', () => {
 
 test('Input should render with invalid value', () => {
     const onChange = jest.fn();
-    const error = {keyword: 'minLength', parameters: {}};
-    expect(render(<Input error={error} value="My value" onChange={onChange} onFinish={jest.fn()} />)).toMatchSnapshot();
+    expect(render(<Input valid={false} value="My value" onChange={onChange} onFinish={jest.fn()} />)).toMatchSnapshot();
 });
 
 test('Input should render with icon', () => {

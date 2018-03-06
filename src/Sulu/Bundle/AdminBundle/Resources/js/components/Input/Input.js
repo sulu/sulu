@@ -4,24 +4,27 @@ import type {ElementRef} from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import Loader from '../Loader';
-import type {FieldTypeProps} from '../../types';
 import inputStyles from './input.scss';
 
 const LOADER_SIZE = 20;
 
-type Props = FieldTypeProps<?string> & {
+type Props = {
     name?: string,
     icon?: string,
     type: string,
     loading?: boolean,
     placeholder?: string,
     inputRef?: (ref: ?ElementRef<'label'>) => void,
-    onFocus?: () => void,
+    valid: boolean,
+    value: ?string,
+    onFinish?: () => void,
+    onChange: (value?: string) => void,
 };
 
 export default class Input extends React.PureComponent<Props> {
     static defaultProps = {
         type: 'text',
+        valid: true,
     };
 
     setRef = (ref: ?ElementRef<'label'>) => {
@@ -44,7 +47,7 @@ export default class Input extends React.PureComponent<Props> {
 
     render() {
         const {
-            error,
+            valid,
             icon,
             loading,
             name,
@@ -56,7 +59,7 @@ export default class Input extends React.PureComponent<Props> {
         const labelClass = classNames(
             inputStyles.input,
             {
-                [inputStyles.error]: error,
+                [inputStyles.error]: !valid,
             }
         );
 
