@@ -7,6 +7,7 @@ import fieldRegistry from '../registries/FieldRegistry';
 
 jest.mock('../registries/FieldRegistry', () => ({
     get: jest.fn(),
+    getOptions: jest.fn(),
 }));
 
 jest.mock('../../../utils', () => ({
@@ -117,6 +118,53 @@ test('Pass correct props to FieldType', () => {
         locale: locale,
         maxOccurs: 4,
         minOccurs: 2,
+        showAllErrors: true,
+        types: {},
+        value: 'test',
+    }));
+});
+
+test('Merge with options from fieldRegistry before passing props to FieldType', () => {
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+    fieldRegistry.getOptions.mockReturnValue({
+        option: 'value',
+    });
+
+    const locale = observable('de');
+    const schema = {
+        label: 'Text',
+        maxOccurs: 4,
+        minOccurs: 2,
+        options: {
+            anotherOption: 'anotherValue',
+        },
+        type: 'text_line',
+        types: {},
+    };
+    const field = shallow(
+        <Field
+            locale={locale}
+            name="text"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schema={schema}
+            showAllErrors={true}
+            value="test"
+        />
+    );
+
+    expect(field.find('Text').props()).toEqual(expect.objectContaining({
+        fieldOptions: {
+            option: 'value',
+        },
+        locale: locale,
+        maxOccurs: 4,
+        minOccurs: 2,
+        options: {
+            anotherOption: 'anotherValue',
+        },
         showAllErrors: true,
         types: {},
         value: 'test',

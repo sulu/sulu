@@ -26,6 +26,7 @@ export type ErrorCollection = {[key: string]: Error};
 
 export type FieldTypeProps<T> = {
     error?: Error | ErrorCollection,
+    fieldOptions?: Object,
     onChange: (value: T) => void,
     onFinish?: () => void,
     locale?: ?IObservableValue<string>,

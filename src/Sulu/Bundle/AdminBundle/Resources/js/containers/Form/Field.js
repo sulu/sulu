@@ -77,6 +77,7 @@ export default class Field extends React.Component<Props> {
                 </div>
             );
         }
+        const fieldOptions = fieldRegistry.getOptions(type);
 
         const fieldClass = classNames(
             fieldStyles.field,
@@ -92,9 +93,10 @@ export default class Field extends React.Component<Props> {
                 <label className={fieldStyles.label}>{label}{required && ' *'}</label>
                 <FieldType
                     error={error}
+                    fieldOptions={fieldOptions}
+                    locale={locale}
                     maxOccurs={maxOccurs}
                     minOccurs={minOccurs}
-                    locale={locale}
                     onChange={this.handleChange}
                     onFinish={this.handleFinish}
                     options={options}

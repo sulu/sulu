@@ -16,6 +16,7 @@ jest.mock('../registries/FieldRegistry', () => ({
                 };
         }
     }),
+    getOptions: jest.fn().mockReturnValue({}),
 }));
 
 test('Should render a grid', () => {

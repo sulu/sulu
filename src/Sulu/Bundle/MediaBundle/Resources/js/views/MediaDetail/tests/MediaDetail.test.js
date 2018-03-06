@@ -14,6 +14,7 @@ jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({
     get: jest.fn().mockReturnValue(function() {
         return null;
     }),
+    getOptions: jest.fn().mockReturnValue({}),
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
