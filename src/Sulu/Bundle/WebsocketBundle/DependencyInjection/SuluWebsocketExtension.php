@@ -34,6 +34,7 @@ class SuluWebsocketExtension extends Extension implements PrependExtensionInterf
         $container->setParameter('sulu_websocket.server.ip_address', $config['server']['ip_address']);
         $container->setParameter('sulu_websocket.server.port', $config['server']['port']);
         $container->setParameter('sulu_websocket.server.http_host', $config['server']['http_host']);
+        $container->setParameter('sulu_websocket.server.ssl', $config['server']['ssl']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
