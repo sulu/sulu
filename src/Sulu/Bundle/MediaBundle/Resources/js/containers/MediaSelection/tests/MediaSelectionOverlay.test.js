@@ -58,6 +58,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             ];
             extendObservable(this, {
                 selections: [],
+                selectionIds: [],
             });
             this.loading = false;
             this.pageCount = 3;
@@ -217,11 +218,11 @@ test('Should add and remove media ids', () => {
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([]);
 
     mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [1],
+        added: [{id: 1}],
         removed: [],
     }));
     mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [2],
+        added: [{id: 2}],
         removed: [],
     }));
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
@@ -245,7 +246,7 @@ test('Should add and remove media ids', () => {
 
     mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
         added: [],
-        removed: [2],
+        removed: [{id: 2}],
     }));
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
         {
@@ -276,11 +277,11 @@ test('Should reset the selection array when the "Reset Selection" button was cli
     ).instance();
 
     mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [1],
+        added: [{id: 1}],
         removed: [],
     }));
     mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [2],
+        added: [{id: 2}],
         removed: [],
     }));
     expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
@@ -324,11 +325,11 @@ test('Should destroy the stores and cleanup all states when the overlay is close
     ).instance();
 
     mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [1],
+        added: [{id: 1}],
         removed: [],
     }));
     mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [2],
+        added: [{id: 2}],
         removed: [],
     }));
     mediaSelectionOverlayInstance.collectionId.set(1);

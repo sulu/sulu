@@ -72,7 +72,14 @@ export default class Datagrid extends React.Component<Props> {
 
     handleItemSelectionChange = (id: string | number, selected?: boolean) => {
         const {store} = this.props;
-        selected ? store.select(id) : store.deselect(id);
+        // TODO do not hardcode id but use metdata instead
+        const row = store.data.find((item) => item.id === id);
+
+        if (!row) {
+            return;
+        }
+
+        selected ? store.select(row) : store.deselect(row);
     };
 
     handleAllSelectionChange = (selected?: boolean) => {
@@ -117,7 +124,7 @@ export default class Datagrid extends React.Component<Props> {
                     page={store.getPage()}
                     pageCount={store.pageCount}
                     schema={store.schema}
-                    selections={store.selections}
+                    selections={store.selectionIds}
                 />
             </div>
         );

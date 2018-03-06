@@ -59,6 +59,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             ];
             extendObservable(this, {
                 selections: [],
+                selectionIds: [],
             });
             this.loading = false;
             this.pageCount = 3;

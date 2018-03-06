@@ -322,12 +322,12 @@ test('Select an item', () => {
         page,
     });
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
-    datagridStore.select(1);
-    datagridStore.select(2);
-    expect(toJS(datagridStore.selections)).toEqual([1, 2]);
+    datagridStore.select({id: 1}) ;
+    datagridStore.select({id: 2}) ;
+    expect(toJS(datagridStore.selectionIds)).toEqual([1, 2]);
 
-    datagridStore.deselect(1);
-    expect(toJS(datagridStore.selections)).toEqual([2]);
+    datagridStore.deselect({id: 1});
+    expect(toJS(datagridStore.selectionIds)).toEqual([2]);
     datagridStore.destroy();
 });
 
@@ -337,10 +337,10 @@ test('Deselect an item that has not been selected yet', () => {
         page,
     });
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
-    datagridStore.select(1);
-    datagridStore.deselect(2);
+    datagridStore.select({id: 1}) ;
+    datagridStore.deselect({id: 2});
 
-    expect(toJS(datagridStore.selections)).toEqual([1]);
+    expect(toJS(datagridStore.selectionIds)).toEqual([1]);
     datagridStore.destroy();
 });
 
@@ -349,9 +349,12 @@ test('Select the entire page', () => {
     const datagridStore = new DatagridStore('tests', {page});
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     datagridStore.structureStrategy.data = [{id: 1}, {id: 2}, {id: 3}];
-    datagridStore.selections = [1, 7];
+    datagridStore.selections = [
+        {id: 1},
+        {id: 7},
+    ];
     datagridStore.selectEntirePage();
-    expect(toJS(datagridStore.selections)).toEqual([1, 7, 2, 3]);
+    expect(toJS(datagridStore.selectionIds)).toEqual([1, 7, 2, 3]);
     datagridStore.destroy();
 });
 
@@ -362,9 +365,13 @@ test('Deselect the entire page', () => {
     });
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     datagridStore.structureStrategy.data = [{id: 1}, {id: 2}, {id: 3}];
-    datagridStore.selections = [1, 2, 7];
+    datagridStore.selections = [
+        {id: 1},
+        {id: 2},
+        {id: 7},
+    ];
     datagridStore.deselectEntirePage();
-    expect(toJS(datagridStore.selections)).toEqual([7]);
+    expect(toJS(datagridStore.selectionIds)).toEqual([7]);
     datagridStore.destroy();
 });
 

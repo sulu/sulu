@@ -6,7 +6,7 @@ import metadataStore from './MetadataStore';
 export default class DatagridStore {
     @observable pageCount: number = 0;
     @observable active: ?string | number = undefined;
-    @observable selections: Array<string | number> = [];
+    @observable selections: Array<Object> = [];
     @observable dataLoading: boolean = true;
     @observable schemaLoading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
@@ -147,22 +147,24 @@ export default class DatagridStore {
         this.active = active;
     }
 
-    @action select(id: string | number) {
-        if (this.selections.includes(id)) {
+    @action select(row: Object) {
+        // TODO do not hardcode id but use metdata instead
+        if (this.selections.findIndex((item) => item.id === row.id) !== -1) {
             return;
         }
 
-        this.selections.push(id);
+        this.selections.push(row);
     }
 
     @action selectEntirePage() {
         this.data.forEach((item) => {
-            this.select(item.id);
+            this.select(item);
         });
     }
 
-    @action deselect(id: string | number) {
-        const index = this.selections.indexOf(id);
+    @action deselect(row: Object) {
+        // TODO do not hardcode id but use metdata instead
+        const index = this.selections.findIndex((item) => item.id === row.id);
         if (index === -1) {
             return;
         }
@@ -172,8 +174,13 @@ export default class DatagridStore {
 
     @action deselectEntirePage() {
         this.data.forEach((item) => {
-            this.deselect(item.id);
+            this.deselect(item);
         });
+    }
+
+    @computed get selectionIds(): Array<string | number> {
+        // TODO do not hardcode id but use metdata instead
+        return this.selections.map((item) => item.id);
     }
 
     @action clearSelection() {

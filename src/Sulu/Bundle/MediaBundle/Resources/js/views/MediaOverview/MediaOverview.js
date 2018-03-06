@@ -3,7 +3,6 @@ import React from 'react';
 import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
-import {translate} from 'sulu-admin-bundle/utils';
 import {withToolbar, DatagridStore} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import MediaCollection from '../../containers/MediaCollection';
@@ -176,19 +175,6 @@ export default withToolbar(MediaOverview, function() {
                 },
             }
             : undefined,
-        items: [
-            {
-                type: 'button',
-                value: translate('sulu_admin.add'),
-                icon: 'su-save',
-                onClick: () => {},
-            },
-            {
-                type: 'button',
-                value: translate('sulu_admin.delete'),
-                icon: 'su-trash',
-                onClick: () => {},
-            },
-        ],
+        items: [],
     };
 });

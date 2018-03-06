@@ -165,17 +165,17 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     }
 
     handleMediaSelectionChanges = (change: any) => {
-        const mediaId = (change.added.length) ? change.added[0] : change.removed[0];
+        const selectedMedia = (change.added.length) ? change.added[0] : change.removed[0];
         const selected = !!change.added.length;
 
         if (selected) {
-            const media = this.mediaDatagridStore.data.find((entry) => entry.id === mediaId);
+            const media = this.mediaDatagridStore.data.find((entry) => entry.id === selectedMedia.id);
 
             if (media) {
                 this.selectedMedia.push(media);
             }
         } else {
-            this.selectedMedia = this.selectedMedia.filter((media) => media.id !== mediaId);
+            this.selectedMedia = this.selectedMedia.filter((media) => media.id !== selectedMedia.id);
         }
     };
 
