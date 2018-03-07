@@ -34,9 +34,17 @@
                 <source>snippet.delete-confirm-text</source>
                 <target>Etes-vous sûr que vous voulez le retirer?</target>
             </trans-unit>
+            <trans-unit id="10a" resname="snippet.save-confirm-text">
+                <source>snippet.save-confirm-text</source>
+                <target>Êtes-vous sûr de vouloir cette modification?</target>
+            </trans-unit>
             <trans-unit id="11" resname="snippet.delete-confirm-title">
                 <source>snippet.delete-confirm-title</source>
                 <target>Confirmation de la suppression</target>
+            </trans-unit>
+            <trans-unit id="11a" resname="snippet.save-confirm-title">
+                <source>snippet.save-confirm-title</source>
+                <target>Confirmez cette modification</target>
             </trans-unit>
             <trans-unit id="12" resname="snippet.delete-do-it">
                 <source>snippet.delete-do-it</source>

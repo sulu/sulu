@@ -71,4 +71,13 @@ interface DefaultSnippetManagerInterface
      * @return bool
      */
     public function isDefault($uuid);
+
+    /**
+     * Returns type of given uuid.
+     *
+     * @param string $uuid
+     *
+     * @return string
+     */
+    public function loadType($uuid);
 }

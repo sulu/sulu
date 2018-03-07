@@ -20,12 +20,14 @@ define([
         },
 
         translationKeys = {
-            deleteReferencedByFollowing: 'snippet.delete-referenced-by-following',
             deleteConfirmText: 'snippet.delete-confirm-text',
-            deleteConfirmDefaultText: 'snippet.delete-confirm-default-text',
             deleteConfirmTitle: 'snippet.delete-confirm-title',
-            deleteDoIt: 'snippet.delete-do-it',
-            deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected'
+            deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected',
+            saveConfirmTitle: 'snippet.save-confirm-title',
+            saveConfirmText: 'snippet.save-confirm-text',
+            doIt: 'snippet.delete-do-it',
+            confirmDefaultText: 'snippet.delete-confirm-default-text',
+            referencedByFollowing: 'snippet.save-referenced-by-following',
         },
 
         errorCodes = {
@@ -33,11 +35,11 @@ define([
         },
 
         templates = {
-            referentialIntegrityMessage: function(pageTitles, isDefault) {
+            referentialIntegrityMessageDelete: function(pageTitles, isDefault) {
                 var message = [];
 
                 if (pageTitles.length > 0) {
-                    message.push('<p>', this.sandbox.translate(translationKeys.deleteReferencedByFollowing), '</p>');
+                    message.push('<p>', this.sandbox.translate(translationKeys.referencedByFollowing), '</p>');
 
                     message.push('<ul>');
 
@@ -49,10 +51,34 @@ define([
                 }
 
                 if (!!isDefault) {
-                    message.push('<p>', this.sandbox.translate(translationKeys.deleteConfirmDefaultText), '</p>');
+                    message.push('<p>', this.sandbox.translate(translationKeys.confirmDefaultText), '</p>');
                 }
 
                 message.push('<p>', this.sandbox.translate(translationKeys.deleteConfirmText), '</p>');
+
+                return message.join('');
+            },
+
+            referentialIntegrityMessageSave: function(pageTitles, isDefault) {
+                var message = [];
+
+                if (pageTitles.length > 0) {
+                    message.push('<p>', this.sandbox.translate(translationKeys.referencedByFollowing), '</p>');
+
+                    message.push('<ul>');
+
+                    this.sandbox.util.foreach(pageTitles, function(pageTitle) {
+                        message.push('<li>', pageTitle, '</li>');
+                    });
+
+                    message.push('</ul>');
+                }
+
+                if (!!isDefault) {
+                    message.push('<p>', this.sandbox.translate(translationKeys.confirmDefaultText), '</p>');
+                }
+
+                message.push('<p>', this.sandbox.translate(translationKeys.saveConfirmText), '</p>');
 
                 return message.join('');
             }
@@ -132,19 +158,29 @@ define([
                 }.bind(this),
                 error: function(model, response) {
                     if (response.status == 409) {
-                        this.referentialIntegrityDialog(snippet, response.responseJSON, successCallback);
+                        var message = this.getReferentialIntegrityDialogMessage(response.responseJSON, templates.referentialIntegrityMessageDelete);
+
+                        this.referentialIntegrityDialog(
+                            translationKeys.deleteConfirmTitle,
+                            message,
+                            snippet,
+                            function () {
+                                snippet.destroy({
+                                    headers: {
+                                        SuluForceRemove: true
+                                    },
+                                    success: function () {
+                                        successCallback()
+                                    }.bind(this)
+                                });
+                            }.bind(this)
+                        );
                     }
                 }.bind(this)
             });
         },
 
-        referentialIntegrityDialog: function(snippet, data, successCallback) {
-            var pageTitles = [];
-
-            this.sandbox.util.foreach(data.structures, function(structure) {
-                pageTitles.push(structure.title);
-            });
-
+        referentialIntegrityDialog: function (title, message, snippet, okCallback, closeCallback) {
             var $element = $('<div/>');
             $('body').append($element);
 
@@ -154,25 +190,27 @@ define([
                     options: {
                         el: $element,
                         openOnStart: true,
-                        title: this.sandbox.translate(translationKeys.deleteConfirmTitle),
-                        message: templates.referentialIntegrityMessage.call(this, pageTitles, data.isDefault),
-                        okDefaultText: this.sandbox.translate(translationKeys.deleteDoIt),
+                        title: this.sandbox.translate(title),
+                        message: message,
+                        okDefaultText: this.sandbox.translate(translationKeys.doIt),
                         type: 'alert',
-                        closeCallback: function() {
-                        },
-                        okCallback: function() {
-                            snippet.destroy({
-                                headers: {
-                                    SuluForceRemove: true
-                                },
-                                success: function() {
-                                    successCallback()
-                                }.bind(this)
-                            });
-                        }.bind(this)
+                        closeCallback: closeCallback,
+                        okCallback: okCallback
                     }
                 }
             ]);
+        },
+
+        getReferentialIntegrityDialogMessage: function (data, template) {
+            var pageTitles = [];
+
+            if (!data.structures) {
+                this.sandbox.util.foreach(data.structures, function (structure) {
+                    pageTitles.push(structure.title);
+                });
+            }
+
+            return template.call(this, pageTitles, data.isDefault);
         },
 
         /**
@@ -234,11 +272,18 @@ define([
         saveSnippet: function(data, action, force) {
             this.model.set(data);
 
+            var headers = {};
+            if (force) {
+                headers = {SuluForcePut: true};
+            }
+
             this.model.fullSave(
                 this.options.language,
                 null,
                 {},
                 {
+                    headers: headers,
+
                     // on success save contacts id
                     success: function(response) {
                         var data = response.toJSON();
@@ -248,6 +293,22 @@ define([
                         this.afterSaveAction(action, data);
                     }.bind(this),
                     error: function(model, response) {
+                        if (response.status == 409) {
+                            var message = this.getReferentialIntegrityDialogMessage(response.responseJSON, templates.referentialIntegrityMessageSave);
+
+                            return this.referentialIntegrityDialog(
+                                translationKeys.saveConfirmTitle,
+                                message,
+                                model,
+                                function () {
+                                    this.saveSnippet(data, action, true);
+                                }.bind(this),
+                                function () {
+                                    this.sandbox.emit('sulu.snippets.snippet.save-error');
+                                }.bind(this)
+                            );
+                        }
+
                         this.handleError.call(this, response.responseJSON.code, data, action);
                     }.bind(this)
                 },
