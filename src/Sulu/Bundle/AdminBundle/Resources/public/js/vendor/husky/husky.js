@@ -22190,6 +22190,7 @@ define('pasteFromWordPlugin',[],function() {
                                     el: $element,
                                     title: editor.lang.pastefromword.title,
                                     info: editor.lang.clipboard.copyError,
+                                    enterMode: editor.config.enterMode,
                                     message: editor.lang.clipboard.pasteMsg,
                                     saveCallback: function(content) {
                                         sandbox.stop($element);
@@ -31595,7 +31596,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @returns {String|Object} the dom object for the cell content or html
          */
         getCellContent: function(record, column, $cell) {
-            var content = record[column.attribute];
+            var content = this.sandbox.util.escapeHtml(record[column.attribute]);
             if (!!column.type && column.type === this.datagrid.types.THUMBNAILS) {
                 content = this.datagrid.manipulateContent(content, column.type, this.options.thumbnailFormat);
                 content = this.sandbox.util.template(templates.img)({
@@ -34431,7 +34432,10 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!params.data) params.data = {};
                 expandIds = this.getSelectedItemIds();
                 expandIds = (!!this.options.expandIds) ? expandIds.concat(this.options.expandIds) : expandIds;
-                params.data['expandIds'] = expandIds.join(',');
+
+                if (expandIds.length) {
+                    params.data['expandIds'] = expandIds.join(',');
+                }
 
                 this.sandbox.dom.addClass(this.$find('.selected-elements'), 'invisible');
                 return this.sandbox.util.load(this.currentUrl, params.data)
@@ -42675,7 +42679,7 @@ define('__component__$column-navigation@husky',[],function() {
                 overflow;
 
             //set the item text to the original title
-            this.sandbox.dom.html($itemText, title);
+            this.sandbox.dom.text($itemText, title);
             this.sandbox.dom.css($itemText, 'font-weight', 'bold');
 
             overflow = (this.sandbox.dom.get($itemText, 0).scrollWidth > this.sandbox.dom.width($itemText));
@@ -42683,7 +42687,7 @@ define('__component__$column-navigation@husky',[],function() {
             while (overflow === true) {
                 maxLength--;
                 croppedTitle = this.sandbox.util.cropMiddle(title, maxLength);
-                this.sandbox.dom.html($itemText, croppedTitle);
+                this.sandbox.dom.text($itemText, croppedTitle);
                 overflow = (this.sandbox.dom.get($itemText, 0).scrollWidth > this.sandbox.dom.width($itemText));
             }
             this.sandbox.dom.css($itemText, 'font-weight', '');
@@ -43861,6 +43865,7 @@ define('__component__$ckeditor/plugins/paste-from-word@husky',['underscore'], fu
     var defaults = {
         title: 'Paste from Word',
         info: '',
+        enterMode: 'P',
         saveCallback: function(content) {
         }
     };
@@ -43907,8 +43912,25 @@ define('__component__$ckeditor/plugins/paste-from-word@husky',['underscore'], fu
                                 ],
                                 okCallback: function() {
                                     var text = this.$el.find('textarea').val();
+                                    // remove all spaces at the begin and end of a line
+                                    text = text.replace(/^ +| +$/gm, '');
 
-                                    this.options.saveCallback(text.split("\n").join('</p><p>'));
+                                    // replace all breaks with br tag
+                                    text = text.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+
+                                    if ('P' === this.options.enterMode) {
+                                        // replace all double br tags with paragraphs
+                                        text = text.replace(/<br\/><br\/>/g, '</p><p>');
+                                        // wrap text with paragraph
+                                        text = '<p>' + text + '</p>';
+                                    } else if ('DIV' === this.options.enterMode) {
+                                        // replace all double br tags with divs
+                                        text = text.replace(/<br\/><br\/>/g, '</div><div>');
+                                        // wrap text with div
+                                        text = '<div>' + text + '</div>';
+                                    }
+
+                                    this.options.saveCallback(text);
                                 }.bind(this)
                             }
                         ]
