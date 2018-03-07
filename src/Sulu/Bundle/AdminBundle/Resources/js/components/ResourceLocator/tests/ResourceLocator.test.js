@@ -43,7 +43,7 @@ test('ResourceLocator should call the onFinish callback when the Input finishes 
     const resourceLocator = shallow(
         <ResourceLocator value="/some/url" mode="leaf" onChange={jest.fn()} onFinish={finishSpy} />
     );
-    
+
     resourceLocator.find('Input').simulate('blur');
 
     expect(finishSpy).toBeCalledWith();
