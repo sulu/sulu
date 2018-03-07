@@ -18,7 +18,6 @@ export default class Assignment extends React.Component<Props> {
     static defaultProps = {
         icon: 'su-plus',
         value: [],
-        resourceKey: 'snippets', // TODO remove, only here for testing purposes
         title: 'Assignment', // TODO remove, only here for testing purposes
     };
 
