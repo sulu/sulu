@@ -134,7 +134,7 @@ export default class AutoComplete extends React.Component<Props> {
                     loading={loading}
                     inputRef={this.setInputRef}
                     onChange={this.handleInputChange}
-                    onFinish={onFinish}
+                    onBlur={onFinish}
                     placeholder={placeholder}
                 />
                 <Popover

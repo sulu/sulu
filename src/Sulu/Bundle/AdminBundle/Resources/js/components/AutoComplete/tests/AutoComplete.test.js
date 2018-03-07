@@ -134,7 +134,7 @@ test('Should call the onFinish callback when the Input lost focus', () => {
         </AutoComplete>
     );
 
-    autoComplete.find('Input').simulate('finish');
+    autoComplete.find('Input').simulate('blur');
 
     expect(finishSpy).toBeCalledWith();
 });

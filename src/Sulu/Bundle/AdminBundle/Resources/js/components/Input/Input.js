@@ -8,7 +8,7 @@ import inputStyles from './input.scss';
 
 const LOADER_SIZE = 20;
 
-type Props = {
+type Props = {|
     name?: string,
     icon?: string,
     type: string,
@@ -19,7 +19,7 @@ type Props = {
     value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
-};
+|};
 
 export default class Input extends React.PureComponent<Props> {
     static defaultProps = {

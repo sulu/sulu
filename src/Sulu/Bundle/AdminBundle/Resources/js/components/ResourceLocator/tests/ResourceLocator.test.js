@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render, mount, shallow} from 'enzyme';
 import ResourceLocator from '../ResourceLocator';
 
 test('ResourceLocator should render with type full', () => {
@@ -40,11 +40,11 @@ test('ResourceLocator should call the onChange callback when the input changes w
 test('ResourceLocator should call the onFinish callback when the Input finishes editing', () => {
     const finishSpy = jest.fn();
 
-    const resourceLocator = mount(
+    const resourceLocator = shallow(
         <ResourceLocator value="/some/url" mode="leaf" onChange={jest.fn()} onFinish={finishSpy} />
     );
-
-    resourceLocator.find('Input').prop('onFinish')();
+    
+    resourceLocator.find('Input').simulate('blur');
 
     expect(finishSpy).toBeCalledWith();
 });

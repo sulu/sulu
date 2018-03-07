@@ -58,5 +58,5 @@ test('Input should call the callback with undefined if the input is removed', ()
 
 test('Input should render with a loader', () => {
     const onChange = jest.fn();
-    expect(render(<Input value={null} loader={true} onChange={onChange} onBlur={jest.fn()} />)).toMatchSnapshot();
+    expect(render(<Input value={null} loading={true} onChange={onChange} onBlur={jest.fn()} />)).toMatchSnapshot();
 });
