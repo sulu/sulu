@@ -17,7 +17,9 @@ test('Pass error correctly to Input component', () => {
     );
 
     expect(inputInvalid.find(InputComponent).prop('valid')).toBe(false);
+});
 
+test('Pass props correctly to Input component', () => {
     const inputValid = shallow(
         <Input
             onChange={jest.fn()}

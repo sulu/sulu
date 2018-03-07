@@ -18,7 +18,7 @@ type Props = {
     valid: boolean,
     value: ?string,
     onBlur?: () => void,
-    onChange: (value?: string) => void,
+    onChange: (value: ?string) => void,
 };
 
 export default class Input extends React.PureComponent<Props> {
