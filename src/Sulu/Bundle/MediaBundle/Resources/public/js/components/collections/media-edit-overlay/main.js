@@ -1038,7 +1038,7 @@ define([
             var mediaId = this.media.id;
 
             $.ajax({
-                url: resetPreviewUrl(mediaId),
+                url: resetPreviewUrl.call(this, mediaId),
                 type: 'DELETE',
                 success: function() {
                     this.previewImageChangeHandler.call(this);

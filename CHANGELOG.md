@@ -188,6 +188,9 @@ CHANGELOG for Sulu
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
 * dev-release/1.5
+    * BUGFIX      #3826 [ContentBundle]         Fix enabling of save button when toggler is changed
+    * HOTFIX      #3819 [MediaBundle]           Fix forgotten context binding for resetPreviewUrl method
+    * FEATURE     #3816 [All]                   Validate if grunt build was run for all bundles with circleci
     * BUGFIX      #3806 [All]                   Fix compatibility on lowest and fix appveyor
     * BUGFIX      #3351 [ContentBundle]         Fix spacing between rows and section in content template generation
 
