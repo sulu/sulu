@@ -17,7 +17,7 @@ type Props = {
     inputRef?: (ref: ?ElementRef<'label'>) => void,
     valid: boolean,
     value: ?string,
-    onFinish?: () => void,
+    onBlur?: () => void,
     onChange: (value?: string) => void,
 };
 
@@ -38,10 +38,10 @@ export default class Input extends React.PureComponent<Props> {
     };
 
     handleBlur = () => {
-        const {onFinish} = this.props;
+        const {onBlur} = this.props;
 
-        if (onFinish) {
-            onFinish();
+        if (onBlur) {
+            onBlur();
         }
     };
 

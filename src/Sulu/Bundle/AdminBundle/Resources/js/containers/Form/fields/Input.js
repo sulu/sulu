@@ -10,7 +10,7 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
         return (
             <InputComponent
                 onChange={onChange}
-                onFinish={onFinish}
+                onBlur={onFinish}
                 value={value}
                 valid={!error}
             />

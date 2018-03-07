@@ -36,7 +36,7 @@ const onChange = (newValue) => {
 <Input error={state.error} value={state.value} onChange={onChange} />
 ```
 
-In addition to that the `onFinish` callback will be executed when `Input` components loses the focus.
+In addition to that the `onBlur` callback will be executed when `Input` components loses the focus.
 
 ```javascript
 initialState = {value: ''};
@@ -44,5 +44,5 @@ const onChange = (newValue) => {
     setState({value: newValue});
 };
 
-<Input value={state.value} onChange={onChange} onFinish={() => alert('Focus lost!')} />
+<Input value={state.value} onChange={onChange} onBlur={() => alert('Focus lost!')} />
 ```
