@@ -24,6 +24,7 @@
             <argument>%sulu_content.export.webspace.formats%</argument>
         </service>
 
+        <!-- Webspace import -->
         <service id="sulu_content.import.webspace" class="Sulu\Component\Content\Import\WebspaceImport">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
