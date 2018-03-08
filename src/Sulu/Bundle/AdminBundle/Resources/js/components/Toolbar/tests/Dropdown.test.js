@@ -96,8 +96,13 @@ test('Click on disabled option will not fire onClick', () => {
         options: [
             {
                 label: 'An option',
-                onClick: clickSpy,
+                onClick: jest.fn(),
                 disabled: true,
+            },
+            {
+                label: 'Another option',
+                onClick: clickSpy,
+                disabled: false,
             },
         ],
     };
@@ -105,7 +110,34 @@ test('Click on disabled option will not fire onClick', () => {
     const dropdown = mount(<Dropdown {...propsMock} />);
 
     dropdown.find('button').simulate('click');
-    dropdown.find('.option > button').first().simulate('click');
+    dropdown.find('.option').first('button').first().simulate('click');
 
     expect(clickSpy).toHaveBeenCalledTimes(0);
+});
+
+test('No active options should disable dropdown', () => {
+    const propsMock = {
+        label: 'Click to open',
+        options: [
+            {
+                label: 'An option',
+                onClick: jest.fn(),
+                disabled: true,
+            },
+            {
+                label: 'Another option',
+                onClick: jest.fn(),
+                disabled: true,
+            },
+        ],
+    };
+
+    const dropdown = mount(<Dropdown {...propsMock} />);
+
+    expect(dropdown.find('button').instance().disabled).toBe(true);
+    expect(dropdown.instance().open).toBe(false);
+
+    // click on button shouldn't open the options
+    dropdown.find('button').simulate('click');
+    expect(dropdown.instance().open).toBe(false);
 });
