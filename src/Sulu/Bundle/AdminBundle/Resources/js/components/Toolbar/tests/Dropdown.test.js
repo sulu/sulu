@@ -96,12 +96,12 @@ test('Click on disabled option will not fire onClick', () => {
         options: [
             {
                 label: 'An option',
-                onClick: jest.fn(),
+                onClick: clickSpy,
                 disabled: true,
             },
             {
                 label: 'Another option',
-                onClick: clickSpy,
+                onClick: jest.fn(),
                 disabled: false,
             },
         ],
