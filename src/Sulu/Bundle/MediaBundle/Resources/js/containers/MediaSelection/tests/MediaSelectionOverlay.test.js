@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, shallow} from 'enzyme';
-import {observable} from 'mobx';
+import {observable, toJS} from 'mobx';
 import pretty from 'pretty';
 import React from 'react';
 import datagridAdapterRegistry from 'sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry';
@@ -58,6 +58,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             ];
             extendObservable(this, {
                 selections: [],
+                selectionIds: [],
             });
             this.loading = false;
             this.pageCount = 3;
@@ -198,72 +199,30 @@ test('Should instantiate the needed stores when the overlay opens', () => {
     expect(DatagridStore.mock.calls[0][1].page.get()).toBe(1);
 });
 
-test('Should add and remove media ids', () => {
-    const thumbnails = {
-        'sulu-240x': 'http://lorempixel.com/240/100',
-        'sulu-25x25': 'http://lorempixel.com/25/25',
-    };
+test('Should call onConfirm callback with selections from datagrid', () => {
+    const confirmSpy = jest.fn();
     const locale = observable();
-    const mediaSelectionOverlayInstance = shallow(
+    const mediaSelectionOverlay = shallow(
         <MediaSelectionOverlay
             open={true}
             locale={locale}
             excludedIds={[]}
             onClose={jest.fn()}
-            onConfirm={jest.fn()}
+            onConfirm={confirmSpy}
         />
-    ).instance();
+    );
 
-    expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([]);
+    const selections = [
+        {id: 1},
+        {id: 3},
+    ];
+    mediaSelectionOverlay.instance().mediaDatagridStore.selections = selections;
+    mediaSelectionOverlay.find('Overlay').simulate('confirm');
 
-    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [1],
-        removed: [],
-    }));
-    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [2],
-        removed: [],
-    }));
-    expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
-        {
-            id: 1,
-            title: 'Title 1',
-            mimeType: 'image/png',
-            size: 12345,
-            url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            mimeType: 'image/jpeg',
-            size: 54321,
-            url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
-        },
-    ]);
-
-    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [],
-        removed: [2],
-    }));
-    expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
-        {
-            id: 1,
-            title: 'Title 1',
-            mimeType: 'image/png',
-            size: 12345,
-            url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
-        },
-    ]);
+    expect(toJS(confirmSpy.mock.calls[0][0])).toEqual(selections);
 });
 
 test('Should reset the selection array when the "Reset Selection" button was clicked', () => {
-    const thumbnails = {
-        'sulu-240x': 'http://lorempixel.com/240/100',
-        'sulu-25x25': 'http://lorempixel.com/25/25',
-    };
     const locale = observable();
     const mediaSelectionOverlayInstance = shallow(
         <MediaSelectionOverlay
@@ -275,43 +234,11 @@ test('Should reset the selection array when the "Reset Selection" button was cli
         />
     ).instance();
 
-    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [1],
-        removed: [],
-    }));
-    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [2],
-        removed: [],
-    }));
-    expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
-        {
-            id: 1,
-            title: 'Title 1',
-            mimeType: 'image/png',
-            size: 12345,
-            url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            mimeType: 'image/jpeg',
-            size: 54321,
-            url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
-        },
-    ]);
-
     mediaSelectionOverlayInstance.handleSelectionReset();
-    expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([]);
-    expect(mediaSelectionOverlayInstance.mediaDatagridStore.deselectEntirePage).toBeCalled();
+    expect(mediaSelectionOverlayInstance.mediaDatagridStore.clearSelection).toBeCalled();
 });
 
 test('Should destroy the stores and cleanup all states when the overlay is closed', () => {
-    const thumbnails = {
-        'sulu-240x': 'http://lorempixel.com/240/100',
-        'sulu-25x25': 'http://lorempixel.com/25/25',
-    };
     const locale = observable();
     const mediaSelectionOverlayInstance = shallow(
         <MediaSelectionOverlay
@@ -323,39 +250,12 @@ test('Should destroy the stores and cleanup all states when the overlay is close
         />
     ).instance();
 
-    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [1],
-        removed: [],
-    }));
-    mediaSelectionOverlayInstance.handleMediaSelectionChanges(observable({
-        added: [2],
-        removed: [],
-    }));
     mediaSelectionOverlayInstance.collectionId.set(1);
 
     expect(mediaSelectionOverlayInstance.collectionId.get()).toBe(1);
-    expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([
-        {
-            id: 1,
-            title: 'Title 1',
-            mimeType: 'image/png',
-            size: 12345,
-            url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            mimeType: 'image/jpeg',
-            size: 54321,
-            url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
-        },
-    ]);
 
     mediaSelectionOverlayInstance.handleClose();
     expect(mediaSelectionOverlayInstance.collectionId.get()).toBe(undefined);
-    expect(mediaSelectionOverlayInstance.selectedMedia).toEqual([]);
     expect(mediaSelectionOverlayInstance.collectionStore.resourceStore.destroy).toBeCalled();
     expect(mediaSelectionOverlayInstance.mediaDatagridStore.destroy).toBeCalled();
     expect(mediaSelectionOverlayInstance.collectionDatagridStore.destroy).toBeCalled();

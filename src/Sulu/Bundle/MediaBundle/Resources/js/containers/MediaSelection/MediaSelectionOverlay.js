@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, computed, observable, observe} from 'mobx';
+import {action, autorun, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
@@ -34,9 +34,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;
     @observable collectionStore: CollectionStore;
-    selectedMedia: Array<Object> = [];
     overlayDisposer: () => void;
-    mediaSelectionsObservationDisposer: () => void;
 
     componentWillMount() {
         const {open} = this.props;
@@ -87,11 +85,6 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             this.overlayDisposer();
         }
 
-        if (this.mediaSelectionsObservationDisposer) {
-            this.mediaSelectionsObservationDisposer();
-        }
-
-        this.selectedMedia = [];
         this.collectionId.set(undefined);
     }
 
@@ -155,29 +148,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             },
             options
         );
-
-        this.mediaSelectionsObservationDisposer = observe(
-            this.mediaDatagridStore.selections,
-            this.handleMediaSelectionChanges
-        );
-
-        this.selectedMedia.forEach((media) => this.mediaDatagridStore.select(media.id));
     }
-
-    handleMediaSelectionChanges = (change: any) => {
-        const mediaId = (change.added.length) ? change.added[0] : change.removed[0];
-        const selected = !!change.added.length;
-
-        if (selected) {
-            const media = this.mediaDatagridStore.data.find((entry) => entry.id === mediaId);
-
-            if (media) {
-                this.selectedMedia.push(media);
-            }
-        } else {
-            this.selectedMedia = this.selectedMedia.filter((media) => media.id !== mediaId);
-        }
-    };
 
     @action handleCollectionNavigate = (collectionId: ?string | number) => {
         this.mediaDatagridStore.clearData();
@@ -201,12 +172,11 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     };
 
     handleSelectionReset = () => {
-        this.selectedMedia = [];
-        this.mediaDatagridStore.deselectEntirePage();
+        this.mediaDatagridStore.clearSelection();
     };
 
     handleConfirm = () => {
-        this.props.onConfirm(this.selectedMedia);
+        this.props.onConfirm(this.mediaDatagridStore.selections);
         this.destroy();
     };
 

@@ -128,13 +128,13 @@ export default withToolbar(List, function() {
         type: 'button',
         value: translate('sulu_admin.delete'),
         icon: 'su-trash',
-        disabled: this.datagridStore.selections.length === 0,
+        disabled: this.datagridStore.selectionIds.length === 0,
         loading: this.deleting,
         onClick: action(() => {
             this.deleting = true;
 
             const deletePromises = [];
-            this.datagridStore.selections.forEach((id) => {
+            this.datagridStore.selectionIds.forEach((id) => {
                 deletePromises.push(ResourceRequester.delete(resourceKey, id));
             });
 

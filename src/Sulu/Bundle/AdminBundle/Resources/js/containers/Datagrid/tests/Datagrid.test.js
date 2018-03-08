@@ -16,6 +16,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
     this.selections = [];
+    this.selectionIds = [];
     this.loading = false;
     this.schema = {test: {}};
     this.select = jest.fn();
@@ -88,8 +89,7 @@ test('Render TableAdapter with correct values', () => {
 
     const datagridStore = new DatagridStore('test', {page: observable(1)});
     datagridStore.active = 3;
-    datagridStore.selections.push(1);
-    datagridStore.selections.push(3);
+    datagridStore.selectionIds.push(1, 3);
     const editClickSpy = jest.fn();
 
     const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} onItemClick={editClickSpy} />);
@@ -118,11 +118,11 @@ test('Selecting and deselecting items should update store', () => {
     checkboxes.at(1).getDOMNode().checked = true;
     checkboxes.at(2).getDOMNode().checked = true;
     checkboxes.at(1).simulate('change', {currentTarget: {checked: true}});
-    expect(datagridStore.select).toBeCalledWith(1);
+    expect(datagridStore.select).toBeCalledWith({id: 1});
     checkboxes.at(2).simulate('change', {currentTarget: {checked: true}});
-    expect(datagridStore.select).toBeCalledWith(2);
+    expect(datagridStore.select).toBeCalledWith({id: 2});
     checkboxes.at(1).simulate('change', {currentTarget: {checked: false}});
-    expect(datagridStore.deselect).toBeCalledWith(1);
+    expect(datagridStore.deselect).toBeCalledWith({id: 1});
 });
 
 test('Selecting and unselecting all items on current page should update store', () => {

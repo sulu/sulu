@@ -31,6 +31,7 @@ jest.mock(
             },
         ];
         this.selections = [];
+        this.selectionIds = [];
         this.getPage = jest.fn().mockReturnValue(2);
         this.schema = {
             title: {},
@@ -167,7 +168,7 @@ test('Should destroy the store on unmount', () => {
     expect(datagridStore.destroy).toBeCalled();
 });
 
-test('Should render the add button in the toolbar only if a addRoute has been passed in options', () => {
+test('Should render the add button in the toolbar only if an addRoute has been passed in options', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
@@ -314,7 +315,7 @@ test('Should render the delete item enabled only if something is selected', () =
     item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(true);
 
-    datagridStore.selections.push(1);
+    datagridStore.selectionIds.push(1);
     toolbarConfig = toolbarFunction.call(list.instance());
     item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(false);
@@ -432,7 +433,7 @@ test('Should delete selected items when click on delete button', () => {
 
     const list = mount(<List router={router} />);
     const datagridStore = list.instance().datagridStore;
-    datagridStore.selections = [1, 4, 6];
+    datagridStore.selectionIds.push(1, 4, 6);
 
     expect(getDeleteItem().loading).toBe(false);
     const clickPromise = getDeleteItem().onClick();
