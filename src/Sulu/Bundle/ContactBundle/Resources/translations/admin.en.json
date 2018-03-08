@@ -3,5 +3,7 @@
     "sulu_contact.persons": "Persons",
     "sulu_contact.details": "Details",
     "sulu_contact.contact_assignment_overlay_title": "Choose contact",
-    "sulu_contact.account_assignment_overlay_title": "Choose account"
+    "sulu_contact.account_assignment_overlay_title": "Choose account",
+    "sulu_contact.contact_assignment_label": "contact(s) selected",
+    "sulu_contact.account_assignment_label": "account(s) selected"
 }

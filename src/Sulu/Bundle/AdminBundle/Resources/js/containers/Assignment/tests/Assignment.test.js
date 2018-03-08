@@ -31,6 +31,12 @@ test('Show with default plus icon', () => {
     expect(render(<Assignment onChange={jest.fn()} resourceKey="snippets" title="Assignment" />)).toMatchSnapshot();
 });
 
+test('Show with passed label', () => {
+    expect(render(
+        <Assignment onChange={jest.fn()} label="Select Snippets" resourceKey="snippets" title="Assignment" />
+    )).toMatchSnapshot();
+});
+
 test('Show with passed icon', () => {
     expect(render(
         <Assignment onChange={jest.fn()} icon="su-document" resourceKey="snippets" title="Assignment" />

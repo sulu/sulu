@@ -5,13 +5,14 @@ import {observer} from 'mobx-react';
 import {arrayMove, MultiItemSelection} from '../../components';
 import DatagridOverlay from './DatagridOverlay';
 
-type Props = {
+type Props = {|
     onChange: (selectedIds: Array<string | number>) => void,
+    label?: string,
     icon: string,
     resourceKey: string,
-    value?: Array<string | number>,
+    value: Array<string | number>,
     title: string,
-};
+|};
 
 @observer
 export default class Assignment extends React.Component<Props> {
@@ -59,11 +60,12 @@ export default class Assignment extends React.Component<Props> {
     };
 
     render() {
-        const {icon, resourceKey, title, value} = this.props;
+        const {icon, label, resourceKey, title, value} = this.props;
 
         return (
             <Fragment>
                 <MultiItemSelection
+                    label={label && value.length + ' ' + label}
                     leftButton={{
                         icon,
                         onClick: this.handleOverlayOpen,
