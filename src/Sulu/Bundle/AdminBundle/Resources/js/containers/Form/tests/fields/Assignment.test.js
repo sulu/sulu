@@ -8,6 +8,7 @@ test('Should pass props correctly to component', () => {
     const value = [1, 6, 8];
     const fieldOptions = {
         icon: '',
+        title: 'Snippets',
         resourceKey: 'snippets',
     };
     const assignment = shallow(<Assignment onChange={changeSpy} fieldOptions={fieldOptions} value={value} />);
@@ -15,6 +16,7 @@ test('Should pass props correctly to component', () => {
     expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
         onChange: changeSpy,
         resourceKey: 'snippets',
+        title: 'Snippets',
         value,
     }));
 });

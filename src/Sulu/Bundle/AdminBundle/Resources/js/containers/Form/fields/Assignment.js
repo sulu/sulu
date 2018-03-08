@@ -13,6 +13,14 @@ export default class Assignment extends React.Component<FieldTypeProps<Array<str
 
         const {icon, resourceKey} = fieldOptions;
 
-        return <AssignmentComponent icon={icon} onChange={onChange} resourceKey={resourceKey} value={value || []} />;
+        return (
+            <AssignmentComponent
+                icon={icon}
+                onChange={onChange}
+                resourceKey={resourceKey}
+                title={fieldOptions.title}
+                value={value || []}
+            />
+        );
     }
 }

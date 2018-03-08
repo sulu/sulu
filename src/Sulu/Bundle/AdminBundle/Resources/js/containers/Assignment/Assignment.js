@@ -18,7 +18,6 @@ export default class Assignment extends React.Component<Props> {
     static defaultProps = {
         icon: 'su-plus',
         value: [],
-        title: 'Assignment', // TODO remove, only here for testing purposes
     };
 
     @observable overlayOpen: boolean = false;

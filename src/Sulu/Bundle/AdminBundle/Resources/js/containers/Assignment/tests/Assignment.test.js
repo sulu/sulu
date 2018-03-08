@@ -28,19 +28,23 @@ beforeEach(() => {
 });
 
 test('Show with default plus icon', () => {
-    expect(render(<Assignment onChange={jest.fn()} resourceKey="snippets" />)).toMatchSnapshot();
+    expect(render(<Assignment onChange={jest.fn()} resourceKey="snippets" title="Assignment" />)).toMatchSnapshot();
 });
 
 test('Show with passed icon', () => {
-    expect(render(<Assignment onChange={jest.fn()} icon="su-document" resourceKey="snippets" />)).toMatchSnapshot();
+    expect(render(
+        <Assignment onChange={jest.fn()} icon="su-document" resourceKey="snippets" title="Assignment" />
+    )).toMatchSnapshot();
 });
 
 test('Show with passed values as items', () => {
-    expect(render(<Assignment onChange={jest.fn()} value={[1, 2, 5]} resourceKey="snippets" />)).toMatchSnapshot();
+    expect(render(
+        <Assignment onChange={jest.fn()} value={[1, 2, 5]} resourceKey="snippets" title="Assignment" />
+    )).toMatchSnapshot();
 });
 
 test('Should open an overlay', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="snippets" />);
+    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="snippets" title="Assignment" />);
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
@@ -49,7 +53,7 @@ test('Should open an overlay', () => {
 });
 
 test('Should close an overlay using the close button', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="snippets" />);
+    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="snippets" title="Assignment" />);
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
@@ -63,7 +67,7 @@ test('Should close an overlay using the close button', () => {
 });
 
 test('Should close an overlay using the confirm button', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="snippets" />);
+    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="snippets" title="Assignment" />);
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
@@ -78,7 +82,7 @@ test('Should close an overlay using the confirm button', () => {
 
 test('Should call the onChange callback when clicking the confirm button', () => {
     const changeSpy = jest.fn();
-    const assignment = mount(<Assignment onChange={changeSpy} resourceKey="snippets" />);
+    const assignment = mount(<Assignment onChange={changeSpy} resourceKey="snippets" title="Assignment" />);
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
     const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
@@ -93,7 +97,7 @@ test('Should call the onChange callback when clicking the confirm button', () =>
 });
 
 test('Should instantiate the DatagridStore with the correct resourceKey and destroy it on unmount', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="pages" />);
+    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="pages" title="Assignment" />);
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
@@ -105,7 +109,9 @@ test('Should instantiate the DatagridStore with the correct resourceKey and dest
 });
 
 test('Should instantiate the DatagridStore with the preselected ids', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} value={[1, 5, 8]} resourceKey="pages" />);
+    const assignment = mount(
+        <Assignment onChange={jest.fn()} value={[1, 5, 8]} resourceKey="pages" title="Assignment" />
+    );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
@@ -115,7 +121,9 @@ test('Should instantiate the DatagridStore with the preselected ids', () => {
 });
 
 test('Should reinstantiate the DatagridStore with the preselected ids when new props are received', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} value={[1, 5, 8]} resourceKey="pages" />);
+    const assignment = mount(
+        <Assignment onChange={jest.fn()} value={[1, 5, 8]} resourceKey="pages" title="Assignment" />
+    );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
@@ -131,7 +139,9 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
 
 test('Should remove an item when the remove button is clicked', () => {
     const changeSpy = jest.fn();
-    const assignment = shallow(<Assignment onChange={changeSpy} resourceKey="snippets" value={[3, 7, 9]} />);
+    const assignment = shallow(
+        <Assignment onChange={changeSpy} resourceKey="snippets" value={[3, 7, 9]} title="Assignment" />
+    );
 
     assignment.find('MultiItemSelection').prop('onItemRemove')(7);
     expect(changeSpy).toBeCalledWith([3, 9]);
@@ -139,7 +149,9 @@ test('Should remove an item when the remove button is clicked', () => {
 
 test('Should reorder the items on drag and drop', () => {
     const changeSpy = jest.fn();
-    const assignment = shallow(<Assignment onChange={changeSpy} resourceKey="snippets" value={[3, 7, 9]} />);
+    const assignment = shallow(
+        <Assignment onChange={changeSpy} resourceKey="snippets" value={[3, 7, 9]} title="Assignment" />
+    );
 
     assignment.find('MultiItemSelection').prop('onItemsSorted')(1, 2);
 

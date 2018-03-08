@@ -6,7 +6,7 @@ import {render} from 'react-dom';
 import {configure} from 'mobx';
 import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
-import {setTranslations} from './utils/Translator';
+import {setTranslations, translate} from './utils/Translator';
 import TextArea from './components/TextArea';
 import Application from './containers/Application';
 import {fieldRegistry, Assignment, Input, ResourceLocator, SingleSelect} from './containers/Form';
@@ -34,12 +34,30 @@ datagridAdapterRegistry.add('column_list', ColumnListAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
 datagridAdapterRegistry.add('table', TableAdapter);
 
-fieldRegistry.add('block', FieldBlocks);
-fieldRegistry.add('resource_locator', ResourceLocator);
-fieldRegistry.add('single_select', SingleSelect);
-fieldRegistry.add('snippet', Assignment); // TODO replace with registration in bundle or configuration from server
-fieldRegistry.add('text_line', Input);
-fieldRegistry.add('text_area', TextArea);
+function registerFieldTypes() {
+    fieldRegistry.add('block', FieldBlocks);
+    fieldRegistry.add('resource_locator', ResourceLocator);
+    fieldRegistry.add('single_select', SingleSelect);
+    fieldRegistry.add('text_line', Input);
+    fieldRegistry.add('text_area', TextArea);
+
+    // TODO move to correct bundle or even allow to register somehow via the config request
+    fieldRegistry.add('snippet', Assignment, {
+        icon: 'su-document',
+        resourceKey: 'snippets',
+        title: translate('sulu_snippet.assignment_overlay_title'),
+    });
+    fieldRegistry.add('contact', Assignment, {
+        icon: 'su-user-1',
+        resourceKey: 'contacts',
+        title: translate('sulu_contact.contact_assignment_overlay_title'),
+    });
+    fieldRegistry.add('account', Assignment, {
+        icon: 'su-user-1',
+        resourceKey: 'accounts',
+        title: translate('sulu_contact.account_assignment_overlay_title'),
+    });
+}
 
 function startApplication() {
     const router = new Router(createHistory());
@@ -66,7 +84,10 @@ Promise.all([
     translationPromise,
     configPromise,
     bundlesReadyPromise,
-]).then(startApplication);
+]).then(() => {
+    registerFieldTypes();
+    startApplication();
+});
 
 export {configPromise};
 
