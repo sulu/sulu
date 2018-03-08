@@ -3,12 +3,12 @@ import React from 'react';
 import Input from '../Input';
 import resourceLocatorStyles from './resourceLocator.scss';
 
-type Props = {
+type Props = {|
     value: string,
     onChange: (value: string) => void,
-    onFinish?: () => void,
+    onBlur?: () => void,
     mode: 'full' | 'leaf',
-};
+|};
 
 export default class ResourceLocator extends React.PureComponent<Props> {
     static defaultProps = {
@@ -47,12 +47,12 @@ export default class ResourceLocator extends React.PureComponent<Props> {
     };
 
     render() {
-        const {onFinish} = this.props;
+        const {onBlur} = this.props;
 
         return (
             <div className={resourceLocatorStyles.resourceLocator}>
                 <span className={resourceLocatorStyles.fixed}>{this.fixed}</span>
-                <Input onChange={this.handleChange} onFinish={onFinish} value={this.changeable} />
+                <Input onChange={this.handleChange} onBlur={onBlur} value={this.changeable} />
             </div>
         );
     }
