@@ -58,8 +58,8 @@ before_script:
   - echo "memory_limit=2048M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - phpenv config-rm xdebug.ini
   - composer self-update
+  - if [[ $SYMFONY__PHPCR__TRANSPORT = jackrabbit ]]; then composer require jackalope/jackalope-jackrabbit:~1.2  --no-update --no-interaction ; fi
   - composer update $COMPOSER_FLAGS
-  - if [[ $SYMFONY__PHPCR__TRANSPORT = jackrabbit ]]; then composer require jackalope/jackalope-jackrabbit:~1.2 ; fi
 
 script: 
   - time ./bin/runtests -i -a $TEST_FLAGS
