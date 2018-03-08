@@ -58,12 +58,14 @@ export default class Dropdown extends React.Component<DropdownProps> {
             }
         );
 
+        const allChildrenDisabled = options.every((option) => option.disabled);
+
         return (
             <div className={dropdownClass}>
                 <Button
                     icon={icon}
                     size={size}
-                    disabled={disabled}
+                    disabled={disabled || allChildrenDisabled}
                     value={label}
                     onClick={this.handleButtonClick}
                     active={this.open}
