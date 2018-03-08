@@ -317,6 +317,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
 
                     if ($parent instanceof BasePageDocument) {
                         $parentUuid = $parent->getUuid();
+
                         try {
                             $resourceSegment = $this->generateUrl(
                                 $structure->getPropertiesByTagName('sulu.rlp.part'),
@@ -330,7 +331,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
                             $resourceSegment = null;
                         }
 
-                        if (!$resourceSegment || $resourceSegment === '/') {
+                        if (!$resourceSegment || '/' === $resourceSegment) {
                             if (!$value) {
                                 $this->addException(
                                     sprintf('Document(%s) needs an resource locator (%s) because no url could be generated', $document->getUuid(), $property->getName()),

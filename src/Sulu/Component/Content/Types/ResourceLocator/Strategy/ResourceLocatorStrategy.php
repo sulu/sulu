@@ -117,7 +117,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         $path = $this->cleaner->cleanup($path, $languageCode);
 
         // if no path was added throw an except that no url could be generated for the given title
-        if (substr($path,0, -1) === $parentPath) {
+        if (substr($path, 0, -1) === $parentPath) {
             throw new ResourceLocatorGeneratorException($title, $parentPath);
         }
 

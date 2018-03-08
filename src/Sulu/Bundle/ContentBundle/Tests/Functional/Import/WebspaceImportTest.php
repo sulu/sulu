@@ -42,9 +42,11 @@ class WebspaceImportTest extends SuluTestCase
     private $webspaceImporter;
 
     protected $distPath = '/../../app/Resources/import/export.xliff.dist';
+
     protected $distPathRU = '/../../app/Resources/import/export_ru.xliff.dist';
 
     protected $path = '/../../app/Resources/import/export.xliff';
+
     protected $pathRU = '/../../app/Resources/import/export_ru.xliff';
 
     /**
