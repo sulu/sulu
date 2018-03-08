@@ -110,7 +110,7 @@ test('Click on disabled option will not fire onClick', () => {
     const dropdown = mount(<Dropdown {...propsMock} />);
 
     dropdown.find('button').simulate('click');
-    dropdown.find('.option').first('button').first().simulate('click');
+    dropdown.find('.option > button').first().simulate('click');
 
     expect(clickSpy).toHaveBeenCalledTimes(0);
 });
