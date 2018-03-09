@@ -58,6 +58,7 @@ viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
 viewRegistry.add('sulu_admin.datagrid', Datagrid);
 
 datagridAdapterRegistry.add('column_list', ColumnListAdapter);
+datagridAdapterRegistry.add('tree_list', ColumnListAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
 datagridAdapterRegistry.add('table', TableAdapter);
 

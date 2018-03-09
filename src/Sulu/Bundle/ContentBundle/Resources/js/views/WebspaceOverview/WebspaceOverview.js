@@ -153,7 +153,9 @@ class WebspaceOverview extends React.Component<ViewProps> {
                             </WebspaceSelect>
                         </div>
                         <Datagrid
-                            adapters={['column_list']}
+                            store={this.datagridStore}
+                            adapters={['column_list', 'tree_list']}
+                            onItemClick={this.handleEditClick}
                             onAddClick={this.handleAddClick}
                             onItemClick={this.handleEditClick}
                             selectable={false}
