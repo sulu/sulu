@@ -22,30 +22,30 @@ test('Should call onConfirm with the current selection', () => {
             onClose={jest.fn()}
             onConfirm={confirmSpy}
             open={true}
-            preSelectedIds={[1, 2, 3]}
+            preSelectedItems={[{id: 1}, {id: 2}, {id: 3}]}
             resourceKey="snippets"
             title="Assignment"
         />
     );
 
     const datagridStore = datagridOverlay.instance().datagridStore;
-    datagridStore.selections = [1, 2];
+    datagridStore.selections = [{id: 1}, {id: 2}];
 
     const confirmButton = document.querySelector('button.primary');
     if (confirmButton) {
         confirmButton.click();
     }
 
-    expect(confirmSpy).toBeCalledWith([1, 2]);
+    expect(confirmSpy).toBeCalledWith([{id: 1}, {id: 2}]);
 });
 
-test('Should select the preSelectedIds in the DatagridStore', () => {
+test('Should select the preSelectedItems in the DatagridStore', () => {
     const datagridOverlay = shallow(
         <DatagridOverlay
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
-            preSelectedIds={[1, 2, 3]}
+            preSelectedItems={[{id: 1}, {id: 2}, {id: 3}]}
             resourceKey="snippets"
             title="Assignment"
         />
@@ -53,12 +53,12 @@ test('Should select the preSelectedIds in the DatagridStore', () => {
 
     const datagridStore = datagridOverlay.instance().datagridStore;
 
-    expect(datagridStore.select).toBeCalledWith(1);
-    expect(datagridStore.select).toBeCalledWith(2);
-    expect(datagridStore.select).toBeCalledWith(3);
+    expect(datagridStore.select).toBeCalledWith({id: 1});
+    expect(datagridStore.select).toBeCalledWith({id: 2});
+    expect(datagridStore.select).toBeCalledWith({id: 3});
 });
 
-test('Should not fail when preSelectedIds is undefined', () => {
+test('Should not fail when preSelectedItems is undefined', () => {
     const datagridOverlay = shallow(
         <DatagridOverlay
             onClose={jest.fn()}

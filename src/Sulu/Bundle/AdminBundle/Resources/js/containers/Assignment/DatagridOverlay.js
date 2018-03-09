@@ -10,10 +10,10 @@ import datagridOverlayStyles from './datagridOverlay.scss';
 
 type Props = {
     onClose: () => void,
-    onConfirm: (selectedIds: Array<string | number>) => void,
+    onConfirm: (selectedItems: Array<Object>) => void,
     open: boolean,
     resourceKey: string,
-    preSelectedIds: Array<string | number>,
+    preSelectedItems: Array<Object>,
     title: string,
 };
 
@@ -22,23 +22,23 @@ export default class DatagridOverlay extends React.Component<Props> {
     page: IObservableValue<number> = observable(1);
 
     static defaultProps = {
-        preSelectedIds: [],
+        preSelectedItems: [],
     };
 
     componentWillMount() {
-        const {resourceKey, preSelectedIds} = this.props;
+        const {resourceKey, preSelectedItems} = this.props;
         this.datagridStore = new DatagridStore(resourceKey, {page: this.page}, {});
 
-        preSelectedIds.forEach((preSelectedId) => {
-            this.datagridStore.select(preSelectedId);
+        preSelectedItems.forEach((preSelectedItem) => {
+            this.datagridStore.select(preSelectedItem);
         });
     }
 
     componentWillReceiveProps(nextProps: Props) {
         this.datagridStore.clearSelection();
 
-        nextProps.preSelectedIds.forEach((preSelectedId) => {
-            this.datagridStore.select(preSelectedId);
+        nextProps.preSelectedItems.forEach((preSelectedItem) => {
+            this.datagridStore.select(preSelectedItem);
         });
     }
 
