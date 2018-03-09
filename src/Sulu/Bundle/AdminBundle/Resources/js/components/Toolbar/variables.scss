@@ -1,0 +1,11 @@
+@import '../../containers/Application/colors.scss';
+
+$toolbarHeight: 60px;
+
+$toolbarBackgroundLightColor: $white;
+$toolbarBackgroundDarkColor: $blueZodiac;
+$shadowColor: $silver;
+$itemsBackgroundColor: $alabaster;
+$itemsContainerBorderColor: $gallery;
+
+$itemsContainerBorder: 1px $itemsContainerBorderColor solid;

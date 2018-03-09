@@ -1,10 +1,4 @@
-@import '../../containers/Application/colors.scss';
-
-$toolbarHeight: 60px;
-
-$toolbarBackgroundLightColor: $white;
-$toolbarBackgroundDarkColor: $blueZodiac;
-$shadowColor: $silver;
+@import './variables.scss';
 
 .toolbar {
     display: flex;
