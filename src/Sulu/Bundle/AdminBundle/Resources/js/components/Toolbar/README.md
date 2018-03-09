@@ -49,3 +49,5 @@ const Toolbar = require('./Toolbar').default;
     </Toolbar.Controls>
 </Toolbar>
 ```
+
+The appearance of the `Toolbar` can be changed by passing the attribute `skin`. Available skins are `light` and `dark`. 
