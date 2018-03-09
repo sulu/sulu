@@ -3,7 +3,7 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import Tree from '../../../components/Tree';
-import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
+import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
 import AbstractAdapter from './AbstractAdapter';
 import FullLoadingStrategy from "../loadingStrategies/FullLoadingStrategy";
 
@@ -11,7 +11,7 @@ import FullLoadingStrategy from "../loadingStrategies/FullLoadingStrategy";
 export default class TreeAdapter extends AbstractAdapter {
     static LoadingStrategy = FullLoadingStrategy;
 
-    static StructureStrategy = FlatStructureStrategy;
+    static StructureStrategy = TreeStructureStrategy;
 
     static defaultProps = {
         data: [],
@@ -31,14 +31,17 @@ export default class TreeAdapter extends AbstractAdapter {
         return -1 !== this.expandedRows.indexOf(identifier);
     }
 
-    flattenData(items: Array<*>, data: Array<*>, depth: number) {
+    flattenData(items: Array<Object>, data: Array<Object>, depth: number) {
         items.forEach((item) => {
-            item.depth = depth;
+            if (!item.data.depth) {
+                // TODO discuss should we get the depth from the API?
+                item.data.depth = depth;
+            }
 
-            data.push(item);
+            data.push(item.data);
 
-            if (this.isExpanded(item.id) && item._embedded.nodes.length) {
-                this.flattenData(item._embedded.nodes, data, ++depth);
+            if (this.isExpanded(item.data.id) && item.children.length) {
+                this.flattenData(item.children, data, ++depth);
             }
         });
 
@@ -49,10 +52,14 @@ export default class TreeAdapter extends AbstractAdapter {
         if (expanded) {
             this.expandedRows.push(identifier);
 
+            if (this.props.onItemActivation) {
+                this.props.onItemActivation(identifier);
+            }
+
             return;
         }
 
-        this.expandedRows.slice(this.expandedRows.indexOf(identifier), 1);
+        this.expandedRows.splice(this.expandedRows.indexOf(identifier), 1);
     }
 
     renderCells(item: Object, schemaKeys: Array<string>) {
