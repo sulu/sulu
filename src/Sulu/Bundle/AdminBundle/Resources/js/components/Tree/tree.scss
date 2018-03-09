@@ -23,10 +23,11 @@ $rowHeight: 40px;
 }
 
 .header {
-    display: flex;
     color: $headerTextColor;
-    background-color: $headerCellBackgroundColor;
-    border-radius: 3px;
+
+    & > tr {
+        height: 60px;
+    }
 }
 
 .header-cell {
@@ -67,6 +68,25 @@ $rowHeight: 40px;
     overflow: hidden;
     max-width: 250px;
     text-align: left;
+}
+
+.cell-content {
+    display: flex;
+    align-items: center;
+}
+
+.toggleIcon {
+    cursor: pointer;
+    display: inline-block;
+    width: 20px;
+}
+
+.cell-choice {
+    padding-right: 10px;
+}
+
+.header-cell-sort-icon {
+    padding-left: 10px;
 }
 
 .header-button-cell {
@@ -124,14 +144,14 @@ $rowHeight: 40px;
     text-align: center;
 
     &:hover {
-        button {
+        > button {
             visibility: visible;
             background-color: $cellBackgroundColorActive;
             border-right: 1px solid $buttonCellBorderColor;
         }
     }
 
-    button {
+    > button {
         visibility: hidden;
         width: 100%;
         height: $rowHeight;
@@ -142,7 +162,7 @@ $rowHeight: 40px;
     }
 }
 
-.tree {
+.tree-placeholder-area {
     color: $emptyMessageColor;
     text-align: center;
     padding: 40px;

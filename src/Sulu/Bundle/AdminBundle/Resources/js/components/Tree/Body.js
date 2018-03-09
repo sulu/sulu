@@ -1,49 +1,62 @@
 // @flow
-import {observer} from 'mobx-react';
+import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import type {ButtonConfig, SelectMode} from './types';
-import Node from './Node';
-import Element from './Element';
-import Children from './Children';
+import Row from './Row';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Node>>,
+    children: ChildrenArray<Element<typeof Row>>,
+    /** @ignore */
+    buttons?: Array<ButtonConfig>,
+    /** @ignore */
+    selectMode?: SelectMode,
+    /** @ignore */
+    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    /** @ignore */
+    onRowToggleChange?: (rowId: string | number, expanded?: boolean) => void,
 };
 
-@observer
-export default class Tree extends React.PureComponent<Props> {
+export default class Body extends React.PureComponent<Props> {
     static defaultProps = {
         selectMode: 'none',
     };
 
-    static Node = Node;
+    cloneRows = (originalRows: ChildrenArray<Element<typeof Row>>) => {
+        const {buttons, selectMode} = this.props;
+        return React.Children.map(originalRows, (row, index) => React.cloneElement(
+            row,
+            {
+                ...row.props,
+                key: `body-row-${index}`,
+                rowIndex: index,
+                buttons: buttons,
+                selectMode: selectMode,
+                onSelectionChange: this.handleRowSelectionChange,
+                onToggleChange: this.handleRowToggleChange,
+            }
+        ));
+    };
 
-    static Element = Element;
+    handleRowSelectionChange = (rowId: string | number, selected?: boolean) => {
+        if (this.props.onRowSelectionChange) {
+            this.props.onRowSelectionChange(rowId, selected);
+        }
+    };
 
-    static Children = Children;
+    handleRowToggleChange = (rowId: string | number, expanded?: boolean) => {
+        if (this.props.onRowToggleChange) {
+            this.props.onRowToggleChange(rowId, expanded);
+        }
+    };
 
     render() {
         const {children} = this.props;
-        let node;
-
-        React.Children.forEach(children, (child: Element<typeof Node>) => {
-            switch (child.type) {
-                case Node:
-                    node = child;
-                    break;
-                default:
-                    throw new Error(
-                        'The Tree Body component only accepts the following children types: ' +
-                        [Node.name].join(', ') +
-                        ' given: ' + child.type
-                    );
-            }
-        });
+        const rows = this.cloneRows(children);
 
         return (
-            <ul>
-                {children}
-            </ul>
+            <tbody>
+                {rows}
+            </tbody>
         );
     }
 }

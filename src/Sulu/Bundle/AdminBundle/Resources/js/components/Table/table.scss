@@ -137,14 +137,14 @@ $borderWidth: 1px;
     text-align: center;
 
     &:hover {
-        button {
+        > button {
             visibility: visible;
             background-color: $cellBackgroundColorActive;
             border-right: $borderWidth solid $buttonCellBorderColor;
         }
     }
 
-    button {
+    > button {
         visibility: hidden;
         width: 100%;
         height: 100%;
