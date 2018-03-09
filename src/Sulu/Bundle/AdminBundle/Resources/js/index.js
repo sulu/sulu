@@ -8,6 +8,7 @@ import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
 import {setTranslations} from './utils/Translator';
 import TextArea from './components/TextArea';
+import TextEditor from './components/TextEditor';
 import Application from './containers/Application';
 import {fieldRegistry, Input, ResourceLocator, SingleSelect} from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
@@ -39,6 +40,7 @@ fieldRegistry.add('resource_locator', ResourceLocator);
 fieldRegistry.add('single_select', SingleSelect);
 fieldRegistry.add('text_line', Input);
 fieldRegistry.add('text_area', TextArea);
+fieldRegistry.add('text_editor', TextEditor);
 
 function startApplication() {
     const router = new Router(createHistory());

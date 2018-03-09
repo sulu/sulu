@@ -1,0 +1,50 @@
+@import '../../containers/Application/colors.scss';
+
+$borderColor: $silver;
+$borderWidth: 1px;
+$borderRadius: 3px;
+$backgroundColor: $white;
+
+.textEditor {
+    border: $borderWidth solid $borderColor;
+    border-radius: $borderRadius;
+    background-color: $backgroundColor;
+    font-size: 12px;
+    line-height: 18px;
+    padding: 10px 10px 0 10px;
+    width: 100%;
+
+    div[contenteditable='true'] {
+        min-height: 100px;
+        max-height: 600px;
+        overflow: auto;
+    }
+
+    p {
+        margin: 0 0 1em 0;
+    }
+
+    .text-align-left {
+        div {
+            text-align: left;
+        }
+    }
+
+    .text-align-center {
+        div {
+            text-align: center;
+        }
+    }
+
+    .text-align-right {
+        div {
+            text-align: right;
+        }
+    }
+
+    .text-align-justify {
+        div {
+            text-align: justify;
+        }
+    }
+}
