@@ -19,33 +19,35 @@ export default class TreeAdapter extends AbstractAdapter {
 
     @observable expandedRows: Array<string | number> = [];
 
-    getData() {
-        let data = [],
+    getDataList() {
+        let dataList = [],
             depth = 0;
-        data = this.flattenData(this.props.data, data, depth);
+        dataList = this.flattenData(this.props.data, dataList, depth);
 
-        return data;
+        return dataList;
     }
 
     isExpanded(identifier: string | number) {
         return -1 !== this.expandedRows.indexOf(identifier);
     }
 
-    flattenData(items: Array<Object>, data: Array<Object>, depth: number) {
+    flattenData(items: Array<Object>, dataList: Array<Object>, depth: number) {
         items.forEach((item) => {
-            if (!item.data.depth) {
-                // TODO discuss should we get the depth from the API?
-                item.data.depth = depth;
+            let expanded = this.isExpanded(item.data.id);
+            item.expanded = expanded;
+
+            if (!item.depth) {
+                item.depth = depth;
             }
 
-            data.push(item.data);
+            dataList.push(item);
 
-            if (this.isExpanded(item.data.id) && item.children.length) {
-                this.flattenData(item.children, data, ++depth);
+            if (expanded && item.children.length) {
+                this.flattenData(item.children, dataList, ++depth);
             }
         });
 
-        return data;
+        return dataList;
     }
 
     @action handleRowToggleChange(identifier: string | number, expanded: boolean) {
@@ -92,21 +94,23 @@ export default class TreeAdapter extends AbstractAdapter {
         ));
     }
 
-    renderRows(items) {
+    renderRows(items: Array<Object>) {
         return items.map((item) => {
             const {
                 schema,
                 selections,
             } = this.props;
+            const {data} = item;
+
             const schemaKeys = Object.keys(schema);
 
-            return <Tree.Row key={item.id}
-                             id={item.id}
+            return <Tree.Row key={data.id}
+                             id={data.id}
                              depth={item.depth}
-                             hasChildren={item.hasChildren}
-                             expanded={this.isExpanded(item.id)}
-                             selected={selections.includes(item.id)}>
-                {this.renderCells(item, schemaKeys)}
+                             hasChildren={data.hasChildren}
+                             expanded={item.expanded}
+                             selected={selections.includes(data.id)}>
+                {this.renderCells(data, schemaKeys)}
             </Tree.Row>
         });
     }
@@ -147,7 +151,7 @@ export default class TreeAdapter extends AbstractAdapter {
                 </Tree.Header>
 
                 <Tree.Body>
-                    {this.renderRows(this.getData())}
+                    {this.renderRows(this.getDataList())}
                 </Tree.Body>
             </Tree>
         );
