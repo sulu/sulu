@@ -62,8 +62,10 @@ export default class Select extends React.Component<SelectProps> {
         const selectClass = classNames(
             className,
             selectStyles.select,
-            selectStyles[skin],
-            (size) ? selectStyles[size] : null
+            {
+                [selectStyles[size]]: size,
+                [selectStyles[skin]]: skin,
+            }
         );
 
         return (

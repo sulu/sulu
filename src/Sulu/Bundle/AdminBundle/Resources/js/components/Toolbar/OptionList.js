@@ -9,6 +9,7 @@ type Props = {
     onOptionClick: (option: Object) => void,
     value?: string | number,
     size?: string,
+    skin?: string,
     onClose?: () => void,
     options: Array<Object>,
 };

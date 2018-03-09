@@ -85,12 +85,12 @@ export default class Toolbar extends React.Component<*> {
         }
 
         return (
-            <ToolbarComponent skin="dark">
+            <ToolbarComponent>
                 <ToolbarComponent.Controls>
-                    {onNavigationButtonClick &&
+                    {!!onNavigationButtonClick &&
                     <ToolbarComponent.Button
                         onClick={this.handleNavigationButtonClick}
-                        skin="primary"
+                        primary={true}
                         icon={navigationOpen ? 'su-x' : 'su-menu'}
                     />
                     }

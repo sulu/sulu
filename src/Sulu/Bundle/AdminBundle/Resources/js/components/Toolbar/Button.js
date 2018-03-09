@@ -14,6 +14,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
         disabled: false,
         hasOptions: false,
         active: false,
+        primary: false,
     };
 
     handleOnClick = () => {
@@ -24,21 +25,21 @@ export default class Button extends React.PureComponent<ButtonProps> {
         const {
             icon,
             size,
-            asdf,
             skin,
             value,
             active,
+            primary,
             loading,
             disabled,
             hasOptions,
         } = this.props;
         const buttonClass = classNames(
             buttonStyles.button,
-            buttonStyles[skin],
             {
                 [buttonStyles.active]: active,
                 [buttonStyles[size]]: size,
-                [buttonStyles[asdf]]: asdf,
+                [buttonStyles[skin]]: skin,
+                [buttonStyles.primary]: primary,
             }
         );
         const buttonContent = this.props.children || value;

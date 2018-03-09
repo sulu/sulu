@@ -24,7 +24,7 @@ export type Button = {
     active?: boolean,
     hasOptions?: boolean,
     loading?: boolean,
-    asdf?: 'primary',
+    primary?: boolean,
     skin?: Skins,
 };
 
@@ -59,6 +59,7 @@ export type Select = {
     label?: string | number,
     icon?: string,
     size?: string,
+    className?: string,
     disabled?: boolean,
     loading?: boolean,
     skin?: Skins,

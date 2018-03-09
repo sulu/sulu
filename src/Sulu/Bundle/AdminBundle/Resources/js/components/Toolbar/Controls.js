@@ -6,7 +6,7 @@ import type {Group, Item, Skins} from './types';
 import controlsStyles from './controls.scss';
 
 type Props = {
-    children: ChildrenArray<Item | Group>,
+    children: ChildrenArray<Item | Group | false>,
     skin?: Skins,
 };
 
@@ -15,12 +15,13 @@ export default class Controls extends React.PureComponent<Props> {
         skin: 'light',
     };
 
-    static createChildren(children: ChildrenArray<Item | Group>, skin?: Skins) {
-        return React.Children.map(children, (child) => {
+    static createChildren(children: ChildrenArray<Item | Group | false>, skin?: Skins) {
+        return React.Children.map(children, (child: Item | Group | false) => {
             if (!child) {
                 return;
             }
 
+            // $FlowFixMe
             return React.cloneElement(
                 child,
                 {

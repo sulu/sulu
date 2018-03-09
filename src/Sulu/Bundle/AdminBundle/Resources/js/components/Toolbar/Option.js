@@ -11,6 +11,7 @@ type Props = {
     value: Object,
     onClick: (value: Object) => void,
     size?: string,
+    skin?: string,
     selected?: boolean,
     disabled?: boolean,
 };
