@@ -72,6 +72,7 @@
         "symfony/twig-bridge": "^3.0",
         "symfony/twig-bundle": "^3.0",
         "symfony/validator": "^3.0",
+        "symfony/web-link": "^3.0",
         "twig/twig": "^1.11 || ^2.0",
         "willdurand/hateoas-bundle": "^1.1",
         "sensio/distribution-bundle": "~5.0.6"
