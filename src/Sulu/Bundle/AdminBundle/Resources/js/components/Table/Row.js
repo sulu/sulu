@@ -116,7 +116,7 @@ export default class Row extends React.PureComponent<Props> {
         }
 
         if (this.props.depth) {
-            style.paddingLeft = (this.props.depth * 20) + 'px'
+            style.paddingLeft = (this.props.depth * 25) + 'px'
         }
 
         if (this.props.selectInFirstCell) {

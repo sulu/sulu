@@ -35,15 +35,12 @@ export default class TreeListAdapter extends AbstractAdapter {
         items.forEach((item) => {
             let expanded = this.isExpanded(item.data.id);
             item.expanded = expanded;
-
-            if (!item.depth) {
-                item.depth = depth;
-            }
+            item.depth = depth;
 
             dataList.push(item);
 
             if (expanded && item.children.length) {
-                this.flattenData(item.children, dataList, ++depth);
+                this.flattenData(item.children, dataList, depth + 1);
             }
         });
 
