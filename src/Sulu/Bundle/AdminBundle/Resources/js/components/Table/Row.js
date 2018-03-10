@@ -33,7 +33,7 @@ type Props = {
     /** The depth of the element in the row */
     depth?: number,
     /** @ignore */
-    onToggleChange?: (rowId: string | number, checked?: boolean) => void,
+    onToggleChange?: (rowId: string | number, expanded: boolean) => void,
     /** @ignore */
     onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
 };
@@ -41,8 +41,9 @@ type Props = {
 export default class Row extends React.PureComponent<Props> {
     static defaultProps = {
         selected: false,
+        selectInFirstCell: false,
         rowIndex: 0,
-        depth: 0
+        depth: 0,
     };
 
     isMultipleSelect = () => {

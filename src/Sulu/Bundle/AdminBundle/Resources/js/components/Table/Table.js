@@ -30,7 +30,7 @@ type Props = {
      * Callback function to notify about open and close of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
-    onRowToggleChange?: (rowId: string | number, expanded?: boolean) => void,
+    onRowToggleChange?: (rowId: string | number, expanded: boolean) => void,
     /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
     onAllSelectionChange?: (checked: boolean) => void,
     /** Text shown when the table has no entries */

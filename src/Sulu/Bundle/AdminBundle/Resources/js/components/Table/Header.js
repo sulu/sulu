@@ -17,7 +17,7 @@ type Props = {
     /** @ignore */
     selectMode?: SelectMode,
     /** @ignore */
-    selectInFirstCell?: SelectMode,
+    selectInFirstCell?: boolean,
     /** @ignore */
     onAllSelectionChange?: (checked: boolean) => void,
     /** If true the "select all" checkbox is checked. */
@@ -28,6 +28,7 @@ export default class Header extends React.PureComponent<Props> {
     static defaultProps = {
         selectMode: 'none',
         allSelected: false,
+        selectInFirstCell: false,
     };
 
     isMultipleSelect = () => {

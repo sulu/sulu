@@ -50,18 +50,18 @@ export default class TreeListAdapter extends AbstractAdapter {
         return dataList;
     }
 
-    @action handleRowToggleChange(identifier: string | number, expanded: boolean) {
+    @action handleRowToggleChange(rowId: string | number, expanded: boolean) {
         if (expanded) {
-            this.expandedRows.push(identifier);
+            this.expandedRows.push(rowId);
 
             if (this.props.onItemActivation) {
-                this.props.onItemActivation(identifier);
+                this.props.onItemActivation(rowId);
             }
 
             return;
         }
 
-        this.expandedRows.splice(this.expandedRows.indexOf(identifier), 1);
+        this.expandedRows.splice(this.expandedRows.indexOf(rowId), 1);
     }
 
     renderCells(item: Object, schemaKeys: Array<string>) {

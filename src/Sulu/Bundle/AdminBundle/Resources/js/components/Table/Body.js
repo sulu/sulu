@@ -15,12 +15,13 @@ type Props = {
     /** @ignore */
     onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     /** @ignore */
-    onRowToggleChange?: (rowId: string | number, expanded?: boolean) => void,
+    onRowToggleChange?: (rowId: string | number, expanded: boolean) => void,
 };
 
 export default class Body extends React.PureComponent<Props> {
     static defaultProps = {
         selectMode: 'none',
+        selectInFirstCell: false,
     };
 
     cloneRows = (originalRows: ?ChildrenArray<Element<typeof Row>>) => {
@@ -50,7 +51,7 @@ export default class Body extends React.PureComponent<Props> {
         }
     };
 
-    handleRowToggleChange = (rowId: string | number, expanded?: boolean) => {
+    handleRowToggleChange = (rowId: string | number, expanded: boolean) => {
         if (this.props.onRowToggleChange) {
             this.props.onRowToggleChange(rowId, expanded);
         }
