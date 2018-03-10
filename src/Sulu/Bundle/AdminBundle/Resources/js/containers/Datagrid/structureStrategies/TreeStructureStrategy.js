@@ -40,7 +40,6 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
             }
 
             const data = this.findRecursive(item.children, identifier);
-
             if (data) {
                 return data;
             }
