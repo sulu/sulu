@@ -101,12 +101,17 @@ export default class TreeListAdapter extends AbstractAdapter {
                 selections,
             } = this.props;
             const {data} = item;
-
             const schemaKeys = Object.keys(schema);
+            let loading = false;
+
+            if (this.props.active === data.id && this.props.loading) {
+                loading = true;
+            }
 
             return <Table.Row key={data.id}
                              id={data.id}
                              depth={item.depth}
+                             isLoading={loading}
                              hasChildren={data.hasChildren}
                              expanded={item.expanded}
                              selected={selections.includes(data.id)}>
