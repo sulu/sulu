@@ -439,3 +439,84 @@ const buttons = [{
     </Body>
 </Table>
 ```
+
+A Table can be used to render tree structured data by adding a depth property to the row element:
+
+```
+const Header = Table.Header;
+const Body = Table.Body;
+const Row = Table.Row;
+const Cell = Table.Cell;
+const HeaderCell = Table.HeaderCell;
+
+
+const buttons = [{
+        icon: 'su-pen',
+        onClick: (rowId) => {
+            alert(`You selected the row with the id ${rowId}. Imagine you could edit this row now... Mind = blown!`);
+        },
+    },
+    {
+        icon: 'su-add',
+        onClick: (rowId) => {
+            alert(`You selected the row with the id ${rowId}. Imagine you could edit this row now... Mind = blown!`);
+        },
+    }];
+
+<Table
+    selectMode="multiple"
+    buttons={buttons}
+    selectInFirstCell="true">
+    <Header>
+        <HeaderCell>Column 1</HeaderCell>
+        <HeaderCell>Column 2</HeaderCell>
+        <HeaderCell>Column 3</HeaderCell>
+        <HeaderCell>Column 4</HeaderCell>
+        <HeaderCell>Column 5</HeaderCell>
+    </Header>
+    <Body>
+        <Row hasChildren="true" expanded="true">
+            <Cell>Content 1</Cell>
+            <Cell>Content 2</Cell>
+            <Cell>Content 3</Cell>
+            <Cell>Content 4</Cell>
+            <Cell>Content 5</Cell>
+        </Row>
+        <Row depth="1">
+            <Cell>Content 1</Cell>
+            <Cell>Content 2</Cell>
+            <Cell>Content 3</Cell>
+            <Cell>Content 4</Cell>
+            <Cell>Content 5</Cell>
+        </Row>
+        <Row depth="1" hasChildren="true" expanded="true">
+            <Cell>Content 1</Cell>
+            <Cell>Content 2</Cell>
+            <Cell>Content 3</Cell>
+            <Cell>Content 4</Cell>
+            <Cell>Content 5</Cell>
+        </Row>
+        <Row depth="2">
+            <Cell>Content 1</Cell>
+            <Cell>Content 2</Cell>
+            <Cell>Content 3</Cell>
+            <Cell>Content 4</Cell>
+            <Cell>Content 5</Cell>
+        </Row>
+        <Row depth="2">
+            <Cell>Content 1</Cell>
+            <Cell>Content 2</Cell>
+            <Cell>Content 3</Cell>
+            <Cell>Content 4</Cell>
+            <Cell>Content 5</Cell>
+        </Row>
+        <Row>
+            <Cell>Content 1</Cell>
+            <Cell>Content 2</Cell>
+            <Cell>Content 3</Cell>
+            <Cell>Content 4</Cell>
+            <Cell>Content 5</Cell>
+        </Row>
+    </Body>
+</Table>
+```
