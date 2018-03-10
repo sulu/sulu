@@ -7,6 +7,8 @@ import type {ButtonConfig, SelectMode} from './types';
 import ButtonCell from './ButtonCell';
 import Cell from './Cell';
 import tableStyles from './table.scss';
+import Icon from "../Icon/Icon";
+import Loader from "../Loader/Loader";
 
 type Props = {
     children: ChildrenArray<Element<typeof Cell>>,
@@ -18,8 +20,20 @@ type Props = {
     buttons?: Array<ButtonConfig>,
     /** @ignore */
     selectMode?: SelectMode,
+    /** If set to true the select is in first cell */
+    selectInFirstCell?: boolean,
     /** If set to true the row is selected */
     selected?: boolean,
+    /** If set to true the row can load children */
+    hasChildren?: boolean,
+    /** If set to true the row child are open */
+    expanded?: boolean,
+    /** If set to true the childs will be loaded */
+    isLoading?: boolean,
+    /** The depth of the element in the row */
+    depth?: number,
+    /** @ignore */
+    onToggleChange?: (rowId: string | number, checked?: boolean) => void,
     /** @ignore */
     onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
 };
@@ -28,6 +42,7 @@ export default class Row extends React.PureComponent<Props> {
     static defaultProps = {
         selected: false,
         rowIndex: 0,
+        depth: 0
     };
 
     isMultipleSelect = () => {
@@ -50,10 +65,16 @@ export default class Row extends React.PureComponent<Props> {
             }
         }
 
-        if (this.isSingleSelect()) {
-            prependedCells.push(this.createRadioCell());
-        } else if (this.isMultipleSelect()) {
-            prependedCells.push(this.createCheckboxCell());
+        if (!this.props.selectInFirstCell) {
+            let select = this.createSelect();
+
+            if (select) {
+                prependedCells.push(
+                    <Cell key={'choice'} small={true}>
+                        {select}
+                    </Cell>
+                );
+            }
         }
 
         const clonedCells = this.cloneCells(cells);
@@ -64,55 +85,97 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     cloneCells = (originalCells: ChildrenArray<Element<typeof Cell>>) => {
-        const {rowIndex} = this.props;
-
         return React.Children.map(originalCells, (cell, index) => {
+            const key = `row-${index}`;
+            const {props} = cell;
+            let {children} = props;
+
+            if (0 === index) {
+                children = this.modifyFirstCell(children);
+            }
+
             return React.cloneElement(
                 cell,
                 {
-                    key: `cell-${rowIndex}-${index}`,
+                    ...props,
+                    key,
+                    children: children
                 }
             );
         });
     };
 
+    modifyFirstCell = (children: ChildrenArray<Element <*>>) => {
+        let toggler = null;
+        let select = null;
+        let style = {};
+
+        if (this.props.hasChildren) {
+            toggler = this.createToggler();
+        }
+
+        if (this.props.depth) {
+            style.paddingLeft = (this.props.depth * 20) + 'px'
+        }
+
+        if (this.props.selectInFirstCell) {
+            select = <div className={tableStyles.cellSelect}>
+                {this.createSelect()}
+            </div>;
+        }
+
+        return <div className={tableStyles.cellContent} style={style}>
+            {select}
+            {toggler}
+            {children}
+        </div>;
+    };
+
+    createSelect = () => {
+        if (this.isSingleSelect()) {
+            return this.createRadioCell();
+        } else if (this.isMultipleSelect()) {
+            return this.createCheckboxCell();
+        }
+    };
+
+    createToggler = () => {
+        let icon = <Icon name={this.props.expanded ? 'su-arrow-filled-down' : 'su-arrow-filled-right'} />
+
+        if (this.props.isLoading) {
+            icon = <Loader size={10}/>
+        }
+
+        return <span onClick={this.handleToggleChange} className={tableStyles.toggleIcon}>
+                {icon}
+            </span>
+    };
+
     createRadioCell = () => {
         const {id, selected, rowIndex} = this.props;
-        const key = `radio-${rowIndex}`;
         const identifier = id || rowIndex;
 
         return (
-            <Cell
-                key={key}
-                small={true}
-            >
-                <Radio
-                    skin="dark"
-                    value={identifier}
-                    checked={!!selected}
-                    onChange={this.handleSingleSelectionChange}
-                />
-            </Cell>
+            <Radio
+                skin="dark"
+                value={identifier}
+                checked={!!selected}
+                onChange={this.handleSingleSelectionChange}
+            />
         );
     };
 
     createCheckboxCell = () => {
         const {id, selected, rowIndex} = this.props;
-        const key = `checkbox-${rowIndex}`;
         const identifier = id || rowIndex;
 
         return (
-            <Cell
-                key={key}
-                small={true}
-            >
-                <Checkbox
-                    skin="dark"
-                    value={identifier}
-                    checked={!!selected}
-                    onChange={this.handleMultipleSelectionChange}
-                />
-            </Cell>
+            <Checkbox
+                skin="dark"
+                value={identifier}
+                checked={!!selected}
+                onChange={this.handleMultipleSelectionChange}
+            />
         );
     };
 
@@ -138,6 +201,15 @@ export default class Row extends React.PureComponent<Props> {
                 />
             );
         });
+    };
+
+    handleToggleChange = () => {
+        const {id, rowIndex, expanded} = this.props;
+        const identifier = id || rowIndex;
+
+        if (this.props.onToggleChange && identifier) {
+            this.props.onToggleChange(identifier, !expanded);
+        }
     };
 
     handleSingleSelectionChange = (rowId?: string | number) => {

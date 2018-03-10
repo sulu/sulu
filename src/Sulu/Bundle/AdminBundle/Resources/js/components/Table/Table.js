@@ -19,11 +19,18 @@ type Props = {
     buttons?: Array<ButtonConfig>,
     /** Can be set to "single" or "multiple". Defaults is "none". */
     selectMode?: SelectMode,
+    /** Can be set to  */
+    selectInFirstCell?: boolean,
     /**
      * Callback function to notify about selection and deselection of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
     onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    /**
+     * Callback function to notify about open and close of a row.
+     * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
+     */
+    onRowToggleChange?: (rowId: string | number, expanded?: boolean) => void,
     /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
     onAllSelectionChange?: (checked: boolean) => void,
     /** Text shown when the table has no entries */
@@ -57,6 +64,7 @@ export default class Table extends React.Component<Props> {
                 allSelected: allSelected,
                 buttons: this.props.buttons,
                 selectMode: this.props.selectMode,
+                selectInFirstCell: this.props.selectInFirstCell,
                 onAllSelectionChange: this.handleAllSelectionChange,
             }
         );
@@ -72,7 +80,9 @@ export default class Table extends React.Component<Props> {
             {
                 buttons: this.props.buttons,
                 selectMode: this.props.selectMode,
+                selectInFirstCell: this.props.selectInFirstCell,
                 onRowSelectionChange: this.handleRowSelectionChange,
+                onRowToggleChange: this.handleRowToggleChange,
             }
         );
     };
@@ -102,6 +112,12 @@ export default class Table extends React.Component<Props> {
                 }
             </div>
         );
+    };
+
+    handleRowToggleChange = (rowId: string | number, selected?: boolean) => {
+        if (this.props.onRowToggleChange) {
+            this.props.onRowToggleChange(rowId, selected);
+        }
     };
 
     handleAllSelectionChange = (checked: boolean) => {

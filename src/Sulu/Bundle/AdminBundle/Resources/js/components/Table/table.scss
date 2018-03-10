@@ -73,6 +73,21 @@ $borderWidth: 1px;
     text-align: left;
 }
 
+.cell-content {
+    display: flex;
+    align-items: center;
+}
+
+.toggleIcon {
+    cursor: pointer;
+    display: inline-block;
+    width: 20px;
+}
+
+.cell-select {
+    padding-right: 10px;
+}
+
 .header-cell-sort-icon {
     padding-left: 10px;
 }

@@ -17,6 +17,8 @@ type Props = {
     /** @ignore */
     selectMode?: SelectMode,
     /** @ignore */
+    selectInFirstCell?: SelectMode,
+    /** @ignore */
     onAllSelectionChange?: (checked: boolean) => void,
     /** If true the "select all" checkbox is checked. */
     allSelected?: boolean,
@@ -49,10 +51,12 @@ export default class Header extends React.PureComponent<Props> {
             }
         }
 
-        if (this.isMultipleSelect()) {
-            prependCells.push(this.createCheckboxCell());
-        } else if (this.isSingleSelect()) {
-            prependCells.push(this.createEmptyCell());
+        if (!this.props.selectInFirstCell) {
+            if (this.isMultipleSelect()) {
+                prependCells.push(this.createCheckboxCell());
+            } else if (this.isSingleSelect()) {
+                prependCells.push(this.createEmptyCell());
+            }
         }
 
         cells.unshift(...prependCells);
@@ -63,15 +67,39 @@ export default class Header extends React.PureComponent<Props> {
     createHeaderCells = (headerCells: ChildrenArray<Element<typeof HeaderCell>>) => {
         return React.Children.map(headerCells, (headerCell, index) => {
             const key = `header-${index}`;
+            const {props} = headerCell;
+            let {children} = props;
+
+            if (0 === index) {
+                children = this.modifyFirstCell(children);
+            }
 
             return React.cloneElement(
                 headerCell,
                 {
-                    ...headerCell.props,
+                    ...props,
                     key,
+                    children: children
                 }
             );
         });
+    };
+
+    modifyFirstCell = (children: ChildrenArray<Element <*>>) => {
+        if (!this.props.selectInFirstCell || !this.isMultipleSelect()) {
+            return children;
+        }
+
+        return <div className={tableStyles.cellContent}>
+            <div className={tableStyles.cellSelect}>
+                <Checkbox
+                    skin="light"
+                    checked={!!this.props.allSelected}
+                    onChange={this.handleAllSelectionChange}
+                />
+            </div>
+            {children}
+        </div>;
     };
 
     createHeaderButtonCells = () => {
@@ -89,7 +117,7 @@ export default class Header extends React.PureComponent<Props> {
                     key={key}
                     className={tableStyles.headerButtonCell}
                 >
-                    <Icon name={button.icon} />
+                    <Icon name={button.icon}/>
                 </HeaderCell>
             );
         });
@@ -113,7 +141,7 @@ export default class Header extends React.PureComponent<Props> {
         const key = 'header-empty';
 
         return (
-            <HeaderCell key={key} />
+            <HeaderCell key={key}/>
         );
     };
 

@@ -2,13 +2,13 @@
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
-import Tree from '../../../components/Tree';
+import Table from '../../../components/Table';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
 import AbstractAdapter from './AbstractAdapter';
 import FullLoadingStrategy from "../loadingStrategies/FullLoadingStrategy";
 
 @observer
-export default class TreeAdapter extends AbstractAdapter {
+export default class TreeListAdapter extends AbstractAdapter {
     static LoadingStrategy = FullLoadingStrategy;
 
     static StructureStrategy = TreeStructureStrategy;
@@ -28,7 +28,7 @@ export default class TreeAdapter extends AbstractAdapter {
     }
 
     isExpanded(identifier: string | number) {
-        return -1 !== this.expandedRows.indexOf(identifier);
+        return this.expandedRows.includes(identifier);
     }
 
     flattenData(items: Array<Object>, dataList: Array<Object>, depth: number) {
@@ -74,9 +74,9 @@ export default class TreeAdapter extends AbstractAdapter {
             }
 
             return (
-                <Tree.Cell key={item.id + schemaKey}>
+                <Table.Cell key={item.id + schemaKey}>
                     {cellContent}
-                </Tree.Cell>
+                </Table.Cell>
             );
         });
     }
@@ -88,9 +88,9 @@ export default class TreeAdapter extends AbstractAdapter {
         const schemaKeys = Object.keys(schema);
 
         return schemaKeys.map((schemaKey) => (
-            <Tree.HeaderCell key={schemaKey}>
+            <Table.HeaderCell key={schemaKey}>
                 {schemaKey}
-            </Tree.HeaderCell>
+            </Table.HeaderCell>
         ));
     }
 
@@ -104,14 +104,14 @@ export default class TreeAdapter extends AbstractAdapter {
 
             const schemaKeys = Object.keys(schema);
 
-            return <Tree.Row key={data.id}
+            return <Table.Row key={data.id}
                              id={data.id}
                              depth={item.depth}
                              hasChildren={data.hasChildren}
                              expanded={item.expanded}
                              selected={selections.includes(data.id)}>
                 {this.renderCells(data, schemaKeys)}
-            </Tree.Row>
+            </Table.Row>
         });
     }
 
@@ -139,21 +139,22 @@ export default class TreeAdapter extends AbstractAdapter {
         }
 
         return (
-            <Tree
+            <Table
                 buttons={buttons}
+                selectInFirstCell={true}
                 selectMode="multiple"
                 onRowToggleChange={this.handleRowToggleChange.bind(this)}
                 onRowSelectionChange={onItemSelectionChange}
                 onAllSelectionChange={onAllSelectionChange}
             >
-                <Tree.Header>
+                <Table.Header>
                     {this.renderHeaderCells()}
-                </Tree.Header>
+                </Table.Header>
 
-                <Tree.Body>
+                <Table.Body>
                     {this.renderRows(this.getDataList())}
-                </Tree.Body>
-            </Tree>
+                </Table.Body>
+            </Table>
         );
     }
 }

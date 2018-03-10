@@ -11,7 +11,11 @@ type Props = {
     /** @ignore */
     selectMode?: SelectMode,
     /** @ignore */
+    selectInFirstCell?: boolean,
+    /** @ignore */
     onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    /** @ignore */
+    onRowToggleChange?: (rowId: string | number, expanded?: boolean) => void,
 };
 
 export default class Body extends React.PureComponent<Props> {
@@ -33,7 +37,9 @@ export default class Body extends React.PureComponent<Props> {
                 rowIndex: index,
                 buttons: buttons,
                 selectMode: selectMode,
+                selectInFirstCell: this.props.selectInFirstCell,
                 onSelectionChange: this.handleRowSelectionChange,
+                onToggleChange: this.handleRowToggleChange,
             }
         ));
     };
@@ -41,6 +47,12 @@ export default class Body extends React.PureComponent<Props> {
     handleRowSelectionChange = (rowId: string | number, selected?: boolean) => {
         if (this.props.onRowSelectionChange) {
             this.props.onRowSelectionChange(rowId, selected);
+        }
+    };
+
+    handleRowToggleChange = (rowId: string | number, expanded?: boolean) => {
+        if (this.props.onRowToggleChange) {
+            this.props.onRowToggleChange(rowId, expanded);
         }
     };
 
