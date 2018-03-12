@@ -106,7 +106,7 @@ Array [
 ]
 `;
 
-exports[`Show with passed values as items 1`] = `
+exports[`Show with passed values as items in right locale 1`] = `
 Array [
   <div>
     <div

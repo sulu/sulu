@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import DatagridOverlay from '../DatagridOverlay';
 
@@ -11,9 +12,40 @@ jest.mock('../../../containers/Datagrid', () => function Datagrid() {
     return <div className="datagrid" />;
 });
 
-jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function() {
+jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey, observableOptions) {
+    this.observableOptions = observableOptions;
     this.select = jest.fn();
 }));
+
+test('Should instantiate the DatagridStore with locale', () => {
+    const locale = observable('en');
+    const datagridOverlay = shallow(
+        <DatagridOverlay
+            locale={locale}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Assignment"
+        />
+    );
+
+    expect(datagridOverlay.instance().datagridStore.observableOptions.locale.get()).toEqual('en');
+});
+
+test('Should instantiate the DatagridStore without locale', () => {
+    const datagridOverlay = shallow(
+        <DatagridOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Assignment"
+        />
+    );
+
+    expect(datagridOverlay.instance().datagridStore.observableOptions.locale).toEqual(undefined);
+});
 
 test('Should call onConfirm with the current selection', () => {
     const confirmSpy = jest.fn();

@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
+import {observable} from 'mobx';
 import pretty from 'pretty';
 import Assignment from '../Assignment';
 import AssignmentStore from '../stores/AssignmentStore';
@@ -51,15 +52,28 @@ test('Show with passed icon', () => {
     )).toMatchSnapshot();
 });
 
-test('Show with passed values as items', () => {
+test('Pass locale to DatagridOverlay', () => {
+    const locale = observable('de');
+    const assignment = mount(
+        <Assignment onChange={jest.fn()} locale={locale} resourceKey="snippets" title="Assignment" />
+    );
+
+    expect(assignment.find('DatagridOverlay').prop('locale').get()).toEqual('de');
+});
+
+test('Show with passed values as items in right locale', () => {
+    const locale = observable('en');
+
     // $FlowFixMe
     AssignmentStore.mockImplementationOnce(function () {
         this.items = [{id: 1}, {id: 2}, {id: 5}];
     });
 
     expect(render(
-        <Assignment onChange={jest.fn()} value={[1, 2, 5]} resourceKey="snippets" title="Assignment" />
+        <Assignment onChange={jest.fn()} locale={locale} value={[1, 2, 5]} resourceKey="snippets" title="Assignment" />
     )).toMatchSnapshot();
+
+    expect(AssignmentStore).toBeCalledWith('snippets', [1, 2, 5], locale);
 });
 
 test('Should open an overlay', () => {
@@ -146,6 +160,8 @@ test('Should instantiate the DatagridStore with the preselected ids', () => {
 });
 
 test('Should reinstantiate the DatagridStore with the preselected ids when new props are received', () => {
+    const locale = observable('en');
+
     // $FlowFixMe
     AssignmentStore.mockImplementationOnce(function () {
         this.items = [{id: 1}, {id: 5}, {id: 8}];
@@ -153,7 +169,7 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     });
 
     const assignment = mount(
-        <Assignment onChange={jest.fn()} value={[1, 5, 8]} resourceKey="pages" title="Assignment" />
+        <Assignment onChange={jest.fn()} locale={locale} value={[1, 5, 8]} resourceKey="pages" title="Assignment" />
     );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
@@ -167,7 +183,28 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     expect(datagridStore.clearSelection).toBeCalled();
     const loadItemsCall = assignment.instance().assignmentStore.loadItems.mock.calls[0];
     expect(loadItemsCall[0]).toEqual([1, 3]);
-    expect(loadItemsCall[1].get()).toEqual('en');
+});
+
+test('Should not reinstantiate the DatagridStore with the preselected ids when new props have the same values', () => {
+    const locale = observable('en');
+
+    // $FlowFixMe
+    AssignmentStore.mockImplementationOnce(function () {
+        this.items = [{id: 1}, {id: 5}, {id: 8}];
+        this.loadItems = jest.fn();
+    });
+
+    const assignment = mount(
+        <Assignment onChange={jest.fn()} locale={locale} value={[1, 5, 8]} resourceKey="pages" title="Assignment" />
+    );
+
+    assignment.find('Button[icon="su-plus"]').simulate('click');
+
+    const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
+
+    assignment.setProps({value: [1, 5, 8]});
+    expect(datagridStore.clearSelection).toBeCalled();
+    expect(assignment.instance().assignmentStore.loadItems).not.toBeCalled();
 });
 
 test('Should remove an item when the remove button is clicked', () => {

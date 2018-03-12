@@ -1,6 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, autorun, observable} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {MultiItemSelection} from '../../components';
 import AssignmentStore from './stores/AssignmentStore';
@@ -9,6 +10,7 @@ import DatagridOverlay from './DatagridOverlay';
 type Props = {|
     onChange: (selectedIds: Array<string | number>) => void,
     label?: string,
+    locale?: ?IObservableValue<string>,
     icon: string,
     resourceKey: string,
     value: Array<string | number>,
@@ -29,9 +31,9 @@ export default class Assignment extends React.Component<Props> {
     @observable overlayOpen: boolean = false;
 
     componentWillMount() {
-        const {onChange, resourceKey, value} = this.props;
+        const {onChange, locale, resourceKey, value} = this.props;
 
-        this.assignmentStore = new AssignmentStore(resourceKey, value);
+        this.assignmentStore = new AssignmentStore(resourceKey, value, locale);
         this.changeDisposer = autorun(() => {
             const itemIds = this.assignmentStore.items.map((item) => item.id);
 
@@ -45,8 +47,24 @@ export default class Assignment extends React.Component<Props> {
     }
 
     componentWillReceiveProps(nextProps: Props) {
-        // TODO replace language with actual variable
-        this.assignmentStore.loadItems(nextProps.value, observable('en'));
+        const {value: newValue} = nextProps;
+        const {value: oldValue} = this.props;
+
+        let valueChanged = false;
+        if (newValue.length == oldValue.length) {
+            for (let i = 0; i < newValue.length; i++) {
+                if (newValue[i] !== oldValue[i]) {
+                    valueChanged = true;
+                    break;
+                }
+            }
+
+            if (!valueChanged) {
+                return;
+            }
+        }
+
+        this.assignmentStore.loadItems(nextProps.value);
     }
 
     componentWillUnmount() {
@@ -83,7 +101,7 @@ export default class Assignment extends React.Component<Props> {
     };
 
     render() {
-        const {icon, label, resourceKey, title} = this.props;
+        const {icon, label, locale, resourceKey, title} = this.props;
         const {items, loading} = this.assignmentStore;
 
         return (
@@ -105,6 +123,7 @@ export default class Assignment extends React.Component<Props> {
                     ))}
                 </MultiItemSelection>
                 <DatagridOverlay
+                    locale={locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}

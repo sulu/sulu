@@ -8,12 +8,14 @@ export default class AssignmentStore {
     @observable items: Array<Object> = [];
     @observable loading: boolean = false;
     resourceKey: string;
+    locale: ?IObservableValue<string>;
 
-    constructor(resourceKey: string, selectedItemIds: Array<string | number>) {
+    constructor(resourceKey: string, selectedItemIds: Array<string | number>, locale: ?IObservableValue<string>) {
         this.resourceKey = resourceKey;
+        this.locale = locale;
         if (selectedItemIds.length) {
             // TODO get observable from somewhere else
-            this.loadItems(selectedItemIds, observable('en'));
+            this.loadItems(selectedItemIds);
         }
     }
 
@@ -34,10 +36,10 @@ export default class AssignmentStore {
         this.loading = loading;
     }
 
-    loadItems = (itemIds: Array<string | number>, locale: IObservableValue<string>) => {
+    loadItems = (itemIds: Array<string | number>) => {
         this.setLoading(true);
         return ResourceRequester.getList(this.resourceKey, {
-            locale: locale.get(),
+            locale: this.locale ? this.locale.get() : undefined,
             ids: itemIds.join(','),
             limit: undefined,
             page: 1,

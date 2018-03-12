@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {shallow} from 'enzyme';
 import Assignment from '../../fields/Assignment';
 
 test('Should pass props correctly to component', () => {
     const changeSpy = jest.fn();
+    const locale = observable('en');
     const value = [1, 6, 8];
     const fieldOptions = {
         icon: '',
@@ -12,10 +14,13 @@ test('Should pass props correctly to component', () => {
         title: 'Snippets',
         resourceKey: 'snippets',
     };
-    const assignment = shallow(<Assignment onChange={changeSpy} fieldOptions={fieldOptions} value={value} />);
+    const assignment = shallow(
+        <Assignment onChange={changeSpy} fieldOptions={fieldOptions} locale={locale} value={value} />
+    );
 
     expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
         label: 'Select snippets',
+        locale,
         onChange: changeSpy,
         resourceKey: 'snippets',
         title: 'Snippets',
@@ -32,6 +37,7 @@ test('Should pass empty array if value is not given', () => {
 
     expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
         onChange: changeSpy,
+        locale: undefined,
         resourceKey: 'pages',
         value: [],
     }));

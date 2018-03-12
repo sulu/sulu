@@ -1,5 +1,5 @@
 // @flow
-import {toJS} from 'mobx';
+import {observable, toJS} from 'mobx';
 import AssignmentStore from '../../stores/AssignmentStore';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
@@ -18,7 +18,7 @@ test('Should load items when being constructed', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const assignmentStore = new AssignmentStore('snippets', [1, 3, 4]);
+    const assignmentStore = new AssignmentStore('snippets', [1, 3, 4], observable('en'));
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
@@ -26,6 +26,66 @@ test('Should load items when being constructed', () => {
             ids: '1,3,4',
             limit: undefined,
             locale: 'en',
+            page: 1,
+        }
+    );
+
+    return listPromise.then(() => {
+        expect(toJS(assignmentStore.items)).toEqual([
+            {id: 1},
+        ]);
+    });
+});
+
+test('Should load items when being constructed in the given locale', () => {
+    const listPromise = Promise.resolve({
+        _embedded: {
+            snippets: [
+                {id: 1},
+            ],
+        },
+    });
+
+    ResourceRequester.getList.mockReturnValue(listPromise);
+
+    const assignmentStore = new AssignmentStore('snippets', [1, 3, 4], observable('de'));
+
+    expect(ResourceRequester.getList).toBeCalledWith(
+        'snippets',
+        {
+            ids: '1,3,4',
+            limit: undefined,
+            locale: 'de',
+            page: 1,
+        }
+    );
+
+    return listPromise.then(() => {
+        expect(toJS(assignmentStore.items)).toEqual([
+            {id: 1},
+        ]);
+    });
+});
+
+test('Should load items when being constructed without a locale', () => {
+    const listPromise = Promise.resolve({
+        _embedded: {
+            snippets: [
+                {id: 1},
+            ],
+        },
+    });
+
+    ResourceRequester.getList.mockReturnValue(listPromise);
+
+    const assignmentStore = new AssignmentStore('snippets', [1, 3, 4]);
+
+    expect(ResourceRequester.getList).toBeCalledWith(
+        'snippets',
+        {
+            ids: '1,3,4',
+            limit: undefined,
+            locale: undefined,
             page: 1,
         }
     );
@@ -49,7 +109,7 @@ test('Should remove an item from the store', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const assignmentStore = new AssignmentStore('snippets', [1, 3, 4]);
+    const assignmentStore = new AssignmentStore('snippets', [1, 3, 4], observable('en'));
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
@@ -85,7 +145,7 @@ test('Should move the items in a store', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const assignmentStore = new AssignmentStore('snippets', [1, 2]);
+    const assignmentStore = new AssignmentStore('snippets', [1, 2], observable('en'));
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
@@ -121,7 +181,7 @@ test('Should set all items on the store', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const assignmentStore = new AssignmentStore('snippets', [1, 2]);
+    const assignmentStore = new AssignmentStore('snippets', [1, 2], observable('en'));
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',

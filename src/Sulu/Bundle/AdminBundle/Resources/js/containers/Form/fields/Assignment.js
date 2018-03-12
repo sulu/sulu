@@ -5,7 +5,7 @@ import type {FieldTypeProps} from '../../../types';
 
 export default class Assignment extends React.Component<FieldTypeProps<Array<string | number>>> {
     render() {
-        const {fieldOptions, onChange, value} = this.props;
+        const {fieldOptions, onChange, locale, value} = this.props;
 
         if (!fieldOptions || !fieldOptions.resourceKey) {
             throw new Error('The assignment field needs a "resourceKey" option to work properly');
@@ -17,6 +17,7 @@ export default class Assignment extends React.Component<FieldTypeProps<Array<str
             <AssignmentComponent
                 icon={icon}
                 label={label}
+                locale={locale}
                 onChange={onChange}
                 resourceKey={resourceKey}
                 title={title}

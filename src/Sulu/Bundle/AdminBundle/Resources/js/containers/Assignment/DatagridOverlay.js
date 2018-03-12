@@ -9,6 +9,7 @@ import {translate} from '../../utils';
 import datagridOverlayStyles from './datagridOverlay.scss';
 
 type Props = {
+    locale?: ?IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedItems: Array<Object>) => void,
     open: boolean,
@@ -26,8 +27,15 @@ export default class DatagridOverlay extends React.Component<Props> {
     };
 
     componentWillMount() {
-        const {resourceKey, preSelectedItems} = this.props;
-        this.datagridStore = new DatagridStore(resourceKey, {page: this.page}, {});
+        const {locale, preSelectedItems, resourceKey} = this.props;
+        const observableOptions = {};
+        observableOptions.page = this.page;
+
+        if (locale) {
+            observableOptions.locale = locale;
+        }
+
+        this.datagridStore = new DatagridStore(resourceKey, observableOptions, {});
 
         preSelectedItems.forEach((preSelectedItem) => {
             this.datagridStore.select(preSelectedItem);
