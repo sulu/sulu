@@ -12,11 +12,11 @@ import Application from './containers/Application';
 import {fieldRegistry, Input, ResourceLocator, SingleSelect} from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
 import {viewRegistry} from './containers/ViewRenderer';
-import {datagridAdapterRegistry, ColumnListAdapter, FolderAdapter, TableAdapter} from './containers/Datagrid';
+import {ColumnListAdapter, datagridAdapterRegistry, FolderAdapter, TableAdapter} from './containers/Datagrid';
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
 import List from './views/List';
-import {bundlesReadyPromise, bundleReady} from './services/Bundles';
+import {bundleReady, bundlesReadyPromise} from './services/Bundles';
 import type {FieldTypeProps} from './types';
 
 export type {FieldTypeProps};
@@ -55,13 +55,18 @@ function startApplication() {
 const translationPromise = Requester.get('/admin/v2/translations?locale=en')
     .then((response) => setTranslations(response));
 
-const configPromise = Requester.get('/admin/v2/config')
-    .then((response) => routeRegistry.addCollection(response.routes));
+const configPromise = Requester.get('/admin/v2/config').then((response) => {
+    routeRegistry.addCollection(response['sulu_admin'].routes);
+
+    return response;
+});
 
 Promise.all([
     translationPromise,
     configPromise,
     bundlesReadyPromise,
 ]).then(startApplication);
+
+export {configPromise};
 
 bundleReady();
