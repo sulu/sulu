@@ -66,11 +66,18 @@ test('Show with passed values as items in right locale', () => {
 
     // $FlowFixMe
     AssignmentStore.mockImplementationOnce(function () {
-        this.items = [{id: 1}, {id: 2}, {id: 5}];
+        this.items = [{id: 1, title: 'Title 1'}, {id: 2, title: 'Title 2'}, {id: 5, title: 'Title 5'}];
     });
 
     expect(render(
-        <Assignment onChange={jest.fn()} locale={locale} value={[1, 2, 5]} resourceKey="snippets" title="Assignment" />
+        <Assignment
+            displayProperties={['id', 'title']}
+            onChange={jest.fn()}
+            locale={locale}
+            resourceKey="snippets"
+            title="Assignment"
+            value={[1, 2, 5]}
+        />
     )).toMatchSnapshot();
 
     expect(AssignmentStore).toBeCalledWith('snippets', [1, 2, 5], locale);

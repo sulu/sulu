@@ -9,6 +9,7 @@ test('Should pass props correctly to component', () => {
     const locale = observable('en');
     const value = [1, 6, 8];
     const fieldOptions = {
+        displayProperties: ['id', 'title'],
         icon: '',
         label: 'Select snippets',
         title: 'Snippets',
@@ -19,6 +20,7 @@ test('Should pass props correctly to component', () => {
     );
 
     expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
+        displayProperties: ['id', 'title'],
         label: 'Select snippets',
         locale,
         onChange: changeSpy,

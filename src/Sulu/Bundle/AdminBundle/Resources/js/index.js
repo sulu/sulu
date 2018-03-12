@@ -43,18 +43,29 @@ function registerFieldTypes() {
 
     // TODO move to correct bundle or even allow to register somehow via the config request
     fieldRegistry.add('snippet', Assignment, {
+        displayProperties: [
+            'title',
+        ],
         icon: 'su-document',
         label: translate('sulu_snippet.assignment_label'),
         resourceKey: 'snippets',
         title: translate('sulu_snippet.assignment_overlay_title'),
     });
     fieldRegistry.add('contact', Assignment, {
+        displayProperties: [
+            'firstName',
+            'lastName',
+        ],
         icon: 'su-user-1',
         label: translate('sulu_contact.contact_assignment_label'),
         resourceKey: 'contacts',
         title: translate('sulu_contact.contact_assignment_overlay_title'),
     });
     fieldRegistry.add('account', Assignment, {
+        displayProperties: [
+            'id',
+            'name',
+        ],
         icon: 'su-user-1',
         label: translate('sulu_contact.account_assignment_label'),
         resourceKey: 'accounts',

@@ -150,7 +150,20 @@ Array [
           <div
             class="content"
           >
-            1
+            <div>
+              <span
+                class="itemColumn"
+                style="width:50%"
+              >
+                1
+              </span>
+              <span
+                class="itemColumn"
+                style="width:50%"
+              >
+                Title 1
+              </span>
+            </div>
           </div>
           <button
             class="removeButton"
@@ -185,7 +198,20 @@ Array [
           <div
             class="content"
           >
-            2
+            <div>
+              <span
+                class="itemColumn"
+                style="width:50%"
+              >
+                2
+              </span>
+              <span
+                class="itemColumn"
+                style="width:50%"
+              >
+                Title 2
+              </span>
+            </div>
           </div>
           <button
             class="removeButton"
@@ -220,7 +246,20 @@ Array [
           <div
             class="content"
           >
-            5
+            <div>
+              <span
+                class="itemColumn"
+                style="width:50%"
+              >
+                5
+              </span>
+              <span
+                class="itemColumn"
+                style="width:50%"
+              >
+                Title 5
+              </span>
+            </div>
           </div>
           <button
             class="removeButton"

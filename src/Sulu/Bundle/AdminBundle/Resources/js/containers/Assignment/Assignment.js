@@ -6,8 +6,10 @@ import {observer} from 'mobx-react';
 import {MultiItemSelection} from '../../components';
 import AssignmentStore from './stores/AssignmentStore';
 import DatagridOverlay from './DatagridOverlay';
+import assignmentStyles from './assignment.scss';
 
 type Props = {|
+    displayProperties: Array<string>,
     onChange: (selectedIds: Array<string | number>) => void,
     label?: string,
     locale?: ?IObservableValue<string>,
@@ -20,6 +22,7 @@ type Props = {|
 @observer
 export default class Assignment extends React.Component<Props> {
     static defaultProps = {
+        displayProperties: [],
         icon: 'su-plus',
         value: [],
     };
@@ -101,8 +104,9 @@ export default class Assignment extends React.Component<Props> {
     };
 
     render() {
-        const {icon, label, locale, resourceKey, title} = this.props;
+        const {displayProperties, icon, label, locale, resourceKey, title} = this.props;
         const {items, loading} = this.assignmentStore;
+        const columns = displayProperties.length;
 
         return (
             <Fragment>
@@ -118,7 +122,17 @@ export default class Assignment extends React.Component<Props> {
                 >
                     {items.map((item, index) => (
                         <MultiItemSelection.Item key={item.id} id={item.id} index={index}>
-                            {item.id}
+                            <div>
+                                {displayProperties.map((displayProperty) => (
+                                    <span
+                                        className={assignmentStyles.itemColumn}
+                                        key={displayProperty}
+                                        style={{width: 100 / columns + '%'}}
+                                    >
+                                        {item[displayProperty]}
+                                    </span>
+                                ))}
+                            </div>
                         </MultiItemSelection.Item>
                     ))}
                 </MultiItemSelection>
