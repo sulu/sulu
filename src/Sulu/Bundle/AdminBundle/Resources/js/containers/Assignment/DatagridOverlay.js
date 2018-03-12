@@ -8,7 +8,7 @@ import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import {translate} from '../../utils';
 import datagridOverlayStyles from './datagridOverlay.scss';
 
-type Props = {
+type Props = {|
     locale?: ?IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedItems: Array<Object>) => void,
@@ -16,7 +16,7 @@ type Props = {
     resourceKey: string,
     preSelectedItems: Array<Object>,
     title: string,
-};
+|};
 
 export default class DatagridOverlay extends React.Component<Props> {
     datagridStore: DatagridStore;
