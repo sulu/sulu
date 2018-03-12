@@ -211,7 +211,9 @@ class AdminController
     public function configV2Action(): Response
     {
         $view = View::create([
-            'routes' => $this->adminPool->getRoutes(),
+            'sulu_admin' => [
+                'routes' => $this->adminPool->getRoutes(),
+            ],
         ]);
         $view->setFormat('json');
 

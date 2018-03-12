@@ -166,7 +166,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->adminPool->getRoutes()->willReturn($data);
 
         $this->viewHandler->handle(Argument::that(function(View $view) use ($data) {
-            return 'json' === $view->getFormat() && $view->getData() === ['routes' => $data];
+            return 'json' === $view->getFormat() && $view->getData() === ['sulu_admin' => ['routes' => $data]];
         }))->shouldBeCalled()->willReturn(new Response());
 
         $this->adminController->configV2Action();
