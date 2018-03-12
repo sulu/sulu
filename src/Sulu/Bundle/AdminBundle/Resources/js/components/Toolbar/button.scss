@@ -1,11 +1,11 @@
 @import '../../containers/Application/colors.scss';
 
 $buttonTextLightColor: $blueZodiac;
-$buttonTextDarkColor: $concrete;
+$buttonTextDarkColor: $white;
 $buttonTextLightColorActive: $shakespeare;
 $buttonTextDarkColorActive: $white;
 $buttonTextLightColorDisabled: $silver;
-$buttonTextDarkColorDisabled: $scorpion;
+$buttonTextDarkColorDisabled: $stormGray;
 $buttonActiveBackgroundLightColor: $wildSand;
 $buttonActiveBackgroundDarkColor: $mirage;
 $primaryTextColor: $white;
@@ -25,12 +25,6 @@ $primaryBackgroundColor: $shakespeare;
             background-color: $buttonActiveBackgroundLightColor;
         }
     }
-
-    &.primary,
-    &.primary:hover {
-        color: $primaryTextColor;
-        background-color: $primaryBackgroundColor;
-    }
 }
 
 .dark {
@@ -46,12 +40,6 @@ $primaryBackgroundColor: $shakespeare;
             color: $buttonTextDarkColorActive;
             background-color: $buttonActiveBackgroundDarkColor;
         }
-    }
-
-    &.primary,
-    &.primary:hover {
-        color: $primaryTextColor;
-        background-color: $primaryBackgroundColor;
     }
 }
 
@@ -86,6 +74,12 @@ $primaryBackgroundColor: $shakespeare;
             margin-left: -6px;
             padding: 0;
         }
+    }
+
+    &.primary,
+    &.primary:hover {
+        color: $primaryTextColor;
+        background-color: $primaryBackgroundColor;
     }
 }
 

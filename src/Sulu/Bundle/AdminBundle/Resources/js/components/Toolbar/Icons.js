@@ -3,12 +3,12 @@ import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
-import type {Skins} from './types';
+import type {Skin} from './types';
 import iconsStyles from './icons.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Icon>>,
-    skin?: Skins,
+    skin?: Skin,
 };
 
 export default class Icons extends React.PureComponent<Props> {

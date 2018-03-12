@@ -32,3 +32,36 @@ exports[`Render controls 1`] = `
   </div>
 </nav>
 `;
+
+exports[`Render dark theme 1`] = `
+<nav
+  class="toolbar dark"
+>
+  <div
+    class="controls dark"
+  >
+    <button
+      class="button dark"
+    >
+      <span
+        class="label"
+      >
+        Test
+      </span>
+    </button>
+  </div>
+  <div
+    class="controls dark"
+  >
+    <button
+      class="button dark"
+    >
+      <span
+        class="label"
+      >
+        Test
+      </span>
+    </button>
+  </div>
+</nav>
+`;

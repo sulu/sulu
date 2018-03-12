@@ -2,12 +2,12 @@
 import type {ChildrenArray} from 'react';
 import React from 'react';
 import classNames from 'classnames';
-import type {Item, Skins} from './types';
+import type {Item, Skin} from './types';
 import itemsStyles from './items.scss';
 
 type Props = {
     children: ChildrenArray<Item>,
-    skin?: Skins,
+    skin?: Skin,
 };
 
 export default class Items extends React.PureComponent<Props> {

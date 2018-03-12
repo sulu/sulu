@@ -3,13 +3,14 @@ import classNames from 'classnames';
 import React from 'react';
 import Backdrop from '../Backdrop';
 import Option from './Option';
+import type {Skin} from './types';
 import optionListStyles from './optionList.scss';
 
 type Props = {
     onOptionClick: (option: Object) => void,
     value?: string | number,
     size?: string,
-    skin?: string,
+    skin?: Skin,
     onClose?: () => void,
     options: Array<Object>,
 };

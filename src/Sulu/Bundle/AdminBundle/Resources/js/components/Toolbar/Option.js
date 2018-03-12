@@ -2,6 +2,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import Icon from '../Icon';
+import type {Skin} from './types';
 import optionStyles from './option.scss';
 
 const ICON_CHECKMARK = 'su-checkmark';
@@ -11,7 +12,7 @@ type Props = {
     value: Object,
     onClick: (value: Object) => void,
     size?: string,
-    skin?: string,
+    skin?: Skin,
     selected?: boolean,
     disabled?: boolean,
 };

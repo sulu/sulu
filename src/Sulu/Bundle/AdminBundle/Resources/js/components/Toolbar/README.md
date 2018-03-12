@@ -51,3 +51,38 @@ const Toolbar = require('./Toolbar').default;
 ```
 
 The appearance of the `Toolbar` can be changed by passing the attribute `skin`. Available skins are `light` and `dark`. 
+
+```
+const Toolbar = require('./Toolbar').default;
+
+<Toolbar skin="dark">
+    <Toolbar.Controls>
+        <Toolbar.Button onClick={() => null}>Test 1</Toolbar.Button>
+        <Toolbar.Items>
+            <Toolbar.Button onClick={() => null}>Test 2</Toolbar.Button>
+            <Toolbar.Dropdown
+                label="Chose an option" 
+                onClick={() => null}
+                options={[
+                    {
+                        label: 'An option',
+                        onClick: () => null,
+                    },
+                ]}
+            />
+        </Toolbar.Items>
+    </Toolbar.Controls>
+    <Toolbar.Controls>
+        <Toolbar.Select 
+            label="Chose an option" 
+            onClick={() => null}
+            options={[
+                {
+                    value: 1,
+                    label: 'An option',
+                },
+            ]}
+        />
+    </Toolbar.Controls>
+</Toolbar>
+```

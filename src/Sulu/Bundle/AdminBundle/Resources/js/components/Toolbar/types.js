@@ -12,7 +12,7 @@ export type Item =
     | Element<typeof SelectComponent>;
 export type Group = Element<typeof ItemsComponent> | Element<typeof IconsComponent>;
 
-export type Skins = 'light' | 'dark';
+export type Skin = 'light' | 'dark';
 
 export type Button = {
     children?: Node,
@@ -25,21 +25,21 @@ export type Button = {
     hasOptions?: boolean,
     loading?: boolean,
     primary?: boolean,
-    skin?: Skins,
+    skin?: Skin,
 };
 
 export type DropdownOption = {
     label: string | number,
     onClick?: () => void,
     disabled?: boolean,
-    skin?: Skins,
+    skin?: Skin,
 };
 
 export type SelectOption = {
     label: string | number,
     value: string | number,
     disabled?: boolean,
-    skin?: Skins,
+    skin?: Skin,
 };
 
 export type Dropdown = {
@@ -49,7 +49,7 @@ export type Dropdown = {
     size?: string,
     disabled?: boolean,
     loading?: boolean,
-    skin?: Skins,
+    skin?: Skin,
 };
 
 export type Select = {
@@ -62,5 +62,5 @@ export type Select = {
     className?: string,
     disabled?: boolean,
     loading?: boolean,
-    skin?: Skins,
+    skin?: Skin,
 };

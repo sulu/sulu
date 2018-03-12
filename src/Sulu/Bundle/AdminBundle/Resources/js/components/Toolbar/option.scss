@@ -1,9 +1,9 @@
 @import '../../containers/Application/colors.scss';
 
 $optionTextLightColor: $blueZodiac;
-$optionTextDarkColor: $concrete;
+$optionTextDarkColor: $white;
 $optionTextLightColorDisabled: $silver;
-$optionTextDarkColorDisabled: $scorpion;
+$optionTextDarkColorDisabled: $stormGray;
 $optionTextLightColorActive: $shakespeare;
 $optionTextDarkColorActive: $white;
 
@@ -27,7 +27,7 @@ $optionTextDarkColorActive: $white;
     color: $optionTextDarkColor;
 
     button {
-        color: $white;
+        color: $optionTextDarkColor;
 
         &:hover,
         &:active,

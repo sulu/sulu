@@ -19,3 +19,16 @@ test('Render controls', () => {
         </Toolbar>
     )).toMatchSnapshot();
 });
+
+test('Render dark theme', () => {
+    expect(render(
+        <Toolbar skin="dark">
+            <Controls>
+                <Button onClick={clickSpy}>Test</Button>
+            </Controls>
+            <Controls>
+                <Button onClick={clickSpy}>Test</Button>
+            </Controls>
+        </Toolbar>
+    )).toMatchSnapshot();
+});

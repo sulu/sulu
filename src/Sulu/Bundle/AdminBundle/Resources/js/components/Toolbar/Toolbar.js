@@ -8,12 +8,12 @@ import Dropdown from './Dropdown';
 import Items from './Items';
 import Icons from './Icons';
 import Select from './Select';
-import type {Skins} from './types';
+import type {Skin} from './types';
 import toolbarStyles from './toolbar.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Controls>>,
-    skin?: Skins,
+    skin?: Skin,
 };
 
 export default class Toolbar extends React.PureComponent<Props> {
@@ -33,7 +33,7 @@ export default class Toolbar extends React.PureComponent<Props> {
 
     static Select = Select;
 
-    static createChildren(children: ChildrenArray<Element<typeof Controls>>, skin?: Skins) {
+    static createChildren(children: ChildrenArray<Element<typeof Controls>>, skin?: Skin) {
         return React.Children.map(children, (child) => {
             return React.cloneElement(
                 child,

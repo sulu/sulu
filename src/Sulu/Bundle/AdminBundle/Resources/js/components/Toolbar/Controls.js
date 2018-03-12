@@ -2,12 +2,12 @@
 import type {ChildrenArray} from 'react';
 import React from 'react';
 import classNames from 'classnames';
-import type {Group, Item, Skins} from './types';
+import type {Group, Item, Skin} from './types';
 import controlsStyles from './controls.scss';
 
 type Props = {
     children: ChildrenArray<Item | Group | false>,
-    skin?: Skins,
+    skin?: Skin,
 };
 
 export default class Controls extends React.PureComponent<Props> {
@@ -15,7 +15,7 @@ export default class Controls extends React.PureComponent<Props> {
         skin: 'light',
     };
 
-    static createChildren(children: ChildrenArray<Item | Group | false>, skin?: Skins) {
+    static createChildren(children: ChildrenArray<Item | Group | false>, skin?: Skin) {
         return React.Children.map(children, (child: Item | Group | false) => {
             if (!child) {
                 return;

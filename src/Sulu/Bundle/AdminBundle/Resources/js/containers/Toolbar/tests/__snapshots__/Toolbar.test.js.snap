@@ -26,7 +26,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
           class="dropdown"
         >
           <button
-            class="button"
+            class="button light"
             value="Save"
           >
             <span
