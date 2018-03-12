@@ -2,16 +2,16 @@
 
 exports[`Render controls 1`] = `
 <div
-  class="controls"
+  class="controls light"
 />
 `;
 
 exports[`Render controls with children 1`] = `
 <div
-  class="controls"
+  class="controls light"
 >
   <button
-    class="button"
+    class="button light"
   >
     <span
       class="label"

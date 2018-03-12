@@ -2,6 +2,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import Icon from '../Icon';
+import type {Skin} from './types';
 import optionStyles from './option.scss';
 
 const ICON_CHECKMARK = 'su-checkmark';
@@ -11,6 +12,7 @@ type Props = {
     value: Object,
     onClick: (value: Object) => void,
     size?: string,
+    skin?: Skin,
     selected?: boolean,
     disabled?: boolean,
 };
@@ -24,6 +26,7 @@ export default class Option extends React.PureComponent<Props> {
 
     render() {
         const {
+            skin,
             size,
             label,
             selected,
@@ -31,6 +34,7 @@ export default class Option extends React.PureComponent<Props> {
         } = this.props;
         const optionClass = classNames(
             optionStyles.option,
+            optionStyles[skin],
             {
                 [optionStyles[size]]: size,
                 [optionStyles.isSelected]: selected,

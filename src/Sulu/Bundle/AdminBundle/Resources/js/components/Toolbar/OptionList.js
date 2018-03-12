@@ -3,12 +3,14 @@ import classNames from 'classnames';
 import React from 'react';
 import Backdrop from '../Backdrop';
 import Option from './Option';
+import type {Skin} from './types';
 import optionListStyles from './optionList.scss';
 
 type Props = {
     onOptionClick: (option: Object) => void,
     value?: string | number,
     size?: string,
+    skin?: Skin,
     onClose?: () => void,
     options: Array<Object>,
 };
@@ -35,9 +37,11 @@ export default class OptionList extends React.PureComponent<Props> {
             size,
             value,
             options,
+            skin,
         } = this.props;
         const optionListClass = classNames(
             optionListStyles.optionList,
+            optionListStyles[skin],
             {
                 [optionListStyles[size]]: size,
             }
@@ -54,6 +58,7 @@ export default class OptionList extends React.PureComponent<Props> {
                             return (
                                 <Option
                                     key={index}
+                                    skin={skin}
                                     size={size}
                                     value={option}
                                     label={option.label}

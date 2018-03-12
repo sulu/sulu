@@ -1,0 +1,33 @@
+@import '../../containers/Application/colors.scss';
+
+$itemsBackgroundLightColor: $alabaster;
+$itemsBackgroundDarkColor: transparent;
+$itemsContainerBorderLightColor: $gallery;
+$itemsContainerBorderDarkColor: rgba($silverChalice, .25);
+
+$itemsContainerBorderLight: 1px $itemsContainerBorderLightColor solid;
+$itemsContainerBorderDark: 1px $itemsContainerBorderDarkColor solid;
+
+.light {
+    background-color: $itemsBackgroundLightColor;
+    border-left: $itemsContainerBorderLight;
+    border-right: $itemsContainerBorderLight;
+}
+
+.dark {
+    background-color: $itemsBackgroundDarkColor;
+    border-left: $itemsContainerBorderDark;
+    border-right: $itemsContainerBorderDark;
+}
+
+.items {
+    display: inline-block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+
+    & > li {
+        display: inline-block;
+    }
+}

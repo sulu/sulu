@@ -1,11 +1,47 @@
 @import '../../containers/Application/colors.scss';
 
-$buttonTextColor: $blueZodiac;
-$buttonTextColorActive: $shakespeare;
-$buttonTextColorDisabled: $silver;
-$buttonActiveBackgroundColor: $wildSand;
+$buttonTextLightColor: $blueZodiac;
+$buttonTextDarkColor: $white;
+$buttonTextLightColorActive: $shakespeare;
+$buttonTextDarkColorActive: $white;
+$buttonTextLightColorDisabled: $silver;
+$buttonTextDarkColorDisabled: $stormGray;
+$buttonActiveBackgroundLightColor: $wildSand;
+$buttonActiveBackgroundDarkColor: $mirage;
 $primaryTextColor: $white;
 $primaryBackgroundColor: $shakespeare;
+
+.light {
+    color: $buttonTextLightColor;
+
+    &:disabled {
+        color: $buttonTextLightColorDisabled;
+    }
+
+    &:not(:disabled) {
+        &:hover,
+        &.active {
+            color: $buttonTextLightColorActive;
+            background-color: $buttonActiveBackgroundLightColor;
+        }
+    }
+}
+
+.dark {
+    color: $buttonTextDarkColor;
+
+    &:disabled {
+        color: $buttonTextDarkColorDisabled;
+    }
+
+    &:not(:disabled) {
+        &:hover,
+        &.active {
+            color: $buttonTextDarkColorActive;
+            background-color: $buttonActiveBackgroundDarkColor;
+        }
+    }
+}
 
 .button {
     display: block;
@@ -15,22 +51,14 @@ $primaryBackgroundColor: $shakespeare;
     border: none;
     height: 60px;
     background-color: transparent;
-    color: $buttonTextColor;
     font-size: 12px;
     cursor: pointer;
 
     &:disabled {
-        color: $buttonTextColorDisabled;
         cursor: default;
     }
 
     &:not(:disabled) {
-        &:hover,
-        &.active {
-            color: $buttonTextColorActive;
-            background-color: $buttonActiveBackgroundColor;
-        }
-
         &.active {
             z-index: 2;
         }

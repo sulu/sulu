@@ -1,5 +1,7 @@
 // @flow
-import type {Node, Element} from 'react';
+import type {Element, Node} from 'react';
+import ItemsComponent from './Items';
+import IconsComponent from './Icons';
 import ButtonComponent from './Button';
 import DropdownComponent from './Dropdown';
 import SelectComponent from './Select';
@@ -8,6 +10,9 @@ export type Item =
     Element<typeof ButtonComponent>
     | Element<typeof DropdownComponent>
     | Element<typeof SelectComponent>;
+export type Group = Element<typeof ItemsComponent> | Element<typeof IconsComponent>;
+
+export type Skin = 'light' | 'dark';
 
 export type Button = {
     children?: Node,
@@ -19,19 +24,22 @@ export type Button = {
     active?: boolean,
     hasOptions?: boolean,
     loading?: boolean,
-    skin?: 'primary',
+    primary?: boolean,
+    skin?: Skin,
 };
 
 export type DropdownOption = {
     label: string | number,
     onClick?: () => void,
     disabled?: boolean,
+    skin?: Skin,
 };
 
 export type SelectOption = {
     label: string | number,
     value: string | number,
     disabled?: boolean,
+    skin?: Skin,
 };
 
 export type Dropdown = {
@@ -41,6 +49,7 @@ export type Dropdown = {
     size?: string,
     disabled?: boolean,
     loading?: boolean,
+    skin?: Skin,
 };
 
 export type Select = {
@@ -50,6 +59,8 @@ export type Select = {
     label?: string | number,
     icon?: string,
     size?: string,
+    className?: string,
     disabled?: boolean,
     loading?: boolean,
+    skin?: Skin,
 };

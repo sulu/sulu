@@ -153,13 +153,13 @@ exports[`Application should not fail if current route does not exist 1`] = `
       class="header"
     >
       <nav
-        class="toolbar"
+        class="toolbar light"
       >
         <div
-          class="controls"
+          class="controls light"
         >
           <button
-            class="button primary"
+            class="button light primary"
           >
             <span
               aria-label="su-menu"
@@ -168,7 +168,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
           </button>
         </div>
         <div
-          class="controls"
+          class="controls light"
         />
       </nav>
     </header>
@@ -332,13 +332,13 @@ exports[`Application should render based on current route 1`] = `
       class="header"
     >
       <nav
-        class="toolbar"
+        class="toolbar light"
       >
         <div
-          class="controls"
+          class="controls light"
         >
           <button
-            class="button primary"
+            class="button light primary"
           >
             <span
               aria-label="su-menu"
@@ -347,7 +347,7 @@ exports[`Application should render based on current route 1`] = `
           </button>
         </div>
         <div
-          class="controls"
+          class="controls light"
         />
       </nav>
     </header>
@@ -662,24 +662,31 @@ exports[`Application should render opened navigation 1`] = `
           navigationOpen={true}
           onNavigationButtonClick={[Function]}
         >
-          <Toolbar>
+          <Toolbar
+            skin="light"
+          >
             <nav
-              className="toolbar"
+              className="toolbar light"
             >
-              <Controls>
+              <Controls
+                key=".0"
+                skin="light"
+              >
                 <div
-                  className="controls"
+                  className="controls light"
                 >
                   <Button
                     active={false}
                     disabled={false}
                     hasOptions={false}
                     icon="su-x"
+                    key=".0"
                     onClick={[Function]}
-                    skin="primary"
+                    primary={true}
+                    skin="light"
                   >
                     <button
-                      className="button primary"
+                      className="button light primary"
                       disabled={false}
                       onClick={[Function]}
                     >
@@ -696,9 +703,12 @@ exports[`Application should render opened navigation 1`] = `
                   </Button>
                 </div>
               </Controls>
-              <Controls>
+              <Controls
+                key=".1"
+                skin="light"
+              >
                 <div
-                  className="controls"
+                  className="controls light"
                 />
               </Controls>
             </nav>

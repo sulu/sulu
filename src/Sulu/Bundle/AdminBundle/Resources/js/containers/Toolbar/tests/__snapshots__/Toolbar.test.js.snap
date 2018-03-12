@@ -2,17 +2,17 @@
 
 exports[`Render the items from the ToolbarStore 1`] = `
 <nav
-  class="toolbar"
+  class="toolbar light"
 >
   <div
-    class="controls"
+    class="controls light"
   >
     <ul
-      class="items"
+      class="items light"
     >
       <li>
         <button
-          class="button"
+          class="button light"
           disabled=""
         >
           <span
@@ -26,7 +26,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
           class="dropdown"
         >
           <button
-            class="button"
+            class="button light"
             value="Save"
           >
             <span
@@ -48,7 +48,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
     </ul>
   </div>
   <div
-    class="controls"
+    class="controls light"
   />
 </nav>
 `;

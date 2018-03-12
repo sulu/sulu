@@ -46,6 +46,7 @@ export default class Dropdown extends React.Component<DropdownProps> {
         const {
             icon,
             size,
+            skin,
             label,
             options,
             disabled,
@@ -65,6 +66,7 @@ export default class Dropdown extends React.Component<DropdownProps> {
                 <Button
                     icon={icon}
                     size={size}
+                    skin={skin}
                     disabled={disabled || allChildrenDisabled}
                     value={label}
                     onClick={this.handleButtonClick}
@@ -74,6 +76,7 @@ export default class Dropdown extends React.Component<DropdownProps> {
                 />
                 {this.open &&
                     <OptionList
+                        skin={skin}
                         options={options}
                         onOptionClick={this.handleOptionListClick}
                         onClose={this.handleOptionListClose}

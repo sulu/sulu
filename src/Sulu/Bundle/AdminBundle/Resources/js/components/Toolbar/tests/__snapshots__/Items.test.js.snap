@@ -2,17 +2,17 @@
 
 exports[`Render items 1`] = `
 <ul
-  class="items"
+  class="items light"
 />
 `;
 
 exports[`Render items with children 1`] = `
 <ul
-  class="items"
+  class="items light"
 >
   <li>
     <button
-      class="button"
+      class="button light"
     >
       <span
         class="label"

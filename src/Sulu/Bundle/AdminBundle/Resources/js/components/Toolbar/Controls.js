@@ -1,17 +1,51 @@
 // @flow
-import type {Node} from 'react';
+import type {ChildrenArray} from 'react';
 import React from 'react';
-import toolbarStyles from './toolbar.scss';
+import classNames from 'classnames';
+import type {Group, Item, Skin} from './types';
+import controlsStyles from './controls.scss';
 
 type Props = {
-    children: Node,
+    children: ChildrenArray<Item | Group | false>,
+    skin?: Skin,
 };
 
 export default class Controls extends React.PureComponent<Props> {
+    static defaultProps = {
+        skin: 'light',
+    };
+
+    static createChildren(children: ChildrenArray<Item | Group | false>, skin?: Skin) {
+        return React.Children.map(children, (child: Item | Group | false) => {
+            if (!child) {
+                return;
+            }
+
+            // $FlowFixMe
+            return React.cloneElement(
+                child,
+                {
+                    ...child.props,
+                    skin: skin,
+                }
+            );
+        });
+    }
+
     render() {
+        const {
+            skin,
+            children,
+        } = this.props;
+
+        const controlsClass = classNames(
+            controlsStyles.controls,
+            controlsStyles[skin]
+        );
+
         return (
-            <div className={toolbarStyles.controls}>
-                {this.props.children}
+            <div className={controlsClass}>
+                {Controls.createChildren(children, skin)}
             </div>
         );
     }
