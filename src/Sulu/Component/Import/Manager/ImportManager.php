@@ -15,7 +15,7 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Import\Exception\ContentTypeImportMissingException;
+use Sulu\Component\Import\Exception\ContentTypeImportMissingException;
 
 /**
  * Import content by given xliff file.

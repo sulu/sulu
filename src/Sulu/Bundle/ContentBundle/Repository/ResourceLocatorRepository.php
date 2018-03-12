@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Exception\ResourceLocatorGeneratorException;
 use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 
@@ -62,7 +63,18 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $title = $this->implodeRlpParts($structure, $parts);
 
         $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
-        $resourceLocator = $resourceLocatorStrategy->generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey);
+
+        try {
+            $resourceLocator = $resourceLocatorStrategy->generate(
+                $title,
+                $parentUuid,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+        } catch (ResourceLocatorGeneratorException $exception) {
+            $resourceLocator = $exception->getParentPath() . '/';
+        }
 
         return [
             'resourceLocator' => $resourceLocator,
