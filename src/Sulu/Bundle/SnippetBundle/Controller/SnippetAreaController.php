@@ -123,6 +123,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
                 'title' => $area['title'],
                 'defaultUuid' => $defaultSnippet ? $defaultSnippet->getUuid() : null,
                 'defaultTitle' => $defaultSnippet ? $defaultSnippet->getTitle() : null,
+                'valid' => true,
             ]
         );
     }
@@ -155,6 +156,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
                 'title' => $area['title'],
                 'defaultUuid' => null,
                 'defaultTitle' => null,
+                'valid' => true,
             ]
         );
     }
