@@ -109,7 +109,7 @@ export default class BlockCollection extends React.Component<Props> {
         this.expandedBlocks[index] = true;
     };
 
-    @action handleTypeChange = (type: string | number, index: number) => {
+    @action handleTypeChange = (type: string, index: number) => {
         const {onChange, value} = this.props;
         const newValue = toJS(value);
         newValue[index].type = type;

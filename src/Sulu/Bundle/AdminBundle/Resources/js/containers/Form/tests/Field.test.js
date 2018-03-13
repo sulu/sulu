@@ -93,7 +93,7 @@ test('Pass correct props to FieldType', () => {
         return <input type="date" />;
     });
 
-    const locale = observable('de');
+    const locale = observable.box('de');
     const schema = {
         label: 'Text',
         maxOccurs: 4,

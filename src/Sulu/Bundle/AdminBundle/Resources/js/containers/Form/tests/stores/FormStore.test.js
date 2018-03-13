@@ -321,7 +321,7 @@ test('Changing type should throw an exception if types are not supported', () =>
 });
 
 test('Loading flag should be set to true as long as schema is loading', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '1', {locale: observable()}));
+    const formStore = new FormStore(new ResourceStore('snippets', '1', {locale: observable.box()}));
     formStore.resourceStore.loading = false;
 
     expect(formStore.loading).toBe(true);
@@ -329,7 +329,7 @@ test('Loading flag should be set to true as long as schema is loading', () => {
 });
 
 test('Loading flag should be set to true as long as data is loading', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '1', {locale: observable()}));
+    const formStore = new FormStore(new ResourceStore('snippets', '1', {locale: observable.box()}));
     formStore.resourceStore.loading = true;
     formStore.schemaLoading = false;
 
@@ -338,7 +338,7 @@ test('Loading flag should be set to true as long as data is loading', () => {
 });
 
 test('Loading flag should be set to false after data and schema have been loading', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '1', {locale: observable()}));
+    const formStore = new FormStore(new ResourceStore('snippets', '1', {locale: observable.box()}));
     formStore.resourceStore.loading = false;
     formStore.schemaLoading = false;
 
@@ -347,7 +347,7 @@ test('Loading flag should be set to false after data and schema have been loadin
 });
 
 test('Save the store should call the resourceStore save function', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '3', {locale: observable()}));
+    const formStore = new FormStore(new ResourceStore('snippets', '3', {locale: observable.box()}));
 
     formStore.save();
     expect(formStore.resourceStore.save).toBeCalled();
@@ -394,7 +394,7 @@ test('Save the store should validate the current data', (done) => {
 
     when(
         () => !formStore.schemaLoading,
-        () => {
+        (): void => {
             formStore.save().catch(() => {
                 expect(toJS(formStore.errors)).toEqual({
                     title: {

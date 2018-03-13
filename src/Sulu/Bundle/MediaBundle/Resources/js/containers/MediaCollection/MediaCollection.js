@@ -47,7 +47,7 @@ export default class MediaCollection extends React.Component<Props> {
         mediaDatagridStore.reload();
         when(
             () => !mediaDatagridStore.loading,
-            () => media.forEach((mediaItem) => mediaDatagridStore.select(mediaItem.id))
+            (): void => media.forEach((mediaItem) => mediaDatagridStore.select(mediaItem.id))
         );
     };
 

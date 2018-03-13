@@ -37,7 +37,7 @@ class OtherLoadingStrategy {
 }
 
 test('Should reset page count and page when strategy changes', () => {
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
 
     const paginatedLoadingStrategy = new PaginatedLoadingStrategy();

@@ -148,7 +148,7 @@ beforeEach(() => {
 });
 
 test('Render an open MediaSelectionOverlay', () => {
-    const locale = observable();
+    const locale = observable.box();
     const body = document.body;
     mount(
         <MediaSelectionOverlay
@@ -166,7 +166,7 @@ test('Render an open MediaSelectionOverlay', () => {
 test('Should instantiate the needed stores when the overlay opens', () => {
     const mediaResourceKey = 'media';
     const collectionResourceKey = 'collections';
-    const locale = observable();
+    const locale = observable.box();
     const mediaSelectionOverlayInstance = shallow(
         <MediaSelectionOverlay
             open={true}
@@ -201,7 +201,7 @@ test('Should instantiate the needed stores when the overlay opens', () => {
 
 test('Should call onConfirm callback with selections from datagrid', () => {
     const confirmSpy = jest.fn();
-    const locale = observable();
+    const locale = observable.box();
     const mediaSelectionOverlay = shallow(
         <MediaSelectionOverlay
             open={true}
@@ -223,7 +223,7 @@ test('Should call onConfirm callback with selections from datagrid', () => {
 });
 
 test('Should reset the selection array when the "Reset Selection" button was clicked', () => {
-    const locale = observable();
+    const locale = observable.box();
     const mediaSelectionOverlayInstance = shallow(
         <MediaSelectionOverlay
             open={true}
@@ -239,7 +239,7 @@ test('Should reset the selection array when the "Reset Selection" button was cli
 });
 
 test('Should destroy the stores and cleanup all states when the overlay is closed', () => {
-    const locale = observable();
+    const locale = observable.box();
     const mediaSelectionOverlayInstance = shallow(
         <MediaSelectionOverlay
             open={true}
@@ -262,7 +262,7 @@ test('Should destroy the stores and cleanup all states when the overlay is close
 });
 
 test('Should change collection with selected media', () => {
-    const locale = observable();
+    const locale = observable.box();
     const mediaSelectionOverlay = mount(
         <MediaSelectionOverlay
             open={true}
@@ -285,7 +285,7 @@ test('Should change collection with selected media', () => {
 });
 
 test('Should reset both datagrid to first page after reopening overlay', () => {
-    const locale = observable();
+    const locale = observable.box();
     const mediaSelectionOverlay = mount(
         <MediaSelectionOverlay
             open={true}

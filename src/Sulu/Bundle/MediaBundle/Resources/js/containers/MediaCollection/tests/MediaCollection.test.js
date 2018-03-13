@@ -207,8 +207,8 @@ beforeEach(() => {
 afterEach(() => document.body.innerHTML = '');
 
 test('Render the MediaCollection', () => {
-    const page = observable();
-    const locale = observable();
+    const page = observable.box();
+    const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
     const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
@@ -240,8 +240,8 @@ test('Should send a request to add a new collection via the overlay', () => {
     const promise = Promise.resolve();
     const field = jest.fn().mockReturnValue(null);
     fieldRegistry.get.mockReturnValue(field);
-    const page = observable();
-    const locale = observable();
+    const page = observable.box();
+    const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
     const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
@@ -297,8 +297,8 @@ test('Should send a request to update the collection via the overlay', () => {
     const field = jest.fn().mockReturnValue(null);
     fieldRegistry.get.mockReturnValue(field);
     const promise = Promise.resolve();
-    const page = observable();
-    const locale = observable();
+    const page = observable.box();
+    const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
@@ -351,8 +351,8 @@ test('Should send a request to update the collection via the overlay', () => {
 
 test('Confirming the delete dialog should delete the item', () => {
     const promise = Promise.resolve();
-    const page = observable();
-    const locale = observable();
+    const page = observable.box();
+    const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
     const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
@@ -397,8 +397,8 @@ test('Confirming the delete dialog should delete the item', () => {
 
 test('Confirming the delete dialog should delete the item and navigate to its parent', () => {
     const promise = Promise.resolve();
-    const page = observable();
-    const locale = observable();
+    const page = observable.box();
+    const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
     const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {

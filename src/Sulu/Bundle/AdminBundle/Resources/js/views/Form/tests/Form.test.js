@@ -52,7 +52,7 @@ test('Should navigate to defined route on back button click', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const router = {
         restore: jest.fn(),
@@ -123,7 +123,7 @@ test('Should change locale in form store via locale chooser', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const router = {
         navigate: jest.fn(),
@@ -149,7 +149,7 @@ test('Should show locales from router options in toolbar', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const router = {
         navigate: jest.fn(),
@@ -415,7 +415,7 @@ test('Should save form when submitted', (done) => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const metadataStore = require('../../../containers/Form/stores/MetadataStore');
-    const resourceStore = new ResourceStore('snippets', 8, {locale: observable()});
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
     const schemaTypesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
@@ -561,7 +561,7 @@ test('Should render save button loading only if form is saving', () => {
 test('Should destroy the store on unmount', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const resourceStore = new ResourceStore('snippets', 12, {locale: observable()});
+    const resourceStore = new ResourceStore('snippets', 12, {locale: observable.box()});
     const router = {
         bind: jest.fn(),
         route: {

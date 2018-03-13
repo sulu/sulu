@@ -3,7 +3,7 @@ import React from 'react';
 import {toJS} from 'mobx';
 import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
-import type {FieldTypeProps} from '../../types';
+import type {BlockError, FieldTypeProps} from '../../types';
 import FieldRenderer from './FieldRenderer';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
@@ -11,6 +11,10 @@ const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one t
 export default class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     handleBlockChange = (index: number, name: string, value: Object) => {
         const {onChange, value: oldValues} = this.props;
+
+        if (!oldValues) {
+            return;
+        }
 
         const newValues = toJS(oldValues);
         newValues[index][name] = value;
@@ -35,7 +39,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         const blockType = type ? types[type] : types[Object.keys(types)[0]]; // TODO replace with a default type
 
-        const errors: Array<Error> = toJS(error);
+        const errors = ((toJS(error): any): ?BlockError);
 
         return (
             <FieldRenderer

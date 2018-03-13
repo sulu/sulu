@@ -58,7 +58,7 @@ test('Should load the correct webspace', () => {
 
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
-    const resourceStore = new ResourceStore('pages', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
 
     const router = {
         restore: jest.fn(),
@@ -87,7 +87,7 @@ test('Should navigate to defined route on back button click', () => {
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('pages', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
 
     const router = {
         restore: jest.fn(),
@@ -122,7 +122,7 @@ test('Should change locale in form store via locale chooser', () => {
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('pages', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
 
     const router = {
         restore: jest.fn(),
@@ -170,7 +170,7 @@ test('Should show loading templates chooser in toolbar while types are loading',
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('pages', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
 
     const router = {
         restore: jest.fn(),
@@ -207,7 +207,7 @@ test('Should show templates chooser in toolbar if types are available', () => {
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
 
-    const resourceStore = new ResourceStore('pages', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
     resourceStore.loading = false;
     resourceStore.locale.set('de');
     resourceStore.data.template = 'homepage';
@@ -257,7 +257,7 @@ test('Should change template on click in template chooser', () => {
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
 
-    const resourceStore = new ResourceStore('pages', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
     resourceStore.loading = false;
     resourceStore.locale.set('de');
     resourceStore.data.template = 'homepage';
@@ -360,7 +360,7 @@ test('Should render save buttons disabled only if form is not dirty', () => {
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
-    const resourceStore = new ResourceStore('pages', 1, {locale: observable()});
+    const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
 
     const router = {
         restore: jest.fn(),
@@ -404,7 +404,7 @@ test('Should save form when submitted and redirect to editRoute when creating a 
     webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
-    const locale = observable();
+    const locale = observable.box();
     const resourceStore = new ResourceStore('pages', undefined, {locale: locale});
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
 

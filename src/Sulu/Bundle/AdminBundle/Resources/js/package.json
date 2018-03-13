@@ -14,7 +14,7 @@
         "jsonpointer": "^4.0.1",
         "loglevel": "^1.4.1",
         "masonry-layout": "^4.2.0",
-        "mobx-react": "^4.4.1",
+        "mobx-react": "^5.0.0",
         "mousetrap": "^1.6.1",
         "normalize.css": "^7.0.0",
         "path-to-regexp": "^1.7.0",
@@ -31,6 +31,6 @@
         "pretty": "^2.0.0"
     },
     "peerDependencies": {
-        "mobx": ">=3.5.1"
+        "mobx": "^4.0.0"
     }
 }

@@ -37,7 +37,7 @@ class OtherLoadingStrategy {
 }
 
 test('Should reset page count and page when strategy changes', () => {
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
 
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
@@ -53,8 +53,8 @@ test('Should reset page count and page when strategy changes', () => {
 });
 
 test('Should reset page count to 0 and page to 1 when locale is changed', () => {
-    const page = observable(3);
-    const locale = observable('en');
+    const page = observable.box(3);
+    const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
 
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();

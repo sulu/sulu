@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render} from 'enzyme';
+import {observable} from 'mobx';
 import React from 'react';
 import ResourceTabs from '../ResourceTabs';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -153,6 +154,31 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
         options: {
             resourceKey: 'snippets',
             locales: ['de', 'en'],
+        },
+    };
+    const router = {
+        route,
+        attributes: {
+            id: 5,
+        },
+    };
+
+    const resourceTabs = mount(<ResourceTabs router={router} route={route}>{() => null}</ResourceTabs>);
+    const resourceStoreConstructorCall = ResourceStore.mock.calls;
+    expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
+    expect(resourceStoreConstructorCall[0][1]).toEqual(5);
+    expect(resourceStoreConstructorCall[0][2].locale).toBeDefined();
+
+    resourceTabs.unmount();
+    expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
+});
+
+test('Should create a ResourceStore with locale on mount if locales have been passed as observable array', () => {
+    const route = {
+        children: [],
+        options: {
+            resourceKey: 'snippets',
+            locales: observable(['de', 'en']),
         },
     };
     const router = {

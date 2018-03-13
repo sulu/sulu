@@ -6,6 +6,7 @@ export type RouteConfig = {
     path: string,
     options: Object,
     attributeDefaults: AttributeMap,
+    rerenderAttributes: Array<string>,
 };
 
 export type Route = {

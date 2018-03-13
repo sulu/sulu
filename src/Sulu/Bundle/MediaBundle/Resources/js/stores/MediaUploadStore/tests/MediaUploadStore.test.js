@@ -25,7 +25,7 @@ test('Calling the "update" method should make a "POST" request to the media upda
         this.send = jest.fn();
     });
 
-    const locale = observable('en');
+    const locale = observable.box('en');
     const mediaUploadStore = new MediaUploadStore(locale);
     const testMediaId = 1;
     const fileData = new File([''], 'fileName');
@@ -45,7 +45,7 @@ test('Calling the "create" method should make a "POST" request to the media upda
         this.send = jest.fn();
     });
 
-    const locale = observable('en');
+    const locale = observable.box('en');
     const mediaUploadStore = new MediaUploadStore(locale);
     const testCollectionId = 1;
     const fileData = new File([''], 'fileName');
@@ -62,7 +62,7 @@ test('After the request was successful the progress will be reset', (done) => {
         this.send = jest.fn();
     });
 
-    const locale = observable('en');
+    const locale = observable.box('en');
     const mediaUploadStore = new MediaUploadStore(locale);
     const testId = 1;
     const fileData = new File([''], 'fileName');
@@ -71,7 +71,7 @@ test('After the request was successful the progress will be reset', (done) => {
 
     when(
         () => mediaUploadStore.progress === 0,
-        () => {
+        (): void => {
             expect(mediaUploadStore.uploading).toBe(false);
             expect(mediaUploadStore.progress).toBe(0);
             done();
