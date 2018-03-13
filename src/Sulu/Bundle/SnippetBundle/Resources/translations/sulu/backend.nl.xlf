@@ -36,7 +36,7 @@
             </trans-unit>
             <trans-unit id="10a" resname="snippet.save-confirm-text">
                 <source>snippet.save-confirm-text</source>
-                <target>Weet je zeker dat je dit wilt overschrijven?</target>
+                <target>Weet je zeker dat je het type van dit fragment wil wijzigen?</target>
             </trans-unit>
             <trans-unit id="11" resname="snippet.delete-confirm-title">
                 <source>snippet.delete-confirm-title</source>
@@ -44,7 +44,7 @@
             </trans-unit>
             <trans-unit id="11a" resname="snippet.save-confirm-title">
                 <source>snippet.save-confirm-title</source>
-                <target>Overschrijven bevestigen</target>
+                <target>Bevestig type wijziging</target>
             </trans-unit>
             <trans-unit id="12" resname="snippet.delete-do-it">
                 <source>snippet.delete-do-it</source>

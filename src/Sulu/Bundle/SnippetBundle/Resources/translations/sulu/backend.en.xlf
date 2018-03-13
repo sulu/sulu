@@ -36,7 +36,7 @@
             </trans-unit>
             <trans-unit id="10a" resname="snippet.save-confirm-text">
                 <source>snippet.save-confirm-text</source>
-                <target>Are you sure you want to overwrite it?</target>
+                <target>Are you sure you want to change the snippet type?</target>
             </trans-unit>
             <trans-unit id="11" resname="snippet.delete-confirm-title">
                 <source>snippet.delete-confirm-title</source>
@@ -44,7 +44,7 @@
             </trans-unit>
             <trans-unit id="11a" resname="snippet.save-confirm-title">
                 <source>snippet.save-confirm-title</source>
-                <target>Confirm overwrite</target>
+                <target>Confirm type change</target>
             </trans-unit>
             <trans-unit id="12" resname="snippet.delete-do-it">
                 <source>snippet.delete-do-it</source>
