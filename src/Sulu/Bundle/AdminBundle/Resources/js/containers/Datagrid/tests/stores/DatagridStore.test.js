@@ -25,9 +25,9 @@ class StructureStrategy {
 test('The loading strategy should be called when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    const page = observable(1);
-    const locale = observable();
-    const additionalValue = observable(5);
+    const page = observable.box(1);
+    const locale = observable.box();
+    const additionalValue = observable.box(5);
     const datagridStore = new DatagridStore(
         'tests',
         {
@@ -61,8 +61,8 @@ test('The loading strategy should be called when a request is sent', () => {
 test('The loading strategy should be called with a different resourceKey when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    const page = observable(1);
-    const locale = observable();
+    const page = observable.box(1);
+    const locale = observable.box();
     const datagridStore = new DatagridStore(
         'snippets',
         {
@@ -95,8 +95,8 @@ test('The loading strategy should be called with a different resourceKey when a 
 test('The loading strategy should be called with a different page when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    const page = observable(1);
-    const locale = observable();
+    const page = observable.box(1);
+    const locale = observable.box();
     const datagridStore = new DatagridStore(
         'snippets',
         {
@@ -141,8 +141,8 @@ test('The loading strategy should be called with a different page when a request
 test('The loading strategy should be called with a different locale when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    const page = observable(1);
-    const locale = observable('en');
+    const page = observable.box(1);
+    const locale = observable.box('en');
     const datagridStore = new DatagridStore(
         'snippets',
         {
@@ -186,7 +186,7 @@ test('The loading strategy should be called with a different locale when a reque
 test('The loading strategy should be called with the active item as parent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    const page = observable(1);
+    const page = observable.box(1);
     const datagridStore = new DatagridStore(
         'snippets',
         {
@@ -215,7 +215,7 @@ test('The loading strategy should be called with the active item as parent', () 
 test('The active item should not be passed as parent if undefined', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    const page = observable(1);
+    const page = observable.box(1);
     const datagridStore = new DatagridStore(
         'snippets',
         {
@@ -246,7 +246,7 @@ test('The active item should not be passed as parent if undefined', () => {
 test('Set loading flag to true before schema is loaded', () => {
     const promise = Promise.resolve();
     metadataStore.getSchema.mockReturnValue(promise);
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     page.set(1);
@@ -259,7 +259,7 @@ test('Set loading flag to true before schema is loaded', () => {
 });
 
 test('Set loading flag to true before request', () => {
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     page.set(1);
@@ -270,7 +270,7 @@ test('Set loading flag to true before request', () => {
 });
 
 test('Set loading flag to false after request', (done) => {
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
     const promise = Promise.resolve({
         pages: 3,
@@ -294,7 +294,7 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     const promise = Promise.resolve(fields);
     metadataStore.getSchema.mockReturnValue(promise);
 
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('tests', {
         page,
     });
@@ -307,7 +307,7 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
 });
 
 test('After initialization no row should be selected', () => {
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('tests', {
         page,
     });
@@ -317,7 +317,7 @@ test('After initialization no row should be selected', () => {
 });
 
 test('Select an item', () => {
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('tests', {
         page,
     });
@@ -332,7 +332,7 @@ test('Select an item', () => {
 });
 
 test('Deselect an item that has not been selected yet', () => {
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('tests', {
         page,
     });
@@ -345,7 +345,7 @@ test('Deselect an item that has not been selected yet', () => {
 });
 
 test('Select the entire page', () => {
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
     datagridStore.structureStrategy.data = [{id: 1}, {id: 2}, {id: 3}];
@@ -359,7 +359,7 @@ test('Select the entire page', () => {
 });
 
 test('Deselect the entire page', () => {
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('tests', {
         page,
     });
@@ -376,7 +376,7 @@ test('Deselect the entire page', () => {
 });
 
 test('Clear the selection', () => {
-    const page = observable();
+    const page = observable.box();
     const datagridStore = new DatagridStore('tests', {
         page,
     });
@@ -391,7 +391,7 @@ test('Clear the selection', () => {
 
 test('Clear the data', () => {
     const datagridStore = new DatagridStore('tests', {
-        page: observable(),
+        page: observable.box(),
     });
     const structureStrategy = new StructureStrategy();
     datagridStore.updateStrategies(new LoadingStrategy(), structureStrategy);
@@ -403,8 +403,8 @@ test('Clear the data', () => {
 test('Nothing should happen when to the same loading strategy is changed', () => {
     const loadingStrategy = new LoadingStrategy();
 
-    const page = observable();
-    const locale = observable();
+    const page = observable.box();
+    const locale = observable.box();
     const datagridStore = new DatagridStore(
         'tests',
         {
@@ -428,8 +428,8 @@ test('The initialize and destroy method of the loading strategies should be call
     const loadingStrategy1 = new LoadingStrategy();
     const loadingStrategy2 = new LoadingStrategy();
 
-    const page = observable();
-    const locale = observable();
+    const page = observable.box();
+    const locale = observable.box();
     const datagridStore = new DatagridStore(
         'tests',
         {
@@ -456,8 +456,8 @@ test('Should reset the data array and set page to 1 when the reload method is ca
     const promise = Promise.resolve({});
     loadingStrategy.load.mockReturnValue(promise);
 
-    const page = observable();
-    const locale = observable();
+    const page = observable.box();
+    const locale = observable.box();
     const datagridStore = new DatagridStore(
         'tests',
         {

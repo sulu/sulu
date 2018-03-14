@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
+import {isObservableArray, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {observable} from 'mobx';
 import Tabs from '../../components/Tabs';
 import Loader from '../../components/Loader';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -28,8 +28,11 @@ export default class ResourceTabs extends React.Component<ViewProps> {
         } = route;
 
         const options = {};
-        if ((typeof locales === 'boolean' && locales === true) || (Array.isArray(locales) && locales.length > 0)) {
-            options.locale = observable();
+        if (
+            (typeof locales === 'boolean' && locales === true)
+            || ((Array.isArray(locales) || isObservableArray(locales)) && locales.length > 0)
+        ) {
+            options.locale = observable.box();
         }
 
         this.resourceStore = new ResourceStore(resourceKey, id, options);

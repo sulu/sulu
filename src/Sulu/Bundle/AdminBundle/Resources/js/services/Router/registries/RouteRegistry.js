@@ -19,7 +19,7 @@ class RouteRegistry {
                 throw new Error('The name "' + routeConfig.name + '" has already been used for another route');
             }
 
-            const route = extendObservable({
+            const route = extendObservable({}, {
                 ...routeConfig,
                 children: [],
                 parent: undefined,

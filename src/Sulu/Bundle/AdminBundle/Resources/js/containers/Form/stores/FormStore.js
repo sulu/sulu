@@ -67,7 +67,7 @@ export default class FormStore {
             if (this.resourceStore.id) {
                 when(
                     () => !this.resourceStore.loading,
-                    () => this.setType(this.resourceStore.data[TYPE])
+                    (): void => this.setType(this.resourceStore.data[TYPE])
                 );
             } else if (this.defaultType) {
                 this.setType(this.defaultType);

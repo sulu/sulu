@@ -32,7 +32,7 @@ test('Render a MultiMediaDropzone', () => {
     expect(render(
         <MultiMediaDropzone
             collectionId={3}
-            locale={observable()}
+            locale={observable.box()}
             onUpload={jest.fn()}
         >
             <div />
@@ -44,7 +44,7 @@ test('Render a MultiMediaDropzone while the overlay is visible', () => {
     const multiMediaDropzone = shallow(
         <MultiMediaDropzone
             collectionId={3}
-            locale={observable()}
+            locale={observable.box()}
             onUpload={jest.fn()}
         >
             <div />
@@ -58,7 +58,7 @@ test('Render a MultiMediaDropzone while the overlay is visible', () => {
 });
 
 test('Render a MultiMediaDropzone while media is uploaded', () => {
-    const locale = observable('en');
+    const locale = observable.box('en');
     const uploadSpy = jest.fn();
     const multiMediaDropzone = shallow(
         <MultiMediaDropzone
@@ -82,7 +82,7 @@ test('Render a MultiMediaDropzone while media is uploaded', () => {
 });
 
 test('Should upload media when it is dropped on the dropzone', (done) => {
-    const locale = observable('en');
+    const locale = observable.box('en');
     const uploadSpy = jest.fn();
     const multiMediaDropzone = shallow(
         <MultiMediaDropzone

@@ -3,7 +3,7 @@ import createHistory from 'history/createHashHistory';
 import log from 'loglevel';
 import React from 'react';
 import {render} from 'react-dom';
-import {useStrict} from 'mobx';
+import {configure} from 'mobx';
 import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
 import {setTranslations} from './utils/Translator';
@@ -21,7 +21,7 @@ import type {FieldTypeProps} from './types';
 
 export type {FieldTypeProps};
 
-useStrict(true);
+configure({enforceActions: true});
 
 window.log = log;
 log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);

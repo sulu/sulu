@@ -22,10 +22,10 @@
         "sourceType": "module"
     },
     "plugins": [
+        "babel",
         "import",
         "react",
-        "flowtype",
-        "class-property"
+        "flowtype"
     ],
     "rules": {
         "indent": [
@@ -141,6 +141,6 @@
             "error",
             "always-multiline"
         ],
-        "class-property/class-property-semicolon": "error"
+        "babel/semi": "error"
     }
 }

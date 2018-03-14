@@ -13,8 +13,8 @@ import listStyles from './list.scss';
 
 @observer
 class List extends React.Component<ViewProps> {
-    page: IObservableValue<number> = observable();
-    locale: IObservableValue<string> = observable();
+    page: IObservableValue<number> = observable.box();
+    locale: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
     @observable deleting = false;
 

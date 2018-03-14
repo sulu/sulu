@@ -87,7 +87,7 @@ beforeEach(() => {
 test('Render TableAdapter with correct values', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
 
-    const datagridStore = new DatagridStore('test', {page: observable(1)});
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     datagridStore.active = 3;
     datagridStore.selectionIds.push(1, 3);
     const editClickSpy = jest.fn();
@@ -104,7 +104,7 @@ test('Render TableAdapter with correct values', () => {
 
 test('Selecting and deselecting items should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', {page: observable(1)});
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     datagridStore.structureStrategy.data.splice(0, datagridStore.structureStrategy.data.length);
     datagridStore.structureStrategy.data.push(
         {id: 1},
@@ -127,7 +127,7 @@ test('Selecting and deselecting items should update store', () => {
 
 test('Selecting and unselecting all items on current page should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', {page: observable(1)});
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     datagridStore.structureStrategy.data = [
         {id: 1},
         {id: 2},
@@ -145,7 +145,7 @@ test('Selecting and unselecting all items on current page should update store', 
 });
 
 test('Switching the adapter should render the correct adapter', () => {
-    const datagridStore = new DatagridStore('test', {page: observable(1)});
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
 
     datagridAdapterRegistry.get.mockImplementation((adapter) => {
         switch (adapter) {
@@ -166,7 +166,7 @@ test('Switching the adapter should render the correct adapter', () => {
 });
 
 test('DatagridStore should be initialized correctly on init and update', () => {
-    const datagridStore = new DatagridStore('test', {page: observable(1)});
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     datagridStore.updateStrategies = jest.fn();
 
     datagridAdapterRegistry.get.mockImplementation((adapter) => {
@@ -210,7 +210,7 @@ test('DatagridStore should be updated with current active element', () => {
             return null;
         }
     });
-    const datagridStore = new DatagridStore('test', {page: observable(1)});
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     expect(datagridStore.active).toBe(undefined);
     mount(<Datagrid adapters={['test']} store={datagridStore} />);
 

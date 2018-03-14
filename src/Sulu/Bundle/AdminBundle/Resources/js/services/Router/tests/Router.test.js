@@ -114,7 +114,7 @@ test('Navigate to route without default attribute when observable is changed', (
         },
     });
 
-    const locale = observable();
+    const locale = observable.box();
 
     const history = createHistory();
     const router = new Router(history);
@@ -142,7 +142,7 @@ test('Update observable attribute on route change', () => {
         },
     });
 
-    const locale = observable();
+    const locale = observable.box();
 
     const history = createHistory();
     const router = new Router(history);
@@ -408,7 +408,7 @@ test('Binding should update passed observable', () => {
         },
     });
 
-    const value = observable();
+    const value = observable.box();
 
     const history = createHistory();
     const router = new Router(history);
@@ -429,7 +429,7 @@ test('Binding should update state in router', () => {
         },
     });
 
-    const page = observable(1);
+    const page = observable.box(1);
 
     const history = createHistory();
     const router = new Router(history);
@@ -452,7 +452,7 @@ test('Binding should set default attribute', () => {
         },
     });
 
-    const locale = observable();
+    const locale = observable.box();
 
     const history = createHistory();
     const router = new Router(history);
@@ -473,7 +473,7 @@ test('Binding should update URL with fixed attributes', () => {
         },
     });
 
-    const uuid = observable(1);
+    const uuid = observable.box(1);
 
     const history = createHistory();
     const router = new Router(history);
@@ -497,7 +497,7 @@ test('Binding should update URL with fixed attributes as string if not a number'
         },
     });
 
-    const uuid = observable('old-uuid');
+    const uuid = observable.box('old-uuid');
 
     const history = createHistory();
     const router = new Router(history);
@@ -521,8 +521,8 @@ test('Binding should update state in router with other default bindings', () => 
         },
     });
 
-    const page = observable();
-    const locale = observable('en');
+    const page = observable.box();
+    const locale = observable.box('en');
 
     const history = createHistory();
     const router = new Router(history);
@@ -546,7 +546,7 @@ test('Do not add parameter to URL if undefined', () => {
         },
     });
 
-    const value = observable();
+    const value = observable.box();
 
     const history = createHistory();
     const router = new Router(history);
@@ -566,7 +566,7 @@ test('Set state to undefined if parameter is removed from URL', () => {
         },
     });
 
-    const value = observable(5);
+    const value = observable.box(5);
 
     const history = createHistory();
     const router = new Router(history);
@@ -586,7 +586,7 @@ test('Bound query should update state to default value if removed from URL', () 
         },
     });
 
-    const value = observable(5);
+    const value = observable.box(5);
 
     const history = createHistory();
     const router = new Router(history);
@@ -606,7 +606,7 @@ test('Bound query should omit URL parameter if set to default value', () => {
         },
     });
 
-    const value = observable('5');
+    const value = observable.box('5');
 
     const history = createHistory();
     const router = new Router(history);
@@ -627,7 +627,7 @@ test('Bound query should initially not be set to undefined in URL', () => {
         },
     });
 
-    const value = observable();
+    const value = observable.box();
 
     const history = createHistory();
     history.push('/list');
@@ -647,7 +647,7 @@ test('Binding should be set to initial passed value from URL', () => {
         },
     });
 
-    const value = observable();
+    const value = observable.box();
 
     const history = createHistory();
     history.push('/list?page=2');
@@ -687,7 +687,7 @@ test('Binding should not be updated if only data type changes', () => {
 });
 
 test('Navigate to child route using state', () => {
-    const formRoute = extendObservable({
+    const formRoute = extendObservable({}, {
         name: 'sulu_snippet.form',
         view: 'sulu_admin.tab',
         path: '/snippets/:uuid',
@@ -695,9 +695,10 @@ test('Navigate to child route using state', () => {
             resourceKey: 'snippet',
         },
         attributeDefaults: {},
+        children: [],
     });
 
-    const detailRoute = extendObservable({
+    const detailRoute = extendObservable({}, {
         name: 'sulu_snippet.form.detail',
         parent: formRoute,
         view: 'sulu_admin.form',
@@ -708,7 +709,7 @@ test('Navigate to child route using state', () => {
         attributeDefaults: {},
     });
 
-    const taxonomyRoute = extendObservable({
+    const taxonomyRoute = extendObservable({}, {
         name: 'sulu_snippet.form.taxonomy',
         parent: formRoute,
         view: 'sulu_admin.form',
@@ -749,7 +750,7 @@ test('Navigate to child route using state', () => {
 });
 
 test('Navigate to child route using URL', () => {
-    const formRoute = extendObservable({
+    const formRoute = extendObservable({}, {
         name: 'sulu_snippet.form',
         view: 'sulu_admin.tab',
         path: '/snippets/:uuid',
@@ -757,9 +758,10 @@ test('Navigate to child route using URL', () => {
             resourceKey: 'snippet',
         },
         attributeDefaults: {},
+        children: [],
     });
 
-    const detailRoute = extendObservable({
+    const detailRoute = extendObservable({}, {
         name: 'sulu_snippet.form.detail',
         parent: formRoute,
         view: 'sulu_admin.form',
@@ -770,7 +772,7 @@ test('Navigate to child route using URL', () => {
         attributeDefaults: {},
     });
 
-    const taxonomyRoute = extendObservable({
+    const taxonomyRoute = extendObservable({}, {
         name: 'sulu_snippet.form.taxonomy',
         parent: formRoute,
         view: 'sulu_admin.form',

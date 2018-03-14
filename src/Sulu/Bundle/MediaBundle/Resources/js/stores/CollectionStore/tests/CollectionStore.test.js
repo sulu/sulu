@@ -8,7 +8,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 }));
 
 test('Do not send request without defined collectionId', () => {
-    const locale = observable();
+    const locale = observable.box();
     new CollectionStore(undefined, locale);
 
     expect(ResourceRequester.get).not.toBeCalled();
@@ -27,7 +27,7 @@ test('After loading the collection info should be set', (done) => {
         },
     }));
 
-    const locale = observable('en');
+    const locale = observable.box('en');
     const collectionStore = new CollectionStore(1, locale);
 
     when(

@@ -15,7 +15,7 @@ test('Should pass props correctly to Renderer', () => {
             parameters: {},
         },
     };
-    const locale = observable('de');
+    const locale = observable.box('de');
     const schema = {
         text: {label: 'Label', type: 'text_line'},
     };
@@ -47,7 +47,7 @@ test('Should pass showAllErrors prop to Renderer', () => {
         <FieldRenderer
             data={{}}
             index={2}
-            locale={observable('de')}
+            locale={observable.box('de')}
             onChange={jest.fn()}
             onFieldFinish={jest.fn()}
             showAllErrors={true}

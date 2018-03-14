@@ -16,10 +16,10 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 @observer
 class MediaOverview extends React.Component<ViewProps> {
-    mediaPage: IObservableValue<number> = observable();
-    collectionPage: IObservableValue<number> = observable();
-    locale: IObservableValue<string> = observable();
-    collectionId: IObservableValue<?number | string> = observable();
+    mediaPage: IObservableValue<number> = observable.box();
+    collectionPage: IObservableValue<number> = observable.box();
+    locale: IObservableValue<string> = observable.box();
+    collectionId: IObservableValue<?number | string> = observable.box();
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;
     @observable collectionStore: CollectionStore;

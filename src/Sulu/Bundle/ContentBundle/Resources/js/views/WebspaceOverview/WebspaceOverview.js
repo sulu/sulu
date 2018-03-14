@@ -13,9 +13,9 @@ import webspaceOverviewStyles from './webspaceOverview.scss';
 
 @observer
 class WebspaceOverview extends React.Component<ViewProps> {
-    page: IObservableValue<number> = observable();
-    locale: IObservableValue<string> = observable();
-    webspace: IObservableValue<string> = observable();
+    page: IObservableValue<number> = observable.box();
+    locale: IObservableValue<string> = observable.box();
+    webspace: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
     @observable webspaces: Array<Webspace>;
 
