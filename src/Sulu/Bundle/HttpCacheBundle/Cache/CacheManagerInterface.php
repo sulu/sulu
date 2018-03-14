@@ -16,20 +16,25 @@ interface CacheManagerInterface
     /**
      * Invalidates given path with given headers.
      */
-    public function invalidatePath(string $path, array $headers = []);
+    public function invalidatePath(string $path, array $headers = []): void;
 
     /**
      * Invalidates given tag.
      */
-    public function invalidateTag(string $tag);
+    public function invalidateTag(string $tag): void;
 
     /**
      * Invalidates whole domain via BAN method.
      */
-    public function invalidateDomain(string $domain);
+    public function invalidateDomain(string $domain): void;
+
+    /**
+     * Invalidates reference.
+     */
+    public function invalidateReference(string $alias, string $id): void;
 
     /**
      * Returns true if current proxy client supports invalidation.
      */
-    public function supportsInvalidate();
+    public function supportsInvalidate(): bool;
 }

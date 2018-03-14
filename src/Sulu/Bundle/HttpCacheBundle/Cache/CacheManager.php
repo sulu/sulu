@@ -52,7 +52,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function invalidatePath(string $path, array $headers = [])
+    public function invalidatePath(string $path, array $headers = []): void
     {
         if (!$this->cacheManager->supports(FOSCacheManager::PATH)) {
             return;
@@ -74,19 +74,19 @@ class CacheManager implements CacheManagerInterface
         }
     }
 
-    public function invalidateReference(string $alias, string $id)
+    public function invalidateReference(string $alias, string $id): void
     {
         if (!Uuid::isValid($id)) {
             $id = sprintf('%s-%s', $alias, $id);
         }
 
         $this->invalidateTag($id);
-}
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function invalidateTag(string $tag)
+    public function invalidateTag(string $tag): void
     {
         if (!$this->cacheManager->supports(FOSCacheManager::TAGS)) {
             return;
@@ -98,7 +98,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function invalidateDomain(string $domain)
+    public function invalidateDomain(string $domain): void
     {
         if (!$this->cacheManager->supports(FOSCacheManager::INVALIDATE)) {
             return;
@@ -114,7 +114,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsInvalidate()
+    public function supportsInvalidate(): bool
     {
         return $this->cacheManager->supports(FOSCacheManager::INVALIDATE);
     }
