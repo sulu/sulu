@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * ENHANCEMENT #3843 [CustomUrlBundle]         Show custom url tab only when configured
     * BUGFIX      #3828 [Husky]                   Avoid expand ids parameter to be added to datagrid request without content
     * BUGFIX      #3828 [Husky]                   Fixed paragraphs and breaks in paste from word plugin
     * BUGFIX      #3806 [All]                     Fix compatibility on lowest and fix appveyor
