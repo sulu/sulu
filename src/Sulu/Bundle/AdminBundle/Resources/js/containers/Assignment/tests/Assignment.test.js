@@ -53,7 +53,7 @@ test('Show with passed icon', () => {
 });
 
 test('Pass locale to DatagridOverlay', () => {
-    const locale = observable('de');
+    const locale = observable.box('de');
     const assignment = mount(
         <Assignment onChange={jest.fn()} locale={locale} resourceKey="snippets" title="Assignment" />
     );
@@ -62,7 +62,7 @@ test('Pass locale to DatagridOverlay', () => {
 });
 
 test('Show with passed values as items in right locale', () => {
-    const locale = observable('en');
+    const locale = observable.box('en');
 
     // $FlowFixMe
     AssignmentStore.mockImplementationOnce(function () {
@@ -167,7 +167,7 @@ test('Should instantiate the DatagridStore with the preselected ids', () => {
 });
 
 test('Should reinstantiate the DatagridStore with the preselected ids when new props are received', () => {
-    const locale = observable('en');
+    const locale = observable.box('en');
 
     // $FlowFixMe
     AssignmentStore.mockImplementationOnce(function () {
@@ -193,7 +193,7 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
 });
 
 test('Should not reinstantiate the DatagridStore with the preselected ids when new props have the same values', () => {
-    const locale = observable('en');
+    const locale = observable.box('en');
 
     // $FlowFixMe
     AssignmentStore.mockImplementationOnce(function () {

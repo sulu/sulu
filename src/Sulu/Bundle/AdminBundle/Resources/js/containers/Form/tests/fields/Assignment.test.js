@@ -6,7 +6,7 @@ import Assignment from '../../fields/Assignment';
 
 test('Should pass props correctly to component', () => {
     const changeSpy = jest.fn();
-    const locale = observable('en');
+    const locale = observable.box('en');
     const value = [1, 6, 8];
     const fieldOptions = {
         displayProperties: ['id', 'title'],

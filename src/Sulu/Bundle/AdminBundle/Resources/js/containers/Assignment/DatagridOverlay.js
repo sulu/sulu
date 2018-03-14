@@ -20,7 +20,7 @@ type Props = {|
 
 export default class DatagridOverlay extends React.Component<Props> {
     datagridStore: DatagridStore;
-    page: IObservableValue<number> = observable(1);
+    page: IObservableValue<number> = observable.box(1);
 
     static defaultProps = {
         preSelectedItems: [],

@@ -132,7 +132,7 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
         option: 'value',
     });
 
-    const locale = observable('de');
+    const locale = observable.box('de');
     const schema = {
         label: 'Text',
         maxOccurs: 4,

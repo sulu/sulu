@@ -18,7 +18,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
 }));
 
 test('Should instantiate the DatagridStore with locale', () => {
-    const locale = observable('en');
+    const locale = observable.box('en');
     const datagridOverlay = shallow(
         <DatagridOverlay
             locale={locale}
