@@ -14,7 +14,6 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\Cache;
 use FOS\HttpCache\ProxyClient\Invalidation\BanCapable;
 use FOS\HttpCacheBundle\CacheManager as FOSCacheManager;
 use Prophecy\Argument;
-use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\HttpFoundation\Request;
