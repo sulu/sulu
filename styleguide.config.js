@@ -2,7 +2,7 @@
 /* eslint-disable import/no-nodejs-modules */
 const path = require('path');
 const fs = require('fs');
-const glob = require('glob');
+const fg = require('fast-glob');
 
 const firstLetterIsUppercase = (string) => {
     const first = string.charAt(0);
@@ -32,7 +32,11 @@ const isSection = (section) => (folderPath) => {
     return path.basename(path.dirname(folderPath)) === section;
 };
 
-const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/*/*');
+const folders = fg.sync(
+    ['./src/Sulu/Bundle/*/Resources/js/*/*', '!**/vendor', '!**/node_modules'],
+    {onlyDirectories: true }
+);
+
 const componentFolders = folders
     .filter(isSection('components'))
     .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
