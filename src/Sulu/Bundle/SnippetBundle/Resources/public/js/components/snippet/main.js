@@ -23,9 +23,10 @@ define([
             deleteConfirmText: 'snippet.delete-confirm-text',
             deleteConfirmTitle: 'snippet.delete-confirm-title',
             deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected',
+            deleteDoIt: 'snippet.delete-do-it',
             saveConfirmTitle: 'snippet.save-confirm-title',
             saveConfirmText: 'snippet.save-confirm-text',
-            doIt: 'snippet.delete-do-it',
+            saveDoIt: 'snippet.save-do-it',
             confirmDefaultText: 'snippet.delete-confirm-default-text',
             referencedByFollowing: 'snippet.save-referenced-by-following',
         },
@@ -60,27 +61,7 @@ define([
             },
 
             referentialIntegrityMessageSave: function(pageTitles, isDefault) {
-                var message = [];
-
-                if (pageTitles.length > 0) {
-                    message.push('<p>', this.sandbox.translate(translationKeys.referencedByFollowing), '</p>');
-
-                    message.push('<ul>');
-
-                    this.sandbox.util.foreach(pageTitles, function(pageTitle) {
-                        message.push('<li>', pageTitle, '</li>');
-                    });
-
-                    message.push('</ul>');
-                }
-
-                if (!!isDefault) {
-                    message.push('<p>', this.sandbox.translate(translationKeys.confirmDefaultText), '</p>');
-                }
-
-                message.push('<p>', this.sandbox.translate(translationKeys.saveConfirmText), '</p>');
-
-                return message.join('');
+                return '<p>' + this.sandbox.translate(translationKeys.saveConfirmText) + '</p>';
             }
         };
 
@@ -162,6 +143,7 @@ define([
 
                         this.referentialIntegrityDialog(
                             translationKeys.deleteConfirmTitle,
+                            translationKeys.deleteDoIt,
                             message,
                             snippet,
                             function () {
@@ -180,7 +162,7 @@ define([
             });
         },
 
-        referentialIntegrityDialog: function (title, message, snippet, okCallback, closeCallback) {
+        referentialIntegrityDialog: function (title, doIt, message, snippet, okCallback, closeCallback) {
             var $element = $('<div/>');
             $('body').append($element);
 
@@ -192,7 +174,7 @@ define([
                         openOnStart: true,
                         title: this.sandbox.translate(title),
                         message: message,
-                        okDefaultText: this.sandbox.translate(translationKeys.doIt),
+                        okDefaultText: this.sandbox.translate(doIt),
                         type: 'alert',
                         closeCallback: closeCallback,
                         okCallback: okCallback
@@ -298,6 +280,7 @@ define([
 
                             return this.referentialIntegrityDialog(
                                 translationKeys.saveConfirmTitle,
+                                translationKeys.saveDoIt,
                                 message,
                                 model,
                                 function () {

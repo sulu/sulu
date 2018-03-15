@@ -36,7 +36,7 @@
             </trans-unit>
             <trans-unit id="10a" resname="snippet.save-confirm-text">
                 <source>snippet.save-confirm-text</source>
-                <target>Weet je zeker dat je het type van dit fragment wil wijzigen?</target>
+                <target>Dit fragment staat ingesteld als standaard voor een webspace. Door het fragmenttype te wijzigen verliest het deze eigenschap.</target>
             </trans-unit>
             <trans-unit id="11" resname="snippet.delete-confirm-title">
                 <source>snippet.delete-confirm-title</source>
@@ -49,6 +49,10 @@
             <trans-unit id="12" resname="snippet.delete-do-it">
                 <source>snippet.delete-do-it</source>
                 <target>Ja, ik weet het zeker</target>
+            </trans-unit>
+            <trans-unit id="12a" resname="snippet.save-do-it">
+                <source>snippet.save-do-it</source>
+                <target>Toch wijzigen</target>
             </trans-unit>
             <trans-unit id="13" resname="snippet.delete-no-snippets-selected">
                 <source>snippet.delete-no-snippets-selected</source>
