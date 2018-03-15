@@ -26,7 +26,7 @@ class CacheManager implements CacheManagerInterface
     /**
      * @var FOSCacheManager
      */
-    private $cacheManager;
+    private $fosCacheManager;
 
     /**
      * @var ReplacerInterface
@@ -39,11 +39,11 @@ class CacheManager implements CacheManagerInterface
     private $requestHost;
 
     public function __construct(
-        FOSCacheManager $cacheManager,
+        FOSCacheManager $fosCacheManager,
         RequestStack $requestStack,
         ReplacerInterface $replacer
     ) {
-        $this->cacheManager = $cacheManager;
+        $this->fosCacheManager = $fosCacheManager;
         $this->replacer = $replacer;
         $this->requestHost =
             $requestStack->getCurrentRequest() ? $requestStack->getCurrentRequest()->getHttpHost() : null;
@@ -54,7 +54,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function invalidatePath(string $path, array $headers = []): void
     {
-        if (!$this->cacheManager->supports(FOSCacheManager::PATH)) {
+        if (!$this->fosCacheManager->supports(FOSCacheManager::PATH)) {
             return;
         }
 
@@ -67,10 +67,10 @@ class CacheManager implements CacheManagerInterface
             $path = $this->replacer->replaceHost($path, $this->requestHost);
         }
 
-        $this->cacheManager->invalidatePath($path, $headers);
+        $this->fosCacheManager->invalidatePath($path, $headers);
 
-        if ($this->cacheManager->supports(FOSCacheManager::REFRESH)) {
-            $this->cacheManager->refreshPath($path, $headers);
+        if ($this->fosCacheManager->supports(FOSCacheManager::REFRESH)) {
+            $this->fosCacheManager->refreshPath($path, $headers);
         }
     }
 
@@ -91,11 +91,11 @@ class CacheManager implements CacheManagerInterface
      */
     public function invalidateTag(string $tag): void
     {
-        if (!$this->cacheManager->supports(FOSCacheManager::TAGS)) {
+        if (!$this->fosCacheManager->supports(FOSCacheManager::TAGS)) {
             return;
         }
 
-        $this->cacheManager->invalidateTags([$tag]);
+        $this->fosCacheManager->invalidateTags([$tag]);
     }
 
     /**
@@ -103,11 +103,11 @@ class CacheManager implements CacheManagerInterface
      */
     public function invalidateDomain(string $domain): void
     {
-        if (!$this->cacheManager->supports(FOSCacheManager::INVALIDATE)) {
+        if (!$this->fosCacheManager->supports(FOSCacheManager::INVALIDATE)) {
             return;
         }
 
-        $this->cacheManager->invalidateRegex(
+        $this->fosCacheManager->invalidateRegex(
             BanCapable::REGEX_MATCH_ALL,
             BanCapable::CONTENT_TYPE_ALL,
             $domain
@@ -119,6 +119,6 @@ class CacheManager implements CacheManagerInterface
      */
     public function supportsInvalidate(): bool
     {
-        return $this->cacheManager->supports(FOSCacheManager::INVALIDATE);
+        return $this->fosCacheManager->supports(FOSCacheManager::INVALIDATE);
     }
 }
