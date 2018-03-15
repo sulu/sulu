@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * BUGFIX      #3844 [Husky]                   Fix accidentally escaping of select value
+    * ENHANCEMENT #3846 [ContentBundle]           Added authored field to base-page-document index
     * ENHANCEMENT #3843 [CustomUrlBundle]         Show custom url tab only when configured
     * BUGFIX      #3828 [Husky]                   Avoid expand ids parameter to be added to datagrid request without content
     * BUGFIX      #3828 [Husky]                   Fixed paragraphs and breaks in paste from word plugin
