@@ -133,7 +133,7 @@ class CacheManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidateUuidReference()
     {
-        $tag = '1234-1234-1234';
+        $tag = '72a31676-282d-11e8-b467-0ed5f89f718b';
 
         $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(true);
         $this->fosCacheManager->invalidateTags([$tag])->shouldBeCalled();

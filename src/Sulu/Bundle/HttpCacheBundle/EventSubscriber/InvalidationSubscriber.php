@@ -237,6 +237,10 @@ class InvalidationSubscriber implements EventSubscriberInterface
      */
     private function invalidateDocumentExcerpt(ExtensionBehavior $document)
     {
+        if (!$this->cacheManager) {
+            return;
+        }
+
         $extensionData = $document->getExtensionsData();
         if (!isset($extensionData['excerpt'])) {
             return;

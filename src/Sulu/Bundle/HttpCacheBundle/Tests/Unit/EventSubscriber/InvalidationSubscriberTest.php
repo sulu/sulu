@@ -203,6 +203,7 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $document = $this->prophesize(BasePageDocument::class);
         $document->getPublished()->willReturn(false);
+        $document->getExtensionsData()->willReturn([]);
 
         $document->getUuid()->willReturn($documentUuid);
 
