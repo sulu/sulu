@@ -259,7 +259,7 @@ class AdminController
                 },
                 "description": {
                     "label": "Description",
-                    "type": "text_area"
+                    "type": "text_editor"
                 },
                 "media": {
                     "label": "Media",
