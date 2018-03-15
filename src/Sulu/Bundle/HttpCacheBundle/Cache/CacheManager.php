@@ -74,6 +74,9 @@ class CacheManager implements CacheManagerInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function invalidateReference(string $alias, string $id): void
     {
         if (!Uuid::isValid($id)) {

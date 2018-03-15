@@ -14,6 +14,7 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\Cache;
 use FOS\HttpCache\ProxyClient\Invalidation\BanCapable;
 use FOS\HttpCacheBundle\CacheManager as FOSCacheManager;
 use Prophecy\Argument;
+use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\HttpFoundation\Request;
@@ -120,5 +121,23 @@ class CacheManagerTest extends \PHPUnit_Framework_TestCase
             $domain
         )->shouldBeCalled();
         $this->cacheManager->invalidateDomain($domain);
+    }
+
+    public function testInvalidateReference()
+    {
+        $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(true);
+        $this->fosCacheManager->invalidateTags(['test-1'])->shouldBeCalled();
+
+        $this->cacheManager->invalidateReference('test', 1);
+    }
+
+    public function testInvalidateUuidReference()
+    {
+        $tag = '1234-1234-1234';
+
+        $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(true);
+        $this->fosCacheManager->invalidateTags([$tag])->shouldBeCalled();
+
+        $this->cacheManager->invalidateReference('test', $tag);
     }
 }

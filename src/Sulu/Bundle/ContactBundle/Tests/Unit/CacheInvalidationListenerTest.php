@@ -16,16 +16,16 @@ use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\EventListener\CacheInvalidationListener;
+use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Contact\Model\ContactInterface;
-use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 
 class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var HandlerInvalidateReferenceInterface
+     * @var CacheManager
      */
-    private $invalidationHandler;
+    private $cacheManager;
 
     /**
      * @var CacheInvalidationListener
@@ -34,9 +34,9 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->invalidationHandler = $this->prophesize(HandlerInvalidateReferenceInterface::class);
+        $this->cacheManager = $this->prophesize(CacheManager::class);
 
-        $this->listener = new CacheInvalidationListener($this->invalidationHandler->reveal());
+        $this->listener = new CacheInvalidationListener($this->cacheManager->reveal());
     }
 
     public function provideData()
@@ -63,9 +63,9 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
             $entity->getTags()->willReturn([]);
             $entity->getCategories()->willReturn([]);
 
-            $this->invalidationHandler->invalidateReference($alias, 1)->shouldBeCalled();
+            $this->cacheManager->invalidateReference($alias, 1)->shouldBeCalled();
         } else {
-            $this->invalidationHandler->invalidateReference(Argument::cetera())->shouldNotBeCalled();
+            $this->cacheManager->invalidateReference(Argument::cetera())->shouldNotBeCalled();
         }
 
         $this->listener->postPersist($eventArgs->reveal());
@@ -86,9 +86,9 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
             $entity->getTags()->willReturn([]);
             $entity->getCategories()->willReturn([]);
 
-            $this->invalidationHandler->invalidateReference($alias, 1)->shouldBeCalled();
+            $this->cacheManager->invalidateReference($alias, 1)->shouldBeCalled();
         } else {
-            $this->invalidationHandler->invalidateReference(Argument::cetera())->shouldNotBeCalled();
+            $this->cacheManager->invalidateReference(Argument::cetera())->shouldNotBeCalled();
         }
 
         $this->listener->postUpdate($eventArgs->reveal());
@@ -109,9 +109,9 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
             $entity->getTags()->willReturn([]);
             $entity->getCategories()->willReturn([]);
 
-            $this->invalidationHandler->invalidateReference($alias, 1)->shouldBeCalled();
+            $this->cacheManager->invalidateReference($alias, 1)->shouldBeCalled();
         } else {
-            $this->invalidationHandler->invalidateReference(Argument::cetera())->shouldNotBeCalled();
+            $this->cacheManager->invalidateReference(Argument::cetera())->shouldNotBeCalled();
         }
 
         $this->listener->preRemove($eventArgs->reveal());
@@ -137,20 +137,20 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
         $tags[0]->getId()->willReturn(1);
         $tags[1]->getId()->willReturn(2);
         $entity->getTags()->willReturn($tags);
-        $this->invalidationHandler->invalidateReference('tag', 1)->shouldBeCalled();
-        $this->invalidationHandler->invalidateReference('tag', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('tag', 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('tag', 2)->shouldBeCalled();
 
         $categories = [$this->prophesize(CategoryInterface::class), $this->prophesize(CategoryInterface::class)];
         $categories[0]->getId()->willReturn(1);
         $categories[1]->getId()->willReturn(2);
         $entity->getCategories()->willReturn($categories);
-        $this->invalidationHandler->invalidateReference('category', 1)->shouldBeCalled();
-        $this->invalidationHandler->invalidateReference('category', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('category', 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('category', 2)->shouldBeCalled();
 
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getObject()->willReturn($entity->reveal());
 
-        $this->invalidationHandler->invalidateReference($alias, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference($alias, 1)->shouldBeCalled();
 
         $this->listener->postPersist($eventArgs->reveal());
     }
@@ -167,20 +167,20 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
         $tags[0]->getId()->willReturn(1);
         $tags[1]->getId()->willReturn(2);
         $entity->getTags()->willReturn($tags);
-        $this->invalidationHandler->invalidateReference('tag', 1)->shouldBeCalled();
-        $this->invalidationHandler->invalidateReference('tag', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('tag', 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('tag', 2)->shouldBeCalled();
 
         $categories = [$this->prophesize(CategoryInterface::class), $this->prophesize(CategoryInterface::class)];
         $categories[0]->getId()->willReturn(1);
         $categories[1]->getId()->willReturn(2);
         $entity->getCategories()->willReturn($categories);
-        $this->invalidationHandler->invalidateReference('category', 1)->shouldBeCalled();
-        $this->invalidationHandler->invalidateReference('category', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('category', 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('category', 2)->shouldBeCalled();
 
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getObject()->willReturn($entity->reveal());
 
-        $this->invalidationHandler->invalidateReference($alias, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference($alias, 1)->shouldBeCalled();
 
         $this->listener->postUpdate($eventArgs->reveal());
     }
@@ -197,20 +197,20 @@ class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
         $tags[0]->getId()->willReturn(1);
         $tags[1]->getId()->willReturn(2);
         $entity->getTags()->willReturn($tags);
-        $this->invalidationHandler->invalidateReference('tag', 1)->shouldBeCalled();
-        $this->invalidationHandler->invalidateReference('tag', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('tag', 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('tag', 2)->shouldBeCalled();
 
         $categories = [$this->prophesize(CategoryInterface::class), $this->prophesize(CategoryInterface::class)];
         $categories[0]->getId()->willReturn(1);
         $categories[1]->getId()->willReturn(2);
         $entity->getCategories()->willReturn($categories);
-        $this->invalidationHandler->invalidateReference('category', 1)->shouldBeCalled();
-        $this->invalidationHandler->invalidateReference('category', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('category', 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference('category', 2)->shouldBeCalled();
 
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getObject()->willReturn($entity->reveal());
 
-        $this->invalidationHandler->invalidateReference($alias, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference($alias, 1)->shouldBeCalled();
 
         $this->listener->preRemove($eventArgs->reveal());
     }
