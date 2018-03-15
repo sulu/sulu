@@ -26,11 +26,11 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 class CacheInvalidationListener
 {
     /**
-     * @var CacheManagerInterface
+     * @var null|CacheManagerInterface
      */
     private $cacheManager;
 
-    public function __construct(CacheManagerInterface $cacheManager)
+    public function __construct(?CacheManagerInterface $cacheManager)
     {
         $this->cacheManager = $cacheManager;
     }
@@ -52,6 +52,10 @@ class CacheInvalidationListener
 
     private function invalidateEntity($object)
     {
+        if (!$this->cacheManager) {
+            return;
+        }
+
         if ($object instanceof MediaInterface) {
             $this->cacheManager->invalidateReference('media', $object->getId());
         } elseif ($object instanceof File) {

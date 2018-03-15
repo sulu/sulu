@@ -24,11 +24,11 @@ use Sulu\Component\Contact\Model\ContactInterface;
 class CacheInvalidationListener
 {
     /**
-     * @var CacheManagerInterface
+     * @var null|CacheManagerInterface
      */
     private $cacheManager;
 
-    public function __construct(CacheManagerInterface $cacheManager)
+    public function __construct(?CacheManagerInterface $cacheManager)
     {
         $this->cacheManager = $cacheManager;
     }
@@ -50,6 +50,10 @@ class CacheInvalidationListener
 
     private function invalidateEntity($object)
     {
+        if (!$this->cacheManager) {
+            return;
+        }
+
         if ($object instanceof ContactInterface) {
             $this->cacheManager->invalidateReference('contact', $object->getId());
             $this->invalidateTags($object->getTags());
