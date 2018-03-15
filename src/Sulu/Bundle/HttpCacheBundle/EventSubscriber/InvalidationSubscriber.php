@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\HttpCacheBundle\EventSubscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
