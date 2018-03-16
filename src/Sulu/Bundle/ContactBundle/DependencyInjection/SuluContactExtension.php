@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
+use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -82,7 +83,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                         ],
                         'accounts' => [
                             'form' => ['@SuluContactBundle/Resources/templates/accounts.xml'],
-                            'list' => '%sulu.model.contact.class%',
+                            'list' => Account::class,
                         ],
                     ],
                 ]
