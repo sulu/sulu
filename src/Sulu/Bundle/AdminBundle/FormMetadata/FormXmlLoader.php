@@ -39,12 +39,7 @@ class FormXmlLoader extends AbstractLoader
         );
     }
 
-    public function loadFormMetadata($resource): FormMetadata
-    {
-        return parent::load($resource, 'form');
-    }
-
-    public function loadData($resource, \DOMXPath $xpath, $type): FormMetadata
+    protected function parse($resource, \DOMXPath $xpath, $type): FormMetadata
     {
         // init running vars
         $tags = [];

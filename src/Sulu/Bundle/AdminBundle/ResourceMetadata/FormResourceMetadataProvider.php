@@ -133,7 +133,7 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
         foreach ($forms as $form) {
             $formFile = $this->kernel->locateResource($form);
             /** @var FormMetadata $formStructure */
-            $formStructure = $this->formXmlLoader->load($formFile);
+            $formStructure = $this->formXmlLoader->load($formFile, $resourceKey);
 
             $fileResources = [new FileResource($formFile)];
 

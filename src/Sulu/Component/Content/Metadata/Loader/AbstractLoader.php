@@ -70,12 +70,12 @@ abstract class AbstractLoader implements LoaderInterface
         $xpath->registerNamespace('x', $this->schemaNamespaceURI);
 
         // init result
-        $result = $this->loadData($resource, $xpath, $type);
+        $result = $this->parse($resource, $xpath, $type);
 
         return $result;
     }
 
-    abstract protected function loadData($resource, \DOMXPath $xpath, $type);
+    abstract protected function parse($resource, \DOMXPath $xpath, $type);
 
     /**
      * Loads the tags for the structure.

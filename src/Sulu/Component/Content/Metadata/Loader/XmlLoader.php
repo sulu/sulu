@@ -96,7 +96,7 @@ class XmlLoader extends AbstractLoader
         return $structure;
     }
 
-    protected function loadData($resource, \DOMXPath $xpath, $type)
+    protected function parse($resource, \DOMXPath $xpath, $type)
     {
         // init running vars
         $tags = [];

@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\TagBundle\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -35,7 +34,7 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                     'resources' => [
                         'tags' => [
                             'form' => [],
-                            'list' => Tag::class,
+                            'list' => '%sulu.model.tag.class%',
                         ],
                     ],
                 ]
