@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
+use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -65,6 +66,24 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                     'meta_title' => ['en' => 'Organizations', 'de' => 'Organisationen'],
                                 ],
                             ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'contacts' => [
+                            'form' => ['@SuluContactBundle/Resources/templates/contacts.xml'],
+                            'list' => '%sulu.model.contact.class%',
+                        ],
+                        'accounts' => [
+                            'form' => ['@SuluContactBundle/Resources/templates/accounts.xml'],
+                            'list' => Account::class,
                         ],
                     ],
                 ]

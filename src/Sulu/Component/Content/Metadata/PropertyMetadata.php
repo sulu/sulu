@@ -21,83 +21,122 @@ class PropertyMetadata extends ItemMetadata
      *
      * @var string
      */
-    public $type;
+    protected $type;
 
     /**
-     * Placeholder for property.
+     * Placeholders for property.
+     *
+     * @var array
      */
-    public $placeholder;
+    protected $placeholders;
 
     /**
      * If the property should be available in different localizations.
      *
      * @var bool
      */
-    public $localized = false;
+    protected $localized = false;
 
     /**
      * If the property is required.
      *
      * @var bool
      */
-    public $required = false;
+    protected $required = false;
 
     /**
      * The number of grid columns the property should use in the admin interface.
      *
      * @var int
      */
-    public $colSpan = null;
+    protected $colSpan = null;
+
+    /**
+     * The number of grid columns the property should use in the admin interface.
+     *
+     * @var int
+     */
+    protected $size = null;
+
+    /**
+     * The number of grid columns the property should have space after.
+     *
+     * @var int
+     */
+    protected $spaceAfter = null;
 
     /**
      * The CSS class the property should use in the admin interface.
      *
      * @var string
      */
-    public $cssClass = null;
-
-    /**
-     * Tags, e.g. [['name' => 'sulu_search.field', 'type' => 'string']].
-     *
-     * @var array
-     */
-    public $tags = [];
+    protected $cssClass = null;
 
     /**
      * @var int
      */
-    public $minOccurs = 1;
+    protected $minOccurs = null;
 
     /**
      * @var mixed
      */
-    public $maxOccurs = 1;
+    protected $maxOccurs = null;
 
     /**
-     * @var Structure
+     * @var StructureMetadata
      */
-    public $structure;
+    protected $structure;
 
-    /**
-     * @var array
-     */
-    public $parameters;
+    public function getCssClass(): ?string
+    {
+        return $this->cssClass;
+    }
 
-    public function getMinOccurs()
+    public function setCssClass(string $cssClass = null): self
+    {
+        $this->cssClass = $cssClass;
+
+        return $this;
+    }
+
+    public function getStructure(): StructureMetadata
+    {
+        return $this->structure;
+    }
+
+    public function setStructure(StructureMetadata $structure): self
+    {
+        $this->structure = $structure;
+
+        return $this;
+    }
+
+    public function getMinOccurs(): ?int
     {
         return $this->minOccurs;
     }
 
-    public function getStructure()
+    public function setMinOccurs(int $minOccurs = null): self
     {
-        throw new \InvalidArgumentException(
-            'Not implemented'
-        );
+        if ($minOccurs) {
+            $this->minOccurs = $minOccurs;
+        }
+
+        return $this;
     }
 
-    public function getMaxOccurs()
+    public function getMaxOccurs(): ?int
     {
         return $this->maxOccurs;
+    }
+
+    public function setMaxOccurs(int $maxOccurs = null): self
+    {
+        if ($maxOccurs) {
+            $this->maxOccurs = $maxOccurs;
+        }
+
+        return $this;
     }
 
     /**
@@ -116,33 +155,115 @@ class PropertyMetadata extends ItemMetadata
         return false;
     }
 
-    public function getColSpan()
+    public function getColSpan(): ?int
     {
+        @trigger_error(
+            sprintf('Do not use getter "%s" from "%s"', 'getColSpan', __CLASS__),
+            E_USER_DEPRECATED
+        );
+
         return $this->colSpan;
     }
 
-    public function getPlaceholder($locale)
+    public function setColSpan(int $colSpan = null): self
     {
-        return $this->placeholder[$locale];
+        @trigger_error(
+            sprintf('Do not use setter "%s" from "%s"', 'getColSpan', __CLASS__),
+            E_USER_DEPRECATED
+        );
+
+        $this->colSpan = $colSpan;
+
+        return $this;
     }
 
-    public function isRequired()
+    public function getSize(): ?int
+    {
+        if ($this->size) {
+            return $this->size;
+        }
+
+        if ($this->colSpan) {
+            return $this->getColSpan();
+        }
+
+        return null;
+    }
+
+    public function setSize(int $size = null): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public function getSpaceAfter(): ?int
+    {
+        return $this->spaceAfter;
+    }
+
+    public function setSpaceAfter(int $spaceAfter = null): self
+    {
+        $this->spaceAfter = $spaceAfter;
+
+        return $this;
+    }
+
+    public function getPlaceholder($locale): string
+    {
+        return $this->placeholders[$locale];
+    }
+
+    public function setPlaceholders(array $placeholders): self
+    {
+        $this->placeholders = $placeholders;
+
+        return $this;
+    }
+
+    public function getPlaceholders(): ?array
+    {
+        return $this->placeholders;
+    }
+
+    public function isRequired(): bool
     {
         return $this->required;
     }
 
-    public function isMultiple()
+    public function setRequired(bool $required): self
+    {
+        $this->required = $required;
+
+        return $this;
+    }
+
+    public function isMultiple(): bool
     {
         return $this->minOccurs !== $this->maxOccurs;
     }
 
-    public function isLocalized()
+    public function isLocalized(): bool
     {
         return $this->localized;
     }
 
-    public function getType()
+    public function setLocalized(bool $localized): self
+    {
+        $this->localized = $localized;
+
+        return $this;
+    }
+
+    public function getType(): string
     {
         return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
     }
 }

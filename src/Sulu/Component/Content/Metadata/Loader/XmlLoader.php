@@ -11,184 +11,222 @@
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Metadata\ComponentMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
+use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
+use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
-use Sulu\Exception\FeatureNotImplementedException;
-use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 /**
- * Load structure structure from an XML file.
+ * Reads a template xml and returns a StructureMetadata.
  */
-class XmlLoader extends XmlLegacyLoader
+class XmlLoader extends AbstractLoader
 {
+    const SCHEME_PATH = '/schema/template-1.0.xsd';
+
+    const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
+
     /**
-     * @var ContentTypeManagerInterface
+     * tags that are required in template
+     * TODO should be possible to inject from config.
+     *
+     * @var array
      */
-    private $contentTypeManager;
+    private $requiredTagNames = [
+        'page' => ['sulu.rlp'],
+        'home' => ['sulu.rlp'],
+        'snippet' => [],
+    ];
+
+    /**
+     * @var CacheLifetimeResolverInterface
+     */
+    private $cacheLifetimeResolver;
+
+    /**
+     * @var PropertiesXmlParser
+     */
+    private $propertiesXmlParser;
 
     public function __construct(
-        ContentTypeManagerInterface $contentTypeManager,
-        CacheLifetimeResolverInterface $cacheLifetimeResolver
+        CacheLifetimeResolverInterface $cacheLifetimeResolver,
+        PropertiesXmlParser $propertiesXmlParser
     ) {
-        parent::__construct($cacheLifetimeResolver);
+        $this->cacheLifetimeResolver = $cacheLifetimeResolver;
+        $this->propertiesXmlParser = $propertiesXmlParser;
 
-        $this->contentTypeManager = $contentTypeManager;
+        parent::__construct(
+            self::SCHEME_PATH,
+            self::SCHEMA_NAMESPACE_URI
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = 'page')
+    public function load($resource, $type = null)
     {
+        if (null === $type) {
+            $type = 'page';
+        }
+
         $data = parent::load($resource, $type);
+
         $data = $this->normalizeStructureData($data);
 
         $structure = new StructureMetadata();
-        $structure->name = $data['key'];
-        $structure->cacheLifetime = $data['cacheLifetime'];
-        $structure->controller = $data['controller'];
-        $structure->internal = $data['internal'];
-        $structure->areas = $data['areas'];
-        $structure->view = $data['view'];
-        $structure->tags = $data['tags'];
-        $structure->parameters = $data['params'];
-        $structure->resource = $resource;
-        $this->mapMeta($structure, $data['meta']);
+        $structure->setResource($resource);
+        $structure->setName($data['key']);
+        $structure->setCacheLifetime($data['cacheLifetime']);
+        $structure->setController($data['controller']);
+        $structure->setInternal($data['internal']);
+        $structure->setCacheLifetime($data['cacheLifetime']);
+        $structure->setAreas($data['areas']);
+        $structure->setView($data['view']);
+        $structure->setTags($data['tags']);
+        $structure->setParameters($data['params']);
 
-        foreach ($data['properties'] as $propertyName => $dataProperty) {
-            $property = $this->createProperty($propertyName, $dataProperty);
-
-            if ($property) {
-                $structure->children[$propertyName] = $property;
-            }
+        foreach ($data['properties'] as $property) {
+            $structure->addChild($property);
         }
-
         $structure->burnProperties();
+
+        $this->mapMeta($structure, $data['meta']);
 
         return $structure;
     }
 
-    private function createProperty($propertyName, $propertyData)
+    protected function parse($resource, \DOMXPath $xpath, $type)
     {
-        if ('block' === $propertyData['type']) {
-            return $this->createBlock($propertyName, $propertyData);
-        }
+        // init running vars
+        $tags = [];
 
-        if ('section' === $propertyData['type']) {
-            return $this->createSection($propertyName, $propertyData);
-        }
+        // init result
+        $result = $this->loadTemplateAttributes($resource, $xpath, $type);
 
-        if (!$this->contentTypeManager->has($propertyData['type'])) {
-            if ('ignore' !== $propertyData['onInvalid']) {
-                throw new \InvalidArgumentException(sprintf(
-                    'Content type with alias "%s" has not been registered. Known content types are: "%s"',
-                    $propertyData['type'],
-                    implode('", "', array_keys($this->contentTypeManager->getAll() ?: []))
-                ));
-            }
-
-            return null;
-        }
-
-        $property = new PropertyMetadata();
-        $property->name = $propertyName;
-        $this->mapProperty($property, $propertyData);
-
-        return $property;
-    }
-
-    private function createSection($propertyName, $data)
-    {
-        $section = new SectionMetadata();
-        $section->name = $propertyName;
-        if (isset($data['meta']['title'])) {
-            $section->title = $data['meta']['title'];
-        }
-        if (isset($data['meta']['info_text'])) {
-            $section->description = $data['meta']['info_text'];
-        }
-
-        foreach ($data['properties'] as $name => $property) {
-            $section->children[$name] = $this->createProperty($name, $property);
-        }
-
-        return $section;
-    }
-
-    private function createBlock($propertyName, $data)
-    {
-        $blockProperty = new BlockMetadata();
-        $blockProperty->name = $propertyName;
-        $blockProperty->defaultComponentName = $data['default-type'];
-
-        if (isset($data['meta']['title'])) {
-            $blockProperty->title = $data['meta']['title'];
-        }
-        if (isset($data['meta']['info_text'])) {
-            $blockProperty->description = $data['meta']['info_text'];
-        }
-
-        $this->mapProperty($blockProperty, $data);
-
-        foreach ($data['types'] as $name => $type) {
-            $component = new ComponentMetadata();
-            $component->name = $name;
-
-            if (isset($type['meta']['title'])) {
-                $component->title = $type['meta']['title'];
-            }
-            if (isset($data['meta']['info_text'])) {
-                $component->description = $data['meta']['info_text'];
-            }
-
-            foreach ($type['properties'] as $propertyName => $propertyData) {
-                $property = new PropertyMetadata();
-                $property->name = $propertyName;
-                $this->mapProperty($property, $propertyData);
-                $component->addChild($property);
-            }
-            $blockProperty->addComponent($component);
-        }
-
-        return $blockProperty;
-    }
-
-    private function mapProperty(PropertyMetadata $property, $data)
-    {
-        $data = $this->normalizePropertyData($data);
-        $property->type = $data['type'];
-        $property->localized = $data['multilingual'];
-        $property->required = $data['mandatory'];
-        $property->colSpan = $data['colspan'];
-        $property->cssClass = $data['cssClass'];
-        $property->tags = $data['tags'];
-        $property->minOccurs = null !== $data['minOccurs'] ? intval($data['minOccurs']) : null;
-        $property->maxOccurs = $data['maxOccurs'] ? intval($data['maxOccurs']) : null;
-        $property->parameters = $data['params'];
-        $this->mapMeta($property, $data['meta']);
-    }
-
-    private function normalizePropertyData($data)
-    {
-        $data = array_replace_recursive(
-            [
-                'type' => null,
-                'multilingual' => true,
-                'mandatory' => true,
-                'colSpan' => null,
-                'cssClass' => null,
-                'minOccurs' => null,
-                'maxOccurs' => null,
-            ],
-            $this->normalizeItem($data)
+        // load properties
+        $result['properties'] = $this->propertiesXmlParser->loadAndCreateProperties(
+            $result['key'],
+            '/x:template/x:properties/x:*',
+            $tags,
+            $xpath
         );
 
-        return $data;
+        // FIXME until excerpt-template is no page template anymore
+        // - https://github.com/sulu-io/sulu/issues/1220#issuecomment-110704259
+        if (!array_key_exists('internal', $result) || !$result['internal']) {
+            if (isset($this->requiredTagNames[$type])) {
+                foreach ($this->requiredTagNames[$type] as $requiredTagName) {
+                    if (!array_key_exists($requiredTagName, $tags)) {
+                        throw new RequiredTagNotFoundException($result['key'], $requiredTagName);
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Load template attributes.
+     */
+    protected function loadTemplateAttributes($resource, \DOMXPath $xpath, $type)
+    {
+        if ('page' === $type || 'home' === $type) {
+            $result = [
+                'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+                'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
+                'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+                'internal' => $this->getValueFromXPath('/x:template/x:internal', $xpath),
+                'cacheLifetime' => $this->loadCacheLifetime('/x:template/x:cacheLifetime', $xpath),
+                'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
+                'areas' => $this->loadStructureAreas('/x:template/x:areas/x:area', $xpath),
+                'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
+            ];
+
+            $result = array_filter(
+                $result,
+                function ($value) {
+                    return null !== $value;
+                }
+            );
+
+            foreach (['key', 'view', 'controller', 'cacheLifetime'] as $requiredProperty) {
+                if (!isset($result[$requiredProperty])) {
+                    throw new InvalidXmlException(
+                        $type,
+                        sprintf(
+                            'Property "%s" is required in XML template file "%s"',
+                            $requiredProperty,
+                            $resource
+                        )
+                    );
+                }
+            }
+        } else {
+            $result = [
+                'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+                'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
+                'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+                'cacheLifetime' => $this->loadCacheLifetime('/x:template/x:cacheLifetime', $xpath),
+                'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
+                'areas' => $this->loadStructureAreas('/x:template/x:areas/x:area', $xpath),
+                'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
+            ];
+
+            $result = array_filter(
+                $result,
+                function ($value) {
+                    return null !== $value;
+                }
+            );
+
+            if (count($result) < 1) {
+                throw new InvalidXmlException($result['key']);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Load cache lifetime metadata.
+     *
+     * @param $path
+     * @param \DOMXPath $xpath
+     *
+     * @return array
+     */
+    private function loadCacheLifetime($path, \DOMXPath $xpath)
+    {
+        $nodeList = $xpath->query($path);
+
+        if (!$nodeList->length) {
+            return [
+                'type' => CacheLifetimeResolverInterface::TYPE_SECONDS,
+                'value' => 0,
+            ];
+        }
+
+        // get first node
+        $node = $nodeList->item(0);
+
+        $type = $node->getAttribute('type');
+        if ('' === $type) {
+            $type = CacheLifetimeResolverInterface::TYPE_SECONDS;
+        }
+
+        $value = $node->nodeValue;
+        if (!$this->cacheLifetimeResolver->supports($type, $value)) {
+            throw new \InvalidArgumentException(
+                sprintf('CacheLifetime "%s" with type "%s" not supported.', $value, $type)
+            );
+        }
+
+        return [
+            'type' => $type,
+            'value' => $value,
+        ];
     }
 
     private function normalizeStructureData($data)
@@ -226,37 +264,9 @@ class XmlLoader extends XmlLegacyLoader
         return $data;
     }
 
-    private function mapMeta($item, $meta)
+    private function mapMeta(StructureMetadata $structure, $meta)
     {
-        $item->title = $meta['title'];
-        $item->description = $meta['info_text'];
-
-        if (isset($item->placeholder)) {
-            $item->placeholder = $meta['info_text'];
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supports($resource, $type = null)
-    {
-        throw new FeatureNotImplementedException();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getResolver()
-    {
-        throw new FeatureNotImplementedException();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setResolver(LoaderResolverInterface $resolver)
-    {
-        throw new FeatureNotImplementedException();
+        $structure->setTitles($meta['title']);
+        $structure->setDescriptions($meta['info_text']);
     }
 }

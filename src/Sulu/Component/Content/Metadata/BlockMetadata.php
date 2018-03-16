@@ -19,7 +19,7 @@ namespace Sulu\Component\Content\Metadata;
 class BlockMetadata extends PropertyMetadata
 {
     /**
-     * @var ComponentMetadata[]
+     * @var ItemMetadata[]
      */
     public $components = [];
 
@@ -41,7 +41,7 @@ class BlockMetadata extends PropertyMetadata
     /**
      * Return the components.
      *
-     * @return ComponentMetadata[]
+     * @return ItemMetadata[]
      */
     public function getComponents()
     {
@@ -51,7 +51,7 @@ class BlockMetadata extends PropertyMetadata
     /**
      * @param $name
      *
-     * @return ComponentMetadata
+     * @return ItemMetadata
      */
     public function getComponentByName($name)
     {
@@ -65,9 +65,9 @@ class BlockMetadata extends PropertyMetadata
     /**
      * Add a new component.
      *
-     * @param ComponentMetadata $component
+     * @param ItemMetadata $component
      */
-    public function addComponent(ComponentMetadata $component)
+    public function addComponent(ItemMetadata $component)
     {
         $this->components[] = $component;
     }

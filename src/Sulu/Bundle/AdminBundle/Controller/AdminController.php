@@ -17,6 +17,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -84,6 +85,11 @@ class AdminController
     private $translator;
 
     /**
+     * @var ResourceMetadataPool
+     */
+    private $resourceMetadataPool;
+
+    /**
      * @var string
      */
     private $environment;
@@ -129,6 +135,7 @@ class AdminController
         EngineInterface $engine,
         LocalizationManagerInterface $localizationManager,
         TranslatorBagInterface $translator,
+        ResourceMetadataPool $resourceMetadataPool,
         $environment,
         $adminName,
         array $locales,
@@ -147,6 +154,7 @@ class AdminController
         $this->engine = $engine;
         $this->localizationManager = $localizationManager;
         $this->translator = $translator;
+        $this->resourceMetadataPool = $resourceMetadataPool;
         $this->environment = $environment;
         $this->adminName = $adminName;
         $this->locales = $locales;
@@ -235,345 +243,14 @@ class AdminController
 
     public function resourcesAction($resource): Response
     {
-        $response = null;
-        switch ($resource) {
-        case 'snippets':
-            $response = new Response(
-                <<<'EOL'
-{
-    "list": {
-        "id": {},
-        "title": {},
-        "template": {},
-        "changed": {},
-        "created": {}
-    },
-    "types": {
-        "default": {
-            "title": "Default",
-            "form": {
-                "title": {
-                    "label": "Title",
-                    "type": "text_line",
-                    "required": true
-                },
-                "description": {
-                    "label": "Description",
-                    "type": "text_area"
-                },
-                "media": {
-                    "label": "Media",
-                    "type": "media_selection"
-                },
-                "blocks": {
-                    "label": "Blocks",
-                    "maxOccurs": 5,
-                    "minOccurs": 2,
-                    "type": "block",
-                    "types": {
-                        "default": {
-                            "title": "Default",
-                            "form": {
-                                "text": {
-                                    "label": "Text",
-                                    "type": "text_line",
-                                    "required": true
-                                }
-                            }
-                        },
-                        "image": {
-                            "title": "Image",
-                            "form": {
-                                "image": {
-                                    "label": "Image",
-                                    "type": "media_selection"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "schema": {
-                "required": ["title", "blocks"],
-                "properties": {
-                    "blocks": {
-                        "type": "array",
-                        "minItems": 2,
-                        "items": {
-                            "type": "object",
-                            "oneOf": [
-                                {
-                                    "required": ["text"],
-                                    "properties": {
-                                        "type": {
-                                            "const": "default"
-                                        }
-                                    }
-                                },
-                                {
-                                    "required": ["image"],
-                                    "properties": {
-                                        "type": {
-                                            "const": "image"
-                                        },
-                                        "image": {
-                                            "type": "object",
-                                            "properties": {
-                                                "ids": {
-                                                    "type": "array",
-                                                    "minItems": 3
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "footer": {
-            "title": "Footer",
-            "form": {
-                "title": {
-                    "label": "Title",
-                    "type": "text_line",
-                    "required": true
-                },
-                "description": {
-                    "label": "Description",
-                    "type": "text_line"
-                }
-            },
-            "schema": {
-                "required": ["title"]
-            }
-        }
-    }
-}
-EOL
-            );
-            break;
-        case 'contacts':
-            $response = new Response(
-                <<<'EOL'
-{
-    "list": {
-        "id": {},
-        "firstName": {},
-        "lastName": {},
-        "title": {},
-        "fullName": {}
-    },
-    "form": {
-        "formOfAddress": {
-            "label": "Form of address",
-            "required": true,
-            "type": "single_select",
-            "size": 3,
-            "spaceAfter": 9,
-            "options": {
-                "default_value": 0,
-                "values": [
-                    {
-                        "value": 0,
-                        "name": "Herr"
-                    },
-                    {
-                        "value": 1,
-                        "name": "Frau"
-                    }
-                ]
-            }
-        },
-        "firstName": {
-            "label": "First Name",
-            "required": true,
-            "type": "text_line",
-            "size": 6
-        },
-        "lastName": {
-            "label": "Last Name",
-            "required": true,
-            "type": "text_line",
-            "size": 6
-        },
-        "salutation": {
-            "label": "Salutation",
-            "required": false,
-            "type": "text_line",
-            "size": 12
-        }
-    },
-    "schema": {
-        "required": ["formOfAddress", "firstName", "lastName"],
-        "properties": {
-            "formOfAddress": {
-                "enum": [0, 1, "0", "1"]
-            }
-        }
-    }
-}
-EOL
-            );
-            break;
-        case 'accounts':
-            $response = new Response(
-                <<<'EOL'
-{
-    "list": {
-        "id": {},
-        "name": {},
-        "email": {}
-    }
-}
-EOL
-            );
-            break;
-        case 'roles':
-            $response = new Response(
-                <<<'EOL'
-{
-    "list": {
-        "id": {},
-        "name": {},
-        "system": {}
-    }
-}
-EOL
-            );
-            break;
-        case 'tags':
-            $response = new Response(
-                <<<'EOL'
-{
-    "list": {
-        "id": {},
-        "name": {}
-    }
-}
-EOL
-            );
-            break;
-        case 'collections':
-            $response = new Response(
-                <<<'EOL'
-{
-    "list": {
-        "id": {},
-        "title": {},
-        "objectCount": {}
-    },
-    "form": {
-        "title": {
-            "label": "Title",
-            "type": "text_line"
-        },
-        "description": {
-            "label": "Description",
-            "type": "text_area"
-        }
-    },
-    "schema": {}
-}
-EOL
-            );
-            break;
-        case 'media':
-            $response = new Response(
-                <<<'EOL'
-{
-    "list": {
-        "id": {},
-        "size": {},
-        "title": {},
-        "mimeType": {},
-        "thumbnails": {}
-    },
-    "form": {
-        "title": {
-            "label": "Title",
-            "type": "text_line"
-        },
-        "description": {
-            "label": "Description",
-            "type": "text_area"
-        },
-        "license": {
-            "label": "License",
-            "type": "section",
-            "items": {
-                "copyright": {
-                    "label": "Copyright information",
-                    "type": "text_area"
-                }
-            }
-        }
-    },
-    "schema": {}
-}
-EOL
-            );
-            break;
-        case 'pages':
-            $response = new Response(
-                <<<'EOL'
-{
-    "list": {
-        "id": {},
-        "title": {}
-    },
-    "types": {
-        "default": {
-            "title": "Default",
-            "form": {
-                "title": {
-                    "label": "Title",
-                    "type": "text_line",
-                    "required": true
-                },
-                "url": {
-                    "label": "Resourcelocator",
-                    "type": "resource_locator",
-                    "size": 3,
-                    "required": true
-                },
-                "article": {
-                    "label": "Article",
-                    "type": "text_area"
-                }
-            },
-            "schema": {
-                "required": ["title", "url"]
-            }
-        },
-        "new": {
-            "title": "New",
-            "form": {
-                "title": {
-                    "label": "Title",
-                    "type": "text_line",
-                    "required": true
-                },
-                "url": {
-                    "label": "Resourcelocator",
-                    "type": "resource_locator",
-                    "size": 3,
-                    "required": true
-                }
-            },
-            "schema": {
-                "required": ["title", "url"]
-            }
-        }
-    }
-}
-EOL
-            );
-            break;
-        }
+        $user = $this->tokenStorage->getToken()->getUser();
 
+        $resourceMetadata = $this->resourceMetadataPool->getResourceMetadata(
+            $resource,
+            $user->getLocale()
+        );
+
+        $response = new Response($this->serializer->serialize($resourceMetadata, 'json'));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;

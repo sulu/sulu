@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import log from 'loglevel';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import classNames from 'classnames';
 import {translate} from '../../utils';
@@ -19,7 +20,7 @@ type Props = {
     value?: *,
 };
 
-export default class Field extends React.PureComponent<Props> {
+export default class Field extends React.Component<Props> {
     static defaultProps = {
         showAllErrors: false,
     };
@@ -57,9 +58,25 @@ export default class Field extends React.PureComponent<Props> {
     }
 
     render() {
-        const {error, value, locale, schema, showAllErrors} = this.props;
+        const {error, value, locale, schema, showAllErrors, name} = this.props;
         const {label, maxOccurs, minOccurs, options, required, type, types} = schema;
-        const FieldType = fieldRegistry.get(type);
+        let FieldType;
+
+        try {
+            FieldType = fieldRegistry.get(type);
+        } catch (e) {
+            log.error(e);
+
+            return (
+                <div className={fieldStyles.fieldException}>
+                    <h4>Error while rendering field!</h4>
+                    <p>
+                        <b>Name:</b> {name}<br />
+                        <b>Exception:</b> {e.toString()}
+                    </p>
+                </div>
+            );
+        }
 
         const fieldClass = classNames(
             fieldStyles.field,

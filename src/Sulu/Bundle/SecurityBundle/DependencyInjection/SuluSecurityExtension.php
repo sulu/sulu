@@ -27,9 +27,6 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 {
     use PersistenceExtensionTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -78,6 +75,20 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                     ],
                     'fragments' => [
                         'path' => '/admin/_fragments',
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'roles' => [
+                            'form' => [],
+                            'list' => '%sulu.model.role.class%',
+                        ],
                     ],
                 ]
             );

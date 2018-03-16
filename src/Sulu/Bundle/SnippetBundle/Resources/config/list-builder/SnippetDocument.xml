@@ -1,0 +1,8 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine"
+       xmlns:list="http://schemas.sulu.io/class/list">
+    <properties>
+        <property name="id" display="always" filter-type="string" list:translation="public.id"/>
+        <property name="title" display="always" filter-type="string" list:translation="public.title"/>
+    </properties>
+</class>

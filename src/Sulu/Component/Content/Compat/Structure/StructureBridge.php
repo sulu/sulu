@@ -350,7 +350,7 @@ class StructureBridge implements StructureInterface
      */
     public function getPropertyNames()
     {
-        return array_keys($this->structure->children);
+        return array_keys($this->structure->getChildren());
     }
 
     /**

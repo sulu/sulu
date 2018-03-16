@@ -55,7 +55,7 @@ define([], function() {
             hasTabsClass: 'has-tabs',
             hasLabelClass: 'has-label',
             backClass: 'back',
-            backIcon: 'su-arrow-left',
+            backIcon: 'arrow-left',
             toolbarClass: 'toolbar',
             tabsRowClass: 'tabs-row',
             tabsClass: 'tabs',

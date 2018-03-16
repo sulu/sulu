@@ -192,6 +192,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         // map the content
         $this->inspector->getStructureMetadata($this->document->reveal())->willReturn($this->structureMetadata->reveal());
         $this->inspector->getWebspace($this->document->reveal())->willReturn('webspace');
+        $this->structureProperty->getType()->willReturn('content_type');
         $this->structureMetadata->getProperties()->willReturn([
             'prop1' => $this->structureProperty->reveal(),
         ]);
@@ -222,7 +223,10 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->structureMetadata->getProperties()->willReturn([
             'prop1' => $this->structureProperty->reveal(),
         ]);
+
         $this->structureProperty->isRequired()->willReturn(true);
+        $this->structureProperty->getType()->willReturn('type');
+
         $this->structure->getProperty('prop1')->willReturn($this->propertyValue->reveal());
         $this->propertyValue->getValue()->willReturn(null);
         $this->structureMetadata->getName()->willReturn('test');
@@ -248,6 +252,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         // map the content
         $this->inspector->getStructureMetadata($this->document->reveal())->willReturn($this->structureMetadata->reveal());
         $this->inspector->getWebspace($this->document->reveal())->willReturn('webspace');
+        $this->structureProperty->getType()->willReturn('content_type');
         $this->structureMetadata->getProperties()->willReturn([
             'prop1' => $this->structureProperty->reveal(),
         ]);

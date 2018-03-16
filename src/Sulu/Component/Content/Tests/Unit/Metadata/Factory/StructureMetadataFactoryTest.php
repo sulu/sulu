@@ -15,6 +15,7 @@ use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\Loader\XmlLoader;
+use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -172,11 +173,14 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $contentTypeManager->has(Argument::any())->willReturn(true);
+
         $cacheLifeTimeResolver = $this->prophesize(CacheLifetimeResolverInterface::class);
         $cacheLifeTimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);
 
-        $xmlLoader = new XmlLoader($contentTypeManager->reveal(), $cacheLifeTimeResolver->reveal());
+        $propertiesXmlLoader = new PropertiesXmlParser($contentTypeManager->reveal());
+
+        $xmlLoader = new XmlLoader($cacheLifeTimeResolver->reveal(), $propertiesXmlLoader);
 
         $loadResult = $xmlLoader->load($this->apostropheMappingFile, 'page');
 

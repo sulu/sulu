@@ -33,7 +33,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     {
         $metadata = $this->getMetadata();
         $tag = ['name' => 'foo'];
-        $metadata->tags = [$tag];
+        $metadata->setTags([$tag]);
         $this->assertEquals($tag, $metadata->getTag('foo'));
     }
 
@@ -43,7 +43,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     public function testGetTitle()
     {
         $metadata = $this->getMetadata();
-        $metadata->title['fr'] = 'Foobar';
+        $metadata->setTitles(['fr' => 'Foobar']);
         $this->assertEquals('Foobar', $metadata->getTitle('fr'));
     }
 
@@ -53,7 +53,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     public function testGetTitleNoLocalization()
     {
         $metadata = $this->getMetadata();
-        $metadata->name = 'foobar';
+        $metadata->setName('foobar');
         $this->assertEquals('Foobar', $metadata->getTitle('es'));
     }
 
@@ -63,9 +63,9 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     public function testGetParameters()
     {
         $metadata = $this->getMetadata();
-        $metadata->parameters = [
+        $metadata->setParameters([
             'param1' => 'param',
-        ];
+        ]);
         $this->assertEquals('param', $metadata->getParameter('param1'));
     }
 
@@ -78,9 +78,9 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     public function testGetParametersInvalid()
     {
         $metadata = $this->getMetadata();
-        $metadata->parameters = [
+        $metadata->setParameters([
             'param1' => 'param',
-        ];
+        ]);
         $metadata->getParameter('param5');
     }
 }

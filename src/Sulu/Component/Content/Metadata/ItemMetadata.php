@@ -21,21 +21,21 @@ abstract class ItemMetadata
      *
      * @var string
      */
-    public $name;
+    protected $name;
 
     /**
      * The title of this property|structure e.g. [["de": "Artikles", "en": "Articles"]].
      *
      * @var array
      */
-    public $title = [];
+    protected $titles = [];
 
     /**
      * Description of this property|structure e.g. [["de": "Liste von Artikeln", "en": "List of articles"]].
      *
      * @var array
      */
-    public $description = [];
+    protected $descriptions = [];
 
     /**
      * Tags, e.g.
@@ -48,7 +48,7 @@ abstract class ItemMetadata
      *
      * @var array
      */
-    public $tags = [];
+    protected $tags = [];
 
     /**
      * Parameters applying to the property.
@@ -61,14 +61,14 @@ abstract class ItemMetadata
      *
      * @var array
      */
-    public $parameters = [];
+    protected $parameters = [];
 
     /**
      * Children of this item, f.e. properties, sections or structures.
      *
-     * @var Item[]
+     * @var ItemMetadata[]
      */
-    public $children = [];
+    protected $children = [];
 
     /**
      * @param mixed $name
@@ -78,15 +78,69 @@ abstract class ItemMetadata
         $this->name = $name;
     }
 
-    /**
-     * Magic setter to catch bad property calls.
-     */
-    public function __set($field, $value)
+    public function __get($name)
     {
-        throw new \InvalidArgumentException(sprintf(
-            'Property "%s" does not exist on "%s"',
-            $field, get_class($this)
-        ));
+        @trigger_error(
+            sprintf('Do not use public property "%s" from "%s"', $name, __CLASS__),
+            E_USER_DEPRECATED
+        );
+
+        return $this[$name];
+    }
+
+    public function __set($name, $value)
+    {
+        @trigger_error(
+            sprintf('Do not use public property "%s" from "%s"', $name, __CLASS__),
+            E_USER_DEPRECATED
+        );
+
+        return $this[$name] = $value;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function setTitles(array $titles): self
+    {
+        $this->titles = $titles;
+
+        return $this;
+    }
+
+    public function getTitles(): array
+    {
+        return $this->titles;
+    }
+
+    public function setDescriptions(array $descriptions): self
+    {
+        $this->descriptions = $descriptions;
+
+        return $this;
+    }
+
+    public function getDescriptions(): array
+    {
+        return $this->descriptions;
+    }
+
+    public function setTags(array $tags): self
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function setParameters(array $parameters): self
+    {
+        $this->parameters = $parameters;
+
+        return $this;
     }
 
     /**
@@ -158,8 +212,8 @@ abstract class ItemMetadata
      */
     public function getTitle($locale)
     {
-        if (isset($this->title[$locale])) {
-            return $this->title[$locale];
+        if (isset($this->titles[$locale])) {
+            return $this->titles[$locale];
         }
 
         return ucfirst($this->name);
@@ -263,8 +317,8 @@ abstract class ItemMetadata
      */
     public function getDescription($locale)
     {
-        if (isset($this->description[$locale])) {
-            return $this->description[$locale];
+        if (isset($this->descriptions[$locale])) {
+            return $this->descriptions[$locale];
         }
 
         return '';

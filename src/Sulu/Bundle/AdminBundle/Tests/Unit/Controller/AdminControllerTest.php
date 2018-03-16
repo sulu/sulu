@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -83,6 +84,11 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
     private $translator;
 
     /**
+     * @var ResourceMetadataPool
+     */
+    private $resourceMetadataPool;
+
+    /**
      * @var string
      */
     private $environment = 'prod';
@@ -136,6 +142,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->engine = $this->prophesize(EngineInterface::class);
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
         $this->translator = $this->prophesize(TranslatorBagInterface::class);
+        $this->resourceMetadataPool = $this->prophesize(ResourceMetadataPool::class);
 
         $this->adminController = new AdminController(
             $this->authorizationChecker->reveal(),
@@ -148,6 +155,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
             $this->engine->reveal(),
             $this->localizationManager->reveal(),
             $this->translator->reveal(),
+            $this->resourceMetadataPool->reveal(),
             $this->environment,
             $this->adminName,
             $this->locales,

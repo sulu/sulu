@@ -85,7 +85,7 @@ class LegacyPropertyFactory
         if (null === $property->getType()) {
             throw new \RuntimeException(sprintf(
                 'Property name "%s" has no type.',
-                $property->name
+                $property->getName()
             ));
         }
 
@@ -93,9 +93,9 @@ class LegacyPropertyFactory
         $propertyBridge = new LegacyProperty(
             $property->getName(),
             [
-                'title' => $property->title,
-                'info_text' => $property->description,
-                'placeholder' => $property->placeholder,
+                'title' => $property->getTitles(),
+                'info_text' => $property->getDescriptions(),
+                'placeholder' => $property->getPlaceholders(),
             ],
             $property->getType(),
             $property->isRequired(),
@@ -107,7 +107,7 @@ class LegacyPropertyFactory
             $property->getColspan()
         );
 
-        foreach ($property->tags as $tag) {
+        foreach ($property->getTags() as $tag) {
             $propertyBridge->addTag(new PropertyTag($tag['name'], $tag['priority'], $tag['attributes']));
         }
 
@@ -137,8 +137,8 @@ class LegacyPropertyFactory
         $sectionProperty = new SectionProperty(
             $property->getName(),
             [
-                'title' => $property->title,
-                'info_text' => $property->description,
+                'title' => $property->getTitles(),
+                'info_text' => $property->getDescriptions(),
             ],
             $property->getColspan()
         );
@@ -155,8 +155,8 @@ class LegacyPropertyFactory
         $blockProperty = new BlockProperty(
             $property->getName(),
             [
-                'title' => $property->title,
-                'info_text' => $property->description,
+                'title' => $property->getTitles(),
+                'info_text' => $property->getDescriptions(),
             ],
             $property->getDefaultComponentName(),
             $property->isRequired(),
@@ -173,8 +173,8 @@ class LegacyPropertyFactory
             $blockPropertyType = new BlockPropertyType(
                 $component->getName(),
                 [
-                    'title' => $component->title,
-                    'info_text' => $component->description,
+                    'title' => $component->getTitles(),
+                    'info_text' => $component->getDescriptions(),
                 ]
             );
 

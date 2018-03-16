@@ -3,6 +3,7 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import Pagination from '../../../components/Pagination';
 import Table from '../../../components/Table';
+import {translate} from '../../../utils/Translator';
 import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
 import AbstractAdapter from './AbstractAdapter';
@@ -26,6 +27,18 @@ export default class TableAdapter extends AbstractAdapter {
 
             return (
                 <Table.Cell key={item.id + schemaKey}>{item[schemaKey]}</Table.Cell>
+            );
+        });
+    }
+
+    renderHeaderCells(schema: Object, schemaKeys: Array<string>) {
+        return schemaKeys.map((schemaKey) => {
+            const title = schema[schemaKey] && schema[schemaKey].title ? translate(schema[schemaKey].title) : schemaKey;
+
+            return(
+                <Table.HeaderCell key={schemaKey}>
+                    {title}
+                </Table.HeaderCell>
             );
         });
     }
@@ -67,9 +80,7 @@ export default class TableAdapter extends AbstractAdapter {
                     onAllSelectionChange={onAllSelectionChange}
                 >
                     <Table.Header>
-                        {schemaKeys.map((schemaKey) => (
-                            <Table.HeaderCell key={schemaKey}>{schemaKey}</Table.HeaderCell>
-                        ))}
+                        {this.renderHeaderCells(schema, schemaKeys)}
                     </Table.Header>
                     <Table.Body>
                         {data.map((item) => (

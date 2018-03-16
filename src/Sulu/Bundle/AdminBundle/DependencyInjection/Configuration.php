@@ -44,7 +44,23 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
-            ->end();
+            ->children()
+                ->arrayNode('resources')
+                    ->useAttributeAsKey('resourceKey')
+                    ->arrayPrototype()
+                        ->children()
+                            ->arrayNode('form')
+                                ->scalarPrototype()->end()
+                                ->isRequired()
+                            ->end()
+                            ->scalarNode('list')
+                                ->isRequired()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
 
         return $treeBuilder;
     }

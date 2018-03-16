@@ -1,0 +1,11 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+    xmlns:orm="http://schema.sulu.io/class/doctrine"
+    xmlns:list="http://schema.sulu.io/class/list">
+    <properties>
+        <property name="id" display="no" filter-type="string" list:translation="public.id"/>
+        <property name="name" display="yes" filter-type="string" list:translation="tags.name"/>
+        <property name="created" display="no" filter-type="string" list:translation="public.created"/>
+        <property name="changed" display="no" filter-type="string" list:translation="public.changed"/>
+        <property name="creator" display="no" filter-type="string" list:translation="tags.author"/>
+    </properties>
+</class>

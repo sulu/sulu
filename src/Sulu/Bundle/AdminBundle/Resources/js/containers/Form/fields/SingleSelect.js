@@ -16,7 +16,7 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
         const {default_value: defaultValue} = options;
 
         if (value === undefined) {
-            onChange(defaultValue);
+            onChange(defaultValue.value);
         }
     }
 
@@ -44,9 +44,9 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
 
         return (
             <SingleSelectComponent onChange={this.handleChange} value={value}>
-                {values.map((value) => (
+                {values.value.map((value) => (
                     <SingleSelectComponent.Option key={value.value} value={value.value}>
-                        {value.name}
+                        {value.title}
                     </SingleSelectComponent.Option>
                 ))}
             </SingleSelectComponent>

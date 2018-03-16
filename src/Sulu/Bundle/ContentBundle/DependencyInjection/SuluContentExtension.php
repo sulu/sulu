@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\DependencyInjection;
 
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
@@ -49,6 +50,12 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                             'type_map' => [
                                 'page' => PageBridge::class,
                                 'home' => PageBridge::class,
+                            ],
+                            'resources' => [
+                                'pages' => [
+                                    'list' => BasePageDocument::class,
+                                    'types' => ['page', 'home'],
+                                ],
                             ],
                         ],
                     ],

@@ -11,8 +11,8 @@
     },
     "dependencies": {
         "sulu-admin-bundle": "file:src/Sulu/Bundle/AdminBundle/Resources/js",
-        "sulu-media-bundle": "file:src/Sulu/Bundle/MediaBundle/Resources/js",
-        "sulu-content-bundle": "file:src/Sulu/Bundle/ContentBundle/Resources/js"
+        "sulu-content-bundle": "file:src/Sulu/Bundle/ContentBundle/Resources/js",
+        "sulu-media-bundle": "file:src/Sulu/Bundle/MediaBundle/Resources/js"
     },
     "devDependencies": {
         "autoprefixer": "^7.1.5",
