@@ -79,10 +79,10 @@ class ResourceMetadataMapper
 
         /** @var PropertyMetadata $property */
         foreach ($properties as $property) {
-            if ($property instanceof PropertyMetadata) {
-                $item = $this->mapProperty($property, $locale);
-            } elseif ($property instanceof BlockMetadata) {
+            if ($property instanceof BlockMetadata) {
                 $item = $this->mapBlock($property, $locale);
+            } elseif ($property instanceof PropertyMetadata) {
+                $item = $this->mapProperty($property, $locale);
             } elseif ($property instanceof SectionMetadata) {
                 $item = $this->mapSection($property, $locale);
             } else {
@@ -174,7 +174,7 @@ class ResourceMetadataMapper
 
         foreach ($property->getComponents() as $component) {
             $fieldType = new FieldType($component->getName());
-            $fieldType->setTitel($component->getTitle($locale));
+            $fieldType->setTitle($component->getTitle($locale));
 
             $componentForm = new Form();
 
