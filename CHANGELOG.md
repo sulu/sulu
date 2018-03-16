@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-release/1.5
+    * ENHANCEMENT #3850 [SecurityBundle]        Allow user to be null for security config
+    * ENHANCEMENT #3850 [MediaBundle]           Allow user to be null for security expression in service build
     * BUGFIX      #4018 [SnippetBundle]         Fix conflict when saving snippet in new language
     * BUGFiX      #3995 [TestBundle]            Fix tests for latest Symfony version
 
