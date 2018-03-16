@@ -250,12 +250,11 @@ class AdminController
             $user->getLocale()
         );
 
-        $json = $this->serializer->serialize(
-            $resourceMetadata,
-            'array'
+        return new Response(
+            $this->serializer->serialize($resourceMetadata, 'json'),
+            Response::HTTP_OK,
+            ['content-type' => 'application/json']
         );
-
-        return new JsonResponse($json);
     }
 
     /**
