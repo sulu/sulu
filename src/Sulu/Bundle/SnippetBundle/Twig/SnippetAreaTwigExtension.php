@@ -13,6 +13,8 @@ namespace Sulu\Bundle\SnippetBundle\Twig;
 
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -73,18 +75,25 @@ class SnippetAreaTwigExtension extends \Twig_Extension
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
         }
 
-        $ids = [
-            $this->defaultSnippetManager->loadIdentifier($webspaceKey, $area),
-        ];
-
-        // to filter null default snippet
-        $ids = array_filter($ids);
-
-        $snippets = $this->snippetResolver->resolve($ids, $webspaceKey, $locale);
-
-        if (isset($snippets[0])) {
-            return $snippets[0];
+        try {
+            $snippet = $this->defaultSnippetManager->load($webspaceKey, $area, $locale);
+        } catch (WrongSnippetTypeException $exception) {
+            return null;
+        } catch (DocumentNotFoundException $exception) {
+            return null;
         }
+
+        if (!$snippet) {
+            return null;
+        }
+
+        $snippets = $this->snippetResolver->resolve([$snippet->getUuid()], $webspaceKey, $locale);
+
+        if (!array_key_exists(0, $snippets)) {
+            return null;
+        }
+
+        return $snippets[0];
     }
 
     /**

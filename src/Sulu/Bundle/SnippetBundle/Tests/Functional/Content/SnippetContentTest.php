@@ -16,6 +16,7 @@ use PHPCR\Util\UUIDHelper;
 use Prophecy\Argument;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
@@ -194,7 +195,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $property->getStructure()->willReturn($structure->reveal());
         $property->getParams()->willReturn([]);
 
-        $this->defaultSnippetManager->loadIdentifier(Argument::any(), Argument::any())->shouldNotBeCalled();
+        $this->defaultSnippetManager->load(Argument::cetera())->shouldNotBeCalled();
 
         $data = $this->contentType->getContentData($property->reveal());
         $this->assertCount(0, $data);
@@ -217,7 +218,9 @@ class SnippetContentTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->defaultSnippetManager->loadIdentifier('sulu_io', 'test')->shouldBeCalledTimes(1)->willReturn(null);
+        $this->defaultSnippetManager->load('sulu_io', 'test', 'de_at')
+            ->shouldBeCalledTimes(1)
+            ->willReturn(null);
 
         $data = $this->contentType->getContentData($property->reveal());
         $this->assertCount(0, $data);
@@ -240,12 +243,36 @@ class SnippetContentTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->defaultSnippetManager->loadIdentifier('sulu_io', 'test')->shouldBeCalledTimes(1)->willReturn(
-            $this->hotel1->getUuid()
-        );
+        $this->defaultSnippetManager->load('sulu_io', 'test', 'de_at')
+            ->shouldBeCalledTimes(1)
+            ->willReturn($this->hotel1);
 
         $data = $this->contentType->getContentData($property->reveal());
         $this->assertCount(1, $data);
+    }
+
+    public function testGetContentDataDefaultWrongType()
+    {
+        $structure = $this->prophesize(PageBridge::class);
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de_at');
+        $structure->getIsShadow()->willReturn(false);
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->willReturn([]);
+        $property->getStructure()->willReturn($structure->reveal());
+        $property->getParams()->willReturn(
+            [
+                'snippetType' => new PropertyParameter('snippetType', 'test'),
+                'default' => new PropertyParameter('default', true),
+            ]
+        );
+
+        $this->defaultSnippetManager->load('sulu_io', 'test', 'de_at')
+            ->willThrow(new WrongSnippetTypeException('', '', $this->hotel1));
+
+        $data = $this->contentType->getContentData($property->reveal());
+        $this->assertCount(0, $data);
     }
 
     public function testGetContentDataDefaultZone()
@@ -265,9 +292,9 @@ class SnippetContentTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->defaultSnippetManager->loadIdentifier('sulu_io', 'sidebar.homepage')->shouldBeCalledTimes(1)->willReturn(
-            $this->hotel1->getUuid()
-        );
+        $this->defaultSnippetManager->load('sulu_io', 'sidebar.homepage', 'de_at')
+            ->shouldBeCalledTimes(1)
+            ->willReturn($this->hotel1);
 
         $data = $this->contentType->getContentData($property->reveal());
         $this->assertCount(1, $data);
@@ -289,7 +316,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->defaultSnippetManager->loadIdentifier(Argument::any(), Argument::any())->shouldNotBeCalled();
+        $this->defaultSnippetManager->load(Argument::cetera())->shouldNotBeCalled();
 
         $data = $this->contentType->getContentData($property->reveal());
         $this->assertCount(0, $data);
@@ -312,7 +339,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->defaultSnippetManager->loadIdentifier(Argument::any(), Argument::any())->shouldNotBeCalled();
+        $this->defaultSnippetManager->load(Argument::cetera())->shouldNotBeCalled();
 
         $data = $this->contentType->getContentData($property->reveal());
         $this->assertCount(0, $data);
