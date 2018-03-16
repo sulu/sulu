@@ -11,22 +11,38 @@
 
 namespace Sulu\Bundle\TagBundle\DependencyInjection;
 
+use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages tag-bundle configuration.
  */
-class SuluTagExtension extends Extension
+class SuluTagExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
 
-    /**
-     * {@inheritdoc}
-     */
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'tags' => [
+                            'form' => [],
+                            'list' => Tag::class,
+                        ],
+                    ],
+                ]
+            );
+        }
+    }
+
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
