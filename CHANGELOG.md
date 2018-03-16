@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * ENHANCEMENT #3849 [AdminBundle]             Add Twig main blocks to be able to use inheritance
     * BUGFIX      #3844 [Husky]                   Fix accidentally escaping of select value
     * ENHANCEMENT #3846 [ContentBundle]           Added authored field to base-page-document index
     * ENHANCEMENT #3843 [CustomUrlBundle]         Show custom url tab only when configured
