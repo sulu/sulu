@@ -18,6 +18,7 @@ jest.mock('../../../containers/Form/registries/FieldRegistry', () => ({
     get: jest.fn().mockReturnValue(function() {
         return null;
     }),
+    getOptions: jest.fn().mockReturnValue({}),
 }));
 
 jest.mock('../../../utils/Translator', () => ({

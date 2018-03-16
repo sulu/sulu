@@ -13,6 +13,7 @@ jest.mock('../../Form/registries/FieldRegistry', () => ({
                 };
         }
     }),
+    getOptions: jest.fn().mockReturnValue({}),
 }));
 
 jest.mock('../../../utils/Translator', () => ({

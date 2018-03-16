@@ -6,10 +6,10 @@ import {render} from 'react-dom';
 import {configure} from 'mobx';
 import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
-import {setTranslations} from './utils/Translator';
+import {setTranslations, translate} from './utils/Translator';
 import TextArea from './components/TextArea';
 import Application from './containers/Application';
-import {fieldRegistry, Input, ResourceLocator, SingleSelect} from './containers/Form';
+import {fieldRegistry, Assignment, Input, ResourceLocator, SingleSelect} from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
 import {viewRegistry} from './containers/ViewRenderer';
 import {ColumnListAdapter, datagridAdapterRegistry, FolderAdapter, TableAdapter} from './containers/Datagrid';
@@ -34,11 +34,24 @@ datagridAdapterRegistry.add('column_list', ColumnListAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
 datagridAdapterRegistry.add('table', TableAdapter);
 
-fieldRegistry.add('block', FieldBlocks);
-fieldRegistry.add('resource_locator', ResourceLocator);
-fieldRegistry.add('single_select', SingleSelect);
-fieldRegistry.add('text_line', Input);
-fieldRegistry.add('text_area', TextArea);
+function registerFieldTypes() {
+    fieldRegistry.add('block', FieldBlocks);
+    fieldRegistry.add('resource_locator', ResourceLocator);
+    fieldRegistry.add('single_select', SingleSelect);
+    fieldRegistry.add('text_line', Input);
+    fieldRegistry.add('text_area', TextArea);
+
+    // TODO move to correct bundle or even allow to register somehow via the config request
+    fieldRegistry.add('snippet', Assignment, {
+        displayProperties: [
+            'title',
+        ],
+        icon: 'su-document',
+        label: translate('sulu_snippet.assignment_label'),
+        resourceKey: 'snippets',
+        overlayTitle: translate('sulu_snippet.assignment_overlay_title'),
+    });
+}
 
 function startApplication() {
     const router = new Router(createHistory());
@@ -65,7 +78,10 @@ Promise.all([
     translationPromise,
     configPromise,
     bundlesReadyPromise,
-]).then(startApplication);
+]).then(() => {
+    registerFieldTypes();
+    startApplication();
+});
 
 export {configPromise};
 

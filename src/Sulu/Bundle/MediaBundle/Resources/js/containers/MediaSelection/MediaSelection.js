@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle';
@@ -9,8 +9,6 @@ import MediaSelectionStore from './stores/MediaSelectionStore';
 import MediaSelectionOverlay from './MediaSelectionOverlay';
 import MediaSelectionItem from './MediaSelectionItem';
 import type {Value} from './types';
-
-const ADD_ICON = 'su-plus';
 
 @observer
 export default class MediaSelection extends React.Component<FieldTypeProps<Value>> {
@@ -100,13 +98,13 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
         const label = (loading) ? '' : this.getLabel(selectedMedia.length);
 
         return (
-            <div>
+            <Fragment>
                 <MultiItemSelection
                     label={label}
                     loading={loading}
                     onItemRemove={this.handleRemove}
                     leftButton={{
-                        icon: ADD_ICON,
+                        icon: 'su-image',
                         onClick: this.handleOverlayOpen,
                     }}
                     onItemsSorted={this.handleSorted}
@@ -139,7 +137,7 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                 />
-            </div>
+            </Fragment>
         );
     }
 }

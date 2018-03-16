@@ -13,6 +13,7 @@ jest.mock('../registries/FieldRegistry', () => ({
                 return require('../../../components/Input').default;
         }
     }),
+    getOptions: jest.fn().mockReturnValue({}),
 }));
 
 jest.mock('../stores/FormStore', () => jest.fn(function() {

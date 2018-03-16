@@ -151,7 +151,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
 `;
 
 exports[`Render a MediaSelection field 1`] = `
-<div>
+Array [
   <div>
     <div
       class="header"
@@ -161,8 +161,8 @@ exports[`Render a MediaSelection field 1`] = `
         type="button"
       >
         <span
-          aria-label="su-plus"
-          class="su-plus"
+          aria-label="su-image"
+          class="su-image"
         />
       </button>
       <div
@@ -316,7 +316,7 @@ exports[`Render a MediaSelection field 1`] = `
         </div>
       </li>
     </ul>
-  </div>
-  <div />
-</div>
+  </div>,
+  <div />,
+]
 `;

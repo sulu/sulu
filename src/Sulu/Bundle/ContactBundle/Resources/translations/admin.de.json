@@ -1,5 +1,9 @@
 {
     "sulu_contact.organizations": "Organisationen",
     "sulu_contact.persons": "Personen",
-    "sulu_contact.details": "Details"
+    "sulu_contact.details": "Details",
+    "sulu_contact.contact_assignment_overlay_title": "Kontakt auswählen",
+    "sulu_contact.account_assignment_overlay_title": "Organisation auswählen",
+    "sulu_contact.contact_assignment_label": "Kontakt(e) ausgewählt",
+    "sulu_contact.account_assignment_label": "Organisation(en) ausgewählt"
 }
