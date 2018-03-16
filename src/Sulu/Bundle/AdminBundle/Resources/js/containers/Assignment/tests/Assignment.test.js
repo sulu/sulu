@@ -199,6 +199,37 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     expect(loadItemsCall[0]).toEqual([1, 3]);
 });
 
+test('Should not reload items if all new ids have already been loaded', () => {
+    const locale = observable.box('en');
+
+    // $FlowFixMe
+    AssignmentStore.mockImplementationOnce(function () {
+        this.items = [{id: 1}, {id: 5}, {id: 8}];
+        this.loadItems = jest.fn();
+    });
+
+    const assignment = mount(
+        <Assignment
+            onChange={jest.fn()}
+            locale={locale}
+            value={[1, 5, 8]}
+            resourceKey="pages"
+            overlayTitle="Assignment"
+        />
+    );
+
+    assignment.find('Button[icon="su-plus"]').simulate('click');
+
+    const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
+    expect(datagridStore.select).toBeCalledWith({id: 1});
+    expect(datagridStore.select).toBeCalledWith({id: 5});
+    expect(datagridStore.select).toBeCalledWith({id: 8});
+
+    assignment.setProps({value: [1, 5]});
+    expect(datagridStore.clearSelection).toBeCalled();
+    expect(assignment.instance().assignmentStore.loadItems).not.toBeCalled();
+});
+
 test('Should not reinstantiate the DatagridStore with the preselected ids when new props have the same values', () => {
     const locale = observable.box('en');
 
