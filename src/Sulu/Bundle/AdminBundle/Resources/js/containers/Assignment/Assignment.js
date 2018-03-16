@@ -51,9 +51,8 @@ export default class Assignment extends React.Component<Props> {
 
     componentWillReceiveProps(nextProps: Props) {
         const {value: newValue} = nextProps;
-        const {value: oldValue} = this.props;
 
-        if (newValue.every((id) => oldValue.includes(id))) {
+        if (newValue.every((id) => this.assignmentStore.items.some((item) => item.id === id))) {
             return;
         }
 
