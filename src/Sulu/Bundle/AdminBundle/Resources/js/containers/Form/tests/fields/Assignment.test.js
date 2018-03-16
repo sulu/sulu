@@ -12,7 +12,7 @@ test('Should pass props correctly to component', () => {
         displayProperties: ['id', 'title'],
         icon: '',
         label: 'Select snippets',
-        title: 'Snippets',
+        overlayTitle: 'Snippets',
         resourceKey: 'snippets',
     };
     const assignment = shallow(
@@ -25,7 +25,7 @@ test('Should pass props correctly to component', () => {
         locale,
         onChange: changeSpy,
         resourceKey: 'snippets',
-        title: 'Snippets',
+        overlayTitle: 'Snippets',
         value,
     }));
 });

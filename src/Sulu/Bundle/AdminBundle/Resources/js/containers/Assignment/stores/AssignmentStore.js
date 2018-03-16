@@ -14,7 +14,6 @@ export default class AssignmentStore {
         this.resourceKey = resourceKey;
         this.locale = locale;
         if (selectedItemIds.length) {
-            // TODO get observable from somewhere else
             this.loadItems(selectedItemIds);
         }
     }

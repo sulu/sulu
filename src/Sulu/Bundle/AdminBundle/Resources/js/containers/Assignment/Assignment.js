@@ -16,7 +16,7 @@ type Props = {|
     icon: string,
     resourceKey: string,
     value: Array<string | number>,
-    title: string,
+    overlayTitle: string,
 |};
 
 @observer
@@ -104,7 +104,7 @@ export default class Assignment extends React.Component<Props> {
     };
 
     render() {
-        const {displayProperties, icon, label, locale, resourceKey, title} = this.props;
+        const {displayProperties, icon, label, locale, resourceKey, overlayTitle} = this.props;
         const {items, loading} = this.assignmentStore;
         const columns = displayProperties.length;
 
@@ -121,7 +121,7 @@ export default class Assignment extends React.Component<Props> {
                     onItemsSorted={this.handleSorted}
                 >
                     {items.map((item, index) => (
-                        <MultiItemSelection.Item key={item.id} id={item.id} index={index}>
+                        <MultiItemSelection.Item key={item.id} id={item.id} index={index + 1}>
                             <div>
                                 {displayProperties.map((displayProperty) => (
                                     <span
@@ -143,7 +143,7 @@ export default class Assignment extends React.Component<Props> {
                     open={this.overlayOpen}
                     resourceKey={resourceKey}
                     preSelectedItems={items}
-                    title={title}
+                    title={overlayTitle}
                 />
             </Fragment>
         );

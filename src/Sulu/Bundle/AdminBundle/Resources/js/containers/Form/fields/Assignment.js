@@ -11,7 +11,7 @@ export default class Assignment extends React.Component<FieldTypeProps<Array<str
             throw new Error('The assignment field needs a "resourceKey" option to work properly');
         }
 
-        const {displayProperties, icon, label, resourceKey, title} = fieldOptions;
+        const {displayProperties, icon, label, resourceKey, overlayTitle} = fieldOptions;
 
         return (
             <AssignmentComponent
@@ -21,7 +21,7 @@ export default class Assignment extends React.Component<FieldTypeProps<Array<str
                 locale={locale}
                 onChange={onChange}
                 resourceKey={resourceKey}
-                title={title}
+                overlayTitle={overlayTitle}
                 value={value || []}
             />
         );
