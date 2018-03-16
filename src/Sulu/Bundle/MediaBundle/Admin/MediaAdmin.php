@@ -16,7 +16,6 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -35,7 +34,7 @@ class MediaAdmin extends Admin
 
     public function __construct(
         SecurityCheckerInterface $securityChecker,
-        LocalizationManager $localizationManager,
+        LocalizationManagerInterface $localizationManager,
         $title
     ) {
         $this->securityChecker = $securityChecker;

@@ -157,25 +157,6 @@ interface CategoryManagerInterface
     public function getApiObjects($categories, $locale);
 
     /**
-     * Returns the FieldDescriptors for the categories.
-     *
-     * @param string $locale
-     *
-     * @return DoctrineFieldDescriptor[]
-     */
-    public function getFieldDescriptors($locale);
-
-    /**
-     * Returns the FieldDescriptor for the given key.
-     *
-     * @param string $locale
-     * @param string $key The key of the FieldDescriptor to return
-     *
-     * @return DoctrineFieldDescriptor
-     */
-    public function getFieldDescriptor($locale, $key);
-
-    /**
      * Move category to new parent.
      *
      * @param int $id

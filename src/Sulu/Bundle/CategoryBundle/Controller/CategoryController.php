@@ -23,6 +23,8 @@ use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -41,11 +43,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
     /**
      * {@inheritdoc}
      */
-    protected static $entityName = CategoryInterface::class;
-
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'categories';
 
     /**
@@ -60,13 +57,14 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function getFieldsAction(Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $fieldDescriptors = $this->getCategoryManager()->getFieldDescriptors($locale);
+        $fieldDescriptors = $this->getFieldDescriptors($locale);
 
         // unset list-irrelevant field descriptors
         unset($fieldDescriptors['lft']);
         unset($fieldDescriptors['rgt']);
         unset($fieldDescriptors['depth']);
         unset($fieldDescriptors['parent']);
+        unset($fieldDescriptors['parentLft']);
         unset($fieldDescriptors['hasChildren']);
         unset($fieldDescriptors['locale']);
         unset($fieldDescriptors['defaultLocale']);
@@ -334,7 +332,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $parentExpressions = [];
         foreach ($parentIdsToExpand as $parentId) {
             $parentExpressions[] = $listBuilder->createWhereExpression(
-                $this->getCategoryManager()->getFieldDescriptor($locale, 'parent'),
+                $listBuilder->getFieldDescriptor('parent'),
                 $parentId,
                 ListBuilderInterface::WHERE_COMPARATOR_EQUAL
             );
@@ -353,6 +351,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         }
 
         $results = $listBuilder->execute();
+
         foreach ($results as &$result) {
             $result['hasChildren'] = ($result['lft'] + 1) !== $result['rgt'];
         }
@@ -385,11 +384,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
         /** @var DoctrineListBuilderFactory $factory */
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-        $fieldDescriptors = $this->getCategoryManager()->getFieldDescriptors($locale);
+        $fieldDescriptors = $this->getFieldDescriptors($locale);
 
-        $listBuilder = $factory->create(self::$entityName);
-        // sort by depth before initializing listbuilder with request parameter to avoid wrong sorting in frontend
-        $listBuilder->sort($fieldDescriptors['depth']);
+        $listBuilder = $factory->create($this->getParameter('sulu.model.category.class'));
+        // sort by parentLft before initializing listbuilder with request parameter to avoid wrong sorting in frontend
+        $listBuilder->sort($fieldDescriptors['parentLft']);
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         $listBuilder->addSelectField($fieldDescriptors['depth']);
@@ -418,5 +417,15 @@ class CategoryController extends RestController implements ClassResourceInterfac
     private function getCategoryManager()
     {
         return $this->get('sulu_category.category_manager');
+    }
+
+    private function getFieldDescriptors($locale, $all = true)
+    {
+        return $this->get('sulu_core.list_builder.field_descriptor_factory')
+            ->getFieldDescriptorForClass(
+                $this->getParameter('sulu.model.category.class'),
+                ['locale' => $locale],
+                $all ? null : DoctrineFieldDescriptorInterface::class
+            );
     }
 }
