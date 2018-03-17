@@ -25,6 +25,7 @@
             <div class="double-bounce2 bouncer"></div>
         </div>
         <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
+            {% block main %}
             <div class="navigation-container">
                 <div class="sulu-navigation-labels"></div>
                 <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
@@ -53,6 +54,7 @@
                 </div>
             </div>
             <div id="overlayContainer" data-aura-component="overlay@suluadmin"></div>
+            {% endblock main %}
         </div>
 
         <script type="text/javascript">

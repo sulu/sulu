@@ -23,6 +23,7 @@
 </head>
 <body>
     <div id="main" class="login">
+        {% block main %}
         <div data-aura-component="login@suluadmin"
              data-aura-login-check="{{ path('sulu_admin.login_check') }}"
              data-aura-reset-mail-url="{{ path('sulu_security.reset_password.email') }}"
@@ -36,6 +37,7 @@
              data-aura-reset-url="{{ path('sulu_security.reset_password.reset') }}"></div>
 
         <div id="labels-container" class='login-label-container' data-aura-component="labels@suluadmin"></div>
+        {% endblock main %}
     </div>
     <script type="text/javascript">
         {% autoescape false %}

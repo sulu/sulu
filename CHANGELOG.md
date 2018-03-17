@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * ENHANCEMENT #3849 [AdminBundle]             Add Twig main blocks to be able to use inheritance
     * HOTFIX      #3848 [ContentBundle]           Added check for unknown-document for "sulu_content_load"
     * BUGFIX      #3844 [Husky]                   Fix accidentally escaping of select value
     * ENHANCEMENT #3846 [ContentBundle]           Added authored field to base-page-document index
