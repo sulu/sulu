@@ -8,7 +8,8 @@ export default class FullLoadingStrategy extends AbstractLoadingStrategy {
     load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer) {
         return ResourceRequester
             .getList(resourceKey, {...options, page: undefined, limit: undefined}).then(action((response) => {
-                const responseData = response._embedded[resourceKey];
+                const responseData = response._embedded[resourceKey] || response._embedded.items;
+
                 data.splice(0, data.length);
                 data.push(...responseData.map(enhanceItem));
 

@@ -34,7 +34,7 @@ export default class InfiniteLoadingStrategy extends AbstractLoadingStrategy {
 
     load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer) {
         return ResourceRequester.getList(resourceKey, {...options, limit: 50}).then(action((response) => {
-            const responseData = response._embedded[resourceKey];
+            const responseData = response._embedded[resourceKey] || response._embedded.items;
             data.push(...responseData.map(enhanceItem));
 
             return response;

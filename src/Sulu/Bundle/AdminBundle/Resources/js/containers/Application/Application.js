@@ -44,6 +44,17 @@ const routes = [
         ],
     },
     {
+        name: 'E-Commerce',
+        key: 'ecommerce',
+        icon: 'fa-shopping-basket',
+        items: [
+            {
+                name: 'Products',
+                key: 'sulu_sylius.product_list',
+            },
+        ],
+    },
+    {
         name: 'Settings',
         icon: 'su-settings',
         key: 'settings',
