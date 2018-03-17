@@ -85,7 +85,7 @@ export default class AutoComplete extends React.Component<Props> {
         this.inputValue = value;
     }
 
-    setInputRef = (inputRef: ?ElementRef<'label'>) => {
+    @action setInputRef = (inputRef: ?ElementRef<'label'>) => {
         if (inputRef) {
             this.inputRef = inputRef;
         }
