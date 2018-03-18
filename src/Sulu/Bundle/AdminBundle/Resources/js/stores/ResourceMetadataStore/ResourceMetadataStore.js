@@ -13,6 +13,7 @@ class ResourceMetadataStore {
         media: '/admin/api/media',
         pages: '/admin/api/pages',
         products: '/admin/api/products',
+        attributes: '/admin/api/attributes',
     };
 
     configurationPromises: {[string]: Promise<Object>} = {};

@@ -67,6 +67,6 @@ Promise.all([
     bundlesReadyPromise,
 ]).then(startApplication);
 
-export {configPromise};
+export {configPromise, bundleReady};
 
 bundleReady();
