@@ -14,6 +14,7 @@ class ResourceMetadataStore {
         pages: '/admin/api/pages',
         products: '/admin/api/products',
         attributes: '/admin/api/attributes',
+        options: '/admin/api/options',
     };
 
     configurationPromises: {[string]: Promise<Object>} = {};

@@ -56,6 +56,10 @@ const routes = [
                 name: 'Attributes',
                 key: 'sulu_sylius.attribute_list',
             },
+            {
+                name: 'Options',
+                key: 'sulu_sylius.product_option_list',
+            },
         ],
     },
     {
