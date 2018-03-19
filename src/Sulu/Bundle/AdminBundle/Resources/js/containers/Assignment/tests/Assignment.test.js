@@ -37,26 +37,44 @@ beforeEach(() => {
 });
 
 test('Show with default plus icon', () => {
-    expect(render(<Assignment onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />))
+    expect(render(<Assignment adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />))
         .toMatchSnapshot();
 });
 
 test('Show with passed label', () => {
     expect(render(
-        <Assignment onChange={jest.fn()} label="Select Snippets" resourceKey="snippets" overlayTitle="Assignment" />
+        <Assignment
+            adapter="column_list"
+            onChange={jest.fn()}
+            label="Select Snippets"
+            resourceKey="snippets"
+            overlayTitle="Assignment"
+        />
     )).toMatchSnapshot();
 });
 
 test('Show with passed icon', () => {
     expect(render(
-        <Assignment onChange={jest.fn()} icon="su-document" resourceKey="snippets" overlayTitle="Assignment" />
+        <Assignment
+            adapter="table"
+            onChange={jest.fn()}
+            icon="su-document"
+            resourceKey="snippets"
+            overlayTitle="Assignment"
+        />
     )).toMatchSnapshot();
 });
 
 test('Pass locale to DatagridOverlay', () => {
     const locale = observable.box('de');
     const assignment = mount(
-        <Assignment onChange={jest.fn()} locale={locale} resourceKey="snippets" overlayTitle="Assignment" />
+        <Assignment
+            adapter="table"
+            onChange={jest.fn()}
+            locale={locale}
+            resourceKey="snippets"
+            overlayTitle="Assignment"
+        />
     );
 
     expect(assignment.find('DatagridOverlay').prop('locale').get()).toEqual('de');
@@ -72,6 +90,7 @@ test('Show with passed values as items in right locale', () => {
 
     expect(render(
         <Assignment
+            adapter="table"
             displayProperties={['id', 'title']}
             onChange={jest.fn()}
             locale={locale}
@@ -85,7 +104,9 @@ test('Show with passed values as items in right locale', () => {
 });
 
 test('Should open an overlay', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />);
+    const assignment = mount(
+        <Assignment adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />
+    );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
@@ -94,7 +115,14 @@ test('Should open an overlay', () => {
 });
 
 test('Should close an overlay using the close button', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />);
+    const assignment = mount(
+        <Assignment
+            adapter="table"
+            onChange={jest.fn()}
+            resourceKey="snippets"
+            overlayTitle="Assignment"
+        />
+    );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
@@ -108,7 +136,9 @@ test('Should close an overlay using the close button', () => {
 });
 
 test('Should close an overlay using the confirm button', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />);
+    const assignment = mount(
+        <Assignment adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />
+    );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
@@ -123,7 +153,9 @@ test('Should close an overlay using the confirm button', () => {
 
 test('Should call the onChange callback when clicking the confirm button', () => {
     const changeSpy = jest.fn();
-    const assignment = mount(<Assignment onChange={changeSpy} resourceKey="snippets" overlayTitle="Assignment" />);
+    const assignment = mount(
+        <Assignment adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Assignment" />
+    );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
     const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
@@ -138,7 +170,9 @@ test('Should call the onChange callback when clicking the confirm button', () =>
 });
 
 test('Should instantiate the DatagridStore with the correct resourceKey and destroy it on unmount', () => {
-    const assignment = mount(<Assignment onChange={jest.fn()} resourceKey="pages" overlayTitle="Assignment" />);
+    const assignment = mount(
+        <Assignment adapter="table" onChange={jest.fn()} resourceKey="pages" overlayTitle="Assignment" />
+    );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
@@ -156,7 +190,13 @@ test('Should instantiate the DatagridStore with the preselected ids', () => {
     });
 
     const assignment = mount(
-        <Assignment onChange={jest.fn()} value={[1, 5, 8]} resourceKey="pages" overlayTitle="Assignment" />
+        <Assignment
+            adapter="table"
+            onChange={jest.fn()}
+            value={[1, 5, 8]}
+            resourceKey="pages"
+            overlayTitle="Assignment"
+        />
     );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
@@ -178,6 +218,7 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
 
     const assignment = mount(
         <Assignment
+            adapter="table"
             onChange={jest.fn()}
             locale={locale}
             value={[1, 5, 8]}
@@ -210,6 +251,7 @@ test('Should not reload items if all new ids have already been loaded', () => {
 
     const assignment = mount(
         <Assignment
+            adapter="table"
             onChange={jest.fn()}
             locale={locale}
             value={[1, 5, 8]}
@@ -241,6 +283,7 @@ test('Should not reinstantiate the DatagridStore with the preselected ids when n
 
     const assignment = mount(
         <Assignment
+            adapter="table"
             onChange={jest.fn()}
             locale={locale}
             value={[1, 5, 8]}
@@ -261,7 +304,13 @@ test('Should not reinstantiate the DatagridStore with the preselected ids when n
 test('Should remove an item when the remove button is clicked', () => {
     const changeSpy = jest.fn();
     const assignment = shallow(
-        <Assignment onChange={changeSpy} resourceKey="snippets" value={[3, 7, 9]} overlayTitle="Assignment" />
+        <Assignment
+            adapter="table"
+            onChange={changeSpy}
+            resourceKey="snippets"
+            value={[3, 7, 9]}
+            overlayTitle="Assignment"
+        />
     );
 
     assignment.find('MultiItemSelection').prop('onItemRemove')(7);
@@ -271,7 +320,13 @@ test('Should remove an item when the remove button is clicked', () => {
 test('Should reorder the items on drag and drop', () => {
     const changeSpy = jest.fn();
     const assignment = shallow(
-        <Assignment onChange={changeSpy} resourceKey="snippets" value={[3, 7, 9]} overlayTitle="Assignment" />
+        <Assignment
+            adapter="table"
+            onChange={changeSpy}
+            resourceKey="snippets"
+            value={[3, 7, 9]}
+            overlayTitle="Assignment"
+        />
     );
 
     assignment.find('MultiItemSelection').prop('onItemsSorted')(1, 2);

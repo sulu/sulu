@@ -82,9 +82,6 @@ class WebspaceOverview extends React.Component<ViewProps> {
         router.bind('webspace', this.webspace);
         apiOptions.webspace = this.webspace;
 
-        // TODO: Make this changeable for user
-        apiOptions.fields = 'title,published';
-
         this.datagridStore = new DatagridStore('pages', observableOptions, apiOptions);
         WebspaceStore.loadWebspaces()
             .then(action((webspaces) => {

@@ -136,13 +136,15 @@ export default class ColumnList extends React.Component<Props> {
 
         return (
             <div className={columnListStyles.columnListToolbarContainer}>
-                <div style={{marginLeft: toolbarPosition}}>
-                    <Toolbar
-                        columnIndex={this.activeColumnIndex}
-                        toolbarItems={toolbarItems}
-                        toolbarRef={this.setToolbarRef}
-                    />
-                </div>
+                {!!toolbarItems.length &&
+                    <div className={columnListStyles.toolbarContainer} style={{marginLeft: toolbarPosition}}>
+                        <Toolbar
+                            columnIndex={this.activeColumnIndex}
+                            toolbarItems={toolbarItems}
+                            toolbarRef={this.setToolbarRef}
+                        />
+                    </div>
+                }
                 <div ref={this.setContainerRef} className={columnListContainerClass}>
                     <div className={columnListStyles.columnList}>
                         {this.cloneColumns(children)}

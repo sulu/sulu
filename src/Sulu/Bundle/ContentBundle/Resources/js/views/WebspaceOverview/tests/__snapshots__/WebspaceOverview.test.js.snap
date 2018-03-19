@@ -37,6 +37,7 @@ exports[`Render WebspaceOverview 1`] = `
         class="columnListToolbarContainer"
       >
         <div
+          class="toolbarContainer"
           style="margin-left: 0px;"
         >
           <div

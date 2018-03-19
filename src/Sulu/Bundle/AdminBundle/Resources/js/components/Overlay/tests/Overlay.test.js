@@ -21,6 +21,7 @@ test('The component should render in body when open', () => {
             onConfirm={jest.fn()}
             confirmText="Apply"
             open={true}
+            size="small"
         >
             <p>My overlay content</p>
         </Overlay>

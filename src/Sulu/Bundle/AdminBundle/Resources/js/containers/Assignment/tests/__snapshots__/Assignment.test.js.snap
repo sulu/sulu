@@ -6,11 +6,11 @@ exports[`Should open an overlay 1`] = `
 </div>
 <div>
   <div class=\\"container\\">
-    <div class=\\"overlay\\">
+    <div class=\\"overlay large\\">
       <section class=\\"content\\">
         <header>Assignment<span class=\\"icon su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
-          <div class=\\"datagrid\\">
+          <div class=\\"datagrid adapter-table\\">
             <div class=\\"datagrid\\"></div>
           </div>
         </article>

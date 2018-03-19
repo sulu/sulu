@@ -147,6 +147,11 @@ class ContentRepository implements ContentRepositoryInterface
     ) {
         $path = $this->resolvePathByUuid($uuid);
 
+        if (!$webspaceKey) {
+            // TODO find a better solution than this (e.g. reuse logic from DocumentInspector and preferably in the PageController)
+            $webspaceKey = explode('/', $path)[2];
+        }
+
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
         $queryBuilder->where($this->qomFactory->childNode('node', $path));

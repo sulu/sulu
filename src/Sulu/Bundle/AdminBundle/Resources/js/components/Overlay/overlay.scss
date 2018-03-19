@@ -1,11 +1,9 @@
 @import '../../containers/Application/colors.scss';
+@import './variables.scss';
 
 $primaryBackground: $concrete;
 $secondaryBackground: $white;
 $borderRadius: 3px;
-
-$headerHeight: 60px;
-$footerHeight: 90px;
 
 $titleColor: $black;
 
@@ -41,9 +39,18 @@ $transitionDuration: 300ms;
     will-change: top, opacity;
     transition: top $transitionDuration, opacity $transitionDuration;
     pointer-events: none;
+    max-height: calc(100vh - $overlayMarginBottom);
 
     & > * {
         pointer-events: auto;
+    }
+
+    &.small {
+        width: 50vw;
+    }
+
+    &.large {
+        width: 80vw;
     }
 }
 
@@ -64,23 +71,23 @@ $transitionDuration: 300ms;
 
     header {
         background: $secondaryBackground;
-        height: $headerHeight;
+        height: $overlayHeaderHeight;
         color: $titleColor;
         font-size: 22px;
         font-weight: bold;
         text-align: center;
-        line-height: $headerHeight;
+        line-height: $overlayHeaderHeight;
     }
 
     article {
-        max-height: calc(100vh - $headerHeight - $footerHeight);
+        max-height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom);
         overflow: auto;
         background: $primaryBackground;
     }
 
     footer {
         background: $secondaryBackground;
-        height: $footerHeight;
+        height: $overlayFooterHeight;
         padding: 0 60px;
         display: flex;
         justify-content: space-between;
@@ -93,7 +100,7 @@ $transitionDuration: 300ms;
 
     .icon {
         position: absolute;
-        top: calc(($headerHeight - $iconSize) / 2);
+        top: calc(($overlayHeaderHeight - $iconSize) / 2);
         right: 30px;
         font-size: $iconFontSize;
         width: $iconSize;

@@ -2,6 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import classNames from 'classnames';
 import Overlay from '../../components/Overlay';
 import Datagrid from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
@@ -9,6 +10,7 @@ import {translate} from '../../utils';
 import datagridOverlayStyles from './datagridOverlay.scss';
 
 type Props = {|
+    adapter: string,
     locale?: ?IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedItems: Array<Object>) => void,
@@ -35,7 +37,7 @@ export default class DatagridOverlay extends React.Component<Props> {
             observableOptions.locale = locale;
         }
 
-        this.datagridStore = new DatagridStore(resourceKey, observableOptions, {});
+        this.datagridStore = new DatagridStore(resourceKey, observableOptions);
 
         preSelectedItems.forEach((preSelectedItem) => {
             this.datagridStore.select(preSelectedItem);
@@ -59,7 +61,12 @@ export default class DatagridOverlay extends React.Component<Props> {
     };
 
     render() {
-        const {onClose, open, title} = this.props;
+        const {adapter, onClose, open, title} = this.props;
+
+        const datagridContainerClass = classNames(
+            datagridOverlayStyles.datagrid,
+            datagridOverlayStyles['adapter-' + adapter]
+        );
 
         return (
             <Overlay
@@ -67,10 +74,11 @@ export default class DatagridOverlay extends React.Component<Props> {
                 onClose={onClose}
                 onConfirm={this.handleConfirm}
                 open={open}
+                size="large"
                 title={title}
             >
-                <div className={datagridOverlayStyles.datagrid}>
-                    <Datagrid adapters={['table']} store={this.datagridStore} />
+                <div className={datagridContainerClass}>
+                    <Datagrid adapters={[adapter]} store={this.datagridStore} />
                 </div>
             </Overlay>
         );

@@ -2,8 +2,9 @@
 @import './variables.scss';
 
 .column {
-    border-right: $columnBorder;
+    flex-grow: 1;
     background: $columnListBackgroundColor;
+    border-right: $columnBorder;
     display: inline-block;
     vertical-align: top;
     width: $columnWidth;

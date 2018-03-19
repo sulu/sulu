@@ -3,7 +3,7 @@ import React from 'react';
 import {render} from 'enzyme';
 import Column from '../Column';
 
-test('The Column component should render', () => {
+test('Should render column with toolbar', () => {
     const buttonsConfig = [
         {
             icon: 'fa-heart',

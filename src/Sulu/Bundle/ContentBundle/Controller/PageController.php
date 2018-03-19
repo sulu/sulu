@@ -12,35 +12,44 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use Sulu\Component\Content\Repository\Content;
-use Sulu\Component\Rest\Exception\MissingParameterChoiceException;
-use Sulu\Component\Rest\Exception\MissingParameterException;
-use Sulu\Component\Rest\Exception\ParameterDataTypeException;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * handles content nodes.
+ * This controller handles as an compatibility layer between the NodeController and the PageController.
+ * This is necessary because the NodeController behaves quite different in a few situations from other controllers, and
+ * we don't want to implement two different behaviours in the frontend.
  */
 class PageController extends NodeController
 {
     protected static $relationName = 'pages';
 
-    /**
-     * Returns content array by parent or webspace root.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     *
-     * @throws MissingParameterChoiceException
-     * @throws MissingParameterException
-     * @throws ParameterDataTypeException
-     */
+    public function cgetAction(Request $request)
+    {
+        if ('true' === $request->query->get('flat') && !$request->query->has('fields')) {
+            // For some reason the NodeController checks if some fields are set instead of the flat flag.
+            // Therefore we set the fields to a default value if flat is passed as true, because the other APIs are also
+            // checking the flat flag, and the behavior is consistent this way.
+            $request->query->set('fields', 'title');
+        }
+
+        return parent::cgetAction($request);
+    }
+
     protected function cgetContent(Request $request)
     {
         if (!$request->query->has('parent')) {
-            $request->request->set('webspace-nodes', 'single');
+            // If the content is loaded using the content mapper for a flat list (indicated by the flat flag in the
+            // response) and there is no parent given, then webspaces have to be returned.
+            if ($request->query->has('webspace')) {
+                // If a webspace is given, then only this single webspace should be returned.
+                // This behavior can be easily explained if the webspace parameter is seen as a filter.
+                $request->query->set('webspace-nodes', 'single');
+            } else {
+                // If no webspace is given, then all webspaces should be returned.
+                $request->query->set('webspace-nodes', 'all');
+            }
         }
 
         return parent::cgetContent($request);

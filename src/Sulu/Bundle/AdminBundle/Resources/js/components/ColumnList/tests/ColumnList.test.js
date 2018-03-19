@@ -198,8 +198,16 @@ test('The ColumnList component should handle which toolbar is active on mouse en
 });
 
 test('Should move the toolbar container to the correct position', () => {
+    const toolbarItems = [
+        {
+            icon: 'fa-plus',
+            type: 'button',
+            onClick: jest.fn(),
+        },
+    ];
+
     const columnList = mount(
-        <ColumnList onItemClick={jest.fn()}>
+        <ColumnList onItemClick={jest.fn()} toolbarItems={toolbarItems}>
             <Column />
         </ColumnList>
     );

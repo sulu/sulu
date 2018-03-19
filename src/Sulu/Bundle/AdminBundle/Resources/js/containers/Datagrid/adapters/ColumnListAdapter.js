@@ -111,7 +111,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
     }
 
     render() {
-        const {loading} = this.props;
+        const {loading, onAddClick} = this.props;
         const buttons = [
             {
                 icon: 'su-pen',
@@ -119,13 +119,15 @@ export default class ColumnListAdapter extends AbstractAdapter {
             },
         ];
 
-        const toolbarItems = [
-            {
+        const toolbarItems = [];
+
+        if (onAddClick) {
+            toolbarItems.push({
                 icon: 'su-add',
                 type: 'button',
                 onClick: this.handleColumnAdd,
-            },
-        ];
+            });
+        }
 
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>

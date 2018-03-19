@@ -57,6 +57,26 @@ test('Render data', () => {
     expect(columnListAdapter).toMatchSnapshot();
 });
 
+test('Render with add button in toolbar when onAddClick callback is given', () => {
+    const data = [];
+
+    const columnListAdapter = render(
+        <ColumnListAdapter
+            active={4}
+            data={data}
+            loading={false}
+            onAddClick={jest.fn()}
+            onPageChange={jest.fn()}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+        />
+    );
+
+    expect(columnListAdapter).toMatchSnapshot();
+});
+
 test('Render data with loading column', () => {
     const data = [
         {

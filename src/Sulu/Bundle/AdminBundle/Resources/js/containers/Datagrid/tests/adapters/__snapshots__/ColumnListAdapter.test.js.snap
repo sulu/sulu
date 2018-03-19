@@ -8,22 +8,6 @@ exports[`Render data 1`] = `
     class="columnListToolbarContainer"
   >
     <div
-      style="margin-left:0"
-    >
-      <div
-        class="toolbar"
-      >
-        <div
-          class="item primary"
-        >
-          <span
-            aria-label="su-add"
-            class="su-add"
-          />
-        </div>
-      </div>
-    </div>
-    <div
       class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
       <div
@@ -191,22 +175,6 @@ exports[`Render data with loading column 1`] = `
     class="columnListToolbarContainer"
   >
     <div
-      style="margin-left:0"
-    >
-      <div
-        class="toolbar"
-      >
-        <div
-          class="item primary"
-        >
-          <span
-            aria-label="su-add"
-            class="su-add"
-          />
-        </div>
-      </div>
-    </div>
-    <div
       class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
       <div
@@ -325,6 +293,45 @@ exports[`Render data with loading column 1`] = `
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render with add button in toolbar when onAddClick callback is given 1`] = `
+<div
+  class="columnListAdapter"
+>
+  <div
+    class="columnListToolbarContainer"
+  >
+    <div
+      class="toolbarContainer"
+      style="margin-left:0"
+    >
+      <div
+        class="toolbar"
+      >
+        <div
+          class="item primary"
+        >
+          <span
+            aria-label="su-add"
+            class="su-add"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
+    >
+      <div
+        class="columnList"
+      >
+        <div
+          class="column"
+        />
       </div>
     </div>
   </div>

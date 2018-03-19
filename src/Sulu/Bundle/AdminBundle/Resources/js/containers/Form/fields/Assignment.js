@@ -7,14 +7,23 @@ export default class Assignment extends React.Component<FieldTypeProps<Array<str
     render() {
         const {fieldOptions, onChange, locale, value} = this.props;
 
-        if (!fieldOptions || !fieldOptions.resourceKey) {
+        if (!fieldOptions) {
+            throw new Error('The assignment field needs a "resourceKey" and a "adapter" option to work properly');
+        }
+
+        if (!fieldOptions.resourceKey) {
             throw new Error('The assignment field needs a "resourceKey" option to work properly');
         }
 
-        const {displayProperties, icon, label, resourceKey, overlayTitle} = fieldOptions;
+        if (!fieldOptions.adapter) {
+            throw new Error('The assignment field needs a "adapter" option to work properly');
+        }
+
+        const {adapter, displayProperties, icon, label, resourceKey, overlayTitle} = fieldOptions;
 
         return (
             <AssignmentComponent
+                adapter={adapter}
                 displayProperties={displayProperties}
                 icon={icon}
                 label={label}
