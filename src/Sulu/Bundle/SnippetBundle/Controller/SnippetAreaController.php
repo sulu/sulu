@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
+use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -46,6 +47,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
         );
 
         $defaultSnippetManager = $this->get('sulu_snippet.default_snippet.manager');
+        $documentManager = $this->get('sulu_document_manager.document_manager');
         $areas = $this->getLocalizedAreas();
 
         $dataList = [];
@@ -54,11 +56,24 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
                 'key' => $key,
                 'template' => $area['template'],
                 'title' => $area['title'],
+                'defaultUuid' => null,
+                'defaultTitle' => null,
+                'valid' => true,
             ];
 
-            $snippet = $defaultSnippetManager->load($webspaceKey, $key, $this->getUser()->getLocale());
-            $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
-            $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
+            try {
+                $snippet = $defaultSnippetManager->load($webspaceKey, $key, $this->getUser()->getLocale());
+                $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
+                $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
+            } catch (WrongSnippetTypeException $exception) {
+                // ignore wrong snippet-type
+                $areaData['valid'] = false;
+
+                $uuid = $defaultSnippetManager->loadIdentifier($webspaceKey, $key);
+                $snippet = $documentManager->find($uuid, $this->getUser()->getLocale());
+                $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
+                $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
+            }
 
             $dataList[] = $areaData;
         }
@@ -108,6 +123,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
                 'title' => $area['title'],
                 'defaultUuid' => $defaultSnippet ? $defaultSnippet->getUuid() : null,
                 'defaultTitle' => $defaultSnippet ? $defaultSnippet->getTitle() : null,
+                'valid' => true,
             ]
         );
     }
@@ -140,6 +156,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
                 'title' => $area['title'],
                 'defaultUuid' => null,
                 'defaultTitle' => null,
+                'valid' => true,
             ]
         );
     }

@@ -1,0 +1,11 @@
+/*----------------------------------------*/
+/* line 2, ../scss/modules/webspace.scss */
+#snippet-types .valid {
+  background: transparent;
+  font-size: larger;
+  margin-bottom: -3px;
+}
+/* line 7, ../scss/modules/webspace.scss */
+#snippet-types .valid .fa-ban {
+  color: #EA524E;
+}

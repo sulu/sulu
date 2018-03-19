@@ -13,6 +13,7 @@ namespace Sulu\Component\CustomUrl\Repository;
 
 use Jackalope\Query\Row;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
+use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Util\QOM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
@@ -62,10 +63,11 @@ class CustomUrlRepository
      *
      * @param string $path
      * @param string $locale
+     * @param array $baseDomains
      *
      * @return \Iterator
      */
-    public function findList($path, $locale)
+    public function findList($path, $locale, array $baseDomains = null)
     {
         // TODO pagination
 
@@ -86,20 +88,24 @@ class CustomUrlRepository
         $queryBuilder->addSelect('a', 'sulu:changed', 'changed');
         $queryBuilder->addSelect('a', 'sulu:changer', 'changer');
 
-        $queryBuilder->from(
-            $queryBuilder->qomf()->selector('a', 'nt:unstructured')
-        );
+        $qomf = $queryBuilder->qomf();
+
+        $queryBuilder->from($qomf->selector('a', 'nt:unstructured'));
 
         $queryBuilder->where(
-            $queryBuilder->qomf()->comparison(
-                $queryBuilder->qomf()->propertyValue('a', 'jcr:mixinTypes'),
+            $qomf->comparison(
+                $qomf->propertyValue('a', 'jcr:mixinTypes'),
                 QueryObjectModelConstantsInterface::JCR_OPERATOR_EQUAL_TO,
-                $queryBuilder->qomf()->literal('sulu:custom_url')
+                $qomf->literal('sulu:custom_url')
             )
         );
         $queryBuilder->andWhere(
-            $queryBuilder->qomf()->descendantNode('a', $path)
+            $qomf->descendantNode('a', $path)
         );
+
+        if ($baseDomains) {
+            $queryBuilder->andWhere($this->createBaseDomainQuery($baseDomains, $qomf));
+        }
 
         $query = $queryBuilder->getQuery();
         $result = $query->execute();
@@ -124,6 +130,33 @@ class CustomUrlRepository
             $this->generator,
             $this->userManager
         );
+    }
+
+    private function createBaseDomainQuery(array $baseDomains, QueryObjectModelFactoryInterface $qomf)
+    {
+        $baseDomainQuery = null;
+        foreach ($baseDomains as $baseDomain) {
+            if (!$baseDomainQuery) {
+                $baseDomainQuery = $qomf->comparison(
+                    $qomf->propertyValue('a', 'baseDomain'),
+                    QueryObjectModelConstantsInterface::JCR_OPERATOR_EQUAL_TO,
+                    $qomf->literal($baseDomain)
+                );
+
+                continue;
+            }
+
+            $baseDomainQuery = $qomf->orConstraint(
+                $baseDomainQuery,
+                $baseDomainQuery = $qomf->comparison(
+                    $qomf->propertyValue('a', 'baseDomain'),
+                    QueryObjectModelConstantsInterface::JCR_OPERATOR_EQUAL_TO,
+                    $qomf->literal($baseDomain)
+                )
+            );
+        }
+
+        return $baseDomainQuery;
     }
 
     /**

@@ -3,15 +3,9 @@
 function build_bundle {
     if [ -f "Gruntfile.js" ]
     then
-        grunt build
-        OUT=$? # return code of grunt build
-
-        if [ OUT != 0 ];
-        then
-            npm install
-            rm -rf Resources/public/dist
-            grunt build
-        fi
+        npm install
+        rm -rf Resources/public/dist
+        npm run build
     fi
 }
 

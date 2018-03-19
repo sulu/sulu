@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Provides custom-url-tab for webspace settings.
@@ -26,9 +27,21 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
      */
     private $securityChecker;
 
-    public function __construct(SecurityCheckerInterface $securityChecker)
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var string
+     */
+    private $environment;
+
+    public function __construct(SecurityCheckerInterface $securityChecker, WebspaceManagerInterface $webspaceManager, $environment)
     {
         $this->securityChecker = $securityChecker;
+        $this->webspaceManager = $webspaceManager;
+        $this->environment = $environment;
     }
 
     /**
@@ -36,20 +49,30 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
      */
     public function getNavigationItems(array $options = [])
     {
-        if (!$this->securityChecker->hasPermission(
-            CustomUrlAdmin::getCustomUrlSecurityContext($options['webspace']),
-            PermissionTypes::VIEW
-        )
-        ) {
+        $navigationItems = [];
+
+        if (!$options['webspace']) {
             return [];
         }
 
-        $contentNavigationItem = new ContentNavigationItem('content-navigation.webspace.custom-url');
-        $contentNavigationItem->setId('tab-custom-urls');
-        $contentNavigationItem->setAction('custom-urls');
-        $contentNavigationItem->setPosition(40);
-        $contentNavigationItem->setComponent('webspace/settings/custom-url@sulucustomurl');
+        $webspace = $this->webspaceManager->findWebspaceByKey($options['webspace']);
+        $customUrls = $webspace->getPortals()[0]->getEnvironment($this->environment)->getCustomUrls();
 
-        return [$contentNavigationItem];
+        if (count($customUrls)
+            && $this->securityChecker->hasPermission(
+                CustomUrlAdmin::getCustomUrlSecurityContext($options['webspace']),
+                PermissionTypes::VIEW
+            )
+        ) {
+            $customUrlNavigationItem = new ContentNavigationItem('content-navigation.webspace.custom-url');
+            $customUrlNavigationItem->setId('tab-custom-urls');
+            $customUrlNavigationItem->setAction('custom-urls');
+            $customUrlNavigationItem->setPosition(40);
+            $customUrlNavigationItem->setComponent('webspace/settings/custom-url@sulucustomurl');
+
+            $navigationItems[] = $customUrlNavigationItem;
+        }
+
+        return $navigationItems;
     }
 }

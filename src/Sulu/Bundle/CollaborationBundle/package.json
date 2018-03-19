@@ -1,11 +1,15 @@
 {
     "name": "sulucollaboration",
-    "version": "0.3.0",
+    "scripts": {
+        "build": "grunt build",
+        "watch": "grunt watch"
+    },
     "devDependencies": {
         "grunt": "0.4.*",
+        "grunt-cli": "^1.2.0",
         "grunt-contrib-copy": "0.4.*",
         "grunt-contrib-uglify": "~0.2.2",
-        "matchdep": "~0.1.1",
-        "grunt-replace": "~0.4.4"
+        "grunt-replace": "~0.4.4",
+        "matchdep": "~0.1.1"
     }
 }

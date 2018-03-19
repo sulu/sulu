@@ -41,7 +41,7 @@
         "ramsey/uuid": "^3.1",
         "sensio/framework-extra-bundle": "^3.0",
         "stof/doctrine-extensions-bundle": "^1.2.2",
-        "sulu/document-manager": "~0.10.0",
+        "sulu/document-manager": "dev-master as 0.10.1",
         "symfony-cmf/routing-bundle": "^2.0",
         "symfony/asset": "^3.0",
         "symfony/cache": "^3.0",

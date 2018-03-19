@@ -113,9 +113,24 @@ define(['config', 'app-config'], function(Config, AppConfig) {
                         viewOptions: {
                             table: {
                                 selectItem: false,
-                                icons: icons
+                                icons: icons,
+                                badges: [
+                                    {
+                                        column: 'defaultTitle',
+                                        icon: 'ban',
+                                        cssClass: 'valid',
+                                        callback: function(item, badge) {
+                                            if (!item.valid) {
+                                                return badge;
+                                            }
+
+                                            return false;
+                                        }.bind(this)
+                                    }
+                                ]
                             }
                         },
+
                         matchings: [
                             {
                                 attribute: 'title',

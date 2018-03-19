@@ -14,13 +14,14 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
     {% block stylesheets %}
-    <link rel="stylesheet" href="/bundles/suluadmin/dist/login.min.1516280460198.css">
+    <link rel="stylesheet" href="/bundles/suluadmin/dist/login.min.1521102556740.css">
 
     <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
     {% endblock stylesheets %}
 </head>
 <body>
     <div id="main" class="login">
+        {% block main %}
         <div data-aura-component="login@suluadmin"
              data-aura-login-check="{{ path('sulu_admin.login_check') }}"
              data-aura-reset-mail-url="{{ path('sulu_security.reset_password.email') }}"
@@ -34,6 +35,7 @@
              data-aura-reset-url="{{ path('sulu_security.reset_password.reset') }}"></div>
 
         <div id="labels-container" class='login-label-container' data-aura-component="labels@suluadmin"></div>
+        {% endblock main %}
     </div>
     <script type="text/javascript">
         {% autoescape false %}
@@ -48,7 +50,7 @@
     </script>
 
     {% block javascripts %}
-    <script data-main="/bundles/suluadmin/dist/login.min.1516280460198" src="/bundles/suluadmin/js/vendor/husky/husky.min.js?v=1516280460198"></script>
+    <script data-main="/bundles/suluadmin/dist/login.min.1521102556740" src="/bundles/suluadmin/js/vendor/husky/husky.min.js?v=1521102556740"></script>
     {% endblock javascripts %}
 </body>
 </html>

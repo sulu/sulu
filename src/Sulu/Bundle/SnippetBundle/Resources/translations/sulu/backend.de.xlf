@@ -34,13 +34,25 @@
                 <source>snippet.delete-confirm-text</source>
                 <target>Sind Sie sicher, dass Sie dieses Schnipsel löschen wollen?</target>
             </trans-unit>
+            <trans-unit id="10a" resname="snippet.save-confirm-text">
+                <source>snippet.save-confirm-text</source>
+                <target>Dieses Schnipsel ist als Default für einen Webspace ausgewählt. Wenn der Typ geändert wird, verliert es diesen Status.</target>
+            </trans-unit>
             <trans-unit id="11" resname="snippet.delete-confirm-title">
                 <source>snippet.delete-confirm-title</source>
                 <target>Löschen bestätigen</target>
             </trans-unit>
+            <trans-unit id="11a" resname="snippet.save-confirm-title">
+                <source>snippet.save-confirm-title</source>
+                <target>Typ Änderung bestätigen</target>
+            </trans-unit>
             <trans-unit id="12" resname="snippet.delete-do-it">
                 <source>snippet.delete-do-it</source>
                 <target>Ja, ich bin sicher</target>
+            </trans-unit>
+            <trans-unit id="12a" resname="snippet.save-do-it">
+                <source>snippet.save-do-it</source>
+                <target>Trotzdem ändern</target>
             </trans-unit>
             <trans-unit id="13" resname="snippet.delete-no-snippets-selected">
                 <source>snippet.delete-no-snippets-selected</source>

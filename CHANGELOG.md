@@ -1,11 +1,26 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
-    * BUGFIX      #3806 [All]                     Fix compatibility on lowest and fix appveyor
+* 1.6.16 (2018-03-19)
+    * ENHANCEMENT #3849 [AdminBundle]             Add Twig main blocks to be able to use inheritance
+    * HOTFIX      #3848 [ContentBundle]           Added check for unknown-document for "sulu_content_load"
+    * BUGFIX      #3844 [Husky]                   Fix accidentally escaping of select value
+    * ENHANCEMENT #3846 [ContentBundle]           Added authored field to base-page-document index
+    * ENHANCEMENT #3843 [CustomUrlBundle]         Show custom url tab only when configured
+    * BUGFIX      #3828 [Husky]                   Avoid expand ids parameter to be added to datagrid request without content
+    * BUGFIX      #3828 [Husky]                   Fixed paragraphs and breaks in paste from word plugin
+    * HOTFIX      #3813 [SnippetBundle]           Ignore wrong template exception
+    * HOTFIX      #3820 [CustomUrlBundle]         Added base-domains to query for custom-urls
+    * HOTFIX      #3810 [ContentBundle]           Fixed rename and publish exception if page has link to a child
     * BUGFIX      #3805 [ContentBundle]           Fix spacing between rows and section in content template generation
     * HOTFIX      #3797 [CategoryBundle]          Fixed category csv-export
     * HOTFIX      #3797 [Rest]                    Fixed issue with large amount of ids in doctrine list-builder query
+    * ENHANCEMENT #3830 [All]                     Avoid duplicated run of composer update for travis
+    * BUGFIX      #3826 [ContentBundle]           Fix enabling of save button when toggler is changed
+    * HOTFIX      #3819 [MediaBundle]             Fix forgotten context binding for resetPreviewUrl method
+    * FEATURE     #3816 [All]                     Validate if grunt build was run for all bundles with circleci
+    * BUGFIX      #3806 [All]                     Fix compatibility on lowest and fix appveyor
+    * BUGFIX      #3351 [ContentBundle]           Fix spacing between rows and section in content template generation
 
 * 1.6.15 (2018-02-27)
     * HOTFIX      #3802 [ContentBundle]           Fixed XmlLoader internal flag
@@ -186,7 +201,11 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
-* dev-release/1.5
+* 1.5.12 (2018-03-19)
+    * ENHANCEMENT #3830 [All]                   Avoid duplicated run of composer update for travis
+    * BUGFIX      #3826 [ContentBundle]         Fix enabling of save button when toggler is changed
+    * HOTFIX      #3819 [MediaBundle]           Fix forgotten context binding for resetPreviewUrl method
+    * FEATURE     #3816 [All]                   Validate if grunt build was run for all bundles with circleci
     * BUGFIX      #3806 [All]                   Fix compatibility on lowest and fix appveyor
     * BUGFIX      #3351 [ContentBundle]         Fix spacing between rows and section in content template generation
 

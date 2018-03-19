@@ -22,6 +22,8 @@ use Sulu\Component\DocumentManager\Exception\NodeNameAlreadyExistsException;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
+use Sulu\Component\Webspace\CustomUrl;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -54,18 +56,32 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     private $cacheHandler;
 
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var string
+     */
+    private $environment;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         CustomUrlRepository $customUrlRepository,
         MetadataFactoryInterface $metadataFactory,
         PathBuilder $pathBuilder,
-        HandlerInvalidatePathInterface $cacheHandler
+        HandlerInvalidatePathInterface $cacheHandler,
+        WebspaceManagerInterface $webspaceManager,
+        $environment
     ) {
         $this->documentManager = $documentManager;
         $this->customUrlRepository = $customUrlRepository;
         $this->metadataFactory = $metadataFactory;
         $this->pathBuilder = $pathBuilder;
         $this->cacheHandler = $cacheHandler;
+        $this->webspaceManager = $webspaceManager;
+        $this->environment = $environment;
     }
 
     /**
@@ -101,7 +117,17 @@ class CustomUrlManager implements CustomUrlManagerInterface
     {
         // TODO pagination
 
-        return $this->customUrlRepository->findList($this->getItemsPath($webspaceKey), $locale);
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $customUrls = $webspace->getPortals()[0]->getEnvironment($this->environment)->getCustomUrls();
+
+        $baseDomains = array_map(
+            function (CustomUrl $customUrl) {
+                return $customUrl->getUrl();
+            },
+            $customUrls
+        );
+
+        return $this->customUrlRepository->findList($this->getItemsPath($webspaceKey), $locale, $baseDomains);
     }
 
     /**

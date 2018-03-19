@@ -19,6 +19,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Exception\ResourceLocatorGeneratorException;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
@@ -316,16 +317,34 @@ class WebspaceImport extends Import implements WebspaceImportInterface
 
                     if ($parent instanceof BasePageDocument) {
                         $parentUuid = $parent->getUuid();
-                        $value = $this->generateUrl(
-                            $structure->getPropertiesByTagName('sulu.rlp.part'),
-                            $parentUuid,
-                            $webspaceKey,
-                            $locale,
-                            $format,
-                            $data
-                        );
 
-                        $document->setResourceSegment($value);
+                        try {
+                            $resourceSegment = $this->generateUrl(
+                                $structure->getPropertiesByTagName('sulu.rlp.part'),
+                                $parentUuid,
+                                $webspaceKey,
+                                $locale,
+                                $format,
+                                $data
+                            );
+                        } catch (ResourceLocatorGeneratorException $exception) {
+                            $resourceSegment = null;
+                        }
+
+                        if (!$resourceSegment || '/' === $resourceSegment) {
+                            if (!$value) {
+                                $this->addException(
+                                    sprintf('Document(%s) needs an resource locator (%s) because no url could be generated', $document->getUuid(), $property->getName()),
+                                    'ignore'
+                                );
+
+                                return false;
+                            }
+
+                            $document->setResourceSegment($value);
+                        } else {
+                            $document->setResourceSegment($resourceSegment);
+                        }
                     }
                 }
             }

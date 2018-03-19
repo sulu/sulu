@@ -25,6 +25,7 @@ interface WebspaceImportInterface
      * @param $output
      * @param string $format
      * @param string $uuid
+     * @param bool $overrideSettings
      * @param string $exportSuluVersion
      *
      * @return array
@@ -36,6 +37,7 @@ interface WebspaceImportInterface
         $output = null,
         $format = '1.2.xliff',
         $uuid = null,
+        $overrideSettings = false,
         $exportSuluVersion = '1.3'
     );
 }

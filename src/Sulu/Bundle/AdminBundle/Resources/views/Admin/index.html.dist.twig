@@ -13,7 +13,7 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         {% block stylesheets %}
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1516280460198.css">
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1521102556740.css">
         {% endblock stylesheets %}
     </head>
     <body>
@@ -22,6 +22,7 @@
             <div class="double-bounce2 bouncer"></div>
         </div>
         <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
+            {% block main %}
             <div class="navigation-container">
                 <div class="sulu-navigation-labels"></div>
                 <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
@@ -50,6 +51,7 @@
                 </div>
             </div>
             <div id="overlayContainer" data-aura-component="overlay@suluadmin"></div>
+            {% endblock main %}
         </div>
 
         <script type="text/javascript">
@@ -70,7 +72,7 @@
         </script>
 
         {% block javascripts %}
-        <script data-main="/bundles/suluadmin/dist/app.min.1516280460198" src="/bundles/suluadmin/js/vendor/husky/husky.min.js?v=1516280460198"></script>
+        <script data-main="/bundles/suluadmin/dist/app.min.1521102556740" src="/bundles/suluadmin/js/vendor/husky/husky.min.js?v=1521102556740"></script>
         {% endblock javascripts %}
     </body>
 </html>

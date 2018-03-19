@@ -59,6 +59,17 @@ ALTER TABLE me_file_version_meta CHANGE title title VARCHAR(191) NOT NULL;
 ALTER TABLE me_file_versions CHANGE name name VARCHAR(191) NOT NULL;
 ```
 
+## 1.6.16
+
+### Page index extension
+
+The field `authored` are now added to massive_search index. Because of this the index has to be rebuild.
+
+```bash
+bin/adminconsole massive:search:reindex --provider structure
+bin/websiteconsole massive:search:reindex --provider structure
+```
+
 ## 1.6.15
 
 ### Priority of UpdateResponseSubscriber

@@ -34,13 +34,25 @@
                 <source>snippet.delete-confirm-text</source>
                 <target>Are you sure you want to remove it?</target>
             </trans-unit>
+            <trans-unit id="10a" resname="snippet.save-confirm-text">
+                <source>snippet.save-confirm-text</source>
+                <target>This Snippet is configured as the default for a Webspace. By changing the Snippet type it will lose this status.</target>
+            </trans-unit>
             <trans-unit id="11" resname="snippet.delete-confirm-title">
                 <source>snippet.delete-confirm-title</source>
                 <target>Confirm delete</target>
             </trans-unit>
+            <trans-unit id="11a" resname="snippet.save-confirm-title">
+                <source>snippet.save-confirm-title</source>
+                <target>Confirm type change</target>
+            </trans-unit>
             <trans-unit id="12" resname="snippet.delete-do-it">
                 <source>snippet.delete-do-it</source>
                 <target>Yes, I am sure</target>
+            </trans-unit>
+            <trans-unit id="12a" resname="snippet.save-do-it">
+                <source>snippet.save-do-it</source>
+                <target>Change anyway</target>
             </trans-unit>
             <trans-unit id="13" resname="snippet.delete-no-snippets-selected">
                 <source>snippet.delete-no-snippets-selected</source>

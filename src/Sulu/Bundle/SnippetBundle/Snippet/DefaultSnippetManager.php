@@ -136,6 +136,26 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function loadType($uuid)
+    {
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $settings = $this->settingsManager->loadStringByWildcard($webspace->getKey(), 'snippets-*');
+
+            if (in_array(!$uuid, $settings)) {
+                continue;
+            }
+
+            $index = array_search($uuid, $settings);
+
+            return substr($index, 9);
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function loadIdentifier($webspaceKey, $type)
     {
         // TODO remove strtolower as soon as lowest Symfony version is 3.4

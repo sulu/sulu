@@ -16,6 +16,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
+use Sulu\Component\Content\Exception\ResourceLocatorGeneratorException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Types\ResourceLocator\Mapper\ResourceLocatorMapperInterface;
@@ -114,6 +115,11 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
 
         // cleanup path
         $path = $this->cleaner->cleanup($path, $languageCode);
+
+        // if no path was added throw an except that no url could be generated for the given title
+        if (substr($path, 0, -1) === $parentPath) {
+            throw new ResourceLocatorGeneratorException($title, $parentPath);
+        }
 
         // get unique path
         $path = $this->mapper->getUniquePath($path, $webspaceKey, $languageCode, $segmentKey);

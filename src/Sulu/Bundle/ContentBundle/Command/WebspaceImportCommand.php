@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Command;
 
-use Sulu\Component\Content\Import\WebspaceInterface;
+use Sulu\Component\Content\Import\WebspaceImportInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -71,12 +71,12 @@ class WebspaceImportCommand extends ContainerAwareCommand
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<error>Abort!</error>');
 
-            return;
+            return -1;
         }
 
         $output->writeln('<info>Continue!</info>');
 
-        /** @var WebspaceInterface $webspaceImporter */
+        /** @var WebspaceImportInterface $webspaceImporter */
         $webspaceImporter = $this->getContainer()->get('sulu_content.import.webspace');
 
         $import = $webspaceImporter->import(

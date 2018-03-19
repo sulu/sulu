@@ -20,6 +20,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -262,6 +263,18 @@ EOT;
                     'type' => 'date',
                     'field' => $this->factory->createMetadataExpression(
                         'object.getPublished()'
+                    ),
+                ]
+            );
+        }
+
+        if ($class->isSubclassOf(LocalizedAuthorBehavior::class)) {
+            $indexMeta->addFieldMapping(
+                'authored',
+                [
+                    'type' => 'date',
+                    'field' => $this->factory->createMetadataExpression(
+                        'object.getAuthored()'
                     ),
                 ]
             );
