@@ -197,6 +197,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
 * dev-release/1.5
+    * ENHANCEMENT #3830 [All]                   Avoid duplicated run of composer update for travis
     * BUGFIX      #3826 [ContentBundle]         Fix enabling of save button when toggler is changed
     * HOTFIX      #3819 [MediaBundle]           Fix forgotten context binding for resetPreviewUrl method
     * FEATURE     #3816 [All]                   Validate if grunt build was run for all bundles with circleci
