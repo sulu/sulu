@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.5
+* 1.5.12 (2018-03-19)
     * ENHANCEMENT #3830 [All]                   Avoid duplicated run of composer update for travis
     * BUGFIX      #3826 [ContentBundle]         Fix enabling of save button when toggler is changed
     * HOTFIX      #3819 [MediaBundle]           Fix forgotten context binding for resetPreviewUrl method
