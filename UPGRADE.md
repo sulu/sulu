@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-master
+## 1.6.16
 
 ### Page index extension
 
