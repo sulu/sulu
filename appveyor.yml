@@ -75,10 +75,10 @@ before_test:
   - ps: if ($env:SYMFONY__PHPCR__TRANSPORT -MATCH "jackrabbit") { $argumentList='-jar jackrabbit-standalone-' + $env:JACKRABBIT_VERSION + '.jar'; Start-Process -FilePath java -ArgumentList $argumentList }
 
   # Composer install
-  - php -dmemory_limit=-1 C:\tools\composer.phar update --no-interaction --no-progress --prefer-dist --no-ansi
   - IF "%SYMFONY__PHPCR__TRANSPORT%" == "jackrabbit" (
-        php -dmemory_limit=-1 C:\tools\composer.phar require jackalope/jackalope-jackrabbit:~1.2
+        php -dmemory_limit=-1 C:\tools\composer.phar require jackalope/jackalope-jackrabbit:~1.2 --no-update --no-interaction
     )
+  - php -dmemory_limit=-1 C:\tools\composer.phar update --no-interaction --no-progress --prefer-dist --no-ansi
 
 test_script:
    - cd %APPVEYOR_BUILD_FOLDER%
