@@ -7,8 +7,17 @@ jobs:
     steps:
       - checkout
       # Node
-      - run: sudo apt-get install ruby ruby-all-dev
-      - run: sudo gem update --system
-      - run: sudo gem install compass
-      - run: bin/build-bundles.sh
-      - run: bin/ci/validate-build-bundles.sh
+      - restore_cache:
+          keys:
+            - node-v1-{{ checksum "package.json" }}
+            - node-v1-
+      - run: npm install
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run: npm run lint:js
+      - run: npm run lint:scss
+      - run: npm run flow
+      - run: npm run styleguide:build
+      - run: npm test -- --maxWorkers=4
