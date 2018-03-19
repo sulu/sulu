@@ -25,6 +25,7 @@
         "doctrine/orm": "^2.5.3",
         "doctrine/phpcr-bundle": "^1.3.5",
         "friendsofsymfony/http-cache": "~1.4",
+        "friendsofsymfony/rest-bundle": "^2.2",
         "gedmo/doctrine-extensions": "~2.4",
         "goodby/csv": "^1.3",
         "guzzlehttp/guzzle": "^6.2",
