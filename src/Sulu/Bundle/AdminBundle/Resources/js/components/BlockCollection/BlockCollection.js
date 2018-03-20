@@ -57,7 +57,10 @@ export default class BlockCollection extends React.Component<Props> {
             expandedBlocks.push(...new Array(minOccurs - value.length).fill(true));
             onChange([
                 ...value,
-                ...new Array(minOccurs - value.length).fill(this.defaultType ? {type: this.defaultType} : {}),
+                ...Array.from(
+                    {length: minOccurs - value.length},
+                    () => this.defaultType ? {type: this.defaultType} : {}
+                ),
             ]);
         }
     }

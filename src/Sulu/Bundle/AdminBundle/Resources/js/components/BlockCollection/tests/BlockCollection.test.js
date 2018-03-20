@@ -55,6 +55,20 @@ test('Should add at least the minOccurs amount of blocks', () => {
     ]);
 });
 
+test('Should fill the array up to minOccurs with different objects', () => {
+    const changeSpy = jest.fn();
+    const value = [];
+
+    shallow(<BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />);
+
+    expect(changeSpy).toBeCalledWith([
+        expect.objectContaining({}),
+        expect.objectContaining({}),
+    ]);
+    const changeSpyCall = changeSpy.mock.calls[0][0];
+    expect(changeSpyCall[0]).not.toBe(changeSpyCall[1]);
+});
+
 test('Should add at least the minOccurs amount of blocks with empty starting value', () => {
     const changeSpy = jest.fn();
     const value = [];
