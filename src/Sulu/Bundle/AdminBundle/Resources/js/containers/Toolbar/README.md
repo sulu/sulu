@@ -161,9 +161,9 @@ const PageWithToolbar = withToolbar(Page, function() {
             }
         },
         icons: [
-            'bell-o',
-            'commenting',
-            'exclamation-circle',
+            'fa-bell-o',
+            'fa-commenting',
+            'fa-exclamation-circle',
         ],
         locale: {
             value: state.localeVal,

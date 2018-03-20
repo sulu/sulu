@@ -41,7 +41,7 @@ const handleDirectDownload = (url) => {
 <div style={{backgroundColor: '#e5e5e5', padding: 20}}>
     <MediaCard
         id="What is luv?"
-        icon="check"
+        icon="su-checkmark"
         onSelectionChange={handleSelection}
         onClick={handleClick}
         selected={state.selected}
