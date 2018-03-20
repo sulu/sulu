@@ -4,12 +4,10 @@ $columnWidth: 270px;
 $columnContainerBorderRadius: 3px;
 $columnHeight: 30px;
 
-$columnBackgroundColor: $white;
 $columnBorderColor: $silver;
 $columnBorder: 1px solid $columnBorderColor;
 
 .column {
-    background: $columnBackgroundColor;
     border-bottom: $columnBorder;
     border-top: $columnBorder;
     border-right: $columnBorder;

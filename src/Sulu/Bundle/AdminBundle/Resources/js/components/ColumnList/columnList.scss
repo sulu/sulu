@@ -1,5 +1,12 @@
+@import '../../containers/Application/colors.scss';
+
+$columnListBackgroundColor: $white;
+
 .column-list {
+    background-color: $columnListBackgroundColor;
     align-items: baseline;
     display: inline-flex;
     height: 100%;
+    width: 100%;
+    overflow-x: auto;
 }
