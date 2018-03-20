@@ -34,7 +34,7 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                     'resources' => [
                         'tags' => [
                             'form' => [],
-                            'list' => '%sulu.model.tag.class%',
+                            'datagrid' => '%sulu.model.tag.class%',
                         ],
                     ],
                 ]

@@ -19,9 +19,6 @@ class TypedResourceMetadata implements ResourceMetadataInterface
 {
     /**
      * @var Datagrid
-     *
-     * @Serializer\SerializedName("list")
-     * TODO: Remove this annotation when the frontend is refactored
      */
     private $datagrid;
 

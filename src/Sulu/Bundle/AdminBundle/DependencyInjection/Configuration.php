@@ -53,7 +53,7 @@ class Configuration implements ConfigurationInterface
                                 ->prototype('scalar')->end()
                                 ->isRequired()
                             ->end()
-                            ->scalarNode('list')
+                            ->scalarNode('datagrid')
                                 ->isRequired()
                             ->end()
                         ->end()

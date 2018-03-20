@@ -115,7 +115,7 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
                 $this->writeResourceMetadataCache(
                     $resourceKey,
                     $resource['form'],
-                    $resource['list'],
+                    $resource['datagrid'],
                     $locale
                 );
             }
