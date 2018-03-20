@@ -53,10 +53,8 @@ export default class ColumnList extends React.Component<Props> {
         const {children} = this.props;
 
         return (
-            <div className={columnListStyles.columnListContainer}>
-                <div className={columnListStyles.columnList}>
-                    {this.cloneColumns(children)}
-                </div>
+            <div className={columnListStyles.columnList}>
+                {this.cloneColumns(children)}
             </div>
         );
     }
