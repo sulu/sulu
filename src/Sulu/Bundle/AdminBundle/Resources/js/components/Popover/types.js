@@ -10,7 +10,7 @@ export type PopoverDimensions = {
 export type PopoverStyle = {
     top: string,
     left: string,
-    maxHeight: string,
+    maxHeight: ?string,
 };
 
 export type VerticalCrop = {

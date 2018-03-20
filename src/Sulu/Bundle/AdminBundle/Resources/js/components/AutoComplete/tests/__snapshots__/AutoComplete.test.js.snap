@@ -52,7 +52,7 @@ exports[`Render the AutoComplete with open suggestions list 2`] = `
 </div>
 <div>
   <div class=\\"container\\">
-    <ul style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\" class=\\"menu\\">
+    <ul style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\" class=\\"menu\\">
       <li style=\\"min-width: 0;\\" class=\\"suggestionItem\\">
         <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-label=\\"fa-ticket\\"></span>Suggestion 1</button>
       </li>

@@ -15,7 +15,7 @@
         "sulu-media-bundle": "file:src/Sulu/Bundle/MediaBundle/Resources/js"
     },
     "devDependencies": {
-        "autoprefixer": "^7.1.5",
+        "autoprefixer": "^7.2.5",
         "babel-core": "^6.25.0",
         "babel-eslint": "^8.1.2",
         "babel-loader": "^7.1.1",
@@ -32,7 +32,7 @@
         "enzyme-to-json": "^3.3.1",
         "eslint": "^4.0.0",
         "eslint-plugin-babel": "^4.1.2",
-        "eslint-plugin-flowtype": "^2.34.0",
+        "eslint-plugin-flowtype": "^2.41.1",
         "eslint-plugin-import": "^2.7.0",
         "eslint-plugin-react": "^7.6.1",
         "extract-text-webpack-plugin": "^3.0.1",
@@ -42,6 +42,7 @@
         "identity-obj-proxy": "^3.0.0",
         "jest": "^22.4.0",
         "mobx": "^4.0.0",
+        "moment-timezone": "^0.5.14",
         "null-loader": "^0.1.1",
         "postcss-calc": "^6.0.1",
         "postcss-hexrgba": "^1.0.0",

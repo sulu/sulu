@@ -18,7 +18,8 @@ type Props = {|
     valid: boolean,
     value: ?string,
     onBlur?: () => void,
-    onChange: (value: ?string) => void,
+    onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
+    onIconClick?: () => void,
 |};
 
 export default class Input extends React.PureComponent<Props> {
@@ -28,13 +29,17 @@ export default class Input extends React.PureComponent<Props> {
     };
 
     setRef = (ref: ?ElementRef<'label'>) => {
-        if (this.props.inputRef) {
-            this.props.inputRef(ref);
+        const {inputRef} = this.props;
+
+        if (!inputRef) {
+            return;
         }
+
+        inputRef(ref);
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        this.props.onChange(event.currentTarget.value || undefined);
+        this.props.onChange(event.currentTarget.value || undefined, event);
     };
 
     handleBlur = () => {
@@ -52,6 +57,7 @@ export default class Input extends React.PureComponent<Props> {
             loading,
             name,
             placeholder,
+            onIconClick,
             type,
             value,
         } = this.props;
@@ -63,6 +69,19 @@ export default class Input extends React.PureComponent<Props> {
             }
         );
 
+        const iconClass = classNames(
+            inputStyles.icon,
+            {
+                [inputStyles.iconClickable]: (!!icon && !!onIconClick),
+            }
+        );
+
+        const onIconClickProperties = onIconClick
+            ? {
+                onClick: onIconClick,
+            }
+            : {};
+
         return (
             <label
                 className={labelClass}
@@ -70,7 +89,7 @@ export default class Input extends React.PureComponent<Props> {
             >
                 {!loading && icon &&
                     <div className={inputStyles.prependedContainer}>
-                        <Icon className={inputStyles.icon} name={icon} />
+                        <Icon {...onIconClickProperties} className={iconClass} name={icon} />
                     </div>
                 }
                 {loading &&

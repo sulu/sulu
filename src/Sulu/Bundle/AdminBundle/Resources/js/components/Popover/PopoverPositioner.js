@@ -16,11 +16,17 @@ const PADDING_TO_WINDOW = 10;
  */
 export default class PopoverPositioner {
     static dimensionsToStyle(dimensions: PopoverDimensions): PopoverStyle {
-        return {
+        const style = {
             top: dimensions.top + 'px',
             left: dimensions.left + 'px',
-            maxHeight: dimensions.height + 'px',
+            maxHeight: undefined,
         };
+
+        if (dimensions.height) {
+            style.maxHeight = dimensions.height + 'px';
+        }
+
+        return style;
     }
 
     static getCroppedDimensions(

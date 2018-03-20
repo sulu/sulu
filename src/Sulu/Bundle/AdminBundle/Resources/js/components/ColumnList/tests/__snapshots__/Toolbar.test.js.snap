@@ -31,7 +31,7 @@ exports[`The Toolbar component should render with active 1`] = `
 </div>
 `;
 
-exports[`The Toolbar component should render with active 2`] = `"<div><div class=\\"backdrop fixed\\"></div></div><div><div class=\\"container\\"><div style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\"><div class=\\"listContainer\\"><ul class=\\"list primary\\"><li><button class=\\"option\\">Option1</button></li><li><button class=\\"option\\">Option2</button></li></ul></div></div></div></div>"`;
+exports[`The Toolbar component should render with active 2`] = `"<div><div class=\\"backdrop fixed\\"></div></div><div><div class=\\"container\\"><div style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\"><div class=\\"listContainer\\"><ul class=\\"list primary\\"><li><button class=\\"option\\">Option1</button></li><li><button class=\\"option\\">Option2</button></li></ul></div></div></div></div>"`;
 
 exports[`The Toolbar component should render with active 3`] = `
 <div

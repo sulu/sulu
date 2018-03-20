@@ -23,6 +23,7 @@ type Props = {
     centerChildElement?: ElementRef<*>,
     horizontalOffset: number,
     verticalOffset: number,
+    backdrop: boolean,
 };
 
 @observer
@@ -31,6 +32,7 @@ export default class Popover extends React.Component<Props> {
         open: false,
         horizontalOffset: 0,
         verticalOffset: 0,
+        backdrop: true,
     };
 
     @observable popoverChildRef: ElementRef<'div'>;
@@ -51,6 +53,8 @@ export default class Popover extends React.Component<Props> {
 
     componentDidUpdate() {
         if (this.popoverChildRef) {
+            this.updateDimensions();
+
             afterElementsRendered(() => {
                 this.popoverChildRef.scrollTop = this.dimensions.scrollTop;
             });
@@ -127,7 +131,6 @@ export default class Popover extends React.Component<Props> {
     @action setPopoverChildRef = (popoverChildRef: ElementRef<*>) => {
         if (popoverChildRef) {
             this.popoverChildRef = popoverChildRef;
-            this.updateDimensions();
         }
     };
 
@@ -136,6 +139,7 @@ export default class Popover extends React.Component<Props> {
             open,
             children,
             anchorElement,
+            backdrop,
         } = this.props;
 
         if (!open || !anchorElement) {
@@ -154,7 +158,9 @@ export default class Popover extends React.Component<Props> {
         return (
             // TODO: Use short syntax when eslint bug is fixed: https://github.com/babel/babel-eslint/issues/554
             <Fragment>
-                <Backdrop visible={false} open={true} onClick={this.handleBackdropClick} />
+                {backdrop &&
+                    <Backdrop visible={false} open={true} onClick={this.handleBackdropClick} />
+                }
                 <Portal>
                     <div className={popoverStyles.container}>
                         {children &&

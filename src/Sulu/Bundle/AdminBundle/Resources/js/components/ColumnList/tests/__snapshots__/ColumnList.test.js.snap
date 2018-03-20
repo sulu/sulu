@@ -226,6 +226,7 @@ exports[`The ColumnList component should render 1`] = `
                   </Icon>
                 </div>
                 <Popover
+                  backdrop={true}
                   horizontalOffset={0}
                   onClose={[Function]}
                   open={false}
@@ -747,6 +748,7 @@ exports[`The ColumnList component should render 1`] = `
                   </Icon>
                 </div>
                 <Popover
+                  backdrop={true}
                   horizontalOffset={0}
                   onClose={[Function]}
                   open={false}
@@ -1159,6 +1161,7 @@ exports[`The ColumnList component should render 1`] = `
                   </Icon>
                 </div>
                 <Popover
+                  backdrop={true}
                   horizontalOffset={0}
                   onClose={[Function]}
                   open={false}
@@ -1562,6 +1565,7 @@ exports[`The ColumnList component should render 1`] = `
                   </Icon>
                 </div>
                 <Popover
+                  backdrop={true}
                   horizontalOffset={0}
                   onClose={[Function]}
                   open={false}

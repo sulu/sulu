@@ -1,0 +1,85 @@
+@import '../../containers/Application/colors.scss';
+
+$fontColor: $scorpion;
+$backgroundColorActive: $shakespeare;
+$borderColorToday: $blueZodiac;
+$borderColor: $silver;
+$iconColor: $dustyGray;
+$iconBorderPadding: 5px;
+$placeholderColor: $dustyGray;
+$borderWidth: 1px;
+$borderRadius: 3px;
+$inputHeight: 30px;
+$inputColor: $black;
+$inputFontSize: 12px;
+
+:global {
+    .rdtPicker {
+        padding: 0 12px;
+        box-shadow: none;
+        border: 1px solid $borderColor;
+        border-radius: 0 0 3px 3px;
+        color: $fontColor;
+        position: inherit;
+        width: auto;
+
+        table {
+            border-spacing: 0;
+        }
+
+        thead td {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        thead tr:first-child th {
+            border-bottom: 1px solid $borderColor;
+            padding: 4px 0 5px;
+        }
+
+        td,
+        th {
+            line-height: 19px;
+            height: 19px;
+            font-size: 14px;
+        }
+
+        th {
+            padding: 3px 2px 2px;
+        }
+
+        td {
+            padding: 8px;
+
+            &:hover {
+                border-radius: 3px;
+            }
+
+            &.rdtActive,
+            &.rdtActive:hover {
+                background: $backgroundColorActive;
+                border-radius: 3px;
+            }
+
+            &.rdtToday::before {
+                border-bottom-color: $borderColorToday;
+            }
+        }
+    }
+
+    .rdtDays {
+        thead tr:last-child th {
+            padding-top: 15px;
+        }
+    }
+
+    .rdtYears {
+        table:last-child {
+            padding: 5px;
+        }
+    }
+
+    .rdtCounters .rdtCount {
+        font-size: 14px;
+    }
+}
