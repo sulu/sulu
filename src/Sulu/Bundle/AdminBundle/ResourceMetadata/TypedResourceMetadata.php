@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
-use JMS\Serializer\Annotation as Serializer;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\Type;
 
