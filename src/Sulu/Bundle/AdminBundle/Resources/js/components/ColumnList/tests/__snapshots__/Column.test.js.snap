@@ -2,7 +2,7 @@
 
 exports[`The Column component should render 1`] = `
 <div
-  class="columnContainer active"
+  class="column"
 >
   <div
     class="toolbar active"
@@ -32,15 +32,12 @@ exports[`The Column component should render 1`] = `
       />
     </div>
   </div>
-  <div
-    class="column"
-  />
 </div>
 `;
 
 exports[`The Column component should render 2`] = `
 <div
-  class="columnContainer"
+  class="column"
 >
   <div
     class="toolbar"
@@ -70,8 +67,5 @@ exports[`The Column component should render 2`] = `
       />
     </div>
   </div>
-  <div
-    class="column"
-  />
 </div>
 `;

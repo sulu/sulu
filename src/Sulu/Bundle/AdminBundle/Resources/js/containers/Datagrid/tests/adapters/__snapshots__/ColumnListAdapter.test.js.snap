@@ -5,26 +5,26 @@ exports[`Render data 1`] = `
   class="columnListAdapter"
 >
   <div
-    class="columnList"
+    class="columnListContainer"
   >
     <div
-      class="columnContainer active"
+      class="columnList"
     >
-      <div
-        class="toolbar active"
-      >
-        <div
-          class="item primary"
-        >
-          <span
-            aria-label="su-add"
-            class="su-add"
-          />
-        </div>
-      </div>
       <div
         class="column"
       >
+        <div
+          class="toolbar active"
+        >
+          <div
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
         <div
           class="item"
         >
@@ -116,25 +116,21 @@ exports[`Render data 1`] = `
           </span>
         </div>
       </div>
-    </div>
-    <div
-      class="columnContainer"
-    >
-      <div
-        class="toolbar"
-      >
-        <div
-          class="item primary"
-        >
-          <span
-            aria-label="su-add"
-            class="su-add"
-          />
-        </div>
-      </div>
       <div
         class="column"
       >
+        <div
+          class="toolbar"
+        >
+          <div
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
         <div
           class="item active"
         >
@@ -183,25 +179,22 @@ exports[`Render data 1`] = `
           />
         </div>
       </div>
-    </div>
-    <div
-      class="columnContainer"
-    >
-      <div
-        class="toolbar"
-      >
-        <div
-          class="item primary"
-        >
-          <span
-            aria-label="su-add"
-            class="su-add"
-          />
-        </div>
-      </div>
       <div
         class="column"
-      />
+      >
+        <div
+          class="toolbar"
+        >
+          <div
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -212,26 +205,26 @@ exports[`Render data with loading column 1`] = `
   class="columnListAdapter"
 >
   <div
-    class="columnList"
+    class="columnListContainer"
   >
     <div
-      class="columnContainer active"
+      class="columnList"
     >
-      <div
-        class="toolbar active"
-      >
-        <div
-          class="item primary"
-        >
-          <span
-            aria-label="su-add"
-            class="su-add"
-          />
-        </div>
-      </div>
       <div
         class="column"
       >
+        <div
+          class="toolbar active"
+        >
+          <div
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
         <div
           class="item active"
         >
@@ -323,25 +316,21 @@ exports[`Render data with loading column 1`] = `
           </span>
         </div>
       </div>
-    </div>
-    <div
-      class="columnContainer"
-    >
-      <div
-        class="toolbar"
-      >
-        <div
-          class="item primary"
-        >
-          <span
-            aria-label="su-add"
-            class="su-add"
-          />
-        </div>
-      </div>
       <div
         class="column loading"
       >
+        <div
+          class="toolbar"
+        >
+          <div
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
         <div
           class="spinner"
           style="width:40px;height:40px"

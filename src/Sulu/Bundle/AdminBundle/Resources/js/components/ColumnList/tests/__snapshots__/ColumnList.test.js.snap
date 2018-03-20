@@ -48,193 +48,193 @@ exports[`The ColumnList component should render 1`] = `
   }
 >
   <div
-    className="columnList"
+    className="columnListContainer"
   >
-    <Column
-      active={true}
-      buttons={
-        Array [
-          Object {
-            "icon": "fa-heart",
-            "onClick": [Function],
-          },
-          Object {
-            "icon": "fa-pencil",
-            "onClick": [Function],
-          },
-        ]
-      }
-      index={0}
-      key=".0"
-      loading={false}
-      onActive={[Function]}
-      onItemClick={[MockFunction]}
-      toolbarItems={
-        Array [
-          Object {
-            "icon": "fa-plus",
-            "index": 0,
-            "onClick": [Function],
-            "type": "button",
-          },
-          Object {
-            "icon": "fa-search",
-            "index": 0,
-            "onClick": [Function],
-            "type": "button",
-          },
-          Object {
-            "icon": "fa-gear",
-            "index": 0,
-            "options": Array [
-              Object {
-                "label": "Option1 ",
-                "onClick": [Function],
-              },
-              Object {
-                "label": "Option2 ",
-                "onClick": [Function],
-              },
-            ],
-            "type": "dropdown",
-          },
-        ]
-      }
+    <div
+      className="columnList"
     >
-      <div
-        className="columnContainer active"
-        onMouseEnter={[Function]}
+      <Column
+        active={true}
+        buttons={
+          Array [
+            Object {
+              "icon": "fa-heart",
+              "onClick": [Function],
+            },
+            Object {
+              "icon": "fa-pencil",
+              "onClick": [Function],
+            },
+          ]
+        }
+        index={0}
+        key=".0"
+        loading={false}
+        onActive={[Function]}
+        onItemClick={[MockFunction]}
+        toolbarItems={
+          Array [
+            Object {
+              "icon": "fa-plus",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "fa-search",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "fa-gear",
+              "index": 0,
+              "options": Array [
+                Object {
+                  "label": "Option1 ",
+                  "onClick": [Function],
+                },
+                Object {
+                  "label": "Option2 ",
+                  "onClick": [Function],
+                },
+              ],
+              "type": "dropdown",
+            },
+          ]
+        }
       >
-        <Toolbar
-          active={true}
-          columnIndex={0}
-          toolbarItems={
-            Array [
-              Object {
-                "icon": "fa-plus",
-                "index": 0,
-                "onClick": [Function],
-                "type": "button",
-              },
-              Object {
-                "icon": "fa-search",
-                "index": 0,
-                "onClick": [Function],
-                "type": "button",
-              },
-              Object {
-                "icon": "fa-gear",
-                "index": 0,
-                "options": Array [
-                  Object {
-                    "label": "Option1 ",
-                    "onClick": [Function],
-                  },
-                  Object {
-                    "label": "Option2 ",
-                    "onClick": [Function],
-                  },
-                ],
-                "type": "dropdown",
-              },
-            ]
-          }
-        >
-          <div
-            className="toolbar active"
-          >
-            <ToolbarButton
-              columnIndex={0}
-              icon="fa-plus"
-              index={0}
-              key="0"
-              onClick={[Function]}
-              skin="primary"
-              type="button"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-plus"
-                >
-                  <span
-                    aria-label="fa-plus"
-                    className="fa fa-plus"
-                  />
-                </Icon>
-              </div>
-            </ToolbarButton>
-            <ToolbarButton
-              columnIndex={0}
-              icon="fa-search"
-              index={0}
-              key="1"
-              onClick={[Function]}
-              skin="primary"
-              type="button"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-search"
-                >
-                  <span
-                    aria-label="fa-search"
-                    className="fa fa-search"
-                  />
-                </Icon>
-              </div>
-            </ToolbarButton>
-            <ToolbarDropdown
-              columnIndex={0}
-              icon="fa-gear"
-              index={0}
-              key="2"
-              options={
-                Array [
-                  Object {
-                    "label": "Option1 ",
-                    "onClick": [Function],
-                  },
-                  Object {
-                    "label": "Option2 ",
-                    "onClick": [Function],
-                  },
-                ]
-              }
-              skin="primary"
-              type="dropdown"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-gear"
-                >
-                  <span
-                    aria-label="fa-gear"
-                    className="fa fa-gear"
-                  />
-                </Icon>
-              </div>
-              <Popover
-                backdrop={true}
-                horizontalOffset={0}
-                onClose={[Function]}
-                open={false}
-                verticalOffset={0}
-              />
-            </ToolbarDropdown>
-          </div>
-        </Toolbar>
         <div
           className="column"
+          onMouseEnter={[Function]}
         >
+          <Toolbar
+            active={true}
+            columnIndex={0}
+            toolbarItems={
+              Array [
+                Object {
+                  "icon": "fa-plus",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "fa-search",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "fa-gear",
+                  "index": 0,
+                  "options": Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ],
+                  "type": "dropdown",
+                },
+              ]
+            }
+          >
+            <div
+              className="toolbar active"
+            >
+              <ToolbarButton
+                columnIndex={0}
+                icon="fa-plus"
+                index={0}
+                key="0"
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-plus"
+                  >
+                    <span
+                      aria-label="fa-plus"
+                      className="fa fa-plus"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarButton
+                columnIndex={0}
+                icon="fa-search"
+                index={0}
+                key="1"
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-search"
+                  >
+                    <span
+                      aria-label="fa-search"
+                      className="fa fa-search"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarDropdown
+                columnIndex={0}
+                icon="fa-gear"
+                index={0}
+                key="2"
+                options={
+                  Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ]
+                }
+                skin="primary"
+                type="dropdown"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-gear"
+                  >
+                    <span
+                      aria-label="fa-gear"
+                      className="fa fa-gear"
+                    />
+                  </Icon>
+                </div>
+                <Popover
+                  backdrop={true}
+                  horizontalOffset={0}
+                  onClose={[Function]}
+                  open={false}
+                  verticalOffset={0}
+                />
+              </ToolbarDropdown>
+            </div>
+          </Toolbar>
           <Item
             active={false}
             buttons={
@@ -570,193 +570,189 @@ exports[`The ColumnList component should render 1`] = `
             </div>
           </Item>
         </div>
-      </div>
-    </Column>
-    <Column
-      active={false}
-      buttons={
-        Array [
-          Object {
-            "icon": "fa-heart",
-            "onClick": [Function],
-          },
-          Object {
-            "icon": "fa-pencil",
-            "onClick": [Function],
-          },
-        ]
-      }
-      index={1}
-      key=".1"
-      loading={false}
-      onActive={[Function]}
-      onItemClick={[MockFunction]}
-      toolbarItems={
-        Array [
-          Object {
-            "icon": "fa-plus",
-            "index": 0,
-            "onClick": [Function],
-            "type": "button",
-          },
-          Object {
-            "icon": "fa-search",
-            "index": 0,
-            "onClick": [Function],
-            "type": "button",
-          },
-          Object {
-            "icon": "fa-gear",
-            "index": 0,
-            "options": Array [
-              Object {
-                "label": "Option1 ",
-                "onClick": [Function],
-              },
-              Object {
-                "label": "Option2 ",
-                "onClick": [Function],
-              },
-            ],
-            "type": "dropdown",
-          },
-        ]
-      }
-    >
-      <div
-        className="columnContainer"
-        onMouseEnter={[Function]}
+      </Column>
+      <Column
+        active={false}
+        buttons={
+          Array [
+            Object {
+              "icon": "fa-heart",
+              "onClick": [Function],
+            },
+            Object {
+              "icon": "fa-pencil",
+              "onClick": [Function],
+            },
+          ]
+        }
+        index={1}
+        key=".1"
+        loading={false}
+        onActive={[Function]}
+        onItemClick={[MockFunction]}
+        toolbarItems={
+          Array [
+            Object {
+              "icon": "fa-plus",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "fa-search",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "fa-gear",
+              "index": 0,
+              "options": Array [
+                Object {
+                  "label": "Option1 ",
+                  "onClick": [Function],
+                },
+                Object {
+                  "label": "Option2 ",
+                  "onClick": [Function],
+                },
+              ],
+              "type": "dropdown",
+            },
+          ]
+        }
       >
-        <Toolbar
-          active={false}
-          columnIndex={1}
-          toolbarItems={
-            Array [
-              Object {
-                "icon": "fa-plus",
-                "index": 0,
-                "onClick": [Function],
-                "type": "button",
-              },
-              Object {
-                "icon": "fa-search",
-                "index": 0,
-                "onClick": [Function],
-                "type": "button",
-              },
-              Object {
-                "icon": "fa-gear",
-                "index": 0,
-                "options": Array [
-                  Object {
-                    "label": "Option1 ",
-                    "onClick": [Function],
-                  },
-                  Object {
-                    "label": "Option2 ",
-                    "onClick": [Function],
-                  },
-                ],
-                "type": "dropdown",
-              },
-            ]
-          }
-        >
-          <div
-            className="toolbar"
-          >
-            <ToolbarButton
-              columnIndex={1}
-              icon="fa-plus"
-              index={0}
-              key="0"
-              onClick={[Function]}
-              skin="primary"
-              type="button"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-plus"
-                >
-                  <span
-                    aria-label="fa-plus"
-                    className="fa fa-plus"
-                  />
-                </Icon>
-              </div>
-            </ToolbarButton>
-            <ToolbarButton
-              columnIndex={1}
-              icon="fa-search"
-              index={0}
-              key="1"
-              onClick={[Function]}
-              skin="primary"
-              type="button"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-search"
-                >
-                  <span
-                    aria-label="fa-search"
-                    className="fa fa-search"
-                  />
-                </Icon>
-              </div>
-            </ToolbarButton>
-            <ToolbarDropdown
-              columnIndex={1}
-              icon="fa-gear"
-              index={0}
-              key="2"
-              options={
-                Array [
-                  Object {
-                    "label": "Option1 ",
-                    "onClick": [Function],
-                  },
-                  Object {
-                    "label": "Option2 ",
-                    "onClick": [Function],
-                  },
-                ]
-              }
-              skin="primary"
-              type="dropdown"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-gear"
-                >
-                  <span
-                    aria-label="fa-gear"
-                    className="fa fa-gear"
-                  />
-                </Icon>
-              </div>
-              <Popover
-                backdrop={true}
-                horizontalOffset={0}
-                onClose={[Function]}
-                open={false}
-                verticalOffset={0}
-              />
-            </ToolbarDropdown>
-          </div>
-        </Toolbar>
         <div
           className="column"
+          onMouseEnter={[Function]}
         >
+          <Toolbar
+            active={false}
+            columnIndex={1}
+            toolbarItems={
+              Array [
+                Object {
+                  "icon": "fa-plus",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "fa-search",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "fa-gear",
+                  "index": 0,
+                  "options": Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ],
+                  "type": "dropdown",
+                },
+              ]
+            }
+          >
+            <div
+              className="toolbar"
+            >
+              <ToolbarButton
+                columnIndex={1}
+                icon="fa-plus"
+                index={0}
+                key="0"
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-plus"
+                  >
+                    <span
+                      aria-label="fa-plus"
+                      className="fa fa-plus"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarButton
+                columnIndex={1}
+                icon="fa-search"
+                index={0}
+                key="1"
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-search"
+                  >
+                    <span
+                      aria-label="fa-search"
+                      className="fa fa-search"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarDropdown
+                columnIndex={1}
+                icon="fa-gear"
+                index={0}
+                key="2"
+                options={
+                  Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ]
+                }
+                skin="primary"
+                type="dropdown"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-gear"
+                  >
+                    <span
+                      aria-label="fa-gear"
+                      className="fa fa-gear"
+                    />
+                  </Icon>
+                </div>
+                <Popover
+                  backdrop={true}
+                  horizontalOffset={0}
+                  onClose={[Function]}
+                  open={false}
+                  verticalOffset={0}
+                />
+              </ToolbarDropdown>
+            </div>
+          </Toolbar>
           <Item
             active={false}
             buttons={
@@ -983,193 +979,189 @@ exports[`The ColumnList component should render 1`] = `
             </div>
           </Item>
         </div>
-      </div>
-    </Column>
-    <Column
-      active={false}
-      buttons={
-        Array [
-          Object {
-            "icon": "fa-heart",
-            "onClick": [Function],
-          },
-          Object {
-            "icon": "fa-pencil",
-            "onClick": [Function],
-          },
-        ]
-      }
-      index={2}
-      key=".2"
-      loading={false}
-      onActive={[Function]}
-      onItemClick={[MockFunction]}
-      toolbarItems={
-        Array [
-          Object {
-            "icon": "fa-plus",
-            "index": 0,
-            "onClick": [Function],
-            "type": "button",
-          },
-          Object {
-            "icon": "fa-search",
-            "index": 0,
-            "onClick": [Function],
-            "type": "button",
-          },
-          Object {
-            "icon": "fa-gear",
-            "index": 0,
-            "options": Array [
-              Object {
-                "label": "Option1 ",
-                "onClick": [Function],
-              },
-              Object {
-                "label": "Option2 ",
-                "onClick": [Function],
-              },
-            ],
-            "type": "dropdown",
-          },
-        ]
-      }
-    >
-      <div
-        className="columnContainer"
-        onMouseEnter={[Function]}
+      </Column>
+      <Column
+        active={false}
+        buttons={
+          Array [
+            Object {
+              "icon": "fa-heart",
+              "onClick": [Function],
+            },
+            Object {
+              "icon": "fa-pencil",
+              "onClick": [Function],
+            },
+          ]
+        }
+        index={2}
+        key=".2"
+        loading={false}
+        onActive={[Function]}
+        onItemClick={[MockFunction]}
+        toolbarItems={
+          Array [
+            Object {
+              "icon": "fa-plus",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "fa-search",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "fa-gear",
+              "index": 0,
+              "options": Array [
+                Object {
+                  "label": "Option1 ",
+                  "onClick": [Function],
+                },
+                Object {
+                  "label": "Option2 ",
+                  "onClick": [Function],
+                },
+              ],
+              "type": "dropdown",
+            },
+          ]
+        }
       >
-        <Toolbar
-          active={false}
-          columnIndex={2}
-          toolbarItems={
-            Array [
-              Object {
-                "icon": "fa-plus",
-                "index": 0,
-                "onClick": [Function],
-                "type": "button",
-              },
-              Object {
-                "icon": "fa-search",
-                "index": 0,
-                "onClick": [Function],
-                "type": "button",
-              },
-              Object {
-                "icon": "fa-gear",
-                "index": 0,
-                "options": Array [
-                  Object {
-                    "label": "Option1 ",
-                    "onClick": [Function],
-                  },
-                  Object {
-                    "label": "Option2 ",
-                    "onClick": [Function],
-                  },
-                ],
-                "type": "dropdown",
-              },
-            ]
-          }
-        >
-          <div
-            className="toolbar"
-          >
-            <ToolbarButton
-              columnIndex={2}
-              icon="fa-plus"
-              index={0}
-              key="0"
-              onClick={[Function]}
-              skin="primary"
-              type="button"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-plus"
-                >
-                  <span
-                    aria-label="fa-plus"
-                    className="fa fa-plus"
-                  />
-                </Icon>
-              </div>
-            </ToolbarButton>
-            <ToolbarButton
-              columnIndex={2}
-              icon="fa-search"
-              index={0}
-              key="1"
-              onClick={[Function]}
-              skin="primary"
-              type="button"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-search"
-                >
-                  <span
-                    aria-label="fa-search"
-                    className="fa fa-search"
-                  />
-                </Icon>
-              </div>
-            </ToolbarButton>
-            <ToolbarDropdown
-              columnIndex={2}
-              icon="fa-gear"
-              index={0}
-              key="2"
-              options={
-                Array [
-                  Object {
-                    "label": "Option1 ",
-                    "onClick": [Function],
-                  },
-                  Object {
-                    "label": "Option2 ",
-                    "onClick": [Function],
-                  },
-                ]
-              }
-              skin="primary"
-              type="dropdown"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-gear"
-                >
-                  <span
-                    aria-label="fa-gear"
-                    className="fa fa-gear"
-                  />
-                </Icon>
-              </div>
-              <Popover
-                backdrop={true}
-                horizontalOffset={0}
-                onClose={[Function]}
-                open={false}
-                verticalOffset={0}
-              />
-            </ToolbarDropdown>
-          </div>
-        </Toolbar>
         <div
           className="column"
+          onMouseEnter={[Function]}
         >
+          <Toolbar
+            active={false}
+            columnIndex={2}
+            toolbarItems={
+              Array [
+                Object {
+                  "icon": "fa-plus",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "fa-search",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "fa-gear",
+                  "index": 0,
+                  "options": Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ],
+                  "type": "dropdown",
+                },
+              ]
+            }
+          >
+            <div
+              className="toolbar"
+            >
+              <ToolbarButton
+                columnIndex={2}
+                icon="fa-plus"
+                index={0}
+                key="0"
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-plus"
+                  >
+                    <span
+                      aria-label="fa-plus"
+                      className="fa fa-plus"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarButton
+                columnIndex={2}
+                icon="fa-search"
+                index={0}
+                key="1"
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-search"
+                  >
+                    <span
+                      aria-label="fa-search"
+                      className="fa fa-search"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarDropdown
+                columnIndex={2}
+                icon="fa-gear"
+                index={0}
+                key="2"
+                options={
+                  Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ]
+                }
+                skin="primary"
+                type="dropdown"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-gear"
+                  >
+                    <span
+                      aria-label="fa-gear"
+                      className="fa fa-gear"
+                    />
+                  </Icon>
+                </div>
+                <Popover
+                  backdrop={true}
+                  horizontalOffset={0}
+                  onClose={[Function]}
+                  open={false}
+                  verticalOffset={0}
+                />
+              </ToolbarDropdown>
+            </div>
+          </Toolbar>
           <Item
             active={false}
             buttons={
@@ -1387,193 +1379,189 @@ exports[`The ColumnList component should render 1`] = `
             </div>
           </Item>
         </div>
-      </div>
-    </Column>
-    <Column
-      active={false}
-      buttons={
-        Array [
-          Object {
-            "icon": "fa-heart",
-            "onClick": [Function],
-          },
-          Object {
-            "icon": "fa-pencil",
-            "onClick": [Function],
-          },
-        ]
-      }
-      index={3}
-      key=".3"
-      loading={true}
-      onActive={[Function]}
-      onItemClick={[MockFunction]}
-      toolbarItems={
-        Array [
-          Object {
-            "icon": "fa-plus",
-            "index": 0,
-            "onClick": [Function],
-            "type": "button",
-          },
-          Object {
-            "icon": "fa-search",
-            "index": 0,
-            "onClick": [Function],
-            "type": "button",
-          },
-          Object {
-            "icon": "fa-gear",
-            "index": 0,
-            "options": Array [
-              Object {
-                "label": "Option1 ",
-                "onClick": [Function],
-              },
-              Object {
-                "label": "Option2 ",
-                "onClick": [Function],
-              },
-            ],
-            "type": "dropdown",
-          },
-        ]
-      }
-    >
-      <div
-        className="columnContainer"
-        onMouseEnter={[Function]}
+      </Column>
+      <Column
+        active={false}
+        buttons={
+          Array [
+            Object {
+              "icon": "fa-heart",
+              "onClick": [Function],
+            },
+            Object {
+              "icon": "fa-pencil",
+              "onClick": [Function],
+            },
+          ]
+        }
+        index={3}
+        key=".3"
+        loading={true}
+        onActive={[Function]}
+        onItemClick={[MockFunction]}
+        toolbarItems={
+          Array [
+            Object {
+              "icon": "fa-plus",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "fa-search",
+              "index": 0,
+              "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "fa-gear",
+              "index": 0,
+              "options": Array [
+                Object {
+                  "label": "Option1 ",
+                  "onClick": [Function],
+                },
+                Object {
+                  "label": "Option2 ",
+                  "onClick": [Function],
+                },
+              ],
+              "type": "dropdown",
+            },
+          ]
+        }
       >
-        <Toolbar
-          active={false}
-          columnIndex={3}
-          toolbarItems={
-            Array [
-              Object {
-                "icon": "fa-plus",
-                "index": 0,
-                "onClick": [Function],
-                "type": "button",
-              },
-              Object {
-                "icon": "fa-search",
-                "index": 0,
-                "onClick": [Function],
-                "type": "button",
-              },
-              Object {
-                "icon": "fa-gear",
-                "index": 0,
-                "options": Array [
-                  Object {
-                    "label": "Option1 ",
-                    "onClick": [Function],
-                  },
-                  Object {
-                    "label": "Option2 ",
-                    "onClick": [Function],
-                  },
-                ],
-                "type": "dropdown",
-              },
-            ]
-          }
-        >
-          <div
-            className="toolbar"
-          >
-            <ToolbarButton
-              columnIndex={3}
-              icon="fa-plus"
-              index={0}
-              key="0"
-              onClick={[Function]}
-              skin="primary"
-              type="button"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-plus"
-                >
-                  <span
-                    aria-label="fa-plus"
-                    className="fa fa-plus"
-                  />
-                </Icon>
-              </div>
-            </ToolbarButton>
-            <ToolbarButton
-              columnIndex={3}
-              icon="fa-search"
-              index={0}
-              key="1"
-              onClick={[Function]}
-              skin="primary"
-              type="button"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-search"
-                >
-                  <span
-                    aria-label="fa-search"
-                    className="fa fa-search"
-                  />
-                </Icon>
-              </div>
-            </ToolbarButton>
-            <ToolbarDropdown
-              columnIndex={3}
-              icon="fa-gear"
-              index={0}
-              key="2"
-              options={
-                Array [
-                  Object {
-                    "label": "Option1 ",
-                    "onClick": [Function],
-                  },
-                  Object {
-                    "label": "Option2 ",
-                    "onClick": [Function],
-                  },
-                ]
-              }
-              skin="primary"
-              type="dropdown"
-            >
-              <div
-                className="item primary"
-                onClick={[Function]}
-              >
-                <Icon
-                  name="fa-gear"
-                >
-                  <span
-                    aria-label="fa-gear"
-                    className="fa fa-gear"
-                  />
-                </Icon>
-              </div>
-              <Popover
-                backdrop={true}
-                horizontalOffset={0}
-                onClose={[Function]}
-                open={false}
-                verticalOffset={0}
-              />
-            </ToolbarDropdown>
-          </div>
-        </Toolbar>
         <div
           className="column loading"
+          onMouseEnter={[Function]}
         >
+          <Toolbar
+            active={false}
+            columnIndex={3}
+            toolbarItems={
+              Array [
+                Object {
+                  "icon": "fa-plus",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "fa-search",
+                  "index": 0,
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                Object {
+                  "icon": "fa-gear",
+                  "index": 0,
+                  "options": Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ],
+                  "type": "dropdown",
+                },
+              ]
+            }
+          >
+            <div
+              className="toolbar"
+            >
+              <ToolbarButton
+                columnIndex={3}
+                icon="fa-plus"
+                index={0}
+                key="0"
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-plus"
+                  >
+                    <span
+                      aria-label="fa-plus"
+                      className="fa fa-plus"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarButton
+                columnIndex={3}
+                icon="fa-search"
+                index={0}
+                key="1"
+                onClick={[Function]}
+                skin="primary"
+                type="button"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-search"
+                  >
+                    <span
+                      aria-label="fa-search"
+                      className="fa fa-search"
+                    />
+                  </Icon>
+                </div>
+              </ToolbarButton>
+              <ToolbarDropdown
+                columnIndex={3}
+                icon="fa-gear"
+                index={0}
+                key="2"
+                options={
+                  Array [
+                    Object {
+                      "label": "Option1 ",
+                      "onClick": [Function],
+                    },
+                    Object {
+                      "label": "Option2 ",
+                      "onClick": [Function],
+                    },
+                  ]
+                }
+                skin="primary"
+                type="dropdown"
+              >
+                <div
+                  className="item primary"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-gear"
+                  >
+                    <span
+                      aria-label="fa-gear"
+                      className="fa fa-gear"
+                    />
+                  </Icon>
+                </div>
+                <Popover
+                  backdrop={true}
+                  horizontalOffset={0}
+                  onClose={[Function]}
+                  open={false}
+                  verticalOffset={0}
+                />
+              </ToolbarDropdown>
+            </div>
+          </Toolbar>
           <Loader
             size={40}
           >
@@ -1595,8 +1583,8 @@ exports[`The ColumnList component should render 1`] = `
             </div>
           </Loader>
         </div>
-      </div>
-    </Column>
+      </Column>
+    </div>
   </div>
 </ColumnList>
 `;

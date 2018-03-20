@@ -57,13 +57,6 @@ export default class Column extends React.Component<Props> {
     render() {
         const {children, active, index, loading, toolbarItems} = this.props;
 
-        const columnContainerClass = classNames(
-            columnStyles.columnContainer,
-            {
-                [columnStyles.active]: active,
-            }
-        );
-
         const columnClass = classNames(
             columnStyles.column,
             {
@@ -72,11 +65,9 @@ export default class Column extends React.Component<Props> {
         );
 
         return (
-            <div onMouseEnter={this.handleMouseEnter} className={columnContainerClass}>
+            <div className={columnClass} onMouseEnter={this.handleMouseEnter}>
                 <Toolbar active={active} columnIndex={index} toolbarItems={toolbarItems} />
-                <div className={columnClass}>
-                    {loading ? <Loader /> : this.cloneItems(children)}
-                </div>
+                {loading ? <Loader /> : this.cloneItems(children)}
             </div>
         );
     }

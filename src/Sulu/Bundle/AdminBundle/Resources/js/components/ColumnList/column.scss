@@ -1,51 +1,16 @@
 @import '../../containers/Application/colors.scss';
+@import './variables.scss';
 
 $columnWidth: 270px;
-$columnContainerBorderRadius: 3px;
-$columnHeight: 30px;
-
-$columnBorderColor: $silver;
-$columnBorder: 1px solid $columnBorderColor;
 
 .column {
-    border-bottom: $columnBorder;
-    border-top: $columnBorder;
     border-right: $columnBorder;
     vertical-align: top;
     width: $columnWidth;
-    height: calc(100% - $columnHeight);
+    height: 100%;
     overflow: hidden;
 }
 
 .loading {
     display: flex;
-}
-
-.column-container:first-child {
-    .column {
-        border-left: $columnBorder;
-        border-radius: $columnContainerBorderRadius 0 0 $columnContainerBorderRadius;
-    }
-
-    &.active {
-        .column {
-            border-radius: 0 0 0 $columnContainerBorderRadius;
-        }
-    }
-}
-
-.column-container:last-child {
-    .column {
-        border-radius: 0 $columnContainerBorderRadius $columnContainerBorderRadius 0;
-    }
-
-    &.active {
-        .column {
-            border-radius: 0 0 $columnContainerBorderRadius 0;
-        }
-    }
-}
-
-.column-container {
-    height: inherit;
 }
