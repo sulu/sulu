@@ -127,6 +127,7 @@ module.exports = { // eslint-disable-line
         devServer: {
             disableHostCheck: true,
         },
+        devtool: 'source-map',
         module: {
             loaders: [
                 {
