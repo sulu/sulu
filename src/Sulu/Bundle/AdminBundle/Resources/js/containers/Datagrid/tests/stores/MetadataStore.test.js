@@ -6,9 +6,9 @@ jest.mock('../../../../stores/ResourceMetadataStore', () => ({
     loadConfiguration: jest.fn(),
 }));
 
-test('Return list fields for given resourceKey from ResourceMetadataStore', () => {
+test('Return datagrid fields for given resourceKey from ResourceMetadataStore', () => {
     const snippetMetadata = {
-        list: {
+        datagrid: {
             id: {},
             title: {
                 sortable: true,
@@ -16,7 +16,7 @@ test('Return list fields for given resourceKey from ResourceMetadataStore', () =
         },
     };
     const contactMetadata = {
-        list: {
+        datagrid: {
             id: {},
             firstName: {
                 sortable: true,
@@ -52,7 +52,7 @@ test('Return list fields for given resourceKey from ResourceMetadataStore', () =
     });
 });
 
-test('Throw exception if no list fields for given resourceKey are available', () => {
+test('Throw exception if no datagrid fields for given resourceKey are available', () => {
     const contactMetadata = {};
     const contactPromise = Promise.resolve(contactMetadata);
 

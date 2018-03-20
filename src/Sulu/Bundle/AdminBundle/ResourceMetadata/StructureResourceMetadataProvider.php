@@ -49,7 +49,7 @@ class StructureResourceMetadataProvider implements ResourceMetadataProviderInter
         }
 
         return $this->getResourceMetadataForStructure(
-            $this->resources[$resourceKey]['list'],
+            $this->resources[$resourceKey]['datagrid'],
             $this->resources[$resourceKey]['types'],
             $locale
         );

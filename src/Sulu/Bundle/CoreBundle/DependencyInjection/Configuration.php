@@ -207,7 +207,7 @@ class Configuration implements ConfigurationInterface
                             ->useAttributeAsKey('resourceKey')
                             ->prototype('array')
                                 ->children()
-                                    ->scalarNode('list')
+                                    ->scalarNode('datagrid')
                                         ->isRequired()
                                     ->end()
                                     ->arrayNode('types')

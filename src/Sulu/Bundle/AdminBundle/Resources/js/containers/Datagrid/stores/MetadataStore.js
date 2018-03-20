@@ -6,11 +6,11 @@ class MetadataStore {
     getSchema(resourceKey: string): Promise<Schema> {
         return resourceMetadataStore.loadConfiguration(resourceKey)
             .then((configuration) => {
-                if (!('list' in configuration)) {
-                    throw new Error('There are no list configurations for the resourceKey "' + resourceKey + '"');
+                if (!('datagrid' in configuration)) {
+                    throw new Error('There is no "datagrid" configuration for the resourceKey "' + resourceKey + '"');
                 }
 
-                return configuration.list;
+                return configuration.datagrid;
             });
     }
 }

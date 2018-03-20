@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
-use JMS\Serializer\Annotation as Serializer;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
@@ -20,9 +19,6 @@ class ResourceMetadata implements ResourceMetadataInterface
 {
     /**
      * @var Datagrid
-     *
-     * @Serializer\SerializedName("list")
-     * TODO: Remove this annotation when the frontend is refactored
      */
     private $datagrid;
 
