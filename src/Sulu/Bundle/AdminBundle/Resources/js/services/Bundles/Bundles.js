@@ -16,12 +16,14 @@ function bundleReady() {
 const bundlesReadyPromise: Promise<*> = new Promise((resolve, reject) => {
     resolveBundlesPromise = resolve;
 
-    setTimeout(() => {
-        reject(
-            'Timeout exceeded: Check if you correctly call the "bundleReady" function in the ' +
-            '"./Resources/js/index.js" file of all your bundles.'
-        );
-    }, TIMEOUT);
+    if (typeof BUNDLE_ENTRIES_COUNT !== 'undefined') {
+        setTimeout(() => {
+            reject(
+                'Timeout exceeded: Check if you correctly call the "bundleReady" function in the ' +
+                '"./Resources/js/index.js" file of all your bundles.'
+            );
+        }, TIMEOUT);
+    }
 });
 
 export {
