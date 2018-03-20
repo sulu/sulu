@@ -154,7 +154,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
                         </div>
                         <Datagrid
                             store={this.datagridStore}
-                            adapters={['tree_list', 'table', 'column_list']} // TODO
+                            adapters={['tree_list', 'column_list']}
                             onItemClick={this.handleEditClick}
                             onAddClick={this.handleAddClick}
                             onItemClick={this.handleEditClick}

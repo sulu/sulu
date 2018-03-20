@@ -91,7 +91,7 @@ export default class Header extends React.PureComponent<Props> {
             return children;
         }
 
-        return <div className={tableStyles.cellContent}>
+        return (<div className={tableStyles.cellContent}>
             <div className={tableStyles.cellSelect}>
                 <Checkbox
                     skin="light"
@@ -100,7 +100,7 @@ export default class Header extends React.PureComponent<Props> {
                 />
             </div>
             {children}
-        </div>;
+        </div>);
     };
 
     createHeaderButtonCells = () => {

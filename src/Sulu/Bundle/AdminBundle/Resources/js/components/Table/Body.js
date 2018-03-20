@@ -15,7 +15,9 @@ type Props = {
     /** @ignore */
     onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     /** @ignore */
-    onRowToggleChange?: (rowId: string | number, expanded: boolean) => void,
+    onRowExpand?: (rowId: string | number) => void,
+    /** @ignore */
+    onRowCollapse?: (rowId: string | number) => void,
 };
 
 export default class Body extends React.PureComponent<Props> {
@@ -40,7 +42,8 @@ export default class Body extends React.PureComponent<Props> {
                 selectMode: selectMode,
                 selectInFirstCell: this.props.selectInFirstCell,
                 onSelectionChange: this.handleRowSelectionChange,
-                onToggleChange: this.handleRowToggleChange,
+                onExpand: this.handleRowExpand,
+                onCollapse: this.handleRowCollapse,
             }
         ));
     };
@@ -51,9 +54,15 @@ export default class Body extends React.PureComponent<Props> {
         }
     };
 
-    handleRowToggleChange = (rowId: string | number, expanded: boolean) => {
-        if (this.props.onRowToggleChange) {
-            this.props.onRowToggleChange(rowId, expanded);
+    handleRowExpand = (rowId: string | number) => {
+        if (this.props.onRowExpand) {
+            this.props.onRowExpand(rowId);
+        }
+    };
+
+    handleRowCollapse = (rowId: string | number) => {
+        if (this.props.onRowCollapse) {
+            this.props.onRowCollapse(rowId);
         }
     };
 

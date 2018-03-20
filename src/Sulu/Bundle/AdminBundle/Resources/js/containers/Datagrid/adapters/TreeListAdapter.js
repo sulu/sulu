@@ -47,18 +47,16 @@ export default class TreeListAdapter extends AbstractAdapter {
         return dataList;
     }
 
-    @action handleRowToggleChange(rowId: string | number, expanded: boolean) {
-        if (expanded) {
-            this.expandedRows.push(rowId);
-
-            if (this.props.onItemActivation) {
-                this.props.onItemActivation(rowId);
-            }
-
-            return;
-        }
-
+    @action handleRowCollapse(rowId: string | number) {
         this.expandedRows.splice(this.expandedRows.indexOf(rowId), 1);
+    }
+
+    @action handleRowExpand(rowId: string | number) {
+        this.expandedRows.push(rowId);
+
+        if (this.props.onItemActivation) {
+            this.props.onItemActivation(rowId);
+        }
     }
 
     renderCells(item: Object, schemaKeys: Array<string>) {
@@ -99,16 +97,11 @@ export default class TreeListAdapter extends AbstractAdapter {
             } = this.props;
             const {data} = item;
             const schemaKeys = Object.keys(schema);
-            let loading = false;
-
-            if (this.props.active === data.id && this.props.loading) {
-                loading = true;
-            }
 
             return <Table.Row key={data.id}
                              id={data.id}
                              depth={item.depth}
-                             isLoading={loading}
+                             isLoading={this.props.active === data.id && this.props.loading}
                              hasChildren={data.hasChildren}
                              expanded={item.expanded}
                              selected={selections.includes(data.id)}>
@@ -145,7 +138,8 @@ export default class TreeListAdapter extends AbstractAdapter {
                 buttons={buttons}
                 selectInFirstCell={true}
                 selectMode="multiple"
-                onRowToggleChange={this.handleRowToggleChange.bind(this)}
+                onRowCollapse={this.handleRowCollapse.bind(this)}
+                onRowExpand={this.handleRowExpand.bind(this)}
                 onRowSelectionChange={onItemSelectionChange}
                 onAllSelectionChange={onAllSelectionChange}
             >

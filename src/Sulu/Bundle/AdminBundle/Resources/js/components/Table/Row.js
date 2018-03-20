@@ -32,8 +32,12 @@ type Props = {
     isLoading?: boolean,
     /** The depth of the element in the row */
     depth?: number,
+    /** The depth padding in px */
+    depthPadding?: number,
     /** @ignore */
-    onToggleChange?: (rowId: string | number, expanded: boolean) => void,
+    onExpand?: (rowId: string | number) => void,
+    /** @ignore */
+    onCollapse?: (rowId: string | number) => void,
     /** @ignore */
     onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
 };
@@ -44,6 +48,12 @@ export default class Row extends React.PureComponent<Props> {
         selectInFirstCell: false,
         rowIndex: 0,
         depth: 0,
+        depthPadding: 25,
+    };
+
+    getIdentifier = () => {
+        const {id, selected, rowIndex} = this.props;
+        return id || rowIndex;
     };
 
     isMultipleSelect = () => {
@@ -116,20 +126,24 @@ export default class Row extends React.PureComponent<Props> {
         }
 
         if (this.props.depth) {
-            style.paddingLeft = (this.props.depth * 25) + 'px'
+            style.paddingLeft = (this.props.depth * this.props.depthPadding) + 'px'
         }
 
         if (this.props.selectInFirstCell) {
-            select = <div className={tableStyles.cellSelect}>
-                {this.createSelect()}
-            </div>;
+            select = (
+                <div className={tableStyles.cellSelect}>
+                    {this.createSelect()}
+                </div>
+            );
         }
 
-        return <div className={tableStyles.cellContent} style={style}>
-            {select}
-            {toggler}
-            {children}
-        </div>;
+        return (
+            <div className={tableStyles.cellContent} style={style}>
+                {select}
+                {toggler}
+                {children}
+            </div>
+        );
     };
 
     createSelect = () => {
@@ -141,25 +155,27 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createToggler = () => {
-        let icon = <Icon name={this.props.expanded ? 'su-arrow-filled-down' : 'su-arrow-filled-right'} />
+        const icon = <Icon name={this.props.expanded ? 'su-arrow-filled-down' : 'su-arrow-filled-right'} />;
 
         if (this.props.isLoading) {
             icon = <Loader size={10}/>
         }
 
-        return <span onClick={this.handleToggleChange} className={tableStyles.toggleIcon}>
+        return (
+            <span onClick={this.props.expanded ? this.handleExpand : this.handleCollapse}
+                     lassName={tableStyles.toggleIcon}>
                 {icon}
             </span>
+        );
     };
 
     createRadioCell = () => {
-        const {id, selected, rowIndex} = this.props;
-        const identifier = id || rowIndex;
+        const {selected} = this.props;
 
         return (
             <Radio
                 skin="dark"
-                value={identifier}
+                value={this.getIdentifier()}
                 checked={!!selected}
                 onChange={this.handleSingleSelectionChange}
             />
@@ -167,13 +183,12 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createCheckboxCell = () => {
-        const {id, selected, rowIndex} = this.props;
-        const identifier = id || rowIndex;
+        const {selected} = this.props;
 
         return (
             <Checkbox
                 skin="dark"
-                value={identifier}
+                value={this.getIdentifier()}
                 checked={!!selected}
                 onChange={this.handleMultipleSelectionChange}
             />
@@ -181,8 +196,8 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createButtonCells = () => {
-        const {id, rowIndex} = this.props;
         const {buttons} = this.props;
+        const identifier = this.getIdentifier();
 
         if (!buttons) {
             return null;
@@ -191,7 +206,6 @@ export default class Row extends React.PureComponent<Props> {
         return buttons.map((button: ButtonConfig, index) => {
             const key = `control-${rowIndex}-${index}`;
             const handleClick = button.onClick;
-            const identifier = id || rowIndex;
 
             return (
                 <ButtonCell
@@ -204,12 +218,15 @@ export default class Row extends React.PureComponent<Props> {
         });
     };
 
-    handleToggleChange = () => {
-        const {id, rowIndex, expanded} = this.props;
-        const identifier = id || rowIndex;
+    handleCollapse = () => {
+        if (this.props.onCollapse) {
+            this.props.onCollapse(this.getIdentifier());
+        }
+    };
 
-        if (this.props.onToggleChange && identifier) {
-            this.props.onToggleChange(identifier, !expanded);
+    handleExpand = () => {
+        if (this.props.onExpand) {
+            this.props.onExpand(this.getIdentifier());
         }
     };
 
