@@ -66,7 +66,7 @@
             <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
             <argument type="service" id="sulu_admin.metadata.resource_metadata_mapper"/>
             <argument>%sulu_core.locales%</argument>
-            <argument type="service" id="kernel"/>
+            <argument type="service" id="file_locator"/>
             <argument>%kernel.cache_dir%/sulu/resourcemetadata</argument>
             <argument>%kernel.debug%</argument>
 

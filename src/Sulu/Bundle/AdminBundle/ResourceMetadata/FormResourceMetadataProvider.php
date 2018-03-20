@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class FormResourceMetadataProvider implements ResourceMetadataProviderInterface, CacheWarmerInterface
@@ -41,9 +42,9 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
     private $locales;
 
     /**
-     * @var KernelInterface
+     * @var FileLocator
      */
-    private $kernel;
+    private $fileLocator;
 
     /**
      * @var string
@@ -65,7 +66,7 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
         FormXmlLoader $formXmlLoader,
         ResourceMetadataMapper $resourceMetadataMapper,
         array $locales,
-        KernelInterface $kernel,
+        FileLocator $fileLocator,
         string $cacheDir,
         bool $debug
     ) {
@@ -73,7 +74,7 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
         $this->formXmlLoader = $formXmlLoader;
         $this->resourceMetadataMapper = $resourceMetadataMapper;
         $this->locales = $locales;
-        $this->kernel = $kernel;
+        $this->fileLocator = $fileLocator;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
     }
@@ -131,7 +132,7 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
         $properties = [];
 
         foreach ($forms as $form) {
-            $formFile = $this->kernel->locateResource($form);
+            $formFile = $this->fileLocator->locate($form);
             /** @var FormMetadata $formStructure */
             $formStructure = $this->formXmlLoader->load($formFile, $resourceKey);
 

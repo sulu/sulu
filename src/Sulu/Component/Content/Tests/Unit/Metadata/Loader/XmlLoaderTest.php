@@ -13,14 +13,14 @@ namespace Sulu\Component\Content\Tests\Unit\Metadata\Loader;
 
 use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Metadata\Loader\XmlLoader;
+use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 
 class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var XmlLoader
+     * @var StructureXmlLoader
      */
     private $loader;
 
@@ -41,7 +41,7 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 
         $propertiesXmlParser = new PropertiesXmlParser($this->contentTypeManager->reveal());
 
-        $this->loader = new XmlLoader($this->cacheLifetimeResolver->reveal(), $propertiesXmlParser);
+        $this->loader = new StructureXmlLoader($this->cacheLifetimeResolver->reveal(), $propertiesXmlParser);
     }
 
     public function testLoadTemplate()
