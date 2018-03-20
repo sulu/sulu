@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <properties xmlns="http://schemas.sulu.io/template/template"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
     <property name="formOfAddress" type="single_select" mandatory="true" colspan="3" spaceAfter="9">
         <meta>
             <title lang="en">Salutation</title>

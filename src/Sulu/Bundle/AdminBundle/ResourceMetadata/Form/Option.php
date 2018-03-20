@@ -24,17 +24,17 @@ class Option
     protected $value;
 
     /**
-     * @var string
+     * @var ?string
      */
     protected $title;
 
     /**
-     * @var string
+     * @var ?string
      */
     protected $placeholder;
 
     /**
-     * @var string
+     * @var ?string
      */
     protected $infotext;
 
@@ -73,32 +73,32 @@ class Option
         $this->value[] = $option;
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function setTitle(string $title): void
+    public function setTitle(string $title = null): void
     {
         $this->title = $title;
     }
 
-    public function getPlaceholder(): string
+    public function getPlaceholder(): ?string
     {
         return $this->placeholder;
     }
 
-    public function setPlaceholder(string $placeholder): void
+    public function setPlaceholder(string $placeholder = null): void
     {
         $this->placeholder = $placeholder;
     }
 
-    public function getInfotext(): string
+    public function getInfotext(): ?string
     {
         return $this->infotext;
     }
 
-    public function setInfotext(string $infotext): void
+    public function setInfotext(string $infotext = null): void
     {
         $this->infotext = $infotext;
     }
