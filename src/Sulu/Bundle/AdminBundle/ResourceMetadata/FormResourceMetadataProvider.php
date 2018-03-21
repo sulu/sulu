@@ -112,25 +112,22 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
     private function loadResourceMetadata(): void
     {
         foreach ($this->resources as $resourceKey => $resource) {
-            foreach ($this->locales as $locale) {
-                $this->writeResourceMetadataCache(
-                    $resourceKey,
-                    $resource['form'],
-                    $resource['datagrid'],
-                    $locale
-                );
-            }
+            $this->writeResourceMetadataCache(
+                $resourceKey,
+                $resource['form'],
+                $resource['datagrid']
+            );
         }
     }
 
-    private function writeResourceMetadataCache(string $resourceKey, array $forms, string $list, string $locale): void
+    private function writeResourceMetadataCache(string $resourceKey, array $forms, string $list): void
     {
-        $cache = $this->getCache($locale, $resourceKey);
         $fileResources = [];
 
         $children = [];
         $properties = [];
 
+        // load and merge all given forms
         foreach ($forms as $form) {
             $formFile = $this->fileLocator->locate($form);
             /** @var FormMetadata $formStructure */
@@ -138,19 +135,28 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
 
             $fileResources = [new FileResource($formFile)];
 
-            $children = array_merge($children, $formStructure->getChildren());
-            $properties = array_merge($properties, $formStructure->getProperties());
+            if ($formStructure->getChildren()) {
+                $children = array_merge($children, $formStructure->getChildren());
+            }
+            if ($formStructure->getProperties()) {
+                $properties = array_merge($properties, $formStructure->getProperties());
+            }
         }
 
-        $resourceMetadata = new ResourceMetadata();
-        $resourceMetadata->setDatagrid($this->resourceMetadataMapper->mapDatagrid($list, $locale));
-        $resourceMetadata->setForm($this->resourceMetadataMapper->mapForm($children, $locale));
-        $resourceMetadata->setSchema($this->resourceMetadataMapper->mapSchema($properties));
+        // generate resource metadata for each locale and write it to the cache
+        foreach ($this->locales as $locale) {
+            $cache = $this->getCache($locale, $resourceKey);
 
-        $cache->write(
-            serialize($resourceMetadata),
-            $fileResources
-        );
+            $resourceMetadata = new ResourceMetadata();
+            $resourceMetadata->setDatagrid($this->resourceMetadataMapper->mapDatagrid($list, $locale));
+            $resourceMetadata->setForm($this->resourceMetadataMapper->mapForm($children, $locale));
+            $resourceMetadata->setSchema($this->resourceMetadataMapper->mapSchema($properties));
+
+            $cache->write(
+                serialize($resourceMetadata),
+                $fileResources
+            );
+        }
     }
 
     private function getCache(string $locale, string $resourceKey): ConfigCache
