@@ -23,7 +23,6 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ResourceMetadataMapper
@@ -147,7 +146,7 @@ class ResourceMetadataMapper
 
                     $option->addValueOption($valueOption);
                 }
-            } else if ('string' === $parameter['type']) {
+            } elseif ('string' === $parameter['type']) {
                 $option->setValue($parameter['value']);
             } else {
                 throw new \Exception('Unsupported parameter given "' . get_class($parameter) . '"');

@@ -109,9 +109,9 @@ class FormResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->resourceMetadataMapper = $this->prophesize(ResourceMetadataMapper::class);
 
-        $this->resourceMetadataMapper->mapForm(['children_array','children_array2'], 'de')
+        $this->resourceMetadataMapper->mapForm(['children_array', 'children_array2'], 'de')
             ->willReturn(new Form());
-        $this->resourceMetadataMapper->mapForm(['children_array','children_array2'], 'en')
+        $this->resourceMetadataMapper->mapForm(['children_array', 'children_array2'], 'en')
             ->willReturn(new Form());
         $this->resourceMetadataMapper->mapForm(['children_array_account'], 'de')
             ->willReturn(new Form());
@@ -123,7 +123,7 @@ class FormResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
         $this->resourceMetadataMapper->mapDatagrid('AccountsClass', 'de')->willReturn(new Datagrid());
         $this->resourceMetadataMapper->mapDatagrid('AccountsClass', 'en')->willReturn(new Datagrid());
 
-        $this->resourceMetadataMapper->mapSchema(['property_array','property_array2'])->willReturn(new Schema());
+        $this->resourceMetadataMapper->mapSchema(['property_array', 'property_array2'])->willReturn(new Schema());
         $this->resourceMetadataMapper->mapSchema(['property_array_account'])->willReturn(new Schema());
 
         $this->fileLocator = $this->prophesize(FileLocator::class);

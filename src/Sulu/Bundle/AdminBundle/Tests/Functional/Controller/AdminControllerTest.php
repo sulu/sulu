@@ -118,7 +118,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('external', $resource->types->overview->form);
         // check if schema is valid
         $this->assertObjectHasAttribute('schema', $resource->types->overview);
-        $this->assertEquals(['title','url'], $resource->types->overview->schema->required);
+        $this->assertEquals(['title', 'url'], $resource->types->overview->schema->required);
     }
 
     public function testGetResourceContacts()

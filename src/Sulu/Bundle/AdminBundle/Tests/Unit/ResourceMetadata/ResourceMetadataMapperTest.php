@@ -102,7 +102,7 @@ class ResourceMetadataMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Schema::class, $schema);
 
         $this->assertCount(2, $schema->getRequired());
-        $this->assertSame(['test2','test3'], $schema->getRequired());
+        $this->assertSame(['test2', 'test3'], $schema->getRequired());
     }
 
     public function testMapFormProperties()
@@ -143,7 +143,7 @@ class ResourceMetadataMapperTest extends \PHPUnit_Framework_TestCase
         $option2 = $field3->getOptions()['values'];
         $this->assertSame($option2->getName(), 'values');
         $this->assertSame($option2->getTitle(), null);
-        $this->assertCount( 2, $option2->getValue());
+        $this->assertCount(2, $option2->getValue());
 
         $option2Value1 = $option2->getValue()[0];
         $this->assertSame($option2Value1->getName(), '0');
@@ -176,7 +176,7 @@ class ResourceMetadataMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($block->getName(), 'blocktest');
         $this->assertSame($block->getLabel(), 'Block Test');
         $this->assertSame($block->getType(), 'block');
-        $this->assertCount( 2, $block->getTypes());
+        $this->assertCount(2, $block->getTypes());
 
         $fieldType1 = $block->getTypes()['type1'];
         $this->assertSame($fieldType1->getName(), 'type1');

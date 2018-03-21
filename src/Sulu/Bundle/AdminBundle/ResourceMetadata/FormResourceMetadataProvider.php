@@ -17,7 +17,6 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\Config\FileLocator;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class FormResourceMetadataProvider implements ResourceMetadataProviderInterface, CacheWarmerInterface
 {

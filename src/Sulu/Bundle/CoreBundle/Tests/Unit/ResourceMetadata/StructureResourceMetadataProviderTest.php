@@ -64,8 +64,7 @@ class StructureResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->resourceMetadataMapper = $this->prophesize(ResourceMetadataMapper::class);
 
-
-        $this->resourceMetadataMapper->mapSchema(['property_array','property_array2'])->willReturn(new Schema());
+        $this->resourceMetadataMapper->mapSchema(['property_array', 'property_array2'])->willReturn(new Schema());
         $this->resourceMetadataMapper->mapSchema(['property_array_account'])->willReturn(new Schema());
 
         $this->structureMetadataFactory = $this->prophesize(StructureMetadataFactory::class);
@@ -107,7 +106,7 @@ class StructureResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
 
         $structures = [
             $structure1,
-            $structure2
+            $structure2,
         ];
         $this->structureMetadataFactory->getStructures('page')->willReturn($structures);
         $this->structureMetadataFactory->getStructures('home')->willReturn($structures);
