@@ -4,7 +4,7 @@
 $columnListBackgroundColor: $white;
 
 .column-list-container {
-    height: 100%;
+    height: calc(100% - $toolbarHeight);
     width: 100%;
     overflow-x: auto;
     border: $columnBorder;

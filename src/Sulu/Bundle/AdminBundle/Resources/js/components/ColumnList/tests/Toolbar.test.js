@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
+import pretty from 'pretty';
 import Toolbar from '../Toolbar';
 import ToolbarDropdown from '../ToolbarDropdown';
 
@@ -14,12 +15,7 @@ test('The Toolbar component should render with active', () => {
         {
             icon: 'fa-plus',
             type: 'button',
-            onClick: () => {},
-        },
-        {
-            icon: 'fa-search',
-            type: 'button',
-            onClick: () => {},
+            onClick: jest.fn(),
         },
         {
             icon: 'fa-gear',
@@ -27,32 +23,23 @@ test('The Toolbar component should render with active', () => {
             options: [
                 {
                     label: 'Option1',
-                    onClick: () => {},
-                },
-                {
-                    label: 'Option2',
-                    onClick: () => {},
+                    onClick: jest.fn(),
                 },
             ],
         },
     ];
 
-    const toolbar = mount(
-        <Toolbar active={true} index={0} toolbarItems={toolbarItems} />
-    );
+    const toolbar = mount(<Toolbar columnIndex={0} toolbarItems={toolbarItems} />);
 
     expect(toolbar.render()).toMatchSnapshot();
     expect(toolbar.find(ToolbarDropdown).length).toBe(1);
+
+    toolbar.find('.fa-plus').simulate('click');
+    expect(toolbarItems[0].onClick).toBeCalledWith(0);
 
     // check for opened dropdown in body
     expect(body.innerHTML).toBe('');
     toolbar.find(ToolbarDropdown).simulate('click');
     expect(body.innerHTML).not.toBe('');
-    expect(body.innerHTML).toMatchSnapshot();
-
-    const toolbarActive = mount(
-        <Toolbar active={false} index={0} toolbarItems={toolbarItems} />
-    );
-
-    expect(toolbarActive.render()).toMatchSnapshot();
+    expect(pretty(body.innerHTML)).toMatchSnapshot();
 });

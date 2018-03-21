@@ -4,7 +4,6 @@ import {mount} from 'enzyme';
 import ColumnList from '../ColumnList';
 import Column from '../Column';
 import Item from '../Item';
-import Toolbar from '../Toolbar';
 
 test('The ColumnList component should render', () => {
     const onItemClick = jest.fn();
@@ -78,52 +77,9 @@ test('The ColumnList component should render', () => {
 test('The ColumnList component should trigger the item callback', () => {
     const onItemClick = jest.fn();
 
-    const buttonsConfig = [
-        {
-            icon: 'fa-heart',
-            onClick: () => {},
-        },
-        {
-            icon: 'fa-pencil',
-            onClick: () => {},
-        },
-    ];
-
-    const toolbarItems = [
-        {
-            index: 0,
-            icon: 'fa-plus',
-            type: 'button',
-            onClick: () => {},
-        },
-        {
-            index: 0,
-            icon: 'fa-search',
-            type: 'button',
-            onClick: () => {},
-        },
-        {
-            index: 0,
-            icon: 'fa-gear',
-            type: 'dropdown',
-            options: [
-                {
-                    label: 'Option1 ',
-                    onClick: () => {},
-                },
-                {
-                    label: 'Option2 ',
-                    onClick: () => {},
-                },
-            ],
-        },
-    ];
-
     const columnList = mount(
         <ColumnList
-            buttons={buttonsConfig}
             onItemClick={onItemClick}
-            toolbarItems={toolbarItems}
         >
             <Column>
                 <Item id="1" selected={true}>Item 1</Item>
@@ -143,8 +99,6 @@ test('The ColumnList component should trigger the item callback', () => {
     const columns = columnList.find(Column);
     expect(columns.length).toBe(3);
 
-    expect(columnList.find(Toolbar).length).toBe(3);
-
     columns.first().find(Item).first().simulate('click');
     columns.first().find(Item).at(2).simulate('click');
     columns.at(1).find(Item).first().simulate('click');
@@ -156,54 +110,20 @@ test('The ColumnList component should trigger the item callback', () => {
 });
 
 test('The ColumnList component should handle which toolbar is active on mouse enter event', () => {
-    const onItemClick = jest.fn();
-
-    const buttonsConfig = [
-        {
-            icon: 'fa-heart',
-            onClick: () => {},
-        },
-        {
-            icon: 'fa-pencil',
-            onClick: () => {},
-        },
-    ];
+    const buttonClickSpy = jest.fn();
 
     const toolbarItems = [
         {
-            index: 0,
             icon: 'fa-plus',
             type: 'button',
-            onClick: () => {},
-        },
-        {
-            index: 0,
-            icon: 'fa-search',
-            type: 'button',
-            onClick: () => {},
-        },
-        {
-            index: 0,
-            icon: 'fa-gear',
-            type: 'dropdown',
-            options: [
-                {
-                    label: 'Option1 ',
-                    onClick: () => {},
-                },
-                {
-                    label: 'Option2 ',
-                    onClick: () => {},
-                },
-            ],
+            onClick: buttonClickSpy,
         },
     ];
 
     const columnList = mount(
         <ColumnList
-            buttons={buttonsConfig}
-            onItemClick={onItemClick}
             toolbarItems={toolbarItems}
+            onItemClick={jest.fn()}
         >
             <Column>
                 <Item id="1" selected={true}>Item 1</Item>
@@ -221,22 +141,14 @@ test('The ColumnList component should handle which toolbar is active on mouse en
         </ColumnList>
     );
     const columns = columnList.find(Column);
-    expect(columnList.find(Column).at(0).props().active).toBe(true);
-    expect(columnList.find(Column).at(1).props().active).toBe(false);
-    expect(columnList.find(Column).at(2).props().active).toBe(false);
+    columnList.find('.fa-plus').simulate('click');
+    expect(buttonClickSpy).toHaveBeenCalledWith(0);
 
     columns.at(1).simulate('mouseEnter');
-    expect(columnList.find(Column).at(0).props().active).toBe(false);
-    expect(columnList.find(Column).at(1).props().active).toBe(true);
-    expect(columnList.find(Column).at(2).props().active).toBe(false);
+    columnList.find('.fa-plus').simulate('click');
+    expect(buttonClickSpy).toHaveBeenLastCalledWith(1);
 
     columns.at(2).simulate('mouseEnter');
-    expect(columnList.find(Column).at(0).props().active).toBe(false);
-    expect(columnList.find(Column).at(1).props().active).toBe(false);
-    expect(columnList.find(Column).at(2).props().active).toBe(true);
-
-    columns.at(0).simulate('mouseEnter');
-    expect(columnList.find(Column).at(0).props().active).toBe(true);
-    expect(columnList.find(Column).at(1).props().active).toBe(false);
-    expect(columnList.find(Column).at(2).props().active).toBe(false);
+    columnList.find('.fa-plus').simulate('click');
+    expect(buttonClickSpy).toHaveBeenLastCalledWith(2);
 });

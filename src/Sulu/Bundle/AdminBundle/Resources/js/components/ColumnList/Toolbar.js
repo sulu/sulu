@@ -1,16 +1,14 @@
 // @flow
 import React from 'react';
-import classNames from 'classnames';
 import ToolbarDropdown from './ToolbarDropdown';
 import ToolbarButton from './ToolbarButton';
 import type {ToolbarItemConfig} from './types';
 import toolbarStyles from './toolbar.scss';
 
-type Props = {
+type Props = {|
     columnIndex?: number,
-    active: boolean,
     toolbarItems: Array<ToolbarItemConfig>,
-};
+|};
 
 export default class Toolbar extends React.Component<Props> {
     renderToolbarItems = (toolbarItems: Array<ToolbarItemConfig>) => {
@@ -27,17 +25,10 @@ export default class Toolbar extends React.Component<Props> {
     };
 
     render() {
-        const {active, toolbarItems} = this.props;
-
-        const containerClass = classNames(
-            toolbarStyles.toolbar,
-            {
-                [toolbarStyles.active]: active,
-            }
-        );
+        const {toolbarItems} = this.props;
 
         return (
-            <div className={containerClass}>
+            <div className={toolbarStyles.toolbar}>
                 {this.renderToolbarItems(toolbarItems)}
             </div>
         );

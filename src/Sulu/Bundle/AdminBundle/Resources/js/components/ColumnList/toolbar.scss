@@ -1,4 +1,5 @@
 @import '../../containers/Application/colors.scss';
+@import './variables.scss';
 
 $itemBackgroundColorPrimary: $silver;
 $itemBackgroundColorSecondary: $shakespeare;
@@ -8,16 +9,10 @@ $borderRadius: 3px;
 $dropdownContainerBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
 
 .toolbar {
-    height: 30px;
-    width: 100%;
+    height: $toolbarHeight;
+    width: calc($columnWidth + $columnBorderWidth);
     display: inline-flex;
-    display: none;
     justify-content: space-between;
-    visibility: hidden;
-
-    &.active {
-        visibility: visible;
-    }
 }
 
 .item {
@@ -27,11 +22,11 @@ $dropdownContainerBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
     cursor: pointer;
 
     &:first-child {
-        border-radius: $borderRadius 0 0;
+        border-top-left-radius: $borderRadius;
     }
 
     &:last-child {
-        border-radius: 0 $borderRadius 0 0;
+        border-top-right-radius: $borderRadius;
     }
 
     &.primary {

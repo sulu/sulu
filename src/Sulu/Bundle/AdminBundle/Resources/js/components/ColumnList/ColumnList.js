@@ -1,10 +1,11 @@
 // @flow
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ChildrenArray, Element} from 'react';
 import Column from './Column';
 import Item from './Item';
+import Toolbar from './Toolbar';
 import type {ItemButtonConfig, ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
@@ -17,6 +18,10 @@ type Props = {
 
 @observer
 export default class ColumnList extends React.Component<Props> {
+    static defaultProps = {
+        toolbarItems: [],
+    };
+
     static Column = Column;
 
     static Item = Item;
@@ -32,7 +37,7 @@ export default class ColumnList extends React.Component<Props> {
     };
 
     cloneColumns = (originalColumns: ChildrenArray<Element<typeof Column>>) => {
-        const {onItemClick, toolbarItems} = this.props;
+        const {onItemClick} = this.props;
 
         return React.Children.map(originalColumns, (column, index) => {
             return React.cloneElement(
@@ -40,24 +45,25 @@ export default class ColumnList extends React.Component<Props> {
                 {
                     index: index,
                     buttons: this.props.buttons,
-                    active: this.activeColumnIndex === index,
                     onActive: this.handleActive,
                     onItemClick: onItemClick,
-                    toolbarItems: toolbarItems,
                 }
             );
         });
     };
 
     render() {
-        const {children} = this.props;
+        const {children, toolbarItems} = this.props;
 
         return (
-            <div className={columnListStyles.columnListContainer}>
-                <div className={columnListStyles.columnList}>
-                    {this.cloneColumns(children)}
+            <Fragment>
+                <Toolbar columnIndex={this.activeColumnIndex} toolbarItems={toolbarItems} />
+                <div className={columnListStyles.columnListContainer}>
+                    <div className={columnListStyles.columnList}>
+                        {this.cloneColumns(children)}
+                    </div>
                 </div>
-            </div>
+            </Fragment>
         );
     }
 }

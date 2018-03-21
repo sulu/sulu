@@ -4,26 +4,21 @@ import React from 'react';
 import classNames from 'classnames';
 import Loader from '../Loader';
 import Item from './Item';
-import Toolbar from './Toolbar';
-import type {ItemButtonConfig, ToolbarItemConfig} from './types';
+import type {ItemButtonConfig} from './types';
 import columnStyles from './column.scss';
 
 type Props = {
-    active: boolean,
     buttons?: Array<ItemButtonConfig>,
     children?: ChildrenArray<Element<typeof Item>>,
     index?: number,
     loading: boolean,
     onActive?: (index?: number) => void,
     onItemClick?: (id: string | number) => void,
-    toolbarItems: Array<ToolbarItemConfig>,
 };
 
 export default class Column extends React.Component<Props> {
     static defaultProps = {
-        active: false,
         loading: false,
-        toolbarItems: [],
     };
 
     cloneItems = (originalItems?: ChildrenArray<Element<typeof Item>>) => {
@@ -55,7 +50,7 @@ export default class Column extends React.Component<Props> {
     };
 
     render() {
-        const {children, active, index, loading, toolbarItems} = this.props;
+        const {children, loading} = this.props;
 
         const columnClass = classNames(
             columnStyles.column,
@@ -66,10 +61,8 @@ export default class Column extends React.Component<Props> {
 
         return (
             <div className={columnClass} onMouseEnter={this.handleMouseEnter}>
-                <Toolbar active={active} columnIndex={index} toolbarItems={toolbarItems} />
                 {loading ? <Loader /> : this.cloneItems(children)}
             </div>
         );
     }
 }
-

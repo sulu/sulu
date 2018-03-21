@@ -1,8 +1,6 @@
 @import '../../containers/Application/colors.scss';
 @import './variables.scss';
 
-$columnWidth: 270px;
-
 .column {
     border-right: $columnBorder;
     vertical-align: top;
