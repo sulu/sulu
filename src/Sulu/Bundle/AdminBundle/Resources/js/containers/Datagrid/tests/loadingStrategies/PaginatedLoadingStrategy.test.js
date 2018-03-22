@@ -21,6 +21,7 @@ class StructureStrategy {
     data = [];
     getData = jest.fn().mockReturnValue(this.data);
     clear = jest.fn();
+    findById = jest.fn();
     enhanceItem = jest.fn();
 }
 

@@ -72,8 +72,7 @@ export default class Datagrid extends React.Component<Props> {
 
     handleItemSelectionChange = (id: string | number, selected?: boolean) => {
         const {store} = this.props;
-        // TODO do not hardcode id but use metdata instead
-        const row = store.data.find((item) => item.id === id);
+        const row = store.findById(id);
 
         if (!row) {
             return;
@@ -88,6 +87,7 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     handleAdapterChange = (adapter: string) => {
+        this.props.store.setActive(undefined); // TODO keep active and expand correctly
         this.setCurrentAdapterKey(adapter);
     };
 

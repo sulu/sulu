@@ -17,6 +17,11 @@ export default class FlatStructureStrategy implements StructureStrategyInterface
         this.data.splice(0, this.data.length);
     }
 
+    findById(identifier: string | number): ?Object {
+        // TODO do not hardcode id but use metdata instead
+        return this.data.find((item) => item.id === identifier);
+    }
+
     enhanceItem(item: Object): Object {
         return item;
     }

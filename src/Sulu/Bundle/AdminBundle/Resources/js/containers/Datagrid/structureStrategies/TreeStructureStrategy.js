@@ -28,6 +28,25 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
         return this.findChildrenForParentId(this.data, parent);
     }
 
+    findById(id: string | number): ?Object {
+        return this.findRecursive(this.data, id);
+    }
+
+    findRecursive(items: Array<Object>, identifier: string | number): ?Object {
+        for (const item of items) {
+            // TODO do not hardcode id but use metdata instead
+            if (item.data.id === identifier) {
+                return item.data;
+            }
+
+            const data = this.findRecursive(item.children, identifier);
+
+            if (data) {
+                return data;
+            }
+        }
+    }
+
     enhanceItem(item: Object): Object {
         return {
             data: item,
