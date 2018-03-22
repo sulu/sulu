@@ -171,3 +171,42 @@ test('Should move the toolbar container to the correct position', () => {
 
     expect(columnList.find('Toolbar').parent().prop('style')).toEqual({marginLeft: 505});
 });
+
+test('Should set classes if the toolbar is active on the first or last visible column', () => {
+    const columnList = mount(
+        <ColumnList onItemClick={jest.fn()}>
+            <Column />
+            <Column />
+            <Column />
+        </ColumnList>
+    );
+
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .toEqual(expect.stringContaining('firstVisibleColumnActive'));
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .toEqual(expect.stringContaining('lastVisibleColumnActive'));
+
+    columnList.instance().toolbar = {
+        getBoundingClientRect: jest.fn().mockReturnValue({width: 271}),
+    };
+    columnList.instance().container = {
+        clientWidth: 500,
+    };
+    columnList.instance().activeColumnIndex = 0;
+    columnList.instance().scrollPosition = 20;
+    columnList.update();
+
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .toEqual(expect.stringContaining('firstVisibleColumnActive'));
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .not.toEqual(expect.stringContaining('lastVisibleColumnActive'));
+
+    columnList.instance().activeColumnIndex = 2;
+    columnList.instance().scrollPosition = 20;
+    columnList.update();
+
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .not.toEqual(expect.stringContaining('firstVisibleColumnActive'));
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .toEqual(expect.stringContaining('lastVisibleColumnActive'));
+});

@@ -186,7 +186,7 @@ exports[`The ColumnList component should render 1`] = `
       </Toolbar>
     </div>
     <div
-      className="columnListContainer"
+      className="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
       <div
         className="columnList"

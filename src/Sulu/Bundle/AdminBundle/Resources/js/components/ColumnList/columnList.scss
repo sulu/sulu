@@ -15,6 +15,14 @@ $columnListBackgroundColor: $white;
     overflow-x: auto;
     border: $columnBorder;
     border-radius: $columnListBorderRadius;
+
+    &.first-visible-column-active {
+        border-top-left-radius: 0;
+    }
+
+    &.last-visible-column-active {
+        border-top-right-radius: 0;
+    }
 }
 
 .column-list {

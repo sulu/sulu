@@ -3,6 +3,7 @@ import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import React from 'react';
 import type {ChildrenArray, Element, ElementRef} from 'react';
+import classNames from 'classnames';
 import Column from './Column';
 import Item from './Item';
 import Toolbar from './Toolbar';
@@ -65,6 +66,14 @@ export default class ColumnList extends React.Component<Props> {
         return this.toolbar.getBoundingClientRect().width - 1;
     }
 
+    get containerWidth(): number {
+        if (!this.container) {
+            return 0;
+        }
+
+        return this.container.clientWidth;
+    }
+
     @action handleScroll = () => {
         this.scrollPosition = this.container.scrollLeft;
     };
@@ -95,17 +104,26 @@ export default class ColumnList extends React.Component<Props> {
 
     render() {
         const {children, toolbarItems} = this.props;
+        const toolbarPosition = -this.scrollPosition + this.activeColumnIndex * this.toolbarWidth;
+
+        const columnListContainerClass = classNames(
+            columnListStyles.columnListContainer,
+            {
+                [columnListStyles.firstVisibleColumnActive]: toolbarPosition <= 0,
+                [columnListStyles.lastVisibleColumnActive]: toolbarPosition >= this.containerWidth - this.toolbarWidth,
+            }
+        );
 
         return (
             <div className={columnListStyles.columnListToolbarContainer}>
-                <div style={{marginLeft: -this.scrollPosition + this.activeColumnIndex * this.toolbarWidth}}>
+                <div style={{marginLeft: toolbarPosition}}>
                     <Toolbar
                         columnIndex={this.activeColumnIndex}
                         toolbarItems={toolbarItems}
                         toolbarRef={this.setToolbarRef}
                     />
                 </div>
-                <div ref={this.setContainerRef} className={columnListStyles.columnListContainer}>
+                <div ref={this.setContainerRef} className={columnListContainerClass}>
                     <div className={columnListStyles.columnList}>
                         {this.cloneColumns(children)}
                     </div>

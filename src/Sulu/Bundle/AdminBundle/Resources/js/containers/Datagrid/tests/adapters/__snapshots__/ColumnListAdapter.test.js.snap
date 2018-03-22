@@ -8,20 +8,23 @@ exports[`Render data 1`] = `
     class="columnListToolbarContainer"
   >
     <div
-      class="toolbar"
       style="margin-left:0"
     >
       <div
-        class="item primary"
+        class="toolbar"
       >
-        <span
-          aria-label="su-add"
-          class="su-add"
-        />
+        <div
+          class="item primary"
+        >
+          <span
+            aria-label="su-add"
+            class="su-add"
+          />
+        </div>
       </div>
     </div>
     <div
-      class="columnListContainer"
+      class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
       <div
         class="columnList"
@@ -188,20 +191,23 @@ exports[`Render data with loading column 1`] = `
     class="columnListToolbarContainer"
   >
     <div
-      class="toolbar"
       style="margin-left:0"
     >
       <div
-        class="item primary"
+        class="toolbar"
       >
-        <span
-          aria-label="su-add"
-          class="su-add"
-        />
+        <div
+          class="item primary"
+        >
+          <span
+            aria-label="su-add"
+            class="su-add"
+          />
+        </div>
       </div>
     </div>
     <div
-      class="columnListContainer"
+      class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
       <div
         class="columnList"

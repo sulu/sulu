@@ -7,14 +7,14 @@ import Item from './Item';
 import type {ItemButtonConfig} from './types';
 import columnStyles from './column.scss';
 
-type Props = {
+type Props = {|
     buttons?: Array<ItemButtonConfig>,
     children?: ChildrenArray<Element<typeof Item>>,
     index?: number,
     loading: boolean,
     onActive?: (index?: number) => void,
     onItemClick?: (id: string | number) => void,
-};
+|};
 
 export default class Column extends React.Component<Props> {
     static defaultProps = {
