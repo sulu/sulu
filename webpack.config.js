@@ -11,7 +11,7 @@ const entries = glob.sync(
     path.resolve(__dirname, 'src/Sulu/Bundle/*/Resources/js/index.js') // eslint-disable-line no-undef
 );
 const entriesCount = entries.length;
-const basePath = 'adminV2';
+const basePath = 'admin/build';
 
 entries.unshift('core-js/fn/array/includes');
 entries.unshift('core-js/fn/array/find-index');
