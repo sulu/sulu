@@ -74,6 +74,18 @@ export default class ColumnList extends React.Component<Props> {
         return this.container.clientWidth;
     }
 
+    get containerScrollWidth(): number {
+        if (!this.container) {
+            return 0;
+        }
+
+        return this.container.scrollWidth;
+    }
+
+    get containerScrolling(): boolean {
+        return this.containerWidth < this.containerScrollWidth;
+    }
+
     @action handleScroll = () => {
         this.scrollPosition = this.container.scrollLeft;
     };
@@ -97,6 +109,7 @@ export default class ColumnList extends React.Component<Props> {
                     buttons: this.props.buttons,
                     onActive: this.handleActive,
                     onItemClick: onItemClick,
+                    scrolling: this.containerScrolling,
                 }
             );
         });

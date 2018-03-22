@@ -14,11 +14,14 @@ type Props = {|
     loading: boolean,
     onActive?: (index?: number) => void,
     onItemClick?: (id: string | number) => void,
+    /** @ignore */
+    scrolling: boolean,
 |};
 
 export default class Column extends React.Component<Props> {
     static defaultProps = {
         loading: false,
+        scrolling: false,
     };
 
     cloneItems = (originalItems?: ChildrenArray<Element<typeof Item>>) => {
@@ -50,12 +53,13 @@ export default class Column extends React.Component<Props> {
     };
 
     render() {
-        const {children, loading} = this.props;
+        const {children, loading, scrolling} = this.props;
 
         const columnClass = classNames(
             columnStyles.column,
             {
                 [columnStyles.loading]: loading,
+                [columnStyles.scrolling]: scrolling,
             }
         );
 

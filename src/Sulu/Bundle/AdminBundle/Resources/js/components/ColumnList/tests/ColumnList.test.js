@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {mount, render} from 'enzyme';
 import ColumnList from '../ColumnList';
 import Column from '../Column';
 import Item from '../Item';
 
-test('The ColumnList component should render', () => {
+test('The ColumnList component should render in a non-scrolling container', () => {
     const onItemClick = jest.fn();
 
     const buttonsConfig = [
@@ -49,7 +49,7 @@ test('The ColumnList component should render', () => {
         },
     ];
 
-    const columnList = mount(
+    expect(render(
         <ColumnList
             buttons={buttonsConfig}
             onItemClick={onItemClick}
@@ -70,8 +70,52 @@ test('The ColumnList component should render', () => {
             </Column>
             <Column loading={true} />
         </ColumnList>
+    )).toMatchSnapshot();
+});
+
+test('The ColumnList component should render in a scrolling container', () => {
+    const onItemClick = jest.fn();
+
+    const toolbarItems = [
+        {
+            index: 0,
+            icon: 'fa-plus',
+            type: 'button',
+            onClick: () => {},
+        },
+    ];
+
+    const columnList = mount(
+        <ColumnList
+            onItemClick={onItemClick}
+            toolbarItems={toolbarItems}
+        >
+            <Column>
+                <Item id="1" selected={true}>Item 1</Item>
+                <Item id="2" hasChildren={true}>Item 1</Item>
+                <Item id="3">Item 1</Item>
+            </Column>
+            <Column>
+                <Item id="1-1">Item 1</Item>
+                <Item id="1-2" hasChildren={true}>Item 1</Item>
+            </Column>
+            <Column>
+                <Item id="1-1-1">Item 1</Item>
+                <Item id="1-1-2">Item 1</Item>
+            </Column>
+            <Column loading={true} />
+        </ColumnList>
     );
-    expect(columnList).toMatchSnapshot();
+
+    columnList.instance().container = {
+        clientWidth: 500,
+        scrollWidth: 600,
+    };
+    columnList.instance().activeColumnIndex = 2;
+    columnList.instance().scrollPosition = 20;
+    columnList.update();
+
+    expect(columnList.render()).toMatchSnapshot();
 });
 
 test('The ColumnList component should trigger the item callback', () => {
