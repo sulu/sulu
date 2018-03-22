@@ -2,7 +2,7 @@
 
 exports[`Should render the datagrid with a title 1`] = `
 <div
-  class="list"
+  class="datagrid"
 >
   <h1>
     Snippets
@@ -156,7 +156,7 @@ exports[`Should render the datagrid with a title 1`] = `
 
 exports[`Should render the datagrid with the correct resourceKey 1`] = `
 <div
-  class="list"
+  class="datagrid"
 >
   <div
     class="datagrid"
@@ -307,7 +307,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
 
 exports[`Should render the datagrid with the pencil icon if a editRoute has been passed 1`] = `
 <div
-  class="list"
+  class="datagrid"
 >
   <div
     class="datagrid"

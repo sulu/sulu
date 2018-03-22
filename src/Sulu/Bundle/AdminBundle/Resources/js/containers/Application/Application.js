@@ -25,7 +25,7 @@ const routes = [
     },
     {
         name: 'Snippets',
-        key: 'sulu_snippet.list',
+        key: 'sulu_snippet.datagrid',
         icon: 'fa-sticky-note-o',
     },
     {
@@ -35,11 +35,11 @@ const routes = [
         items: [
             {
                 name: 'Contacts',
-                key: 'sulu_contact.contacts_list',
+                key: 'sulu_contact.contacts_datagrid',
             },
             {
                 name: 'Accounts',
-                key: 'sulu_contact.accounts_list',
+                key: 'sulu_contact.accounts_datagrid',
             },
         ],
     },
@@ -50,11 +50,11 @@ const routes = [
         items: [
             {
                 name: 'Tags',
-                key: 'sulu_tag.list',
+                key: 'sulu_tag.datagrid',
             },
             {
                 name: 'Roles',
-                key: 'sulu_security.list',
+                key: 'sulu_security.datagrid',
             },
         ],
     },

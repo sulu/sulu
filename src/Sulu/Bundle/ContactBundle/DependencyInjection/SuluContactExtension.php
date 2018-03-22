@@ -78,11 +78,11 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                 [
                     'resources' => [
                         'contacts' => [
-                            'form' => ['@SuluContactBundle/Resources/forms/Contact.xml'],
+                            'form' => ['@SuluContactBundle/Resources/config/forms/Contact.xml'],
                             'datagrid' => '%sulu.model.contact.class%',
                         ],
                         'accounts' => [
-                            'form' => ['@SuluContactBundle/Resources/forms/Account.xml'],
+                            'form' => ['@SuluContactBundle/Resources/config/forms/Account.xml'],
                             'datagrid' => Account::class,
                         ],
                     ],
