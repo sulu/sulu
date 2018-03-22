@@ -21,6 +21,7 @@ class StructureStrategy {
     data = [];
     getData = jest.fn().mockReturnValue(this.data);
     clear = jest.fn();
+    findById = jest.fn();
     enhanceItem = jest.fn();
 }
 
@@ -63,6 +64,7 @@ test('Should reset page count to 0 and page to 1 when locale is changed', () => 
         data = [];
         clear = jest.fn();
         getData = jest.fn().mockReturnValue([]);
+        findById = jest.fn();
         enhanceItem = jest.fn();
     }
     const structureStrategy = new StructureStrategy();

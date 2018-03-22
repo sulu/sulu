@@ -51,6 +51,7 @@ export interface StructureStrategyInterface {
     data: Array<*>,
     getData(parent: ?string | number): ?Array<*>,
     enhanceItem(item: Object): Object,
+    findById(identifier: string | number): ?Object,
     clear(): void,
 }
 

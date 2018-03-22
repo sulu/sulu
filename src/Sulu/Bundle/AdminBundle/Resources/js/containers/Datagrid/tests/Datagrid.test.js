@@ -64,6 +64,7 @@ class StructureStrategy {
 
     clear = jest.fn();
     getData = jest.fn();
+    findById = jest.fn();
     enhanceItem = jest.fn();
 }
 
@@ -196,6 +197,7 @@ test('DatagridStore should be updated with current active element', () => {
             data = [];
             clear = jest.fn();
             getData = jest.fn();
+            findById = jest.fn();
             enhanceItem = jest.fn();
         };
 
