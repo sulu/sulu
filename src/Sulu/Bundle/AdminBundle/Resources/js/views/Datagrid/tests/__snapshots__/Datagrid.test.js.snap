@@ -1,5 +1,159 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Should render the datagrid with a title 1`] = `
+<div
+  class="list"
+>
+  <h1>
+    Snippets
+  </h1>
+  <div
+    class="datagrid"
+  >
+    <section>
+      <div
+        class="tableContainer"
+      >
+        <table
+          class="table"
+        >
+          <thead
+            class="header"
+          >
+            <tr>
+              <th
+                class="headerCell"
+              >
+                <span>
+                  <label
+                    class="label"
+                  >
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </span>
+              </th>
+              <th
+                class="headerCell"
+              >
+                <span>
+                  title
+                </span>
+              </th>
+              <th
+                class="headerCell"
+              >
+                <span>
+                  description
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="row"
+            >
+              <td
+                class="cell small"
+              >
+                <label
+                  class="label"
+                >
+                  <span
+                    class="switch checkbox dark"
+                  >
+                    <input
+                      type="checkbox"
+                      value="1"
+                    />
+                    <span />
+                  </span>
+                </label>
+              </td>
+              <td
+                class="cell"
+              >
+                Title 1
+              </td>
+              <td
+                class="cell"
+              >
+                Description 1
+              </td>
+            </tr>
+            <tr
+              class="row"
+            >
+              <td
+                class="cell small"
+              >
+                <label
+                  class="label"
+                >
+                  <span
+                    class="switch checkbox dark"
+                  >
+                    <input
+                      type="checkbox"
+                      value="2"
+                    />
+                    <span />
+                  </span>
+                </label>
+              </td>
+              <td
+                class="cell"
+              >
+                Title 2
+              </td>
+              <td
+                class="cell"
+              >
+                Description 2
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <nav
+        class="pagination"
+      >
+        <div
+          class="loader"
+        />
+        <span
+          class="display"
+        >
+          Page: 2 of 3
+        </span>
+        <button
+          class="previous"
+        >
+          <span
+            aria-label="su-arrow-left"
+            class="su-arrow-left"
+          />
+        </button>
+        <button
+          class="next"
+        >
+          <span
+            aria-label="su-arrow-right"
+            class="su-arrow-right"
+          />
+        </button>
+      </nav>
+    </section>
+  </div>
+</div>
+`;
+
 exports[`Should render the datagrid with the correct resourceKey 1`] = `
 <div
   class="list"
@@ -268,160 +422,6 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
                   />
                 </button>
               </td>
-              <td
-                class="cell small"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </td>
-              <td
-                class="cell"
-              >
-                Title 2
-              </td>
-              <td
-                class="cell"
-              >
-                Description 2
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <nav
-        class="pagination"
-      >
-        <div
-          class="loader"
-        />
-        <span
-          class="display"
-        >
-          Page: 2 of 3
-        </span>
-        <button
-          class="previous"
-        >
-          <span
-            aria-label="su-arrow-left"
-            class="su-arrow-left"
-          />
-        </button>
-        <button
-          class="next"
-        >
-          <span
-            aria-label="su-arrow-right"
-            class="su-arrow-right"
-          />
-        </button>
-      </nav>
-    </section>
-  </div>
-</div>
-`;
-
-exports[`Should render the list with a title 1`] = `
-<div
-  class="list"
->
-  <h1>
-    Snippets
-  </h1>
-  <div
-    class="datagrid"
-  >
-    <section>
-      <div
-        class="tableContainer"
-      >
-        <table
-          class="table"
-        >
-          <thead
-            class="header"
-          >
-            <tr>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  <label
-                    class="label"
-                  >
-                    <span
-                      class="switch checkbox light"
-                    >
-                      <input
-                        type="checkbox"
-                      />
-                      <span />
-                    </span>
-                  </label>
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  title
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  description
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              class="row"
-            >
-              <td
-                class="cell small"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="1"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </td>
-              <td
-                class="cell"
-              >
-                Title 1
-              </td>
-              <td
-                class="cell"
-              >
-                Description 1
-              </td>
-            </tr>
-            <tr
-              class="row"
-            >
               <td
                 class="cell small"
               >

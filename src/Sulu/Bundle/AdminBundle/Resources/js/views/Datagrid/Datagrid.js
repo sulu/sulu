@@ -3,16 +3,16 @@ import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React from 'react';
-import Datagrid from '../../containers/Datagrid';
+import {default as DatagridContainer} from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import ResourceRequester from '../../services/ResourceRequester';
 import {translate} from '../../utils/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import listStyles from './list.scss';
+import datagridStyles from './datagrid.scss';
 
 @observer
-class List extends React.Component<ViewProps> {
+class Datagrid extends React.Component<ViewProps> {
     page: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
@@ -73,9 +73,9 @@ class List extends React.Component<ViewProps> {
         } = this.props.router;
 
         return (
-            <div className={listStyles.list}>
+            <div className={datagridStyles.list}>
                 {title && <h1>{translate(title)}</h1>}
-                <Datagrid
+                <DatagridContainer
                     store={this.datagridStore}
                     adapters={adapters}
                     onItemClick={editRoute && this.handleEditClick}
@@ -85,7 +85,7 @@ class List extends React.Component<ViewProps> {
     }
 }
 
-export default withToolbar(List, function() {
+export default withToolbar(Datagrid, function() {
     const {router} = this.props;
 
     const {

@@ -55,7 +55,7 @@ class TagAdmin extends Admin
     public function getRoutes(): array
     {
         return [
-            (new Route('sulu_tag.list', '/tags', 'sulu_admin.list'))
+            (new Route('sulu_tag.datagrid', '/tags', 'sulu_admin.datagrid'))
                 ->addOption('title', 'sulu_tag.tags')
                 ->addOption('resourceKey', 'tags')
                 ->addOption('adapters', ['table']),

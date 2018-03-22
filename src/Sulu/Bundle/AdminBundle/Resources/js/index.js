@@ -15,7 +15,7 @@ import {viewRegistry} from './containers/ViewRenderer';
 import {ColumnListAdapter, datagridAdapterRegistry, FolderAdapter, TableAdapter} from './containers/Datagrid';
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
-import List from './views/List';
+import Datagrid from './views/Datagrid';
 import {bundleReady, bundlesReadyPromise} from './services/Bundles';
 import type {FieldTypeProps} from './types';
 
@@ -28,7 +28,7 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 
 viewRegistry.add('sulu_admin.form', Form);
 viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
-viewRegistry.add('sulu_admin.list', List);
+viewRegistry.add('sulu_admin.datagrid', Datagrid);
 
 datagridAdapterRegistry.add('column_list', ColumnListAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
