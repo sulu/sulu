@@ -19,6 +19,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.selectionIds = [];
     this.loading = false;
     this.schema = {test: {}};
+    this.findById = jest.fn();
     this.select = jest.fn();
     this.deselect = jest.fn();
     this.selectEntirePage = jest.fn();
@@ -112,6 +113,9 @@ test('Selecting and deselecting items should update store', () => {
         {id: 2},
         {id: 3}
     );
+
+    datagridStore.findById.mockReturnValueOnce({id: 1}).mockReturnValueOnce({id: 2}).mockReturnValueOnce({id: 1});
+
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
     const checkboxes = datagrid.find('input[type="checkbox"]');
@@ -119,10 +123,13 @@ test('Selecting and deselecting items should update store', () => {
     checkboxes.at(1).getDOMNode().checked = true;
     checkboxes.at(2).getDOMNode().checked = true;
     checkboxes.at(1).simulate('change', {currentTarget: {checked: true}});
+    expect(datagridStore.findById).toBeCalledWith(1);
     expect(datagridStore.select).toBeCalledWith({id: 1});
     checkboxes.at(2).simulate('change', {currentTarget: {checked: true}});
+    expect(datagridStore.findById).toBeCalledWith(2);
     expect(datagridStore.select).toBeCalledWith({id: 2});
     checkboxes.at(1).simulate('change', {currentTarget: {checked: false}});
+    expect(datagridStore.findById).toBeCalledWith(1);
     expect(datagridStore.deselect).toBeCalledWith({id: 1});
 });
 
