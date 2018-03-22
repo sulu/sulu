@@ -7,4 +7,4 @@ module.name_mapper='.+\.s?css' -> 'empty/object'
 .*/node_modules/findup/.*
 .*/node_modules/jss/.*
 .*/node_modules/stylelint/.*
-.*/vendor/symfony/symfony/.*
+.*/vendor/symfony/.*
