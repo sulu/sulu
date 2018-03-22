@@ -261,6 +261,8 @@ class AdminController
         if ($resourceMetadata instanceof TypesInterface) {
             foreach ($resourceMetadata->getTypes() as $typeName => $type) {
                 $resourceMetadataArray['types'][$typeName] = [
+                    'name' => $type->getName(),
+                    'title' => $type->getTitle(),
                     'form' => $type->getForm(),
                     'schema' => $type->getSchema(),
                 ];
