@@ -1,8 +1,8 @@
 // @flow
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import React, {Fragment} from 'react';
-import type {ChildrenArray, Element} from 'react';
+import React from 'react';
+import type {ChildrenArray, Element, ElementRef} from 'react';
 import Column from './Column';
 import Item from './Item';
 import Toolbar from './Toolbar';
@@ -27,6 +27,47 @@ export default class ColumnList extends React.Component<Props> {
     static Item = Item;
 
     @observable activeColumnIndex: number = 0;
+    @observable scrollPosition: number = 0;
+
+    container: ElementRef<'div'>;
+    toolbar: ElementRef<'div'>;
+
+    setContainerRef = (ref: ?ElementRef<'div'>) => {
+        if (!ref) {
+            return;
+        }
+
+        this.container = ref;
+    };
+
+    setToolbarRef = (ref: ?ElementRef<'div'>) => {
+        if (!ref) {
+            return;
+        }
+
+        this.toolbar = ref;
+    };
+
+    componentDidMount() {
+        this.container.addEventListener('scroll', this.handleScroll);
+    }
+
+    componentWillUnmount() {
+        this.container.removeEventListener('scroll', this.handleScroll);
+    }
+
+    get toolbarWidth(): number {
+        if (!this.toolbar) {
+            return 0;
+        }
+
+        // remove the 1px border from the toolbar to get the correct width
+        return this.toolbar.getBoundingClientRect().width - 1;
+    }
+
+    @action handleScroll = () => {
+        this.scrollPosition = this.container.scrollLeft;
+    };
 
     @action handleActive = (index?: number) => {
         if (index === undefined) {
@@ -56,14 +97,20 @@ export default class ColumnList extends React.Component<Props> {
         const {children, toolbarItems} = this.props;
 
         return (
-            <Fragment>
-                <Toolbar columnIndex={this.activeColumnIndex} toolbarItems={toolbarItems} />
-                <div className={columnListStyles.columnListContainer}>
+            <div className={columnListStyles.columnListToolbarContainer}>
+                <div style={{marginLeft: -this.scrollPosition + this.activeColumnIndex * this.toolbarWidth}}>
+                    <Toolbar
+                        columnIndex={this.activeColumnIndex}
+                        toolbarItems={toolbarItems}
+                        toolbarRef={this.setToolbarRef}
+                    />
+                </div>
+                <div ref={this.setContainerRef} className={columnListStyles.columnListContainer}>
                     <div className={columnListStyles.columnList}>
                         {this.cloneColumns(children)}
                     </div>
                 </div>
-            </Fragment>
+            </div>
         );
     }
 }

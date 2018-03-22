@@ -5,171 +5,176 @@ exports[`Render data 1`] = `
   class="columnListAdapter"
 >
   <div
-    class="toolbar"
+    class="columnListToolbarContainer"
   >
     <div
-      class="item primary"
+      class="toolbar"
+      style="margin-left:0"
     >
-      <span
-        aria-label="su-add"
-        class="su-add"
-      />
+      <div
+        class="item primary"
+      >
+        <span
+          aria-label="su-add"
+          class="su-add"
+        />
+      </div>
     </div>
-  </div>
-  <div
-    class="columnListContainer"
-  >
     <div
-      class="columnList"
+      class="columnListContainer"
     >
       <div
-        class="column"
+        class="columnList"
       >
         <div
-          class="item"
+          class="column"
         >
-          <span
-            class="buttons"
+          <div
+            class="item"
           >
             <span
-              aria-label="su-pen"
-              class="button su-pen clickable"
-              role="button"
-              tabindex="0"
-            />
-          </span>
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Page 1"
-              class="croppedText"
-              title="Page 1"
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="button su-pen clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
             >
               <div
-                aria-hidden="true"
-                class="front"
+                aria-label="Page 1"
+                class="croppedText"
+                title="Page 1"
               >
-                Pag
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 1
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 1
+                </div>
               </div>
+            </span>
+            <span
+              aria-label="su-arrow-right"
+              class="children su-arrow-right"
+            />
+          </div>
+          <div
+            class="item active"
+          >
+            <span
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="button su-pen clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
+            >
               <div
-                aria-hidden="true"
-                class="back"
+                aria-label="Page 2"
+                class="croppedText"
+                title="Page 2"
               >
-                <span>
-                  e 1
-                </span>
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 2
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2
+                </div>
               </div>
-              <div
-                class="whole"
-              >
-                Page 1
-              </div>
-            </div>
-          </span>
-          <span
-            aria-label="su-arrow-right"
-            class="children su-arrow-right"
-          />
+            </span>
+          </div>
         </div>
         <div
-          class="item active"
+          class="column"
         >
-          <span
-            class="buttons"
+          <div
+            class="item active"
           >
             <span
-              aria-label="su-pen"
-              class="button su-pen clickable"
-              role="button"
-              tabindex="0"
-            />
-          </span>
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Page 2"
-              class="croppedText"
-              title="Page 2"
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="button su-pen clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
             >
               <div
-                aria-hidden="true"
-                class="front"
+                aria-label="Page 2.1"
+                class="croppedText"
+                title="Page 2.1"
               >
-                Pag
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Page
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                     2.1
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2.1
+                </div>
               </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  e 2
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Page 2
-              </div>
-            </div>
-          </span>
+            </span>
+            <span
+              aria-label="su-arrow-right"
+              class="children su-arrow-right"
+            />
+          </div>
         </div>
-      </div>
-      <div
-        class="column"
-      >
         <div
-          class="item active"
-        >
-          <span
-            class="buttons"
-          >
-            <span
-              aria-label="su-pen"
-              class="button su-pen clickable"
-              role="button"
-              tabindex="0"
-            />
-          </span>
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Page 2.1"
-              class="croppedText"
-              title="Page 2.1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Page
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                   2.1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Page 2.1
-              </div>
-            </div>
-          </span>
-          <span
-            aria-label="su-arrow-right"
-            class="children su-arrow-right"
-          />
-        </div>
+          class="column"
+        />
       </div>
-      <div
-        class="column"
-      />
     </div>
   </div>
 </div>
@@ -180,130 +185,135 @@ exports[`Render data with loading column 1`] = `
   class="columnListAdapter"
 >
   <div
-    class="toolbar"
+    class="columnListToolbarContainer"
   >
     <div
-      class="item primary"
-    >
-      <span
-        aria-label="su-add"
-        class="su-add"
-      />
-    </div>
-  </div>
-  <div
-    class="columnListContainer"
-  >
-    <div
-      class="columnList"
+      class="toolbar"
+      style="margin-left:0"
     >
       <div
-        class="column"
+        class="item primary"
       >
-        <div
-          class="item active"
-        >
-          <span
-            class="buttons"
-          >
-            <span
-              aria-label="su-pen"
-              class="button su-pen clickable"
-              role="button"
-              tabindex="0"
-            />
-          </span>
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Page 1"
-              class="croppedText"
-              title="Page 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Pag
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  e 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Page 1
-              </div>
-            </div>
-          </span>
-          <span
-            aria-label="su-arrow-right"
-            class="children su-arrow-right"
-          />
-        </div>
-        <div
-          class="item"
-        >
-          <span
-            class="buttons"
-          >
-            <span
-              aria-label="su-pen"
-              class="button su-pen clickable"
-              role="button"
-              tabindex="0"
-            />
-          </span>
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Page 2"
-              class="croppedText"
-              title="Page 2"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Pag
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  e 2
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Page 2
-              </div>
-            </div>
-          </span>
-        </div>
+        <span
+          aria-label="su-add"
+          class="su-add"
+        />
       </div>
+    </div>
+    <div
+      class="columnListContainer"
+    >
       <div
-        class="column loading"
+        class="columnList"
       >
         <div
-          class="spinner"
-          style="width:40px;height:40px"
+          class="column"
         >
           <div
-            class="doubleBounce1"
-          />
+            class="item active"
+          >
+            <span
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="button su-pen clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
+            >
+              <div
+                aria-label="Page 1"
+                class="croppedText"
+                title="Page 1"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 1
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 1
+                </div>
+              </div>
+            </span>
+            <span
+              aria-label="su-arrow-right"
+              class="children su-arrow-right"
+            />
+          </div>
           <div
-            class="doubleBounce2"
-          />
+            class="item"
+          >
+            <span
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="button su-pen clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
+            >
+              <div
+                aria-label="Page 2"
+                class="croppedText"
+                title="Page 2"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 2
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+        <div
+          class="column loading"
+        >
+          <div
+            class="spinner"
+            style="width:40px;height:40px"
+          >
+            <div
+              class="doubleBounce1"
+            />
+            <div
+              class="doubleBounce2"
+            />
+          </div>
         </div>
       </div>
     </div>

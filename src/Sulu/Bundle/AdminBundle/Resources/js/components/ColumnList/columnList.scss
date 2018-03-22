@@ -3,6 +3,12 @@
 
 $columnListBackgroundColor: $white;
 
+.column-list-toolbar-container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
 .column-list-container {
     height: calc(100% - $toolbarHeight);
     width: 100%;

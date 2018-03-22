@@ -47,1033 +47,1046 @@ exports[`The ColumnList component should render 1`] = `
     ]
   }
 >
-  <Toolbar
-    columnIndex={0}
-    toolbarItems={
-      Array [
-        Object {
-          "icon": "fa-plus",
-          "index": 0,
-          "onClick": [Function],
-          "type": "button",
-        },
-        Object {
-          "icon": "fa-search",
-          "index": 0,
-          "onClick": [Function],
-          "type": "button",
-        },
-        Object {
-          "icon": "fa-gear",
-          "index": 0,
-          "options": Array [
-            Object {
-              "label": "Option1 ",
-              "onClick": [Function],
-            },
-            Object {
-              "label": "Option2 ",
-              "onClick": [Function],
-            },
-          ],
-          "type": "dropdown",
-        },
-      ]
-    }
-  >
-    <div
-      className="toolbar"
-    >
-      <ToolbarButton
-        columnIndex={0}
-        icon="fa-plus"
-        index={0}
-        key="0"
-        onClick={[Function]}
-        skin="primary"
-        type="button"
-      >
-        <div
-          className="item primary"
-          onClick={[Function]}
-        >
-          <Icon
-            name="fa-plus"
-          >
-            <span
-              aria-label="fa-plus"
-              className="fa fa-plus"
-            />
-          </Icon>
-        </div>
-      </ToolbarButton>
-      <ToolbarButton
-        columnIndex={0}
-        icon="fa-search"
-        index={0}
-        key="1"
-        onClick={[Function]}
-        skin="primary"
-        type="button"
-      >
-        <div
-          className="item primary"
-          onClick={[Function]}
-        >
-          <Icon
-            name="fa-search"
-          >
-            <span
-              aria-label="fa-search"
-              className="fa fa-search"
-            />
-          </Icon>
-        </div>
-      </ToolbarButton>
-      <ToolbarDropdown
-        columnIndex={0}
-        icon="fa-gear"
-        index={0}
-        key="2"
-        options={
-          Array [
-            Object {
-              "label": "Option1 ",
-              "onClick": [Function],
-            },
-            Object {
-              "label": "Option2 ",
-              "onClick": [Function],
-            },
-          ]
-        }
-        skin="primary"
-        type="dropdown"
-      >
-        <div
-          className="item primary"
-          onClick={[Function]}
-        >
-          <Icon
-            name="fa-gear"
-          >
-            <span
-              aria-label="fa-gear"
-              className="fa fa-gear"
-            />
-          </Icon>
-        </div>
-        <Popover
-          backdrop={true}
-          horizontalOffset={0}
-          onClose={[Function]}
-          open={false}
-          verticalOffset={0}
-        />
-      </ToolbarDropdown>
-    </div>
-  </Toolbar>
   <div
-    className="columnListContainer"
+    className="columnListToolbarContainer"
   >
     <div
-      className="columnList"
+      style={
+        Object {
+          "marginLeft": 0,
+        }
+      }
     >
-      <Column
-        buttons={
+      <Toolbar
+        columnIndex={0}
+        toolbarItems={
           Array [
             Object {
-              "icon": "fa-heart",
+              "icon": "fa-plus",
+              "index": 0,
               "onClick": [Function],
+              "type": "button",
             },
             Object {
-              "icon": "fa-pencil",
+              "icon": "fa-search",
+              "index": 0,
               "onClick": [Function],
+              "type": "button",
+            },
+            Object {
+              "icon": "fa-gear",
+              "index": 0,
+              "options": Array [
+                Object {
+                  "label": "Option1 ",
+                  "onClick": [Function],
+                },
+                Object {
+                  "label": "Option2 ",
+                  "onClick": [Function],
+                },
+              ],
+              "type": "dropdown",
             },
           ]
         }
-        index={0}
-        key=".0"
-        loading={false}
-        onActive={[Function]}
-        onItemClick={[MockFunction]}
+        toolbarRef={[Function]}
       >
         <div
-          className="column"
-          onMouseEnter={[Function]}
+          className="toolbar"
         >
-          <Item
-            active={false}
-            buttons={
-              Array [
-                Object {
-                  "icon": "fa-heart",
-                  "onClick": [Function],
-                },
-                Object {
-                  "icon": "fa-pencil",
-                  "onClick": [Function],
-                },
-              ]
-            }
-            hasChildren={false}
-            id="1"
-            key=".0"
-            onClick={[MockFunction]}
-            selected={true}
+          <ToolbarButton
+            columnIndex={0}
+            icon="fa-plus"
+            index={0}
+            key="0"
+            onClick={[Function]}
+            skin="primary"
+            type="button"
           >
             <div
-              className="item"
+              className="item primary"
               onClick={[Function]}
             >
-              <span
-                className="buttons"
-              >
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-heart",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="1"
-                  key="button-0"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-heart"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-heart"
-                      className="button fa fa-heart clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-pencil",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="1"
-                  key="button-1"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-pencil"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-pencil"
-                      className="button fa fa-pencil clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-              </span>
-              <span
-                className="text"
-              >
-                <CroppedText>
-                  <div
-                    aria-label="Item 1"
-                    className="croppedText"
-                    title="Item 1"
-                  >
-                    <div
-                      aria-hidden={true}
-                      className="front"
-                    >
-                      Ite
-                    </div>
-                    <div
-                      aria-hidden={true}
-                      className="back"
-                    >
-                      <span>
-                        m 1
-                      </span>
-                    </div>
-                    <div
-                      className="whole"
-                    >
-                      Item 1
-                    </div>
-                  </div>
-                </CroppedText>
-              </span>
-            </div>
-          </Item>
-          <Item
-            active={false}
-            buttons={
-              Array [
-                Object {
-                  "icon": "fa-heart",
-                  "onClick": [Function],
-                },
-                Object {
-                  "icon": "fa-pencil",
-                  "onClick": [Function],
-                },
-              ]
-            }
-            hasChildren={true}
-            id="2"
-            key=".1"
-            onClick={[MockFunction]}
-          >
-            <div
-              className="item"
-              onClick={[Function]}
-            >
-              <span
-                className="buttons"
-              >
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-heart",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="2"
-                  key="button-0"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-heart"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-heart"
-                      className="button fa fa-heart clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-pencil",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="2"
-                  key="button-1"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-pencil"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-pencil"
-                      className="button fa fa-pencil clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-              </span>
-              <span
-                className="text"
-              >
-                <CroppedText>
-                  <div
-                    aria-label="Item 1"
-                    className="croppedText"
-                    title="Item 1"
-                  >
-                    <div
-                      aria-hidden={true}
-                      className="front"
-                    >
-                      Ite
-                    </div>
-                    <div
-                      aria-hidden={true}
-                      className="back"
-                    >
-                      <span>
-                        m 1
-                      </span>
-                    </div>
-                    <div
-                      className="whole"
-                    >
-                      Item 1
-                    </div>
-                  </div>
-                </CroppedText>
-              </span>
               <Icon
-                className="children"
-                name="su-arrow-right"
+                name="fa-plus"
               >
                 <span
-                  aria-label="su-arrow-right"
-                  className="children su-arrow-right"
+                  aria-label="fa-plus"
+                  className="fa fa-plus"
                 />
               </Icon>
             </div>
-          </Item>
-          <Item
-            active={false}
-            buttons={
-              Array [
-                Object {
-                  "icon": "fa-heart",
-                  "onClick": [Function],
-                },
-                Object {
-                  "icon": "fa-pencil",
-                  "onClick": [Function],
-                },
-              ]
-            }
-            hasChildren={false}
-            id="3"
-            key=".2"
-            onClick={[MockFunction]}
+          </ToolbarButton>
+          <ToolbarButton
+            columnIndex={0}
+            icon="fa-search"
+            index={0}
+            key="1"
+            onClick={[Function]}
+            skin="primary"
+            type="button"
           >
             <div
-              className="item"
+              className="item primary"
               onClick={[Function]}
             >
-              <span
-                className="buttons"
-              >
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-heart",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="3"
-                  key="button-0"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-heart"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-heart"
-                      className="button fa fa-heart clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-pencil",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="3"
-                  key="button-1"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-pencil"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-pencil"
-                      className="button fa fa-pencil clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-              </span>
-              <span
-                className="text"
-              >
-                <CroppedText>
-                  <div
-                    aria-label="Item 1"
-                    className="croppedText"
-                    title="Item 1"
-                  >
-                    <div
-                      aria-hidden={true}
-                      className="front"
-                    >
-                      Ite
-                    </div>
-                    <div
-                      aria-hidden={true}
-                      className="back"
-                    >
-                      <span>
-                        m 1
-                      </span>
-                    </div>
-                    <div
-                      className="whole"
-                    >
-                      Item 1
-                    </div>
-                  </div>
-                </CroppedText>
-              </span>
-            </div>
-          </Item>
-        </div>
-      </Column>
-      <Column
-        buttons={
-          Array [
-            Object {
-              "icon": "fa-heart",
-              "onClick": [Function],
-            },
-            Object {
-              "icon": "fa-pencil",
-              "onClick": [Function],
-            },
-          ]
-        }
-        index={1}
-        key=".1"
-        loading={false}
-        onActive={[Function]}
-        onItemClick={[MockFunction]}
-      >
-        <div
-          className="column"
-          onMouseEnter={[Function]}
-        >
-          <Item
-            active={false}
-            buttons={
-              Array [
-                Object {
-                  "icon": "fa-heart",
-                  "onClick": [Function],
-                },
-                Object {
-                  "icon": "fa-pencil",
-                  "onClick": [Function],
-                },
-              ]
-            }
-            hasChildren={false}
-            id="1-1"
-            key=".0"
-            onClick={[MockFunction]}
-          >
-            <div
-              className="item"
-              onClick={[Function]}
-            >
-              <span
-                className="buttons"
-              >
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-heart",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="1-1"
-                  key="button-0"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-heart"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-heart"
-                      className="button fa fa-heart clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-pencil",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="1-1"
-                  key="button-1"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-pencil"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-pencil"
-                      className="button fa fa-pencil clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-              </span>
-              <span
-                className="text"
-              >
-                <CroppedText>
-                  <div
-                    aria-label="Item 1"
-                    className="croppedText"
-                    title="Item 1"
-                  >
-                    <div
-                      aria-hidden={true}
-                      className="front"
-                    >
-                      Ite
-                    </div>
-                    <div
-                      aria-hidden={true}
-                      className="back"
-                    >
-                      <span>
-                        m 1
-                      </span>
-                    </div>
-                    <div
-                      className="whole"
-                    >
-                      Item 1
-                    </div>
-                  </div>
-                </CroppedText>
-              </span>
-            </div>
-          </Item>
-          <Item
-            active={false}
-            buttons={
-              Array [
-                Object {
-                  "icon": "fa-heart",
-                  "onClick": [Function],
-                },
-                Object {
-                  "icon": "fa-pencil",
-                  "onClick": [Function],
-                },
-              ]
-            }
-            hasChildren={true}
-            id="1-2"
-            key=".1"
-            onClick={[MockFunction]}
-          >
-            <div
-              className="item"
-              onClick={[Function]}
-            >
-              <span
-                className="buttons"
-              >
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-heart",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="1-2"
-                  key="button-0"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-heart"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-heart"
-                      className="button fa fa-heart clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-pencil",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="1-2"
-                  key="button-1"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-pencil"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-pencil"
-                      className="button fa fa-pencil clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-              </span>
-              <span
-                className="text"
-              >
-                <CroppedText>
-                  <div
-                    aria-label="Item 1"
-                    className="croppedText"
-                    title="Item 1"
-                  >
-                    <div
-                      aria-hidden={true}
-                      className="front"
-                    >
-                      Ite
-                    </div>
-                    <div
-                      aria-hidden={true}
-                      className="back"
-                    >
-                      <span>
-                        m 1
-                      </span>
-                    </div>
-                    <div
-                      className="whole"
-                    >
-                      Item 1
-                    </div>
-                  </div>
-                </CroppedText>
-              </span>
               <Icon
-                className="children"
-                name="su-arrow-right"
+                name="fa-search"
               >
                 <span
-                  aria-label="su-arrow-right"
-                  className="children su-arrow-right"
+                  aria-label="fa-search"
+                  className="fa fa-search"
                 />
               </Icon>
             </div>
-          </Item>
-        </div>
-      </Column>
-      <Column
-        buttons={
-          Array [
-            Object {
-              "icon": "fa-heart",
-              "onClick": [Function],
-            },
-            Object {
-              "icon": "fa-pencil",
-              "onClick": [Function],
-            },
-          ]
-        }
-        index={2}
-        key=".2"
-        loading={false}
-        onActive={[Function]}
-        onItemClick={[MockFunction]}
-      >
-        <div
-          className="column"
-          onMouseEnter={[Function]}
-        >
-          <Item
-            active={false}
-            buttons={
+          </ToolbarButton>
+          <ToolbarDropdown
+            columnIndex={0}
+            icon="fa-gear"
+            index={0}
+            key="2"
+            options={
               Array [
                 Object {
-                  "icon": "fa-heart",
+                  "label": "Option1 ",
                   "onClick": [Function],
                 },
                 Object {
-                  "icon": "fa-pencil",
+                  "label": "Option2 ",
                   "onClick": [Function],
                 },
               ]
             }
-            hasChildren={false}
-            id="1-1-1"
-            key=".0"
-            onClick={[MockFunction]}
+            skin="primary"
+            type="dropdown"
           >
             <div
-              className="item"
+              className="item primary"
               onClick={[Function]}
             >
-              <span
-                className="buttons"
+              <Icon
+                name="fa-gear"
               >
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-heart",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="1-1-1"
-                  key="button-0"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-heart"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-heart"
-                      className="button fa fa-heart clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-pencil",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="1-1-1"
-                  key="button-1"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-pencil"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-pencil"
-                      className="button fa fa-pencil clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-              </span>
-              <span
-                className="text"
-              >
-                <CroppedText>
-                  <div
-                    aria-label="Item 1"
-                    className="croppedText"
-                    title="Item 1"
-                  >
-                    <div
-                      aria-hidden={true}
-                      className="front"
-                    >
-                      Ite
-                    </div>
-                    <div
-                      aria-hidden={true}
-                      className="back"
-                    >
-                      <span>
-                        m 1
-                      </span>
-                    </div>
-                    <div
-                      className="whole"
-                    >
-                      Item 1
-                    </div>
-                  </div>
-                </CroppedText>
-              </span>
+                <span
+                  aria-label="fa-gear"
+                  className="fa fa-gear"
+                />
+              </Icon>
             </div>
-          </Item>
-          <Item
-            active={false}
-            buttons={
-              Array [
-                Object {
-                  "icon": "fa-heart",
-                  "onClick": [Function],
-                },
-                Object {
-                  "icon": "fa-pencil",
-                  "onClick": [Function],
-                },
-              ]
-            }
-            hasChildren={false}
-            id="1-1-2"
-            key=".1"
-            onClick={[MockFunction]}
-          >
-            <div
-              className="item"
-              onClick={[Function]}
-            >
-              <span
-                className="buttons"
-              >
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-heart",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="1-1-2"
-                  key="button-0"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-heart"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-heart"
-                      className="button fa fa-heart clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-                <ItemButton
-                  config={
-                    Object {
-                      "icon": "fa-pencil",
-                      "onClick": [Function],
-                    }
-                  }
-                  id="1-1-2"
-                  key="button-1"
-                >
-                  <Icon
-                    className="button"
-                    name="fa-pencil"
-                    onClick={[Function]}
-                  >
-                    <span
-                      aria-label="fa-pencil"
-                      className="button fa fa-pencil clickable"
-                      onClick={[Function]}
-                      role="button"
-                      tabIndex={0}
-                    />
-                  </Icon>
-                </ItemButton>
-              </span>
-              <span
-                className="text"
-              >
-                <CroppedText>
-                  <div
-                    aria-label="Item 1"
-                    className="croppedText"
-                    title="Item 1"
-                  >
-                    <div
-                      aria-hidden={true}
-                      className="front"
-                    >
-                      Ite
-                    </div>
-                    <div
-                      aria-hidden={true}
-                      className="back"
-                    >
-                      <span>
-                        m 1
-                      </span>
-                    </div>
-                    <div
-                      className="whole"
-                    >
-                      Item 1
-                    </div>
-                  </div>
-                </CroppedText>
-              </span>
-            </div>
-          </Item>
+            <Popover
+              backdrop={true}
+              horizontalOffset={0}
+              onClose={[Function]}
+              open={false}
+              verticalOffset={0}
+            />
+          </ToolbarDropdown>
         </div>
-      </Column>
-      <Column
-        buttons={
-          Array [
-            Object {
-              "icon": "fa-heart",
-              "onClick": [Function],
-            },
-            Object {
-              "icon": "fa-pencil",
-              "onClick": [Function],
-            },
-          ]
-        }
-        index={3}
-        key=".3"
-        loading={true}
-        onActive={[Function]}
-        onItemClick={[MockFunction]}
+      </Toolbar>
+    </div>
+    <div
+      className="columnListContainer"
+    >
+      <div
+        className="columnList"
       >
-        <div
-          className="column loading"
-          onMouseEnter={[Function]}
+        <Column
+          buttons={
+            Array [
+              Object {
+                "icon": "fa-heart",
+                "onClick": [Function],
+              },
+              Object {
+                "icon": "fa-pencil",
+                "onClick": [Function],
+              },
+            ]
+          }
+          index={0}
+          key=".0"
+          loading={false}
+          onActive={[Function]}
+          onItemClick={[MockFunction]}
         >
-          <Loader
-            size={40}
+          <div
+            className="column"
+            onMouseEnter={[Function]}
           >
-            <div
-              className="spinner"
-              style={
-                Object {
-                  "height": 40,
-                  "width": 40,
-                }
+            <Item
+              active={false}
+              buttons={
+                Array [
+                  Object {
+                    "icon": "fa-heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "fa-pencil",
+                    "onClick": [Function],
+                  },
+                ]
               }
+              hasChildren={false}
+              id="1"
+              key=".0"
+              onClick={[MockFunction]}
+              selected={true}
             >
               <div
-                className="doubleBounce1"
-              />
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1"
+                    key="button-0"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-heart"
+                        className="button fa fa-heart clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1"
+                    key="button-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-pencil"
+                        className="button fa fa-pencil clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
+                </span>
+              </div>
+            </Item>
+            <Item
+              active={false}
+              buttons={
+                Array [
+                  Object {
+                    "icon": "fa-heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "fa-pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={true}
+              id="2"
+              key=".1"
+              onClick={[MockFunction]}
+            >
               <div
-                className="doubleBounce2"
-              />
-            </div>
-          </Loader>
-        </div>
-      </Column>
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="2"
+                    key="button-0"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-heart"
+                        className="button fa fa-heart clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="2"
+                    key="button-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-pencil"
+                        className="button fa fa-pencil clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
+                </span>
+                <Icon
+                  className="children"
+                  name="su-arrow-right"
+                >
+                  <span
+                    aria-label="su-arrow-right"
+                    className="children su-arrow-right"
+                  />
+                </Icon>
+              </div>
+            </Item>
+            <Item
+              active={false}
+              buttons={
+                Array [
+                  Object {
+                    "icon": "fa-heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "fa-pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={false}
+              id="3"
+              key=".2"
+              onClick={[MockFunction]}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="3"
+                    key="button-0"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-heart"
+                        className="button fa fa-heart clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="3"
+                    key="button-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-pencil"
+                        className="button fa fa-pencil clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
+                </span>
+              </div>
+            </Item>
+          </div>
+        </Column>
+        <Column
+          buttons={
+            Array [
+              Object {
+                "icon": "fa-heart",
+                "onClick": [Function],
+              },
+              Object {
+                "icon": "fa-pencil",
+                "onClick": [Function],
+              },
+            ]
+          }
+          index={1}
+          key=".1"
+          loading={false}
+          onActive={[Function]}
+          onItemClick={[MockFunction]}
+        >
+          <div
+            className="column"
+            onMouseEnter={[Function]}
+          >
+            <Item
+              active={false}
+              buttons={
+                Array [
+                  Object {
+                    "icon": "fa-heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "fa-pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={false}
+              id="1-1"
+              key=".0"
+              onClick={[MockFunction]}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1"
+                    key="button-0"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-heart"
+                        className="button fa fa-heart clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1"
+                    key="button-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-pencil"
+                        className="button fa fa-pencil clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
+                </span>
+              </div>
+            </Item>
+            <Item
+              active={false}
+              buttons={
+                Array [
+                  Object {
+                    "icon": "fa-heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "fa-pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={true}
+              id="1-2"
+              key=".1"
+              onClick={[MockFunction]}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-2"
+                    key="button-0"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-heart"
+                        className="button fa fa-heart clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-2"
+                    key="button-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-pencil"
+                        className="button fa fa-pencil clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
+                </span>
+                <Icon
+                  className="children"
+                  name="su-arrow-right"
+                >
+                  <span
+                    aria-label="su-arrow-right"
+                    className="children su-arrow-right"
+                  />
+                </Icon>
+              </div>
+            </Item>
+          </div>
+        </Column>
+        <Column
+          buttons={
+            Array [
+              Object {
+                "icon": "fa-heart",
+                "onClick": [Function],
+              },
+              Object {
+                "icon": "fa-pencil",
+                "onClick": [Function],
+              },
+            ]
+          }
+          index={2}
+          key=".2"
+          loading={false}
+          onActive={[Function]}
+          onItemClick={[MockFunction]}
+        >
+          <div
+            className="column"
+            onMouseEnter={[Function]}
+          >
+            <Item
+              active={false}
+              buttons={
+                Array [
+                  Object {
+                    "icon": "fa-heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "fa-pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={false}
+              id="1-1-1"
+              key=".0"
+              onClick={[MockFunction]}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1-1"
+                    key="button-0"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-heart"
+                        className="button fa fa-heart clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1-1"
+                    key="button-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-pencil"
+                        className="button fa fa-pencil clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
+                </span>
+              </div>
+            </Item>
+            <Item
+              active={false}
+              buttons={
+                Array [
+                  Object {
+                    "icon": "fa-heart",
+                    "onClick": [Function],
+                  },
+                  Object {
+                    "icon": "fa-pencil",
+                    "onClick": [Function],
+                  },
+                ]
+              }
+              hasChildren={false}
+              id="1-1-2"
+              key=".1"
+              onClick={[MockFunction]}
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+              >
+                <span
+                  className="buttons"
+                >
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-heart",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1-2"
+                    key="button-0"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-heart"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-heart"
+                        className="button fa fa-heart clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                  <ItemButton
+                    config={
+                      Object {
+                        "icon": "fa-pencil",
+                        "onClick": [Function],
+                      }
+                    }
+                    id="1-1-2"
+                    key="button-1"
+                  >
+                    <Icon
+                      className="button"
+                      name="fa-pencil"
+                      onClick={[Function]}
+                    >
+                      <span
+                        aria-label="fa-pencil"
+                        className="button fa fa-pencil clickable"
+                        onClick={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </Icon>
+                  </ItemButton>
+                </span>
+                <span
+                  className="text"
+                >
+                  <CroppedText>
+                    <div
+                      aria-label="Item 1"
+                      className="croppedText"
+                      title="Item 1"
+                    >
+                      <div
+                        aria-hidden={true}
+                        className="front"
+                      >
+                        Ite
+                      </div>
+                      <div
+                        aria-hidden={true}
+                        className="back"
+                      >
+                        <span>
+                          m 1
+                        </span>
+                      </div>
+                      <div
+                        className="whole"
+                      >
+                        Item 1
+                      </div>
+                    </div>
+                  </CroppedText>
+                </span>
+              </div>
+            </Item>
+          </div>
+        </Column>
+        <Column
+          buttons={
+            Array [
+              Object {
+                "icon": "fa-heart",
+                "onClick": [Function],
+              },
+              Object {
+                "icon": "fa-pencil",
+                "onClick": [Function],
+              },
+            ]
+          }
+          index={3}
+          key=".3"
+          loading={true}
+          onActive={[Function]}
+          onItemClick={[MockFunction]}
+        >
+          <div
+            className="column loading"
+            onMouseEnter={[Function]}
+          >
+            <Loader
+              size={40}
+            >
+              <div
+                className="spinner"
+                style={
+                  Object {
+                    "height": 40,
+                    "width": 40,
+                  }
+                }
+              >
+                <div
+                  className="doubleBounce1"
+                />
+                <div
+                  className="doubleBounce2"
+                />
+              </div>
+            </Loader>
+          </div>
+        </Column>
+      </div>
     </div>
   </div>
 </ColumnList>

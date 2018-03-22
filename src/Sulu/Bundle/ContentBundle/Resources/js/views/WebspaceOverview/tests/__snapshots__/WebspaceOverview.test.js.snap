@@ -34,26 +34,31 @@ exports[`Render WebspaceOverview 1`] = `
       class="columnListAdapter"
     >
       <div
-        class="toolbar"
+        class="columnListToolbarContainer"
       >
         <div
-          class="item primary"
-        >
-          <span
-            aria-label="su-add"
-            class="su-add"
-          />
-        </div>
-      </div>
-      <div
-        class="columnListContainer"
-      >
-        <div
-          class="columnList"
+          class="toolbar"
+          style="margin-left: 0px;"
         >
           <div
-            class="column"
-          />
+            class="item primary"
+          >
+            <span
+              aria-label="su-add"
+              class="su-add"
+            />
+          </div>
+        </div>
+        <div
+          class="columnListContainer"
+        >
+          <div
+            class="columnList"
+          >
+            <div
+              class="column"
+            />
+          </div>
         </div>
       </div>
     </div>

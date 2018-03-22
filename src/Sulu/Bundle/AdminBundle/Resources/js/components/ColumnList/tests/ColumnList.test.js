@@ -152,3 +152,22 @@ test('The ColumnList component should handle which toolbar is active on mouse en
     columnList.find('.fa-plus').simulate('click');
     expect(buttonClickSpy).toHaveBeenLastCalledWith(2);
 });
+
+test('Should move the toolbar container to the correct position', () => {
+    const columnList = mount(
+        <ColumnList onItemClick={jest.fn()}>
+            <Column />
+        </ColumnList>
+    );
+
+    expect(columnList.find('Toolbar').parent().prop('style')).toEqual({marginLeft: 0});
+
+    columnList.instance().toolbar = {
+        getBoundingClientRect: jest.fn().mockReturnValue({width: 271}),
+    };
+    columnList.instance().scrollPosition = 35;
+    columnList.instance().activeColumnIndex = 2;
+    columnList.update();
+
+    expect(columnList.find('Toolbar').parent().prop('style')).toEqual({marginLeft: 505});
+});
