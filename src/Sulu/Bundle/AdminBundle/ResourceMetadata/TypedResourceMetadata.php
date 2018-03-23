@@ -28,7 +28,7 @@ class TypedResourceMetadata implements DatagridInterface, TypesInterface
      */
     private $types = [];
 
-    public function getDatagrid()
+    public function getDatagrid(): Datagrid
     {
         return $this->datagrid;
     }
