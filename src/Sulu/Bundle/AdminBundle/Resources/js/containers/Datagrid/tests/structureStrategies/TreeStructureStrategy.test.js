@@ -121,3 +121,77 @@ test('Should enhance the items with data and children', () => {
         children: [],
     });
 });
+
+test('Should find nested items by id or return undefined', () => {
+    const treeStructureStrategy = new TreeStructureStrategy();
+
+    const homeData = {
+        id: 0,
+        title: 'Homepage',
+        hasChildren: true,
+    };
+
+    const child1 = {
+        data: {
+            id: 1,
+            title: 'Child1',
+            hasChildren: false,
+        },
+        children: [],
+    };
+
+    const child2 = {
+        data: {
+            id: 2,
+            title: 'Child2',
+            hasChildren: false,
+        },
+        children: [],
+    };
+
+    const child3a = {
+        data: {
+            id: '3a',
+            title: 'Child3a',
+            hasChildren: false,
+        },
+        children: [],
+    };
+
+    const child3b = {
+        data: {
+            id: '3b',
+            title: 'Child3b',
+            hasChildren: false,
+        },
+        children: [],
+    };
+
+    const child3 = {
+        data: {
+            id: 3,
+            title: 'Child3',
+            hasChildren: true,
+        },
+        children: [
+            child3a,
+            child3b,
+        ],
+    };
+
+    treeStructureStrategy.data = [
+        {
+            data: homeData,
+            children: [
+                child1,
+                child2,
+                child3,
+            ],
+        },
+    ];
+
+    expect(treeStructureStrategy.findById(0)).toEqual(homeData);
+    expect(treeStructureStrategy.findById(2)).toEqual(child2.data);
+    expect(treeStructureStrategy.findById('3a')).toEqual(child3a.data);
+    expect(treeStructureStrategy.findById(4)).toEqual(undefined);
+});
