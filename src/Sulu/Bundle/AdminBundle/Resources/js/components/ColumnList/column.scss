@@ -3,6 +3,8 @@
 
 .column {
     border-right: $columnBorder;
+    background: $columnListBackgroundColor;
+    display: inline-block;
     vertical-align: top;
     width: $columnWidth;
     height: 100%;
@@ -14,6 +16,7 @@
     }
 }
 
-.loading {
+.loader {
+    height: 100%;
     display: flex;
 }

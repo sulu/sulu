@@ -1,8 +1,6 @@
 @import '../../containers/Application/colors.scss';
 @import './variables.scss';
 
-$columnListBackgroundColor: $white;
-
 .column-list-toolbar-container {
     height: 100%;
     width: 100%;
@@ -13,6 +11,7 @@ $columnListBackgroundColor: $white;
     height: calc(100% - $toolbarHeight);
     width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
     border: $columnBorder;
     border-radius: $columnListBorderRadius;
 
@@ -26,8 +25,7 @@ $columnListBackgroundColor: $white;
 }
 
 .column-list {
-    display: inline-flex;
     height: 100%;
-    min-width: 100%;
+    white-space: nowrap;
     background-color: $columnListBackgroundColor;
 }

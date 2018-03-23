@@ -58,14 +58,18 @@ export default class Column extends React.Component<Props> {
         const columnClass = classNames(
             columnStyles.column,
             {
-                [columnStyles.loading]: loading,
                 [columnStyles.scrolling]: scrolling,
             }
         );
 
         return (
             <div className={columnClass} onMouseEnter={this.handleMouseEnter}>
-                {loading ? <Loader /> : this.cloneItems(children)}
+                {loading ?
+                    <div className={columnStyles.loader}>
+                        <Loader />
+                    </div>
+                    : this.cloneItems(children)
+                }
             </div>
         );
     }
