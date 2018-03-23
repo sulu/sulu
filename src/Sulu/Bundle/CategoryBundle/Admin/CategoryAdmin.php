@@ -27,8 +27,12 @@ class CategoryAdmin extends Admin
     public function __construct(SecurityCheckerInterface $securityChecker, $title)
     {
         $this->securityChecker = $securityChecker;
+    }
 
-        $rootNavigationItem = new NavigationItem($title);
+    public function getNavigation(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('root');
+
         $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);
 
@@ -47,7 +51,7 @@ class CategoryAdmin extends Admin
             $rootNavigationItem->addChild($section);
         }
 
-        $this->setNavigation(new Navigation($rootNavigationItem));
+        return new Navigation($rootNavigationItem);
     }
 
     /**

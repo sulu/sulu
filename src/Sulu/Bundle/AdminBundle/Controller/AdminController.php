@@ -223,9 +223,16 @@ class AdminController
      */
     public function configV2Action(): Response
     {
+        $navigation = [];
+
+        foreach ($this->adminPool->getNavigation()->getRoot()->getChildren() as $navigationItem) {
+            $navigation[] = $navigationItem->toArray();
+        }
+
         $view = View::create([
             'sulu_admin' => [
                 'routes' => $this->adminPool->getRoutes(),
+                'navigation' => $navigation,
             ],
         ]);
         $view->setFormat('json');

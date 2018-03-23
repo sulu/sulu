@@ -61,8 +61,11 @@ class ContentAdmin extends Admin
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
         $this->sessionManager = $sessionManager;
+    }
 
-        $rootNavigationItem = new NavigationItem($title);
+    public function getNavigation(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('title');
 
         $section = new NavigationItem('navigation.webspaces');
         $section->setPosition(10);
@@ -101,7 +104,7 @@ class ContentAdmin extends Admin
             }
         }
 
-        $this->setNavigation(new Navigation($rootNavigationItem));
+        return new Navigation($rootNavigationItem);
     }
 
     /**

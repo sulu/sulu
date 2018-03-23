@@ -17,9 +17,9 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 class SuluSearchAdmin extends Admin
 {
-    public function __construct($title)
+    public function getNavigation(): Navigation
     {
-        $rootNavigationItem = new NavigationItem($title);
+        $rootNavigationItem = new NavigationItem('root');
 
         $section = new NavigationItem('navigation.search-section');
         $section->setPosition(1);
@@ -33,7 +33,7 @@ class SuluSearchAdmin extends Admin
 
         $section->addChild($search);
 
-        $this->setNavigation(new Navigation($rootNavigationItem));
+        return new Navigation($rootNavigationItem);
     }
 
     /**

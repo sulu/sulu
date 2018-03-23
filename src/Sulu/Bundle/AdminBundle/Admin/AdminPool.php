@@ -27,6 +27,11 @@ class AdminPool
     private $pool = [];
 
     /**
+     * @var array
+     */
+    private $routes;
+
+    /**
      * Returns all the registered admins.
      *
      * @return Admin[]
@@ -51,6 +56,15 @@ class AdminPool
      */
     public function getRoutes(): array
     {
+        if (!$this->routes) {
+            $this->loadRoutes();
+        }
+
+        return $this->routes;
+    }
+
+    private function loadRoutes(): void
+    {
         $routes = [];
         $this->iterateAdmins(function(Admin $admin) use (&$routes) {
             $routes = array_merge($routes, $admin->getRoutes());
@@ -62,7 +76,7 @@ class AdminPool
             $route = clone $route;
         });
 
-        return $this->mergeRouteOptions($routes);
+        $this->routes = $this->mergeRouteOptions($routes);
     }
 
     private function validateRoutes(array $routes): void

@@ -63,22 +63,27 @@ class SnippetAdmin extends Admin
         $this->securityChecker = $securityChecker;
         $this->webspaceManager = $webspaceManager;
         $this->defaultEnabled = $defaultEnabled;
+    }
 
-        $rootNavigationItem = new NavigationItem($title);
+    public function getNavigation(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('root');
 
         $section = new NavigationItem('navigation.modules');
-        $section->setPosition(20);
 
         if ($this->securityChecker->hasPermission('sulu.global.snippets', 'view')) {
             $snippet = new NavigationItem('navigation.snippets');
             $snippet->setPosition(10);
             $snippet->setIcon('sticky-note-o');
             $snippet->setAction('snippet/snippets');
+            $snippet->setMainRoute('sulu_snippet.list');
+
             $section->addChild($snippet);
+
             $rootNavigationItem->addChild($section);
         }
 
-        $this->setNavigation(new Navigation($rootNavigationItem));
+        return new Navigation($rootNavigationItem);
     }
 
     /**

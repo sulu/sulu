@@ -28,8 +28,12 @@ class ContactAdmin extends Admin
     public function __construct(SecurityCheckerInterface $securityChecker, $title)
     {
         $this->securityChecker = $securityChecker;
+    }
 
-        $rootNavigationItem = new NavigationItem($title);
+    public function getNavigation(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('root');
+
         $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);
 
@@ -42,6 +46,8 @@ class ContactAdmin extends Admin
             $people->setPosition(10);
             $people->setIcon('users');
             $people->setAction('contacts/contacts');
+            $people->setMainRoute('sulu_contact.datagrid');
+
             $contacts->addChild($people);
         }
 
@@ -50,6 +56,8 @@ class ContactAdmin extends Admin
             $companies->setPosition(20);
             $companies->setIcon('building');
             $companies->setAction('contacts/accounts');
+            $companies->setMainRoute('sulu_account.datagrid');
+
             $contacts->addChild($companies);
         }
 
@@ -58,7 +66,7 @@ class ContactAdmin extends Admin
             $section->addChild($contacts);
         }
 
-        $this->setNavigation(new Navigation($rootNavigationItem));
+        return new Navigation($rootNavigationItem);
     }
 
     public function getRoutes(): array

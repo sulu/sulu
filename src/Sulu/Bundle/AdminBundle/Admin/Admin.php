@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
+use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 /**
  * Defines all the required information from a bundle's admin class.
@@ -47,16 +48,6 @@ abstract class Admin
     }
 
     /**
-     * Returns a navigation containing the position of the admin in the navigation.
-     *
-     * @return \Sulu\Bundle\AdminBundle\Navigation\Navigation
-     */
-    public function getNavigation()
-    {
-        return $this->navigation;
-    }
-
-    /**
      * Returns the bundle name for the javascript main file.
      *
      * @deprecated Will not be used and removed in 2.0
@@ -76,5 +67,12 @@ abstract class Admin
     public function getSecurityContexts()
     {
         return [];
+    }
+
+    public function getNavigation(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('root');
+
+        return new Navigation($rootNavigationItem);
     }
 }

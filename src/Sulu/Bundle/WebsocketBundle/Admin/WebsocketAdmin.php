@@ -26,12 +26,4 @@ class WebsocketAdmin extends Admin
     {
         return 'suluwebsocket';
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getNavigation()
-    {
-        return new Navigation();
-    }
 }

@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManager;
+use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
@@ -39,8 +40,12 @@ class MediaAdmin extends Admin
     ) {
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
+    }
 
-        $rootNavigationItem = new NavigationItem($title);
+    public function getNavigation(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('root');
+
         $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);
 
@@ -53,7 +58,7 @@ class MediaAdmin extends Admin
             $rootNavigationItem->addChild($section);
         }
 
-        $this->setNavigation(new Navigation($rootNavigationItem));
+        return new Navigation($rootNavigationItem);
     }
 
     /**
