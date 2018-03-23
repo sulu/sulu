@@ -16,6 +16,4 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 interface FormInterface extends ResourceMetadataInterface
 {
     public function getForm(): Form;
-
-    public function setForm(Form $form): void;
 }

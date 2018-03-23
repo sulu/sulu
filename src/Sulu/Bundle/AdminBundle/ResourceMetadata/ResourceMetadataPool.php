@@ -20,16 +20,6 @@ class ResourceMetadataPool
      */
     private $resourceMetadataProviders;
 
-    /**
-     * Returns all the registered providers.
-     *
-     * @return ResourceMetadataProviderInterface[]
-     */
-    public function getProviders(): array
-    {
-        return $this->resourceMetadataProviders;
-    }
-
     public function getResourceMetadata(string $resourceKey, string $locale): ?ResourceMetadataInterface
     {
         foreach ($this->resourceMetadataProviders as $resourceMetadataProvider) {

@@ -15,7 +15,5 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 
 interface DatagridInterface extends ResourceMetadataInterface
 {
-    public function getDatagrid();
-
-    public function setDatagrid(Datagrid $datagrid): void;
+    public function getDatagrid(): Datagrid;
 }

@@ -43,19 +43,14 @@ class ResourceMetadataPoolTest extends \PHPUnit_Framework_TestCase
         $this->resourceMetadataPool->addResourceMetadataProvider($this->provider2->reveal());
     }
 
-    public function testGetProviders()
-    {
-        $this->assertEquals(2, count($this->resourceMetadataPool->getProviders()));
-        $this->assertSame($this->provider1->reveal(), $this->resourceMetadataPool->getProviders()[0]);
-        $this->assertSame($this->provider2->reveal(), $this->resourceMetadataPool->getProviders()[1]);
-    }
-
     public function testGetResourceMetadata()
     {
         $resourceMetadata = $this->prophesize(ResourceMetadataInterface::class)->reveal();
 
-        $this->provider1->getResourceMetadata('resource_key_test', 'de')->willReturn(null);
-        $this->provider2->getResourceMetadata('resource_key_test', 'de')->willReturn($resourceMetadata);
+        $this->provider1->getResourceMetadata('resource_key_test', 'de')
+            ->shouldBeCalled()->willReturn(null);
+        $this->provider2->getResourceMetadata('resource_key_test', 'de')
+            ->shouldBeCalled()->willReturn($resourceMetadata);
 
         $this->assertEquals(
             $resourceMetadata,

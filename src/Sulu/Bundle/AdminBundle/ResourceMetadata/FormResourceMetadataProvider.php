@@ -131,15 +131,18 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
             $formFile = $this->fileLocator->locate($form);
             /** @var FormMetadata $formStructure */
             $formStructure = $this->formXmlLoader->load($formFile, $resourceKey);
+            $newChildren = $formStructure->getChildren();
+            $newProperties = $formStructure->getProperties();
 
+            if ($newChildren) {
+                $children = array_merge($children, $newChildren);
+            }
+            if ($newProperties) {
+                $properties = array_merge($properties, $newProperties);
+            }
+
+            // create a new file resource for the cache
             $fileResources = [new FileResource($formFile)];
-
-            if ($formStructure->getChildren()) {
-                $children = array_merge($children, $formStructure->getChildren());
-            }
-            if ($formStructure->getProperties()) {
-                $properties = array_merge($properties, $formStructure->getProperties());
-            }
         }
 
         // generate resource metadata for each locale and write it to the cache

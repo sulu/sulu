@@ -16,6 +16,4 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 interface SchemaInterface extends ResourceMetadataInterface
 {
     public function getSchema(): Schema;
-
-    public function setSchema(Schema $schema): void;
 }
