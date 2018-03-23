@@ -28,12 +28,8 @@ class ContactAdmin extends Admin
     public function __construct(SecurityCheckerInterface $securityChecker, $title)
     {
         $this->securityChecker = $securityChecker;
-    }
 
-    public function getNavigation(): Navigation
-    {
-        $rootNavigationItem = new NavigationItem('root');
-
+        $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);
 
@@ -46,8 +42,6 @@ class ContactAdmin extends Admin
             $people->setPosition(10);
             $people->setIcon('users');
             $people->setAction('contacts/contacts');
-            $people->setMainRoute('sulu_contact.datagrid');
-
             $contacts->addChild($people);
         }
 
@@ -56,14 +50,43 @@ class ContactAdmin extends Admin
             $companies->setPosition(20);
             $companies->setIcon('building');
             $companies->setAction('contacts/accounts');
-            $companies->setMainRoute('sulu_account.datagrid');
-
             $contacts->addChild($companies);
         }
 
         if ($contacts->hasChildren()) {
             $rootNavigationItem->addChild($section);
             $section->addChild($contacts);
+        }
+
+        $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('root');
+
+        $contacts = new NavigationItem('navigation.contacts');
+        $contacts->setPosition(30);
+        $contacts->setIcon('fa-user');
+
+        if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
+            $people = new NavigationItem('navigation.contacts.people');
+            $people->setPosition(10);
+            $people->setMainRoute('sulu_contact.contacts_list');
+
+            $contacts->addChild($people);
+        }
+
+        if ($this->securityChecker->hasPermission('sulu.contact.organizations', PermissionTypes::VIEW)) {
+            $companies = new NavigationItem('navigation.contacts.companies');
+            $companies->setPosition(20);
+            $companies->setMainRoute('sulu_contact.accounts_list');
+
+            $contacts->addChild($companies);
+        }
+
+        if ($contacts->hasChildren()) {
+            $rootNavigationItem->addChild($contacts);
         }
 
         return new Navigation($rootNavigationItem);

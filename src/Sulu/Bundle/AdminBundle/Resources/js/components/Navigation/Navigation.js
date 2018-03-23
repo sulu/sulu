@@ -119,7 +119,8 @@ export default class Navigation extends React.Component<Props> {
             <div className={navigationStyles.navigation}>
                 <div className={navigationStyles.header}>
                     <div className={navigationStyles.headerContent}>
-                        {title}
+                        <Icon className={navigationStyles.headerIcon} name="su-sulu" />
+                        <span className={navigationStyles.headerTitle}>{title}</span>
                     </div>
                 </div>
                 <div className={navigationStyles.user}>

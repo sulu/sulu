@@ -1,23 +1,23 @@
 // @flow
-import type {Navigation} from '../types';
+import type {NavigationItem} from '../types';
 
 class NavigationRegistry {
-    navigation: Array<Navigation>;
+    navigationItems: Array<NavigationItem>;
 
     constructor() {
         this.clear();
     }
 
     clear() {
-        this.navigation = [];
+        this.navigationItems = [];
     }
 
-    set(navigation: Array<Navigation>) {
-        this.navigation = navigation;
+    set(navigation: Array<NavigationItem>) {
+        this.navigationItems = navigation;
     }
 
-    get(): Array<Navigation> {
-        return this.navigation;
+    get(): Array<NavigationItem> {
+        return this.navigationItems;
     }
 }
 

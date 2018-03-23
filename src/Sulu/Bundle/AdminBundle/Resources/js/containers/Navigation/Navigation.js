@@ -1,16 +1,25 @@
 // @flow
-import {action, observable} from 'mobx';
-import {observer} from 'mobx-react';
 import React from 'react';
-import Loader from '../../components/Loader';
+import {Navigation as NavigationComponent} from '../../components';
+import Router from '../../services/Router/Router';
+import navigationRegistry from './registries/NavigationRegistry';
+import type {NavigationItem} from './types';
 
 type Props = {
-    store: FormStore,
-    onSubmit: (action: ?string) => void,
+    router: Router,
+    onNavigate: (route: string) => void,
 };
 
-@observer
+const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
+
 export default class Navigation extends React.Component<Props> {
+    handleNavigationItemClick = (value: *) => {
+        if (value && typeof value === 'string') {
+            this.props.router.navigate(value);
+            this.props.onNavigate(value);
+        }
+    };
+
     handleLogoutClick = () => {
         // TODO: Logout user here.
     };
@@ -19,11 +28,18 @@ export default class Navigation extends React.Component<Props> {
         // TODO: Open profile edit overlay here.
     };
 
-    renderNavigation() {
+    isItemActive = (navigationItem: NavigationItem) => {
         const {router} = this.props;
 
+        return (navigationItem.mainRoute && router.route.name === navigationItem.mainRoute) ||
+            (navigationItem.childRoutes && navigationItem.childRoutes.includes(router.route.name));
+    };
+
+    render() {
+        const navigation = navigationRegistry.get();
+
         return (
-            <Navigation
+            <NavigationComponent
                 title="Sulu" // TODO: Get this dynamically from server
                 username="Hikaru Sulu" // TODO: Get this data from logged in user
                 suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
@@ -31,29 +47,29 @@ export default class Navigation extends React.Component<Props> {
                 onLogoutClick={this.handleLogoutClick}
                 onProfileClick={this.handleProfileEditClick}
             >
-                {routes.map((route) => (
-                    <Navigation.Item
-                        key={route.key ? route.key : ''}
-                        value={route.key ? route.key : ''}
-                        title={route.name}
-                        icon={route.icon}
-                        active={route.key && router.route ? (router.route.name === route.key) : false}
+                {navigation.map((navigationItem: NavigationItem) => (
+                    <NavigationComponent.Item
+                        key={navigationItem.id}
+                        value={navigationItem.mainRoute ? navigationItem.mainRoute : navigationItem.id}
+                        title={navigationItem.title}
+                        icon={navigationItem.icon}
+                        active={this.isItemActive(navigationItem)}
                         onClick={this.handleNavigationItemClick}
                     >
-                        {Array.isArray(route.items) &&
-                        route.items.map((subRoute) => (
-                            <Navigation.Item
-                                key={subRoute.key}
-                                value={subRoute.key}
-                                title={subRoute.name}
-                                active={router.route ? router.route.name === subRoute.key : false}
-                                onClick={this.handleNavigationItemClick}
-                            />
-                        ))
+                        {Array.isArray(navigationItem.items) &&
+                            navigationItem.items.map((subNavigationItem) => (
+                                <NavigationComponent.Item
+                                    key={subNavigationItem.id}
+                                    value={subNavigationItem.mainRoute}
+                                    title={subNavigationItem.title}
+                                    active={this.isItemActive(subNavigationItem)}
+                                    onClick={this.handleNavigationItemClick}
+                                />
+                            ))
                         }
-                    </Navigation.Item>
+                    </NavigationComponent.Item>
                 ))}
-            </Navigation>
+            </NavigationComponent>
         );
     }
 }

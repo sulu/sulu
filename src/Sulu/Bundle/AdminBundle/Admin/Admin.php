@@ -18,7 +18,7 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 /**
  * Defines all the required information from a bundle's admin class.
  */
-abstract class Admin
+abstract class Admin implements RouteProviderInterface, NavigationProviderInterface
 {
     /**
      * The navigation describes the position of the admin.
@@ -48,6 +48,16 @@ abstract class Admin
     }
 
     /**
+     * Returns a navigation containing the position of the admin in the navigation.
+     *
+     * @return \Sulu\Bundle\AdminBundle\Navigation\Navigation
+     */
+    public function getNavigation(): Navigation
+    {
+        return $this->navigation;
+    }
+
+    /**
      * Returns the bundle name for the javascript main file.
      *
      * @deprecated Will not be used and removed in 2.0
@@ -69,7 +79,7 @@ abstract class Admin
         return [];
     }
 
-    public function getNavigation(): Navigation
+    public function getNavigationV2(): Navigation
     {
         $rootNavigationItem = new NavigationItem('root');
 

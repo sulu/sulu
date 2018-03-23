@@ -20,6 +20,8 @@ use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
+use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
+use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
@@ -95,6 +97,16 @@ class AdminController
     private $resourceMetadataPool;
 
     /**
+     * @var RouteRegistry
+     */
+    private $routeRegistry;
+
+    /**
+     * @var NavigationRegistry
+     */
+    private $navigationRegistry;
+
+    /**
      * @var string
      */
     private $environment;
@@ -141,6 +153,8 @@ class AdminController
         LocalizationManagerInterface $localizationManager,
         TranslatorBagInterface $translator,
         ResourceMetadataPool $resourceMetadataPool,
+        RouteRegistry $routeRegistry,
+        NavigationRegistry $navigationRegistry,
         $environment,
         $adminName,
         array $locales,
@@ -160,6 +174,8 @@ class AdminController
         $this->localizationManager = $localizationManager;
         $this->translator = $translator;
         $this->resourceMetadataPool = $resourceMetadataPool;
+        $this->routeRegistry = $routeRegistry;
+        $this->navigationRegistry = $navigationRegistry;
         $this->environment = $environment;
         $this->adminName = $adminName;
         $this->locales = $locales;
@@ -223,16 +239,10 @@ class AdminController
      */
     public function configV2Action(): Response
     {
-        $navigation = [];
-
-        foreach ($this->adminPool->getNavigation()->getRoot()->getChildren() as $navigationItem) {
-            $navigation[] = $navigationItem->toArray();
-        }
-
         $view = View::create([
             'sulu_admin' => [
-                'routes' => $this->adminPool->getRoutes(),
-                'navigation' => $navigation,
+                'routes' => $this->routeRegistry->getRoutes(),
+                'navigation' => $this->navigationRegistry->getNavigation()->toArrayChildren(),
             ],
         ]);
         $view->setFormat('json');

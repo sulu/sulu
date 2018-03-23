@@ -63,6 +63,16 @@ class Route
         return $this->name;
     }
 
+    public function updatePath(string $newPath): void
+    {
+        $this->path = $newPath;
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
     public function addOption(string $key, $value): self
     {
         $this->options[$key] = $value;

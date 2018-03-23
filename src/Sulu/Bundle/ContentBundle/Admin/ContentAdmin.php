@@ -61,11 +61,8 @@ class ContentAdmin extends Admin
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
         $this->sessionManager = $sessionManager;
-    }
 
-    public function getNavigation(): Navigation
-    {
-        $rootNavigationItem = new NavigationItem('title');
+        $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('navigation.webspaces');
         $section->setPosition(10);
@@ -101,6 +98,27 @@ class ContentAdmin extends Admin
                 $webspaceItem->addChild($webspaceSettingsItem);
 
                 $section->addChild($webspaceItem);
+            }
+        }
+
+        $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('root');
+
+        /** @var Webspace $webspace */
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), PermissionTypes::VIEW)) {
+                $webspaceItem = new NavigationItem('navigation.webspaces');
+                $webspaceItem->setPosition(10);
+                $webspaceItem->setIcon('su-webspace');
+                $webspaceItem->setMainRoute('sulu_content.webspaces');
+
+                $rootNavigationItem->addChild($webspaceItem);
+
+                break;
             }
         }
 
