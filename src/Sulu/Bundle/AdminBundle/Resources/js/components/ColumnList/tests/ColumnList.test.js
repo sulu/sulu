@@ -207,7 +207,7 @@ test('Should move the toolbar container to the correct position', () => {
     expect(columnList.find('Toolbar').parent().prop('style')).toEqual({marginLeft: 0});
 
     columnList.instance().toolbar = {
-        getBoundingClientRect: jest.fn().mockReturnValue({width: 271}),
+        clientWidth: 271,
     };
     columnList.instance().scrollPosition = 35;
     columnList.instance().activeColumnIndex = 2;
@@ -231,7 +231,7 @@ test('Should set classes if the toolbar is active on the first or last visible c
         .toEqual(expect.stringContaining('lastVisibleColumnActive'));
 
     columnList.instance().toolbar = {
-        getBoundingClientRect: jest.fn().mockReturnValue({width: 271}),
+        clientWidth: 271,
     };
     columnList.instance().container = {
         clientWidth: 500,

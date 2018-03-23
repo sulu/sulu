@@ -63,7 +63,7 @@ export default class ColumnList extends React.Component<Props> {
         }
 
         // remove the 1px border from the toolbar to get the correct width
-        return this.toolbar.getBoundingClientRect().width - 1;
+        return this.toolbar.clientWidth - 1;
     }
 
     get containerWidth(): number {
@@ -100,6 +100,7 @@ export default class ColumnList extends React.Component<Props> {
 
     cloneColumns = (originalColumns: ChildrenArray<Element<typeof Column>>) => {
         const {onItemClick} = this.props;
+        const scrolling = this.containerScrolling;
 
         return React.Children.map(originalColumns, (column, index) => {
             return React.cloneElement(
@@ -109,7 +110,7 @@ export default class ColumnList extends React.Component<Props> {
                     buttons: this.props.buttons,
                     onActive: this.handleActive,
                     onItemClick: onItemClick,
-                    scrolling: this.containerScrolling,
+                    scrolling,
                 }
             );
         });
