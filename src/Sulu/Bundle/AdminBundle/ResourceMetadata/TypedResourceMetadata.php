@@ -12,9 +12,11 @@
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\Type;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 
-class TypedResourceMetadata implements ResourceMetadataInterface
+class TypedResourceMetadata implements DatagridInterface, TypesInterface
 {
     /**
      * @var Datagrid
@@ -26,7 +28,7 @@ class TypedResourceMetadata implements ResourceMetadataInterface
      */
     private $types = [];
 
-    public function getDatagrid()
+    public function getDatagrid(): Datagrid
     {
         return $this->datagrid;
     }

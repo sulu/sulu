@@ -79,7 +79,7 @@ beforeEach(() => {
 });
 
 test('Should render the datagrid with the correct resourceKey', () => {
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const router = {
         bind: jest.fn(),
         route: {
@@ -90,12 +90,12 @@ test('Should render the datagrid with the correct resourceKey', () => {
         },
     };
 
-    const list = render(<List router={router} />);
-    expect(list).toMatchSnapshot();
+    const datagrid = render(<Datagrid router={router} />);
+    expect(datagrid).toMatchSnapshot();
 });
 
-test('Should render the list with a title', () => {
-    const List = require('../List').default;
+test('Should render the datagrid with a title', () => {
+    const Datagrid = require('../Datagrid').default;
 
     const router = {
         bind: jest.fn(),
@@ -108,12 +108,12 @@ test('Should render the list with a title', () => {
         },
     };
 
-    const list = render(<List router={router} />);
-    expect(list).toMatchSnapshot();
+    const datagrid = render(<Datagrid router={router} />);
+    expect(datagrid).toMatchSnapshot();
 });
 
 test('Should render the datagrid with the pencil icon if a editRoute has been passed', () => {
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const router = {
         bind: jest.fn(),
         route: {
@@ -125,23 +125,23 @@ test('Should render the datagrid with the pencil icon if a editRoute has been pa
         },
     };
 
-    const list = render(<List router={router} />);
-    expect(list).toMatchSnapshot();
+    const datagrid = render(<Datagrid router={router} />);
+    expect(datagrid).toMatchSnapshot();
 });
 
 test('Should throw an error when no resourceKey is defined in the route options', () => {
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const router = {
         route: {
             options: {},
         },
     };
 
-    expect(() => render(<List router={router} />)).toThrow(/mandatory resourceKey option/);
+    expect(() => render(<Datagrid router={router} />)).toThrow(/mandatory resourceKey option/);
 });
 
 test('Should destroy the store on unmount', () => {
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const router = {
         bind: jest.fn(),
         route: {
@@ -153,7 +153,7 @@ test('Should destroy the store on unmount', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const datagrid = mount(<Datagrid router={router} />);
     const page = router.bind.mock.calls[0][1];
     const locale = router.bind.mock.calls[1][1];
 
@@ -162,15 +162,15 @@ test('Should destroy the store on unmount', () => {
     expect(router.bind).toBeCalledWith('page', page, 1);
     expect(router.bind).toBeCalledWith('locale', locale);
 
-    const datagridStore = list.instance().datagridStore;
-    list.unmount();
+    const datagridStore = datagrid.instance().datagridStore;
+    datagrid.unmount();
 
     expect(datagridStore.destroy).toBeCalled();
 });
 
 test('Should render the add button in the toolbar only if an addRoute has been passed in options', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const router = {
         bind: jest.fn(),
@@ -183,9 +183,9 @@ test('Should render the add button in the toolbar only if an addRoute has been p
         },
     };
 
-    const list = mount(<List router={router} />);
+    const datagrid = mount(<Datagrid router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(datagrid.instance());
     expect(toolbarConfig.items).toEqual(
         expect.arrayContaining(
             [
@@ -197,7 +197,7 @@ test('Should render the add button in the toolbar only if an addRoute has been p
 
 test('Should navigate when add button is clicked and locales have been passed in options', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const router = {
         navigate: jest.fn(),
@@ -212,13 +212,13 @@ test('Should navigate when add button is clicked and locales have been passed in
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
+    const datagrid = mount(<Datagrid router={router} />);
+    datagrid.instance().locale = {
         get: function() {
             return 'de';
         },
     };
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(datagrid.instance());
 
     toolbarConfig.items[0].onClick();
 
@@ -227,7 +227,7 @@ test('Should navigate when add button is clicked and locales have been passed in
 
 test('Should navigate without locale when pencil button is clicked', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const router = {
         navigate: jest.fn(),
@@ -241,8 +241,8 @@ test('Should navigate without locale when pencil button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const datagrid = mount(<Datagrid router={router} />);
+    const toolbarConfig = toolbarFunction.call(datagrid.instance());
 
     toolbarConfig.items[0].onClick();
 
@@ -250,7 +250,7 @@ test('Should navigate without locale when pencil button is clicked', () => {
 });
 
 test('Should navigate when pencil button is clicked and locales have been passed in options', () => {
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
@@ -264,18 +264,18 @@ test('Should navigate when pencil button is clicked and locales have been passed
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
+    const datagrid = mount(<Datagrid router={router} />);
+    datagrid.instance().locale = {
         get: function() {
             return 'de';
         },
     };
-    list.find('ButtonCell button').at(0).simulate('click');
+    datagrid.find('ButtonCell button').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1, locale: 'de'});
 });
 
 test('Should navigate without locale when pencil button is clicked', () => {
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
@@ -288,14 +288,14 @@ test('Should navigate without locale when pencil button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.find('ButtonCell button').at(0).simulate('click');
+    const datagrid = mount(<Datagrid router={router} />);
+    datagrid.find('ButtonCell button').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
 });
 
 test('Should render the delete item enabled only if something is selected', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const router = {
         bind: jest.fn(),
@@ -307,23 +307,23 @@ test('Should render the delete item enabled only if something is selected', () =
         },
     };
 
-    const list = mount(<List router={router} />);
-    const datagridStore = list.instance().datagridStore;
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
 
     let toolbarConfig, item;
-    toolbarConfig = toolbarFunction.call(list.instance());
+    toolbarConfig = toolbarFunction.call(datagrid.instance());
     item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(true);
 
     datagridStore.selectionIds.push(1);
-    toolbarConfig = toolbarFunction.call(list.instance());
+    toolbarConfig = toolbarFunction.call(datagrid.instance());
     item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(false);
 });
 
 test('Should render the locale dropdown with the options from router', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const router = {
         bind: jest.fn(),
@@ -336,14 +336,14 @@ test('Should render the locale dropdown with the options from router', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
+    const datagrid = mount(<Datagrid router={router} />);
+    datagrid.instance().locale = {
         get: function() {
             return 'de';
         },
     };
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
+    const toolbarConfig = toolbarFunction.call(datagrid.instance());
     expect(toolbarConfig.locale.value).toBe('de');
     expect(toolbarConfig.locale.options).toEqual([
         {value: 'en', label: 'en'},
@@ -352,7 +352,7 @@ test('Should render the locale dropdown with the options from router', () => {
 });
 
 test('Should pass options from router to the DatagridStore', () => {
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const router = {
         bind: jest.fn(),
         route: {
@@ -367,14 +367,14 @@ test('Should pass options from router to the DatagridStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const datagridStore = list.instance().datagridStore;
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
 
     expect(datagridStore.options.webspace).toEqual('example');
 });
 
 test('Should pass locale and page observables to the DatagridStore', () => {
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const router = {
         bind: jest.fn(),
         route: {
@@ -386,15 +386,15 @@ test('Should pass locale and page observables to the DatagridStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const datagridStore = list.instance().datagridStore;
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
 
     expect(datagridStore.observableOptions).toHaveProperty('page');
     expect(datagridStore.observableOptions).toHaveProperty('locale');
 });
 
 test('Should not pass the locale observable to the DatagridStore if no locales are defined', () => {
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const router = {
         bind: jest.fn(),
         route: {
@@ -405,8 +405,8 @@ test('Should not pass the locale observable to the DatagridStore if no locales a
         },
     };
 
-    const list = mount(<List router={router} />);
-    const datagridStore = list.instance().datagridStore;
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
 
     expect(datagridStore.observableOptions).toHaveProperty('page');
     expect(datagridStore.observableOptions).not.toHaveProperty('locale');
@@ -414,11 +414,11 @@ test('Should not pass the locale observable to the DatagridStore if no locales a
 
 test('Should delete selected items when click on delete button', () => {
     function getDeleteItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.value === 'Delete');
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Delete');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
-    const List = require('../List').default;
+    const Datagrid = require('../Datagrid').default;
     const ResourceRequester = require('../../../services/ResourceRequester');
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const router = {
@@ -431,8 +431,8 @@ test('Should delete selected items when click on delete button', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const datagridStore = list.instance().datagridStore;
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
     datagridStore.selectionIds.push(1, 4, 6);
 
     expect(getDeleteItem().loading).toBe(false);

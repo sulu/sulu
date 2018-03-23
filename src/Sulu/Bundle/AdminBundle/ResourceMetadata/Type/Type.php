@@ -12,9 +12,11 @@
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Type;
 
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 
-class Type
+class Type implements FormInterface, SchemaInterface
 {
     /**
      * @var string

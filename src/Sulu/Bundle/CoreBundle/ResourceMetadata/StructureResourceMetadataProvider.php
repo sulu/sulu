@@ -9,9 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
+namespace Sulu\Bundle\CoreBundle\ResourceMetadata;
 
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\Type;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\TypedResourceMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 

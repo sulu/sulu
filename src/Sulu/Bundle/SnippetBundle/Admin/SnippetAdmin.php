@@ -96,7 +96,7 @@ class SnippetAdmin extends Admin
         );
 
         return [
-            (new Route('sulu_snippet.list', '/snippets/:locale', 'sulu_admin.list'))
+            (new Route('sulu_snippet.datagrid', '/snippets/:locale', 'sulu_admin.datagrid'))
                 ->addOption('title', 'sulu_snippet.snippets')
                 ->addOption('resourceKey', 'snippets')
                 ->addOption('adapters', ['table'])
@@ -109,7 +109,7 @@ class SnippetAdmin extends Admin
                 ->addOption('locales', $snippetLocales),
             (new Route('sulu_snippet.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
-                ->addOption('backRoute', 'sulu_snippet.list')
+                ->addOption('backRoute', 'sulu_snippet.datagrid')
                 ->addOption('editRoute', 'sulu_snippet.edit_form.detail')
                 ->setParent('sulu_snippet.add_form'),
             (new Route('sulu_snippet.edit_form', '/snippets/:locale/:id', 'sulu_admin.resource_tabs'))
@@ -117,13 +117,13 @@ class SnippetAdmin extends Admin
                 ->addOption('locales', $snippetLocales),
             (new Route('sulu_snippet.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
-                ->addOption('backRoute', 'sulu_snippet.list')
+                ->addOption('backRoute', 'sulu_snippet.datagrid')
                 ->setParent('sulu_snippet.edit_form'),
-            (new Route('sulu_snippet.edit_form.taxonomies', '/taxonomies', 'sulu_admin.list'))
+            (new Route('sulu_snippet.edit_form.taxonomies', '/taxonomies', 'sulu_admin.datagrid'))
                 ->addOption('resourceKey', 'snippets')
                 ->addOption('tabTitle', 'sulu_snippet.taxonomies')
                 ->addOption('adapters', ['table'])
-                ->addOption('backRoute', 'sulu_snippet.list')
+                ->addOption('backRoute', 'sulu_snippet.datagrid')
                 ->setParent('sulu_snippet.edit_form'),
         ];
     }

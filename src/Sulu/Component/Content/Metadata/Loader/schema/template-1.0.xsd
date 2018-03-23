@@ -10,15 +10,9 @@
     -->
     <xs:import namespace='http://www.w3.org/XML/1998/namespace' schemaLocation='xml.xsd'/>
 
-    <!--
-    Attribute group for attributes that are allowed for all elements
-    -->
-    <xs:attributeGroup name="defaultAttributes">
-        <xs:anyAttribute namespace='http://www.w3.org/XML/1998/namespace'/>
-    </xs:attributeGroup>
+    <xs:include schemaLocation="properties-1.0.xsd"/>
 
     <xs:element name="template" type="templateType"/>
-    <xs:element name="properties" type="rootPropertiesType"/>
 
     <xs:complexType name="templateType">
         <xs:choice maxOccurs="unbounded">
@@ -44,144 +38,6 @@
         <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
-    <xs:complexType name="metaType">
-        <xs:choice maxOccurs="unbounded">
-            <xs:element type="langType" name="title"/>
-            <xs:element type="langType" name="info_text"/>
-            <xs:element type="langType" name="placeholder"/>
-        </xs:choice>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="areasType">
-        <xs:sequence>
-            <xs:element type="areaContextType" name="area" minOccurs="1" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="areaContextType">
-        <xs:sequence>
-            <xs:element name="meta">
-                <xs:complexType>
-                    <xs:choice maxOccurs="unbounded">
-                        <xs:element type="langType" name="title"/>
-                    </xs:choice>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-        <xs:attribute name="key" type="xs:string" use="required"/>
-    </xs:complexType>
-
-    <xs:complexType name="langType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="lang" use="required" type="xs:string"/>
-                <xs:attributeGroup ref="defaultAttributes"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
-    <xs:complexType name="rootPropertiesType">
-        <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element type="propertyType" name="property" minOccurs="1" maxOccurs="unbounded"/>
-            <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="sectionType" name="section" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:choice>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="sectionType">
-        <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
-        </xs:sequence>
-
-        <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="cssClass" use="optional"/>
-        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="propertiesType">
-        <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element type="propertyType" name="property"/>
-            <xs:element type="blockType" name="block"/>
-        </xs:choice>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="propertyType" mixed="true">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="xs:string" name="indexField" minOccurs="0" maxOccurs="1"/>
-        </xs:choice>
-
-        <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="type" use="required"/>
-        <xs:attribute name="onInvalid" use="optional">
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="ignore"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute type="xs:string" name="mandatory" use="optional"/>
-        <xs:attribute type="xs:string" name="multilingual" use="optional"/>
-        <xs:attribute type="xs:nonNegativeInteger" name="minOccurs" use="optional"/>
-        <xs:attribute type="xs:positiveInteger" name="maxOccurs" use="optional"/>
-        <xs:attribute type="xs:string" name="cssClass" use="optional"/>
-        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
-        <xs:attribute type="xs:integer" name="size" use="optional"/>
-        <xs:attribute type="xs:integer" name="spaceAfter" use="optional"/>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="blockType">
-        <xs:sequence minOccurs="1" maxOccurs="unbounded">
-            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="blockTypesType" name="types" minOccurs="1" maxOccurs="1"/>
-        </xs:sequence>
-
-        <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="default-type" use="required"/>
-        <xs:attribute type="xs:string" name="mandatory" use="optional"/>
-        <xs:attribute type="xs:string" name="multilingual" use="optional"/>
-        <xs:attribute type="xs:nonNegativeInteger" name="minOccurs" use="optional"/>
-        <xs:attribute type="xs:positiveInteger" name="maxOccurs" use="optional"/>
-        <xs:attribute type="xs:string" name="cssClass" use="optional"/>
-        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="blockTypesType">
-        <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element type="blockTypeType" name="type" minOccurs="1" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="blockTypeType">
-        <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
-        </xs:sequence>
-
-        <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="tagType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="name" use="required"/>
-                <xs:attribute type="xs:int" name="priority" use="optional"/>
-                <xs:anyAttribute namespace="##any" processContents="lax"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
     <xs:complexType name="cacheLifetimeType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -203,31 +59,6 @@
     <xs:simpleType name="cacheLifetimeTypeAnyString">
         <xs:restriction base="xs:string">
             <xs:pattern value="[0-9a-zA-Z]*"/>
-        </xs:restriction>
-    </xs:simpleType>
-
-    <xs:complexType name="paramsType">
-        <xs:sequence>
-            <xs:element type="paramType" name="param" maxOccurs="unbounded" minOccurs="0"/>
-        </xs:sequence>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="paramType">
-        <xs:choice maxOccurs="unbounded">
-            <xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="meta" type="metaType" minOccurs="0" maxOccurs="1"/>
-        </xs:choice>
-        <xs:attribute name="type" type="paramTypeType" default="string"/>
-        <xs:attribute name="name" type="xs:string" use="required"/>
-        <xs:attribute name="value" type="xs:string" use="optional"/>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:simpleType name="paramTypeType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="collection"/>
-            <xs:enumeration value="string"/>
         </xs:restriction>
     </xs:simpleType>
 

@@ -66,26 +66,15 @@
             <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
             <argument type="service" id="sulu_admin.metadata.resource_metadata_mapper"/>
             <argument>%sulu_core.locales%</argument>
-            <argument type="service" id="kernel"/>
+            <argument type="service" id="file_locator"/>
             <argument>%kernel.cache_dir%/sulu/resourcemetadata</argument>
             <argument>%kernel.debug%</argument>
 
             <tag name="sulu.resource_metadata_provider"/>
         </service>
 
-        <service id="sulu_admin.metadata.resource_metadata_provider.structure"
-                 class="Sulu\Bundle\AdminBundle\ResourceMetadata\StructureResourceMetadataProvider"
-        >
-            <argument type="service" id="sulu_content.structure.factory"/>
-            <argument type="service" id="sulu_admin.metadata.resource_metadata_mapper"/>
-            <argument type="string">%sulu.content.structure.resources%</argument>
-
-            <tag name="sulu.resource_metadata_provider"/>
-        </service>
-
         <service id="sulu_admin.metadata.resource_metadata_mapper" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper">
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
-            <argument type="service" id="service_container"/>
             <argument type="service" id="translator.default"/>
         </service>
 

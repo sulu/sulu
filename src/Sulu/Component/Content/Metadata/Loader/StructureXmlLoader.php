@@ -20,7 +20,7 @@ use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 /**
  * Reads a template xml and returns a StructureMetadata.
  */
-class XmlLoader extends AbstractLoader
+class StructureXmlLoader extends AbstractLoader
 {
     const SCHEME_PATH = '/schema/template-1.0.xsd';
 

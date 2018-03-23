@@ -64,7 +64,7 @@ class ContactAdmin extends Admin
     public function getRoutes(): array
     {
         return [
-            (new Route('sulu_contact.contacts_list', '/contacts', 'sulu_admin.list'))
+            (new Route('sulu_contact.contacts_datagrid', '/contacts', 'sulu_admin.datagrid'))
                 ->addOption('title', 'sulu_contact.persons')
                 ->addOption('adapters', ['table'])
                 ->addOption('resourceKey', 'contacts')
@@ -74,16 +74,16 @@ class ContactAdmin extends Admin
                 ->addOption('resourceKey', 'contacts'),
             (new Route('sulu_contact.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_contact.details')
-                ->addOption('backRoute', 'sulu_contact.contacts_list')
+                ->addOption('backRoute', 'sulu_contact.contacts_datagrid')
                 ->addOption('editRoute', 'sulu_contact.edit_form.detail')
                 ->setParent('sulu_contact.add_form'),
             (new Route('sulu_contact.edit_form', '/contacts/:id', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'contacts'),
             (new Route('sulu_contact.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_contact.details')
-                ->addOption('backRoute', 'sulu_contact.contacts_list')
+                ->addOption('backRoute', 'sulu_contact.contacts_datagrid')
                 ->setParent('sulu_contact.edit_form'),
-            (new Route('sulu_contact.accounts_list', '/accounts', 'sulu_admin.list'))
+            (new Route('sulu_contact.accounts_datagrid', '/accounts', 'sulu_admin.datagrid'))
                 ->addOption('title', 'sulu_contact.organizations')
                 ->addOption('adapters', ['table'])
                 ->addOption('resourceKey', 'accounts'),

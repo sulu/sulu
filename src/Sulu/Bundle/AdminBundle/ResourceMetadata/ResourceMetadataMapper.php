@@ -23,7 +23,6 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ResourceMetadataMapper
@@ -34,22 +33,15 @@ class ResourceMetadataMapper
     protected $fieldDescriptorFactory;
 
     /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
      * @var TranslatorInterface
      */
     protected $translator;
 
     public function __construct(
         FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        ContainerInterface $container,
         TranslatorInterface $translator
     ) {
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->container = $container;
         $this->translator = $translator;
     }
 
@@ -103,17 +95,15 @@ class ResourceMetadataMapper
         $section->setSize($property->getSize());
 
         foreach ($property->getChildren() as $component) {
-            $item = null;
-
             if ($component instanceof PropertyMetadata) {
                 $item = $this->mapProperty($component, $locale);
             } elseif ($component instanceof BlockMetadata) {
                 $item = $this->mapBlock($component, $locale);
+            } else {
+                throw new \Exception('Unsupported property given "' . get_class($property) . '"');
             }
 
-            if ($item) {
-                $section->addItem($item);
-            }
+            $section->addItem($item);
         }
 
         return $section;
@@ -156,10 +146,10 @@ class ResourceMetadataMapper
 
                     $option->addValueOption($valueOption);
                 }
-            }
-
-            if ('string' === $parameter['type']) {
+            } elseif ('string' === $parameter['type']) {
                 $option->setValue($parameter['value']);
+            } else {
+                throw new \Exception('Unsupported parameter given "' . get_class($parameter) . '"');
             }
 
             $field->addOption($option);

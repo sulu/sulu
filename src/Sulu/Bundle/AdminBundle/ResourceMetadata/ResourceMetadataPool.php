@@ -16,7 +16,7 @@ use Sulu\Bundle\AdminBundle\Exception\ResourceNotFoundException;
 class ResourceMetadataPool
 {
     /**
-     * @var FormResourceMetadataProvider[]
+     * @var ResourceMetadataProviderInterface[]
      */
     private $resourceMetadataProviders;
 

@@ -1,5 +1,6 @@
-The list is registered with the key `sulu_admin.list`. It shows a Datagrid with a toolbar. The toolbar shows an add and
-a delete button, whereby the latter one only appears enabled if something in the Datagrid has been selected.
+The datagrid is registered with the key `sulu_admin.datagrid`. It shows a Datagrid container with a toolbar.
+The toolbar shows an add and a delete button, whereby the latter one only appears enabled
+if something in the Datagridhas been selected.
 
 The view uses the options passed via the current route to adapt its behavior. The following table explains the meanings
 of the available options:

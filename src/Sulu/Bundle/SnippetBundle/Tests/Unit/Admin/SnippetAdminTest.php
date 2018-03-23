@@ -66,7 +66,7 @@ class SnippetAdminTest extends \PHPUnit_Framework_TestCase
         $editDetailRoute = $routes[4];
         $taxonomiesRoute = $routes[5];
 
-        $this->assertAttributeEquals('sulu_snippet.list', 'name', $listRoute);
+        $this->assertAttributeEquals('sulu_snippet.datagrid', 'name', $listRoute);
         $this->assertAttributeSame([
             'title' => 'sulu_snippet.snippets',
             'resourceKey' => 'snippets',
@@ -84,7 +84,7 @@ class SnippetAdminTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals('sulu_snippet.add_form', 'parent', $addDetailRoute);
         $this->assertAttributeSame([
             'tabTitle' => 'sulu_snippet.details',
-            'backRoute' => 'sulu_snippet.list',
+            'backRoute' => 'sulu_snippet.datagrid',
             'editRoute' => 'sulu_snippet.edit_form.detail',
         ], 'options', $addDetailRoute);
         $this->assertAttributeEquals('sulu_snippet.edit_form', 'name', $editFormRoute);
@@ -96,7 +96,7 @@ class SnippetAdminTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals('sulu_snippet.edit_form', 'parent', $editDetailRoute);
         $this->assertAttributeSame([
             'tabTitle' => 'sulu_snippet.details',
-            'backRoute' => 'sulu_snippet.list',
+            'backRoute' => 'sulu_snippet.datagrid',
         ], 'options', $editDetailRoute);
         $this->assertAttributeEquals('sulu_snippet.edit_form.taxonomies', 'name', $taxonomiesRoute);
         $this->assertAttributeEquals('sulu_snippet.edit_form', 'parent', $taxonomiesRoute);
@@ -104,7 +104,7 @@ class SnippetAdminTest extends \PHPUnit_Framework_TestCase
             'resourceKey' => 'snippets',
             'tabTitle' => 'sulu_snippet.taxonomies',
             'adapters' => ['table'],
-            'backRoute' => 'sulu_snippet.list',
+            'backRoute' => 'sulu_snippet.datagrid',
         ], 'options', $taxonomiesRoute);
     }
 }

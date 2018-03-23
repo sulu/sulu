@@ -83,7 +83,7 @@ class SecurityAdmin extends Admin
     public function getRoutes(): array
     {
         return [
-            (new Route('sulu_security.list', '/roles', 'sulu_admin.list'))
+            (new Route('sulu_security.datagrid', '/roles', 'sulu_admin.datagrid'))
                 ->addOption('title', 'sulu_security.roles')
                 ->addOption('adapters', ['table'])
                 ->addOption('resourceKey', 'roles'),

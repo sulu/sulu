@@ -17,7 +17,12 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -245,12 +250,35 @@ class AdminController
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
+        /** @var ResourceMetadataInterface $resourceMetadata */
         $resourceMetadata = $this->resourceMetadataPool->getResourceMetadata(
             $resource,
             $user->getLocale()
         );
 
-        $response = new Response($this->serializer->serialize($resourceMetadata, 'json'));
+        $resourceMetadataArray = [];
+
+        if ($resourceMetadata instanceof TypesInterface) {
+            foreach ($resourceMetadata->getTypes() as $typeName => $type) {
+                $resourceMetadataArray['types'][$typeName] = [
+                    'name' => $type->getName(),
+                    'title' => $type->getTitle(),
+                    'form' => $type->getForm(),
+                    'schema' => $type->getSchema(),
+                ];
+            }
+        }
+        if ($resourceMetadata instanceof FormInterface) {
+            $resourceMetadataArray['form'] = $resourceMetadata->getForm();
+        }
+        if ($resourceMetadata instanceof SchemaInterface) {
+            $resourceMetadataArray['schema'] = $resourceMetadata->getSchema();
+        }
+        if ($resourceMetadata instanceof DatagridInterface) {
+            $resourceMetadataArray['datagrid'] = $resourceMetadata->getDatagrid();
+        }
+
+        $response = new Response($this->serializer->serialize($resourceMetadataArray, 'json'));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;

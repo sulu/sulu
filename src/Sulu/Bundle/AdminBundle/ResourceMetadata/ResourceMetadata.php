@@ -12,10 +12,13 @@
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 
-class ResourceMetadata implements ResourceMetadataInterface
+class ResourceMetadata implements DatagridInterface, FormInterface, SchemaInterface
 {
     /**
      * @var Datagrid

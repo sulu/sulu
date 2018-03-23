@@ -516,10 +516,10 @@ exports[`Application should render opened navigation 1`] = `
               active={false}
               expanded={false}
               icon="fa-sticky-note-o"
-              key=".$sulu_snippet.list"
+              key=".$sulu_snippet.datagrid"
               onClick={[Function]}
               title="Snippets"
-              value="sulu_snippet.list"
+              value="sulu_snippet.datagrid"
             >
               <div
                 className="item"

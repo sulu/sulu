@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Metadata\Factory;
 use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Metadata\Loader\XmlLoader;
+use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
@@ -180,7 +180,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
 
         $propertiesXmlLoader = new PropertiesXmlParser($contentTypeManager->reveal());
 
-        $xmlLoader = new XmlLoader($cacheLifeTimeResolver->reveal(), $propertiesXmlLoader);
+        $xmlLoader = new StructureXmlLoader($cacheLifeTimeResolver->reveal(), $propertiesXmlLoader);
 
         $loadResult = $xmlLoader->load($this->apostropheMappingFile, 'page');
 
