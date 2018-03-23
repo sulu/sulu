@@ -161,9 +161,9 @@ const PageWithToolbar = withToolbar(Page, function() {
             }
         },
         icons: [
-            'bell-o',
-            'commenting',
-            'exclamation-circle',
+            'fa-bell-o',
+            'fa-commenting',
+            'fa-exclamation-circle',
         ],
         locale: {
             value: state.localeVal,
@@ -204,10 +204,10 @@ const observable = require('mobx').observable;
 
 class Page extends React.PureComponent {
     constructor() {
-        this.loadingSave = observable(false);
-        this.template = observable();
-        this.loadingTemplate = observable(false);
-        this.loadingActions = observable(false);
+        this.loadingSave = observable.box(false);
+        this.template = observable.box();
+        this.loadingTemplate = observable.box(false);
+        this.loadingActions = observable.box(false);
     }
 
     render() {
