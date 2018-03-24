@@ -187,6 +187,11 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>
 
+        <service id="sulu_admin.metadata.resource_metadata_mapper" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper">
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
+            <argument type="service" id="translator.default"/>
+        </service>
+
         <!-- resource metadata provider -->
         <service id="sulu_core.resource_metadata_provider.structure"
                  class="Sulu\Bundle\CoreBundle\ResourceMetadata\StructureResourceMetadataProvider"
