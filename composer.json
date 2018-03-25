@@ -98,6 +98,8 @@
         "symfony/process": "^3.4",
         "symfony/stopwatch": "^3.4",
         "symfony/var-dumper": "^3.4",
+        "symfony/web-profiler-bundle": "^3.4",
+        "symfony/web-server-bundle": "^3.4",
         "zendframework/zend-stdlib": "~2.3",
         "zendframework/zendsearch": "@dev"
     },
@@ -136,6 +138,9 @@
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
             "src/Sulu/Bundle/*/Tests/"
+        ],
+        "classmap": [
+            "tests/Application/app/AppKernel.php"
         ]
     },
     "autoload-dev": {

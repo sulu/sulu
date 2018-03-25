@@ -8,6 +8,23 @@
 /tests/app/cache
 /tests/app/data
 /tests/app/logs
+/tests/Application/var/cache/*
+/tests/Application/var/indexes/*
+/tests/Application/var/logs/*
+/tests/Application/var/sessions/*
+/tests/Application/var/uploads/*
+/tests/Application/var/sitemaps/*
+!/tests/Application/var/cache/.gitkeep
+!/tests/Application/var/indexes/.gitkeep
+!/tests/Application/var/logs/.gitkeep
+!/tests/Application/var/sessions/.gitkeep
+!/tests/Application/var/uploads/.gitkeep
+!/tests/Application/var/sitemaps/.gitkeep
+/tests/Application/var/bootstrap.php.cache
+/tests/Application/var/SymfonyRequirements.php
+/tests/Application/web/bundles
+/tests/Application/web/uploads
+/tests/Application/web/admin
 /tests/Resources/cache
 /vendor
 

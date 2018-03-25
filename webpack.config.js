@@ -25,7 +25,7 @@ entries.unshift('url-search-params-polyfill');
 module.exports = { // eslint-disable-line no-undef
     entry: entries,
     output: {
-        path: path.resolve('web'),
+        path: path.resolve('tests/Application/web'),
         filename: basePath + '/[name].[chunkhash].js',
     },
     module: {

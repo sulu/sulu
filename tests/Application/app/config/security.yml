@@ -1,0 +1,40 @@
+security:
+    access_decision_manager:
+        strategy: unanimous
+        allow_if_all_abstain: true
+
+    encoders:
+        Sulu\Bundle\SecurityBundle\Entity\User:
+            algorithm: sha512
+            iterations: 5000
+            encode_as_base64: false
+
+    providers:
+        sulu:
+            id: sulu_security.user_provider
+
+    access_control:
+        - { path: ^/admin/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/security/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/_wdt, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_USER }
+
+    firewalls:
+        admin:
+            pattern: ^/
+            anonymous: ~
+            entry_point: sulu_security.authentication_entry_point
+            form_login:
+                login_path: sulu_admin.login
+                check_path: sulu_admin.login_check
+                success_handler: sulu_security.authentication_handler
+                failure_handler: sulu_security.authentication_handler
+                csrf_token_generator: security.csrf.token_manager
+            logout:
+                path: /admin/logout
+                target: /admin/
+
+sulu_security:
+    checker:
+        enabled: true

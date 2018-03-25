@@ -6,8 +6,11 @@
         "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss",
         "flow": "flow",
         "test": "jest",
+        "test:features": "cucumber-js src/Sulu/Bundle/*/Resources/js/features/**/*.feature --require-module babel-register",
         "styleguide": "styleguidist server",
-        "styleguide:build": "styleguidist build"
+        "styleguide:build": "styleguidist build",
+        "build": "rimraf tests/Application/web/admin/build && webpack -p",
+        "watch": "webpack -d -w"
     },
     "dependencies": {
         "sulu-admin-bundle": "file:src/Sulu/Bundle/AdminBundle/Resources/js",
@@ -24,8 +27,10 @@
         "babel-plugin-transform-object-rest-spread": "^6.23.0",
         "babel-preset-env": "^1.6.1",
         "babel-preset-react": "^6.24.1",
+        "babel-register": "^6.26.0",
         "core-js": "^2.5.1",
         "css-loader": "^0.28.4",
+        "cucumber": "^4.0.0",
         "empty": "^0.10.1",
         "enzyme": "^3.3.0",
         "enzyme-adapter-react-16": "^1.1.1",
@@ -53,6 +58,7 @@
         "pretty": "^2.0.0",
         "react-styleguidist": "^6.2.2",
         "react-test-renderer": "^16.2.0",
+        "rimraf": "^2.6.2",
         "stylelint": "^7.12.0",
         "stylelint-config-standard": "^16.0.0",
         "webpack": "^3.5.6",
