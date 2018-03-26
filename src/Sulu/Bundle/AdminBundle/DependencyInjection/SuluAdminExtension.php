@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -21,8 +22,29 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluAdminExtension extends Extension
+class SuluAdminExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('framework')) {
+            $container->prependExtensionConfig(
+                'framework',
+                [
+                    'assets' => [
+                        'packages' => [
+                            'admin' => [
+                                'json_manifest_path' => '%kernel.project_dir%/web/adminV2/manifest.json',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
