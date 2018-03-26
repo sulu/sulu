@@ -87,10 +87,10 @@ class SnippetAdmin extends Admin
 
         if ($this->securityChecker->hasPermission('sulu.global.snippets', 'view')) {
             $snippet = new NavigationItem('navigation.snippets');
-            $snippet->setPosition(10);
+            $snippet->setPosition(20);
             $snippet->setIcon('su-paper');
             $snippet->setAction('snippet/snippets');
-            $snippet->setMainRoute('sulu_snippet.list');
+            $snippet->setMainRoute('sulu_snippet.datagrid');
 
             $rootNavigationItem->addChild($snippet);
         }

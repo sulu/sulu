@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\AdminBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
+use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
@@ -47,7 +49,7 @@ class RouteRegistry
         return $this->routes;
     }
 
-    public function findRouteByName(string $name): ?Route
+    public function findRouteByName(string $name): Route
     {
         foreach ($this->getRoutes() as $route) {
             if ($route->getName() === $name) {
@@ -55,7 +57,7 @@ class RouteRegistry
             }
         }
 
-        return null;
+        throw new RouteNotFoundException($name);
     }
 
     private function loadRoutes(): void
@@ -95,15 +97,13 @@ class RouteRegistry
 
         foreach ($routes as $route) {
             $routeParent = $route->getParent();
-            if ($routeParent && !in_array($routeParent, $routeNames)) {
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        'The route "%s" was defined as the parent of "%s", but the route "%s" does not exist',
-                        $routeParent,
-                        $route->getName(),
-                        $routeParent
-                    )
-                );
+
+            if (!$routeParent) {
+                continue;
+            }
+
+            if (!in_array($routeParent, $routeNames)) {
+                throw new ParentRouteNotFoundException($routeParent, $route->getName());
             }
         }
     }

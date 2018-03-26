@@ -40,12 +40,8 @@ class MediaAdmin extends Admin
     ) {
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
-    }
 
-    public function getNavigation(): Navigation
-    {
-        $rootNavigationItem = new NavigationItem('root');
-
+        $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);
 
@@ -56,6 +52,22 @@ class MediaAdmin extends Admin
             $media->setAction('media/collections');
             $section->addChild($media);
             $rootNavigationItem->addChild($section);
+        }
+
+        $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('root');
+
+        if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {
+            $media = new NavigationItem('navigation.media');
+            $media->setPosition(30);
+            $media->setIcon('su-image');
+            $media->setMainRoute('sulu_media.overview');
+
+            $rootNavigationItem->addChild($media);
         }
 
         return new Navigation($rootNavigationItem);

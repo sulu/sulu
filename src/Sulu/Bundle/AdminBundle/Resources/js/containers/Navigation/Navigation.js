@@ -36,7 +36,7 @@ export default class Navigation extends React.Component<Props> {
     };
 
     render() {
-        const navigation = navigationRegistry.get();
+        const navigationItems = navigationRegistry.get();
 
         return (
             <NavigationComponent
@@ -47,7 +47,7 @@ export default class Navigation extends React.Component<Props> {
                 onLogoutClick={this.handleLogoutClick}
                 onProfileClick={this.handleProfileEditClick}
             >
-                {navigation.map((navigationItem: NavigationItem) => (
+                {navigationItems.map((navigationItem: NavigationItem) => (
                     <NavigationComponent.Item
                         key={navigationItem.id}
                         value={navigationItem.mainRoute ? navigationItem.mainRoute : navigationItem.id}

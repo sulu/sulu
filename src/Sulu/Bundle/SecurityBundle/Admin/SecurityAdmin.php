@@ -28,12 +28,8 @@ class SecurityAdmin extends Admin
     public function __construct(SecurityCheckerInterface $securityChecker, $title)
     {
         $this->securityChecker = $securityChecker;
-    }
 
-    public function getNavigation(): Navigation
-    {
-        $rootNavigationItem = new NavigationItem('root');
-
+        $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);
 
@@ -51,6 +47,25 @@ class SecurityAdmin extends Admin
         if ($settings->hasChildren()) {
             $section->addChild($settings);
             $rootNavigationItem->addChild($section);
+        }
+
+        $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('root');
+
+        $settings = Admin::getNavigationItemSettings();
+
+        if ($this->securityChecker->hasPermission('sulu.security.roles', PermissionTypes::VIEW)) {
+            $roles = new NavigationItem('navigation.settings.roles', $settings);
+            $roles->setPosition(10);
+            $roles->setMainRoute('sulu_security.datagrid');
+        }
+
+        if ($settings->hasChildren()) {
+            $rootNavigationItem->addChild($settings);
         }
 
         return new Navigation($rootNavigationItem);

@@ -56,15 +56,4 @@ class Navigation
     {
         return $this->getRoot()->toArray();
     }
-
-    public function toArrayChildren(): array
-    {
-        $arrayChildren = [];
-
-        foreach ($this->getRoot()->getChildren() as $child) {
-            $arrayChildren[] = $child->toArray();
-        }
-
-        return $arrayChildren;
-    }
 }

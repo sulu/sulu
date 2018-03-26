@@ -89,6 +89,7 @@
         </service>
 
         <service id="sulu_admin.navigation_registry" class="Sulu\Bundle\AdminBundle\Admin\NavigationRegistry">
+            <argument type="service" id="translator"/>
             <argument type="service" id="sulu_admin.admin_pool"/>
             <argument type="service" id="sulu_admin.route_registry"/>
         </service>

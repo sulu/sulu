@@ -66,13 +66,13 @@ class ContactAdmin extends Admin
         $rootNavigationItem = new NavigationItem('root');
 
         $contacts = new NavigationItem('navigation.contacts');
-        $contacts->setPosition(30);
+        $contacts->setPosition(40);
         $contacts->setIcon('fa-user');
 
         if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
             $people = new NavigationItem('navigation.contacts.people');
             $people->setPosition(10);
-            $people->setMainRoute('sulu_contact.contacts_list');
+            $people->setMainRoute('sulu_contact.contacts_datagrid');
 
             $contacts->addChild($people);
         }
@@ -80,7 +80,7 @@ class ContactAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.contact.organizations', PermissionTypes::VIEW)) {
             $companies = new NavigationItem('navigation.contacts.companies');
             $companies->setPosition(20);
-            $companies->setMainRoute('sulu_contact.accounts_list');
+            $companies->setMainRoute('sulu_contact.accounts_datagrid');
 
             $contacts->addChild($companies);
         }

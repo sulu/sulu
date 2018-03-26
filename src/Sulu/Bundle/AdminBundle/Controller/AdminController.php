@@ -242,7 +242,7 @@ class AdminController
         $view = View::create([
             'sulu_admin' => [
                 'routes' => $this->routeRegistry->getRoutes(),
-                'navigation' => $this->navigationRegistry->getNavigation()->toArrayChildren(),
+                'navigation' => $this->navigationRegistry->getNavigation()->toArray()['items'],
             ],
         ]);
         $view->setFormat('json');

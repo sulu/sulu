@@ -53,7 +53,7 @@ class ResourceMetadataMapper
         foreach ($fieldDescriptors as $fieldDescriptor) {
             $field = new DatagridField($fieldDescriptor->getName());
 
-            $field->setLabel($this->translator->trans($fieldDescriptor->getTranslation(), [], 'admin', $locale));
+            $field->setLabel($this->translator->trans($fieldDescriptor->getTranslation(), [], 'admin'));
             $field->setType($fieldDescriptor->getType());
 
             $datagrid->addField($field);

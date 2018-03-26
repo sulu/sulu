@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class NavigationRegistry
 {
@@ -20,6 +21,11 @@ class NavigationRegistry
      * @var Navigation
      */
     private $navigation;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var AdminPool
@@ -31,8 +37,9 @@ class NavigationRegistry
      */
     private $routeRegistry;
 
-    public function __construct(AdminPool $adminPool, RouteRegistry $routeRegistry)
+    public function __construct(TranslatorInterface $translator, AdminPool $adminPool, RouteRegistry $routeRegistry)
     {
+        $this->translator = $translator;
         $this->adminPool = $adminPool;
         $this->routeRegistry = $routeRegistry;
     }
@@ -68,14 +75,21 @@ class NavigationRegistry
         };
 
         foreach ($navigation->getRoot()->getChildren() as $child) {
-            $this->addChildRoutes($child);
+            $this->processNavigationItem($child);
         }
 
         $this->navigation = $navigation;
     }
 
-    private function addChildRoutes(NavigationItem $navigationItem): void
+    /**
+     * Adds the translation and the child routes to the given navigation item.
+     */
+    private function processNavigationItem(NavigationItem $navigationItem): void
     {
+        // translate name
+        $navigationItem->setName($this->translator->trans($navigationItem->getName(), [], 'admin_backend'));
+
+        // add child routes
         if ($navigationItem->getMainRoute()) {
             $mainPath = $this->routeRegistry->findRouteByName($navigationItem->getMainRoute())->getPath();
             foreach ($this->routeRegistry->getRoutes() as $route) {
@@ -85,8 +99,9 @@ class NavigationRegistry
             }
         }
 
+        // process all children
         foreach ($navigationItem->getChildren() as $child) {
-            $this->addChildRoutes($child);
+            $this->processNavigationItem($child);
         }
     }
 }
