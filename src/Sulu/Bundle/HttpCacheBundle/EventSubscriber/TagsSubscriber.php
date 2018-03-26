@@ -15,7 +15,9 @@ use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -33,12 +35,19 @@ class TagsSubscriber implements EventSubscriberInterface
      */
     private $symfonyResponseTagger;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     public function __construct(
         ReferenceStorePoolInterface $referenceStorePool,
-        SymfonyResponseTagger $symfonyResponseTagger
+        SymfonyResponseTagger $symfonyResponseTagger,
+        RequestStack $requestStack
     ) {
         $this->referenceStorePool = $referenceStorePool;
         $this->symfonyResponseTagger = $symfonyResponseTagger;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -54,9 +63,15 @@ class TagsSubscriber implements EventSubscriberInterface
     /**
      * Adds tags from the reference store to the response tagger.
      */
-    public function addTags()
+    public function addTags(): void
     {
-        $this->symfonyResponseTagger->addTags($this->getTags());
+        $tags = $this->getTags();
+        $currentStructureUuid = $this->getCurrentStructureUuid();
+        if ($currentStructureUuid && !in_array($currentStructureUuid, $tags)) {
+            $tags[] = $currentStructureUuid;
+        }
+
+        $this->symfonyResponseTagger->addTags($tags);
     }
 
     /**
@@ -88,5 +103,23 @@ class TagsSubscriber implements EventSubscriberInterface
         }
 
         return $tags;
+    }
+
+    /**
+     * Returns uuid of current structure.
+     */
+    private function getCurrentStructureUuid(): ?string
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if (!$request) {
+            return null;
+        }
+
+        $structure = $request->get('structure');
+        if (!$structure || !$structure instanceof StructureInterface) {
+            return null;
+        }
+
+        return $structure->getUuid();
     }
 }
