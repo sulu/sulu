@@ -211,6 +211,10 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaOverview);
     toolbarConfig.backButton.onClick();
+    expect(mediaOverview.mediaDatagridStore.clearData).toBeCalled();
+    expect(mediaOverview.mediaDatagridStore.clearSelection).toBeCalled();
+    expect(mediaOverview.collectionDatagridStore.clearData).toBeCalled();
+    expect(mediaOverview.collectionDatagridStore.clearSelection).toBeCalled();
     expect(router.restore).toBeCalledWith('sulu_media.overview', {
         'collectionPage': '1',
         'id': 1,

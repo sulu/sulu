@@ -95,11 +95,15 @@ class MediaOverview extends React.Component<ViewProps> {
         );
     }
 
-    @action handleCollectionNavigate = (collectionId) => {
+    clearDatagrids() {
         this.mediaDatagridStore.clearData();
         this.mediaDatagridStore.clearSelection();
         this.collectionDatagridStore.clearData();
         this.collectionDatagridStore.clearSelection();
+    }
+
+    @action handleCollectionNavigate = (collectionId) => {
+        this.clearDatagrids();
         this.mediaPage.set(1);
         this.collectionPage.set(1);
         this.collectionId.set(collectionId);
@@ -164,6 +168,7 @@ export default withToolbar(MediaOverview, function() {
         backButton: this.collectionId.get()
             ? {
                 onClick: () => {
+                    this.clearDatagrids();
                     router.restore(
                         COLLECTION_ROUTE,
                         {
