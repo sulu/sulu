@@ -71,6 +71,10 @@ class TagsSubscriber implements EventSubscriberInterface
             $tags[] = $currentStructureUuid;
         }
 
+        if (count($tags) <= 0) {
+            return;
+        }
+
         $this->symfonyResponseTagger->addTags($tags);
     }
 
