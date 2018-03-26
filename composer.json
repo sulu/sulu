@@ -94,7 +94,7 @@
         "symfony/dom-crawler": "^3.4",
         "symfony/monolog-bundle": "^3.1",
         "symfony/monolog-bridge": "^3.4",
-        "symfony/phpunit-bridge": "^3.4.4",
+        "symfony/phpunit-bridge": "^3.4",
         "symfony/process": "^3.4",
         "symfony/stopwatch": "^3.4",
         "symfony/var-dumper": "^3.4",
