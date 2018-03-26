@@ -55,7 +55,7 @@
         "symfony/filesystem": "^3.0",
         "symfony/finder": "^3.0",
         "symfony/form": "^3.0",
-        "symfony/framework-bundle": "^3.0",
+        "symfony/framework-bundle": "^3.3",
         "symfony/http-foundation": "^3.0",
         "symfony/http-kernel": "^3.0",
         "symfony/intl": "^3.0",

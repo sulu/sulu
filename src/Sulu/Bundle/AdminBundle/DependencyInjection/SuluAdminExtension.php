@@ -35,7 +35,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                 [
                     'assets' => [
                         'packages' => [
-                            'admin' => [
+                            'sulu_admin' => [
                                 'json_manifest_path' => '%kernel.project_dir%/web/adminV2/manifest.json',
                             ],
                         ],
