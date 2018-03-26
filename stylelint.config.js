@@ -7,6 +7,7 @@ module.exports = { // eslint-disable-line
         'selector-pseudo-class-no-unknown': [ true, {
             ignorePseudoClasses: [
                 'global',
+                'export',
             ],
         }],
         'indentation': 4,
