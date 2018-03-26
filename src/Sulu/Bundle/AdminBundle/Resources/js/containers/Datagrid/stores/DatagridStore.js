@@ -93,6 +93,10 @@ export default class DatagridStore {
         }
     }
 
+    findById(identifier: string | number): ?Object {
+        return this.structureStrategy.findById(identifier);
+    }
+
     sendRequest = () => {
         if (!this.initialized) {
             return;
@@ -143,7 +147,7 @@ export default class DatagridStore {
         this.observableOptions.page.set(page);
     }
 
-    @action setActive(active: string | number) {
+    @action setActive(active: ?string | number) {
         this.active = active;
     }
 
