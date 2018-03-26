@@ -57,6 +57,12 @@ export default class ColumnList extends React.Component<Props> {
         this.container.removeEventListener('scroll', this.handleScroll);
     }
 
+    componentWillReceiveProps(nextProps: Props) {
+        if (this.container && nextProps.children !== this.props.children) {
+            this.container.scrollLeft = this.toolbarWidth * (nextProps.children.length - 1);
+        }
+    }
+
     get toolbarWidth(): number {
         if (!this.toolbar) {
             return 0;

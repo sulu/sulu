@@ -254,3 +254,55 @@ test('Should set classes if the toolbar is active on the first or last visible c
     expect(columnList.find('.columnListContainer').prop('className'))
         .toEqual(expect.stringContaining('lastVisibleColumnActive'));
 });
+
+test('Should scroll to the last column when new column is loaded', () => {
+    const columnList = mount(
+        <ColumnList onItemClick={jest.fn()}>
+            <Column />
+        </ColumnList>
+    );
+
+    columnList.instance().toolbar = {
+        clientWidth: 271,
+    };
+    columnList.instance().container = {
+        clientWidth: 500,
+    };
+
+    columnList.setProps({
+        children: [
+            <Column key={1} />,
+            <Column key={2} />,
+            <Column key={3} />,
+        ],
+    });
+    columnList.update();
+
+    expect(columnList.instance().container.scrollLeft).toEqual(540);
+});
+
+test('Should not scroll to the last column when other props are updated', () => {
+    const children = [
+        <Column key={1} />,
+    ];
+    const columnList = mount(
+        <ColumnList onItemClick={jest.fn()}>
+            {children}
+        </ColumnList>
+    );
+
+    columnList.instance().toolbar = {
+        clientWidth: 271,
+    };
+    columnList.instance().container = {
+        clientWidth: 500,
+        scrollLeft: 10,
+    };
+
+    columnList.setProps({
+        children,
+    });
+    columnList.update();
+
+    expect(columnList.instance().container.scrollLeft).toEqual(10);
+});
