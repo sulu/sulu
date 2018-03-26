@@ -80,7 +80,7 @@ class TagsSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->currentStructureUuid = Uuid::uuid4()->toString();
 
         $testReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $testReferenceStore->getAll()->willReturn(['1','2']);
+        $testReferenceStore->getAll()->willReturn(['1', '2']);
         $this->referenceStores['test'] = $testReferenceStore;
 
         $testReferenceStore2 = $this->prophesize(ReferenceStoreInterface::class);
