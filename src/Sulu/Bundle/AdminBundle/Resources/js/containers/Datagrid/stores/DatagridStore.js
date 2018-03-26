@@ -147,7 +147,7 @@ export default class DatagridStore {
         this.observableOptions.page.set(page);
     }
 
-    @action setActive(active?: string | number) {
+    @action setActive(active: ?string | number) {
         this.active = active;
     }
 
