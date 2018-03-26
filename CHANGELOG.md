@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3870 [Husky]                   Updated husky to fix bug with thumbnails in datagrid
+
 * 1.6.16 (2018-03-19)
     * ENHANCEMENT #3849 [AdminBundle]             Add Twig main blocks to be able to use inheritance
     * HOTFIX      #3848 [ContentBundle]           Added check for unknown-document for "sulu_content_load"
