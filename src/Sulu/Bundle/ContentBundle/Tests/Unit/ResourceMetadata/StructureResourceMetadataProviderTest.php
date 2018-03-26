@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CoreBundle\Tests\Unit\ResourceMetadata;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\ResourceMetadata;
 
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
-use Sulu\Bundle\CoreBundle\ResourceMetadata\StructureResourceMetadataProvider;
+use Sulu\Bundle\ContentBundle\ResourceMetadata\StructureResourceMetadataProvider;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 

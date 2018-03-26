@@ -44,6 +44,7 @@ class SuluTestKernel extends SuluKernel
             // Sulu
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
+            new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\ContentBundle\SuluContentBundle(),
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),
             new \Sulu\Bundle\SecurityBundle\SuluSecurityBundle(),
@@ -65,7 +66,6 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
-            new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
         ];
 
         if (self::CONTEXT_WEBSITE === $this->getContext()) {
