@@ -4,26 +4,24 @@ import React from 'react';
 import classNames from 'classnames';
 import Loader from '../Loader';
 import Item from './Item';
-import Toolbar from './Toolbar';
-import type {ItemButtonConfig, ToolbarItemConfig} from './types';
+import type {ItemButtonConfig} from './types';
 import columnStyles from './column.scss';
 
-type Props = {
-    active: boolean,
+type Props = {|
     buttons?: Array<ItemButtonConfig>,
     children?: ChildrenArray<Element<typeof Item>>,
     index?: number,
     loading: boolean,
     onActive?: (index?: number) => void,
     onItemClick?: (id: string | number) => void,
-    toolbarItems: Array<ToolbarItemConfig>,
-};
+    /** @ignore */
+    scrolling: boolean,
+|};
 
 export default class Column extends React.Component<Props> {
     static defaultProps = {
-        active: false,
         loading: false,
-        toolbarItems: [],
+        scrolling: false,
     };
 
     cloneItems = (originalItems?: ChildrenArray<Element<typeof Item>>) => {
@@ -55,30 +53,24 @@ export default class Column extends React.Component<Props> {
     };
 
     render() {
-        const {children, active, index, loading, toolbarItems} = this.props;
-
-        const columnContainerClass = classNames(
-            columnStyles.columnContainer,
-            {
-                [columnStyles.active]: active,
-            }
-        );
+        const {children, loading, scrolling} = this.props;
 
         const columnClass = classNames(
             columnStyles.column,
             {
-                [columnStyles.loading]: loading,
+                [columnStyles.scrolling]: scrolling,
             }
         );
 
         return (
-            <div onMouseEnter={this.handleMouseEnter} className={columnContainerClass}>
-                <Toolbar active={active} columnIndex={index} toolbarItems={toolbarItems} />
-                <div className={columnClass}>
-                    {loading ? <Loader /> : this.cloneItems(children)}
-                </div>
+            <div className={columnClass} onMouseEnter={this.handleMouseEnter}>
+                {loading ?
+                    <div className={columnStyles.loader}>
+                        <Loader />
+                    </div>
+                    : this.cloneItems(children)
+                }
             </div>
         );
     }
 }
-

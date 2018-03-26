@@ -1,9 +1,31 @@
-.column-list-container {
+@import '../../containers/Application/colors.scss';
+@import './variables.scss';
+
+.column-list-toolbar-container {
     height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.column-list-container {
+    height: calc(100% - $toolbarHeight);
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: $columnBorder;
+    border-radius: $columnListBorderRadius;
+
+    &.first-visible-column-active {
+        border-top-left-radius: 0;
+    }
+
+    &.last-visible-column-active {
+        border-top-right-radius: 0;
+    }
 }
 
 .column-list {
-    align-items: baseline;
-    display: inline-flex;
-    height: inherit;
+    height: 100%;
+    white-space: nowrap;
+    background-color: $columnListBackgroundColor;
 }

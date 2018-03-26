@@ -2,7 +2,7 @@
     flex-grow: 1;
     position: relative;
 
-    > :only-child {
+    > :last-child {
         position: absolute;
     }
 }

@@ -2,9 +2,11 @@
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
+import type {ChildrenArray, Element, ElementRef} from 'react';
+import classNames from 'classnames';
 import Column from './Column';
 import Item from './Item';
+import Toolbar from './Toolbar';
 import type {ItemButtonConfig, ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
@@ -17,11 +19,82 @@ type Props = {
 
 @observer
 export default class ColumnList extends React.Component<Props> {
+    static defaultProps = {
+        toolbarItems: [],
+    };
+
     static Column = Column;
 
     static Item = Item;
 
     @observable activeColumnIndex: number = 0;
+    @observable scrollPosition: number = 0;
+
+    container: ElementRef<'div'>;
+    toolbar: ElementRef<'div'>;
+
+    setContainerRef = (ref: ?ElementRef<'div'>) => {
+        if (!ref) {
+            return;
+        }
+
+        this.container = ref;
+    };
+
+    setToolbarRef = (ref: ?ElementRef<'div'>) => {
+        if (!ref) {
+            return;
+        }
+
+        this.toolbar = ref;
+    };
+
+    componentDidMount() {
+        this.container.addEventListener('scroll', this.handleScroll);
+    }
+
+    componentWillUnmount() {
+        this.container.removeEventListener('scroll', this.handleScroll);
+    }
+
+    componentWillReceiveProps(nextProps: Props) {
+        if (this.container && nextProps.children !== this.props.children) {
+            this.container.scrollLeft = this.toolbarWidth * (nextProps.children.length - 1);
+        }
+    }
+
+    get toolbarWidth(): number {
+        if (!this.toolbar) {
+            return 0;
+        }
+
+        // remove the 1px border from the toolbar to get the correct width
+        return this.toolbar.clientWidth - 1;
+    }
+
+    get containerWidth(): number {
+        if (!this.container) {
+            return 0;
+        }
+
+        return this.container.clientWidth;
+    }
+
+    get containerScrollWidth(): number {
+        if (!this.container) {
+            return 0;
+        }
+
+        return this.container.scrollWidth;
+    }
+
+    get containerScrolling(): boolean {
+        return this.containerWidth < this.containerScrollWidth;
+    }
+
+    @action handleScroll = () => {
+        this.scrollPosition = this.container.scrollLeft;
+    };
 
     @action handleActive = (index?: number) => {
         if (index === undefined) {
@@ -32,7 +105,8 @@ export default class ColumnList extends React.Component<Props> {
     };
 
     cloneColumns = (originalColumns: ChildrenArray<Element<typeof Column>>) => {
-        const {onItemClick, toolbarItems} = this.props;
+        const {onItemClick} = this.props;
+        const scrolling = this.containerScrolling;
 
         return React.Children.map(originalColumns, (column, index) => {
             return React.cloneElement(
@@ -40,22 +114,39 @@ export default class ColumnList extends React.Component<Props> {
                 {
                     index: index,
                     buttons: this.props.buttons,
-                    active: this.activeColumnIndex === index,
                     onActive: this.handleActive,
                     onItemClick: onItemClick,
-                    toolbarItems: toolbarItems,
+                    scrolling,
                 }
             );
         });
     };
 
     render() {
-        const {children} = this.props;
+        const {children, toolbarItems} = this.props;
+        const toolbarPosition = -this.scrollPosition + this.activeColumnIndex * this.toolbarWidth;
+
+        const columnListContainerClass = classNames(
+            columnListStyles.columnListContainer,
+            {
+                [columnListStyles.firstVisibleColumnActive]: toolbarPosition <= 0,
+                [columnListStyles.lastVisibleColumnActive]: toolbarPosition >= this.containerWidth - this.toolbarWidth,
+            }
+        );
 
         return (
-            <div className={columnListStyles.columnListContainer}>
-                <div className={columnListStyles.columnList}>
-                    {this.cloneColumns(children)}
+            <div className={columnListStyles.columnListToolbarContainer}>
+                <div style={{marginLeft: toolbarPosition}}>
+                    <Toolbar
+                        columnIndex={this.activeColumnIndex}
+                        toolbarItems={toolbarItems}
+                        toolbarRef={this.setToolbarRef}
+                    />
+                </div>
+                <div ref={this.setContainerRef} className={columnListContainerClass}>
+                    <div className={columnListStyles.columnList}>
+                        {this.cloneColumns(children)}
+                    </div>
                 </div>
             </div>
         );

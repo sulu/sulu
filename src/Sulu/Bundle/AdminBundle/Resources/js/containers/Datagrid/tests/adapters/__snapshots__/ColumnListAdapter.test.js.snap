@@ -5,26 +5,30 @@ exports[`Render data 1`] = `
   class="columnListAdapter"
 >
   <div
-    class="columnListContainer"
+    class="columnListToolbarContainer"
   >
     <div
-      class="columnList"
+      style="margin-left:0"
     >
       <div
-        class="columnContainer active"
+        class="toolbar"
       >
         <div
-          class="toolbar active"
+          class="item primary"
         >
-          <div
-            class="item primary"
-          >
-            <span
-              aria-label="su-add"
-              class="su-add"
-            />
-          </div>
+          <span
+            aria-label="su-add"
+            class="su-add"
+          />
         </div>
+      </div>
+    </div>
+    <div
+      class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
+    >
+      <div
+        class="columnList"
+      >
         <div
           class="column"
         >
@@ -117,22 +121,6 @@ exports[`Render data 1`] = `
                 </div>
               </div>
             </span>
-          </div>
-        </div>
-      </div>
-      <div
-        class="columnContainer"
-      >
-        <div
-          class="toolbar"
-        >
-          <div
-            class="item primary"
-          >
-            <span
-              aria-label="su-add"
-              class="su-add"
-            />
           </div>
         </div>
         <div
@@ -186,22 +174,6 @@ exports[`Render data 1`] = `
             />
           </div>
         </div>
-      </div>
-      <div
-        class="columnContainer"
-      >
-        <div
-          class="toolbar"
-        >
-          <div
-            class="item primary"
-          >
-            <span
-              aria-label="su-add"
-              class="su-add"
-            />
-          </div>
-        </div>
         <div
           class="column"
         />
@@ -216,26 +188,30 @@ exports[`Render data with loading column 1`] = `
   class="columnListAdapter"
 >
   <div
-    class="columnListContainer"
+    class="columnListToolbarContainer"
   >
     <div
-      class="columnList"
+      style="margin-left:0"
     >
       <div
-        class="columnContainer active"
+        class="toolbar"
       >
         <div
-          class="toolbar active"
+          class="item primary"
         >
-          <div
-            class="item primary"
-          >
-            <span
-              aria-label="su-add"
-              class="su-add"
-            />
-          </div>
+          <span
+            aria-label="su-add"
+            class="su-add"
+          />
         </div>
+      </div>
+    </div>
+    <div
+      class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
+    >
+      <div
+        class="columnList"
+      >
         <div
           class="column"
         >
@@ -330,35 +306,23 @@ exports[`Render data with loading column 1`] = `
             </span>
           </div>
         </div>
-      </div>
-      <div
-        class="columnContainer"
-      >
         <div
-          class="toolbar"
+          class="column"
         >
           <div
-            class="item primary"
-          >
-            <span
-              aria-label="su-add"
-              class="su-add"
-            />
-          </div>
-        </div>
-        <div
-          class="column loading"
-        >
-          <div
-            class="spinner"
-            style="width:40px;height:40px"
+            class="loader"
           >
             <div
-              class="doubleBounce1"
-            />
-            <div
-              class="doubleBounce2"
-            />
+              class="spinner"
+              style="width:40px;height:40px"
+            >
+              <div
+                class="doubleBounce1"
+              />
+              <div
+                class="doubleBounce2"
+              />
+            </div>
           </div>
         </div>
       </div>

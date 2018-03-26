@@ -1,12 +1,11 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {mount, render} from 'enzyme';
 import ColumnList from '../ColumnList';
 import Column from '../Column';
 import Item from '../Item';
-import Toolbar from '../Toolbar';
 
-test('The ColumnList component should render', () => {
+test('The ColumnList component should render in a non-scrolling container', () => {
     const onItemClick = jest.fn();
 
     const buttonsConfig = [
@@ -50,7 +49,7 @@ test('The ColumnList component should render', () => {
         },
     ];
 
-    const columnList = mount(
+    expect(render(
         <ColumnList
             buttons={buttonsConfig}
             onItemClick={onItemClick}
@@ -71,23 +70,11 @@ test('The ColumnList component should render', () => {
             </Column>
             <Column loading={true} />
         </ColumnList>
-    );
-    expect(columnList).toMatchSnapshot();
+    )).toMatchSnapshot();
 });
 
-test('The ColumnList component should trigger the item callback', () => {
+test('The ColumnList component should render in a scrolling container', () => {
     const onItemClick = jest.fn();
-
-    const buttonsConfig = [
-        {
-            icon: 'fa-heart',
-            onClick: () => {},
-        },
-        {
-            icon: 'fa-pencil',
-            onClick: () => {},
-        },
-    ];
 
     const toolbarItems = [
         {
@@ -96,34 +83,47 @@ test('The ColumnList component should trigger the item callback', () => {
             type: 'button',
             onClick: () => {},
         },
-        {
-            index: 0,
-            icon: 'fa-search',
-            type: 'button',
-            onClick: () => {},
-        },
-        {
-            index: 0,
-            icon: 'fa-gear',
-            type: 'dropdown',
-            options: [
-                {
-                    label: 'Option1 ',
-                    onClick: () => {},
-                },
-                {
-                    label: 'Option2 ',
-                    onClick: () => {},
-                },
-            ],
-        },
     ];
 
     const columnList = mount(
         <ColumnList
-            buttons={buttonsConfig}
             onItemClick={onItemClick}
             toolbarItems={toolbarItems}
+        >
+            <Column>
+                <Item id="1" selected={true}>Item 1</Item>
+                <Item id="2" hasChildren={true}>Item 1</Item>
+                <Item id="3">Item 1</Item>
+            </Column>
+            <Column>
+                <Item id="1-1">Item 1</Item>
+                <Item id="1-2" hasChildren={true}>Item 1</Item>
+            </Column>
+            <Column>
+                <Item id="1-1-1">Item 1</Item>
+                <Item id="1-1-2">Item 1</Item>
+            </Column>
+            <Column loading={true} />
+        </ColumnList>
+    );
+
+    columnList.instance().container = {
+        clientWidth: 500,
+        scrollWidth: 600,
+    };
+    columnList.instance().activeColumnIndex = 2;
+    columnList.instance().scrollPosition = 20;
+    columnList.update();
+
+    expect(columnList.render()).toMatchSnapshot();
+});
+
+test('The ColumnList component should trigger the item callback', () => {
+    const onItemClick = jest.fn();
+
+    const columnList = mount(
+        <ColumnList
+            onItemClick={onItemClick}
         >
             <Column>
                 <Item id="1" selected={true}>Item 1</Item>
@@ -143,8 +143,6 @@ test('The ColumnList component should trigger the item callback', () => {
     const columns = columnList.find(Column);
     expect(columns.length).toBe(3);
 
-    expect(columnList.find(Toolbar).length).toBe(3);
-
     columns.first().find(Item).first().simulate('click');
     columns.first().find(Item).at(2).simulate('click');
     columns.at(1).find(Item).first().simulate('click');
@@ -156,54 +154,20 @@ test('The ColumnList component should trigger the item callback', () => {
 });
 
 test('The ColumnList component should handle which toolbar is active on mouse enter event', () => {
-    const onItemClick = jest.fn();
-
-    const buttonsConfig = [
-        {
-            icon: 'fa-heart',
-            onClick: () => {},
-        },
-        {
-            icon: 'fa-pencil',
-            onClick: () => {},
-        },
-    ];
+    const buttonClickSpy = jest.fn();
 
     const toolbarItems = [
         {
-            index: 0,
             icon: 'fa-plus',
             type: 'button',
-            onClick: () => {},
-        },
-        {
-            index: 0,
-            icon: 'fa-search',
-            type: 'button',
-            onClick: () => {},
-        },
-        {
-            index: 0,
-            icon: 'fa-gear',
-            type: 'dropdown',
-            options: [
-                {
-                    label: 'Option1 ',
-                    onClick: () => {},
-                },
-                {
-                    label: 'Option2 ',
-                    onClick: () => {},
-                },
-            ],
+            onClick: buttonClickSpy,
         },
     ];
 
     const columnList = mount(
         <ColumnList
-            buttons={buttonsConfig}
-            onItemClick={onItemClick}
             toolbarItems={toolbarItems}
+            onItemClick={jest.fn()}
         >
             <Column>
                 <Item id="1" selected={true}>Item 1</Item>
@@ -221,22 +185,124 @@ test('The ColumnList component should handle which toolbar is active on mouse en
         </ColumnList>
     );
     const columns = columnList.find(Column);
-    expect(columnList.find(Column).at(0).props().active).toBe(true);
-    expect(columnList.find(Column).at(1).props().active).toBe(false);
-    expect(columnList.find(Column).at(2).props().active).toBe(false);
+    columnList.find('.fa-plus').simulate('click');
+    expect(buttonClickSpy).toHaveBeenCalledWith(0);
 
     columns.at(1).simulate('mouseEnter');
-    expect(columnList.find(Column).at(0).props().active).toBe(false);
-    expect(columnList.find(Column).at(1).props().active).toBe(true);
-    expect(columnList.find(Column).at(2).props().active).toBe(false);
+    columnList.find('.fa-plus').simulate('click');
+    expect(buttonClickSpy).toHaveBeenLastCalledWith(1);
 
     columns.at(2).simulate('mouseEnter');
-    expect(columnList.find(Column).at(0).props().active).toBe(false);
-    expect(columnList.find(Column).at(1).props().active).toBe(false);
-    expect(columnList.find(Column).at(2).props().active).toBe(true);
+    columnList.find('.fa-plus').simulate('click');
+    expect(buttonClickSpy).toHaveBeenLastCalledWith(2);
+});
 
-    columns.at(0).simulate('mouseEnter');
-    expect(columnList.find(Column).at(0).props().active).toBe(true);
-    expect(columnList.find(Column).at(1).props().active).toBe(false);
-    expect(columnList.find(Column).at(2).props().active).toBe(false);
+test('Should move the toolbar container to the correct position', () => {
+    const columnList = mount(
+        <ColumnList onItemClick={jest.fn()}>
+            <Column />
+        </ColumnList>
+    );
+
+    expect(columnList.find('Toolbar').parent().prop('style')).toEqual({marginLeft: 0});
+
+    columnList.instance().toolbar = {
+        clientWidth: 271,
+    };
+    columnList.instance().scrollPosition = 35;
+    columnList.instance().activeColumnIndex = 2;
+    columnList.update();
+
+    expect(columnList.find('Toolbar').parent().prop('style')).toEqual({marginLeft: 505});
+});
+
+test('Should set classes if the toolbar is active on the first or last visible column', () => {
+    const columnList = mount(
+        <ColumnList onItemClick={jest.fn()}>
+            <Column />
+            <Column />
+            <Column />
+        </ColumnList>
+    );
+
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .toEqual(expect.stringContaining('firstVisibleColumnActive'));
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .toEqual(expect.stringContaining('lastVisibleColumnActive'));
+
+    columnList.instance().toolbar = {
+        clientWidth: 271,
+    };
+    columnList.instance().container = {
+        clientWidth: 500,
+    };
+    columnList.instance().activeColumnIndex = 0;
+    columnList.instance().scrollPosition = 20;
+    columnList.update();
+
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .toEqual(expect.stringContaining('firstVisibleColumnActive'));
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .not.toEqual(expect.stringContaining('lastVisibleColumnActive'));
+
+    columnList.instance().activeColumnIndex = 2;
+    columnList.instance().scrollPosition = 20;
+    columnList.update();
+
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .not.toEqual(expect.stringContaining('firstVisibleColumnActive'));
+    expect(columnList.find('.columnListContainer').prop('className'))
+        .toEqual(expect.stringContaining('lastVisibleColumnActive'));
+});
+
+test('Should scroll to the last column when new column is loaded', () => {
+    const columnList = mount(
+        <ColumnList onItemClick={jest.fn()}>
+            <Column />
+        </ColumnList>
+    );
+
+    columnList.instance().toolbar = {
+        clientWidth: 271,
+    };
+    columnList.instance().container = {
+        clientWidth: 500,
+    };
+
+    columnList.setProps({
+        children: [
+            <Column key={1} />,
+            <Column key={2} />,
+            <Column key={3} />,
+        ],
+    });
+    columnList.update();
+
+    expect(columnList.instance().container.scrollLeft).toEqual(540);
+});
+
+test('Should not scroll to the last column when other props are updated', () => {
+    const children = [
+        <Column key={1} />,
+    ];
+    const columnList = mount(
+        <ColumnList onItemClick={jest.fn()}>
+            {children}
+        </ColumnList>
+    );
+
+    columnList.instance().toolbar = {
+        clientWidth: 271,
+    };
+    columnList.instance().container = {
+        clientWidth: 500,
+        scrollLeft: 10,
+    };
+
+    columnList.setProps({
+        children,
+    });
+    columnList.update();
+
+    expect(columnList.instance().container.scrollLeft).toEqual(10);
 });

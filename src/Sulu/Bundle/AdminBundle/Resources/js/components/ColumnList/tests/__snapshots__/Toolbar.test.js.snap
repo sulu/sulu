@@ -2,39 +2,6 @@
 
 exports[`The Toolbar component should render with active 1`] = `
 <div
-  class="toolbar active"
->
-  <div
-    class="item primary"
-  >
-    <span
-      aria-label="fa-plus"
-      class="fa fa-plus"
-    />
-  </div>
-  <div
-    class="item primary"
-  >
-    <span
-      aria-label="fa-search"
-      class="fa fa-search"
-    />
-  </div>
-  <div
-    class="item primary"
-  >
-    <span
-      aria-label="fa-gear"
-      class="fa fa-gear"
-    />
-  </div>
-</div>
-`;
-
-exports[`The Toolbar component should render with active 2`] = `"<div><div class=\\"backdrop fixed\\"></div></div><div><div class=\\"container\\"><div style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\"><div class=\\"listContainer\\"><ul class=\\"list primary\\"><li><button class=\\"option\\">Option1</button></li><li><button class=\\"option\\">Option2</button></li></ul></div></div></div></div>"`;
-
-exports[`The Toolbar component should render with active 3`] = `
-<div
   class="toolbar"
 >
   <div
@@ -49,17 +16,28 @@ exports[`The Toolbar component should render with active 3`] = `
     class="item primary"
   >
     <span
-      aria-label="fa-search"
-      class="fa fa-search"
-    />
-  </div>
-  <div
-    class="item primary"
-  >
-    <span
       aria-label="fa-gear"
       class="fa fa-gear"
     />
   </div>
 </div>
+`;
+
+exports[`The Toolbar component should render with active 2`] = `
+"<div>
+  <div class=\\"backdrop fixed\\"></div>
+</div>
+<div>
+  <div class=\\"container\\">
+    <div style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\">
+      <div class=\\"listContainer\\">
+        <ul class=\\"list primary\\">
+          <li>
+            <button class=\\"option\\">Option1</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>"
 `;

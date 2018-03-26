@@ -1,53 +1,22 @@
 @import '../../containers/Application/colors.scss';
-
-$columnWidth: 270px;
-$columnContainerBorderRadius: 3px;
-$columnHeight: 30px;
-
-$columnBackgroundColor: $white;
-$columnBorderColor: $silver;
-$columnBorder: 1px solid $columnBorderColor;
+@import './variables.scss';
 
 .column {
-    background: $columnBackgroundColor;
-    border-bottom: $columnBorder;
-    border-top: $columnBorder;
     border-right: $columnBorder;
+    background: $columnListBackgroundColor;
+    display: inline-block;
     vertical-align: top;
     width: $columnWidth;
-    height: calc(100% - $columnHeight);
-    overflow: hidden;
+    height: 100%;
+    overflow-y: auto;
+
+    &.scrolling:last-child {
+        border-right: none;
+        width: calc($columnWidth - 1px);
+    }
 }
 
-.loading {
+.loader {
+    height: 100%;
     display: flex;
-}
-
-.column-container:first-child {
-    .column {
-        border-left: $columnBorder;
-        border-radius: $columnContainerBorderRadius 0 0 $columnContainerBorderRadius;
-    }
-
-    &.active {
-        .column {
-            border-radius: 0 0 0 $columnContainerBorderRadius;
-        }
-    }
-}
-
-.column-container:last-child {
-    .column {
-        border-radius: 0 $columnContainerBorderRadius $columnContainerBorderRadius 0;
-    }
-
-    &.active {
-        .column {
-            border-radius: 0 0 $columnContainerBorderRadius 0;
-        }
-    }
-}
-
-.column-container {
-    height: inherit;
 }
