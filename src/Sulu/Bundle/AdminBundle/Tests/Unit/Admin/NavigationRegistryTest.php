@@ -16,8 +16,6 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
-use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
-use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -175,10 +173,10 @@ class NavigationRegistryTest extends \PHPUnit_Framework_TestCase
         $route1->getName()->willReturn('route1');
 
         $this->routeRegistry->getRoutes()->willReturn([$route1->reveal()])
-            ->shouldBeCalledTimes(1);;
+            ->shouldBeCalledTimes(1);
 
         $this->routeRegistry->findRouteByName('route1')->shouldBeCalled()
-            ->willReturn($route1->reveal())->shouldBeCalledTimes(1);;
+            ->willReturn($route1->reveal())->shouldBeCalledTimes(1);
 
         $this->navigationRegistry->getNavigation();
     }

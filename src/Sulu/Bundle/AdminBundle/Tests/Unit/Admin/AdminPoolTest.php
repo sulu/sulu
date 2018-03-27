@@ -13,7 +13,6 @@ namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Console\Command\Command;
