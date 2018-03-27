@@ -186,16 +186,5 @@
         <service id="sulu.content.localization_finder" class="Sulu\Component\Content\Compat\LocalizationFinder">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>
-
-        <!-- resource metadata provider -->
-        <service id="sulu_core.resource_metadata_provider.structure"
-                 class="Sulu\Bundle\CoreBundle\ResourceMetadata\StructureResourceMetadataProvider"
-        >
-            <argument type="service" id="sulu_content.structure.factory"/>
-            <argument type="service" id="sulu_admin.metadata.resource_metadata_mapper"/>
-            <argument type="string">%sulu.content.structure.resources%</argument>
-
-            <tag name="sulu.resource_metadata_provider"/>
-        </service>
     </services>
 </container>
