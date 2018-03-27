@@ -38,8 +38,13 @@ class PageControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertCount(2, $response->_embedded->pages);
-        $this->assertEquals('Sulu CMF', $response->_embedded->pages[0]->title);
-        $this->assertEquals('Test CMF', $response->_embedded->pages[1]->title);
+
+        $titles = array_map(function($page) {
+            return $page->title;
+        }, $response->_embedded->pages);
+
+        $this->assertContains('Sulu CMF', $titles);
+        $this->assertContains('Test CMF', $titles);
     }
 
     public function testGetFlatResponseForWebspace()
@@ -65,5 +70,24 @@ class PageControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertCount(0, $response->_embedded->pages);
+    }
+
+    public function testGetFlatResponseWithIds()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $webspaceUuids = [
+            $this->session->getNode('/cmf/test_io/contents')->getIdentifier(),
+            $this->session->getNode('/cmf/sulu_io/contents')->getIdentifier(),
+        ];
+
+        $client->request('GET', '/api/pages?locale=en&flat=true&ids=' . implode(',', $webspaceUuids));
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertCount(2, $response->_embedded->pages);
+        $this->assertEquals('Homepage', $response->_embedded->pages[0]->title);
+        $this->assertEquals('test_io', $response->_embedded->pages[0]->webspaceKey);
+        $this->assertEquals('Homepage', $response->_embedded->pages[1]->title);
+        $this->assertEquals('sulu_io', $response->_embedded->pages[1]->webspaceKey);
     }
 }

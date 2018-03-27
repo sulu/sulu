@@ -27,14 +27,18 @@ class PageController extends NodeController
 
     public function cgetAction(Request $request)
     {
-        if ('true' === $request->query->get('flat') && !$request->query->has('fields')) {
+        if ('true' === $request->query->get('flat')
+            && !$request->query->has('fields')
+            && !$request->query->has('ids')
+        ) {
             // For some reason the NodeController checks if some fields are set instead of the flat flag.
             // Therefore we set the fields to a default value if flat is passed as true, because the other APIs are also
             // checking the flat flag, and the behavior is consistent this way.
+            // This should not happen if ids are passed, because the NodeController behaves different then as well
             $request->query->set('fields', 'title');
         }
 
-        return parent::cgetAction($request);
+        return $this->replaceRelationNameInResponse(parent::cgetAction($request));
     }
 
     protected function cgetContent(Request $request)
@@ -53,5 +57,18 @@ class PageController extends NodeController
         }
 
         return parent::cgetContent($request);
+    }
+
+    private function replaceRelationNameInResponse(Response $response)
+    {
+        $responseContent = json_decode($response->getContent(), true);
+        if (array_key_exists('nodes', $responseContent['_embedded'])) {
+            $responseContent['_embedded']['pages'] = $responseContent['_embedded']['nodes'];
+            unset($responseContent['_embedded']['nodes']);
+
+            $response->setContent(json_encode($responseContent));
+        }
+
+        return $response;
     }
 }

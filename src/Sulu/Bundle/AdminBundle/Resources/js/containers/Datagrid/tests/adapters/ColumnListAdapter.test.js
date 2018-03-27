@@ -247,3 +247,46 @@ test('Execute onItemActivation callback when an item is clicked with the correct
 
     expect(onItemActivationSpy).toBeCalledWith(2);
 });
+
+test('Execute onItemSelectionChange callback when an item is selected', () => {
+    const itemSelectionChangeSpy = jest.fn();
+
+    const data = [
+        {
+            children: [],
+            data: {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+        },
+        {
+            children: [],
+            data: {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+            },
+        },
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            active={3}
+            data={data}
+            loading={false}
+            onItemSelectionChange={itemSelectionChangeSpy}
+            onPageChange={jest.fn()}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[2]}
+        />
+    );
+
+    columnListAdapter.find('Item').at(1).find('.su-checkmark').simulate('click');
+    expect(itemSelectionChangeSpy).toHaveBeenLastCalledWith(2, false);
+
+    columnListAdapter.find('Item').at(0).find('.su-checkmark').simulate('click');
+    expect(itemSelectionChangeSpy).toHaveBeenLastCalledWith(1, true);
+});

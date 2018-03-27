@@ -26,10 +26,10 @@ export default class ColumnListAdapter extends AbstractAdapter {
         }
     };
 
-    handleEditClick = (id: string | number) => {
-        const {onItemClick} = this.props;
-        if (onItemClick) {
-            onItemClick(id);
+    handleItemSelectionChange = (id: string | number) => {
+        const {onItemSelectionChange, selections} = this.props;
+        if (onItemSelectionChange) {
+            onItemSelectionChange(id, !selections.includes(id));
         }
     };
 
@@ -118,15 +118,15 @@ export default class ColumnListAdapter extends AbstractAdapter {
         if (onItemClick) {
             buttons.push({
                 icon: 'su-pen',
-                onClick: this.handleEditClick,
+                onClick: onItemClick,
             });
         }
 
         if (onItemSelectionChange) {
             buttons.push({
                 icon: 'su-checkmark',
-                onClick: () => {},
-            })
+                onClick: this.handleItemSelectionChange,
+            });
         }
 
         const toolbarItems = [];
@@ -163,5 +163,5 @@ export default class ColumnListAdapter extends AbstractAdapter {
                 </ColumnList>
             </div>
         );
-   }
+    }
 }
