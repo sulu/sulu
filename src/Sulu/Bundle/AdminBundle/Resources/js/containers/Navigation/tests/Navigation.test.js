@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {render} from 'enzyme';
+import {render, mount} from 'enzyme';
 import Navigation from '../Navigation';
 
 jest.mock('../registries/NavigationRegistry', () => ({
@@ -50,6 +50,22 @@ test('Should render navigation', () => {
     };
     const handleNavigate = jest.fn();
 
-    const form = render(<Navigation router={router} onNavigate={handleNavigate} />);
-    expect(form).toMatchSnapshot();
+    const navigation = render(<Navigation router={router} onNavigate={handleNavigate} />);
+    expect(navigation).toMatchSnapshot();
+});
+
+test('Should call the navigation callback and router navigate', () => {
+    const router = {
+        route: {
+            name: 'sulu_admin.form_tab',
+            view: 'form_tab',
+        },
+        navigate: jest.fn(),
+    };
+    const handleNavigate = jest.fn();
+
+    const navigation = mount(<Navigation router={router} onNavigate={handleNavigate} />);
+    navigation.find('Item').at(4).find('.title').simulate('click');
+    expect(router.navigate).toHaveBeenCalledWith('sulu_article.datagrid');
+    expect(handleNavigate).toHaveBeenCalledWith('sulu_article.datagrid');
 });
