@@ -20,6 +20,13 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
  */
 abstract class Admin implements RouteProviderInterface, NavigationProviderInterface
 {
+    static function getNavigationItemRoot(): NavigationItem
+    {
+        $root = new NavigationItem('root');
+
+        return $root;
+    }
+
     static function getNavigationItemSettings(): NavigationItem
     {
         $settings = new NavigationItem('navigation.settings');

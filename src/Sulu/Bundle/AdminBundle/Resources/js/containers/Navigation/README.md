@@ -1,16 +1,128 @@
-The `Form` component allows to show a form based on a `FormStore`. This store holds the schema, which defines which
-fields the form should display.  The `FormStore` also holds all the current data displayed in the form. The `Form`
-component will update this store everytime something changes.
+The `Navigation` container uses the `NavigationRegistry` to load all navigation items
+and render the navigation component with all items.
 
-In addition that it also takes an `onSubmit` callback, which will be executed when the `Form` is submitted. The data of
-the form can then be taken from the passed `FormStore`.
+Set navigation items in the `NavigationRegistry` and rendering it using the `Navigation` is shown in the following
+example:
 
-```javascript static
-const store = new FormStore('snippets');
+```javascript
+const navigationRegistry = require('./registries/NavigationRegistry').default;
+navigationRegistry.clear(); // Just to make sure the NavigationRegistry is empty, not needed in a real world application
 
-function handleSubmit() {
-    console.log(store.data);
-}
+const items = [
+    {
+        "title": "Webspaces",
+        "icon": "su-webspace",
+        "mainRoute": "sulu_content.webspaces",
+        "disabled": false,
+        "id": "5aba0a9d7a5e3174614828",
+        "childRoutes": [
+          "sulu_content.webspaces",
+          "sulu_content.page_add_form",
+          "sulu_content.page_add_form.detail",
+          "sulu_content.page_edit_form",
+          "sulu_content.page_edit_form.detail"
+        ]
+      },
+      {
+        "title": "Schnipsel",
+        "icon": "su-paper",
+        "action": "snippet/snippets",
+        "mainRoute": "sulu_snippet.datagrid",
+        "disabled": false,
+        "id": "5aba0a9d7a5ef415448250",
+        "childRoutes": [
+          "sulu_snippet.datagrid",
+          "sulu_snippet.add_form",
+          "sulu_snippet.add_form.detail",
+          "sulu_snippet.edit_form",
+          "sulu_snippet.edit_form.detail",
+          "sulu_snippet.edit_form.taxonomies"
+        ]
+      },
+      {
+        "title": "Medien",
+        "icon": "su-image",
+        "mainRoute": "sulu_media.overview",
+        "disabled": false,
+        "id": "5aba0a9d7a5f7279240523",
+        "childRoutes": [
+          "sulu_media.overview"
+        ]
+      },
+      {
+        "title": "Kontakte",
+        "icon": "fa-user",
+        "disabled": false,
+        "id": "5aba0a9d7a5ff533782840",
+        "items": [
+          {
+            "title": "Personen",
+            "mainRoute": "sulu_contact.contacts_datagrid",
+            "disabled": false,
+            "id": "5aba0a9d7a608673818690",
+            "childRoutes": [
+              "sulu_contact.contacts_datagrid",
+              "sulu_contact.add_form",
+              "sulu_contact.add_form.detail",
+              "sulu_contact.edit_form",
+              "sulu_contact.edit_form.detail"
+            ]
+          },
+          {
+            "title": "Organisationen",
+            "mainRoute": "sulu_contact.accounts_datagrid",
+            "disabled": false,
+            "id": "5aba0a9d7a610927910329",
+            "childRoutes": [
+              "sulu_contact.accounts_datagrid"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Einstellungen",
+        "icon": "su-settings",
+        "disabled": false,
+        "id": "5aba0a9d7a619926740941",
+        "items": [
+          {
+            "title": "Benutzerrollen",
+            "mainRoute": "sulu_security.datagrid",
+            "disabled": false,
+            "id": "5aba0a9d7a621158100794",
+            "childRoutes": [
+              "sulu_security.datagrid"
+            ]
+          },
+          {
+            "title": "Tags",
+            "mainRoute": "sulu_tag.datagrid",
+            "disabled": false,
+            "id": "5aba0a9d7a629138404840",
+            "childRoutes": [
+              "sulu_tag.datagrid"
+            ]
+          }
+        ]
+      }
+];
+navigationRegistry.set(items);
 
-<Form store={store} onSubmit={handleSubmit} />
+// instead of this mocked Router you would usually use a real one
+const route = {
+    view: 'view',
+};
+const router = {
+    attributes: {
+        content: 'Some trivial content!',
+    },
+    route: route,
+    navigate: (value) => { console.log(`Router would navigate to ${value}`)}
+};
+
+const handleNavigate = (value) => {
+    alert(`You clicked on item ${value}`);
+};
+
+<Navigation router={router} onNavigate={handleNavigate} />
 ```
