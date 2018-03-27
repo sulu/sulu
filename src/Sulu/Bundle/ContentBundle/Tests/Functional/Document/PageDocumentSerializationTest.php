@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Integration\Document;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Document;
 
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;

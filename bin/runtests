@@ -358,14 +358,6 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
 
     write_header('Testing: ' . $bundleName);
 
-    $baseVendorDir = getcwd() . '/vendor';
-    $bundleVendorDir = $bundleDir . '/vendor';
-
-    if (!file_exists($bundleVendorDir)) {
-        symlink($baseVendorDir, $bundleVendorDir);
-        write_info('Symlinked base vendor dir');
-    }
-
     $cacheDir = getcwd() . '/Tests/app/cache';
     if ($input->getOption('cache-clear')) {
         write_info('Clear cache');

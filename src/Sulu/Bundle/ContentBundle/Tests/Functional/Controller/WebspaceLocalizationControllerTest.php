@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Controller;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 

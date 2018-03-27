@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Controller;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
 use PHPCR\SessionInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Controller;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use PHPCR\SessionInterface;

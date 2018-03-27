@@ -9,11 +9,15 @@
  * with this source code in the file LICENSE.
  */
 
-$file = getcwd() . '/vendor/autoload.php';
+use Doctrine\Common\Annotations\AnnotationRegistry;
+
+$file = __DIR__ . '/../../../../../../vendor/autoload.php';
 if (!file_exists($file)) {
     throw new RuntimeException('Install dependencies to run test suite.');
 }
 
-$autoload = require $file;
+$loader = require $file;
 
-\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$autoload, 'loadClass']);
+AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+
+return $loader;

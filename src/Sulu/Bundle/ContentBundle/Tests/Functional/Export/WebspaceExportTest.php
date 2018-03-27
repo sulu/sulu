@@ -140,6 +140,8 @@ class WebspaceExportTest extends SuluTestCase
                 'subtitle' => $data[0]['subtitle'],
                 'url' => $data[0]['url'],
                 'article' => $data[0]['article'],
+                'tags' => $data[0]['tags'],
+                'external_url' => $data[0]['external_url'],
                 'block' => [
                     [
                         'type' => $data[0]['block'][0]['type']['value'],
@@ -158,6 +160,8 @@ class WebspaceExportTest extends SuluTestCase
                 'subtitle' => $data[1]['subtitle'],
                 'url' => $data[1]['url'],
                 'article' => $data[1]['article'],
+                'tags' => $data[1]['tags'],
+                'external_url' => $data[1]['external_url'],
                 'block' => [
                     [
                         'type' => $data[1]['block'][0]['type']['value'],
@@ -180,6 +184,8 @@ class WebspaceExportTest extends SuluTestCase
                 'subtitle' => 'subtitle',
                 'url' => '/test-1',
                 'article' => 'Lorem Ipsum dolorem apsum',
+                'tags' => 'Test',
+                'external_url' => 'http://www.google.com',
                 'block' => [
                     [
                         'type' => [
@@ -240,6 +246,8 @@ class WebspaceExportTest extends SuluTestCase
                 'subtitle' => 'subtitle',
                 'url' => '/test-2',
                 'article' => 'asdfasdf',
+                'tags' => 'Sulu CMS Symfony',
+                'external_url' => 'https://sulu.io',
                 'block' => [
                     [
                         'type' => [
@@ -355,6 +363,14 @@ class WebspaceExportTest extends SuluTestCase
             case 'article':
                 $type = 'text_line';
                 $translate = true;
+                break;
+            case 'tags':
+                $type = 'text_line';
+                $translate = true;
+                break;
+            case 'external_url':
+                $type = 'url';
+                $translate = false;
                 break;
             case 'block':
                 $type = 'block';

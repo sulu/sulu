@@ -1,8 +1,8 @@
 framework:
     translator:
-        fallbacks: ["en"]
+        fallbacks: ['en']
     secret: secret
-    router: { resource: "%kernel.root_dir%/config/routing.yml" }
+    router: { resource: '%kernel.root_dir%/config/routing.yml' }
     templating: { engines: ['twig'] }
     form:
         enabled: true
@@ -17,30 +17,30 @@ framework:
 monolog:
     handlers:
         main:
-            type:  "null"
+            type:  'null'
 
 sulu_core:
-    cache_dir: "%kernel.root_dir%/cache/sulu"
+    cache_dir: '%kernel.root_dir%/cache/sulu'
     content:
         structure:
              default_type:
-                snippet: "default"
+                snippet: 'default'
              paths:
                  pages:
-                     path: "%kernel.root_dir%/Resources/pages"
+                     path: '%kernel.root_dir%/Resources/pages'
                      type: page
                  homepage:
-                     path: "%kernel.root_dir%/Resources/pages"
+                     path: '%kernel.root_dir%/Resources/pages'
                      type: home
                  templates:
-                     path: "%kernel.root_dir%/Resources/snippets"
+                     path: '%kernel.root_dir%/Resources/snippets'
                      type: snippet
 
-                 # This configuration could be used either from a bundle or the "root" of the repsitory
+                 # This configuration could be used either from a bundle or the 'root' of the repository
                  # We try both just to be sure
                  sulu_1:
-                     path: "%kernel.root_dir%/../../../CoreBundle/Content/templates"
-                     type: "page"
+                     path: '%kernel.root_dir%/../../../CoreBundle/Content/templates'
+                     type: 'page'
     webspace: ~
 
 sulu_admin:
@@ -49,7 +49,7 @@ sulu_admin:
 
 doctrine:
     orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_generate_proxy_classes: '%kernel.debug%'
         auto_mapping: true
         resolve_target_entities:
             Sulu\Component\Security\Authentication\UserInterface: Sulu\Bundle\SecurityBundle\Entity\User
@@ -61,25 +61,25 @@ doctrine:
             gedmo_tree:
                 type: xml
                 prefix: Gedmo\Tree\Entity
-                dir: "%kernel.root_dir%/../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
-                alias: GedmoTree # this one is optional and will default to the name set for the mapping
+                dir: '%kernel.root_dir%/../../../../../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity'
+                alias: GedmoTree
                 is_bundle: false
         dql:
             string_functions:
                 group_concat: Oro\ORM\Query\AST\Functions\String\GroupConcat
     dbal:
-        driver: "%database.driver%"
-        host: "%database.host%"
-        port: "%database.port%"
-        dbname: "%database.name%"
-        user: "%database.user%"
-        password: "%database.password%"
-        path: "%database.path%"
-        server_version: "%database.version%"
-        charset: "%database.charset%"
+        driver: '%database.driver%'
+        host: '%database.host%'
+        port: '%database.port%'
+        dbname: '%database.name%'
+        user: '%database.user%'
+        password: '%database.password%'
+        path: '%database.path%'
+        server_version: '%database.version%'
+        charset: '%database.charset%'
         default_table_options:
-            charset: "%database.charset%"
-            collate: "%database.collate%"
+            charset: '%database.charset%'
+            collate: '%database.collate%'
 
 stof_doctrine_extensions:
     orm:
@@ -93,20 +93,20 @@ sulu_document_manager:
     sessions:
         default:
             backend:
-                type: "%phpcr.transport%"
-                url:  "%phpcr.backend_url%"
-            workspace: "%phpcr.workspace%"
-            username: "%phpcr.username%"
-            password: "%phpcr.password%"
+                type: '%phpcr.transport%'
+                url:  '%phpcr.backend_url%'
+            workspace: '%phpcr.workspace%'
+            username: '%phpcr.username%'
+            password: '%phpcr.password%'
         live:
             backend:
-                type: "%phpcr.transport%"
-                url:  "%phpcr.backend_url%"
-            workspace: "%phpcr.workspace%_live"
-            username: "%phpcr.username%"
-            password: "%phpcr.password%"
+                type: '%phpcr.transport%'
+                url:  '%phpcr.backend_url%'
+            workspace: '%phpcr.workspace%_live'
+            username: '%phpcr.username%'
+            password: '%phpcr.password%'
     debug: false
 
 jms_serializer:
     metadata:
-        debug: "%kernel.debug%"
+        debug: '%kernel.debug%'
