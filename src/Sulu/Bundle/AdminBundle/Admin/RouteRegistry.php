@@ -14,8 +14,6 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 class RouteRegistry
 {
@@ -69,7 +67,7 @@ class RouteRegistry
             }
 
             $routes = array_merge($routes, $admin->getRoutes());
-        };
+        }
 
         $this->validateRoutes($routes);
 

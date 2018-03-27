@@ -61,7 +61,7 @@ class ContactAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    static function getNavigationItemContacts(): NavigationItem
+    public static function getNavigationItemContacts(): NavigationItem
     {
         $contacts = new NavigationItem('navigation.contacts');
         $contacts->setPosition(40);

@@ -72,7 +72,7 @@ class NavigationRegistry
             }
 
             $navigation = $navigation->merge($admin->getNavigationV2());
-        };
+        }
 
         foreach ($navigation->getRoot()->getChildren() as $child) {
             $this->processNavigationItem($child);
@@ -93,7 +93,7 @@ class NavigationRegistry
         if ($navigationItem->getMainRoute()) {
             $mainPath = $this->routeRegistry->findRouteByName($navigationItem->getMainRoute())->getPath();
             foreach ($this->routeRegistry->getRoutes() as $route) {
-                if (strpos($route->getPath(), $mainPath) !== false) {
+                if (false !== strpos($route->getPath(), $mainPath)) {
                     $navigationItem->addChildRoute($route->getName());
                 }
             }
