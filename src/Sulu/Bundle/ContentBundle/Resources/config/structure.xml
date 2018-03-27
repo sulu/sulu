@@ -30,7 +30,7 @@
         </service>
 
         <!-- resource metadata provider -->
-        <service id="sulu_core.resource_metadata_provider.structure"
+        <service id="sulu_content.resource_metadata_provider.structure"
                  class="Sulu\Bundle\ContentBundle\ResourceMetadata\StructureResourceMetadataProvider"
         >
             <argument type="service" id="sulu_content.structure.factory"/>
@@ -38,6 +38,7 @@
             <argument type="string">%sulu.content.structure.resources%</argument>
 
             <tag name="sulu.resource_metadata_provider"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>
