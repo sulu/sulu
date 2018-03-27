@@ -302,7 +302,7 @@ exports[`Render data with selection 1`] = `
           class="column"
         >
           <div
-            class="item"
+            class="item selected"
           >
             <span
               class="buttons"

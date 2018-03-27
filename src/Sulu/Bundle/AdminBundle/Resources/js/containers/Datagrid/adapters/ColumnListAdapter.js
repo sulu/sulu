@@ -111,7 +111,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
     }
 
     render() {
-        const {loading, onAddClick, onItemClick, onItemSelectionChange} = this.props;
+        const {loading, onAddClick, onItemClick, onItemSelectionChange, selections} = this.props;
 
         const buttons = [];
 
@@ -150,10 +150,11 @@ export default class ColumnListAdapter extends AbstractAdapter {
                             {items.map((item: Object) => (
                                 // TODO: Don't access properties like "hasChildren" or "title" directly
                                 <ColumnList.Item
+                                    active={this.activeItemPath.includes(item.id)}
+                                    hasChildren={item.hasChildren}
                                     id={item.id}
                                     key={item.id}
-                                    hasChildren={item.hasChildren}
-                                    active={this.activeItemPath.includes(item.id)}
+                                    selected={selections.includes(item.id)}
                                 >
                                     {item.title}
                                 </ColumnList.Item>

@@ -85,9 +85,16 @@ class PageControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertCount(2, $response->_embedded->pages);
-        $this->assertEquals('Homepage', $response->_embedded->pages[0]->title);
-        $this->assertEquals('test_io', $response->_embedded->pages[0]->webspaceKey);
-        $this->assertEquals('Homepage', $response->_embedded->pages[1]->title);
-        $this->assertEquals('sulu_io', $response->_embedded->pages[1]->webspaceKey);
+
+        $page1 = $response->_embedded->pages[0];
+        $page2 = $response->_embedded->pages[1];
+        $this->assertEquals('Homepage', $page1->title);
+        $this->assertEquals('test_io', $page1->webspaceKey);
+        $this->assertObjectHasAttribute('id', $page1);
+        $this->assertObjectNotHasAttribute('uuid', $page1);
+        $this->assertEquals('Homepage', $page2->title);
+        $this->assertEquals('sulu_io', $page2->webspaceKey);
+        $this->assertObjectHasAttribute('id', $page2);
+        $this->assertObjectNotHasAttribute('uuid', $page2);
     }
 }

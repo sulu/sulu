@@ -38,7 +38,7 @@ class PageController extends NodeController
             $request->query->set('fields', 'title');
         }
 
-        return $this->replaceRelationNameInResponse(parent::cgetAction($request));
+        return $this->transformResponse(parent::cgetAction($request));
     }
 
     protected function cgetContent(Request $request)
@@ -59,15 +59,26 @@ class PageController extends NodeController
         return parent::cgetContent($request);
     }
 
-    private function replaceRelationNameInResponse(Response $response)
+    private function transformResponse(Response $response)
     {
         $responseContent = json_decode($response->getContent(), true);
+
         if (array_key_exists('nodes', $responseContent['_embedded'])) {
+            // sometime the NodeController does not listen the relation name set in this controller,
+            // so we replace it on our own.
             $responseContent['_embedded']['pages'] = $responseContent['_embedded']['nodes'];
             unset($responseContent['_embedded']['nodes']);
-
-            $response->setContent(json_encode($responseContent));
         }
+
+        // sometimes the NodeController has an uuid field instead of id, so we replace it
+        array_walk($responseContent['_embedded']['pages'], function(&$node) {
+            if (array_key_exists('uuid', $node)) {
+                $node['id'] = $node['uuid'];
+                unset($node['uuid']);
+            }
+        });
+
+        $response->setContent(json_encode($responseContent));
 
         return $response;
     }

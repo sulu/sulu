@@ -8,18 +8,20 @@ import type {ItemButtonConfig} from './types';
 import itemStyles from './item.scss';
 
 type Props = {
-    id: string | number,
-    children: string,
     active: boolean,
-    hasChildren: boolean,
     buttons?: Array<ItemButtonConfig>,
+    children: string,
+    hasChildren: boolean,
+    id: string | number,
     onClick?: (id: string | number) => void,
+    selected: boolean,
 };
 
 export default class Item extends React.Component<Props> {
     static defaultProps = {
         active: false,
         hasChildren: false,
+        selected: false,
     };
 
     handleClick = () => {
@@ -45,12 +47,13 @@ export default class Item extends React.Component<Props> {
     };
 
     render() {
-        const {children, active, hasChildren} = this.props;
+        const {children, active, hasChildren, selected} = this.props;
 
         const itemClass = classNames(
             itemStyles.item,
             {
                 [itemStyles.active]: active,
+                [itemStyles.selected]: selected,
             }
         );
 

@@ -47,7 +47,7 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
         class="column"
       >
         <div
-          class="item"
+          class="item selected"
         >
           <span
             class="buttons"
@@ -461,7 +461,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
         class="column scrolling"
       >
         <div
-          class="item"
+          class="item selected"
         >
           <span
             class="buttons"

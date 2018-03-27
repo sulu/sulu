@@ -8,6 +8,8 @@ jest.mock('sulu-admin-bundle/containers', () => {
         withToolbar: jest.fn((Component) => Component),
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function() {
+            this.selections = [];
+            this.selectionIds = [];
             this.getPage = jest.fn().mockReturnValue(1);
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();

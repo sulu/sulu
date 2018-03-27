@@ -126,7 +126,7 @@ test('Render data with selection', () => {
             page={undefined}
             pageCount={0}
             schema={{}}
-            selections={[]}
+            selections={[1]}
         />
     );
 

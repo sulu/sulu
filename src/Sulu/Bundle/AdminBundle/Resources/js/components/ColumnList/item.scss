@@ -45,7 +45,8 @@ $itemColorHover: $white;
     }
 }
 
-.item:hover {
+.item:hover,
+.item.selected {
     .button {
         visibility: visible;
     }
