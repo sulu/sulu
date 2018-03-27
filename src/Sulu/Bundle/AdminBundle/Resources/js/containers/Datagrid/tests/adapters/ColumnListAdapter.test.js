@@ -3,7 +3,7 @@ import React from 'react';
 import {mount, render} from 'enzyme';
 import ColumnListAdapter from '../../adapters/ColumnListAdapter';
 
-test('Render data', () => {
+test('Render data with edit button', () => {
     const data = [
         {
             children: [
@@ -46,6 +46,7 @@ test('Render data', () => {
             active={4}
             data={data}
             loading={false}
+            onItemClick={jest.fn()}
             onPageChange={jest.fn()}
             page={undefined}
             pageCount={0}
@@ -57,6 +58,42 @@ test('Render data', () => {
     expect(columnListAdapter).toMatchSnapshot();
 });
 
+test('Render data without edit button', () => {
+    const data = [
+        {
+            children: [
+                {
+                    children: [],
+                    data: {
+                        id: 3,
+                        title: 'Page 1.1',
+                        hasChildren: false,
+                    },
+                },
+            ],
+            data: {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+        },
+    ];
+
+    const columnListAdapter = render(
+        <ColumnListAdapter
+            active={4}
+            data={data}
+            loading={false}
+            onPageChange={jest.fn()}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+        />
+    );
+
+    expect(columnListAdapter).toMatchSnapshot();
+});
 test('Render with add button in toolbar when onAddClick callback is given', () => {
     const data = [];
 

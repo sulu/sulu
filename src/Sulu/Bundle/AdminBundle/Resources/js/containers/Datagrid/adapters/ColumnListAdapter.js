@@ -111,13 +111,15 @@ export default class ColumnListAdapter extends AbstractAdapter {
     }
 
     render() {
-        const {loading, onAddClick} = this.props;
-        const buttons = [
-            {
+        const {loading, onAddClick, onItemClick} = this.props;
+
+        const buttons = [];
+        if (onItemClick) {
+            buttons.push({
                 icon: 'su-pen',
                 onClick: this.handleEditClick,
-            },
-        ];
+            });
+        }
 
         const toolbarItems = [];
 
