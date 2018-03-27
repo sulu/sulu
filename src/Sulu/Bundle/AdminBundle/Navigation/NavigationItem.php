@@ -232,6 +232,9 @@ class NavigationItem implements \Iterator
         $this->childRoutes[] = $childRoute;
     }
 
+    /**
+     * @return string[]
+     */
     public function getChildRoutes(): array
     {
         return $this->childRoutes;

@@ -17,8 +17,11 @@ use JMS\Serializer\SerializerInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
+use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
+use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
+use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -89,6 +92,16 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
     private $resourceMetadataPool;
 
     /**
+     * @var RouteRegistry
+     */
+    private $routeRegistry;
+
+    /**
+     * @var NavigationRegistry
+     */
+    private $navigationRegistry;
+
+    /**
      * @var string
      */
     private $environment = 'prod';
@@ -143,6 +156,8 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
         $this->translator = $this->prophesize(TranslatorBagInterface::class);
         $this->resourceMetadataPool = $this->prophesize(ResourceMetadataPool::class);
+        $this->routeRegistry = $this->prophesize(RouteRegistry::class);
+        $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
 
         $this->adminController = new AdminController(
             $this->authorizationChecker->reveal(),
@@ -156,6 +171,8 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
             $this->localizationManager->reveal(),
             $this->translator->reveal(),
             $this->resourceMetadataPool->reveal(),
+            $this->routeRegistry->reveal(),
+            $this->navigationRegistry->reveal(),
             $this->environment,
             $this->adminName,
             $this->locales,
@@ -168,13 +185,24 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigurationAction()
     {
-        $data = [
+        $routes = [
             new Route('sulu_snippet.datagrid', '/snippets', 'sulu_admin.datagrid'),
         ];
-        $this->adminPool->getRoutes()->willReturn($data);
+        $this->routeRegistry->getRoutes()->willReturn($routes);
 
-        $this->viewHandler->handle(Argument::that(function(View $view) use ($data) {
-            return 'json' === $view->getFormat() && $view->getData() === ['sulu_admin' => ['routes' => $data]];
+        $navigation = $this->prophesize(Navigation::class);
+        $navigation->toArray()->willReturn(['items' => ['navigation_item1','navigation_item2']]);
+        $this->navigationRegistry->getNavigation()->willReturn($navigation->reveal());
+
+        $expectedResult = [
+            'sulu_admin' => [
+                'routes' => $routes,
+                'navigation' => ['navigation_item1','navigation_item2']
+            ],
+        ];
+
+        $this->viewHandler->handle(Argument::that(function(View $view) use ($expectedResult) {
+            return 'json' === $view->getFormat() && $view->getData() === $expectedResult;
         }))->shouldBeCalled()->willReturn(new Response());
 
         $this->adminController->configV2Action();
