@@ -702,7 +702,7 @@ test('Navigate to child route using state', () => {
         name: 'sulu_snippet.form.detail',
         parent: formRoute,
         view: 'sulu_admin.form',
-        path: '/detail',
+        path: '/snippets/:uuid/detail',
         options: {
             tabTitle: 'Detail',
         },
@@ -713,7 +713,7 @@ test('Navigate to child route using state', () => {
         name: 'sulu_snippet.form.taxonomy',
         parent: formRoute,
         view: 'sulu_admin.form',
-        path: '/taxonomy',
+        path: '/snippets/:uuid/taxonomy',
         options: {
             tabTitle: 'Taxonomies',
         },
@@ -765,7 +765,7 @@ test('Navigate to child route using URL', () => {
         name: 'sulu_snippet.form.detail',
         parent: formRoute,
         view: 'sulu_admin.form',
-        path: '/detail',
+        path: '/snippets/:uuid/detail',
         options: {
             tabTitle: 'Detail',
         },
@@ -776,7 +776,7 @@ test('Navigate to child route using URL', () => {
         name: 'sulu_snippet.form.taxonomy',
         parent: formRoute,
         view: 'sulu_admin.form',
-        path: '/taxonomy',
+        path: '/snippets/:uuid/taxonomy',
         options: {
             tabTitle: 'Taxonomies',
         },

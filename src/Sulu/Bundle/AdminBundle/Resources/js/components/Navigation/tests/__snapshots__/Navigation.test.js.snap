@@ -10,7 +10,15 @@ exports[`The component should render and handle clicks correctly 1`] = `
     <div
       class="headerContent"
     >
-      sulu.io
+      <span
+        aria-label="su-sulu"
+        class="headerIcon su-sulu"
+      />
+      <span
+        class="headerTitle"
+      >
+        sulu.io
+      </span>
     </div>
   </div>
   <div
@@ -100,7 +108,15 @@ exports[`The component should render with all available props and handle clicks 
     <div
       class="headerContent"
     >
-      sulu.io
+      <span
+        aria-label="su-sulu"
+        class="headerIcon su-sulu"
+      />
+      <span
+        class="headerTitle"
+      >
+        sulu.io
+      </span>
     </div>
   </div>
   <div

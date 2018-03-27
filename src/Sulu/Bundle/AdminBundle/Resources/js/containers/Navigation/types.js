@@ -4,6 +4,6 @@ export type NavigationItem = {
     title: string,
     icon: string,
     mainRoute: string,
-    childRoutes: Array<string>,
-    items: Array<NavigationItem     >,
+    childRoutes?: Array<string>,
+    items?: Array<NavigationItem>,
 };

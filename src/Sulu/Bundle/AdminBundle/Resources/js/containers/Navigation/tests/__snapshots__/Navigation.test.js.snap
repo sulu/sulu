@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render navigation 1`] = `
+<div
+  class="navigation"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="headerContent"
+    >
+      <span
+        aria-label="su-sulu"
+        class="headerIcon su-sulu"
+      />
+      <span
+        class="headerTitle"
+      >
+        Sulu
+      </span>
+    </div>
+  </div>
+  <div
+    class="user"
+  >
+    <div
+      class="userContent"
+    >
+      <div
+        class="noUserImage"
+      >
+        <span
+          aria-label="fa-user"
+          class="fa fa-user"
+        />
+      </div>
+      <div
+        class="userProfile"
+      >
+        <span>
+          Hikaru Sulu
+        </span>
+        <button>
+          <span
+            aria-label="su-exit"
+            class="su-exit"
+          />
+          Log out
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="items"
+  >
+    <div
+      class="item active"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="su-options"
+          class="su-options"
+        />
+        Test Navigation
+      </div>
+    </div>
+    <div
+      class="item"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="su-article"
+          class="su-article"
+        />
+        Test Navigation 2
+      </div>
+    </div>
+    <div
+      class="item active hasChildren"
+    >
+      <div
+        class="title"
+      >
+        <span
+          aria-label="su-options"
+          class="su-options"
+        />
+        Test Navigation with Children
+      </div>
+      <div>
+        <div
+          class="item active"
+        >
+          <div
+            class="title"
+          >
+            Test Navigation Child 1
+          </div>
+        </div>
+        <div
+          class="item"
+        >
+          <div
+            class="title"
+          >
+            Test Navigation Child 2
+          </div>
+        </div>
+      </div>
+      <span
+        aria-label="su-arrow-down"
+        class="childrenIndicator su-arrow-down clickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+  </div>
+  <div
+    class="versions"
+  >
+    <div>
+      Sulu (
+      <a
+        href="https://github.com/sulu/sulu/releases"
+        target="_blank"
+      >
+        2.0.0-RC1
+      </a>
+      )
+    </div>
+  </div>
+</div>
+`;
