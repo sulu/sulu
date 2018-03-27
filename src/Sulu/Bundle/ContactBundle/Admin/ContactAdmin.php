@@ -61,13 +61,19 @@ class ContactAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    public function getNavigationV2(): Navigation
+    static function getNavigationItemContacts(): NavigationItem
     {
-        $rootNavigationItem = new NavigationItem('root');
-
         $contacts = new NavigationItem('navigation.contacts');
         $contacts->setPosition(40);
         $contacts->setIcon('fa-user');
+
+        return $contacts;
+    }
+
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = Admin::getNavigationItemRoot();
+        $contacts = self::getNavigationItemContacts();
 
         if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
             $people = new NavigationItem('navigation.contacts.people');

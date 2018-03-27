@@ -59,7 +59,7 @@ class MediaAdmin extends Admin
 
     public function getNavigationV2(): Navigation
     {
-        $rootNavigationItem = new NavigationItem('root');
+        $rootNavigationItem = Admin::getNavigationItemRoot();
 
         if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {
             $media = new NavigationItem('navigation.media');

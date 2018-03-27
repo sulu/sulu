@@ -51,11 +51,8 @@ class WebsiteAdmin extends Admin
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
-    }
 
-    public function getNavigation(): Navigation
-    {
-        $rootNavigationItem = new NavigationItem('root');
+        $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);
@@ -74,7 +71,7 @@ class WebsiteAdmin extends Admin
             $rootNavigationItem->addChild($section);
         }
 
-        return new Navigation($rootNavigationItem);
+        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
     /**

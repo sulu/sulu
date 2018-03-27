@@ -106,7 +106,7 @@ class ContentAdmin extends Admin
 
     public function getNavigationV2(): Navigation
     {
-        $rootNavigationItem = new NavigationItem('root');
+        $rootNavigationItem = Admin::getNavigationItemRoot();
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {

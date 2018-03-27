@@ -54,7 +54,7 @@ class TagAdmin extends Admin
 
     public function getNavigationV2(): Navigation
     {
-        $rootNavigationItem = new NavigationItem('root');
+        $rootNavigationItem = Admin::getNavigationItemRoot();
 
         $settings = Admin::getNavigationItemSettings();
 
