@@ -61,7 +61,25 @@ exports[`Render WebspaceOverview 1`] = `
           >
             <div
               class="column"
-            />
+            >
+              <div
+                class="item"
+              >
+                <span
+                  class="buttons"
+                >
+                  <span
+                    aria-label="su-pen"
+                    class="button su-pen clickable"
+                    role="button"
+                    tabindex="0"
+                  />
+                </span>
+                <span
+                  class="text"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

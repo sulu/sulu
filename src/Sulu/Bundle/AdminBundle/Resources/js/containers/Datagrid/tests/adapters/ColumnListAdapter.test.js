@@ -94,6 +94,45 @@ test('Render data without edit button', () => {
 
     expect(columnListAdapter).toMatchSnapshot();
 });
+
+test('Render data with selection', () => {
+    const data = [
+        {
+            children: [
+                {
+                    children: [],
+                    data: {
+                        id: 3,
+                        title: 'Page 1.1',
+                        hasChildren: false,
+                    },
+                },
+            ],
+            data: {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+        },
+    ];
+
+    const columnListAdapter = render(
+        <ColumnListAdapter
+            active={4}
+            data={data}
+            loading={false}
+            onItemSelectionChange={jest.fn()}
+            onPageChange={jest.fn()}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+        />
+    );
+
+    expect(columnListAdapter).toMatchSnapshot();
+});
+
 test('Render with add button in toolbar when onAddClick callback is given', () => {
     const data = [];
 

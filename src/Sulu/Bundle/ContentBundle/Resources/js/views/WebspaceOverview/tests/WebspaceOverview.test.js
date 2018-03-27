@@ -53,6 +53,15 @@ test('Render WebspaceOverview', () => {
     };
 
     const webspaceOverview = mount(<WebspaceOverview router={router} />);
+    webspaceOverview.instance().datagridStore.data = [
+        {
+            data: {
+                id: 1,
+            },
+            children: [],
+            id: 1,
+        },
+    ];
 
     return promise.then(() => {
         webspaceOverview.update();

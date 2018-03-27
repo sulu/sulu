@@ -111,14 +111,22 @@ export default class ColumnListAdapter extends AbstractAdapter {
     }
 
     render() {
-        const {loading, onAddClick, onItemClick} = this.props;
+        const {loading, onAddClick, onItemClick, onItemSelectionChange} = this.props;
 
         const buttons = [];
+
         if (onItemClick) {
             buttons.push({
                 icon: 'su-pen',
                 onClick: this.handleEditClick,
             });
+        }
+
+        if (onItemSelectionChange) {
+            buttons.push({
+                icon: 'su-checkmark',
+                onClick: () => {},
+            })
         }
 
         const toolbarItems = [];
@@ -155,5 +163,5 @@ export default class ColumnListAdapter extends AbstractAdapter {
                 </ColumnList>
             </div>
         );
-    }
+   }
 }

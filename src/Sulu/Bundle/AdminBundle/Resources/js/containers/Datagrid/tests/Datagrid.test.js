@@ -102,6 +102,16 @@ test('Render TableAdapter with correct values', () => {
     expect(tableAdapter.prop('selections')).toEqual([1, 3]);
     expect(tableAdapter.prop('schema')).toEqual({test: {}});
     expect(tableAdapter.prop('onItemClick')).toBe(editClickSpy);
+    expect(tableAdapter.prop('onItemSelectionChange')).toBeInstanceOf(Function);
+    expect(tableAdapter.prop('onAllSelectionChange')).toBeInstanceOf(Function);
+});
+
+test('Render the adapter in non-selectable mode', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(<Datagrid adapters={['test']} selectable={false} store={datagridStore} />);
+
+    expect(datagrid.find('TestAdapter').prop('onItemSelectionChange')).toEqual(undefined);
+    expect(datagrid.find('TestAdapter').prop('onAllSelectionChange')).toEqual(undefined);
 });
 
 test('Selecting and deselecting items should update store', () => {
