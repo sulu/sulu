@@ -19,6 +19,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.destroy = jest.fn();
     this.resourceKey = resourceKey;
     this.select = jest.fn();
+    this.setActive = jest.fn();
 }));
 
 jest.mock('../stores/AssignmentStore', () => jest.fn(function() {

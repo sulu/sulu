@@ -14,8 +14,10 @@ jest.mock('../../../containers/Datagrid', () => jest.fn(function Datagrid(props)
 }));
 
 jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey, observableOptions) {
+    this.clearSelection = jest.fn();
     this.observableOptions = observableOptions;
     this.select = jest.fn();
+    this.setActive = jest.fn();
 }));
 
 test('Should instantiate the DatagridStore with locale', () => {
@@ -136,4 +138,21 @@ test('Should instantiate the datagrid with the passed adapter', () => {
         />
     );
     expect(datagridOverlay2.find(Datagrid).prop('adapters')).toEqual(['column_list']);
+});
+
+test('Should reset active item when reopening because a complete tree to a certain item cannot be opened yet', () => {
+    const datagridOverlay = mount(
+        <DatagridOverlay
+            adapter="table"
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="test"
+        />
+    );
+
+    datagridOverlay.setProps({open: true});
+
+    expect(datagridOverlay.instance().datagridStore.setActive).toBeCalledWith(undefined);
 });
