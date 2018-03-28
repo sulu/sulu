@@ -12,7 +12,6 @@
         "url-search-params-polyfill": "^2.0.0"
     },
     "devDependencies": {
-        "cucumber": "^4.0.0",
         "enzyme": "^3.3.0",
         "pretty": "^2.0.0"
     },

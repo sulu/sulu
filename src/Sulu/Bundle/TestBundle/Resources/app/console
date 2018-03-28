@@ -35,7 +35,7 @@ foreach ($adminPool->getCommands() as $command) {
 
 function require_kernel()
 {
-    $dirs = [ 'tests/app', 'Tests/app' ];
+    $dirs = [ 'app', 'Tests/app' ];
 
     if ($kernelDir = getenv('KERNEL_DIR')) {
         array_unshift($dirs, $kernelDir);

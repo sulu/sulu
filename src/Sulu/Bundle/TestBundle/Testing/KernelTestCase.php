@@ -155,7 +155,7 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
         } else {
             $kernelPaths = [
                 sprintf('%s/Tests/app/AppKernel.php', getcwd()), // bundle test kernel
-                sprintf('%s/tests/app/AppKernel.php', getcwd()), // sulu-io/sulu test kernel
+                sprintf('%s/app/AppKernel.php', getcwd()), // sulu/sulu test kernel
             ];
         }
 

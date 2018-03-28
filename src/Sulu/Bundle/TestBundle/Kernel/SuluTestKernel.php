@@ -14,6 +14,8 @@ namespace Sulu\Bundle\TestBundle\Kernel;
 use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Represents a kernel for sulu-application tests.
@@ -27,16 +29,16 @@ class SuluTestKernel extends SuluKernel
     {
         $bundles = [
             // Dependencies
+            new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
+            new \Symfony\Bundle\TwigBundle\TwigBundle(),
+            new \Symfony\Bundle\MonologBundle\MonologBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
-            new \JMS\SerializerBundle\JMSSerializerBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new \Symfony\Bundle\MonologBundle\MonologBundle(),
-            new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
-            new \Symfony\Bundle\TwigBundle\TwigBundle(),
+            new \JMS\SerializerBundle\JMSSerializerBundle(),
 
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
@@ -89,11 +91,11 @@ class SuluTestKernel extends SuluKernel
     {
         $loader->load(SuluTestBundle::getConfigDir() . '/config.php');
 
-        // @see https://github.com/symfony/symfony/issues/7555
-        $envParameters = $this->getEnvParameters();
-
-        $loader->load(function ($container) use ($envParameters) {
-            $container->getParameterBag()->add($envParameters);
+        $loader->load(function (ContainerBuilder $container) {
+            $container->setParameter('phpcr.transport', $container->resolveEnvPlaceholders(
+                $container->getParameter('phpcr.transport'),
+                true
+            ));
         });
     }
 

@@ -6,10 +6,9 @@
         "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss",
         "flow": "flow",
         "test": "jest",
-        "test:features": "cucumber-js src/Sulu/Bundle/*/Resources/js/features/**/*.feature --require-module babel-register",
         "styleguide": "styleguidist server",
         "styleguide:build": "styleguidist build",
-        "build": "rimraf tests/Application/web/admin/build && webpack -p",
+        "build": "rimraf web/admin/build && webpack -p",
         "watch": "webpack -d -w"
     },
     "dependencies": {
@@ -27,10 +26,8 @@
         "babel-plugin-transform-object-rest-spread": "^6.23.0",
         "babel-preset-env": "^1.6.1",
         "babel-preset-react": "^6.24.1",
-        "babel-register": "^6.26.0",
         "core-js": "^2.5.1",
         "css-loader": "^0.28.4",
-        "cucumber": "^4.0.0",
         "empty": "^0.10.1",
         "enzyme": "^3.3.0",
         "enzyme-adapter-react-16": "^1.1.1",

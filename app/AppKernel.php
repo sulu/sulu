@@ -11,6 +11,7 @@
 
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AppKernel extends SuluKernel
 {
@@ -65,6 +66,7 @@ class AppKernel extends SuluKernel
             new Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
             new Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new Sulu\Bundle\CollaborationBundle\SuluCollaborationBundle(),
+            new Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
             new Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
 
             new DTL\Bundle\PhpcrMigrations\PhpcrMigrationsBundle(),
@@ -103,6 +105,13 @@ class AppKernel extends SuluKernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
+
+        $loader->load(function (ContainerBuilder $container) {
+            $container->setParameter('phpcr.transport', $container->resolveEnvPlaceholders(
+                $container->getParameter('phpcr.transport'),
+                true
+            ));
+        });
     }
 
     protected function getKernelParameters()
