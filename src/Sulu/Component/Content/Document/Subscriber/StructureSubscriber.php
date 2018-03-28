@@ -121,6 +121,7 @@ class StructureSubscriber implements EventSubscriberInterface
                 'load_ghost_content' => true,
                 'clear_missing_content' => false,
                 'ignore_required' => false,
+                'template' => null,
             ]
         );
         $options->setAllowedTypes('load_ghost_content', 'bool');
@@ -184,6 +185,11 @@ class StructureSubscriber implements EventSubscriberInterface
         $rehydrate = $event->getOption('rehydrate');
         if (!$structureType && $rehydrate) {
             $structureType = $this->getDefaultStructureType($document);
+        }
+
+        $template = $event->getOption('template');
+        if ($template) {
+            $structureType = $template;
         }
 
         $document->setStructureType($structureType);

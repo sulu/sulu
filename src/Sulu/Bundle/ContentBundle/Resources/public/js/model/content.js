@@ -35,8 +35,12 @@ define([
             return this.save.call(this, attributes, options);
         },
 
-        fullFetch: function(webspace, language, breadcrumb, options) {
+        fullFetch: function(webspace, language, breadcrumb, template, options) {
             options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language + '&breadcrumb=' + !!breadcrumb});
+
+            if (template) {
+                options.url = options.url + '&template=' + template;
+            }
 
             return this.fetch.call(this, options);
         },

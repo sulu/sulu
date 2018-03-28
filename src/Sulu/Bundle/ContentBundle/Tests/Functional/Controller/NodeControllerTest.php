@@ -276,6 +276,55 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('Test German', $response['article']);
     }
 
+    public function testGetAnotherTemplate()
+    {
+        $document = $this->createPageDocument();
+        $document->setTitle('test_en');
+        $document->setResourceSegment('/test_en');
+        $document->setStructureType('default');
+        $document->getStructure()->bind([
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'article' => 'Test English',
+        ]);
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $document->setTitle('test_de');
+        $document->setResourceSegment('/test_de');
+        $document->setStructureType('default');
+        $document->getStructure()->bind([
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'article' => 'Test German',
+        ]);
+        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        // change the template now to "simple"
+        // the old data "article" should still exists
+        $document->setStructureType('simple');
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/' . $document->getUuid() . '?language=en');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayNotHasKey('article', $response);
+
+        $client->request('GET', '/api/nodes/' . $document->getUuid() . '?language=en&template=default');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('Test English', $response['article']);
+    }
+
     public function testGetNotExisting()
     {
         $client = $this->createAuthenticatedClient();
