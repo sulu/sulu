@@ -48,10 +48,6 @@ sub sulu_recv {
     if (req.http.Authorization) {
         return (pass);
     }
-
-    if (req.http.Cache-Control ~ "no-cache" && client.ip ~ invalidators) {
-        set req.hash_always_miss = true;
-    }
 }
 
 sub sulu_backend_response {

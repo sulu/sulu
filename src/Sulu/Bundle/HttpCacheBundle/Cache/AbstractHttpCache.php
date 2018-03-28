@@ -16,7 +16,6 @@ use FOS\HttpCache\SymfonyCache\CustomTtlListener;
 use FOS\HttpCache\SymfonyCache\DebugListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
 use FOS\HttpCache\SymfonyCache\PurgeListener;
-use FOS\HttpCache\SymfonyCache\RefreshListener;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -41,7 +40,6 @@ abstract class AbstractHttpCache extends HttpCache implements CacheInvalidation
 
         $this->addSubscriber(new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL));
         $this->addSubscriber(new PurgeListener());
-        $this->addSubscriber(new RefreshListener());
 
         if ($kernel->isDebug()) {
             $this->addSubscriber(new DebugListener());
