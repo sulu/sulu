@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sulu';
-  src:  url('fonts/sulu.eot?x6m93g');
-  src:  url('fonts/sulu.eot?x6m93g#iefix') format('embedded-opentype'),
-  url('fonts/sulu.ttf?x6m93g') format('truetype'),
-  url('fonts/sulu.woff?x6m93g') format('woff'),
-  url('fonts/sulu.svg?x6m93g#sulu') format('svg');
+  src:  url('fonts/sulu.eot?fp5ycy');
+  src:  url('fonts/sulu.eot?fp5ycy#iefix') format('embedded-opentype'),
+  url('fonts/sulu.ttf?fp5ycy') format('truetype'),
+  url('fonts/sulu.woff?fp5ycy') format('woff'),
+  url('fonts/sulu.svg?fp5ycy#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,7 +24,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.su-User:before {
+.su-user:before {
   content: "\e91a";
 }
 .su-arrow-alt-v:before {
@@ -114,7 +114,7 @@
 .su-copyright:before {
   content: "\e967";
 }
-.su-@:before {
+.su-at:before {
   content: "\e968";
 }
 .su-unlink:before {
@@ -210,13 +210,13 @@
 .su-phone2:before {
   content: "\e990";
 }
-.su-Bullseye1:before {
+.su-webspace3:before {
   content: "\e950";
 }
-.su-Bullseye3:before {
+.su-webspace:before {
   content: "\e945";
 }
-.su-Bullseye2:before {
+.su-webspace2:before {
   content: "\e944";
 }
 .su-phone:before {
@@ -275,12 +275,6 @@
 }
 .su-arrow-long-left:before {
   content: "\e905";
-}
-.su-user-1:before {
-  content: "\e918";
-}
-.su-user-2:before {
-  content: "\e919";
 }
 .su-document:before {
   content: "\e949";
@@ -474,6 +468,6 @@
 .su-Warning:before {
   content: "\e947";
 }
-.su-webspace:before {
+.su-webspace4:before {
   content: "\e948";
 }
