@@ -68,6 +68,10 @@ export default class DatagridOverlay extends React.Component<Props> {
         const {adapter, onClose, open, title} = this.props;
 
         const datagridContainerClass = classNames(
+            datagridOverlayStyles['adapter-container-' + adapter]
+        );
+
+        const datagridClass = classNames(
             datagridOverlayStyles.datagrid,
             datagridOverlayStyles['adapter-' + adapter]
         );
@@ -82,7 +86,9 @@ export default class DatagridOverlay extends React.Component<Props> {
                 title={title}
             >
                 <div className={datagridContainerClass}>
-                    <Datagrid adapters={[adapter]} store={this.datagridStore} />
+                    <div className={datagridClass}>
+                        <Datagrid adapters={[adapter]} store={this.datagridStore} />
+                    </div>
                 </div>
             </Overlay>
         );

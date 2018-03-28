@@ -4,11 +4,11 @@
 $primaryBackground: $concrete;
 $secondaryBackground: $white;
 $borderRadius: 3px;
+$footerBorderColor: $silver;
 
 $titleColor: $black;
 
 $iconFontSize: 14px;
-$iconSize: ($iconFontSize + 10px);
 
 $confirmBackground: $shakespeare;
 $confirmColor: $white;
@@ -70,7 +70,7 @@ $transitionDuration: 300ms;
     box-shadow: 0 10px 18px 0 rgba($mineShaft, .5);
 
     header {
-        background: $secondaryBackground;
+        background: $primaryBackground;
         height: $overlayHeaderHeight;
         color: $titleColor;
         font-size: 22px;
@@ -87,6 +87,7 @@ $transitionDuration: 300ms;
 
     footer {
         background: $secondaryBackground;
+        border-top: 1px solid $footerBorderColor;
         height: $overlayFooterHeight;
         padding: 0 60px;
         display: flex;
@@ -100,12 +101,10 @@ $transitionDuration: 300ms;
 
     .icon {
         position: absolute;
-        top: calc(($overlayHeaderHeight - $iconSize) / 2);
-        right: 30px;
+        right: 60px;
         font-size: $iconFontSize;
-        width: $iconSize;
-        height: $iconSize;
-        line-height: $iconSize;
+        font-weight: bold;
+        line-height: $overlayHeaderHeight;
         text-align: center;
         cursor: pointer;
     }

@@ -2,6 +2,7 @@
 
 $contentBackgroundColor: $concrete;
 $footerBackgroundColor: $white;
+$footerBorderColor: $silver;
 $borderRadius: 3px;
 
 $titleColor: $black;
@@ -66,6 +67,7 @@ $transitionDuration: 300ms;
 
     footer {
         background: $footerBackgroundColor;
+        border-top: 1px solid $footerBorderColor;
         padding: 30px;
         display: flex;
         justify-content: space-between;
