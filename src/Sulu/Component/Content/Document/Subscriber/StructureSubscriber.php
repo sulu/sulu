@@ -121,7 +121,7 @@ class StructureSubscriber implements EventSubscriberInterface
                 'load_ghost_content' => true,
                 'clear_missing_content' => false,
                 'ignore_required' => false,
-                'template' => null,
+                'structure' => null,
             ]
         );
         $options->setAllowedTypes('load_ghost_content', 'bool');
@@ -178,20 +178,8 @@ class StructureSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $node = $event->getNode();
-        $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
-        $structureType = $node->getPropertyValueWithDefault($propertyName, null);
-
         $rehydrate = $event->getOption('rehydrate');
-        if (!$structureType && $rehydrate) {
-            $structureType = $this->getDefaultStructureType($document);
-        }
-
-        $template = $event->getOption('template');
-        if ($template) {
-            $structureType = $template;
-        }
-
+        $structureType = $this->getStructureType($event, $document, $rehydrate);
         $document->setStructureType($structureType);
 
         if (false === $event->getOption('load_ghost_content', false)) {
@@ -239,6 +227,31 @@ class StructureSubscriber implements EventSubscriberInterface
             $this->getStructureTypePropertyName($document, $locale),
             $document->getStructureType()
         );
+    }
+
+    /**
+     * @param AbstractMappingEvent $event
+     * @param StructureBehavior $document
+     * @param bool $rehydrate
+     *
+     * @return string
+     */
+    private function getStructureType(AbstractMappingEvent $event, StructureBehavior $document, $rehydrate)
+    {
+        $structureType = $event->getOption('structure_type');
+        if ($structureType) {
+            return $structureType;
+        }
+
+        $node = $event->getNode();
+        $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
+        $structureType = $node->getPropertyValueWithDefault($propertyName, null);
+
+        if (!$structureType && $rehydrate) {
+            return $this->getDefaultStructureType($document);
+        }
+
+        return $structureType;
     }
 
     /**

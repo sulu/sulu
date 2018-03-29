@@ -260,7 +260,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                         $language,
                         [
                             'load_ghost_content' => $ghostContent,
-                            'template' => $template,
+                            'structure_type' => $template,
                         ]
                     );
                 } catch (DocumentNotFoundException $ex) {
