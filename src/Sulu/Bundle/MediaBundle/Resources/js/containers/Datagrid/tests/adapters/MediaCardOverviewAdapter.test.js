@@ -40,7 +40,7 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
     const mediaCardAdapter = render(
         <MediaCardOverviewAdapter
             data={data}
-            icon="su-pen"
+            disabledIds={[]}
             loading={false}
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}

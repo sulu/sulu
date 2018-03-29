@@ -10,16 +10,18 @@ import AdapterSwitch from './AdapterSwitch';
 import datagridStyles from './datagrid.scss';
 
 type Props = {|
+    adapters: Array<string>,
+    disabledIds: Array<string | number>,
     onItemClick?: (itemId: string | number) => void,
     onAddClick?: (id: string | number) => void,
     selectable: boolean,
     store: DatagridStore,
-    adapters: Array<string>,
 |};
 
 @observer
 export default class Datagrid extends React.Component<Props> {
     static defaultProps = {
+        disabledIds: [],
         selectable: true,
     };
 
@@ -103,6 +105,7 @@ export default class Datagrid extends React.Component<Props> {
     render() {
         const {
             adapters,
+            disabledIds,
             onItemClick,
             onAddClick,
             selectable,
@@ -120,6 +123,7 @@ export default class Datagrid extends React.Component<Props> {
                 <Adapter
                     active={store.active}
                     data={store.data}
+                    disabledIds={disabledIds}
                     loading={store.loading}
                     onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
                     onItemActivation={this.handleItemActivation}

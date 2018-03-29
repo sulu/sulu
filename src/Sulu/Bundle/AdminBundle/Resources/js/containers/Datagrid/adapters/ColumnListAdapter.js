@@ -111,7 +111,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
     }
 
     render() {
-        const {loading, onAddClick, onItemClick, onItemSelectionChange, selections} = this.props;
+        const {disabledIds, loading, onAddClick, onItemClick, onItemSelectionChange, selections} = this.props;
 
         const buttons = [];
 
@@ -151,6 +151,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
                                 // TODO: Don't access properties like "hasChildren" or "title" directly
                                 <ColumnList.Item
                                     active={this.activeItemPath.includes(item.id)}
+                                    disabled={disabledIds.includes(item.id)}
                                     hasChildren={item.hasChildren}
                                     id={item.id}
                                     key={item.id}
