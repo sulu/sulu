@@ -5,6 +5,7 @@ import React from 'react';
 import Loader from '../../components/Loader';
 import Renderer from './Renderer';
 import FormStore from './stores/FormStore';
+import FormInspector from './FormInspector';
 
 type Props = {
     store: FormStore,
@@ -39,7 +40,7 @@ export default class Form extends React.Component<Props> {
                     <Renderer
                         data={store.data}
                         errors={store.errors}
-                        locale={store.locale}
+                        formInspector={new FormInspector(store)}
                         onChange={this.handleChange}
                         onFieldFinish={this.handleFieldFinish}
                         schema={store.schema}

@@ -2,6 +2,13 @@
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import Renderer from '../Renderer';
+import FormInspector from '../FormInspector';
+import FormStore from '../stores/FormStore';
+import ResourceStore from '../../../stores/ResourceStore';
+
+jest.mock('../FormInspector', () => jest.fn());
+jest.mock('../stores/FormStore', () => jest.fn());
+jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
 jest.mock('../registries/FieldRegistry', () => ({
     get: jest.fn((type) => {
@@ -20,16 +27,16 @@ jest.mock('../registries/FieldRegistry', () => ({
 }));
 
 test('Should render a grid', () => {
-    const submitSpy = jest.fn();
     const changeSpy = jest.fn();
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     const renderer = render(
         <Renderer
             data={{}}
-            schema={{}}
-            locale={undefined}
+            formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSubmit={submitSpy}
+            schema={{}}
         />
     );
     expect(renderer).toMatchSnapshot();
@@ -47,14 +54,14 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
         },
     };
     const fieldFinishSpy = jest.fn();
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
     const renderer = mount(
         <Renderer
             data={{}}
-            locale={undefined}
+            formInspector={formInspector}
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
-            onSubmit={jest.fn()}
             schema={schema}
         />
     );
@@ -64,24 +71,6 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
 
     renderer.find('Field').at(1).prop('onFinish')();
     expect(fieldFinishSpy).toHaveBeenCalledTimes(2);
-});
-
-test('Should call onSubmit callback when submitted', () => {
-    const submitSpy = jest.fn();
-    const changeSpy = jest.fn();
-    const renderer = mount(
-        <Renderer
-            data={{}}
-            locale={undefined}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSubmit={submitSpy}
-            schema={{}}
-        />
-    );
-
-    renderer.prop('onSubmit')();
-    expect(submitSpy).toBeCalled();
 });
 
 test('Should render field types based on schema', () => {
@@ -97,15 +86,15 @@ test('Should render field types based on schema', () => {
     };
 
     const changeSpy = jest.fn();
-    const submitSpy = jest.fn();
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
     const renderer = render(
         <Renderer
             data={{}}
-            locale={undefined}
+            formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSubmit={submitSpy}
             schema={schema}
         />
     );
@@ -113,7 +102,7 @@ test('Should render field types based on schema', () => {
     expect(renderer).toMatchSnapshot();
 });
 
-test('Should pass name and schema to fields', () => {
+test('Should pass name, schema and formInspector to fields', () => {
     const schema = {
         text: {
             label: 'Text',
@@ -127,25 +116,27 @@ test('Should pass name and schema to fields', () => {
 
     const changeSpy = jest.fn();
     const fieldFinishSpy = jest.fn();
-    const submitSpy = jest.fn();
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
     const renderer = shallow(
         <Renderer
             data={{}}
-            locale={undefined}
+            formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={fieldFinishSpy}
-            onSubmit={submitSpy}
             schema={schema}
         />
     );
 
     const fields = renderer.find('Field');
 
+    expect(fields.at(0).prop('formInspector')).toBe(formInspector);
     expect(fields.at(0).prop('name')).toBe('text');
     expect(fields.at(0).prop('onChange')).toBe(changeSpy);
     expect(fields.at(0).prop('onFinish')).toBeInstanceOf(Function);
     expect(fields.at(0).prop('error')).toBe(undefined);
+    expect(fields.at(1).prop('formInspector')).toBe(formInspector);
     expect(fields.at(1).prop('name')).toBe('datetime');
     expect(fields.at(1).prop('onChange')).toBe(changeSpy);
     expect(fields.at(1).prop('onFinish')).toBeInstanceOf(Function);
@@ -178,16 +169,16 @@ test('Should pass errors to fields that have already been modified at least once
     };
 
     const changeSpy = jest.fn();
-    const submitSpy = jest.fn();
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
     const renderer = shallow(
         <Renderer
             data={{}}
             errors={errors}
-            locale={undefined}
+            formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSubmit={submitSpy}
             schema={schema}
         />
     );
@@ -226,16 +217,16 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
     };
 
     const changeSpy = jest.fn();
-    const submitSpy = jest.fn();
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
     const renderer = shallow(
         <Renderer
             data={{}}
             errors={errors}
-            locale={undefined}
+            formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSubmit={submitSpy}
             schema={schema}
             showAllErrors={true}
         />
@@ -251,7 +242,6 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
 
 test('Should render nested sections', () => {
     const changeSpy = jest.fn();
-    const submitSpy = jest.fn();
 
     const schema = {
         section1: {
@@ -280,13 +270,14 @@ test('Should render nested sections', () => {
         },
     };
 
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     expect(render(
         <Renderer
             data={{}}
-            locale={undefined}
+            formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSubmit={submitSpy}
             schema={schema}
         />
     )).toMatchSnapshot();

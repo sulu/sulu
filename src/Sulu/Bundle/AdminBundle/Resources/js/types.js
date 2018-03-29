@@ -1,6 +1,6 @@
 // @flow
 import type {ComponentType, Node} from 'react';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import {FormInspector} from './containers/Form';
 import type {Types} from './containers/Form';
 
 export type PaginationProps = {
@@ -24,16 +24,16 @@ export type Error = BlockError | PropertyError;
 
 export type ErrorCollection = {[key: string]: Error};
 
-export type FieldTypeProps<T> = {
+export type FieldTypeProps<T> = {|
     error?: Error | ErrorCollection,
-    fieldOptions?: Object,
-    onChange: (value: T) => void,
-    onFinish?: () => void,
-    locale?: ?IObservableValue<string>,
+    fieldTypeOptions?: Object,
+    formInspector?: FormInspector,
     maxOccurs?: number,
     minOccurs?: number,
-    options?: Object,
+    onChange: (value: T) => void,
+    onFinish?: () => void,
+    schemaOptions?: Object,
     showAllErrors?: boolean,
     types?: Types,
     value: ?T,
-};
+|};

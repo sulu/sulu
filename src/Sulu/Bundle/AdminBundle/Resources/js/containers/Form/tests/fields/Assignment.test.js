@@ -3,12 +3,21 @@ import React from 'react';
 import {observable} from 'mobx';
 import {shallow} from 'enzyme';
 import Assignment from '../../fields/Assignment';
+import FormInspector from '../../FormInspector';
+import FormStore from '../../stores/FormStore';
+import ResourceStore from '../../../../stores/ResourceStore';
+
+jest.mock('../../FormInspector', () => jest.fn(function() {
+    this.locale = 'en';
+}));
+jest.mock('../../stores/FormStore', () => jest.fn());
+jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 
 test('Should pass props correctly to component', () => {
     const changeSpy = jest.fn();
     const locale = observable.box('en');
     const value = [1, 6, 8];
-    const fieldOptions = {
+    const fieldTypeOptions = {
         adapter: 'table',
         displayProperties: ['id', 'title'],
         icon: '',
@@ -16,15 +25,23 @@ test('Should pass props correctly to component', () => {
         overlayTitle: 'Snippets',
         resourceKey: 'snippets',
     };
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     const assignment = shallow(
-        <Assignment onChange={changeSpy} fieldOptions={fieldOptions} locale={locale} value={value} />
+        <Assignment
+            formInspector={formInspector}
+            fieldTypeOptions={fieldTypeOptions}
+            onChange={changeSpy}
+            value={value}
+        />
     );
 
     expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
         adapter: 'table',
         displayProperties: ['id', 'title'],
         label: 'Select snippets',
-        locale,
+        locale: 'en',
         onChange: changeSpy,
         resourceKey: 'snippets',
         overlayTitle: 'Snippets',
@@ -38,28 +55,53 @@ test('Should pass empty array if value is not given', () => {
         adapter: 'column_list',
         resourceKey: 'pages',
     };
-    const assignment = shallow(<Assignment onChange={changeSpy} fieldOptions={fieldOptions} value={undefined} />);
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    const assignment = shallow(
+        <Assignment
+            formInspector={formInspector}
+            fieldTypeOptions={fieldOptions}
+            onChange={changeSpy}
+            value={undefined}
+        />
+    );
 
     expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
         adapter: 'column_list',
         onChange: changeSpy,
-        locale: undefined,
         resourceKey: 'pages',
         value: [],
     }));
 });
 
 test('Should throw an error if no fieldOptions are passed', () => {
-    expect(() => shallow(<Assignment onChange={jest.fn()} value={undefined} />))
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    expect(() => shallow(<Assignment formInspector={formInspector} onChange={jest.fn()} value={undefined} />))
         .toThrowError(/a "resourceKey" and a "adapter"/);
 });
 
 test('Should throw an error if no resourceKey is passed in fieldOptions', () => {
-    expect(() => shallow(<Assignment onChange={jest.fn()} fieldOptions={{}} value={undefined} />))
-        .toThrowError(/"resourceKey"/);
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    expect(() => shallow(
+        <Assignment
+            formInspector={formInspector}
+            fieldTypeOptions={{}}
+            onChange={jest.fn()}
+            value={undefined}
+        />
+    )).toThrowError(/"resourceKey"/);
 });
 
-test('Should throw an error if no adapter is passed in fieldOptions', () => {
-    expect(() => shallow(<Assignment onChange={jest.fn()} fieldOptions={{resourceKey: 'test'}} value={undefined} />))
-        .toThrowError(/"adapter"/);
+test('Should throw an error if no adapter is passed in fieldTypeOptions', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    expect(() => shallow(
+        <Assignment
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            fieldTypeOptions={{resourceKey: 'test'}}
+            value={undefined}
+        />
+    )).toThrowError(/"adapter"/);
 });

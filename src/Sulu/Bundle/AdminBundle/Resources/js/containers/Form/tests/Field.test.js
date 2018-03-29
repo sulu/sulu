@@ -2,8 +2,15 @@
 import {render, shallow} from 'enzyme';
 import React from 'react';
 import {observable} from 'mobx';
+import ResourceStore from '../../../stores/ResourceStore';
 import Field from '../Field';
 import fieldRegistry from '../registries/FieldRegistry';
+import FormInspector from '../FormInspector';
+import FormStore from '../stores/FormStore';
+
+jest.mock('../../../stores/ResourceStore', () => jest.fn());
+jest.mock('../FormInspector', () => jest.fn());
+jest.mock('../stores/FormStore', () => jest.fn());
 
 jest.mock('../registries/FieldRegistry', () => ({
     get: jest.fn(),
@@ -15,11 +22,19 @@ jest.mock('../../../utils', () => ({
 }));
 
 test('Render correct label with correct field type', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
     });
     expect(render(
-        <Field name="test" onChange={jest.fn()} onFinish={jest.fn()} schema={{label: 'label1', type: 'text'}} />
+        <Field
+            formInspector={formInspector}
+            name="test"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schema={{label: 'label1', type: 'text'}}
+        />
     )).toMatchSnapshot();
 
     fieldRegistry.get.mockReturnValue(function DateTime() {
@@ -27,6 +42,7 @@ test('Render correct label with correct field type', () => {
     });
     expect(render(
         <Field
+            formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -36,11 +52,14 @@ test('Render correct label with correct field type', () => {
 });
 
 test('Render a required field with correct field type', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
     });
     expect(render(
         <Field
+            formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -50,6 +69,8 @@ test('Render a required field with correct field type', () => {
 });
 
 test('Render a field with an error', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
     });
@@ -57,6 +78,7 @@ test('Render a field with an error', () => {
         render(
             <Field
                 error={{keyword: 'minLength', parameters: {}}}
+                formInspector={formInspector}
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
@@ -67,6 +89,8 @@ test('Render a field with an error', () => {
 });
 
 test('Render a field with a error collection', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
     });
@@ -80,6 +104,7 @@ test('Render a field with a error collection', () => {
         render(
             <Field
                 error={error}
+                formInspector={formInspector}
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
@@ -90,11 +115,12 @@ test('Render a field with a error collection', () => {
 });
 
 test('Pass correct props to FieldType', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="date" />;
     });
 
-    const locale = observable.box('de');
     const schema = {
         label: 'Text',
         maxOccurs: 4,
@@ -104,7 +130,7 @@ test('Pass correct props to FieldType', () => {
     };
     const field = shallow(
         <Field
-            locale={locale}
+            formInspector={formInspector}
             name="text"
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -115,7 +141,7 @@ test('Pass correct props to FieldType', () => {
     );
 
     expect(field.find('Text').props()).toEqual(expect.objectContaining({
-        locale: locale,
+        formInspector,
         maxOccurs: 4,
         minOccurs: 2,
         showAllErrors: true,
@@ -125,6 +151,8 @@ test('Pass correct props to FieldType', () => {
 });
 
 test('Merge with options from fieldRegistry before passing props to FieldType', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
     });
@@ -132,7 +160,6 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
         option: 'value',
     });
 
-    const locale = observable.box('de');
     const schema = {
         label: 'Text',
         maxOccurs: 4,
@@ -145,7 +172,7 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
     };
     const field = shallow(
         <Field
-            locale={locale}
+            formInspector={formInspector}
             name="text"
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -156,13 +183,12 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
     );
 
     expect(field.find('Text').props()).toEqual(expect.objectContaining({
-        fieldOptions: {
+        fieldTypeOptions: {
             option: 'value',
         },
-        locale: locale,
         maxOccurs: 4,
         minOccurs: 2,
-        options: {
+        schemaOptions: {
             anotherOption: 'anotherValue',
         },
         showAllErrors: true,
@@ -172,6 +198,8 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
 });
 
 test('Call onChange callback when value of Field changes', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
     });
@@ -179,7 +207,7 @@ test('Call onChange callback when value of Field changes', () => {
     const changeSpy = jest.fn();
     const field = shallow(
         <Field
-            locale={undefined}
+            formInspector={formInspector}
             name="test"
             onChange={changeSpy}
             onFinish={jest.fn()}
@@ -193,6 +221,8 @@ test('Call onChange callback when value of Field changes', () => {
 });
 
 test('Call onFinish callback after editing the field has finished', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
     });
@@ -200,7 +230,7 @@ test('Call onFinish callback after editing the field has finished', () => {
     const finishSpy = jest.fn();
     const field = shallow(
         <Field
-            locale={undefined}
+            formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
             onFinish={finishSpy}

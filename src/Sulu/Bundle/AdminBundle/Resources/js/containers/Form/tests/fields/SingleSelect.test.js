@@ -4,7 +4,7 @@ import {shallow} from 'enzyme';
 import SingleSelect from '../../fields/SingleSelect';
 
 test('Pass props correctly to SingleSelect', () => {
-    const options = {
+    const schemaOptions = {
         values: {
             value: [
                 {
@@ -22,7 +22,7 @@ test('Pass props correctly to SingleSelect', () => {
         <SingleSelect
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            options={options}
+            schemaOptions={schemaOptions}
             value="test"
         />
     );
@@ -40,7 +40,7 @@ test('Pass props correctly to SingleSelect', () => {
 
 test('Should call onFinish callback on every onChange', () => {
     const finishSpy = jest.fn();
-    const options = {
+    const schemaOptions = {
         values: {
             value: [
                 {
@@ -59,7 +59,7 @@ test('Should call onFinish callback on every onChange', () => {
         <SingleSelect
             onChange={jest.fn()}
             onFinish={finishSpy}
-            options={options}
+            schemaOptions={schemaOptions}
             value="test"
         />
     );
@@ -71,7 +71,7 @@ test('Should call onFinish callback on every onChange', () => {
 
 test('Set default value if no value is passed', () => {
     const changeSpy = jest.fn();
-    const options = {
+    const schemaOptions = {
         default_value: {
             value: 'mr',
         },
@@ -88,12 +88,12 @@ test('Set default value if no value is passed', () => {
             ],
         },
     };
-    shallow(<SingleSelect onChange={changeSpy} onFinish={jest.fn()} options={options} value={undefined} />);
+    shallow(<SingleSelect onChange={changeSpy} onFinish={jest.fn()} schemaOptions={schemaOptions} value={undefined} />);
 
     expect(changeSpy).toBeCalledWith('mr');
 });
 
-test('Throw error if no options are passed', () => {
+test('Throw error if no schemaOptions are passed', () => {
     expect(() => shallow(<SingleSelect onChange={jest.fn()} onFinish={jest.fn()} value={undefined} />))
         .toThrow(/"values"/);
 });

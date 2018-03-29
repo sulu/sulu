@@ -7,13 +7,13 @@ const MISSING_VALUES_OPTIONS = 'The "values" option has to be set for the Single
 
 export default class SingleSelect extends React.Component<FieldTypeProps<string | number>> {
     componentWillMount() {
-        const {onChange, options, value} = this.props;
+        const {onChange, schemaOptions, value} = this.props;
 
-        if (!options) {
+        if (!schemaOptions) {
             return;
         }
 
-        const {default_value: defaultValue} = options;
+        const {default_value: defaultValue} = schemaOptions;
 
         if (value === undefined) {
             onChange(defaultValue.value);
@@ -31,12 +31,12 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
     };
 
     render() {
-        const {options, value} = this.props;
-        if (!options) {
+        const {schemaOptions, value} = this.props;
+        if (!schemaOptions) {
             throw new Error(MISSING_VALUES_OPTIONS);
         }
 
-        const {values} = options;
+        const {values} = schemaOptions;
 
         if (!values) {
             throw new Error(MISSING_VALUES_OPTIONS);
