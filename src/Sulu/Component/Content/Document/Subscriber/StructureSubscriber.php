@@ -121,7 +121,7 @@ class StructureSubscriber implements EventSubscriberInterface
                 'load_ghost_content' => true,
                 'clear_missing_content' => false,
                 'ignore_required' => false,
-                'structure' => null,
+                'structure_type' => null,
             ]
         );
         $options->setAllowedTypes('load_ghost_content', 'bool');
