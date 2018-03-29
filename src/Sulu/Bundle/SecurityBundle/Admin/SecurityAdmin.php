@@ -54,12 +54,12 @@ class SecurityAdmin extends Admin
 
     public function getNavigationV2(): Navigation
     {
-        $rootNavigationItem = Admin::getNavigationItemRoot();
+        $rootNavigationItem = $this->getNavigationItemRoot();
 
         $settings = Admin::getNavigationItemSettings();
 
         if ($this->securityChecker->hasPermission('sulu.security.roles', PermissionTypes::VIEW)) {
-            $roles = new NavigationItem('navigation.settings.roles', $settings);
+            $roles = new NavigationItem('sulu_security.roles', $settings);
             $roles->setPosition(10);
             $roles->setMainRoute('sulu_security.datagrid');
         }

@@ -106,12 +106,12 @@ class ContentAdmin extends Admin
 
     public function getNavigationV2(): Navigation
     {
-        $rootNavigationItem = Admin::getNavigationItemRoot();
+        $rootNavigationItem = $this->getNavigationItemRoot();
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), PermissionTypes::VIEW)) {
-                $webspaceItem = new NavigationItem('navigation.webspaces');
+                $webspaceItem = new NavigationItem('sulu_content.webspaces');
                 $webspaceItem->setPosition(10);
                 $webspaceItem->setIcon('su-webspace');
                 $webspaceItem->setMainRoute('sulu_content.webspaces');

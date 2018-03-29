@@ -56,4 +56,20 @@ class Navigation
     {
         return $this->getRoot()->toArray();
     }
+
+    /**
+     * Returns all children of the array result.
+     *
+     * @return array
+     */
+    public function getChildrenAsArray(): array
+    {
+        $arrayResult = $this->toArray();
+
+        if (array_key_exists('items', $arrayResult)) {
+            return $arrayResult['items'];
+        }
+
+        return [];
+    }
 }

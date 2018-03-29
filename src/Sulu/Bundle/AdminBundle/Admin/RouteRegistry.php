@@ -41,7 +41,6 @@ class RouteRegistry
     {
         if (!$this->routes) {
             $this->loadRoutes();
-            $this->processRoutes();
         }
 
         return $this->routes;
@@ -76,13 +75,12 @@ class RouteRegistry
         });
 
         $this->routes = $this->mergeRouteOptions($routes);
-    }
 
-    private function processRoutes(): void
-    {
+        // prepend path when parent is set
         foreach ($this->routes as $route) {
             if ($route->getParent()) {
-                $route->updatePath($this->getRoutePath($route));
+                $parentRoute = $this->findRouteByName($route->getParent());
+                $route->prependPath($parentRoute->getPath());
             }
         }
     }
@@ -134,16 +132,5 @@ class RouteRegistry
         }
 
         return $mergedRoutes;
-    }
-
-    private function getRoutePath(Route $route): string
-    {
-        if (!$route->getParent()) {
-            return $route->getPath();
-        }
-
-        $parentRoute = $this->findRouteByName($route->getParent());
-
-        return $parentRoute->getPath() . $route->getPath();
     }
 }

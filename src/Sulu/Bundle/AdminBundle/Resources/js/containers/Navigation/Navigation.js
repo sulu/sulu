@@ -13,7 +13,7 @@ type Props = {
 const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
 
 export default class Navigation extends React.Component<Props> {
-    handleNavigationItemClick = (value: *) => {
+    handleNavigationItemClick = (value: string) => {
         if (value && typeof value === 'string') {
             this.props.router.navigate(value);
             this.props.onNavigate(value);

@@ -21,6 +21,11 @@ class ParentRouteNotFoundException extends \Exception
      */
     private $route;
 
+    /**
+     * @var string
+     */
+    private $parentRoute;
+
     public function __construct(string $parentRoute, string $route)
     {
         parent::__construct(
@@ -38,5 +43,10 @@ class ParentRouteNotFoundException extends \Exception
     public function getRoute(): string
     {
         return $this->route;
+    }
+
+    public function getParentRoute(): string
+    {
+        return $this->parentRoute;
     }
 }

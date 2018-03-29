@@ -86,8 +86,11 @@ class NavigationRegistry
      */
     private function processNavigationItem(NavigationItem $navigationItem): void
     {
-        // translate name
-        $navigationItem->setName($this->translator->trans($navigationItem->getName(), [], 'admin_backend'));
+        // create label from name when nothing set
+        if (!$navigationItem->getLabel()) {
+            $navigationItem->setLabel($this->translator->trans($navigationItem->getName(), [], 'admin_backend'));
+        }
+
 
         // add child routes
         if ($navigationItem->getMainRoute()) {

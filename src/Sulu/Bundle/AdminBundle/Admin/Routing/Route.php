@@ -63,9 +63,9 @@ class Route
         return $this->name;
     }
 
-    public function updatePath(string $newPath): void
+    public function prependPath(string $prependPath): void
     {
-        $this->path = $newPath;
+        $this->path = $prependPath . $this->path;
     }
 
     public function getPath(): string

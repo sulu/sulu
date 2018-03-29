@@ -1,8 +1,6 @@
-The `Navigation` container uses the `NavigationRegistry` to load all navigation items
-and render the navigation component with all items.
+The `Navigation` container uses the `NavigationRegistry` to load all navigation items and render the navigation component with all items.
 
-Set navigation items in the `NavigationRegistry` and rendering it using the `Navigation` is shown in the following
-example:
+Set navigation items in the `NavigationRegistry` and rendering it using the `Navigation` is shown in the following example:
 
 ```javascript
 const navigationRegistry = require('./registries/NavigationRegistry').default;

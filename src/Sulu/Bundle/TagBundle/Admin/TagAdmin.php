@@ -54,12 +54,12 @@ class TagAdmin extends Admin
 
     public function getNavigationV2(): Navigation
     {
-        $rootNavigationItem = Admin::getNavigationItemRoot();
+        $rootNavigationItem = $this->getNavigationItemRoot();
 
         $settings = Admin::getNavigationItemSettings();
 
         if ($this->securityChecker->hasPermission('sulu.settings.tags', 'view')) {
-            $roles = new NavigationItem('navigation.settings.tags', $settings);
+            $roles = new NavigationItem('sulu_tag.tags', $settings);
             $roles->setPosition(30);
             $roles->setMainRoute('sulu_tag.datagrid');
         }

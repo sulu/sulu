@@ -1,5 +1,5 @@
 {
-    "navigation.contacts": "Contacts",
-    "navigation.contacts.people": "People",
-    "navigation.contacts.companies": "Organizations"
+    "sulu_contact.contacts": "Contacts",
+    "sulu_contact.people": "People",
+    "sulu_contact.companies": "Organizations"
 }

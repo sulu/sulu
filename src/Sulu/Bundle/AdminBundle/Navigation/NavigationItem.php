@@ -32,6 +32,11 @@ class NavigationItem implements \Iterator
     protected $name;
 
     /**
+     * @var string
+     */
+    protected $label;
+
+    /**
      * The icon of the navigationItem.
      *
      * @var string
@@ -170,6 +175,16 @@ class NavigationItem implements \Iterator
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setLabel(string $label): void
+    {
+        $this->label = $label;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
     }
 
     /**

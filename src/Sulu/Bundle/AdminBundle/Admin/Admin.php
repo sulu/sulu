@@ -20,16 +20,16 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
  */
 abstract class Admin implements RouteProviderInterface, NavigationProviderInterface
 {
-    public static function getNavigationItemRoot(): NavigationItem
+    public function getNavigationItemRoot(): NavigationItem
     {
         $root = new NavigationItem('root');
 
         return $root;
     }
 
-    public static function getNavigationItemSettings(): NavigationItem
+    public function getNavigationItemSettings(): NavigationItem
     {
-        $settings = new NavigationItem('navigation.settings');
+        $settings = new NavigationItem('sulu_admin.settings');
         $settings->setPosition(50);
         $settings->setIcon('su-settings');
 

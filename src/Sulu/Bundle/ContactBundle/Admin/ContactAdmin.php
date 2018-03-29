@@ -61,9 +61,9 @@ class ContactAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    public static function getNavigationItemContacts(): NavigationItem
+    public function getNavigationItemContacts(): NavigationItem
     {
-        $contacts = new NavigationItem('navigation.contacts');
+        $contacts = new NavigationItem('sulu_contact.contacts');
         $contacts->setPosition(40);
         $contacts->setIcon('fa-user');
 
@@ -72,11 +72,11 @@ class ContactAdmin extends Admin
 
     public function getNavigationV2(): Navigation
     {
-        $rootNavigationItem = Admin::getNavigationItemRoot();
-        $contacts = self::getNavigationItemContacts();
+        $rootNavigationItem = $this->getNavigationItemRoot();
+        $contacts = $this->getNavigationItemContacts();
 
         if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
-            $people = new NavigationItem('navigation.contacts.people');
+            $people = new NavigationItem('sulu_contact.people');
             $people->setPosition(10);
             $people->setMainRoute('sulu_contact.contacts_datagrid');
 
@@ -84,7 +84,7 @@ class ContactAdmin extends Admin
         }
 
         if ($this->securityChecker->hasPermission('sulu.contact.organizations', PermissionTypes::VIEW)) {
-            $companies = new NavigationItem('navigation.contacts.companies');
+            $companies = new NavigationItem('sulu_contact.organizations');
             $companies->setPosition(20);
             $companies->setMainRoute('sulu_contact.accounts_datagrid');
 

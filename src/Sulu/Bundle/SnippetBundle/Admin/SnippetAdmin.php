@@ -83,10 +83,10 @@ class SnippetAdmin extends Admin
 
     public function getNavigationV2(): Navigation
     {
-        $rootNavigationItem = Admin::getNavigationItemRoot();
+        $rootNavigationItem = $this->getNavigationItemRoot();
 
         if ($this->securityChecker->hasPermission('sulu.global.snippets', 'view')) {
-            $snippet = new NavigationItem('navigation.snippets');
+            $snippet = new NavigationItem('sulu_snippet.snippets');
             $snippet->setPosition(20);
             $snippet->setIcon('su-paper');
             $snippet->setAction('snippet/snippets');
