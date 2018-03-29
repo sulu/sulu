@@ -91,7 +91,6 @@ class NavigationRegistry
             $navigationItem->setLabel($this->translator->trans($navigationItem->getName(), [], 'admin_backend'));
         }
 
-
         // add child routes
         if ($navigationItem->getMainRoute()) {
             $mainPath = $this->routeRegistry->findRouteByName($navigationItem->getMainRoute())->getPath();
