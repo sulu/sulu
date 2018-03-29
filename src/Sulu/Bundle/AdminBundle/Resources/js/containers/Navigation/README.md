@@ -3,6 +3,7 @@ The `Navigation` container uses the `NavigationRegistry` to load all navigation 
 Set navigation items in the `NavigationRegistry` and rendering it using the `Navigation` is shown in the following example:
 
 ```javascript
+const Navigation = require('./Navigation').default;
 const navigationRegistry = require('./registries/NavigationRegistry').default;
 navigationRegistry.clear(); // Just to make sure the NavigationRegistry is empty, not needed in a real world application
 
@@ -107,14 +108,14 @@ const items = [
 navigationRegistry.set(items);
 
 // instead of this mocked Router you would usually use a real one
-const route = {
-    view: 'view',
-};
 const router = {
     attributes: {
         content: 'Some trivial content!',
     },
-    route: route,
+    route: {
+       view: 'view',
+       name: 'test',
+   },
     navigate: (value) => { console.log(`Router would navigate to ${value}`)}
 };
 
