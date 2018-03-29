@@ -86,7 +86,7 @@ class NavigationRegistry
      */
     private function processNavigationItem(NavigationItem $navigationItem): void
     {
-        // create label from name when nothing set
+        // create label from name when no label is set
         if (!$navigationItem->getLabel()) {
             $navigationItem->setLabel($this->translator->trans($navigationItem->getName(), [], 'admin_backend'));
         }
