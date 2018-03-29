@@ -132,14 +132,14 @@ class NavigationRegistryTest extends \PHPUnit_Framework_TestCase
 
         $navigation = $this->navigationRegistry->getNavigation();
         $this->assertCount(2, $navigation->getRoot()->getChildren());
-        $this->assertEquals('Navigation 1', $navigation->getRoot()->getChildren()[0]->getName());
-        $this->assertEquals('Navigation 2', $navigation->getRoot()->getChildren()[1]->getName());
+        $this->assertEquals('Navigation 1', $navigation->getRoot()->getChildren()[0]->getLabel());
+        $this->assertEquals('Navigation 2', $navigation->getRoot()->getChildren()[1]->getLabel());
 
         // check for children of first navigation
         $this->assertCount(2, $navigation->getRoot()->getChildren()[1]->getChildren());
         $this->assertEquals(
             'Navigation 2 - Child 1',
-            $navigation->getRoot()->getChildren()[1]->getChildren()[0]->getName()
+            $navigation->getRoot()->getChildren()[1]->getChildren()[0]->getLabel()
         );
         // check for created child routes
         $this->assertCount(
@@ -153,7 +153,7 @@ class NavigationRegistryTest extends \PHPUnit_Framework_TestCase
         // check for "Navigation 2 - Child 2"
         $this->assertEquals(
             'Navigation 2 - Child 2',
-            $navigation->getRoot()->getChildren()[1]->getChildren()[1]->getName()
+            $navigation->getRoot()->getChildren()[1]->getChildren()[1]->getLabel()
         );
     }
 

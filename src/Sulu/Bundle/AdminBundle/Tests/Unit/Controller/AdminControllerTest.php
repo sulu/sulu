@@ -191,7 +191,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->routeRegistry->getRoutes()->willReturn($routes);
 
         $navigation = $this->prophesize(Navigation::class);
-        $navigation->toArray()->willReturn(['items' => ['navigation_item1', 'navigation_item2']]);
+        $navigation->getChildrenAsArray()->willReturn(['items' => ['navigation_item1', 'navigation_item2']]);
         $this->navigationRegistry->getNavigation()->willReturn($navigation->reveal());
 
         $expectedResult = [
