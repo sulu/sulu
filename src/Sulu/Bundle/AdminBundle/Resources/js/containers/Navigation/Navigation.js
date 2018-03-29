@@ -14,10 +14,8 @@ const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
 
 export default class Navigation extends React.Component<Props> {
     handleNavigationItemClick = (value: string) => {
-        if (value && typeof value === 'string') {
-            this.props.router.navigate(value);
-            this.props.onNavigate(value);
-        }
+        this.props.router.navigate(value);
+        this.props.onNavigate(value);
     };
 
     handleLogoutClick = () => {

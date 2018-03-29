@@ -38,6 +38,7 @@ class ParentRouteNotFoundException extends \Exception
         );
 
         $this->route = $route;
+        $this->parentRoute = $parentRoute;
     }
 
     public function getRoute(): string

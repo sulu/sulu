@@ -8,7 +8,7 @@ navigationRegistry.clear(); // Just to make sure the NavigationRegistry is empty
 
 const items = [
     {
-        "title": "Webspaces",
+        "label": "Webspaces",
         "icon": "su-webspace",
         "mainRoute": "sulu_content.webspaces",
         "disabled": false,
@@ -22,7 +22,7 @@ const items = [
         ]
       },
       {
-        "title": "Schnipsel",
+        "label": "Schnipsel",
         "icon": "su-paper",
         "action": "snippet/snippets",
         "mainRoute": "sulu_snippet.datagrid",
@@ -38,7 +38,7 @@ const items = [
         ]
       },
       {
-        "title": "Medien",
+        "label": "Medien",
         "icon": "su-image",
         "mainRoute": "sulu_media.overview",
         "disabled": false,
@@ -48,13 +48,13 @@ const items = [
         ]
       },
       {
-        "title": "Kontakte",
+        "label": "Kontakte",
         "icon": "fa-user",
         "disabled": false,
         "id": "5aba0a9d7a5ff533782840",
         "items": [
           {
-            "title": "Personen",
+            "label": "Personen",
             "mainRoute": "sulu_contact.contacts_datagrid",
             "disabled": false,
             "id": "5aba0a9d7a608673818690",
@@ -67,7 +67,7 @@ const items = [
             ]
           },
           {
-            "title": "Organisationen",
+            "label": "Organisationen",
             "mainRoute": "sulu_contact.accounts_datagrid",
             "disabled": false,
             "id": "5aba0a9d7a610927910329",
@@ -78,13 +78,13 @@ const items = [
         ]
       },
       {
-        "title": "Einstellungen",
+        "label": "Einstellungen",
         "icon": "su-settings",
         "disabled": false,
         "id": "5aba0a9d7a619926740941",
         "items": [
           {
-            "title": "Benutzerrollen",
+            "label": "Benutzerrollen",
             "mainRoute": "sulu_security.datagrid",
             "disabled": false,
             "id": "5aba0a9d7a621158100794",
@@ -93,7 +93,7 @@ const items = [
             ]
           },
           {
-            "title": "Tags",
+            "label": "Tags",
             "mainRoute": "sulu_tag.datagrid",
             "disabled": false,
             "id": "5aba0a9d7a629138404840",

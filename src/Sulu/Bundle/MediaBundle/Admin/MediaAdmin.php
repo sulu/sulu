@@ -66,6 +66,8 @@ class MediaAdmin extends Admin
             $media->setPosition(30);
             $media->setIcon('su-image');
             $media->setMainRoute('sulu_media.overview');
+            $media->addChildRoute('sulu_media.form');
+            $media->addChildRoute('sulu_media.form.detail');
 
             $rootNavigationItem->addChild($media);
         }

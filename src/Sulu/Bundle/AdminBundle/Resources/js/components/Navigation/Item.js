@@ -7,10 +7,10 @@ import itemStyles from './item.scss';
 
 type Props = {
     children?: ChildrenArray<Element<typeof Item> | false>,
-    value: *,
+    value: string,
     title: string,
     active?: boolean,
-    onClick?: (value: *) => void,
+    onClick?: (value: string) => void,
     expanded?: boolean,
     icon?: string,
 };
