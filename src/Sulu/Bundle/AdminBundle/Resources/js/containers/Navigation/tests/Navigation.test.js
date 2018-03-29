@@ -1,10 +1,23 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {render, mount} from 'enzyme';
 import Navigation from '../Navigation';
+import Router from '../../../services/Router';
+
+jest.mock('../../../services/Router', () => jest.fn(function() {
+    this.navigate = jest.fn();
+}));
 
 jest.mock('../registries/NavigationRegistry', () => ({
-    get: jest.fn().mockReturnValue([
+    get: jest.fn().mockReturnValue(
+        {
+            id: '111-111',
+            title: 'Test Navigation',
+            icon: 'su-options',
+            mainRoute: 'returned_main_route',
+        }
+    ),
+    getAll: jest.fn().mockReturnValue([
         {
             id: '111-111',
             title: 'Test Navigation',
@@ -42,11 +55,16 @@ jest.mock('../registries/NavigationRegistry', () => ({
 }));
 
 test('Should render navigation', () => {
-    const router = {
-        route: {
-            name: 'sulu_admin.form_tab',
-            view: 'form_tab',
-        },
+    const router = new Router({});
+    router.route = {
+        name: 'sulu_admin.form_tab',
+        view: 'form_tab',
+        attributeDefaults: {},
+        children: [],
+        options: {},
+        parent: undefined,
+        path: '/form',
+        rerenderAttributes: [],
     };
     const handleNavigate = jest.fn();
 
@@ -55,17 +73,21 @@ test('Should render navigation', () => {
 });
 
 test('Should call the navigation callback and router navigate', () => {
-    const router = {
-        route: {
-            name: 'sulu_admin.form_tab',
-            view: 'form_tab',
-        },
-        navigate: jest.fn(),
+    const router = new Router({});
+    router.route = {
+        name: 'sulu_admin.form_tab',
+        view: 'form_tab',
+        attributeDefaults: {},
+        children: [],
+        options: {},
+        parent: undefined,
+        path: '/form',
+        rerenderAttributes: [],
     };
     const handleNavigate = jest.fn();
 
     const navigation = mount(<Navigation router={router} onNavigate={handleNavigate} />);
     navigation.find('Item').at(4).find('.title').simulate('click');
-    expect(router.navigate).toHaveBeenCalledWith('sulu_article.datagrid');
-    expect(handleNavigate).toHaveBeenCalledWith('sulu_article.datagrid');
+    expect(router.navigate).toHaveBeenCalledWith('returned_main_route');
+    expect(handleNavigate).toHaveBeenCalledWith('returned_main_route');
 });

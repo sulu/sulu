@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import navigationRegistry from '../../registries/NavigationRegistry';
 
 beforeEach(() => {
@@ -10,12 +10,21 @@ test('Set and clear all from NavigationRegistry', () => {
         [
             {
                 id: '111',
+                label: 'Test 1',
+                icon: 'su-webspace',
+                mainRoute: 'sulu_content.webspaces',
             },
             {
                 id: '222',
+                label: 'Test 2',
+                icon: 'su-webspace',
+                mainRoute: 'sulu_content.webspaces',
             },
             {
                 id: '333',
+                label: 'Test 3',
+                icon: 'su-webspace',
+                mainRoute: 'sulu_content.webspaces',
             },
         ]
     );
@@ -29,16 +38,67 @@ test('Set and get all from NavigationRegistry', () => {
     const items = [
         {
             id: '111',
+            label: 'Test 1',
+            icon: 'su-webspace',
+            mainRoute: 'sulu_content.webspaces',
         },
         {
             id: '222',
+            label: 'Test 2',
+            icon: 'su-webspace',
+            mainRoute: 'sulu_content.webspaces',
         },
         {
             id: '333',
+            label: 'Test 3',
+            icon: 'su-webspace',
+            mainRoute: 'sulu_content.webspaces',
         },
     ];
 
     navigationRegistry.set(items);
 
-    expect(navigationRegistry.get()).toBe(items);
+    expect(navigationRegistry.getAll()).toBe(items);
+});
+
+test('GetBy id should return the correct item', () => {
+    const items = [
+        {
+            id: '111',
+            label: 'Test 1',
+            icon: 'su-webspace',
+            mainRoute: 'sulu_content.webspaces',
+        },
+        {
+            id: '222',
+            label: 'Test 2',
+            icon: 'su-webspace',
+            mainRoute: 'sulu_content.webspaces',
+        },
+        {
+            id: '333',
+            label: 'Test 3',
+            icon: 'su-webspace',
+            mainRoute: 'sulu_content.webspaces',
+            items: [
+                {
+                    id: '444',
+                    label: 'Test 4',
+                    icon: 'su-webspace',
+                    mainRoute: 'sulu_content.webspaces',
+                },
+                {
+                    id: '555',
+                    label: 'Test 5',
+                    icon: 'su-webspace',
+                    mainRoute: 'sulu_content.webspaces',
+                },
+            ],
+        },
+    ];
+
+    navigationRegistry.set(items);
+
+    expect(navigationRegistry.get('111')).toBe(items[0]);
+    expect(navigationRegistry.get('555')).toBe(items[2].items[1]);
 });

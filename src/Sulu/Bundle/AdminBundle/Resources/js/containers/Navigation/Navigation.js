@@ -14,8 +14,10 @@ const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
 
 export default class Navigation extends React.Component<Props> {
     handleNavigationItemClick = (value: string) => {
-        this.props.router.navigate(value);
-        this.props.onNavigate(value);
+        const navigationItem = navigationRegistry.get(value);
+
+        this.props.router.navigate(navigationItem.mainRoute);
+        this.props.onNavigate(navigationItem.mainRoute);
     };
 
     handleLogoutClick = () => {
@@ -38,7 +40,7 @@ export default class Navigation extends React.Component<Props> {
     };
 
     render() {
-        const navigationItems = navigationRegistry.get();
+        const navigationItems = navigationRegistry.getAll();
 
         return (
             <NavigationComponent
@@ -52,7 +54,7 @@ export default class Navigation extends React.Component<Props> {
                 {navigationItems.map((navigationItem: NavigationItem) => (
                     <NavigationComponent.Item
                         key={navigationItem.id}
-                        value={navigationItem.mainRoute ? navigationItem.mainRoute : navigationItem.id}
+                        value={navigationItem.id}
                         title={navigationItem.label}
                         icon={navigationItem.icon}
                         active={this.isItemActive(navigationItem)}
@@ -62,7 +64,7 @@ export default class Navigation extends React.Component<Props> {
                             navigationItem.items.map((subNavigationItem) => (
                                 <NavigationComponent.Item
                                     key={subNavigationItem.id}
-                                    value={subNavigationItem.mainRoute}
+                                    value={subNavigationItem.id}
                                     title={subNavigationItem.label}
                                     active={this.isItemActive(subNavigationItem)}
                                     onClick={this.handleNavigationItemClick}
