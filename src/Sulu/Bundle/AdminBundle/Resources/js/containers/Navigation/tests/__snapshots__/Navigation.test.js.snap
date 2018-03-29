@@ -64,7 +64,6 @@ exports[`Should render navigation 1`] = `
           aria-label="su-options"
           class="su-options"
         />
-        Test Navigation
       </div>
     </div>
     <div
@@ -77,7 +76,6 @@ exports[`Should render navigation 1`] = `
           aria-label="su-article"
           class="su-article"
         />
-        Test Navigation 2
       </div>
     </div>
     <div
@@ -90,7 +88,6 @@ exports[`Should render navigation 1`] = `
           aria-label="su-options"
           class="su-options"
         />
-        Test Navigation with Children
       </div>
       <div>
         <div
@@ -98,18 +95,14 @@ exports[`Should render navigation 1`] = `
         >
           <div
             class="title"
-          >
-            Test Navigation Child 1
-          </div>
+          />
         </div>
         <div
           class="item"
         >
           <div
             class="title"
-          >
-            Test Navigation Child 2
-          </div>
+          />
         </div>
       </div>
       <span

@@ -31,6 +31,10 @@ export default class Navigation extends React.Component<Props> {
     isItemActive = (navigationItem: NavigationItem) => {
         const {router} = this.props;
 
+        if (!router.route) {
+            return false;
+        }
+
         return (navigationItem.mainRoute && router.route.name === navigationItem.mainRoute) ||
             (navigationItem.childRoutes && navigationItem.childRoutes.includes(router.route.name));
     };
@@ -51,7 +55,7 @@ export default class Navigation extends React.Component<Props> {
                     <NavigationComponent.Item
                         key={navigationItem.id}
                         value={navigationItem.mainRoute ? navigationItem.mainRoute : navigationItem.id}
-                        title={navigationItem.title}
+                        title={navigationItem.label}
                         icon={navigationItem.icon}
                         active={this.isItemActive(navigationItem)}
                         onClick={this.handleNavigationItemClick}
@@ -61,7 +65,7 @@ export default class Navigation extends React.Component<Props> {
                                 <NavigationComponent.Item
                                     key={subNavigationItem.id}
                                     value={subNavigationItem.mainRoute}
-                                    title={subNavigationItem.title}
+                                    title={subNavigationItem.label}
                                     active={this.isItemActive(subNavigationItem)}
                                     onClick={this.handleNavigationItemClick}
                                 />

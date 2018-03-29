@@ -177,7 +177,7 @@ class NavigationItem implements \Iterator
         return $this->name;
     }
 
-    public function setLabel(string $label): void
+    public function setLabel(string $label = null): void
     {
         $this->label = $label;
     }
@@ -424,6 +424,7 @@ class NavigationItem implements \Iterator
         $new->setId($this->getId());
         $new->setHasSettings($this->getHasSettings());
         $new->setPosition($this->getPosition());
+        $new->setLabel($this->getLabel());
 
         return $new;
     }
@@ -592,6 +593,7 @@ class NavigationItem implements \Iterator
     {
         $array = [
             'title' => $this->getName(),
+            'label' => $this->getLabel(),
             'icon' => $this->getIcon(),
             'action' => $this->getAction(),
             'mainRoute' => $this->getMainRoute(),
