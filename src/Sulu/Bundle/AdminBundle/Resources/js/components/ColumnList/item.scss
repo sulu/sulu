@@ -1,8 +1,8 @@
 @import '../../containers/Application/colors.scss';
 
 $itemBackgroundColorSelected: $alabaster;
-$itemBackgroundColorHover: $blueZodiac;
-$itemColorHover: $white;
+$itemBackgroundColorHover: $concrete;
+$itemColorDisabled: $dustyGray;
 
 .item {
     height: 40px;
@@ -23,9 +23,12 @@ $itemColorHover: $white;
         font-weight: bold;
     }
 
+    &.disabled {
+        color: $itemColorDisabled;
+    }
+
     &:hover {
         background: $itemBackgroundColorHover;
-        color: $itemColorHover;
     }
 
     .children {
@@ -38,16 +41,21 @@ $itemColorHover: $white;
     width: 20px;
     font-size: 20px;
     text-align: center;
-    visibility: hidden;
 
     &:last-child {
         margin-right: 5px;
     }
 }
 
-.item:hover,
-.item.selected {
-    .button {
-        visibility: visible;
+.buttons {
+    visibility: hidden;
+}
+
+.item:not(.disabled) {
+    &:hover,
+    &.selected {
+        .buttons {
+            visibility: visible;
+        }
     }
 }

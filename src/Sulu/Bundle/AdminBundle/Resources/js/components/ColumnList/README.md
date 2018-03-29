@@ -61,7 +61,7 @@ const toolbarItems = [
     <ColumnList buttons={buttons} onItemClick={handleItemClick} toolbarItems={toolbarItems}>
         <ColumnList.Column>
             <ColumnList.Item id="1" selected="true">Google 1</ColumnList.Item>
-            <ColumnList.Item id="2" hasChildren="true">Apple 1</ColumnList.Item>
+            <ColumnList.Item id="2" hasChildren="true" disabled={true}>Apple 1</ColumnList.Item>
             <ColumnList.Item id="3">Microsoft 1</ColumnList.Item>
         </ColumnList.Column>
         <ColumnList.Column>

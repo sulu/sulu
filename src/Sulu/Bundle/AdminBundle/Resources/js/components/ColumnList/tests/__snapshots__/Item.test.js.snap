@@ -1,5 +1,44 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Should render item as disabled 1`] = `
+<div
+  class="item disabled"
+>
+  <span
+    class="buttons"
+  />
+  <span
+    class="text"
+  >
+    <div
+      aria-label="Test"
+      class="croppedText"
+      title="Test"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Te
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          st
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Test
+      </div>
+    </div>
+  </span>
+</div>
+`;
+
 exports[`Should render item as not selected by default 1`] = `
 <div
   class="item"

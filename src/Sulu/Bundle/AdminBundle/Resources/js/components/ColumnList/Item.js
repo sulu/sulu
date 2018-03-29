@@ -7,19 +7,21 @@ import ItemButton from './ItemButton';
 import type {ItemButtonConfig} from './types';
 import itemStyles from './item.scss';
 
-type Props = {
+type Props = {|
     active: boolean,
     buttons?: Array<ItemButtonConfig>,
     children: string,
+    disabled: boolean,
     hasChildren: boolean,
     id: string | number,
     onClick?: (id: string | number) => void,
     selected: boolean,
-};
+|};
 
 export default class Item extends React.Component<Props> {
     static defaultProps = {
         active: false,
+        disabled: false,
         hasChildren: false,
         selected: false,
     };
@@ -30,7 +32,7 @@ export default class Item extends React.Component<Props> {
         }
     };
 
-    createButtons = () => {
+    renderButtons = () => {
         const {buttons, id} = this.props;
 
         if (!buttons) {
@@ -47,12 +49,13 @@ export default class Item extends React.Component<Props> {
     };
 
     render() {
-        const {children, active, hasChildren, selected} = this.props;
+        const {active, children, disabled, hasChildren, selected} = this.props;
 
         const itemClass = classNames(
             itemStyles.item,
             {
                 [itemStyles.active]: active,
+                [itemStyles.disabled]: disabled,
                 [itemStyles.selected]: selected,
             }
         );
@@ -60,7 +63,7 @@ export default class Item extends React.Component<Props> {
         return (
             <div onClick={this.handleClick} className={itemClass}>
                 <span className={itemStyles.buttons}>
-                    {this.createButtons()}
+                    {this.renderButtons()}
                 </span>
                 <span className={itemStyles.text}>
                     <CroppedText>{children}</CroppedText>
