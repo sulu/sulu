@@ -72,6 +72,7 @@ test('Render data with schema and selections', () => {
         <TableAdapter
             data={data}
             loading={false}
+            onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
             page={1}
             pageCount={3}

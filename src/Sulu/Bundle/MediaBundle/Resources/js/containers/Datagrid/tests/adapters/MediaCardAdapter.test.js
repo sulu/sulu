@@ -42,6 +42,7 @@ test('Render a basic Masonry view with MediaCards', () => {
             data={data}
             icon="su-pen"
             loading={false}
+            onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
             page={1}
             pageCount={7}

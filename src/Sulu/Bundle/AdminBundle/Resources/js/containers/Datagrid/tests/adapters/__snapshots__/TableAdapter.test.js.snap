@@ -26,24 +26,6 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             class="headerCell"
           >
             <span>
-              <label
-                class="label"
-              >
-                <span
-                  class="switch checkbox light"
-                >
-                  <input
-                    type="checkbox"
-                  />
-                  <span />
-                </span>
-              </label>
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
               title
             </span>
           </th>
@@ -64,23 +46,6 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             </button>
           </td>
           <td
-            class="cell small"
-          >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
-              >
-                <input
-                  type="checkbox"
-                  value="1"
-                />
-                <span />
-              </span>
-            </label>
-          </td>
-          <td
             class="cell"
           >
             Title 1
@@ -98,23 +63,6 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
                 class="su-pen"
               />
             </button>
-          </td>
-          <td
-            class="cell small"
-          >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
-              >
-                <input
-                  type="checkbox"
-                  value="2"
-                />
-                <span />
-              </span>
-            </label>
           </td>
           <td
             class="cell"
@@ -173,24 +121,6 @@ exports[`Render data with schema 1`] = `
             class="headerCell"
           >
             <span>
-              <label
-                class="label"
-              >
-                <span
-                  class="switch checkbox light"
-                >
-                  <input
-                    type="checkbox"
-                  />
-                  <span />
-                </span>
-              </label>
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
               title
             </span>
           </th>
@@ -208,23 +138,6 @@ exports[`Render data with schema 1`] = `
           class="row"
         >
           <td
-            class="cell small"
-          >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
-              >
-                <input
-                  type="checkbox"
-                  value="1"
-                />
-                <span />
-              </span>
-            </label>
-          </td>
-          <td
             class="cell"
           >
             Title 1
@@ -238,23 +151,6 @@ exports[`Render data with schema 1`] = `
         <tr
           class="row"
         >
-          <td
-            class="cell small"
-          >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
-              >
-                <input
-                  type="checkbox"
-                  value="2"
-                />
-                <span />
-              </span>
-            </label>
-          </td>
           <td
             class="cell"
           >
@@ -503,24 +399,6 @@ exports[`Render data with schema in different order 1`] = `
             class="headerCell"
           >
             <span>
-              <label
-                class="label"
-              >
-                <span
-                  class="switch checkbox light"
-                >
-                  <input
-                    type="checkbox"
-                  />
-                  <span />
-                </span>
-              </label>
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
               description
             </span>
           </th>
@@ -538,23 +416,6 @@ exports[`Render data with schema in different order 1`] = `
           class="row"
         >
           <td
-            class="cell small"
-          >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
-              >
-                <input
-                  type="checkbox"
-                  value="1"
-                />
-                <span />
-              </span>
-            </label>
-          </td>
-          <td
             class="cell"
           >
             Description 1
@@ -568,23 +429,6 @@ exports[`Render data with schema in different order 1`] = `
         <tr
           class="row"
         >
-          <td
-            class="cell small"
-          >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
-              >
-                <input
-                  type="checkbox"
-                  value="2"
-                />
-                <span />
-              </span>
-            </label>
-          </td>
           <td
             class="cell"
           >
@@ -646,24 +490,6 @@ exports[`Render data with schema not containing all fields 1`] = `
             class="headerCell"
           >
             <span>
-              <label
-                class="label"
-              >
-                <span
-                  class="switch checkbox light"
-                >
-                  <input
-                    type="checkbox"
-                  />
-                  <span />
-                </span>
-              </label>
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
               title
             </span>
           </th>
@@ -674,23 +500,6 @@ exports[`Render data with schema not containing all fields 1`] = `
           class="row"
         >
           <td
-            class="cell small"
-          >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
-              >
-                <input
-                  type="checkbox"
-                  value="1"
-                />
-                <span />
-              </span>
-            </label>
-          </td>
-          <td
             class="cell"
           >
             Title 1
@@ -699,23 +508,6 @@ exports[`Render data with schema not containing all fields 1`] = `
         <tr
           class="row"
         >
-          <td
-            class="cell small"
-          >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
-              >
-                <input
-                  type="checkbox"
-                  value="2"
-                />
-                <span />
-              </span>
-            </label>
-          </td>
           <td
             class="cell"
           >

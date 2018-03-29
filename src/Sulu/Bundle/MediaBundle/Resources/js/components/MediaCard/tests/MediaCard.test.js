@@ -4,12 +4,23 @@ import pretty from 'pretty';
 import React from 'react';
 import MediaCard from '../MediaCard';
 
-test('Render a simple MediaCard component', () => {
+test('Render a MediaCard component', () => {
     expect(render(
         <MediaCard
             title="Test"
             meta="Test/Test"
             image="http://lorempixel.com/300/200"
+        />
+    )).toMatchSnapshot();
+});
+
+test('Render a MediaCard component with a checkbox for selection', () => {
+    expect(render(
+        <MediaCard
+            image="http://lorempixel.com/300/200"
+            meta="Test/Test"
+            onSelectionChange={jest.fn()}
+            title="Test"
         />
     )).toMatchSnapshot();
 });
