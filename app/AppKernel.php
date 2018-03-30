@@ -106,6 +106,8 @@ class AppKernel extends SuluKernel
     {
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
 
+        // we need to resolve the SULU_PHPCR_TRANSPORT environment variable at this point,
+        // because the doctrine phpcr configuration is not working with unresolved environment variables
         $loader->load(function (ContainerBuilder $container) {
             $container->setParameter('phpcr.transport', $container->resolveEnvPlaceholders(
                 $container->getParameter('phpcr.transport'),
