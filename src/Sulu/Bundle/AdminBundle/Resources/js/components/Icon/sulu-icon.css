@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sulu';
-  src:  url('fonts/sulu.eot?fp5ycy');
-  src:  url('fonts/sulu.eot?fp5ycy#iefix') format('embedded-opentype'),
-  url('fonts/sulu.ttf?fp5ycy') format('truetype'),
-  url('fonts/sulu.woff?fp5ycy') format('woff'),
-  url('fonts/sulu.svg?fp5ycy#sulu') format('svg');
+  src:  url('fonts/sulu.eot?r5yfb4');
+  src:  url('fonts/sulu.eot?r5yfb4#iefix') format('embedded-opentype'),
+  url('fonts/sulu.ttf?r5yfb4') format('truetype'),
+  url('fonts/sulu.woff?r5yfb4') format('woff'),
+  url('fonts/sulu.svg?r5yfb4#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -210,13 +210,7 @@
 .su-phone2:before {
   content: "\e990";
 }
-.su-webspace3:before {
-  content: "\e950";
-}
 .su-webspace:before {
-  content: "\e945";
-}
-.su-webspace2:before {
   content: "\e944";
 }
 .su-phone:before {
@@ -464,10 +458,4 @@
 }
 .su-view2:before {
   content: "\e946";
-}
-.su-Warning:before {
-  content: "\e947";
-}
-.su-webspace4:before {
-  content: "\e948";
 }
