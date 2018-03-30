@@ -61,7 +61,7 @@ test('Set and get all from NavigationRegistry', () => {
     expect(navigationRegistry.getAll()).toBe(items);
 });
 
-test('GetBy id should return the correct item', () => {
+test('Get should return the correct item', () => {
     const items = [
         {
             id: '111',
