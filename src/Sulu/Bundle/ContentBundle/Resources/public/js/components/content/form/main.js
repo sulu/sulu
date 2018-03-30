@@ -45,7 +45,7 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             // change template
             this.sandbox.on('sulu.dropdown.template.item-clicked', function(item) {
                 this.animateTemplateDropdown = true;
-                this.checkRenderTemplate(item);
+                this.checkRenderTemplate(item, true);
             }, this);
 
             // content save
@@ -111,6 +111,10 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             this.sandbox.emit('sulu.content.contents.get-data', this.render.bind(this));
         },
 
+        reloadData: function(template) {
+            this.sandbox.emit('sulu.content.contents.get-data', this.rerender.bind(this), true, template);
+        },
+
         render: function(data, preview) {
             this.bindCustomEvents();
             this.listenForChange();
@@ -127,7 +131,13 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             this.sandbox.emit('sulu.content.contents.show-save-items', 'content');
         },
 
-        checkRenderTemplate: function(item) {
+        rerender: function(data, preview) {
+            this.preview = preview;
+            this.data = data;
+            this.loadFormTemplate(data.template);
+        },
+
+        checkRenderTemplate: function(item, reloadData) {
             if (typeof item === 'string') {
                 item = {template: item};
             }
@@ -141,7 +151,11 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             if (this.template !== '' && !this.saved) {
                 this.showRenderTemplateDialog(item);
             } else {
-                this.loadFormTemplate(item);
+                if (reloadData) {
+                    this.reloadData(item.template);
+                } else {
+                    this.loadFormTemplate(item);
+                }
             }
         },
 
@@ -162,13 +176,16 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
                 function() {
                     // ok callback
-                    this.loadFormTemplate(item);
+                    this.reloadData(item.template);
                 }.bind(this)
             );
         },
 
         loadFormTemplate: function(item) {
             var tmp, url;
+            if (typeof item === 'string') {
+                item = {template: item};
+            }
             if (!!item) {
                 this.template = item.template;
             }

@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.5
+    * ENHANCEMENT #3876 [ContentBundle]         Reload data when changing template  
+
 * 1.5.12 (2018-03-19)
     * ENHANCEMENT #3830 [All]                   Avoid duplicated run of composer update for travis
     * BUGFIX      #3826 [ContentBundle]         Fix enabling of save button when toggler is changed
