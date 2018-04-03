@@ -1,6 +1,6 @@
 // @flow
 import 'font-awesome/css/font-awesome.min.css';
-import './icomoon.css';
+import './sulu-icon.css';
 import React from 'react';
 import classNames from 'classnames';
 import log from 'loglevel';
