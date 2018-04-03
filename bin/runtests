@@ -24,8 +24,8 @@ use Symfony\Component\Process\Process;
 // ============================
 
 // set default env variables
-if (!getenv('SYMFONY__PHPCR__TRANSPORT')) {
-    putenv('SYMFONY__PHPCR__TRANSPORT=doctrinedbal');
+if (!getenv('SULU_PHPCR_TRANSPORT')) {
+    putenv('SULU_PHPCR_TRANSPORT=doctrinedbal');
 }
 
 // ensure that we don't timeout
@@ -358,14 +358,6 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
 
     write_header('Testing: ' . $bundleName);
 
-    $baseVendorDir = getcwd() . '/vendor';
-    $bundleVendorDir = $bundleDir . '/vendor';
-
-    if (!file_exists($bundleVendorDir)) {
-        symlink($baseVendorDir, $bundleVendorDir);
-        write_info('Symlinked base vendor dir');
-    }
-
     $cacheDir = getcwd() . '/Tests/app/cache';
     if ($input->getOption('cache-clear')) {
         write_info('Clear cache');
@@ -384,7 +376,7 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
 
     $flags = $input->getOption('flags');
     $process = exec_cmd(sprintf(
-        'vendor%sbin%sphpunit --configuration %s %s',
+        '.%sbin%sphpunit --configuration %s %s',
         DIRECTORY_SEPARATOR,
         DIRECTORY_SEPARATOR,
         $phpunitFile->getPathname(),
@@ -483,7 +475,7 @@ if ($input->getOption('initialize')) {
     }
     init_dbal();
     write_info('Initializing the content repository');
-    if (getenv('SYMFONY__PHPCR__TRANSPORT') === 'doctrine_dbal') {
+    if (getenv('SULU_PHPCR_TRANSPORT') === 'doctrinedbal') {
         init_phpcr_dbal();
     }
     write(PHP_EOL);
@@ -512,7 +504,7 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
     putenv('KERNEL_DIR=' . __DIR__ . '/../tests/app');
     exec_sf_cmd('sulu:document:initialize --purge --ansi --force', true);
     $process = exec_cmd(
-        'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit ' . $input->getOption('flags'),
+        '.' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit ' . $input->getOption('flags'),
         true,
         false
     );

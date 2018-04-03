@@ -10,4 +10,4 @@
 *.iml
 
 # Configuration
-/Resources/dist/parameters.yml
+/Resources/app/config/parameters.yml

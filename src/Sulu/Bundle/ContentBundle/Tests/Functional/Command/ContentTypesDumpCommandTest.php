@@ -9,8 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Command;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Command;
 
+use Sulu\Bundle\ContentBundle\Command\ContentTypesDumpCommand;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;

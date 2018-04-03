@@ -14,7 +14,7 @@
         <parameter key="sulu_website.twig.sitemap.memoized.class">Sulu\Bundle\WebsiteBundle\Twig\Sitemap\MemoizedSitemapTwigExtension</parameter>
         <parameter key="sulu_website.twig.content.class">Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension</parameter>
         <parameter key="sulu_website.twig.content.memoized.class">Sulu\Bundle\WebsiteBundle\Twig\Content\MemoizedContentTwigExtension</parameter>
-        <parameter key="sulu_website.twig.Meta.class">Sulu\Bundle\WebsiteBundle\Twig\Meta\MetaTwigExtension</parameter>
+        <parameter key="sulu_website.twig.meta.class">Sulu\Bundle\WebsiteBundle\Twig\Meta\MetaTwigExtension</parameter>
         <parameter key="sulu_website.twig.seo.class">Sulu\Bundle\WebsiteBundle\Twig\Seo\SeoTwigExtension</parameter>
         <parameter key="sulu_website.twig.util.class">Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension</parameter>
         <parameter key="sulu_website.routing.portal_loader.class">Sulu\Bundle\WebsiteBundle\Routing\PortalLoader</parameter>

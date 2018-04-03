@@ -7,7 +7,7 @@ environment:
   matrix:
     # see http://windows.php.net/downloads/releases/ for available versions
     - PHP_VERSION: 7.1.14
-      SYMFONY__DATABASE__PASSWORD: Password12!
+      SULU_DATABASE_PASSWORD: Password12!
 
 services:
   - mysql
@@ -59,7 +59,7 @@ before_test:
   - cd %APPVEYOR_BUILD_FOLDER%
 
   # Composer install
-  - IF "%SYMFONY__PHPCR__TRANSPORT%" == "jackrabbit" (
+  - IF "%SULU_PHPCR_TRANSPORT%" == "jackrabbit" (
         php -dmemory_limit=-1 C:\tools\composer.phar require jackalope/jackalope-jackrabbit:~1.2 --no-update --no-interaction
     )
   - php -dmemory_limit=-1 C:\tools\composer.phar update --no-interaction --no-progress --prefer-dist --no-ansi

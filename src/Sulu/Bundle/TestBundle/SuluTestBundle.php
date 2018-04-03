@@ -17,6 +17,6 @@ class SuluTestBundle extends Bundle
 {
     public static function getConfigDir()
     {
-        return __DIR__ . '/Resources/dist';
+        return __DIR__ . '/Resources/app/config';
     }
 }

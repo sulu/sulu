@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata;
+namespace Sulu\Component\Rest\Tests\Functional\ListBuilder\Metadata;
 
 use Metadata\Driver\FileLocatorInterface;
 use Metadata\MetadataFactory;

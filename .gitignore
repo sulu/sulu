@@ -1,4 +1,10 @@
 # Vendor, logs and cache
+/app/config/parameters.yml
+/bin/*
+!/bin/build-bundles.sh
+!/bin/cli/validate-build-bundles.sh
+!/bin/console
+!/bin/runtests
 /src/Sulu/Bundle/*/Tests/app/cache
 /src/Sulu/Bundle/*/Tests/app/data
 /src/Sulu/Bundle/*/Tests/app/logs
@@ -9,6 +15,24 @@
 /tests/app/data
 /tests/app/logs
 /tests/Resources/cache
+/var/cache/*
+/var/indexes/*
+/var/logs/*
+/var/sessions/*
+/var/uploads/*
+/var/sitemaps/*
+!/var/cache/.gitkeep
+!/var/indexes/.gitkeep
+!/var/logs/.gitkeep
+!/var/sessions/.gitkeep
+!/var/uploads/.gitkeep
+!/var/sitemaps/.gitkeep
+/var/bootstrap.php.cache
+/var/SymfonyRequirements.php
+/web/bundles
+/web/uploads
+/web/admin
+
 /vendor
 
 # Composer

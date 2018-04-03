@@ -7,7 +7,9 @@
         "flow": "flow",
         "test": "jest",
         "styleguide": "styleguidist server",
-        "styleguide:build": "styleguidist build"
+        "styleguide:build": "styleguidist build",
+        "build": "rimraf web/admin/build && webpack -p",
+        "watch": "webpack -d -w"
     },
     "dependencies": {
         "sulu-admin-bundle": "file:src/Sulu/Bundle/AdminBundle/Resources/js",
@@ -53,6 +55,7 @@
         "pretty": "^2.0.0",
         "react-styleguidist": "^6.2.2",
         "react-test-renderer": "^16.2.0",
+        "rimraf": "^2.6.2",
         "stylelint": "^7.12.0",
         "stylelint-config-standard": "^16.0.0",
         "webpack": "^3.5.6",

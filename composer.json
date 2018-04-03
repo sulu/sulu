@@ -34,6 +34,7 @@
         "php-http/client-common": "^1.1.0",
         "php-http/guzzle6-adapter": "^1.1",
         "imagine/imagine": "~0.6.1 || ~0.7.0",
+        "incenteev/composer-parameter-handler": "^2.1",
         "jms/serializer-bundle": "^2.2",
         "layershifter/tld-extract": "^1.1",
         "massive/build-bundle": "^0.3.0",
@@ -102,6 +103,8 @@
         "symfony/process": "^3.4",
         "symfony/stopwatch": "^3.4",
         "symfony/var-dumper": "^3.4",
+        "symfony/web-profiler-bundle": "^3.4",
+        "symfony/web-server-bundle": "^3.4",
         "zendframework/zend-stdlib": "~2.3",
         "zendframework/zendsearch": "@dev"
     },
@@ -145,11 +148,41 @@
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
             "src/Sulu/Bundle/*/Tests/"
+        ],
+        "classmap": [
+            "app/AppKernel.php"
         ]
     },
     "autoload-dev": {
         "psr-0": {
             "Sulu\\": "tests/"
+        }
+    },
+    "scripts": {
+        "sulu-scripts": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sulu\\Bundle\\TranslateBundle\\Composer\\TranslateScriptHandler::installTranslations"
+        ],
+        "post-install-cmd": [
+            "@sulu-scripts"
+        ],
+        "post-update-cmd": [
+            "@sulu-scripts"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
+        "symfony-web-dir": "web",
+        "symfony-tests-dir": "tests",
+        "symfony-assets-install": "relative",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
         }
     }
 }

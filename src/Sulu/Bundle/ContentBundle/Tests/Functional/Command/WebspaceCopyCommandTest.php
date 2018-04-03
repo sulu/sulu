@@ -9,8 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Command;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Command;
 
+use Sulu\Bundle\ContentBundle\Command\WebspaceCopyCommand;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;

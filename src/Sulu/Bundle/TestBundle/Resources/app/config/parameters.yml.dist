@@ -1,0 +1,37 @@
+parameters:
+    database.driver: '%env(SULU_DATABASE_DRIVER)%'
+    database.host: '%env(SULU_DATABASE_HOST)%'
+    database.port: '%env(SULU_DATABASE_PORT)%'
+    database.path: '%env(SULU_DATABASE_PATH)%'
+    database.user: '%env(SULU_DATABASE_USER)%'
+    database.name: '%env(SULU_DATABASE_NAME)%'
+    database.password: '%env(SULU_DATABASE_PASSWORD)%'
+    database.version: '%env(SULU_DATABASE_VERSION)%'
+    database.charset: '%env(SULU_DATABASE_CHARSET)%'
+    database.collate: '%env(SULU_DATABASE_COLLATE)%'
+
+    phpcr.transport: '%env(SULU_PHPCR_TRANSPORT)%'
+    phpcr.backend_url: '%env(SULU_PHPCR_BACKEND_URL)%'
+    phpcr.username: '%env(SULU_PHPCR_USERNAME)%'
+    phpcr.password: '%env(SULU_PHPCR_PASSWORD)%'
+    phpcr.workspace: '%env(SULU_PHPCR_WORKSPACE)%'
+
+
+    # Fallback values (used if environmental variables are not set)
+    env(SULU_DATABASE_DRIVER): pdo_mysql
+    env(SULU_DATABASE_HOST): 127.0.0.1
+    env(SULU_DATABASE_PORT): ~
+    env(SULU_DATABASE_PATH): ~
+    env(SULU_DATABASE_USER): root
+    env(SULU_DATABASE_NAME): sulu_test
+    env(SULU_DATABASE_PASSWORD): ~
+    env(SULU_DATABASE_VERSION): 5.6
+    env(SULU_DATABASE_CHARSET): utf8mb4
+    env(SULU_DATABASE_COLLATE): utf8mb4_unicode_ci
+
+    env(SULU_PHPCR_TRANSPORT): doctrinedbal
+    env(SULU_PHPCR_BACKEND_URL): http://localhost:8080/server/
+    env(SULU_PHPCR_USERNAME): admin
+    env(SULU_PHPCR_PASSWORD): admin
+    env(SULU_PHPCR_WORKSPACE): test
+

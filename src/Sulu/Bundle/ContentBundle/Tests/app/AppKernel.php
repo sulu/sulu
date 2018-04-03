@@ -20,7 +20,7 @@ class AppKernel extends SuluTestKernel
 
         $loader->load(__DIR__ . '/config/config.yml');
 
-        if ('jackrabbit' === getenv('SYMFONY__PHPCR__TRANSPORT')) {
+        if ('jackrabbit' === getenv('SULU_PHPCR_TRANSPORT')) {
             $loader->load(__DIR__ . '/config/versioning.yml');
         }
 

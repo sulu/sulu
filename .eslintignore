@@ -1,7 +1,8 @@
 **/node_modules/
 **/vendor/
 **/flow-typed/
-styleguide
+styleguide/
+**/admin/build/
 
 # TODO Remove these rules once the old code is removed
 Gruntfile.js

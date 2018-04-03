@@ -1,0 +1,104 @@
+framework:
+    translator:
+        fallbacks: ['en']
+    secret: secret
+    router: { resource: '%kernel.root_dir%/config/routing.yml' }
+    templating: { engines: ['twig'] }
+    form:
+        enabled: true
+    csrf_protection: ~
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        enabled: false
+
+# Monolog is needed for the webspace bundle
+monolog:
+    handlers:
+        main:
+            type:  'null'
+
+sulu_core:
+    cache_dir: '%kernel.root_dir%/cache/sulu'
+    content:
+        structure:
+             default_type:
+                snippet: 'default'
+             paths:
+                 pages:
+                     path: '%kernel.root_dir%/Resources/pages'
+                     type: page
+                 homepage:
+                     path: '%kernel.root_dir%/Resources/pages'
+                     type: home
+                 templates:
+                     path: '%kernel.root_dir%/Resources/snippets'
+                     type: snippet
+
+                 # This configuration could be used either from a bundle or the 'root' of the repository
+                 # We try both just to be sure
+                 sulu_1:
+                     path: '%kernel.root_dir%/../../../CoreBundle/Content/templates'
+                     type: 'page'
+    webspace: ~
+
+sulu_admin:
+    name: SULU 2.0
+    email: installation.email@sulu.test
+
+doctrine:
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings:
+            gedmo_tree:
+                type: xml
+                prefix: Gedmo\Tree\Entity
+                dir: '%kernel.root_dir%/../../../../../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity'
+                alias: GedmoTree
+                is_bundle: false
+    dbal:
+        driver: '%database.driver%'
+        host: '%database.host%'
+        port: '%database.port%'
+        dbname: '%database.name%'
+        user: '%database.user%'
+        password: '%database.password%'
+        path: '%database.path%'
+        server_version: '%database.version%'
+        charset: '%database.charset%'
+        default_table_options:
+            charset: '%database.charset%'
+            collate: '%database.collate%'
+
+stof_doctrine_extensions:
+    orm:
+        default:
+            tree: true
+
+sulu_test:
+    enable_test_user_provider: true
+
+sulu_document_manager:
+    sessions:
+        default:
+            backend:
+                type: '%phpcr.transport%'
+                url:  '%phpcr.backend_url%'
+            workspace: '%phpcr.workspace%'
+            username: '%phpcr.username%'
+            password: '%phpcr.password%'
+        live:
+            backend:
+                type: '%phpcr.transport%'
+                url:  '%phpcr.backend_url%'
+            workspace: '%phpcr.workspace%_live'
+            username: '%phpcr.username%'
+            password: '%phpcr.password%'
+    debug: false
+
+jms_serializer:
+    metadata:
+        debug: '%kernel.debug%'
