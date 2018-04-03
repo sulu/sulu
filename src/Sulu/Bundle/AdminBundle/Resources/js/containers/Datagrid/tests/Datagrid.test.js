@@ -74,6 +74,8 @@ class TestAdapter extends AbstractAdapter {
 
     static StructureStrategy = StructureStrategy;
 
+    static icon = 'su-view';
+
     render() {
         return (
             <div>Test Adapter</div>
@@ -186,7 +188,7 @@ test('Switching the adapter should render the correct adapter', () => {
     expect(datagrid.find('AdapterSwitch').length).toBe(1);
     expect(datagrid.find('TableAdapter').length).toBe(1);
 
-    datagrid.find('AdapterSwitchItem').at(1).simulate('click');
+    datagrid.find('AdapterSwitch Button').at(1).simulate('click');
     expect(datagrid.find('TableAdapter').length).toBe(0);
     expect(datagrid.find('FolderAdapter').length).toBe(1);
 });
@@ -225,6 +227,8 @@ test('DatagridStore should be updated with current active element', () => {
             findById = jest.fn();
             enhanceItem = jest.fn();
         };
+
+        static icon = 'su-view';
 
         componentWillMount() {
             const {onItemActivation} = this.props;

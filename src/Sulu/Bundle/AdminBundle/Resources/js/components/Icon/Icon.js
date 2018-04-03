@@ -28,6 +28,10 @@ export default class Icon extends React.PureComponent<Props> {
         const {className, name, onClick} = this.props;
         let fontClass = '';
 
+        if (!name || name.length <= 0) {
+            log.warn('Invalid icon given: ' + name);
+        }
+
         switch (name.substr(0, 3)) {
             case 'su-':
                 fontClass = null;

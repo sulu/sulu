@@ -43,6 +43,9 @@ exports[`Render the MediaCollection 1`] = `
       </div>
     </div>
     <div
+      class="toolbar"
+    />
+    <div
       class="datagrid"
     >
       <section>
@@ -147,6 +150,9 @@ exports[`Render the MediaCollection 1`] = `
     class="divider"
   />
   <div>
+    <div
+      class="toolbar"
+    />
     <div
       class="datagrid"
     >

@@ -55,6 +55,9 @@ exports[`Render a simple MediaOverview 1`] = `
         </div>
       </div>
       <div
+        class="toolbar"
+      />
+      <div
         class="datagrid"
       >
         <section>
@@ -160,18 +163,40 @@ exports[`Render a simple MediaOverview 1`] = `
     />
     <div>
       <div
+        class="toolbar"
+      >
+        <div>
+          <button
+            class="button icon active button"
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              <span
+                aria-label="su-view"
+                class="su-view"
+              />
+            </span>
+          </button>
+          <button
+            class="button icon button"
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              <span
+                aria-label="su-view2"
+                class="su-view2"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
         class="datagrid"
       >
-        <ul>
-          <li>
-            <i>
-              media_card_overview
-            </i>
-          </li>
-          <li>
-            table
-          </li>
-        </ul>
         <section>
           <div>
             <div

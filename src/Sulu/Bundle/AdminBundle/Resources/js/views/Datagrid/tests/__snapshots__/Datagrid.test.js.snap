@@ -8,6 +8,9 @@ exports[`Should render the datagrid with a title 1`] = `
     Snippets
   </h1>
   <div
+    class="toolbar"
+  />
+  <div
     class="datagrid"
   >
     <section>
@@ -159,6 +162,9 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
   class="datagrid"
 >
   <div
+    class="toolbar"
+  />
+  <div
     class="datagrid"
   >
     <section>
@@ -309,6 +315,9 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
 <div
   class="datagrid"
 >
+  <div
+    class="toolbar"
+  />
   <div
     class="datagrid"
   >
