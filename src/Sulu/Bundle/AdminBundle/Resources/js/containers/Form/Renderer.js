@@ -1,6 +1,5 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React from 'react';
 import Divider from '../../components/Divider';

@@ -203,8 +203,6 @@ test('Render block with schema and error on fields already being modified', () =
 });
 
 test('Should correctly pass props to the BlockCollection', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
-
     const types = {
         default: {
             title: 'Default',

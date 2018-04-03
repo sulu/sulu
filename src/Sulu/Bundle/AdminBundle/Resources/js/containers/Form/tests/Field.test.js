@@ -1,7 +1,6 @@
 // @flow
 import {render, shallow} from 'enzyme';
 import React from 'react';
-import {observable} from 'mobx';
 import ResourceStore from '../../../stores/ResourceStore';
 import Field from '../Field';
 import fieldRegistry from '../registries/FieldRegistry';

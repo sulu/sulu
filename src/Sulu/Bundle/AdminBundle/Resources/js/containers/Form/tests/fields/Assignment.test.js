@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
 import {shallow} from 'enzyme';
 import Assignment from '../../fields/Assignment';
 import FormInspector from '../../FormInspector';
@@ -15,7 +14,6 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 
 test('Should pass props correctly to component', () => {
     const changeSpy = jest.fn();
-    const locale = observable.box('en');
     const value = [1, 6, 8];
     const fieldTypeOptions = {
         adapter: 'table',

@@ -1,32 +1,46 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import type {FieldTypeProps} from '../../types';
 import textAreaStyles from './textArea.scss';
 
-type Props = FieldTypeProps<string> & {
+type Props = {|
     name?: string,
+    onBlur?: () => void,
+    onChange: (string) => void,
     placeholder?: string,
-};
+    valid: boolean,
+    value: ?string,
+|};
 
 export default class TextArea extends React.PureComponent<Props> {
+    static defaultProps = {
+        valid: true,
+    };
+
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
         this.props.onChange(event.currentTarget.value);
     };
 
+    handleBlur = () => {
+        const {onBlur} = this.props;
+
+        if (onBlur) {
+            onBlur();
+        }
+    };
+
     render() {
         const {
-            error,
             name,
-            onFinish,
             placeholder,
             value,
+            valid,
         } = this.props;
 
         const textareaClass = classNames(
             textAreaStyles.textArea,
             {
-                [textAreaStyles.error]: error,
+                [textAreaStyles.error]: !valid,
             }
         );
 
@@ -36,7 +50,7 @@ export default class TextArea extends React.PureComponent<Props> {
                 className={textareaClass}
                 value={value || ''}
                 placeholder={placeholder}
-                onBlur={onFinish}
+                onBlur={this.handleBlur}
                 onChange={this.handleChange}
             />
         );

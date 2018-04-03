@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
 import {shallow} from 'enzyme';
 import FieldRenderer from '../FieldRenderer';
 import {FormInspector, FormStore, Renderer} from '../../Form';

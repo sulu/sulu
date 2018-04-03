@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import classNames from 'classnames';
 import {translate} from '../../utils';
 import type {Error, ErrorCollection} from '../../types';
