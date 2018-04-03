@@ -296,7 +296,7 @@
 
         <service id="sulu_media.doctrine.invalidation_listener"
                  class="Sulu\Bundle\MediaBundle\EventListener\CacheInvalidationListener">
-            <argument type="service" id="sulu_http_cache.handler.aggregate"/>
+            <argument type="service" id="sulu_http_cache.cache_manager" on-invalid="null" />
 
             <tag name="doctrine.event_listener" event="postPersist"/>
             <tag name="doctrine.event_listener" event="postUpdate"/>

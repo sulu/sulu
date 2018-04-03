@@ -14,9 +14,9 @@ namespace Sulu\Bundle\ContactBundle\EventListener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Contact\Model\ContactInterface;
-use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 
 /**
  * Invalidate references when account/contact are persisted.
@@ -24,13 +24,13 @@ use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 class CacheInvalidationListener
 {
     /**
-     * @var HandlerInvalidateReferenceInterface
+     * @var null|CacheManagerInterface
      */
-    private $invalidationHandler;
+    private $cacheManager;
 
-    public function __construct(HandlerInvalidateReferenceInterface $invalidationHandler)
+    public function __construct(?CacheManagerInterface $cacheManager)
     {
-        $this->invalidationHandler = $invalidationHandler;
+        $this->cacheManager = $cacheManager;
     }
 
     public function postPersist(LifecycleEventArgs $eventArgs)
@@ -50,12 +50,16 @@ class CacheInvalidationListener
 
     private function invalidateEntity($object)
     {
+        if (!$this->cacheManager) {
+            return;
+        }
+
         if ($object instanceof ContactInterface) {
-            $this->invalidationHandler->invalidateReference('contact', $object->getId());
+            $this->cacheManager->invalidateReference('contact', $object->getId());
             $this->invalidateTags($object->getTags());
             $this->invalidateCategories($object->getCategories());
         } elseif ($object instanceof AccountInterface) {
-            $this->invalidationHandler->invalidateReference('account', $object->getId());
+            $this->cacheManager->invalidateReference('account', $object->getId());
             $this->invalidateTags($object->getTags());
             $this->invalidateCategories($object->getCategories());
         }
@@ -67,7 +71,7 @@ class CacheInvalidationListener
     private function invalidateTags($tags)
     {
         foreach ($tags as $tag) {
-            $this->invalidationHandler->invalidateReference('tag', $tag->getId());
+            $this->cacheManager->invalidateReference('tag', $tag->getId());
         }
     }
 
@@ -77,7 +81,7 @@ class CacheInvalidationListener
     private function invalidateCategories($categories)
     {
         foreach ($categories as $category) {
-            $this->invalidationHandler->invalidateReference('category', $category->getId());
+            $this->cacheManager->invalidateReference('category', $category->getId());
         }
     }
 }

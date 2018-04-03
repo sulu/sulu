@@ -19,7 +19,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepository;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepository;
-use Sulu\Component\HttpCache\HttpCache;
+use Sulu\Bundle\AudienceTargetingBundle\EventListener\AudienceTargetingCacheListener;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -42,16 +42,16 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('headers')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('target_group')->defaultValue(HttpCache::TARGET_GROUP_HEADER)->end()
-                        ->scalarNode('url')->defaultValue(HttpCache::USER_CONTEXT_URL_HEADER)->end()
+                        ->scalarNode('target_group')->defaultValue(AudienceTargetingCacheListener::TARGET_GROUP_HEADER)->end()
+                        ->scalarNode('url')->defaultValue(AudienceTargetingCacheListener::USER_CONTEXT_URL_HEADER)->end()
                     ->end()
                 ->end()
-                ->scalarNode('url')->defaultValue(HttpCache::TARGET_GROUP_URL)->end()
+                ->scalarNode('url')->defaultValue(AudienceTargetingCacheListener::TARGET_GROUP_URL)->end()
                 ->arrayNode('cookies')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('target_group')->defaultValue(HttpCache::TARGET_GROUP_COOKIE)->end()
-                        ->scalarNode('session')->defaultValue(HttpCache::VISITOR_SESSION_COOKIE)->end()
+                        ->scalarNode('target_group')->defaultValue(AudienceTargetingCacheListener::TARGET_GROUP_COOKIE)->end()
+                        ->scalarNode('session')->defaultValue(AudienceTargetingCacheListener::VISITOR_SESSION_COOKIE)->end()
                     ->end()
                 ->end()
                 ->arrayNode('hit')

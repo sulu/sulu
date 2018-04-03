@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Rule;
 
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\InternalLink;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -96,11 +97,16 @@ class PageRule implements RuleInterface
             }
 
             $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspace->getKey());
-            $uuid = $resourceLocatorStrategy->loadByResourceLocator(
-                $this->requestAnalyzer->getResourceLocator(),
-                $webspace->getKey(),
-                $localization->getLocale()
-            );
+
+            try {
+                $uuid = $resourceLocatorStrategy->loadByResourceLocator(
+                    $this->requestAnalyzer->getResourceLocator(),
+                    $webspace->getKey(),
+                    $localization->getLocale()
+                );
+            } catch (ResourceLocatorNotFoundException $exception) {
+                return false;
+            }
         }
 
         if (!$uuid) {

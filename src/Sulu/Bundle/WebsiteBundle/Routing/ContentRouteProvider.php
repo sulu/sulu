@@ -54,29 +54,21 @@ class ContentRouteProvider implements RouteProviderInterface
     private $structureManager;
 
     /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
      * @param DocumentManagerInterface $documentManager
      * @param DocumentInspector $documentInspector
      * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
      * @param StructureManagerInterface $structureManager
-     * @param RequestAnalyzerInterface $requestAnalyzer
      */
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        StructureManagerInterface $structureManager,
-        RequestAnalyzerInterface $requestAnalyzer
+        StructureManagerInterface $structureManager
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->structureManager = $structureManager;
-        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     /**

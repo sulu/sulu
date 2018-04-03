@@ -21,7 +21,6 @@ use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\Exception\NodeNameAlreadyExistsException;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
-use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -52,11 +51,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
     private $pathBuilder;
 
     /**
-     * @var HandlerInvalidatePathInterface
-     */
-    private $cacheHandler;
-
-    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -71,7 +65,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         CustomUrlRepository $customUrlRepository,
         MetadataFactoryInterface $metadataFactory,
         PathBuilder $pathBuilder,
-        HandlerInvalidatePathInterface $cacheHandler,
         WebspaceManagerInterface $webspaceManager,
         $environment
     ) {
@@ -79,7 +72,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $this->customUrlRepository = $customUrlRepository;
         $this->metadataFactory = $metadataFactory;
         $this->pathBuilder = $pathBuilder;
-        $this->cacheHandler = $cacheHandler;
         $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
     }
@@ -275,21 +267,9 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function invalidate(CustomUrlDocument $document)
+    public function getRoutesPath($webspaceKey)
     {
-        foreach ($document->getRoutes() as $route => $routeDocument) {
-            $this->cacheHandler->invalidatePath($route);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function invalidateRoute($webspaceKey, RouteDocument $routeDocument)
-    {
-        $this->cacheHandler->invalidatePath(
-            PathHelper::relativizePath($routeDocument->getPath(), $this->getRoutesPath($webspaceKey))
-        );
+        return $this->pathBuilder->build(['%base%', $webspaceKey, '%custom_urls%', '%custom_urls_routes%']);
     }
 
     /**
@@ -334,15 +314,5 @@ class CustomUrlManager implements CustomUrlManagerInterface
     private function getItemsPath($webspaceKey)
     {
         return $this->pathBuilder->build(['%base%', $webspaceKey, '%custom_urls%', '%custom_urls_items%']);
-    }
-
-    /**
-     * Returns base path to custom-url routes.
-     *
-     * @return string
-     */
-    private function getRoutesPath($webspaceKey)
-    {
-        return $this->pathBuilder->build(['%base%', $webspaceKey, '%custom_urls%', '%custom_urls_routes%']);
     }
 }

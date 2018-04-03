@@ -23,7 +23,6 @@ use Sulu\Component\DocumentManager\Exception\NodeNameAlreadyExistsException;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
-use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -53,11 +52,6 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
      * @var PathBuilder
      */
     private $pathBuilder;
-
-    /**
-     * @var HandlerInvalidatePathInterface
-     */
-    private $cacheHandler;
 
     /**
      * @var WebspaceManagerInterface
@@ -90,7 +84,6 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $this->customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->pathBuilder = $this->prophesize(PathBuilder::class);
-        $this->cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
         $this->targetDocument = $this->prophesize(PageDocument::class)->reveal();
@@ -101,7 +94,6 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $this->customUrlRepository->reveal(),
             $this->metadataFactory->reveal(),
             $this->pathBuilder->reveal(),
-            $this->cacheHandler->reveal(),
             $this->webspaceManager->reveal(),
             $this->environment
         );
@@ -395,36 +387,6 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn('/cmf/sulu_io/custom_urls/routes');
 
         $this->manager->deleteRoute('sulu_io', '123-123-123');
-    }
-
-    public function testInvalidate()
-    {
-        $document = $this->prophesize(CustomUrlDocument::class);
-
-        $document->getRoutes()->willReturn(
-            [
-                'sulu.io/en' => $this->prophesize(RouteDocument::class)->reveal(),
-                'sulu.io/de' => $this->prophesize(RouteDocument::class)->reveal(),
-            ]
-        );
-
-        $this->manager->invalidate($document->reveal());
-
-        $this->cacheHandler->invalidatePath('sulu.io/en')->shouldBeCalled();
-        $this->cacheHandler->invalidatePath('sulu.io/de')->shouldBeCalled();
-    }
-
-    public function testInvalidateRoute()
-    {
-        $document = $this->prophesize(RouteDocument::class);
-
-        $document->getPath()->willReturn('/cmf/sulu_io/custom_urls/routes/sulu.io/en');
-        $this->pathBuilder->build(['%base%', 'sulu_io', '%custom_urls%', '%custom_urls_routes%'])
-            ->willReturn('/cmf/sulu_io/custom_urls/routes');
-
-        $this->manager->invalidateRoute('sulu_io', $document->reveal());
-
-        $this->cacheHandler->invalidatePath('sulu.io/en')->shouldBeCalled();
     }
 
     private function getMapping()

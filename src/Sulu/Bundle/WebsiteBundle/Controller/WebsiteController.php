@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use InvalidArgumentException;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,7 +70,13 @@ abstract class WebsiteController extends Controller
                 );
             }
 
-            return new Response($content);
+            $response = new Response($content);
+
+            if (!$preview && $this->getCacheTimeLifeEnhancer()) {
+                $this->getCacheTimeLifeEnhancer()->enhance($response, $structure);
+            }
+
+            return $response;
         } catch (InvalidArgumentException $e) {
             // template not found
             throw new HttpException(406, 'Error encountered when rendering content', $e);
@@ -127,5 +134,17 @@ abstract class WebsiteController extends Controller
     public function getRequest()
     {
         return $this->get('request_stack')->getCurrentRequest();
+    }
+
+    /**
+     * @return null|CacheLifetimeEnhancer
+     */
+    protected function getCacheTimeLifeEnhancer(): ?CacheLifetimeEnhancer
+    {
+        if (!$this->has('sulu_http_cache.cache_lifetime.enhancer')) {
+            return null;
+        }
+
+        return $this->get('sulu_http_cache.cache_lifetime.enhancer');
     }
 }

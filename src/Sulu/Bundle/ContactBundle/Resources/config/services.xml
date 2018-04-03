@@ -130,7 +130,7 @@
             <tag name="sulu_website.reference_store" alias="account"/>
         </service>
         <service id="sulu_contact.doctrine.invalidation_listener" class="Sulu\Bundle\ContactBundle\EventListener\CacheInvalidationListener">
-            <argument type="service" id="sulu_http_cache.handler.aggregate"/>
+            <argument type="service" id="sulu_http_cache.cache_manager" on-invalid="null" />
 
             <tag name="doctrine.event_listener" event="postPersist"/>
             <tag name="doctrine.event_listener" event="postUpdate"/>

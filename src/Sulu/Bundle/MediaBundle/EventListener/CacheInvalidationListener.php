@@ -13,12 +13,12 @@ namespace Sulu\Bundle\MediaBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 
 /**
  * Invalidate references when media is persisted.
@@ -26,13 +26,13 @@ use Sulu\Component\HttpCache\HandlerInvalidateReferenceInterface;
 class CacheInvalidationListener
 {
     /**
-     * @var HandlerInvalidateReferenceInterface
+     * @var null|CacheManagerInterface
      */
-    private $invalidationHandler;
+    private $cacheManager;
 
-    public function __construct(HandlerInvalidateReferenceInterface $invalidationHandler)
+    public function __construct(?CacheManagerInterface $cacheManager)
     {
-        $this->invalidationHandler = $invalidationHandler;
+        $this->cacheManager = $cacheManager;
     }
 
     public function postPersist(LifecycleEventArgs $eventArgs)
@@ -52,8 +52,12 @@ class CacheInvalidationListener
 
     private function invalidateEntity($object)
     {
+        if (!$this->cacheManager) {
+            return;
+        }
+
         if ($object instanceof MediaInterface) {
-            $this->invalidationHandler->invalidateReference('media', $object->getId());
+            $this->cacheManager->invalidateReference('media', $object->getId());
         } elseif ($object instanceof File) {
             $this->invalidateEntity($object->getMedia());
         } elseif ($object instanceof FileVersion) {
@@ -71,7 +75,7 @@ class CacheInvalidationListener
     private function invalidateTags($tags)
     {
         foreach ($tags as $tag) {
-            $this->invalidationHandler->invalidateReference('tag', $tag->getId());
+            $this->cacheManager->invalidateReference('tag', $tag->getId());
         }
     }
 
@@ -81,7 +85,7 @@ class CacheInvalidationListener
     private function invalidateCategories($categories)
     {
         foreach ($categories as $category) {
-            $this->invalidationHandler->invalidateReference('category', $category->getId());
+            $this->cacheManager->invalidateReference('category', $category->getId());
         }
     }
 }

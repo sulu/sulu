@@ -125,17 +125,9 @@ interface CustomUrlManagerInterface
     public function deleteRoute($webspaceKey, $uuid);
 
     /**
-     * Invalidate http-cache for given document.
+     * Returns base path to custom-url routes.
      *
-     * @param CustomUrlDocument $document
+     * @return string
      */
-    public function invalidate(CustomUrlDocument $document);
-
-    /**
-     * Invalidate http-cache for given route-document.
-     *
-     * @param string $webspaceKey
-     * @param RouteDocument $routeDocument
-     */
-    public function invalidateRoute($webspaceKey, RouteDocument $routeDocument);
+    public function getRoutesPath($webspaceKey);
 }

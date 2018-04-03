@@ -11,8 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Cache;
 
-use FOS\HttpCache\ProxyClient\Invalidation\BanInterface;
-use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -47,31 +46,23 @@ class CacheClearer implements CacheClearerInterface
     private $varDir;
 
     /**
-     * @var ProxyClientInterface
+     * @var null|CacheManager
      */
-    private $proxyClient;
+    private $cacheManager;
 
-    /**
-     * @param Filesystem $filesystem
-     * @param $kernelEnvironment
-     * @param $kernelRootDir
-     * @param RequestStack $requestStack
-     * @param string $varDir
-     * @param ProxyClientInterface $proxyClient
-     */
     public function __construct(
         Filesystem $filesystem,
         $kernelEnvironment,
         $kernelRootDir,
         RequestStack $requestStack,
         $varDir = null,
-        ProxyClientInterface $proxyClient = null
+        ?CacheManager $cacheManager
     ) {
         $this->kernelRootDir = $kernelRootDir;
         $this->kernelEnvironment = $kernelEnvironment;
         $this->filesystem = $filesystem;
         $this->varDir = $varDir;
-        $this->proxyClient = $proxyClient;
+        $this->cacheManager = $cacheManager;
         $this->requestStack = $requestStack;
     }
 
@@ -80,19 +71,15 @@ class CacheClearer implements CacheClearerInterface
      */
     public function clear()
     {
-        if ($this->proxyClient instanceof BanInterface) {
+        if ($this->cacheManager && $this->cacheManager->supportsInvalidate()) {
             $request = $this->requestStack->getCurrentRequest();
             if (!$request) {
                 return;
             }
 
-            $this->proxyClient->banPath(
-                BanInterface::REGEX_MATCH_ALL,
-                BanInterface::CONTENT_TYPE_ALL,
-                [$request->getHost()]
-            );
+            $this->cacheManager->invalidateDomain($request->getHost());
 
-            return $this->proxyClient->flush();
+            return;
         }
 
         $path = sprintf(

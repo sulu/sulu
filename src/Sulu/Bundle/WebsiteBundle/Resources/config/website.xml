@@ -19,7 +19,6 @@
             <argument type="service" id="sulu_document_manager.document_inspector"/>
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
 
             <tag name="sulu.context" context="website"/>
         </service>

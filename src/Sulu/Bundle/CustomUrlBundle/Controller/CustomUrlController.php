@@ -131,7 +131,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
             $request->request->all(),
             $this->getRequestParameter($request, 'targetLocale', true)
         );
-        $manager->invalidate($document);
         $this->get('sulu_document_manager.document_manager')->flush();
 
         $context = new Context();
@@ -151,8 +150,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     public function deleteAction($webspaceKey, $uuid)
     {
         $manager = $this->get('sulu_custom_urls.manager');
-        $document = $manager->delete($uuid);
-        $manager->invalidate($document);
+        $manager->delete($uuid);
         $this->get('sulu_document_manager.document_manager')->flush();
 
         return $this->handleView($this->view());
@@ -172,8 +170,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
 
         $manager = $this->get('sulu_custom_urls.manager');
         foreach ($uuids as $uuid) {
-            $document = $manager->delete($uuid);
-            $manager->invalidate($document);
+            $manager->delete($uuid);
         }
         $this->get('sulu_document_manager.document_manager')->flush();
 
@@ -195,8 +192,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
 
         $manager = $this->get('sulu_custom_urls.manager');
         foreach ($uuids as $uuid) {
-            $document = $manager->deleteRoute($webspaceKey, $uuid);
-            $manager->invalidateRoute($webspaceKey, $document);
+            $manager->deleteRoute($webspaceKey, $uuid);
         }
         $this->get('sulu_document_manager.document_manager')->flush();
 

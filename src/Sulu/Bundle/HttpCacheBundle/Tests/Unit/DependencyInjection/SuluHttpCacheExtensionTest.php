@@ -56,6 +56,9 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
     {
         parent::setUp();
 
+        $this->container->setParameter('kernel.debug', true);
+        $this->container->setParameter('kernel.environment', 'test');
+
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
@@ -63,7 +66,6 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->logger = $this->prophesize(LoggerInterface::class);
         $this->referenceStore = $this->prophesize(ReferenceStorePoolInterface::class);
 
-        $this->container->setParameter('kernel.environment', 'test');
         $this->container->set('sulu_core.webspace.webspace_manager', $this->webspaceManager->reveal());
         $this->container->set('sulu.content.type_manager', $this->contentTypeManager->reveal());
         $this->container->set('request_stack', $this->requestStack->reveal());
@@ -79,61 +81,40 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         ];
     }
 
+    public function provideEnvConfig()
+    {
+        return [
+            [true, 'test', false],
+            [false, 'test', false],
+            [true, 'dev', false],
+            [false, 'dev', false],
+            [true, 'prod', true],
+            [false, 'prod', true],
+        ];
+    }
+
     public function testDefaultConfig()
     {
         $this->load();
         $this->compile();
 
-        $this->assertTrue($this->container->has('sulu_http_cache.handler'));
-        $this->assertTrue($this->container->has('sulu_http_cache.handler.aggregate'));
-        $this->assertTrue($this->container->has('sulu_http_cache.handler.url'));
-        $this->assertFalse($this->container->has('sulu_http_cache.handler.tags'));
-    }
-
-    public function provideHandler()
-    {
-        return [
-            ['tags'],
-            ['url'],
-            ['public'],
-            ['debug'],
-            ['aggregate'],
-        ];
+        $this->assertTrue($this->container->has('sulu_http_cache.cache_lifetime.resolver'));
+        $this->assertTrue($this->container->has('sulu_http_cache.event_subscriber.invalidation'));
+        $this->assertFalse($this->container->has('sulu_http_cache.cache_manager'));
     }
 
     /**
-     * @dataProvider provideHandler
+     * @dataProvider provideEnvConfig
      */
-    public function testHandler($handler)
+    public function testVarnishConfig(bool $debug, string $env, bool $expected)
     {
-        $config = [];
-        if ('aggregate' !== $handler) {
-            $config = [
-                'handlers' => [
-                    $handler => [
-                        'enabled' => true,
-                    ],
-                ],
-            ];
-        }
+        $this->container->setParameter('kernel.debug', $debug);
+        $this->container->setParameter('kernel.environment', $env);
 
-        $this->load($config);
-        $this->compile();
-
-        $this->assertTrue($this->container->has('sulu_http_cache.handler.aggregate'));
-        $this->assertTrue($this->container->has('sulu_http_cache.handler.' . $handler));
-
-        $this->container->get('sulu_http_cache.handler.' . $handler);
-    }
-
-    public function testVarnishConfig()
-    {
         $config = [
             'proxy_client' => [
                 'varnish' => [
                     'enabled' => true,
-                    'servers' => ['foobar.dom', 'dom.foobar'],
-                    'base_url' => 'http://foo.dom',
                 ],
             ],
         ];
@@ -141,29 +122,38 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->load($config);
         $this->compile();
 
-        $res = $this->container->getParameter('sulu_http_cache.proxy_client.varnish.servers');
-        $this->assertEquals($config['proxy_client']['varnish']['servers'], $res);
+        $this->assertEquals($expected, $this->container->has('sulu_http_cache.cache_manager'));
 
-        $res = $this->container->getParameter('sulu_http_cache.proxy_client.varnish.base_url');
-        $this->assertEquals($config['proxy_client']['varnish']['base_url'], $res);
-    }
-
-    public function provideEventSubscribers()
-    {
-        return [
-            ['flush'],
-            ['update_response'],
-        ];
+        if ($expected) {
+            $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.max_age', 240);
+            $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.shared_max_age', 240);
+        }
     }
 
     /**
-     * @dataProvider provideEventSubscribers
+     * @dataProvider provideEnvConfig
      */
-    public function testEventSubscribers($name)
+    public function testSymfonyConfig(bool $debug, string $env, bool $expected)
     {
-        $this->load([]);
+        $this->container->setParameter('kernel.debug', $debug);
+        $this->container->setParameter('kernel.environment', $env);
+
+        $config = [
+            'proxy_client' => [
+                'symfony' => [
+                    'enabled' => true,
+                ],
+            ],
+        ];
+
+        $this->load($config);
         $this->compile();
 
-        $this->container->get('sulu_http_cache.event_subscriber.' . $name);
+        $this->assertEquals($expected, $this->container->has('sulu_http_cache.cache_manager'));
+
+        if ($expected) {
+            $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.max_age', 240);
+            $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.shared_max_age', 240);
+        }
     }
 }
