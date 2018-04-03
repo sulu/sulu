@@ -19,6 +19,14 @@ test('Should render with skin link', () => {
     expect(render(<Button skin="link" />)).toMatchSnapshot();
 });
 
+test('Should render with skin icon', () => {
+    expect(render(<Button skin="icon" />)).toMatchSnapshot();
+});
+
+test('Should render with skin icon and active', () => {
+    expect(render(<Button skin="icon" active={true} />)).toMatchSnapshot();
+});
+
 test('Should call the callback on click', () => {
     const preventDefaultSpy = jest.fn();
     const onClick = jest.fn();
