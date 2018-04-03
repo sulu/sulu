@@ -3,3 +3,17 @@
     flex-direction: column;
     height: 100%;
 }
+
+.toolbar {
+    margin-bottom: 30px;
+
+    & > * {
+        float: right;
+    }
+
+    &::after {
+        content: '';
+        clear: both;
+        display: block;
+    }
+}

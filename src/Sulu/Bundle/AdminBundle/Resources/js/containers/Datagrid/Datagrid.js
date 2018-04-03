@@ -1,7 +1,7 @@
 // @flow
 import {observer} from 'mobx-react';
 import {observable, action, computed} from 'mobx';
-import React from 'react';
+import React, {Fragment} from 'react';
 import equal from 'fast-deep-equal';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
@@ -114,31 +114,33 @@ export default class Datagrid extends React.Component<Props> {
         const Adapter = this.currentAdapter;
 
         return (
-            <div className={datagridStyles.datagrid}>
-                <div>
+            <Fragment>
+                <div className={datagridStyles.toolbar}>
                     <AdapterSwitch
                         adapters={adapters}
                         currentAdapter={this.currentAdapterKey}
                         onAdapterChange={this.handleAdapterChange}
                     />
                 </div>
-                <Adapter
-                    active={store.active}
-                    data={store.data}
-                    disabledIds={disabledIds}
-                    loading={store.loading}
-                    onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
-                    onItemActivation={this.handleItemActivation}
-                    onItemClick={onItemClick}
-                    onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
-                    onAddClick={onAddClick}
-                    onPageChange={this.handlePageChange}
-                    page={store.getPage()}
-                    pageCount={store.pageCount}
-                    schema={store.schema}
-                    selections={store.selectionIds}
-                />
-            </div>
+                <div className={datagridStyles.datagrid}>
+                    <Adapter
+                        active={store.active}
+                        data={store.data}
+                        disabledIds={disabledIds}
+                        loading={store.loading}
+                        onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
+                        onItemActivation={this.handleItemActivation}
+                        onItemClick={onItemClick}
+                        onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
+                        onAddClick={onAddClick}
+                        onPageChange={this.handlePageChange}
+                        page={store.getPage()}
+                        pageCount={store.pageCount}
+                        schema={store.schema}
+                        selections={store.selectionIds}
+                    />
+                </div>
+            </Fragment>
         );
     }
 }

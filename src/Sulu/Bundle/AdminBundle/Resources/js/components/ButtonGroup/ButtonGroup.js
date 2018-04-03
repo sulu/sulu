@@ -27,6 +27,10 @@ export default class ButtonGroup extends React.PureComponent<Props> {
     };
 
     render() {
-        return this.cloneChildren();
+        return (
+            <div>
+                {this.cloneChildren()}
+            </div>
+        );
     }
 }
