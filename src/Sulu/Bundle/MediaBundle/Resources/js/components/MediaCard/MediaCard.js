@@ -112,18 +112,19 @@ export default class MediaCard extends React.Component<Props> {
 
     render() {
         const {
-            id,
-            icon,
-            meta,
-            title,
-            image,
-            selected,
-            mimeType,
-            showCover,
-            imageSizes,
-            downloadUrl,
-            downloadText,
             downloadCopyText,
+            downloadText,
+            downloadUrl,
+            icon,
+            id,
+            image,
+            imageSizes,
+            meta,
+            mimeType,
+            onSelectionChange,
+            selected,
+            title,
+            showCover,
         } = this.props;
         const mediaCardClass = classNames(
             mediaCardStyles.mediaCard,
@@ -140,6 +141,12 @@ export default class MediaCard extends React.Component<Props> {
             }
         );
 
+        const mediaTitle = (
+            <div className={mediaCardStyles.titleText}>
+                <CroppedText>{title}</CroppedText>
+            </div>
+        );
+
         return (
             <div className={mediaCardClass}>
                 <div className={mediaCardStyles.header}>
@@ -148,15 +155,16 @@ export default class MediaCard extends React.Component<Props> {
                         onClick={this.handleHeaderClick}
                     >
                         <div className={mediaCardStyles.title}>
-                            <Checkbox
-                                value={id}
-                                checked={!!selected}
-                                className={mediaCardStyles.checkbox}
-                            >
-                                <div className={mediaCardStyles.titleText}>
-                                    <CroppedText>{title}</CroppedText>
-                                </div>
-                            </Checkbox>
+                            {onSelectionChange
+                                ? <Checkbox
+                                    value={id}
+                                    checked={!!selected}
+                                    className={mediaCardStyles.checkbox}
+                                >
+                                    {mediaTitle}
+                                </Checkbox>
+                                : mediaTitle
+                            }
                         </div>
                         {meta &&
                             <div className={mediaCardStyles.meta}>

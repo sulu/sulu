@@ -75,7 +75,7 @@ export default class TableAdapter extends AbstractAdapter {
             >
                 <Table
                     buttons={buttons}
-                    selectMode="multiple"
+                    selectMode={onItemSelectionChange ? 'multiple' : undefined}
                     onRowSelectionChange={onItemSelectionChange}
                     onAllSelectionChange={onAllSelectionChange}
                 >

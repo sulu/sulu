@@ -1,6 +1,10 @@
 @import '../../containers/Application/colors.scss';
 @import './variables.scss';
 
+:export {
+    column-width: $columnWidth;
+}
+
 .column-list-toolbar-container {
     height: 100%;
     width: 100%;
@@ -8,7 +12,7 @@
 }
 
 .column-list-container {
-    height: calc(100% - $toolbarHeight);
+    height: 100%;
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
@@ -21,6 +25,10 @@
 
     &.last-visible-column-active {
         border-top-right-radius: 0;
+    }
+
+    .toolbar-container ~ & {
+        height: calc(100% - $toolbarHeight);
     }
 }
 

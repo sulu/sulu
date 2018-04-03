@@ -5,6 +5,19 @@ import ColumnList from '../ColumnList';
 import Column from '../Column';
 import Item from '../Item';
 
+jest.mock('../columnList.scss', () => new Proxy({}, {
+    get: function(target, key) {
+        if (key === '__esModule') {
+            return false;
+        }
+        if (key === 'columnWidth') {
+            return '270px';
+        }
+
+        return key;
+    },
+}));
+
 test('The ColumnList component should render in a non-scrolling container', () => {
     const onItemClick = jest.fn();
 
@@ -198,17 +211,22 @@ test('The ColumnList component should handle which toolbar is active on mouse en
 });
 
 test('Should move the toolbar container to the correct position', () => {
+    const toolbarItems = [
+        {
+            icon: 'fa-plus',
+            type: 'button',
+            onClick: jest.fn(),
+        },
+    ];
+
     const columnList = mount(
-        <ColumnList onItemClick={jest.fn()}>
+        <ColumnList onItemClick={jest.fn()} toolbarItems={toolbarItems}>
             <Column />
         </ColumnList>
     );
 
     expect(columnList.find('Toolbar').parent().prop('style')).toEqual({marginLeft: 0});
 
-    columnList.instance().toolbar = {
-        clientWidth: 271,
-    };
     columnList.instance().scrollPosition = 35;
     columnList.instance().activeColumnIndex = 2;
     columnList.update();
@@ -225,14 +243,13 @@ test('Should set classes if the toolbar is active on the first or last visible c
         </ColumnList>
     );
 
+    columnList.update();
+
     expect(columnList.find('.columnListContainer').prop('className'))
         .toEqual(expect.stringContaining('firstVisibleColumnActive'));
     expect(columnList.find('.columnListContainer').prop('className'))
         .toEqual(expect.stringContaining('lastVisibleColumnActive'));
 
-    columnList.instance().toolbar = {
-        clientWidth: 271,
-    };
     columnList.instance().container = {
         clientWidth: 500,
     };
@@ -262,9 +279,6 @@ test('Should scroll to the last column when new column is loaded', () => {
         </ColumnList>
     );
 
-    columnList.instance().toolbar = {
-        clientWidth: 271,
-    };
     columnList.instance().container = {
         clientWidth: 500,
     };

@@ -26,10 +26,10 @@ export default class ColumnListAdapter extends AbstractAdapter {
         }
     };
 
-    handleEditClick = (id: string | number) => {
-        const {onItemClick} = this.props;
-        if (onItemClick) {
-            onItemClick(id);
+    handleItemSelectionChange = (id: string | number) => {
+        const {onItemSelectionChange, selections} = this.props;
+        if (onItemSelectionChange) {
+            onItemSelectionChange(id, !selections.includes(id));
         }
     };
 
@@ -111,21 +111,33 @@ export default class ColumnListAdapter extends AbstractAdapter {
     }
 
     render() {
-        const {loading} = this.props;
-        const buttons = [
-            {
-                icon: 'su-pen',
-                onClick: this.handleEditClick,
-            },
-        ];
+        const {loading, onAddClick, onItemClick, onItemSelectionChange, selections} = this.props;
 
-        const toolbarItems = [
-            {
+        const buttons = [];
+
+        if (onItemClick) {
+            buttons.push({
+                icon: 'su-pen',
+                onClick: onItemClick,
+            });
+        }
+
+        if (onItemSelectionChange) {
+            buttons.push({
+                icon: 'su-checkmark',
+                onClick: this.handleItemSelectionChange,
+            });
+        }
+
+        const toolbarItems = [];
+
+        if (onAddClick) {
+            toolbarItems.push({
                 icon: 'su-add',
                 type: 'button',
                 onClick: this.handleColumnAdd,
-            },
-        ];
+            });
+        }
 
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
@@ -138,10 +150,11 @@ export default class ColumnListAdapter extends AbstractAdapter {
                             {items.map((item: Object) => (
                                 // TODO: Don't access properties like "hasChildren" or "title" directly
                                 <ColumnList.Item
+                                    active={this.activeItemPath.includes(item.id)}
+                                    hasChildren={item.hasChildren}
                                     id={item.id}
                                     key={item.id}
-                                    hasChildren={item.hasChildren}
-                                    active={this.activeItemPath.includes(item.id)}
+                                    selected={selections.includes(item.id)}
                                 >
                                     {item.title}
                                 </ColumnList.Item>

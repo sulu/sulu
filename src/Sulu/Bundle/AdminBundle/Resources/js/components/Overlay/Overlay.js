@@ -10,7 +10,7 @@ import Icon from '../Icon';
 import Button from '../Button';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
-import type {Action} from './types';
+import type {Action, Size} from './types';
 import Actions from './Actions';
 import overlayStyles from './overlay.scss';
 
@@ -22,6 +22,7 @@ type Props = {
     confirmLoading: boolean,
     onConfirm: () => void,
     open: boolean,
+    size?: Size,
     onClose: () => void,
 };
 
@@ -83,19 +84,27 @@ export default class Overlay extends React.Component<Props> {
 
     render() {
         const {
+            actions,
+            children,
+            confirmLoading,
+            confirmText,
+            onClose,
+            onConfirm,
             open,
             title,
-            actions,
-            onClose,
-            children,
-            onConfirm,
-            confirmText,
-            confirmLoading,
+            size,
         } = this.props;
         const containerClass = classNames(
             overlayStyles.container,
             {
                 [overlayStyles.isDown]: this.visible,
+            }
+        );
+
+        const overlayClass = classNames(
+            overlayStyles.overlay,
+            {
+                [overlayStyles[size]]: size,
             }
         );
 
@@ -110,7 +119,7 @@ export default class Overlay extends React.Component<Props> {
                             className={containerClass}
                             onTransitionEnd={this.handleTransitionEnd}
                         >
-                            <div className={overlayStyles.overlay}>
+                            <div className={overlayClass}>
                                 <section className={overlayStyles.content}>
                                     <header>
                                         {title}

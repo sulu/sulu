@@ -477,8 +477,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
             throw new MissingParameterException(get_class($this), 'locale');
         }
 
-        if (!$webspaceKey && !$webspaceNodes) {
-            throw new MissingParameterChoiceException(get_class($this), ['webspace', 'webspace-nodes']);
+        if (!$webspaceKey && !$webspaceNodes && !$parent) {
+            throw new MissingParameterChoiceException(get_class($this), ['webspace', 'webspace-nodes', 'parent']);
         }
 
         if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
@@ -497,12 +497,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
             ->getMapping();
 
         $contents = [];
-        if ($webspaceKey) {
-            if (!$parent) {
-                $contents = $contentRepository->findByWebspaceRoot($locale, $webspaceKey, $mapping, $user);
-            } else {
-                $contents = $contentRepository->findByParentUuid($parent, $locale, $webspaceKey, $mapping, $user);
-            }
+
+        if ($parent) {
+            $contents = $contentRepository->findByParentUuid($parent, $locale, $webspaceKey, $mapping, $user);
+        } elseif ($webspaceKey) {
+            $contents = $contentRepository->findByWebspaceRoot($locale, $webspaceKey, $mapping, $user);
         }
 
         if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {

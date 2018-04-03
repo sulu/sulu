@@ -9,15 +9,20 @@ import AbstractAdapter from './adapters/AbstractAdapter';
 import AdapterSwitch from './AdapterSwitch';
 import datagridStyles from './datagrid.scss';
 
-type Props = {
+type Props = {|
     onItemClick?: (itemId: string | number) => void,
     onAddClick?: (id: string | number) => void,
+    selectable: boolean,
     store: DatagridStore,
     adapters: Array<string>,
-};
+|};
 
 @observer
 export default class Datagrid extends React.Component<Props> {
+    static defaultProps = {
+        selectable: true,
+    };
+
     @observable currentAdapterKey: string;
 
     @computed get currentAdapter(): typeof AbstractAdapter {
@@ -97,10 +102,11 @@ export default class Datagrid extends React.Component<Props> {
 
     render() {
         const {
-            store,
+            adapters,
             onItemClick,
             onAddClick,
-            adapters,
+            selectable,
+            store,
         } = this.props;
         const Adapter = this.currentAdapter;
 
@@ -115,10 +121,10 @@ export default class Datagrid extends React.Component<Props> {
                     active={store.active}
                     data={store.data}
                     loading={store.loading}
-                    onAllSelectionChange={this.handleAllSelectionChange}
+                    onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
                     onItemActivation={this.handleItemActivation}
                     onItemClick={onItemClick}
-                    onItemSelectionChange={this.handleItemSelectionChange}
+                    onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
                     onAddClick={onAddClick}
                     onPageChange={this.handlePageChange}
                     page={store.getPage()}

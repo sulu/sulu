@@ -44,6 +44,7 @@ function registerFieldTypes() {
 
     // TODO move to correct bundle or even allow to register somehow via the config request
     fieldRegistry.add('snippet', Assignment, {
+        adapter: 'table',
         displayProperties: [
             'title',
         ],
@@ -51,6 +52,17 @@ function registerFieldTypes() {
         label: translate('sulu_snippet.assignment_label'),
         resourceKey: 'snippets',
         overlayTitle: translate('sulu_snippet.assignment_overlay_title'),
+    });
+
+    fieldRegistry.add('internal_links', Assignment, {
+        adapter: 'column_list',
+        displayProperties: [
+            'title',
+        ],
+        icon: 'su-document',
+        label: translate('sulu_content.assignment_label'),
+        resourceKey: 'pages',
+        overlayTitle: translate('sulu_content.assignment_overlay_title'),
     });
 }
 

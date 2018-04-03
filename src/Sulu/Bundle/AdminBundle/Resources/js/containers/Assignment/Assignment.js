@@ -9,6 +9,7 @@ import DatagridOverlay from './DatagridOverlay';
 import assignmentStyles from './assignment.scss';
 
 type Props = {|
+    adapter: string,
     displayProperties: Array<string>,
     onChange: (selectedIds: Array<string | number>) => void,
     label?: string,
@@ -93,7 +94,7 @@ export default class Assignment extends React.Component<Props> {
     };
 
     render() {
-        const {displayProperties, icon, label, locale, resourceKey, overlayTitle} = this.props;
+        const {adapter, displayProperties, icon, label, locale, resourceKey, overlayTitle} = this.props;
         const {items, loading} = this.assignmentStore;
         const columns = displayProperties.length;
 
@@ -126,6 +127,7 @@ export default class Assignment extends React.Component<Props> {
                     ))}
                 </MultiItemSelection>
                 <DatagridOverlay
+                    adapter={adapter}
                     locale={locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}

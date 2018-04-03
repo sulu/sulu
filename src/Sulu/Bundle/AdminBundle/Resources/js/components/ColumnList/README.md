@@ -1,9 +1,7 @@
-The `ColumnList` component consists out of three parts: `ColumnList`, `Column` and `Item`. 
+The `ColumnList` component consists out of three parts: `ColumnList`, `Column` and `Item`. The `toolbarItems` prop
+can be used to configure the toolbar above every column.
 
 ```
-const Column = ColumnList.Column;
-const Item = ColumnList.Item;
-
 const buttons = [
     {
         icon: 'fa-heart',
@@ -61,20 +59,43 @@ const toolbarItems = [
 
 <div style={{height: '60vh'}}>
     <ColumnList buttons={buttons} onItemClick={handleItemClick} toolbarItems={toolbarItems}>
-        <Column>
-            <Item id="1" selected="true">Google 1</Item>
-            <Item id="2" hasChildren="true">Apple 1</Item>
-            <Item id="3">Microsoft 1</Item>
-        </Column>
-        <Column>
-            <Item id="1-1">Item 1</Item>
-            <Item id="1-2" hasChildren="true">Item 1</Item>
-        </Column>
-        <Column>
-            <Item id="1-1-1">Item 1</Item>
-            <Item id="1-1-2">Item 1</Item>
-        </Column>
-        <Column />
+        <ColumnList.Column>
+            <ColumnList.Item id="1" selected="true">Google 1</ColumnList.Item>
+            <ColumnList.Item id="2" hasChildren="true">Apple 1</ColumnList.Item>
+            <ColumnList.Item id="3">Microsoft 1</ColumnList.Item>
+        </ColumnList.Column>
+        <ColumnList.Column>
+            <ColumnList.Item id="1-1">Item 1</ColumnList.Item>
+            <ColumnList.Item id="1-2" hasChildren="true">Item 1</ColumnList.Item>
+        </ColumnList.Column>
+        <ColumnList.Column>
+            <ColumnList.Item id="1-1-1">Item 1</ColumnList.Item>
+            <ColumnList.Item id="1-1-2">Item 1</ColumnList.Item>
+        </ColumnList.Column>
+        <ColumnList.Column />
+    </ColumnList>
+</div>
+```
+
+The `toolbarItems` prop is optional, and the component can also be used without a toolbar.
+
+```
+<div style={{height: '60vh'}}>
+    <ColumnList>
+        <ColumnList.Column>
+            <ColumnList.Item id="1" selected="true">Google 1</ColumnList.Item>
+            <ColumnList.Item id="2" hasChildren="true">Apple 1</ColumnList.Item>
+            <ColumnList.Item id="3">Microsoft 1</ColumnList.Item>
+        </ColumnList.Column>
+        <ColumnList.Column>
+            <ColumnList.Item id="1-1">Item 1</ColumnList.Item>
+            <ColumnList.Item id="1-2" hasChildren="true">Item 1</ColumnList.Item>
+        </ColumnList.Column>
+        <ColumnList.Column>
+            <ColumnList.Item id="1-1-1">Item 1</ColumnList.Item>
+            <ColumnList.Item id="1-1-2">Item 1</ColumnList.Item>
+        </ColumnList.Column>
+        <ColumnList.Column />
     </ColumnList>
 </div>
 ```
