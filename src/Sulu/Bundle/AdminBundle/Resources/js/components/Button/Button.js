@@ -13,7 +13,7 @@ type Props = {
     children: Node,
     disabled: boolean,
     skin: 'primary' | 'secondary' | 'link' | 'icon',
-    onClick: (value?: *) => void,
+    onClick: (value: *) => void,
     loading: boolean,
     className?: string,
     value?: *,
@@ -25,6 +25,7 @@ export default class Button extends React.PureComponent<Props> {
         loading: false,
         size: 'large',
         active: false,
+        skin: 'secondary',
     };
 
     handleClick = (event: SyntheticEvent<HTMLButtonElement>) => {

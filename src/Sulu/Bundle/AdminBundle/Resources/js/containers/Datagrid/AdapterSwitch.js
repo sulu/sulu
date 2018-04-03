@@ -12,7 +12,11 @@ type Props = {
 };
 
 export default class AdapterSwitch extends React.PureComponent<Props> {
-    handleAdapterChange = (adapter: string) => {
+    handleAdapterChange = (adapter: *) => {
+        if (!adapter) {
+            return;
+        }
+
         this.props.onAdapterChange(adapter);
     };
 
