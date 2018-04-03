@@ -14,6 +14,8 @@ export default class TableAdapter extends AbstractAdapter {
 
     static StructureStrategy = FlatStructureStrategy;
 
+    static icon = 'su-view2';
+
     static defaultProps = {
         data: [],
     };

@@ -12,6 +12,8 @@ export default class MediaCardSelectionAdapter extends AbstractAdapter {
 
     static StructureStrategy = FlatStructureStrategy;
 
+    static icon = 'su-view';
+
     handleItemClick = (itemId: string | number, selected: boolean) => {
         const {onItemSelectionChange} = this.props;
 

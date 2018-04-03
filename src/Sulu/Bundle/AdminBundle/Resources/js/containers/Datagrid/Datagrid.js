@@ -115,11 +115,13 @@ export default class Datagrid extends React.Component<Props> {
 
         return (
             <div className={datagridStyles.datagrid}>
-                <AdapterSwitch
-                    adapters={adapters}
-                    currentAdapter={this.currentAdapterKey}
-                    onAdapterChange={this.handleAdapterChange}
-                />
+                <div>
+                    <AdapterSwitch
+                        adapters={adapters}
+                        currentAdapter={this.currentAdapterKey}
+                        onAdapterChange={this.handleAdapterChange}
+                    />
+                </div>
                 <Adapter
                     active={store.active}
                     data={store.data}

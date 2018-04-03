@@ -1,6 +1,9 @@
 // @flow
-import React from 'react';
-import AdapterSwitchItem from './AdapterSwitchItem';
+import React, {Fragment} from 'react';
+import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
+import ButtonGroup from '../../components/ButtonGroup';
+import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 
 type Props = {
     adapters: Array<string>,
@@ -24,16 +27,22 @@ export default class AdapterSwitch extends React.PureComponent<Props> {
         }
 
         return (
-            <ul>
-                {adapters.map((adapter, index) => (
-                    <AdapterSwitchItem
-                        adapter={adapter}
-                        key={index}
-                        active={adapter === currentAdapter}
-                        onClick={this.handleAdapterChange}
-                    />
-                ))}
-            </ul>
+            <ButtonGroup>
+                {adapters.map((adapter, index) => {
+                    const Adapter = datagridAdapterRegistry.get(adapter);
+
+                    return (
+                        <Button
+                            value={adapter}
+                            key={index}
+                            active={adapter === currentAdapter}
+                            onClick={this.handleAdapterChange}
+                        >
+                            <Icon name={Adapter.icon} />
+                        </Button>
+                    );
+                })}
+            </ButtonGroup>
         );
     }
 }
