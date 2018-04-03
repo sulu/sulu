@@ -67,9 +67,9 @@ class ContentTeaserProvider implements TeaserProviderInterface
         foreach ($searchResult as $item) {
             $document = $item->getDocument();
 
-            $title = $document->getField('title')->getValue();
-            $excerptTitle = $document->getField('excerptTitle')->getValue();
-            $excerptDescription = $document->getField('excerptDescription')->getValue();
+            $title = $this->getTitleFromDocument($document);
+            $excerptTitle = $this->getExcerptTitleFromDocument($document);
+            $excerptDescription = $this->getExcerptDescritionFromDocument($document);
             $excerptMedia = $this->getMedia($document, 'excerptImages');
 
             $teaserDescription = $document->hasField(StructureProvider::FIELD_TEASER_DESCRIPTION) ?
@@ -93,6 +93,21 @@ class ContentTeaserProvider implements TeaserProviderInterface
         }
 
         return $result;
+    }
+
+    protected function getTitleFromDocument(Document $document)
+    {
+        return $document->getField('title')->getValue();
+    }
+
+    protected function getExcerptTitleFromDocument(Document $document)
+    {
+        return $document->getField('excerptTitle')->getValue();
+    }
+
+    protected function getExcerptDescritionFromDocument(Document $document)
+    {
+        return $document->getField('excerptDescription')->getValue();
     }
 
     /**
