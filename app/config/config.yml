@@ -141,9 +141,9 @@ sulu_website:
 
 # SuluHttpCache Configuration
 sulu_http_cache:
-    handlers:
-        debug:
-            enabled: '%kernel.debug%'
+    proxy_client:
+        symfony:
+            enabled: true
 
 # SuluMedia Configuration
 sulu_media:
