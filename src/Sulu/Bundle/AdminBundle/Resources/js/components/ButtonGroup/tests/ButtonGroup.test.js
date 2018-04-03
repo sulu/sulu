@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render} from 'enzyme';
 import ButtonGroup from '../ButtonGroup';
 import Button from '../../Button';
 import Icon from '../../Icon';
@@ -12,7 +12,7 @@ test('Should render one button', () => {
         <ButtonGroup>
             <Button onClick={handleClick}><Icon name="su-view" /></Button>
         </ButtonGroup>
-    )
+    );
     expect(render(buttonGroup)).toMatchSnapshot();
 });
 
@@ -24,7 +24,7 @@ test('Should render two buttons', () => {
             <Button onClick={handleClick}><Icon name="su-view" /></Button>
             <Button onClick={handleClick}><Icon name="su-view2" /></Button>
         </ButtonGroup>
-    )
+    );
     expect(render(buttonGroup)).toMatchSnapshot();
 });
 
@@ -38,6 +38,6 @@ test('Should render more than two buttons', () => {
             <Button onClick={handleClick}><Icon name="su-view" /></Button>
             <Button onClick={handleClick}><Icon name="su-view2" /></Button>
         </ButtonGroup>
-    )
+    );
     expect(render(buttonGroup)).toMatchSnapshot();
 });

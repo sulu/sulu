@@ -1,9 +1,9 @@
 // @flow
-import React, {Fragment} from 'react';
-import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
+import React from 'react';
 import ButtonGroup from '../../components/ButtonGroup';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
+import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 
 type Props = {
     adapters: Array<string>,
