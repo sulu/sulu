@@ -10,8 +10,8 @@ exports[`Should open an overlay 1`] = `
       <section class=\\"content\\">
         <header>Assignment<span class=\\"icon su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
-          <div class=\\"adapter-container-table\\">
-            <div class=\\"datagrid adapter-table\\">
+          <div class=\\"adapter-container table\\">
+            <div class=\\"datagrid adapter table\\">
               <div class=\\"datagrid\\"></div>
             </div>
           </div>

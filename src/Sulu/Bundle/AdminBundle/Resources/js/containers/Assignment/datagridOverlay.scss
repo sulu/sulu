@@ -5,12 +5,12 @@
     padding: 30px 60px 60px;
 }
 
-.adapter-container-column_list {
+.adapter-container.column_list {
     height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom);
     overflow: hidden;
 }
 
-.adapter-column_list {
+.adapter.column_list {
     padding: 0;
     height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom + $columnBorderWidth);
 }
