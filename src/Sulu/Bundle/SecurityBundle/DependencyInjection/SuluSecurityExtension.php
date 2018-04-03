@@ -88,6 +88,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                         'roles' => [
                             'form' => [],
                             'datagrid' => '%sulu.model.role.class%',
+                            'endpoint' => 'get_roles',
                         ],
                     ],
                 ]

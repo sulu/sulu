@@ -14,6 +14,7 @@ import FieldBlocks from './containers/FieldBlocks';
 import {viewRegistry} from './containers/ViewRenderer';
 import {navigationRegistry} from './containers/Navigation';
 import {ColumnListAdapter, datagridAdapterRegistry, FolderAdapter, TableAdapter} from './containers/Datagrid';
+import resourceMetadataStore from './stores/ResourceMetadataStore';
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
 import Datagrid from './views/Datagrid';
@@ -85,6 +86,7 @@ const translationPromise = Requester.get('/admin/v2/translations?locale=en')
 const configPromise = Requester.get('/admin/v2/config').then((response) => {
     routeRegistry.addCollection(response['sulu_admin'].routes);
     navigationRegistry.set(response['sulu_admin'].navigation);
+    resourceMetadataStore.setEndpoints(response['sulu_admin'].endpoints);
 
     return response;
 });

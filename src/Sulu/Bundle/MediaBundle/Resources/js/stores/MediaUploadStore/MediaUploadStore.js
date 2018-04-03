@@ -29,12 +29,12 @@ export default class MediaUploadStore {
     }
 
     update(mediaId: string | number, file: File): Promise<*> {
-        const baseUrl = ResourceMetadataStore.getBaseUrl(RESOURCE_KEY);
+        const endpoint = ResourceMetadataStore.getEndpoint(RESOURCE_KEY);
         const queryString = ResourceRequester.buildQueryString({
             action: 'new-version',
             locale: this.locale.get(),
         });
-        const url = baseUrl + '/' + mediaId + queryString;
+        const url = endpoint + '/' + mediaId + queryString;
 
         this.setUploading(true);
 
@@ -43,12 +43,12 @@ export default class MediaUploadStore {
     }
 
     create(collectionId: string | number, file: File): Promise<*> {
-        const baseUrl = ResourceMetadataStore.getBaseUrl(RESOURCE_KEY);
+        const endpoint = ResourceMetadataStore.getEndpoint(RESOURCE_KEY);
         const queryString = ResourceRequester.buildQueryString({
             locale: this.locale.get(),
             collection: collectionId,
         });
-        const url = baseUrl + queryString;
+        const url = endpoint + queryString;
 
         this.setUploading(true);
 

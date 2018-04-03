@@ -20,6 +20,17 @@ class ResourceMetadataPool
      */
     private $resourceMetadataProviders;
 
+    public function getAllResourceMetadata(string $locale): array
+    {
+        $resourceMetadataArray = [];
+
+        foreach ($this->resourceMetadataProviders as $resourceMetadataProvider) {
+            $resourceMetadataArray = array_merge($resourceMetadataArray, $resourceMetadataProvider->getAllResourceMetadata($locale));
+        }
+
+        return $resourceMetadataArray;
+    }
+
     public function getResourceMetadata(string $resourceKey, string $locale): ?ResourceMetadataInterface
     {
         foreach ($this->resourceMetadataProviders as $resourceMetadataProvider) {

@@ -13,5 +13,7 @@ namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
 interface ResourceMetadataProviderInterface
 {
+    public function getAllResourceMetadata(string $locale): array;
+
     public function getResourceMetadata(string $resourceKey, string $locale): ?ResourceMetadataInterface;
 }

@@ -55,6 +55,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                                 'pages' => [
                                     'datagrid' => BasePageDocument::class,
                                     'types' => ['page', 'home'],
+                                    'endpoint' => 'get_pages',
                                 ],
                             ],
                         ],

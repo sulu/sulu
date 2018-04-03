@@ -13,4 +13,5 @@ namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
 interface ResourceMetadataInterface
 {
+    public function getKey(): string;
 }

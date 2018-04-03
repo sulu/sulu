@@ -11,9 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Form;
 
-use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
-
-interface FormInterface extends ResourceMetadataInterface
+interface FormInterface
 {
     public function getForm(): Form;
 }

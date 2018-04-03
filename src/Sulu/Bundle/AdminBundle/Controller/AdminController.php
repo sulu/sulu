@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
@@ -33,6 +34,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
@@ -97,6 +99,7 @@ class AdminController
     private $resourceMetadataPool;
 
     /**
+<<<<<<< HEAD
      * @var RouteRegistry
      */
     private $routeRegistry;
@@ -105,6 +108,11 @@ class AdminController
      * @var NavigationRegistry
      */
     private $navigationRegistry;
+=======
+     * @var RouterInterface
+     */
+    private $router;
+>>>>>>> Implement endpoints
 
     /**
      * @var string
@@ -155,6 +163,7 @@ class AdminController
         ResourceMetadataPool $resourceMetadataPool,
         RouteRegistry $routeRegistry,
         NavigationRegistry $navigationRegistry,
+        RouterInterface $router,
         $environment,
         $adminName,
         array $locales,
@@ -176,6 +185,7 @@ class AdminController
         $this->resourceMetadataPool = $resourceMetadataPool;
         $this->routeRegistry = $routeRegistry;
         $this->navigationRegistry = $navigationRegistry;
+        $this->router = $router;
         $this->environment = $environment;
         $this->adminName = $adminName;
         $this->locales = $locales;
@@ -239,10 +249,20 @@ class AdminController
      */
     public function configV2Action(): Response
     {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $endpoints = [];
+        foreach ($this->resourceMetadataPool->getAllResourceMetadata($user->getLocale()) as $resourceMetadata) {
+            if ($resourceMetadata instanceof EndpointInterface) {
+                $endpoints[$resourceMetadata->getKey()] = $this->router->generate($resourceMetadata->getEndpoint());
+            }
+        }
+
         $view = View::create([
             'sulu_admin' => [
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
+                'endpoints' => $endpoints,
             ],
         ]);
         $view->setFormat('json');

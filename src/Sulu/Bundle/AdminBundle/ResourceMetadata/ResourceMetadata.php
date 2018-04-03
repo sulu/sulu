@@ -18,8 +18,13 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 
-class ResourceMetadata implements DatagridInterface, FormInterface, SchemaInterface
+class ResourceMetadata implements DatagridInterface, FormInterface, SchemaInterface, EndpointInterface
 {
+    /**
+     * @var string
+     */
+    private $key;
+
     /**
      * @var Datagrid
      */
@@ -34,6 +39,21 @@ class ResourceMetadata implements DatagridInterface, FormInterface, SchemaInterf
      * @var Schema
      */
     private $schema;
+
+    /**
+     * @var string
+     */
+    private $endpoint;
+
+    public function getKey(): string
+    {
+        return $this->key;
+    }
+
+    public function setKey(string $key): void
+    {
+        $this->key = $key;
+    }
 
     public function getDatagrid(): Datagrid
     {
@@ -63,5 +83,15 @@ class ResourceMetadata implements DatagridInterface, FormInterface, SchemaInterf
     public function setSchema(Schema $schema): void
     {
         $this->schema = $schema;
+    }
+
+    public function getEndpoint(): string
+    {
+        return $this->endpoint;
+    }
+
+    public function setEndpoint(string $endpoint): void
+    {
+        $this->endpoint = $endpoint;
     }
 }

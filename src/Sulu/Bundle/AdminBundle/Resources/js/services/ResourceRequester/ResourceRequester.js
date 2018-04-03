@@ -23,29 +23,29 @@ export default class ResourceRequester {
     }
 
     static get(resourceKey: string, id: number | string, queryOptions: ?Object) {
-        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        return Requester.get(baseUrl + '/' + id + ResourceRequester.buildQueryString(queryOptions));
+        const endpoint = resourceMetadataStore.getEndpoint(resourceKey);
+        return Requester.get(endpoint + '/' + id + ResourceRequester.buildQueryString(queryOptions));
     }
 
     static post(resourceKey: string, data: Object, queryOptions: ?Object) {
-        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        return Requester.post(baseUrl + ResourceRequester.buildQueryString(queryOptions), data);
+        const endpoint = resourceMetadataStore.getEndpoint(resourceKey);
+        return Requester.post(endpoint + ResourceRequester.buildQueryString(queryOptions), data);
     }
 
     static put(resourceKey: string, id: number | string, data: Object, queryOptions: ?Object) {
-        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        return Requester.put(baseUrl + '/' + id + ResourceRequester.buildQueryString(queryOptions), data);
+        const endpoint = resourceMetadataStore.getEndpoint(resourceKey);
+        return Requester.put(endpoint + '/' + id + ResourceRequester.buildQueryString(queryOptions), data);
     }
 
     static getList(resourceKey: string, options: ListOptions) {
-        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
+        const endpoint = resourceMetadataStore.getEndpoint(resourceKey);
         const queryOptions = {...options, flat: true};
 
-        return Requester.get(baseUrl + ResourceRequester.buildQueryString(queryOptions));
+        return Requester.get(endpoint + ResourceRequester.buildQueryString(queryOptions));
     }
 
     static delete(resourceKey: string, id: number | string) {
-        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        return Requester.delete(baseUrl + '/' + id);
+        const endpoint = resourceMetadataStore.getEndpoint(resourceKey);
+        return Requester.delete(endpoint + '/' + id);
     }
 }

@@ -78,6 +78,17 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
         $this->debug = $debug;
     }
 
+    public function getAllResourceMetadata(string $locale): array
+    {
+        $resourceMetadataArray = [];
+
+        foreach (array_keys($this->resources) as $resourceKey) {
+            $resourceMetadataArray[] = $this->getResourceMetadata($resourceKey, $locale);
+        }
+
+        return $resourceMetadataArray;
+    }
+
     public function getResourceMetadata(string $resourceKey, string $locale): ?ResourceMetadataInterface
     {
         if (!array_key_exists($resourceKey, $this->resources)) {
@@ -114,12 +125,13 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
             $this->writeResourceMetadataCache(
                 $resourceKey,
                 $resource['form'],
-                $resource['datagrid']
+                $resource['datagrid'],
+                $resource['endpoint']
             );
         }
     }
 
-    private function writeResourceMetadataCache(string $resourceKey, array $forms, string $list): void
+    private function writeResourceMetadataCache(string $resourceKey, array $forms, string $list, string $endpoint): void
     {
         $fileResources = [];
 
@@ -150,9 +162,11 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
             $cache = $this->getCache($locale, $resourceKey);
 
             $resourceMetadata = new ResourceMetadata();
+            $resourceMetadata->setKey($resourceKey);
             $resourceMetadata->setDatagrid($this->resourceMetadataMapper->mapDatagrid($list, $locale));
             $resourceMetadata->setForm($this->resourceMetadataMapper->mapForm($children, $locale));
             $resourceMetadata->setSchema($this->resourceMetadataMapper->mapSchema($properties));
+            $resourceMetadata->setEndpoint($endpoint);
 
             $cache->write(
                 serialize($resourceMetadata),
