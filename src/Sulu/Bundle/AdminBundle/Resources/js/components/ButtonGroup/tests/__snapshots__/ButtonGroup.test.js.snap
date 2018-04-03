@@ -72,19 +72,6 @@ exports[`Should render one button 1`] = `
       />
     </span>
   </button>
-  <button
-    class="button icon button"
-    type="button"
-  >
-    <span
-      class="text"
-    >
-      <span
-        aria-label="su-view2"
-        class="su-view2"
-      />
-    </span>
-  </button>
 </div>
 `;
 
