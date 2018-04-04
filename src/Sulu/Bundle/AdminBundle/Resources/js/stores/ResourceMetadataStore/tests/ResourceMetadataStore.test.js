@@ -7,9 +7,9 @@ jest.mock('../../../services/Requester', () => ({
 }));
 
 test('Set and get endpoint for given key', () => {
-   resourceMetadataStore.setEndpoints({
-       snippets: '/admin/api/snippets',
-   });
+    resourceMetadataStore.setEndpoints({
+        snippets: '/admin/api/snippets',
+    });
     expect(resourceMetadataStore.getEndpoint('snippets')).toEqual('/admin/api/snippets');
 });
 
