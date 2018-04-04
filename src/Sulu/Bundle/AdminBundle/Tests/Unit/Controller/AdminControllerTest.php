@@ -216,7 +216,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $navigation = $this->prophesize(Navigation::class);
         $navigation->getChildrenAsArray()->willReturn(['navigation_item1', 'navigation_item2']);
         $this->navigationRegistry->getNavigation()->willReturn($navigation->reveal());
-        
+
         $resourceMetadata1 = $this->prophesize(EndpointInterface::class);
         $resourceMetadata1->getKey()->willReturn('test1');
         $resourceMetadata1->getEndpoint()->willReturn('route_id_1');
