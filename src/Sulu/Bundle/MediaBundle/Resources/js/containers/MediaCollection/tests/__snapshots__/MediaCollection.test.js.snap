@@ -146,258 +146,260 @@ exports[`Render the MediaCollection 1`] = `
   <div
     class="divider"
   />
-  <div
-    class="datagrid"
-  >
-    <section>
-      <div>
-        <div
-          class="masonry"
-        >
-          <li
-            style="margin-bottom:30px"
+  <div>
+    <div
+      class="datagrid"
+    >
+      <section>
+        <div>
+          <div
+            class="masonry"
           >
-            <div
-              class="mediaCard"
+            <li
+              style="margin-bottom:30px"
             >
               <div
-                class="header"
+                class="mediaCard"
               >
                 <div
-                  class="description"
+                  class="header"
                 >
                   <div
-                    class="title"
+                    class="description"
                   >
-                    <label
-                      class="label"
+                    <div
+                      class="title"
                     >
-                      <span
-                        class="switch checkbox dark checkbox"
+                      <label
+                        class="label"
                       >
-                        <input
-                          type="checkbox"
-                          value="1"
-                        />
-                        <span />
-                      </span>
-                      <div>
-                        <div
-                          class="titleText"
+                        <span
+                          class="switch checkbox dark checkbox"
                         >
+                          <input
+                            type="checkbox"
+                            value="1"
+                          />
+                          <span />
+                        </span>
+                        <div>
                           <div
-                            aria-label="Title 1"
-                            class="croppedText"
-                            title="Title 1"
+                            class="titleText"
                           >
                             <div
-                              aria-hidden="true"
-                              class="front"
+                              aria-label="Title 1"
+                              class="croppedText"
+                              title="Title 1"
                             >
-                              Titl
-                            </div>
-                            <div
-                              aria-hidden="true"
-                              class="back"
-                            >
-                              <span>
-                                e 1
-                              </span>
-                            </div>
-                            <div
-                              class="whole"
-                            >
-                              Title 1
+                              <div
+                                aria-hidden="true"
+                                class="front"
+                              >
+                                Titl
+                              </div>
+                              <div
+                                aria-hidden="true"
+                                class="back"
+                              >
+                                <span>
+                                  e 1
+                                </span>
+                              </div>
+                              <div
+                                class="whole"
+                              >
+                                Title 1
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </label>
-                  </div>
-                  <div
-                    class="meta"
-                  >
+                      </label>
+                    </div>
                     <div
-                      aria-label="image/png 12.35 KB"
-                      class="croppedText"
-                      title="image/png 12.35 KB"
+                      class="meta"
                     >
                       <div
-                        aria-hidden="true"
-                        class="front"
+                        aria-label="image/png 12.35 KB"
+                        class="croppedText"
+                        title="image/png 12.35 KB"
                       >
-                        image/png
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        class="back"
-                      >
-                        <span>
-                           12.35 KB
-                        </span>
-                      </div>
-                      <div
-                        class="whole"
-                      >
-                        image/png 12.35 KB
+                        <div
+                          aria-hidden="true"
+                          class="front"
+                        >
+                          image/png
+                        </div>
+                        <div
+                          aria-hidden="true"
+                          class="back"
+                        >
+                          <span>
+                             12.35 KB
+                          </span>
+                        </div>
+                        <div
+                          class="whole"
+                        >
+                          image/png 12.35 KB
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <button
-                    class="downloadButton"
-                  >
-                    <span
-                      aria-label="fa-cloud-download"
-                      class="fa fa-cloud-download"
-                    />
-                  </button>
-                </div>
-              </div>
-              <div
-                class="media"
-              >
-                <img
-                  alt="Title 1"
-                  src="http://lorempixel.com/240/100"
-                />
-                <div
-                  class="cover"
-                >
-                  <span
-                    aria-label="su-pen"
-                    class="mediaIcon su-pen"
-                  />
-                </div>
-              </div>
-            </div>
-          </li>
-          <li
-            style="margin-bottom:30px"
-          >
-            <div
-              class="mediaCard"
-            >
-              <div
-                class="header"
-              >
-                <div
-                  class="description"
-                >
-                  <div
-                    class="title"
-                  >
-                    <label
-                      class="label"
+                  <div>
+                    <button
+                      class="downloadButton"
                     >
                       <span
-                        class="switch checkbox dark checkbox"
+                        aria-label="fa-cloud-download"
+                        class="fa fa-cloud-download"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="media"
+                >
+                  <img
+                    alt="Title 1"
+                    src="http://lorempixel.com/240/100"
+                  />
+                  <div
+                    class="cover"
+                  >
+                    <span
+                      aria-label="su-pen"
+                      class="mediaIcon su-pen"
+                    />
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li
+              style="margin-bottom:30px"
+            >
+              <div
+                class="mediaCard"
+              >
+                <div
+                  class="header"
+                >
+                  <div
+                    class="description"
+                  >
+                    <div
+                      class="title"
+                    >
+                      <label
+                        class="label"
                       >
-                        <input
-                          type="checkbox"
-                          value="2"
-                        />
-                        <span />
-                      </span>
-                      <div>
-                        <div
-                          class="titleText"
+                        <span
+                          class="switch checkbox dark checkbox"
                         >
+                          <input
+                            type="checkbox"
+                            value="2"
+                          />
+                          <span />
+                        </span>
+                        <div>
                           <div
-                            aria-label="Title 1"
-                            class="croppedText"
-                            title="Title 1"
+                            class="titleText"
                           >
                             <div
-                              aria-hidden="true"
-                              class="front"
+                              aria-label="Title 1"
+                              class="croppedText"
+                              title="Title 1"
                             >
-                              Titl
-                            </div>
-                            <div
-                              aria-hidden="true"
-                              class="back"
-                            >
-                              <span>
-                                e 1
-                              </span>
-                            </div>
-                            <div
-                              class="whole"
-                            >
-                              Title 1
+                              <div
+                                aria-hidden="true"
+                                class="front"
+                              >
+                                Titl
+                              </div>
+                              <div
+                                aria-hidden="true"
+                                class="back"
+                              >
+                                <span>
+                                  e 1
+                                </span>
+                              </div>
+                              <div
+                                class="whole"
+                              >
+                                Title 1
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </label>
-                  </div>
-                  <div
-                    class="meta"
-                  >
+                      </label>
+                    </div>
                     <div
-                      aria-label="image/jpeg 54.32 KB"
-                      class="croppedText"
-                      title="image/jpeg 54.32 KB"
+                      class="meta"
                     >
                       <div
-                        aria-hidden="true"
-                        class="front"
+                        aria-label="image/jpeg 54.32 KB"
+                        class="croppedText"
+                        title="image/jpeg 54.32 KB"
                       >
-                        image/jpeg
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        class="back"
-                      >
-                        <span>
-                           54.32 KB
-                        </span>
-                      </div>
-                      <div
-                        class="whole"
-                      >
-                        image/jpeg 54.32 KB
+                        <div
+                          aria-hidden="true"
+                          class="front"
+                        >
+                          image/jpeg
+                        </div>
+                        <div
+                          aria-hidden="true"
+                          class="back"
+                        >
+                          <span>
+                             54.32 KB
+                          </span>
+                        </div>
+                        <div
+                          class="whole"
+                        >
+                          image/jpeg 54.32 KB
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <div>
+                    <button
+                      class="downloadButton"
+                    >
+                      <span
+                        aria-label="fa-cloud-download"
+                        class="fa fa-cloud-download"
+                      />
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <button
-                    class="downloadButton"
+                <div
+                  class="media"
+                >
+                  <img
+                    alt="Title 1"
+                    src="http://lorempixel.com/240/100"
+                  />
+                  <div
+                    class="cover"
                   >
                     <span
-                      aria-label="fa-cloud-download"
-                      class="fa fa-cloud-download"
+                      aria-label="su-pen"
+                      class="mediaIcon su-pen"
                     />
-                  </button>
+                  </div>
                 </div>
               </div>
-              <div
-                class="media"
-              >
-                <img
-                  alt="Title 1"
-                  src="http://lorempixel.com/240/100"
-                />
-                <div
-                  class="cover"
-                >
-                  <span
-                    aria-label="su-pen"
-                    class="mediaIcon su-pen"
-                  />
-                </div>
-              </div>
-            </div>
-          </li>
+            </li>
+          </div>
         </div>
-      </div>
-      <div
-        class="indicator"
-      />
-    </section>
+        <div
+          class="indicator"
+        />
+      </section>
+    </div>
   </div>
   <input
     autocomplete="off"
