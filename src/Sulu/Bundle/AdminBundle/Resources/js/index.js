@@ -49,7 +49,7 @@ function registerFieldTypes() {
         displayProperties: [
             'title',
         ],
-        icon: 'su-document',
+        icon: 'su-snippet',
         label: translate('sulu_snippet.assignment_label'),
         resourceKey: 'snippets',
         overlayTitle: translate('sulu_snippet.assignment_overlay_title'),
