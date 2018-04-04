@@ -14,7 +14,22 @@ type Props = {
 
 @observer
 export default class Form extends React.Component<Props> {
+    formInspector: FormInspector;
     @observable showAllErrors = false;
+
+    componentWillMount() {
+        this.updateFormInspector();
+    }
+
+    componentWillReceiveProps(nextProps: Props) {
+        if (this.props.store !== nextProps.store) {
+            this.updateFormInspector();
+        }
+    }
+
+    updateFormInspector() {
+        this.formInspector = new FormInspector(this.props.store);
+    }
 
     /** @public */
     @action submit = (action: ?string) => {
@@ -40,7 +55,7 @@ export default class Form extends React.Component<Props> {
                     <Renderer
                         data={store.data}
                         errors={store.errors}
-                        formInspector={new FormInspector(store)}
+                        formInspector={this.formInspector}
                         onChange={this.handleChange}
                         onFieldFinish={this.handleFieldFinish}
                         schema={store.schema}
