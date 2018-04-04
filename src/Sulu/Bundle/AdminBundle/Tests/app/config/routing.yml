@@ -1,6 +1,38 @@
-sulu_contact:
+sulu_admin:
     resource: "@SuluAdminBundle/Resources/config/routing.yml"
     prefix: /admin
 
 sulu_security:
     resource: "@SuluSecurityBundle/Resources/config/routing.xml"
+
+sulu_snippet.snippet:
+    type: rest
+    resource: sulu_snippet.controller.snippet
+
+sulu_content.page:
+    type: rest
+    resource: Sulu\Bundle\ContentBundle\Controller\PageController
+
+sulu_media.media:
+    type: rest
+    resource: Sulu\Bundle\MediaBundle\Controller\MediaController
+
+sulu_media.collections:
+    type: rest
+    resource: Sulu\Bundle\MediaBundle\Controller\CollectionController
+
+sulu_tag.tags:
+    type: rest
+    resource: Sulu\Bundle\TagBundle\Controller\TagController
+
+sulu_security.roles:
+    type: rest
+    resource: Sulu\Bundle\SecurityBundle\Controller\RoleController
+
+sulu_contact.contacts:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\ContactController
+
+sulu_contact.accounts:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\AccountController
