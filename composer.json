@@ -109,6 +109,7 @@
         "zendframework/zendsearch": "@dev"
     },
     "conflict": {
+        "doctrine/dbal": "2.7.0",
         "doctrine/lexer": "1.0.0",
         "friendsofsymfony/http-cache": "2.1.0 - 2.1.2",
         "symfony/symfony": "2.8.10",
