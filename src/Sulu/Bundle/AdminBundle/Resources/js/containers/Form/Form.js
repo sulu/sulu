@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Loader from '../../components/Loader';
@@ -14,21 +14,10 @@ type Props = {
 
 @observer
 export default class Form extends React.Component<Props> {
-    formInspector: FormInspector;
     @observable showAllErrors = false;
 
-    componentWillMount() {
-        this.updateFormInspector();
-    }
-
-    componentWillReceiveProps(nextProps: Props) {
-        if (this.props.store !== nextProps.store) {
-            this.updateFormInspector();
-        }
-    }
-
-    updateFormInspector() {
-        this.formInspector = new FormInspector(this.props.store);
+    @computed get formInspector(): FormInspector {
+        return new FormInspector(this.props.store);
     }
 
     /** @public */
