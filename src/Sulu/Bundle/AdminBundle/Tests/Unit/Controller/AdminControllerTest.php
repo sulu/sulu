@@ -228,10 +228,6 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->router->generate('route_id_1')->willReturn('/path1');
         $this->router->generate('route_id_2')->willReturn('/path2');
 
-        $routes = [
-            new Route('sulu_snippet.datagrid', '/snippets', 'sulu_admin.datagrid'),
-        ];
-        $this->adminPool->getRoutes()->willReturn($routes);
         $this->resourceMetadataPool->getAllResourceMetadata('en')->willReturn(
             [$resourceMetadata1->reveal(), $resourceMetadata2->reveal()]
         );

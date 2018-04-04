@@ -63,7 +63,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('routes', $response->sulu_admin);
         $this->assertInternalType('array', $response->sulu_admin->navigation);
         $this->assertInternalType('array', $response->sulu_admin->routes);
-        $this->assertInternalType('array', $response->sulu_admin->endpoints);
+        $this->assertInternalType('object', $response->sulu_admin->endpoints);
     }
 
     public function testGetResourcePages()
@@ -140,8 +140,6 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('schema', $resource->types->overview);
         $this->assertEquals(['title', 'url'], $resource->types->overview->schema->required);
     }
-<<<<<<< HEAD
-=======
 
     public function testGetResourceContacts()
     {
@@ -195,5 +193,4 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('schema', $resource);
         $this->assertObjectHasAttribute('required', $resource->schema);
     }
->>>>>>> Add test
 }

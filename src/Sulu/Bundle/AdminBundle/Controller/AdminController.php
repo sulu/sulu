@@ -99,7 +99,6 @@ class AdminController
     private $resourceMetadataPool;
 
     /**
-<<<<<<< HEAD
      * @var RouteRegistry
      */
     private $routeRegistry;
@@ -108,11 +107,11 @@ class AdminController
      * @var NavigationRegistry
      */
     private $navigationRegistry;
-=======
+
+    /**
      * @var RouterInterface
      */
     private $router;
->>>>>>> Implement endpoints
 
     /**
      * @var string
