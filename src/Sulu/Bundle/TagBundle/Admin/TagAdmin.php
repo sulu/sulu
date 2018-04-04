@@ -52,6 +52,25 @@ class TagAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = $this->getNavigationItemRoot();
+
+        $settings = Admin::getNavigationItemSettings();
+
+        if ($this->securityChecker->hasPermission('sulu.settings.tags', 'view')) {
+            $roles = new NavigationItem('sulu_tag.tags', $settings);
+            $roles->setPosition(30);
+            $roles->setMainRoute('sulu_tag.datagrid');
+        }
+
+        if ($settings->hasChildren()) {
+            $rootNavigationItem->addChild($settings);
+        }
+
+        return new Navigation($rootNavigationItem);
+    }
+
     public function getRoutes(): array
     {
         return [

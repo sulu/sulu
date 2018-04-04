@@ -17,6 +17,8 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
+use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
+use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
@@ -95,6 +97,16 @@ class AdminController
     private $resourceMetadataPool;
 
     /**
+     * @var RouteRegistry
+     */
+    private $routeRegistry;
+
+    /**
+     * @var NavigationRegistry
+     */
+    private $navigationRegistry;
+
+    /**
      * @var string
      */
     private $environment;
@@ -141,6 +153,8 @@ class AdminController
         LocalizationManagerInterface $localizationManager,
         TranslatorBagInterface $translator,
         ResourceMetadataPool $resourceMetadataPool,
+        RouteRegistry $routeRegistry,
+        NavigationRegistry $navigationRegistry,
         $environment,
         $adminName,
         array $locales,
@@ -160,6 +174,8 @@ class AdminController
         $this->localizationManager = $localizationManager;
         $this->translator = $translator;
         $this->resourceMetadataPool = $resourceMetadataPool;
+        $this->routeRegistry = $routeRegistry;
+        $this->navigationRegistry = $navigationRegistry;
         $this->environment = $environment;
         $this->adminName = $adminName;
         $this->locales = $locales;
@@ -225,7 +241,8 @@ class AdminController
     {
         $view = View::create([
             'sulu_admin' => [
-                'routes' => $this->adminPool->getRoutes(),
+                'routes' => $this->routeRegistry->getRoutes(),
+                'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
             ],
         ]);
         $view->setFormat('json');

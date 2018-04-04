@@ -49,9 +49,9 @@ class ResourceMetadataMapperTest extends \PHPUnit_Framework_TestCase
         $this->fieldDescriptorFactory = $this->prophesize(FieldDescriptorFactory::class);
 
         $this->translator = $this->prophesize(Translator::class);
-        $this->translator->trans('test_translation_key1', [], 'admin', 'de')->willReturn('Test 1');
-        $this->translator->trans('test_translation_key2', [], 'admin', 'de')->willReturn('Test 2');
-        $this->translator->trans('test_translation_key3', [], 'admin', 'de')->willReturn('Test 3');
+        $this->translator->trans('test_translation_key1', [], 'admin')->willReturn('Test 1');
+        $this->translator->trans('test_translation_key2', [], 'admin')->willReturn('Test 2');
+        $this->translator->trans('test_translation_key3', [], 'admin')->willReturn('Test 3');
 
         $this->resourceMetadataMapper = new ResourceMetadataMapper(
             $this->fieldDescriptorFactory->reveal(),

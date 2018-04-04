@@ -26,6 +26,21 @@ $buttonColor: $silver;
     padding: 20px 40px;
 }
 
+.header-icon {
+    font-size: 20px;
+    line-height: 20px;
+    padding-right: 20px;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.header-title {
+    font-size: 16px;
+    line-height: 20px;
+    vertical-align: middle;
+    height: 100%;
+}
+
 .user {
     min-height: 130px;
     background-color: $userBackgroundColor;

@@ -61,6 +61,43 @@ class ContactAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
+    public function getNavigationItemContacts(): NavigationItem
+    {
+        $contacts = new NavigationItem('sulu_contact.contacts');
+        $contacts->setPosition(40);
+        $contacts->setIcon('fa-user');
+
+        return $contacts;
+    }
+
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = $this->getNavigationItemRoot();
+        $contacts = $this->getNavigationItemContacts();
+
+        if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
+            $people = new NavigationItem('sulu_contact.people');
+            $people->setPosition(10);
+            $people->setMainRoute('sulu_contact.contacts_datagrid');
+
+            $contacts->addChild($people);
+        }
+
+        if ($this->securityChecker->hasPermission('sulu.contact.organizations', PermissionTypes::VIEW)) {
+            $companies = new NavigationItem('sulu_contact.organizations');
+            $companies->setPosition(20);
+            $companies->setMainRoute('sulu_contact.accounts_datagrid');
+
+            $contacts->addChild($companies);
+        }
+
+        if ($contacts->hasChildren()) {
+            $rootNavigationItem->addChild($contacts);
+        }
+
+        return new Navigation($rootNavigationItem);
+    }
+
     public function getRoutes(): array
     {
         return [

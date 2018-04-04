@@ -48,6 +48,20 @@ class AdminControllerTest extends SuluTestCase
         $this->assertContains('"settings":{"test":{"key":"value"}}', $client->getResponse()->getContent());
     }
 
+    public function testGetConfig()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/admin/v2/config');
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertObjectHasAttribute('sulu_admin', $response);
+        $this->assertObjectHasAttribute('navigation', $response->sulu_admin);
+        $this->assertObjectHasAttribute('routes', $response->sulu_admin);
+        $this->assertInternalType('array', $response->sulu_admin->navigation);
+        $this->assertInternalType('array', $response->sulu_admin->routes);
+    }
+
     public function testGetResourcePages()
     {
         $client = $this->createAuthenticatedClient();
@@ -119,54 +133,5 @@ class AdminControllerTest extends SuluTestCase
         // check if schema is valid
         $this->assertObjectHasAttribute('schema', $resource->types->overview);
         $this->assertEquals(['title', 'url'], $resource->types->overview->schema->required);
-    }
-
-    public function testGetResourceContacts()
-    {
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/resources/contacts');
-
-        $resource = json_decode($client->getResponse()->getContent());
-
-        // check for datagrid
-        $this->assertObjectHasAttribute('datagrid', $resource);
-        $this->assertObjectHasAttribute('id', $resource->datagrid);
-        $this->assertObjectHasAttribute('title', $resource->datagrid);
-        $this->assertObjectHasAttribute('account', $resource->datagrid);
-        $this->assertObjectHasAttribute('firstName', $resource->datagrid);
-
-        // check for form
-        $this->assertObjectHasAttribute('form', $resource);
-        $this->assertObjectHasAttribute('formOfAddress', $resource->form);
-        $this->assertObjectHasAttribute('firstName', $resource->form);
-        $this->assertObjectHasAttribute('lastName', $resource->form);
-        $this->assertObjectHasAttribute('salutation', $resource->form);
-
-        // check for schema
-        $this->assertObjectHasAttribute('schema', $resource);
-        $this->assertObjectHasAttribute('required', $resource->schema);
-    }
-
-    public function testGetResourceAccounts()
-    {
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/resources/accounts');
-
-        $resource = json_decode($client->getResponse()->getContent());
-
-        // check for datagrid
-        $this->assertObjectHasAttribute('datagrid', $resource);
-        $this->assertObjectHasAttribute('id', $resource->datagrid);
-        $this->assertObjectHasAttribute('name', $resource->datagrid);
-        $this->assertObjectHasAttribute('zip', $resource->datagrid);
-        $this->assertObjectHasAttribute('city', $resource->datagrid);
-
-        // check for form
-        $this->assertObjectHasAttribute('form', $resource);
-        $this->assertObjectHasAttribute('name', $resource->form);
-
-        // check for schema
-        $this->assertObjectHasAttribute('schema', $resource);
-        $this->assertObjectHasAttribute('required', $resource->schema);
     }
 }

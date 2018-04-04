@@ -28,9 +28,9 @@ class WebsocketAdmin extends Admin
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getNavigation()
+    * {@inheritdoc}
+    */
+    public function getNavigation(): Navigation
     {
         return new Navigation();
     }

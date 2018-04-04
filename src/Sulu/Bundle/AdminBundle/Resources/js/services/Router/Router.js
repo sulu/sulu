@@ -61,7 +61,7 @@ export default class Router {
         for (const name in routeRegistry.getAll()) {
             const route = routeRegistry.get(name);
             const names = [];
-            const match = pathToRegexp(Router.getRoutePath(route), names).exec(path);
+            const match = pathToRegexp(route.path, names).exec(path);
 
             if (!match) {
                 continue;
@@ -142,9 +142,8 @@ export default class Router {
             return '';
         }
 
-        const path = Router.getRoutePath(this.route);
         const keys = [];
-        pathToRegexp(path, keys);
+        pathToRegexp(this.route.path, keys);
         const keyNames = keys.map((key) => key.name);
 
         const attributes = toJS(this.attributes);
@@ -153,7 +152,7 @@ export default class Router {
             attributes[key] = value;
         }
 
-        const url = compile(path)(attributes);
+        const url = compile(this.route.path)(attributes);
         const searchParameters = new URLSearchParams();
         Object.keys(attributes).forEach((key) => {
             const value = attributes[key];
@@ -188,14 +187,6 @@ export default class Router {
             && this.route.name === route.name
             && equal(this.attributes, attributes)
         );
-    }
-
-    static getRoutePath(route: Route) {
-        if (!route.parent) {
-            return route.path;
-        }
-
-        return Router.getRoutePath(route.parent) + route.path;
     }
 
     static tryParseNumber(value: string) {

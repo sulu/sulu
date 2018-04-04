@@ -63,6 +63,16 @@ class Route
         return $this->name;
     }
 
+    public function prependPath(string $prependPath): void
+    {
+        $this->path = $prependPath . $this->path;
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
     public function addOption(string $key, $value): self
     {
         $this->options[$key] = $value;

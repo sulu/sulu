@@ -104,6 +104,27 @@ class ContentAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = $this->getNavigationItemRoot();
+
+        /** @var Webspace $webspace */
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), PermissionTypes::VIEW)) {
+                $webspaceItem = new NavigationItem('sulu_content.webspaces');
+                $webspaceItem->setPosition(10);
+                $webspaceItem->setIcon('su-webspace');
+                $webspaceItem->setMainRoute('sulu_content.webspaces');
+
+                $rootNavigationItem->addChild($webspaceItem);
+
+                break;
+            }
+        }
+
+        return new Navigation($rootNavigationItem);
+    }
+
     /**
      * {@inheritdoc}
      */

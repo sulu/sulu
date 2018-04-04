@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
 /**
@@ -27,16 +26,6 @@ class AdminPool
     private $pool = [];
 
     /**
-     * Returns all the registered admins.
-     *
-     * @return Admin[]
-     */
-    public function getAdmins()
-    {
-        return $this->pool;
-    }
-
-    /**
      * Adds a new admin.
      *
      * @param $admin
@@ -47,73 +36,11 @@ class AdminPool
     }
 
     /**
-     * Returns all the routes for the frontend application from all Admin objects.
+     * @return Admin[]
      */
-    public function getRoutes(): array
+    public function getAdmins(): array
     {
-        $routes = [];
-        $this->iterateAdmins(function(Admin $admin) use (&$routes) {
-            $routes = array_merge($routes, $admin->getRoutes());
-        });
-
-        $this->validateRoutes($routes);
-
-        array_walk($routes, function(&$route, $index) {
-            $route = clone $route;
-        });
-
-        return $this->mergeRouteOptions($routes);
-    }
-
-    private function validateRoutes(array $routes): void
-    {
-        $routeNames = array_map(function(Route $route) {
-            return $route->getName();
-        }, $routes);
-
-        foreach ($routes as $route) {
-            $routeParent = $route->getParent();
-            if ($routeParent && !in_array($routeParent, $routeNames)) {
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        'The route "%s" was defined as the parent of "%s", but the route "%s" does not exist',
-                        $routeParent,
-                        $route->getName(),
-                        $routeParent
-                    )
-                );
-            }
-        }
-    }
-
-    private function mergeRouteOptions(array $routes, string $parent = null)
-    {
-        /** @var Route[] $childRoutes */
-        $childRoutes = array_filter($routes, function(Route $route) use ($parent) {
-            return $route->getParent() === $parent;
-        });
-
-        if (empty($childRoutes)) {
-            return [];
-        }
-
-        /** @var Route $parentRoute */
-        $parentRoutes = array_values(array_filter($routes, function(Route $route) use ($parent) {
-            return $route->getName() === $parent;
-        }));
-
-        $parentRoute = null;
-        if (!empty($parentRoutes)) {
-            $parentRoute = $parentRoutes[0];
-        }
-
-        $mergedRoutes = [];
-        foreach ($childRoutes as $childRoute) {
-            $mergedRoutes[] = $parentRoute ? $childRoute->mergeRoute($parentRoute) : $childRoute;
-            $mergedRoutes = array_merge($mergedRoutes, $this->mergeRouteOptions($routes, $childRoute->getName()));
-        }
-
-        return $mergedRoutes;
+        return $this->pool;
     }
 
     /**

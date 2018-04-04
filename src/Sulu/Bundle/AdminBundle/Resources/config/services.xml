@@ -23,6 +23,8 @@
             <argument type="service" id="sulu.core.localization_manager"/>
             <argument type="service" id="translator.default"/>
             <argument type="service" id="sulu_admin.metadata.resource_metadata_pool"/>
+            <argument type="service" id="sulu_admin.route_registry"/>
+            <argument type="service" id="sulu_admin.navigation_registry"/>
             <argument>%kernel.environment%</argument>
             <argument>%sulu_admin.name%</argument>
             <argument>%sulu_core.locales%</argument>
@@ -80,6 +82,16 @@
 
         <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader">
             <argument type="service" id="sulu_content.structure.properties_xml_parser"/>
+        </service>
+
+        <service id="sulu_admin.route_registry" class="Sulu\Bundle\AdminBundle\Admin\RouteRegistry">
+            <argument type="service" id="sulu_admin.admin_pool"/>
+        </service>
+
+        <service id="sulu_admin.navigation_registry" class="Sulu\Bundle\AdminBundle\Admin\NavigationRegistry">
+            <argument type="service" id="translator"/>
+            <argument type="service" id="sulu_admin.admin_pool"/>
+            <argument type="service" id="sulu_admin.route_registry"/>
         </service>
     </services>
 </container>

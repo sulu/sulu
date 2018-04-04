@@ -81,6 +81,23 @@ class SnippetAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = $this->getNavigationItemRoot();
+
+        if ($this->securityChecker->hasPermission('sulu.global.snippets', 'view')) {
+            $snippet = new NavigationItem('sulu_snippet.snippets');
+            $snippet->setPosition(20);
+            $snippet->setIcon('su-paper');
+            $snippet->setAction('snippet/snippets');
+            $snippet->setMainRoute('sulu_snippet.datagrid');
+
+            $rootNavigationItem->addChild($snippet);
+        }
+
+        return new Navigation($rootNavigationItem);
+    }
+
     /**
      * {@inheritdoc}
      */

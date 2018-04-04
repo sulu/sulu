@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManager;
+use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
@@ -54,6 +55,24 @@ class MediaAdmin extends Admin
         }
 
         $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = $this->getNavigationItemRoot();
+
+        if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {
+            $media = new NavigationItem('sulu_media.media');
+            $media->setPosition(30);
+            $media->setIcon('su-image');
+            $media->setMainRoute('sulu_media.overview');
+            $media->addChildRoute('sulu_media.form');
+            $media->addChildRoute('sulu_media.form.detail');
+
+            $rootNavigationItem->addChild($media);
+        }
+
+        return new Navigation($rootNavigationItem);
     }
 
     /**

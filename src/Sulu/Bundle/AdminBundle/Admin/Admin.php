@@ -13,12 +13,29 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
+use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 /**
  * Defines all the required information from a bundle's admin class.
  */
-abstract class Admin
+abstract class Admin implements RouteProviderInterface, NavigationProviderInterface
 {
+    public function getNavigationItemRoot(): NavigationItem
+    {
+        $root = new NavigationItem('root');
+
+        return $root;
+    }
+
+    public function getNavigationItemSettings(): NavigationItem
+    {
+        $settings = new NavigationItem('sulu_admin.settings');
+        $settings->setPosition(50);
+        $settings->setIcon('su-settings');
+
+        return $settings;
+    }
+
     /**
      * The navigation describes the position of the admin.
      *
@@ -51,7 +68,7 @@ abstract class Admin
      *
      * @return \Sulu\Bundle\AdminBundle\Navigation\Navigation
      */
-    public function getNavigation()
+    public function getNavigation(): Navigation
     {
         return $this->navigation;
     }
@@ -76,5 +93,12 @@ abstract class Admin
     public function getSecurityContexts()
     {
         return [];
+    }
+
+    public function getNavigationV2(): Navigation
+    {
+        $rootNavigationItem = new NavigationItem('root');
+
+        return new Navigation($rootNavigationItem);
     }
 }

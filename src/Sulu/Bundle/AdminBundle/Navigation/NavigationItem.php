@@ -32,6 +32,11 @@ class NavigationItem implements \Iterator
     protected $name;
 
     /**
+     * @var string
+     */
+    protected $label;
+
+    /**
      * The icon of the navigationItem.
      *
      * @var string
@@ -44,6 +49,16 @@ class NavigationItem implements \Iterator
      * @var string
      */
     protected $action;
+
+    /**
+     * @var string
+     */
+    protected $mainRoute;
+
+    /**
+     * @var string[]
+     */
+    protected $childRoutes = [];
 
     /**
      * Will be used for a custom behaviour of the navigation item.
@@ -162,6 +177,16 @@ class NavigationItem implements \Iterator
         return $this->name;
     }
 
+    public function setLabel(string $label = null): void
+    {
+        $this->label = $label;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
     /**
      * Set the icon of the NavigaitonItem.
      *
@@ -200,6 +225,34 @@ class NavigationItem implements \Iterator
     public function getAction()
     {
         return $this->action;
+    }
+
+    public function setMainRoute(string $mainRoute = null): void
+    {
+        $this->mainRoute = $mainRoute;
+    }
+
+    public function getMainRoute(): ?string
+    {
+        return $this->mainRoute;
+    }
+
+    public function setChildRoutes(array $childRoutes): void
+    {
+        $this->childRoutes = $childRoutes;
+    }
+
+    public function addChildRoute(string $childRoute): void
+    {
+        $this->childRoutes[] = $childRoute;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getChildRoutes(): array
+    {
+        return $this->childRoutes;
     }
 
     /**
@@ -247,7 +300,7 @@ class NavigationItem implements \Iterator
     /**
      * Returns all children from this navigation item.
      *
-     * @return array
+     * @return self[]
      */
     public function getChildren()
     {
@@ -361,6 +414,8 @@ class NavigationItem implements \Iterator
     {
         $new = $this->copyWithName();
         $new->setAction($this->getAction());
+        $new->setMainRoute($this->getMainRoute());
+        $new->setChildRoutes($this->getChildRoutes());
         $new->setEvent($this->getEvent());
         $new->setEventArguments($this->getEventArguments());
         $new->setIcon($this->getIcon());
@@ -369,6 +424,7 @@ class NavigationItem implements \Iterator
         $new->setId($this->getId());
         $new->setHasSettings($this->getHasSettings());
         $new->setPosition($this->getPosition());
+        $new->setLabel($this->getLabel());
 
         return $new;
     }
@@ -537,14 +593,20 @@ class NavigationItem implements \Iterator
     {
         $array = [
             'title' => $this->getName(),
+            'label' => $this->getLabel(),
             'icon' => $this->getIcon(),
             'action' => $this->getAction(),
+            'mainRoute' => $this->getMainRoute(),
             'event' => $this->getEvent(),
             'eventArguments' => $this->getEventArguments(),
             'hasSettings' => $this->getHasSettings(),
             'disabled' => $this->getDisabled(),
             'id' => (null != $this->getId()) ? $this->getId() : str_replace('.', '', uniqid('', true)), //FIXME don't use uniqid()
         ];
+
+        if (count($this->getChildRoutes()) > 0) {
+            $array['childRoutes'] = $this->getChildRoutes();
+        }
 
         if (null != $this->getHeaderIcon() || null != $this->getHeaderTitle()) {
             $array['header'] = [

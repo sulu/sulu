@@ -12,6 +12,7 @@ import Application from './containers/Application';
 import {fieldRegistry, Assignment, DatePicker, Input, ResourceLocator, SingleSelect} from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
 import {viewRegistry} from './containers/ViewRenderer';
+import {navigationRegistry} from './containers/Navigation';
 import {ColumnListAdapter, datagridAdapterRegistry, FolderAdapter, TableAdapter} from './containers/Datagrid';
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
@@ -83,6 +84,7 @@ const translationPromise = Requester.get('/admin/v2/translations?locale=en')
 
 const configPromise = Requester.get('/admin/v2/config').then((response) => {
     routeRegistry.addCollection(response['sulu_admin'].routes);
+    navigationRegistry.set(response['sulu_admin'].navigation);
 
     return response;
 });
