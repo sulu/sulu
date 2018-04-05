@@ -8,7 +8,7 @@ import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
 import {setTranslations, translate} from './utils/Translator';
 import Application from './containers/Application';
-import {fieldRegistry, Assignment, DatePicker, Input, ResourceLocator, SingleSelect, TextArea} from './containers/Form';
+import {Assignment, DatePicker, fieldRegistry, Input, ResourceLocator, SingleSelect, TextArea} from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
 import {viewRegistry} from './containers/ViewRenderer';
 import {navigationRegistry} from './containers/Navigation';
@@ -16,6 +16,8 @@ import {ColumnListAdapter, datagridAdapterRegistry, FolderAdapter, TableAdapter}
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
 import Datagrid from './views/Datagrid';
+import {sidebarViewRegistry} from './containers/Sidebar';
+import Preview from './views/Preview';
 import {bundleReady, bundlesReadyPromise} from './services/Bundles';
 import type {FieldTypeProps} from './types';
 
@@ -65,6 +67,8 @@ function registerFieldTypes() {
         overlayTitle: translate('sulu_content.assignment_overlay_title'),
     });
 }
+
+sidebarViewRegistry.add('preview', Preview);
 
 function startApplication() {
     const router = new Router(createHistory());

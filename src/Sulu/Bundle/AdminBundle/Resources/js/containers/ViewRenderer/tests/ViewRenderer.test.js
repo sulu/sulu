@@ -3,9 +3,14 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import ViewRenderer from '../ViewRenderer';
 import viewRegistry from '../registries/ViewRegistry';
+import sidebarStore from '../../Sidebar/stores/SidebarStore';
 
 jest.mock('../registries/ViewRegistry', () => ({
     get: jest.fn(),
+}));
+
+jest.mock('../../Sidebar/stores/SidebarStore', () => ({
+    clearConfig: jest.fn(),
 }));
 
 test('Render view returned from ViewRegistry', () => {
@@ -13,6 +18,7 @@ test('Render view returned from ViewRegistry', () => {
     const view = render(<ViewRenderer router={{route: {view: 'test'}}} />);
     expect(view).toMatchSnapshot();
     expect(viewRegistry.get).toBeCalledWith('test');
+    expect(sidebarStore.clearConfig).toBeCalled();
 });
 
 test('Render view returned from ViewRegistry with passed router', () => {
@@ -269,4 +275,20 @@ test('Render view with route that has more than one rerenderAttributes', () => {
 
     const viewRenderer = shallow(<ViewRenderer router={router} />);
     expect(viewRenderer.key()).toBe('test__de');
+});
+
+test('Render view and not clear the sidebarstore when component has sidebar', () => {
+    const Component = class Component extends React.Component {
+        static hasSidebar = true;
+
+        render() {
+            return <h1>{this.props.title}</h1>;
+        }
+    };
+
+    viewRegistry.get.mockReturnValue(Component);
+    const view = render(<ViewRenderer router={{route: {view: 'test'}}} />);
+    expect(view).toMatchSnapshot();
+    expect(viewRegistry.get).toBeCalledWith('test');
+    expect(sidebarStore.clearConfig).not.toBeCalled();
 });

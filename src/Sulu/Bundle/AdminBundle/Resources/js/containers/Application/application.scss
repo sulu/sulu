@@ -1,3 +1,4 @@
+@import './variables.scss';
 @import '../../components/Toolbar/variables.scss';
 
 .root {
@@ -15,13 +16,38 @@
 
 .content {
     width: 100vw;
-    flex-shrink: 0;
     min-height: 500px;
+    overflow: auto;
+
+    &.with-sidebar {
+        display: flex;
+    }
+}
+
+.view-container {
+    overflow-y: auto;
+    height: calc(100% - $toolbarHeight);
 }
 
 .main {
-    height: calc(100vh - $toolbarHeight);
-    overflow-y: auto;
+    height: 100vh;
+    flex: 2;
+}
+
+.sidebar {
+    transition: flex $sidebarShrinkAnimationDuration;
+
+    &.small {
+        flex: 1;
+    }
+
+    &.medium {
+        flex: 2;
+    }
+
+    &.large {
+        flex: 3;
+    }
 }
 
 .header {

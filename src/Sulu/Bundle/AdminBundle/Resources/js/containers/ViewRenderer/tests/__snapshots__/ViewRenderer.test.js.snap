@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render view and not clear the sidebarstore when component has sidebar 1`] = `<h1 />`;
+
 exports[`Render view returned from ViewRegistry 1`] = `
 <h1>
   Test
