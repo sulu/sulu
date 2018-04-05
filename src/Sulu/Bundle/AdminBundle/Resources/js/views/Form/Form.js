@@ -17,6 +17,14 @@ class Form extends React.PureComponent<Props> {
 
     componentWillMount() {
         const {resourceStore, router} = this.props;
+
+        if (!resourceStore) {
+            throw new Error(
+                'The view "Form" needs a resourceStore to work properly.'
+                + 'Did you maybe forget to make this view a child of a "ResourceTabs" view?'
+            );
+        }
+
         this.formStore = new FormStore(resourceStore);
 
         if (resourceStore.locale) {

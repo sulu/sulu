@@ -608,3 +608,8 @@ test('Should not bind the locale if no locales have been passed via options', ()
     form.unmount();
     expect(router.unbind).not.toBeCalled();
 });
+
+test('Should throw an error if the resourceStore is not passed for some reason', () => {
+    const Form = require('../Form').default;
+    expect(() => shallow(<Form />)).toThrow(/"ResourceTabs"/);
+});
