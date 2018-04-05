@@ -1,16 +1,27 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {shallow} from 'enzyme';
 import Assignment from '../../fields/Assignment';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 
-jest.mock('../../FormInspector', () => jest.fn(function() {
-    this.locale = 'en';
+jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
+    this.id = formStore.id;
+    this.resourceKey = formStore.resourceKey;
+    this.locale = formStore.locale;
 }));
-jest.mock('../../stores/FormStore', () => jest.fn());
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
+jest.mock('../../stores/FormStore', () => jest.fn(function(resourceStore) {
+    this.id = resourceStore.id;
+    this.resourceKey = resourceStore.resourceKey;
+    this.locale = resourceStore.locale;
+}));
+jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, options) {
+    this.id = id;
+    this.resourceKey = resourceKey;
+    this.locale = options ? options.locale : undefined;
+}));
 
 test('Should pass props correctly to component', () => {
     const changeSpy = jest.fn();
@@ -24,7 +35,13 @@ test('Should pass props correctly to component', () => {
         resourceKey: 'snippets',
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale})
+        )
+    );
 
     const assignment = shallow(
         <Assignment
@@ -39,12 +56,32 @@ test('Should pass props correctly to component', () => {
         adapter: 'table',
         displayProperties: ['id', 'title'],
         label: 'Select snippets',
-        locale: 'en',
+        locale,
         onChange: changeSpy,
         resourceKey: 'snippets',
         overlayTitle: 'Snippets',
         value,
     }));
+});
+
+test('Should pass id of form as disabledId to avoid assigning something to itself', () => {
+    const fieldTypeOptions = {
+        adapter: 'table',
+        resourceKey: 'pages',
+    };
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('pages', 4)));
+
+    const assignment = shallow(
+        <Assignment
+            formInspector={formInspector}
+            fieldTypeOptions={fieldTypeOptions}
+            onChange={jest.fn()}
+            value={undefined}
+        />
+    );
+
+    expect(assignment.find('Assignment').prop('disabledIds')).toEqual([4]);
 });
 
 test('Should pass empty array if value is not given', () => {

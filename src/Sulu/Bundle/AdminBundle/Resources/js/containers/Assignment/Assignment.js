@@ -10,6 +10,7 @@ import assignmentStyles from './assignment.scss';
 
 type Props = {|
     adapter: string,
+    disabledIds: Array<string | number>,
     displayProperties: Array<string>,
     onChange: (selectedIds: Array<string | number>) => void,
     label?: string,
@@ -23,6 +24,7 @@ type Props = {|
 @observer
 export default class Assignment extends React.Component<Props> {
     static defaultProps = {
+        disabledIds: [],
         displayProperties: [],
         icon: 'su-plus',
         value: [],
@@ -94,7 +96,7 @@ export default class Assignment extends React.Component<Props> {
     };
 
     render() {
-        const {adapter, displayProperties, icon, label, locale, resourceKey, overlayTitle} = this.props;
+        const {adapter, disabledIds, displayProperties, icon, label, locale, resourceKey, overlayTitle} = this.props;
         const {items, loading} = this.assignmentStore;
         const columns = displayProperties.length;
 
@@ -128,6 +130,7 @@ export default class Assignment extends React.Component<Props> {
                 </MultiItemSelection>
                 <DatagridOverlay
                     adapter={adapter}
+                    disabledIds={disabledIds}
                     locale={locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
