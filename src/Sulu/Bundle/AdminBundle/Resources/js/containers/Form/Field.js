@@ -1,24 +1,24 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import classNames from 'classnames';
 import {translate} from '../../utils';
 import type {Error, ErrorCollection} from '../../types';
 import fieldRegistry from './registries/FieldRegistry';
 import fieldStyles from './field.scss';
+import FormInspector from './FormInspector';
 import type {SchemaEntry} from './types';
 
-type Props = {
+type Props = {|
     error?: Error | ErrorCollection,
-    locale?: ?IObservableValue<string>,
+    formInspector: FormInspector,
     name: string,
     onChange: (string, *) => void,
     onFinish: (name: string) => void,
     schema: SchemaEntry,
     showAllErrors: boolean,
     value?: *,
-};
+|};
 
 export default class Field extends React.Component<Props> {
     static defaultProps = {
@@ -58,8 +58,8 @@ export default class Field extends React.Component<Props> {
     }
 
     render() {
-        const {error, value, locale, schema, showAllErrors, name} = this.props;
-        const {label, maxOccurs, minOccurs, options, required, type, types} = schema;
+        const {error, value, formInspector, schema, showAllErrors, name} = this.props;
+        const {label, maxOccurs, minOccurs, options: schemaOptions, required, type, types} = schema;
         let FieldType;
 
         try {
@@ -77,7 +77,7 @@ export default class Field extends React.Component<Props> {
                 </div>
             );
         }
-        const fieldOptions = fieldRegistry.getOptions(type);
+        const fieldTypeOptions = fieldRegistry.getOptions(type);
 
         const fieldClass = classNames(
             fieldStyles.field,
@@ -93,13 +93,13 @@ export default class Field extends React.Component<Props> {
                 <label className={fieldStyles.label}>{label}{required && ' *'}</label>
                 <FieldType
                     error={error}
-                    fieldOptions={fieldOptions}
-                    locale={locale}
+                    fieldTypeOptions={fieldTypeOptions}
+                    formInspector={formInspector}
                     maxOccurs={maxOccurs}
                     minOccurs={minOccurs}
                     onChange={this.handleChange}
                     onFinish={this.handleFinish}
-                    options={options}
+                    schemaOptions={schemaOptions}
                     showAllErrors={showAllErrors}
                     types={types}
                     value={value}

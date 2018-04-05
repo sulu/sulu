@@ -5,21 +5,25 @@ import type {FieldTypeProps} from '../../../types';
 
 export default class Assignment extends React.Component<FieldTypeProps<Array<string | number>>> {
     render() {
-        const {fieldOptions, onChange, locale, value} = this.props;
+        const {fieldTypeOptions, formInspector, onChange, value} = this.props;
 
-        if (!fieldOptions) {
+        if (!formInspector) {
+            throw new Error('The assignment field needs a working FormInspector to work properly');
+        }
+
+        if (!fieldTypeOptions) {
             throw new Error('The assignment field needs a "resourceKey" and a "adapter" option to work properly');
         }
 
-        if (!fieldOptions.resourceKey) {
+        if (!fieldTypeOptions.resourceKey) {
             throw new Error('The assignment field needs a "resourceKey" option to work properly');
         }
 
-        if (!fieldOptions.adapter) {
+        if (!fieldTypeOptions.adapter) {
             throw new Error('The assignment field needs a "adapter" option to work properly');
         }
 
-        const {adapter, displayProperties, icon, label, resourceKey, overlayTitle} = fieldOptions;
+        const {adapter, displayProperties, icon, label, resourceKey, overlayTitle} = fieldTypeOptions;
 
         return (
             <AssignmentComponent
@@ -27,7 +31,7 @@ export default class Assignment extends React.Component<FieldTypeProps<Array<str
                 displayProperties={displayProperties}
                 icon={icon}
                 label={label}
-                locale={locale}
+                locale={formInspector.locale}
                 onChange={onChange}
                 resourceKey={resourceKey}
                 overlayTitle={overlayTitle}

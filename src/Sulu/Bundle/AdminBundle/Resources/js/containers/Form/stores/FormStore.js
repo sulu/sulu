@@ -172,6 +172,14 @@ export default class FormStore {
         return this.resourceStore.locale;
     }
 
+    get resourceKey(): string {
+        return this.resourceStore.resourceKey;
+    }
+
+    get id(): ?string | number {
+        return this.resourceStore.id;
+    }
+
     @action setType(type: string) {
         this.validateTypes();
         this.type = type;

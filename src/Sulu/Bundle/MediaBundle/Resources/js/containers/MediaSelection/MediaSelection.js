@@ -17,16 +17,16 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
 
     componentWillMount() {
         const {
+            formInspector,
             value,
-            locale,
         } = this.props;
         const selectedMediaIds = (value && value.ids) ? value.ids : null;
 
-        if (!locale) {
+        if (!formInspector || !formInspector.locale) {
             throw new Error('The media selection needs a locale to work properly');
         }
 
-        this.mediaSelectionStore = new MediaSelectionStore(selectedMediaIds, locale);
+        this.mediaSelectionStore = new MediaSelectionStore(selectedMediaIds, formInspector.locale);
     }
 
     @action openMediaOverlay() {
@@ -84,11 +84,13 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
     };
 
     render() {
-        const {locale} = this.props;
+        const {formInspector} = this.props;
 
-        if (!locale) {
+        if (!formInspector || !formInspector.locale) {
             throw new Error('The media selection needs a locale to work properly');
         }
+
+        const {locale} = formInspector;
 
         const {
             loading,

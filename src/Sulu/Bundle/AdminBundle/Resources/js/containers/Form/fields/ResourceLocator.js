@@ -13,8 +13,8 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
     }
 
     render() {
-        const {onChange, value, options, onFinish} = this.props;
-        const mode = options && options.mode ? options.mode : 'leaf';
+        const {onChange, value, schemaOptions, onFinish} = this.props;
+        const mode = schemaOptions && schemaOptions.mode ? schemaOptions.mode : 'leaf';
 
         if (!value) {
             return null;

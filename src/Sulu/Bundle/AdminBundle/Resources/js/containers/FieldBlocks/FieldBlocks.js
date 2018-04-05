@@ -31,7 +31,11 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
     };
 
     renderBlockContent = (value: Object, type: ?string, index: number) => {
-        const {error, locale, onFinish, showAllErrors, types} = this.props;
+        const {error, formInspector, onFinish, showAllErrors, types} = this.props;
+
+        if (!formInspector) {
+            throw new Error('The FieldBlocks field type needs a formInspector to work properly');
+        }
 
         if (!types) {
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
@@ -45,8 +49,8 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             <FieldRenderer
                 data={value}
                 errors={errors && errors.length > index && errors[index] ? errors[index] : undefined}
+                formInspector={formInspector}
                 index={index}
-                locale={locale}
                 onChange={this.handleBlockChange}
                 onFieldFinish={onFinish}
                 schema={blockType.form}

@@ -5,7 +5,7 @@ import ResourceLocator from '../../fields/ResourceLocator';
 import ResourceLocatorComponent from '../../../../components/ResourceLocator';
 
 test('Pass props correctly to ResourceLocator', () => {
-    const options = {
+    const schemaOptions = {
         mode: 'full',
     };
 
@@ -13,13 +13,13 @@ test('Pass props correctly to ResourceLocator', () => {
         <ResourceLocator
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            options={options}
+            schemaOptions={schemaOptions}
             value="/"
         />
     );
 
     expect(resourceLocator.find(ResourceLocatorComponent).prop('value')).toBe('/');
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe(options.mode);
+    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe(schemaOptions.mode);
 });
 
 test('Set default value correctly with undefined value', () => {

@@ -3,6 +3,13 @@ import React from 'react';
 import {mount, shallow} from 'enzyme';
 import pretty from 'pretty';
 import FieldBlocks from '../FieldBlocks';
+import FormInspector from '../../Form/FormInspector';
+import FormStore from '../../Form/stores/FormStore';
+import ResourceStore from '../../../stores/ResourceStore';
+
+jest.mock('../../Form/FormInspector', () => jest.fn());
+jest.mock('../../Form/stores/FormStore', () => jest.fn());
+jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
 jest.mock('../../Form/registries/FieldRegistry', () => ({
     get: jest.fn((type) => {
@@ -21,6 +28,8 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('Render block with schema', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+
     const types = {
         default: {
             title: 'Default',
@@ -48,70 +57,25 @@ test('Render block with schema', () => {
         },
     ];
 
-    const fieldBlocks = mount(<FieldBlocks onChange={jest.fn()} onFinish={jest.fn()} types={types} value={value} />);
-
-    fieldBlocks.find('Block').at(0).simulate('click');
-    fieldBlocks.find('Block').at(1).simulate('click');
-
-    expect(pretty(fieldBlocks.html())).toMatchSnapshot();
-});
-
-test('Render block with schema and error on fields already being modified', () => {
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                },
-            },
-        },
-    };
-
-    const value = [
-        {
-            text: 'Test1',
-        },
-        {
-            text: 'T2',
-        },
-        {
-            text: 'T3',
-        },
-    ];
-
-    const error = [
-        undefined,
-        {
-            text: {
-                keyword: 'minLength',
-                parameters: {},
-            },
-        },
-        {
-            text: {
-                keyword: 'minLength',
-                parameters: {},
-            },
-        },
-    ];
-
     const fieldBlocks = mount(
-        <FieldBlocks error={error} onChange={jest.fn()} onFinish={jest.fn()} types={types} value={value} />
+        <FieldBlocks
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            types={types}
+            value={value}
+        />
     );
 
     fieldBlocks.find('Block').at(0).simulate('click');
     fieldBlocks.find('Block').at(1).simulate('click');
-    fieldBlocks.find('Block').at(2).simulate('click');
-
-    fieldBlocks.find('Block').at(0).find('Field').at(0).prop('onFinish')('text');
-    fieldBlocks.find('Block').at(1).find('Field').at(0).prop('onFinish')('text');
 
     expect(pretty(fieldBlocks.html())).toMatchSnapshot();
 });
 
 test('Render block with schema and error on fields already being modified', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+
     const types = {
         default: {
             title: 'Default',
@@ -155,6 +119,71 @@ test('Render block with schema and error on fields already being modified', () =
     const fieldBlocks = mount(
         <FieldBlocks
             error={error}
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    fieldBlocks.find('Block').at(0).simulate('click');
+    fieldBlocks.find('Block').at(1).simulate('click');
+    fieldBlocks.find('Block').at(2).simulate('click');
+
+    fieldBlocks.find('Block').at(0).find('Field').at(0).prop('onFinish')('text');
+    fieldBlocks.find('Block').at(1).find('Field').at(0).prop('onFinish')('text');
+
+    expect(pretty(fieldBlocks.html())).toMatchSnapshot();
+});
+
+test('Render block with schema and error on fields already being modified', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    const value = [
+        {
+            text: 'Test1',
+        },
+        {
+            text: 'T2',
+        },
+        {
+            text: 'T3',
+        },
+    ];
+
+    const error = [
+        undefined,
+        {
+            text: {
+                keyword: 'minLength',
+                parameters: {},
+            },
+        },
+        {
+            text: {
+                keyword: 'minLength',
+                parameters: {},
+            },
+        },
+    ];
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            error={error}
+            formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             showAllErrors={true}
@@ -211,6 +240,8 @@ test('Should correctly pass props to the BlockCollection', () => {
 });
 
 test('Should call onFinish when a field from the child renderer has finished editing', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+
     const types = {
         default: {
             title: 'Default',
@@ -225,7 +256,15 @@ test('Should call onFinish when a field from the child renderer has finished edi
     const value = [{}];
 
     const finishSpy = jest.fn();
-    const fieldBlocks = mount(<FieldBlocks onChange={jest.fn()} onFinish={finishSpy} types={types} value={value} />);
+    const fieldBlocks = mount(
+        <FieldBlocks
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            types={types}
+            value={value}
+        />
+    );
 
     fieldBlocks.find('Block').simulate('click');
     fieldBlocks.find('FieldRenderer').prop('onFieldFinish')();

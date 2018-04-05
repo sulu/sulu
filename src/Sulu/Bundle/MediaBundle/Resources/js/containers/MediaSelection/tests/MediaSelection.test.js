@@ -185,8 +185,12 @@ test('Render a MediaSelection field', () => {
         this.selectedMediaIds = [1, 2, 3];
     });
 
+    const formInspector = {
+        locale: 'en',
+    };
+
     expect(render(
-        <MediaSelection locale="en" />
+        <MediaSelection formInspector={formInspector} />
     )).toMatchSnapshot();
 });
 
@@ -212,8 +216,12 @@ test('The MediaSelection should have 3 child-items', () => {
         this.selectedMediaIds = [1, 2, 3];
     });
 
+    const formInspector = {
+        locale: 'en',
+    };
+
     const mediaSelection = shallow(
-        <MediaSelection locale="en" />
+        <MediaSelection formInspector={formInspector} />
     );
 
     expect(mediaSelection.find('Item').length).toBe(3);
@@ -225,8 +233,12 @@ test('Clicking on the "add media" button should open up an overlay', () => {
         this.selectedMediaIds = [];
     });
 
+    const formInspector = {
+        locale: 'de',
+    };
+
     const body = document.body;
-    const mediaSelection = mount(<MediaSelection locale="de" />);
+    const mediaSelection = mount(<MediaSelection formInspector={formInspector} />);
 
     mediaSelection.find('.button.left').simulate('click');
     expect(pretty(body.innerHTML)).toMatchSnapshot();
@@ -241,8 +253,11 @@ test('Should remove media from the selection', () => {
 
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
+    const formInspector = {
+        locale: 'de',
+    };
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale="de" onChange={changeSpy} onFinish={finishSpy} />
+        <MediaSelection formInspector={formInspector} onChange={changeSpy} onFinish={finishSpy} />
     ).instance();
 
     mediaSelectionInstance.handleRemove(1);
@@ -260,8 +275,11 @@ test('Should move media inside the selection', () => {
 
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
+    const formInspector = {
+        locale: 'en',
+    };
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale="en" onChange={changeSpy} onFinish={finishSpy} />
+        <MediaSelection formInspector={formInspector} onChange={changeSpy} onFinish={finishSpy} />
     ).instance();
 
     mediaSelectionInstance.handleSorted(1, 3);
@@ -283,8 +301,11 @@ test('Should add the selected medias to the selection store on confirm', () => {
     };
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
+    const formInspector = {
+        locale: 'de',
+    };
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale="de" onChange={changeSpy} onFinish={finishSpy} />
+        <MediaSelection formInspector={formInspector} onChange={changeSpy} onFinish={finishSpy} />
     ).instance();
 
     mediaSelectionInstance.openMediaOverlay();

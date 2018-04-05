@@ -4,7 +4,7 @@ import FormStore from '../../stores/FormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/MetadataStore';
 
-jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id) {
+jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, options) {
     this.id = id;
     this.resourceKey = resourceKey;
     this.save = jest.fn().mockReturnValue(Promise.resolve());
@@ -12,6 +12,10 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id) {
     this.change = jest.fn();
     this.data = {};
     this.loading = false;
+
+    if (options) {
+        this.locale = options.locale;
+    }
 });
 
 jest.mock('../../stores/MetadataStore', () => ({
@@ -52,6 +56,27 @@ test('Create data object for schema', () => {
         });
         formStore.destroy();
     }, 0);
+});
+
+test('Read resourceKey from ResourceStore', () => {
+    const resourceStore = new ResourceStore('snippets');
+    const formStore = new FormStore(resourceStore);
+
+    expect(formStore.resourceKey).toEqual('snippets');
+});
+
+test('Read locale from ResourceStore', () => {
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    const formStore = new FormStore(resourceStore);
+
+    expect(formStore.locale && formStore.locale.get()).toEqual('en');
+});
+
+test('Read id from ResourceStore', () => {
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    const formStore = new FormStore(resourceStore);
+
+    expect(formStore.id).toEqual('1');
 });
 
 test('Set template property of ResourceStore to first type be default', () => {

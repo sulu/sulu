@@ -16,7 +16,9 @@ jest.mock('../registries/FieldRegistry', () => ({
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('../stores/FormStore', () => jest.fn(function() {
+jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
+    this.id = resourceStore.id;
+    this.resourceKey = resourceStore.resourceKey;
     this.data = {};
     this.validate = jest.fn();
     this.schema = {};
@@ -24,7 +26,10 @@ jest.mock('../stores/FormStore', () => jest.fn(function() {
     this.change = jest.fn();
 }));
 
-jest.mock('../../../stores/ResourceStore', () => jest.fn());
+jest.mock('../../../stores/ResourceStore', () => jest.fn(function (resourceKey, id) {
+    this.resourceKey = resourceKey;
+    this.id = id;
+}));
 
 jest.mock('../stores/MetadataStore', () => ({
     getSchema: jest.fn(),
@@ -61,7 +66,7 @@ test('Should validate form when a field has finished being edited', () => {
     expect(store.validate).toBeCalledWith();
 });
 
-test('Should pass schema, data and showAllErrors flag to Renderer', () => {
+test('Should pass formInspector, schema, data and showAllErrors flag to Renderer', () => {
     const store = new FormStore(new ResourceStore('snippet', '1'));
     store.schema = {};
     store.data.title = 'Title';
@@ -72,6 +77,10 @@ test('Should pass schema, data and showAllErrors flag to Renderer', () => {
         data: store.data,
         schema: store.schema,
     }));
+
+    const formInspector = form.find('Renderer').prop('formInspector');
+    expect(formInspector.resourceKey).toEqual('snippet');
+    expect(formInspector.id).toEqual('1');
 });
 
 test('Should pass showAllErrors flag to Renderer when form has been submitted', () => {

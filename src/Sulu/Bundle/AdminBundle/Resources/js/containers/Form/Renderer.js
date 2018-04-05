@@ -1,24 +1,24 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React from 'react';
 import Divider from '../../components/Divider';
 import Grid from '../../components/Grid';
 import type {ErrorCollection} from '../../types';
 import Field from './Field';
+import FormInspector from './FormInspector';
 import rendererStyles from './renderer.scss';
 import type {Schema, SchemaEntry} from './types';
 
-type Props = {
+type Props = {|
     data: Object,
     errors?: ErrorCollection,
+    formInspector: FormInspector,
     schema: Schema,
     showAllErrors: boolean,
     onChange: (string, *) => void,
     onFieldFinish: ?() => void,
-    locale: ?IObservableValue<string>,
-};
+|};
 
 @observer
 export default class Renderer extends React.Component<Props> {
@@ -58,7 +58,7 @@ export default class Renderer extends React.Component<Props> {
     }
 
     renderGridItem(schemaField: SchemaEntry, schemaKey: string) {
-        const {data, errors, locale, onChange, showAllErrors} = this.props;
+        const {data, errors, formInspector, onChange, showAllErrors} = this.props;
 
         const error = (showAllErrors || this.modifiedFields.includes(schemaKey)) && errors && errors[schemaKey]
             ? errors[schemaKey]
@@ -73,13 +73,13 @@ export default class Renderer extends React.Component<Props> {
             >
                 <Field
                     error={error}
+                    formInspector={formInspector}
                     name={schemaKey}
                     schema={schemaField}
                     onChange={onChange}
                     onFinish={this.handleFieldFinish}
                     showAllErrors={showAllErrors}
                     value={data[schemaKey]}
-                    locale={locale}
                 />
             </Grid.Item>
         );
