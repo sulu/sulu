@@ -23,6 +23,7 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -217,11 +218,11 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $navigation->getChildrenAsArray()->willReturn(['navigation_item1', 'navigation_item2']);
         $this->navigationRegistry->getNavigation()->willReturn($navigation->reveal());
 
-        $resourceMetadata1 = $this->prophesize(EndpointInterface::class);
+        $resourceMetadata1 = $this->prophesize(ResourceMetadata::class);
         $resourceMetadata1->getKey()->willReturn('test1');
         $resourceMetadata1->getEndpoint()->willReturn('route_id_1');
 
-        $resourceMetadata2 = $this->prophesize(EndpointInterface::class);
+        $resourceMetadata2 = $this->prophesize(ResourceMetadata::class);
         $resourceMetadata2->getKey()->willReturn('test2');
         $resourceMetadata2->getEndpoint()->willReturn('route_id_2');
 
