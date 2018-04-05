@@ -81,6 +81,22 @@ test('Pass locale to DatagridOverlay', () => {
     expect(assignment.find('DatagridOverlay').prop('locale').get()).toEqual('de');
 });
 
+test('Pass disabledIds to DatagridOverlay', () => {
+    const disabledIds = [1, 2, 4];
+
+    const assignment = mount(
+        <Assignment
+            adapter="table"
+            disabledIds={disabledIds}
+            onChange={jest.fn()}
+            overlayTitle="Assignment"
+            resourceKey="snippets"
+        />
+    );
+
+    expect(assignment.find('DatagridOverlay').prop('disabledIds')).toEqual(disabledIds);
+});
+
 test('Show with passed values as items in right locale', () => {
     const locale = observable.box('en');
 

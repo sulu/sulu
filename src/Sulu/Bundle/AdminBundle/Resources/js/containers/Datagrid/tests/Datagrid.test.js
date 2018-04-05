@@ -114,6 +114,14 @@ test('Render the adapter in non-selectable mode', () => {
     expect(datagrid.find('TestAdapter').prop('onAllSelectionChange')).toEqual(undefined);
 });
 
+test('Pass the ids to be disabled to the adapter', () => {
+    const disabledIds = [1, 3];
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(<Datagrid adapters={['test']} disabledIds={disabledIds} store={datagridStore} />);
+
+    expect(datagrid.find('TestAdapter').prop('disabledIds')).toBe(disabledIds);
+});
+
 test('Selecting and deselecting items should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});

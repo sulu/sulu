@@ -34,6 +34,7 @@ test('Render data with schema', () => {
     const tableAdapter = render(
         <TableAdapter
             data={data}
+            disabledIds={[]}
             loading={false}
             page={2}
             pageCount={5}
@@ -71,6 +72,7 @@ test('Render data with schema and selections', () => {
     const tableAdapter = render(
         <TableAdapter
             data={data}
+            disabledIds={[]}
             loading={false}
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
@@ -104,6 +106,7 @@ test('Render data with schema in different order', () => {
     const tableAdapter = render(
         <TableAdapter
             data={data}
+            disabledIds={[]}
             loading={false}
             onPageChange={jest.fn()}
             page={2}
@@ -135,6 +138,7 @@ test('Render data with schema not containing all fields', () => {
     const tableAdapter = render(
         <TableAdapter
             data={data}
+            disabledIds={[]}
             loading={false}
             onPageChange={jest.fn()}
             page={1}
@@ -167,6 +171,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     const tableAdapter = render(
         <TableAdapter
             data={data}
+            disabledIds={[]}
             loading={false}
             onItemClick={rowEditClickSpy}
             onPageChange={jest.fn()}
@@ -200,6 +205,7 @@ test('Click on pencil should execute onItemEdit callback', () => {
     const tableAdapter = shallow(
         <TableAdapter
             data={data}
+            disabledIds={[]}
             loading={false}
             onItemClick={rowEditClickSpy}
             onPageChange={jest.fn()}
@@ -237,6 +243,7 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
     const tableAdapter = shallow(
         <TableAdapter
             data={data}
+            disabledIds={[]}
             loading={false}
             onItemSelectionChange={rowSelectionChangeSpy}
             onPageChange={jest.fn()}
@@ -259,6 +266,7 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
     const tableAdapter = shallow(
         <TableAdapter
             data={data}
+            disabledIds={[]}
             loading={false}
             onAllSelectionChange={allSelectionChangeSpy}
             onPageChange={jest.fn()}
@@ -275,7 +283,15 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
 test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const tableAdapter = shallow(
-        <TableAdapter loading={false} onPageChange={pageChangeSpy} page={2} pageCount={7} schema={{}} selections={[]} />
+        <TableAdapter
+            disabledIds={[]}
+            loading={false}
+            onPageChange={pageChangeSpy}
+            page={2}
+            pageCount={7}
+            schema={{}}
+            selections={[]}
+        />
     );
     expect(tableAdapter.find('Pagination').get(0).props).toEqual({
         total: 7,

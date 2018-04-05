@@ -45,6 +45,7 @@ test('Render data with edit button', () => {
         <ColumnListAdapter
             active={4}
             data={data}
+            disabledIds={[]}
             loading={false}
             onItemClick={jest.fn()}
             onPageChange={jest.fn()}
@@ -83,6 +84,7 @@ test('Render data without edit button', () => {
         <ColumnListAdapter
             active={4}
             data={data}
+            disabledIds={[]}
             loading={false}
             onPageChange={jest.fn()}
             page={undefined}
@@ -120,6 +122,46 @@ test('Render data with selection', () => {
         <ColumnListAdapter
             active={4}
             data={data}
+            disabledIds={[]}
+            loading={false}
+            onItemSelectionChange={jest.fn()}
+            onPageChange={jest.fn()}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[1]}
+        />
+    );
+
+    expect(columnListAdapter).toMatchSnapshot();
+});
+
+test('Render data with disabled items', () => {
+    const data = [
+        {
+            children: [
+                {
+                    children: [],
+                    data: {
+                        id: 3,
+                        title: 'Page 1.1',
+                        hasChildren: false,
+                    },
+                },
+            ],
+            data: {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+        },
+    ];
+
+    const columnListAdapter = render(
+        <ColumnListAdapter
+            active={3}
+            data={data}
+            disabledIds={[3]}
             loading={false}
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
@@ -140,6 +182,7 @@ test('Render with add button in toolbar when onAddClick callback is given', () =
         <ColumnListAdapter
             active={4}
             data={data}
+            disabledIds={[]}
             loading={false}
             onAddClick={jest.fn()}
             onPageChange={jest.fn()}
@@ -177,6 +220,7 @@ test('Render data with loading column', () => {
         <ColumnListAdapter
             active={1}
             data={data}
+            disabledIds={[]}
             loading={true}
             onPageChange={jest.fn()}
             page={undefined}
@@ -233,6 +277,7 @@ test('Execute onItemActivation callback when an item is clicked with the correct
         <ColumnListAdapter
             active={3}
             data={data}
+            disabledIds={[]}
             loading={false}
             onItemActivation={onItemActivationSpy}
             onPageChange={jest.fn()}
@@ -274,6 +319,7 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
         <ColumnListAdapter
             active={3}
             data={data}
+            disabledIds={[]}
             loading={false}
             onItemSelectionChange={itemSelectionChangeSpy}
             onPageChange={jest.fn()}

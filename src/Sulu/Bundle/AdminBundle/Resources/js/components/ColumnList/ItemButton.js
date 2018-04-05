@@ -4,10 +4,10 @@ import Icon from '../Icon';
 import type {ItemButtonConfig} from './types';
 import itemStyles from './item.scss';
 
-type Props = {
+type Props = {|
     id: string | number,
     config: ItemButtonConfig,
-};
+|};
 
 export default class ItemButton extends React.Component<Props> {
     handleClick = () => {
