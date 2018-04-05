@@ -75,11 +75,13 @@ export default class MediaCollection extends React.Component<Props> {
                     onCollectionNavigate={this.handleCollectionNavigate}
                 />
                 <Divider />
-                <MediaSection
-                    adapters={mediaDatagridAdapters}
-                    datagridStore={mediaDatagridStore}
-                    onMediaClick={this.handleMediaClick}
-                />
+                <div>
+                    <MediaSection
+                        adapters={mediaDatagridAdapters}
+                        datagridStore={mediaDatagridStore}
+                        onMediaClick={this.handleMediaClick}
+                    />
+                </div>
             </MultiMediaDropzone>
         );
     }

@@ -55,84 +55,86 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                 <div></div>
               </div>
               <div class=\\"divider\\"></div>
-              <div class=\\"datagrid\\">
-                <section>
-                  <div>
-                    <div class=\\"masonry\\" style=\\"position: relative; height: 0px;\\">
-                      <li style=\\"margin-bottom: 30px; position: absolute; left: 0px; top: 0px;\\">
-                        <div class=\\"mediaCard\\">
-                          <div class=\\"header\\">
-                            <div class=\\"description\\">
-                              <div class=\\"title\\">
-                                <label class=\\"label\\"><span class=\\"switch checkbox dark checkbox\\"><input type=\\"checkbox\\" value=\\"1\\"><span></span></span>
-                                  <div>
-                                    <div class=\\"titleText\\">
-                                      <div title=\\"Title 1\\" aria-label=\\"Title 1\\" class=\\"croppedText\\">
-                                        <div class=\\"front\\" aria-hidden=\\"true\\">Titl</div>
-                                        <div class=\\"back\\" aria-hidden=\\"true\\"><span>e 1</span></div>
-                                        <div class=\\"whole\\">Title 1</div>
+              <div>
+                <div class=\\"datagrid\\">
+                  <section>
+                    <div>
+                      <div class=\\"masonry\\" style=\\"position: relative; height: 0px;\\">
+                        <li style=\\"margin-bottom: 30px; position: absolute; left: 0px; top: 0px;\\">
+                          <div class=\\"mediaCard\\">
+                            <div class=\\"header\\">
+                              <div class=\\"description\\">
+                                <div class=\\"title\\">
+                                  <label class=\\"label\\"><span class=\\"switch checkbox dark checkbox\\"><input type=\\"checkbox\\" value=\\"1\\"><span></span></span>
+                                    <div>
+                                      <div class=\\"titleText\\">
+                                        <div title=\\"Title 1\\" aria-label=\\"Title 1\\" class=\\"croppedText\\">
+                                          <div class=\\"front\\" aria-hidden=\\"true\\">Titl</div>
+                                          <div class=\\"back\\" aria-hidden=\\"true\\"><span>e 1</span></div>
+                                          <div class=\\"whole\\">Title 1</div>
+                                        </div>
                                       </div>
                                     </div>
+                                  </label>
+                                </div>
+                                <div class=\\"meta\\">
+                                  <div title=\\"image/png 12.35 KB\\" aria-label=\\"image/png 12.35 KB\\" class=\\"croppedText\\">
+                                    <div class=\\"front\\" aria-hidden=\\"true\\">image/png</div>
+                                    <div class=\\"back\\" aria-hidden=\\"true\\"><span> 12.35 KB</span></div>
+                                    <div class=\\"whole\\">image/png 12.35 KB</div>
                                   </div>
-                                </label>
-                              </div>
-                              <div class=\\"meta\\">
-                                <div title=\\"image/png 12.35 KB\\" aria-label=\\"image/png 12.35 KB\\" class=\\"croppedText\\">
-                                  <div class=\\"front\\" aria-hidden=\\"true\\">image/png</div>
-                                  <div class=\\"back\\" aria-hidden=\\"true\\"><span> 12.35 KB</span></div>
-                                  <div class=\\"whole\\">image/png 12.35 KB</div>
                                 </div>
                               </div>
+                              <div>
+                                <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"fa-cloud-download\\"></span></button>
+                              </div>
                             </div>
-                            <div>
-                              <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"fa-cloud-download\\"></span></button>
+                            <div class=\\"media\\">
+                              <img alt=\\"Title 1\\" src=\\"http://lorempixel.com/240/100\\">
+                              <div class=\\"cover\\"><span class=\\"mediaIcon su-checkmark\\" aria-label=\\"su-checkmark\\"></span></div>
                             </div>
                           </div>
-                          <div class=\\"media\\">
-                            <img alt=\\"Title 1\\" src=\\"http://lorempixel.com/240/100\\">
-                            <div class=\\"cover\\"><span class=\\"mediaIcon su-checkmark\\" aria-label=\\"su-checkmark\\"></span></div>
-                          </div>
-                        </div>
-                      </li>
-                      <li style=\\"margin-bottom: 30px; position: absolute; left: 0px; top: 0px;\\">
-                        <div class=\\"mediaCard\\">
-                          <div class=\\"header\\">
-                            <div class=\\"description\\">
-                              <div class=\\"title\\">
-                                <label class=\\"label\\"><span class=\\"switch checkbox dark checkbox\\"><input type=\\"checkbox\\" value=\\"2\\"><span></span></span>
-                                  <div>
-                                    <div class=\\"titleText\\">
-                                      <div title=\\"Title 2\\" aria-label=\\"Title 2\\" class=\\"croppedText\\">
-                                        <div class=\\"front\\" aria-hidden=\\"true\\">Titl</div>
-                                        <div class=\\"back\\" aria-hidden=\\"true\\"><span>e 2</span></div>
-                                        <div class=\\"whole\\">Title 2</div>
+                        </li>
+                        <li style=\\"margin-bottom: 30px; position: absolute; left: 0px; top: 0px;\\">
+                          <div class=\\"mediaCard\\">
+                            <div class=\\"header\\">
+                              <div class=\\"description\\">
+                                <div class=\\"title\\">
+                                  <label class=\\"label\\"><span class=\\"switch checkbox dark checkbox\\"><input type=\\"checkbox\\" value=\\"2\\"><span></span></span>
+                                    <div>
+                                      <div class=\\"titleText\\">
+                                        <div title=\\"Title 2\\" aria-label=\\"Title 2\\" class=\\"croppedText\\">
+                                          <div class=\\"front\\" aria-hidden=\\"true\\">Titl</div>
+                                          <div class=\\"back\\" aria-hidden=\\"true\\"><span>e 2</span></div>
+                                          <div class=\\"whole\\">Title 2</div>
+                                        </div>
                                       </div>
                                     </div>
+                                  </label>
+                                </div>
+                                <div class=\\"meta\\">
+                                  <div title=\\"image/jpeg 54.32 KB\\" aria-label=\\"image/jpeg 54.32 KB\\" class=\\"croppedText\\">
+                                    <div class=\\"front\\" aria-hidden=\\"true\\">image/jpeg</div>
+                                    <div class=\\"back\\" aria-hidden=\\"true\\"><span> 54.32 KB</span></div>
+                                    <div class=\\"whole\\">image/jpeg 54.32 KB</div>
                                   </div>
-                                </label>
-                              </div>
-                              <div class=\\"meta\\">
-                                <div title=\\"image/jpeg 54.32 KB\\" aria-label=\\"image/jpeg 54.32 KB\\" class=\\"croppedText\\">
-                                  <div class=\\"front\\" aria-hidden=\\"true\\">image/jpeg</div>
-                                  <div class=\\"back\\" aria-hidden=\\"true\\"><span> 54.32 KB</span></div>
-                                  <div class=\\"whole\\">image/jpeg 54.32 KB</div>
                                 </div>
                               </div>
+                              <div>
+                                <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"fa-cloud-download\\"></span></button>
+                              </div>
                             </div>
-                            <div>
-                              <button class=\\"downloadButton\\"><span class=\\"fa fa-cloud-download\\" aria-label=\\"fa-cloud-download\\"></span></button>
+                            <div class=\\"media\\">
+                              <img alt=\\"Title 2\\" src=\\"http://lorempixel.com/240/100\\">
+                              <div class=\\"cover\\"><span class=\\"mediaIcon su-checkmark\\" aria-label=\\"su-checkmark\\"></span></div>
                             </div>
                           </div>
-                          <div class=\\"media\\">
-                            <img alt=\\"Title 2\\" src=\\"http://lorempixel.com/240/100\\">
-                            <div class=\\"cover\\"><span class=\\"mediaIcon su-checkmark\\" aria-label=\\"su-checkmark\\"></span></div>
-                          </div>
-                        </div>
-                      </li>
+                        </li>
+                      </div>
                     </div>
-                  </div>
-                  <div class=\\"indicator\\"></div>
-                </section>
+                    <div class=\\"indicator\\"></div>
+                  </section>
+                </div>
               </div>
               <input type=\\"file\\" style=\\"display: none;\\" multiple=\\"\\" autocomplete=\\"off\\">
             </div>
