@@ -32,14 +32,6 @@ export default class Application extends React.Component<Props> {
         this.toggleNavigation();
     };
 
-    handleLogoutClick = () => {
-        // TODO: Logout user here.
-    };
-
-    handleProfileEditClick = () => {
-        // TODO: Open profile edit overlay here.
-    };
-
     render() {
         const {router} = this.props;
 
