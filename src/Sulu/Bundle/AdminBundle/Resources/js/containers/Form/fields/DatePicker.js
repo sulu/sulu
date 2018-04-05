@@ -7,7 +7,7 @@ import type {FieldTypeProps} from '../../../types';
 export default class DatePicker extends React.Component<FieldTypeProps<?string>> {
     handleChange = (value: ?Date) => {
         const {onChange, onFinish} = this.props;
-        const stringValue = value ? moment(value).format('YYYY-MM-DD') : undefined;
+        const stringValue = value ? moment(value).format(moment.ISO_8601) : undefined;
 
         onChange(stringValue);
 
@@ -18,7 +18,7 @@ export default class DatePicker extends React.Component<FieldTypeProps<?string>>
 
     render() {
         const {value, error} = this.props;
-        const date = value ? moment(value, 'YYYY-MM-DD').toDate() : undefined;
+        const date = value ? moment(value, moment.ISO_8601).toDate() : undefined;
 
         return (
             <DatePickerComponent onChange={this.handleChange} valid={!error} value={date} />

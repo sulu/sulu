@@ -3,9 +3,9 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import Pagination from '../../../components/Pagination';
 import Table from '../../../components/Table';
-import {translate} from '../../../utils/Translator';
 import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
+import datagridFieldTransformerRegistry from '../registries/DatagridFieldTransformerRegistry';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
@@ -20,22 +20,22 @@ export default class TableAdapter extends AbstractAdapter {
         data: [],
     };
 
-    renderCells(item: Object, schemaKeys: Array<string>) {
+    renderCells(item: Object, schema: Object) {
+        const schemaKeys = Object.keys(schema);
         return schemaKeys.map((schemaKey) => {
-            // TODO: Remove this when a datafield mapping is built
-            if (typeof item[schemaKey] === 'object') {
-                return <Table.Cell key={item.id + schemaKey}>Object!</Table.Cell>;
-            }
+            const value = datagridFieldTransformerRegistry.get(schema[schemaKey].type).transform(item[schemaKey]);
 
             return (
-                <Table.Cell key={item.id + schemaKey}>{item[schemaKey]}</Table.Cell>
+                <Table.Cell key={item.id + schemaKey}>{value}</Table.Cell>
             );
         });
     }
 
-    renderHeaderCells(schema: Object, schemaKeys: Array<string>) {
+    renderHeaderCells(schema: Object) {
+        const schemaKeys = Object.keys(schema);
+
         return schemaKeys.map((schemaKey) => {
-            const label = schema[schemaKey] && schema[schemaKey].label ? translate(schema[schemaKey].label) : schemaKey;
+            const label = schema[schemaKey].label ? schema[schemaKey].label : schemaKey;
 
             return(
                 <Table.HeaderCell key={schemaKey}>
@@ -53,7 +53,7 @@ export default class TableAdapter extends AbstractAdapter {
         const newSchema = {};
 
         for (const key of Object.keys(schema)) {
-            if (schema[key].disabled || !schema[key].default) {
+            if (schema[key].disabled) {
                 continue;
             }
 
@@ -76,7 +76,6 @@ export default class TableAdapter extends AbstractAdapter {
             selections,
         } = this.props;
         const schema = this.getSchema();
-        const schemaKeys = Object.keys(schema);
         const buttons = [];
 
         if (onItemClick) {
@@ -100,12 +99,12 @@ export default class TableAdapter extends AbstractAdapter {
                     onAllSelectionChange={onAllSelectionChange}
                 >
                     <Table.Header>
-                        {this.renderHeaderCells(schema, schemaKeys)}
+                        {this.renderHeaderCells(schema)}
                     </Table.Header>
                     <Table.Body>
                         {data.map((item) => (
                             <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
-                                {this.renderCells(item, schemaKeys)}
+                                {this.renderCells(item, schema)}
                             </Table.Row>
                         ))}
                     </Table.Body>

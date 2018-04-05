@@ -60,3 +60,7 @@ export type TreeItem = {
     data: DataItem,
     children: Array<TreeItem>,
 };
+
+export interface FieldTransformer {
+    transform(value: *): *,
+}
