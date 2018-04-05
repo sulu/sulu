@@ -67,4 +67,21 @@ class ResourceMetadataPoolTest extends \PHPUnit_Framework_TestCase
 
         $this->resourceMetadataPool->getResourceMetadata('resource_key_not_existing', 'de');
     }
+
+    public function testGetAllResourceMetadata()
+    {
+        $resourceMetadata1 = $this->prophesize(ResourceMetadataInterface::class)->reveal();
+        $resourceMetadata2 = $this->prophesize(ResourceMetadataInterface::class)->reveal();
+        $resourceMetadata3 = $this->prophesize(ResourceMetadataInterface::class)->reveal();
+
+        $this->provider1->getAllResourceMetadata('de')
+            ->shouldBeCalled()->willReturn([$resourceMetadata1, $resourceMetadata2]);
+        $this->provider2->getAllResourceMetadata('de')
+            ->shouldBeCalled()->willReturn([$resourceMetadata3]);
+
+        $this->assertEquals(
+            [$resourceMetadata1, $resourceMetadata2, $resourceMetadata3],
+            $this->resourceMetadataPool->getAllResourceMetadata('de')
+        );
+    }
 }

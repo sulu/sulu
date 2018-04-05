@@ -15,11 +15,16 @@ use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\FormResourceMetadataProvider;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
@@ -80,12 +85,14 @@ class FormResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
                     '@SuluContactBundle/Resources/forms/contact.xml',
                     '@SuluContactBundle/Resources/forms/contact2.xml',
                 ],
+                'endpoint' => '123',
             ],
             'accounts' => [
                 'datagrid' => 'AccountsClass',
                 'form' => [
                     '@SuluAccountBundle/Resources/forms/account.xml',
                 ],
+                'endpoint' => '123',
             ],
         ];
 
@@ -186,6 +193,26 @@ class FormResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
 
         /** @var ResourceMetadata $resourceMetadata */
         $resourceMetadata = $this->formResourceMetadataProvider->getResourceMetadata('contacts', 'de');
+        $this->assertInstanceOf(
+            ResourceMetadataInterface::class,
+            $resourceMetadata
+        );
+        $this->assertInstanceOf(
+            EndpointInterface::class,
+            $resourceMetadata
+        );
+        $this->assertInstanceOf(
+            SchemaInterface::class,
+            $resourceMetadata
+        );
+        $this->assertInstanceOf(
+            FormInterface::class,
+            $resourceMetadata
+        );
+        $this->assertInstanceOf(
+            DatagridInterface::class,
+            $resourceMetadata
+        );
         $this->assertEquals($resourceMetadata->getForm(), new Form());
         $this->assertEquals($resourceMetadata->getDatagrid(), new Datagrid());
         $this->assertEquals($resourceMetadata->getSchema(), new Schema());
@@ -195,13 +222,46 @@ class FormResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($resourceMetadata->getForm(), new Form());
         $this->assertEquals($resourceMetadata->getDatagrid(), new Datagrid());
         $this->assertEquals($resourceMetadata->getSchema(), new Schema());
-
-        $this->formResourceMetadataProvider->getResourceMetadata('contacts', 'de');
     }
 
     public function testGetUnknownResource()
     {
         $this->assertNull($this->formResourceMetadataProvider->getResourceMetadata('unknown_key', 'de'));
+    }
+
+    public function testGetAll()
+    {
+        // load should happen only one time for each given locale
+        $this->formXmlLoader->load($this->contactXml, Argument::any())->shouldBeCalledTimes(1);
+        $this->formXmlLoader->load($this->contactXml2, Argument::any())->shouldBeCalledTimes(1);
+        $this->formXmlLoader->load($this->accountXml, Argument::any())->shouldBeCalledTimes(1);
+
+        /** @var ResourceMetadata $resourceMetadata */
+        $resourceMetadata1 = $this->formResourceMetadataProvider->getResourceMetadata('contacts', 'de');
+        $this->assertEquals($resourceMetadata1->getForm(), new Form());
+        $this->assertEquals($resourceMetadata1->getDatagrid(), new Datagrid());
+        $this->assertEquals($resourceMetadata1->getSchema(), new Schema());
+        $this->assertEquals($resourceMetadata1->getKey(), 'contacts');
+
+        /** @var ResourceMetadata $resourceMetadata */
+        $resourceMetadata2 = $this->formResourceMetadataProvider->getResourceMetadata('accounts', 'de');
+        $this->assertEquals($resourceMetadata2->getForm(), new Form());
+        $this->assertEquals($resourceMetadata2->getDatagrid(), new Datagrid());
+        $this->assertEquals($resourceMetadata2->getSchema(), new Schema());
+        $this->assertEquals($resourceMetadata2->getKey(), 'accounts');
+
+        $this->assertCount(
+            2,
+            $this->formResourceMetadataProvider->getAllResourceMetadata('de')
+        );
+
+        $this->assertEquals(
+            [
+                $resourceMetadata1,
+                $resourceMetadata2,
+            ],
+            $this->formResourceMetadataProvider->getAllResourceMetadata('de')
+        );
     }
 
     private function cleanUp()

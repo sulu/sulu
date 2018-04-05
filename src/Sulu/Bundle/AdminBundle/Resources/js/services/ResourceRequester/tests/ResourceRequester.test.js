@@ -10,7 +10,7 @@ jest.mock('../../Requester/Requester', () => ({
 }));
 
 jest.mock('../../../stores/ResourceMetadataStore', () => ({
-    getBaseUrl: jest.fn().mockImplementation((resourceKey) => {
+    getEndpoint: jest.fn().mockImplementation((resourceKey) => {
         switch (resourceKey) {
             case 'snippets':
                 return '/snippets';

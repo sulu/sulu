@@ -13,11 +13,17 @@ namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\Type;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 
-class TypedResourceMetadata implements DatagridInterface, TypesInterface
+class TypedResourceMetadata implements ResourceMetadataInterface, DatagridInterface, TypesInterface, EndpointInterface
 {
+    /**
+     * @var string
+     */
+    private $key;
+
     /**
      * @var Datagrid
      */
@@ -27,6 +33,21 @@ class TypedResourceMetadata implements DatagridInterface, TypesInterface
      * @var Type[]
      */
     private $types = [];
+
+    /**
+     * @var string
+     */
+    private $endpoint;
+
+    public function getKey(): string
+    {
+        return $this->key;
+    }
+
+    public function setKey(string $key): void
+    {
+        $this->key = $key;
+    }
 
     public function getDatagrid(): Datagrid
     {
@@ -49,5 +70,15 @@ class TypedResourceMetadata implements DatagridInterface, TypesInterface
     public function addType(Type $type): void
     {
         $this->types[$type->getName()] = $type;
+    }
+
+    public function getEndpoint(): string
+    {
+        return $this->endpoint;
+    }
+
+    public function setEndpoint(string $endpoint): void
+    {
+        $this->endpoint = $endpoint;
     }
 }

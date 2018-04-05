@@ -6,12 +6,15 @@ jest.mock('../../../services/Requester', () => ({
     get: jest.fn(),
 }));
 
-test('Get base URL for given key', () => {
-    expect(resourceMetadataStore.getBaseUrl('snippets')).toEqual('/admin/api/snippets');
+test('Set and get endpoint for given key', () => {
+    resourceMetadataStore.setEndpoints({
+        snippets: '/admin/api/snippets',
+    });
+    expect(resourceMetadataStore.getEndpoint('snippets')).toEqual('/admin/api/snippets');
 });
 
-test('Throw exception when getting base URL for not existing key', () => {
-    expect(() => resourceMetadataStore.getBaseUrl('not-existing')).toThrow(/"not-existing"/);
+test('Throw exception when getting endpoint for not existing key', () => {
+    expect(() => resourceMetadataStore.getEndpoint('not-existing')).toThrow(/"not-existing"/);
 });
 
 test('Load configuration for given key', () => {

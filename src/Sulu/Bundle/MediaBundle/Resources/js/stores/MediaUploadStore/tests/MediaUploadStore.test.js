@@ -5,7 +5,7 @@ import MediaUploadStore from '../MediaUploadStore';
 
 jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceMetadataStore: {
-        getBaseUrl: jest.fn().mockImplementation((resourceKey) => {
+        getEndpoint: jest.fn().mockImplementation((resourceKey) => {
             switch (resourceKey) {
                 case 'media':
                     return '/media';

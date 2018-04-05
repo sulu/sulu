@@ -46,6 +46,17 @@ class StructureResourceMetadataProvider implements ResourceMetadataProviderInter
         $this->resources = $resources;
     }
 
+    public function getAllResourceMetadata(string $locale): array
+    {
+        $resourceMetadataArray = [];
+
+        foreach (array_keys($this->resources) as $resourceKey) {
+            $resourceMetadataArray[] = $this->getResourceMetadata($resourceKey, $locale);
+        }
+
+        return $resourceMetadataArray;
+    }
+
     public function getResourceMetadata(string $resourceKey, string $locale): ?ResourceMetadataInterface
     {
         if (!array_key_exists($resourceKey, $this->resources)) {
@@ -53,19 +64,25 @@ class StructureResourceMetadataProvider implements ResourceMetadataProviderInter
         }
 
         return $this->getResourceMetadataForStructure(
+            $resourceKey,
             $this->resources[$resourceKey]['datagrid'],
             $this->resources[$resourceKey]['types'],
+            $this->resources[$resourceKey]['endpoint'],
             $locale
         );
     }
 
     private function getResourceMetadataForStructure(
+        string $resourceKey,
         string $list,
         array $structureTypes,
+        string $endpoint,
         string $locale
     ): TypedResourceMetadata {
         $resourceMetadata = new TypedResourceMetadata();
+        $resourceMetadata->setKey($resourceKey);
         $resourceMetadata->setDatagrid($this->resourceMetadataMapper->mapDatagrid($list, $locale));
+        $resourceMetadata->setEndpoint($endpoint);
 
         foreach ($structureTypes as $structureType) {
             /** @var StructureMetadata $structureMetadata */

@@ -22,14 +22,18 @@ use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
@@ -50,6 +54,16 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
      * @var TokenStorageInterface
      */
     private $tokenStorage;
+
+    /**
+     * @var TokenInterface
+     */
+    private $token;
+
+    /**
+     * @var UserInterface
+     */
+    private $user;
 
     /**
      * @var AdminPool
@@ -102,6 +116,11 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
     private $navigationRegistry;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @var string
      */
     private $environment = 'prod';
@@ -148,6 +167,8 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->authorizationChecker = $this->prophesize(AuthorizationCheckerInterface::class);
         $this->urlGenerator = $this->prophesize(UrlGeneratorInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $this->token = $this->prophesize(TokenInterface::class);
+        $this->user = $this->prophesize(UserInterface::class);
         $this->adminPool = $this->prophesize(AdminPool::class);
         $this->jsConfigPool = $this->prophesize(JsConfigPool::class);
         $this->serializer = $this->prophesize(SerializerInterface::class);
@@ -158,6 +179,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->resourceMetadataPool = $this->prophesize(ResourceMetadataPool::class);
         $this->routeRegistry = $this->prophesize(RouteRegistry::class);
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
+        $this->router = $this->prophesize(RouterInterface::class);
 
         $this->adminController = new AdminController(
             $this->authorizationChecker->reveal(),
@@ -173,6 +195,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
             $this->resourceMetadataPool->reveal(),
             $this->routeRegistry->reveal(),
             $this->navigationRegistry->reveal(),
+            $this->router->reveal(),
             $this->environment,
             $this->adminName,
             $this->locales,
@@ -194,10 +217,33 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $navigation->getChildrenAsArray()->willReturn(['navigation_item1', 'navigation_item2']);
         $this->navigationRegistry->getNavigation()->willReturn($navigation->reveal());
 
+        $resourceMetadata1 = $this->prophesize(ResourceMetadata::class);
+        $resourceMetadata1->getKey()->willReturn('test1');
+        $resourceMetadata1->getEndpoint()->willReturn('route_id_1');
+
+        $resourceMetadata2 = $this->prophesize(ResourceMetadata::class);
+        $resourceMetadata2->getKey()->willReturn('test2');
+        $resourceMetadata2->getEndpoint()->willReturn('route_id_2');
+
+        $this->router->generate('route_id_1')->willReturn('/path1');
+        $this->router->generate('route_id_2')->willReturn('/path2');
+
+        $this->resourceMetadataPool->getAllResourceMetadata('en')->willReturn(
+            [$resourceMetadata1->reveal(), $resourceMetadata2->reveal()]
+        );
+
+        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
+        $this->token->getUser()->willReturn($this->user->reveal());
+        $this->user->getLocale()->willReturn('en');
+
         $expectedResult = [
             'sulu_admin' => [
                 'routes' => $routes,
                 'navigation' => ['navigation_item1', 'navigation_item2'],
+                'endpoints' => [
+                    'test1' => '/path1',
+                    'test2' => '/path2',
+                ],
             ],
         ];
 

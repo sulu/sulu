@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Schema;
+namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint;
 
-interface SchemaInterface
+interface EndpointInterface
 {
-    public function getSchema(): Schema;
+    public function getEndpoint(): string;
 }

@@ -2,25 +2,19 @@
 import Requester from '../../services/Requester';
 
 class ResourceMetadataStore {
-    // TODO load from server
-    baseUrls: {[string]: string} = {
-        snippets: '/admin/api/snippets',
-        contacts: '/admin/api/contacts',
-        accounts: '/admin/api/accounts',
-        roles: '/admin/api/roles',
-        tags: '/admin/api/tags',
-        collections: '/admin/api/collections',
-        media: '/admin/api/media',
-        pages: '/admin/api/pages',
-    };
+    endpoints: {[string]: string} = {};
 
     configurationPromises: {[string]: Promise<Object>} = {};
 
-    getBaseUrl(key: string) {
-        if (!(key in this.baseUrls)) {
-            throw new Error('There is no baseUrl for the resourceKey "' + key + '"');
+    setEndpoints(endpoints: {[string]: string}) {
+        this.endpoints = endpoints;
+    }
+
+    getEndpoint(key: string) {
+        if (!(key in this.endpoints)) {
+            throw new Error('There is no endpoint for the resourceKey "' + key + '"');
         }
-        return this.baseUrls[key];
+        return this.endpoints[key];
     }
 
     loadConfiguration(key: string): Promise<Object> {
