@@ -28,6 +28,26 @@ class Field
      */
     protected $type;
 
+    /**
+     * @var bool
+     */
+    protected $disabled;
+
+    /**
+     * @var bool
+     */
+    protected $default;
+
+    /**
+     * @var bool
+     */
+    protected $sortable;
+
+    /**
+     * @var bool
+     */
+    protected $editable;
+
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -56,5 +76,45 @@ class Field
     public function setType(string $type): void
     {
         $this->type = $type;
+    }
+
+    public function isDisabled(): bool
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled(bool $disabled): void
+    {
+        $this->disabled = $disabled;
+    }
+
+    public function isDefault(): bool
+    {
+        return $this->default;
+    }
+
+    public function setDefault(bool $default): void
+    {
+        $this->default = $default;
+    }
+
+    public function isSortable(): bool
+    {
+        return $this->sortable;
+    }
+
+    public function setSortable(bool $sortable): void
+    {
+        $this->sortable = $sortable;
+    }
+
+    public function isEditable(): bool
+    {
+        return $this->editable;
+    }
+
+    public function setEditable(bool $editable): void
+    {
+        $this->editable = $editable;
     }
 }

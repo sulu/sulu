@@ -35,14 +35,32 @@ export default class TableAdapter extends AbstractAdapter {
 
     renderHeaderCells(schema: Object, schemaKeys: Array<string>) {
         return schemaKeys.map((schemaKey) => {
-            const title = schema[schemaKey] && schema[schemaKey].title ? translate(schema[schemaKey].title) : schemaKey;
+            const label = schema[schemaKey] && schema[schemaKey].label ? translate(schema[schemaKey].label) : schemaKey;
 
             return(
                 <Table.HeaderCell key={schemaKey}>
-                    {title}
+                    {label}
                 </Table.HeaderCell>
             );
         });
+    }
+
+    getSchema() {
+        const {
+            schema,
+        } = this.props;
+
+        const newSchema = {};
+
+        for (const key of Object.keys(schema)) {
+            if (schema[key].disabled || !schema[key].default) {
+                continue;
+            }
+
+            newSchema[key] = schema[key];
+        }
+
+        return newSchema;
     }
 
     render() {
@@ -55,9 +73,9 @@ export default class TableAdapter extends AbstractAdapter {
             onPageChange,
             page,
             pageCount,
-            schema,
             selections,
         } = this.props;
+        const schema = this.getSchema();
         const schemaKeys = Object.keys(schema);
         const buttons = [];
 
