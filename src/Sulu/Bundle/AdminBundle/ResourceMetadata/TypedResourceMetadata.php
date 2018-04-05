@@ -13,10 +13,11 @@ namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\Type;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 
-class TypedResourceMetadata implements DatagridInterface, TypesInterface, EndpointInterface
+class TypedResourceMetadata implements ResourceMetadataInterface, DatagridInterface, TypesInterface, EndpointInterface
 {
     /**
      * @var string

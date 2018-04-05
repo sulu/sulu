@@ -4,11 +4,11 @@ import Requester from '../../services/Requester';
 class ResourceMetadataStore {
     endpoints: {[string]: string} = {};
 
+    configurationPromises: {[string]: Promise<Object>} = {};
+
     setEndpoints(endpoints: {[string]: string}) {
         this.endpoints = endpoints;
     }
-
-    configurationPromises: {[string]: Promise<Object>} = {};
 
     getEndpoint(key: string) {
         if (!(key in this.endpoints)) {

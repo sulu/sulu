@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
+namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint;
 
-interface EndpointInterface extends ResourceMetadataInterface
+interface EndpointInterface
 {
     public function getEndpoint(): string;
 }

@@ -11,9 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid;
 
-use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
-
-interface DatagridInterface extends ResourceMetadataInterface
+interface DatagridInterface
 {
     public function getDatagrid(): Datagrid;
 }

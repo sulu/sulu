@@ -20,7 +20,7 @@ use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\EndpointInterface;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
