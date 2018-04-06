@@ -78,6 +78,9 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
         $this->debug = $debug;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAllResourceMetadata(string $locale): array
     {
         $resourceMetadataArray = [];

@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -55,8 +56,7 @@ class ResourceMetadataMapper
 
             $field->setLabel($this->translator->trans($fieldDescriptor->getTranslation(), [], 'admin'));
             $field->setType($fieldDescriptor->getType());
-            $field->setDisabled($fieldDescriptor->getDisabled());
-            $field->setDefault($fieldDescriptor->getDefault());
+            $field->setDisplay($this->getDisplay($fieldDescriptor));
             $field->setSortable($fieldDescriptor->getSortable());
             $field->setEditable($fieldDescriptor->getEditable());
 
@@ -64,6 +64,22 @@ class ResourceMetadataMapper
         }
 
         return $datagrid;
+    }
+
+    private function getDisplay(FieldDescriptorInterface $fieldDescriptor): string
+    {
+        if ($fieldDescriptor->getDefault() && !$fieldDescriptor->getDisabled()) {
+            return \Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata::DISPLAY_ALWAYS;
+        }
+        if ($fieldDescriptor->getDefault() && $fieldDescriptor->getDisabled()) {
+            return \Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata::DISPLAY_YES;
+        }
+        if (!$fieldDescriptor->getDefault() && !$fieldDescriptor->getDisabled()) {
+            return \Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata::DISPLAY_NO;
+        }
+        if (!$fieldDescriptor->getDefault() && $fieldDescriptor->getDisabled()) {
+            return \Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata::DISPLAY_NEVER;
+        }
     }
 
     /**

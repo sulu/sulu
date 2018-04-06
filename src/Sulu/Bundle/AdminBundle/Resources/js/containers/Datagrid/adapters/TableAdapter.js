@@ -53,7 +53,7 @@ export default class TableAdapter extends AbstractAdapter {
         const newSchema = {};
 
         for (const key of Object.keys(schema)) {
-            if (schema[key].disabled) {
+            if (schema[key].display === 'never' || schema[key].display === 'no') {
                 continue;
             }
 

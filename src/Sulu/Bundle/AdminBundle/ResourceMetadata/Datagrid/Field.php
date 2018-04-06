@@ -29,14 +29,9 @@ class Field
     protected $type;
 
     /**
-     * @var bool
+     * @var string
      */
-    protected $disabled;
-
-    /**
-     * @var bool
-     */
-    protected $default;
+    protected $display;
 
     /**
      * @var bool
@@ -78,24 +73,14 @@ class Field
         $this->type = $type;
     }
 
-    public function isDisabled(): bool
+    public function getDisplay(): string
     {
-        return $this->disabled;
+        return $this->display;
     }
 
-    public function setDisabled(bool $disabled): void
+    public function setDisplay(string $display): void
     {
-        $this->disabled = $disabled;
-    }
-
-    public function isDefault(): bool
-    {
-        return $this->default;
-    }
-
-    public function setDefault(bool $default): void
-    {
-        $this->default = $default;
+        $this->display = $display;
     }
 
     public function isSortable(): bool
