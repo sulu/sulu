@@ -94,7 +94,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
             <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
               <div class=\\"field error\\">
                 <label class=\\"label\\">Text</label>
-                <input type=\\"text\\" class=\\"minLength\\" value=\\"T2\\">
+                <input class=\\"minLength\\" type=\\"text\\" value=\\"T2\\">
                 <label class=\\"errorLabel\\">sulu_admin.error_minlength</label>
               </div>
             </div>
@@ -160,7 +160,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
             <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
               <div class=\\"field error\\">
                 <label class=\\"label\\">Text</label>
-                <input type=\\"text\\" class=\\"minLength\\" value=\\"T2\\">
+                <input class=\\"minLength\\" type=\\"text\\" value=\\"T2\\">
                 <label class=\\"errorLabel\\">sulu_admin.error_minlength</label>
               </div>
             </div>
@@ -179,7 +179,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
             <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
               <div class=\\"field error\\">
                 <label class=\\"label\\">Text</label>
-                <input type=\\"text\\" class=\\"minLength\\" value=\\"T3\\">
+                <input class=\\"minLength\\" type=\\"text\\" value=\\"T3\\">
                 <label class=\\"errorLabel\\">sulu_admin.error_minlength</label>
               </div>
             </div>
