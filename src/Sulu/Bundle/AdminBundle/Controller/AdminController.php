@@ -38,6 +38,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AdminController
 {
@@ -89,9 +90,14 @@ class AdminController
     private $localizationManager;
 
     /**
-     * @var TranslatorBagInterface
+     * @var TranslatorInterface
      */
     private $translator;
+
+    /**
+     * @var TranslatorBagInterface
+     */
+    private $translatorBag;
 
     /**
      * @var ResourceMetadataPool
@@ -158,7 +164,8 @@ class AdminController
         ViewHandlerInterface $viewHandler,
         EngineInterface $engine,
         LocalizationManagerInterface $localizationManager,
-        TranslatorBagInterface $translator,
+        TranslatorInterface $translator,
+        TranslatorBagInterface $translatorBag,
         ResourceMetadataPool $resourceMetadataPool,
         RouteRegistry $routeRegistry,
         NavigationRegistry $navigationRegistry,
@@ -181,6 +188,7 @@ class AdminController
         $this->engine = $engine;
         $this->localizationManager = $localizationManager;
         $this->translator = $translator;
+        $this->translatorBag = $translatorBag;
         $this->resourceMetadataPool = $resourceMetadataPool;
         $this->routeRegistry = $routeRegistry;
         $this->navigationRegistry = $navigationRegistry;
@@ -259,6 +267,36 @@ class AdminController
 
         $view = View::create([
             'sulu_admin' => [
+                'field_types' => [
+                    'assignment' => [
+                        'snippet' => [
+                            'adapter' => 'table',
+                            'displayProperties' => ['title'],
+                            'icon' => 'su-snippet',
+                            'label' => $this->translator->trans('sulu_snippet.assignment_label', [], 'admin_backend'),
+                            'resourceKey' => 'snippets',
+                            'overlayTitle' => $this->translator->trans(
+                                'sulu_snippet.assignment_overlay_title',
+                                [],
+                                'admin_backend'
+                            ),
+                        ],
+                        'internal_links' => [
+                            'adapter' => 'column_list',
+                            'displayProperties' => [
+                                'title',
+                            ],
+                            'icon' => 'su-document',
+                            'label' => $this->translator->trans('sulu_content.assignment_label', [], 'admin_backend'),
+                            'resourceKey' => 'pages',
+                            'overlayTitle' => $this->translator->trans(
+                                'sulu_content.assignment_overlay_title',
+                                [],
+                                'admin_backend'
+                            ),
+                        ],
+                    ],
+                ],
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
                 'endpoints' => $endpoints,
@@ -271,7 +309,7 @@ class AdminController
 
     public function translationsAction(Request $request): Response
     {
-        $catalogue = $this->translator->getCatalogue($request->query->get('locale'));
+        $catalogue = $this->translatorBag->getCatalogue($request->query->get('locale'));
         $fallbackCatalogue = $catalogue->getFallbackCatalogue();
 
         $translations = $catalogue->all(static::TRANSLATION_DOMAIN);

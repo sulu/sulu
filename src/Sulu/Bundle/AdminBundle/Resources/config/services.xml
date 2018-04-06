@@ -22,6 +22,7 @@
             <argument type="service" id="templating"/>
             <argument type="service" id="sulu.core.localization_manager"/>
             <argument type="service" id="translator.default"/>
+            <argument type="service" id="translator.default"/>
             <argument type="service" id="sulu_admin.metadata.resource_metadata_pool"/>
             <argument type="service" id="sulu_admin.route_registry"/>
             <argument type="service" id="sulu_admin.navigation_registry"/>
