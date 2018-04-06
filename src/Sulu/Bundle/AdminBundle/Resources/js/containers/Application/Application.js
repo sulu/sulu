@@ -5,8 +5,9 @@ import {action, observable} from 'mobx';
 import classNames from 'classnames';
 import React from 'react';
 import Navigation from '../Navigation';
-import Toolbar from '../Toolbar';
 import Router from '../../services/Router';
+import Sidebar, {sidebarStore} from '../Sidebar';
+import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
 import {Backdrop} from '../../components';
 import applicationStyles from './application.scss';
@@ -41,12 +42,26 @@ export default class Application extends React.Component<Props> {
             }
         );
 
+        const sidebarClass = classNames(
+            applicationStyles.sidebar,
+            {
+                [applicationStyles[sidebarStore.size]]: sidebarStore.size,
+            }
+        );
+
+        const contentClass = classNames(
+            applicationStyles.content,
+            {
+                [applicationStyles.withSidebar]: sidebarStore.view,
+            }
+        );
+
         return (
             <div className={rootClass}>
                 <nav className={applicationStyles.navigation}>
                     <Navigation router={router} onNavigate={this.handleNavigate} />
                 </nav>
-                <div className={applicationStyles.content}>
+                <div className={contentClass}>
                     <Backdrop
                         open={this.navigationVisible}
                         visible={false}
@@ -54,20 +69,21 @@ export default class Application extends React.Component<Props> {
                         local={true}
                         fixed={false}
                     />
-                    <header className={applicationStyles.header}>
-                        <Toolbar
-                            navigationOpen={this.navigationVisible}
-                            onNavigationButtonClick={this.handleNavigationButtonClick}
-                        />
-                    </header>
                     <main className={applicationStyles.main}>
-                        {router.route &&
-                            <ViewRenderer
-                                key={router.route.name}
-                                router={router}
+                        <header className={applicationStyles.header}>
+                            <Toolbar
+                                navigationOpen={this.navigationVisible}
+                                onNavigationButtonClick={this.handleNavigationButtonClick}
                             />
-                        }
+                        </header>
+
+                        <div className={applicationStyles.viewContainer}>
+                            {router.route &&
+                            <ViewRenderer key={router.route.name} router={router} />
+                            }
+                        </div>
                     </main>
+                    <Sidebar className={sidebarClass} />
                 </div>
             </div>
         );

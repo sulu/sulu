@@ -1,0 +1,7 @@
+@import '../Application/colors.scss';
+
+$sidebarBorderColor: $silver;
+
+.sidebar {
+    border-left: 1px $sidebarBorderColor solid;
+}

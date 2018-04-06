@@ -79,32 +79,36 @@ exports[`Application should not fail if current route does not exist 1`] = `
   <div
     class="content"
   >
-    <header
-      class="header"
-    >
-      <nav
-        class="toolbar light"
-      >
-        <div
-          class="controls light"
-        >
-          <button
-            class="button light primary"
-          >
-            <span
-              aria-label="su-menu"
-              class="icon su-menu"
-            />
-          </button>
-        </div>
-        <div
-          class="controls light"
-        />
-      </nav>
-    </header>
     <main
       class="main"
-    />
+    >
+      <header
+        class="header"
+      >
+        <nav
+          class="toolbar light"
+        >
+          <div
+            class="controls light"
+          >
+            <button
+              class="button light primary"
+            >
+              <span
+                aria-label="su-menu"
+                class="icon su-menu"
+              />
+            </button>
+          </div>
+          <div
+            class="controls light"
+          />
+        </nav>
+      </header>
+      <div
+        class="viewContainer"
+      />
+    </main>
   </div>
 </div>
 `;
@@ -188,39 +192,43 @@ exports[`Application should render based on current route 1`] = `
   <div
     class="content"
   >
-    <header
-      class="header"
-    >
-      <nav
-        class="toolbar light"
-      >
-        <div
-          class="controls light"
-        >
-          <button
-            class="button light primary"
-          >
-            <span
-              aria-label="su-menu"
-              class="icon su-menu"
-            />
-          </button>
-        </div>
-        <div
-          class="controls light"
-        />
-      </nav>
-    </header>
     <main
       class="main"
     >
-      <div>
-        <h1>
-          Test
-        </h1>
-        <h2>
-          test
-        </h2>
+      <header
+        class="header"
+      >
+        <nav
+          class="toolbar light"
+        >
+          <div
+            class="controls light"
+          >
+            <button
+              class="button light primary"
+            >
+              <span
+                aria-label="su-menu"
+                class="icon su-menu"
+              />
+            </button>
+          </div>
+          <div
+            class="controls light"
+          />
+        </nav>
+      </header>
+      <div
+        class="viewContainer"
+      >
+        <div>
+          <h1>
+            Test
+          </h1>
+          <h2>
+            test
+          </h2>
+        </div>
       </div>
     </main>
   </div>
@@ -379,96 +387,103 @@ exports[`Application should render opened navigation 1`] = `
           onClick={[Function]}
         />
       </Backdrop>
-      <header
-        className="header"
-      >
-        <Toolbar
-          navigationOpen={true}
-          onNavigationButtonClick={[Function]}
-        >
-          <Toolbar
-            skin="light"
-          >
-            <nav
-              className="toolbar light"
-            >
-              <Controls
-                key=".0"
-                skin="light"
-              >
-                <div
-                  className="controls light"
-                >
-                  <Button
-                    active={false}
-                    disabled={false}
-                    hasOptions={false}
-                    icon="su-x"
-                    key=".0"
-                    onClick={[Function]}
-                    primary={true}
-                    skin="light"
-                  >
-                    <button
-                      className="button light primary"
-                      disabled={false}
-                      onClick={[Function]}
-                    >
-                      <Icon
-                        className="icon"
-                        name="su-x"
-                      >
-                        <span
-                          aria-label="su-x"
-                          className="icon su-x"
-                        />
-                      </Icon>
-                    </button>
-                  </Button>
-                </div>
-              </Controls>
-              <Controls
-                key=".1"
-                skin="light"
-              >
-                <div
-                  className="controls light"
-                />
-              </Controls>
-            </nav>
-          </Toolbar>
-        </Toolbar>
-      </header>
       <main
         className="main"
       >
-        <Test
-          key="test"
-          router={
-            Object {
-              "route": Object {
-                "attributeDefaults": Object {},
-                "children": Array [],
-                "name": "test",
-                "options": Object {},
-                "parent": null,
-                "path": "/webspaces",
-                "rerenderAttributes": Array [],
-                "view": "test",
-              },
-            }
-          }
+        <header
+          className="header"
         >
-          <div>
-            <h1>
-              Test
-            </h1>
-            <h2>
-              test
-            </h2>
-          </div>
-        </Test>
+          <Toolbar
+            navigationOpen={true}
+            onNavigationButtonClick={[Function]}
+          >
+            <Toolbar
+              skin="light"
+            >
+              <nav
+                className="toolbar light"
+              >
+                <Controls
+                  key=".0"
+                  skin="light"
+                >
+                  <div
+                    className="controls light"
+                  >
+                    <Button
+                      active={false}
+                      disabled={false}
+                      hasOptions={false}
+                      icon="su-x"
+                      key=".0"
+                      onClick={[Function]}
+                      primary={true}
+                      skin="light"
+                    >
+                      <button
+                        className="button light primary"
+                        disabled={false}
+                        onClick={[Function]}
+                      >
+                        <Icon
+                          className="icon"
+                          name="su-x"
+                        >
+                          <span
+                            aria-label="su-x"
+                            className="icon su-x"
+                          />
+                        </Icon>
+                      </button>
+                    </Button>
+                  </div>
+                </Controls>
+                <Controls
+                  key=".1"
+                  skin="light"
+                >
+                  <div
+                    className="controls light"
+                  />
+                </Controls>
+              </nav>
+            </Toolbar>
+          </Toolbar>
+        </header>
+        <div
+          className="viewContainer"
+        >
+          <Test
+            key="test"
+            router={
+              Object {
+                "route": Object {
+                  "attributeDefaults": Object {},
+                  "children": Array [],
+                  "name": "test",
+                  "options": Object {},
+                  "parent": null,
+                  "path": "/webspaces",
+                  "rerenderAttributes": Array [],
+                  "view": "test",
+                },
+              }
+            }
+          >
+            <div>
+              <h1>
+                Test
+              </h1>
+              <h2>
+                test
+              </h2>
+            </div>
+          </Test>
+        </div>
       </main>
+      <Sidebar
+        className="sidebar"
+      />
     </div>
   </div>
 </Application>

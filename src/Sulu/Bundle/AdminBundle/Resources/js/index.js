@@ -8,7 +8,7 @@ import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
 import {setTranslations, translate} from './utils/Translator';
 import Application from './containers/Application';
-import {fieldRegistry, Assignment, DatePicker, Input, ResourceLocator, SingleSelect, TextArea} from './containers/Form';
+import {Assignment, DatePicker, fieldRegistry, Input, ResourceLocator, SingleSelect, TextArea} from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
 import {viewRegistry} from './containers/ViewRenderer';
 import {navigationRegistry} from './containers/Navigation';
