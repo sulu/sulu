@@ -16,6 +16,7 @@ $linkFontSize: 14px;
 $linkColor: $black;
 
 $iconBackgroundColorActive: $doveGray;
+$iconBackgroundColorHover: $mercury;
 $iconColorActive: $white;
 
 .button {
@@ -72,6 +73,10 @@ $iconColorActive: $white;
     border: 1px solid $iconBorderColor;
     color: $iconBorderColor;
     cursor: pointer;
+
+    &:hover {
+        background-color: $silver;
+    }
 
     &.active {
         background-color: $iconBorderColor;

@@ -9,22 +9,22 @@ const LOADER_SIZE = 25;
 
 type Props = {
     active: boolean,
-    size: 'small' | 'large',
     children: Node,
-    disabled: boolean,
-    skin: 'primary' | 'secondary' | 'link' | 'icon',
-    onClick: (value: *) => void,
-    loading: boolean,
     className?: string,
+    disabled: boolean,
+    loading: boolean,
+    onClick: (value: *) => void,
+    size: 'small' | 'large',
+    skin: 'primary' | 'secondary' | 'link' | 'icon',
     value?: *,
 };
 
 export default class Button extends React.PureComponent<Props> {
     static defaultProps = {
+        active: false,
         disabled: false,
         loading: false,
         size: 'large',
-        active: false,
         skin: 'secondary',
     };
 
@@ -37,10 +37,10 @@ export default class Button extends React.PureComponent<Props> {
         const {
             active,
             children,
+            className,
             disabled,
             loading,
             skin,
-            className,
         } = this.props;
         const buttonClass = classNames(
             buttonStyles.button,

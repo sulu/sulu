@@ -9,13 +9,11 @@ const onClick = () => {
 };
 
 <ButtonGroup>
-    <Button
-        onClick={onClick}>
+    <Button onClick={onClick}>
         <Icon name="su-view" />
     </Button>
-    <Button
-        onClick={onClick}>
-        <Icon name="su-view" />
+    <Button onClick={onClick}>
+        <Icon name="su-view2" />
     </Button>
 </ButtonGroup>
 ```
@@ -29,17 +27,13 @@ const onClick = () => {
 };
 
 <ButtonGroup>
-    <Button
-        active={true}
-        onClick={onClick}>
-        <Icon name="su-view" />
+    <Button active={true} onClick={onClick}>
+        <Icon name="xxx" />
     </Button>
-    <Button
-        onClick={onClick}>
-        <Icon name="su-list" />
+    <Button onClick={onClick}>
+        <Icon name="su-view2" />
     </Button>
-    <Button
-        onClick={onClick}>
+    <Button onClick={onClick}>
         <Icon name="su-view" />
     </Button>
 </ButtonGroup>
@@ -54,8 +48,7 @@ const onClick = () => {
 };
 
 <ButtonGroup>
-    <Button
-        onClick={onClick}>
+    <Button onClick={onClick}>
         <Icon name="su-view" />
     </Button>
 </ButtonGroup>
