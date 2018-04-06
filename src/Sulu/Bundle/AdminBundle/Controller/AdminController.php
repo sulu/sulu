@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
+use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
@@ -38,7 +39,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class AdminController
 {
@@ -90,11 +90,6 @@ class AdminController
     private $localizationManager;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var TranslatorBagInterface
      */
     private $translatorBag;
@@ -118,6 +113,11 @@ class AdminController
      * @var RouterInterface
      */
     private $router;
+
+    /**
+     * @var FieldTypeOptionRegistryInterface
+     */
+    private $fieldTypeOptionRegistry;
 
     /**
      * @var string
@@ -164,12 +164,12 @@ class AdminController
         ViewHandlerInterface $viewHandler,
         EngineInterface $engine,
         LocalizationManagerInterface $localizationManager,
-        TranslatorInterface $translator,
         TranslatorBagInterface $translatorBag,
         ResourceMetadataPool $resourceMetadataPool,
         RouteRegistry $routeRegistry,
         NavigationRegistry $navigationRegistry,
         RouterInterface $router,
+        FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         $environment,
         $adminName,
         array $locales,
@@ -187,12 +187,12 @@ class AdminController
         $this->viewHandler = $viewHandler;
         $this->engine = $engine;
         $this->localizationManager = $localizationManager;
-        $this->translator = $translator;
         $this->translatorBag = $translatorBag;
         $this->resourceMetadataPool = $resourceMetadataPool;
         $this->routeRegistry = $routeRegistry;
         $this->navigationRegistry = $navigationRegistry;
         $this->router = $router;
+        $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
         $this->environment = $environment;
         $this->adminName = $adminName;
         $this->locales = $locales;
@@ -267,36 +267,7 @@ class AdminController
 
         $view = View::create([
             'sulu_admin' => [
-                'field_types' => [
-                    'assignment' => [
-                        'snippet' => [
-                            'adapter' => 'table',
-                            'displayProperties' => ['title'],
-                            'icon' => 'su-snippet',
-                            'label' => $this->translator->trans('sulu_snippet.assignment_label', [], 'admin_backend'),
-                            'resourceKey' => 'snippets',
-                            'overlayTitle' => $this->translator->trans(
-                                'sulu_snippet.assignment_overlay_title',
-                                [],
-                                'admin_backend'
-                            ),
-                        ],
-                        'internal_links' => [
-                            'adapter' => 'column_list',
-                            'displayProperties' => [
-                                'title',
-                            ],
-                            'icon' => 'su-document',
-                            'label' => $this->translator->trans('sulu_content.assignment_label', [], 'admin_backend'),
-                            'resourceKey' => 'pages',
-                            'overlayTitle' => $this->translator->trans(
-                                'sulu_content.assignment_overlay_title',
-                                [],
-                                'admin_backend'
-                            ),
-                        ],
-                    ],
-                ],
+                'field_type_options' => $this->fieldTypeOptionRegistry->toArray(),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
                 'endpoints' => $endpoints,

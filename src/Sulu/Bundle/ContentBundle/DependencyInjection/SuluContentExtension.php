@@ -26,15 +26,30 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-/**
- * This is the class that loads and manages your bundle configuration.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- */
 class SuluContentExtension extends Extension implements PrependExtensionInterface
 {
     public function prepend(ContainerBuilder $container)
     {
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'field_type_options' => [
+                        'assignment' => [
+                            'internal_links' => [
+                                'adapter' => 'column_list',
+                                'displayProperties' => ['title'],
+                                'icon' => 'su-document',
+                                'label' => 'sulu_content.assignment_label',
+                                'resourceKey' => 'pages',
+                                'overlayTitle' => 'sulu_content.assignment_overlay_title',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('sulu_core')) {
             $container->prependExtensionConfig(
                 'sulu_core',

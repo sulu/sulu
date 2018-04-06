@@ -22,11 +22,11 @@
             <argument type="service" id="templating"/>
             <argument type="service" id="sulu.core.localization_manager"/>
             <argument type="service" id="translator.default"/>
-            <argument type="service" id="translator.default"/>
             <argument type="service" id="sulu_admin.metadata.resource_metadata_pool"/>
             <argument type="service" id="sulu_admin.route_registry"/>
             <argument type="service" id="sulu_admin.navigation_registry"/>
             <argument type="service" id="router"/>
+            <argument type="service" id="sulu_admin.field_type_option_registry"/>
             <argument>%kernel.environment%</argument>
             <argument>%sulu_admin.name%</argument>
             <argument>%sulu_core.locales%</argument>
@@ -95,5 +95,10 @@
             <argument type="service" id="sulu_admin.admin_pool"/>
             <argument type="service" id="sulu_admin.route_registry"/>
         </service>
+
+        <service
+            id="sulu_admin.field_type_option_registry"
+            class="Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistry"
+        />
     </services>
 </container>

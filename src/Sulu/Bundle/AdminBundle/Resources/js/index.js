@@ -77,7 +77,7 @@ Promise.all([
     configPromise,
     bundlesReadyPromise,
 ]).then((values) => {
-    registerFieldTypes(values[1]['sulu_admin']['field_types']);
+    registerFieldTypes(values[1]['sulu_admin']['field_type_options']);
     startApplication();
 });
 
