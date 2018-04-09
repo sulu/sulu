@@ -23,15 +23,22 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.locale = options ? options.locale : undefined;
 }));
 
+jest.mock('../../../../utils/Translator', () => ({
+    translate: jest.fn(function(key) {
+        return key;
+    }),
+}));
+
 test('Should pass props correctly to component', () => {
     const changeSpy = jest.fn();
     const value = [1, 6, 8];
+
     const fieldTypeOptions = {
         adapter: 'table',
         displayProperties: ['id', 'title'],
         icon: '',
-        label: 'Select snippets',
-        overlayTitle: 'Snippets',
+        label: 'sulu_snippet.assignment_label',
+        overlayTitle: 'sulu_snippet.assignment_overlay_title',
         resourceKey: 'snippets',
     };
 
@@ -55,11 +62,11 @@ test('Should pass props correctly to component', () => {
     expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
         adapter: 'table',
         displayProperties: ['id', 'title'],
-        label: 'Select snippets',
+        label: 'sulu_snippet.assignment_label',
         locale,
         onChange: changeSpy,
         resourceKey: 'snippets',
-        overlayTitle: 'Snippets',
+        overlayTitle: 'sulu_snippet.assignment_overlay_title',
         value,
     }));
 });

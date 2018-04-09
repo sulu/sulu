@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
+use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
@@ -98,7 +99,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var TranslatorBagInterface
      */
-    private $translator;
+    private $translatorBag;
 
     /**
      * @var ResourceMetadataPool
@@ -119,6 +120,11 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
      * @var RouterInterface
      */
     private $router;
+
+    /**
+     * @var FieldTypeOptionRegistryInterface
+     */
+    private $fieldTypeOptionRegistry;
 
     /**
      * @var string
@@ -175,11 +181,12 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->viewHandler = $this->prophesize(ViewHandlerInterface::class);
         $this->engine = $this->prophesize(EngineInterface::class);
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
-        $this->translator = $this->prophesize(TranslatorBagInterface::class);
+        $this->translatorBag = $this->prophesize(TranslatorBagInterface::class);
         $this->resourceMetadataPool = $this->prophesize(ResourceMetadataPool::class);
         $this->routeRegistry = $this->prophesize(RouteRegistry::class);
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
         $this->router = $this->prophesize(RouterInterface::class);
+        $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
 
         $this->adminController = new AdminController(
             $this->authorizationChecker->reveal(),
@@ -191,11 +198,12 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
             $this->viewHandler->reveal(),
             $this->engine->reveal(),
             $this->localizationManager->reveal(),
-            $this->translator->reveal(),
+            $this->translatorBag->reveal(),
             $this->resourceMetadataPool->reveal(),
             $this->routeRegistry->reveal(),
             $this->navigationRegistry->reveal(),
             $this->router->reveal(),
+            $this->fieldTypeOptionRegistry->reveal(),
             $this->environment,
             $this->adminName,
             $this->locales,
@@ -236,19 +244,20 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->token->getUser()->willReturn($this->user->reveal());
         $this->user->getLocale()->willReturn('en');
 
-        $expectedResult = [
-            'sulu_admin' => [
-                'routes' => $routes,
-                'navigation' => ['navigation_item1', 'navigation_item2'],
-                'endpoints' => [
+        $fieldTypeOptions = ['assignment' => []];
+        $this->fieldTypeOptionRegistry->toArray()->willReturn($fieldTypeOptions);
+
+        $this->viewHandler->handle(Argument::that(function(View $view) use ($fieldTypeOptions, $routes) {
+            $data = $view->getData()['sulu_admin'];
+
+            return 'json' === $view->getFormat()
+                && $data['field_type_options'] === $fieldTypeOptions
+                && $data['routes'] === $routes
+                && $data['navigation'] === ['navigation_item1', 'navigation_item2']
+                && $data['endpoints'] === [
                     'test1' => '/path1',
                     'test2' => '/path2',
-                ],
-            ],
-        ];
-
-        $this->viewHandler->handle(Argument::that(function(View $view) use ($expectedResult) {
-            return 'json' === $view->getFormat() && $view->getData() === $expectedResult;
+                ];
         }))->shouldBeCalled()->willReturn(new Response());
 
         $this->adminController->configV2Action();
@@ -280,7 +289,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $fallbackCatalogue = $this->prophesize(MessageCatalogueInterface::class);
         $fallbackCatalogue->all('admin')->willReturn($fallbackTranslations);
         $catalogue->getFallbackCatalogue()->willReturn($fallbackCatalogue);
-        $this->translator->getCatalogue($locale)->willReturn($catalogue->reveal());
+        $this->translatorBag->getCatalogue($locale)->willReturn($catalogue->reveal());
 
         $response = $this->adminController->translationsAction($request);
         $this->assertEquals($resultTranslations, json_decode($response->getContent(), true));
@@ -293,7 +302,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $catalogue = $this->prophesize(MessageCatalogueInterface::class);
         $catalogue->all('admin')->willReturn(['save' => 'Save']);
         $catalogue->getFallbackCatalogue()->willReturn(null);
-        $this->translator->getCatalogue('en')->willReturn($catalogue->reveal());
+        $this->translatorBag->getCatalogue('en')->willReturn($catalogue->reveal());
 
         $response = $this->adminController->translationsAction($request);
         $this->assertEquals(['save' => 'Save'], json_decode($response->getContent(), true));

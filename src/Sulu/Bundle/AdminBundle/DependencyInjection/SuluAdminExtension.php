@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -61,5 +62,21 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+
+        $this->loadFieldTypeOptions(
+            $config['field_type_options'],
+            $container->getDefinition('sulu_admin.field_type_option_registry')
+        );
+    }
+
+    public function loadFieldTypeOptions(
+        array $fieldTypeOptionsConfig,
+        Definition $fieldTypeOptionRegistry
+    ) {
+        foreach ($fieldTypeOptionsConfig as $baseFieldType => $baseFieldTypeConfig) {
+            foreach ($baseFieldTypeConfig as $fieldTypeName => $fieldTypeConfig) {
+                $fieldTypeOptionRegistry->addMethodCall('add', [$fieldTypeName, $baseFieldType, $fieldTypeConfig]);
+            }
+        }
     }
 }

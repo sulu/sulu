@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {translate} from '../../../utils/Translator';
 import AssignmentComponent from '../../Assignment';
 import type {FieldTypeProps} from '../../../types';
 
@@ -31,11 +32,11 @@ export default class Assignment extends React.Component<FieldTypeProps<Array<str
                 displayProperties={displayProperties}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 icon={icon}
-                label={label}
+                label={translate(label)}
                 locale={formInspector.locale}
                 onChange={onChange}
                 resourceKey={resourceKey}
-                overlayTitle={overlayTitle}
+                overlayTitle={translate(overlayTitle)}
                 value={value || []}
             />
         );

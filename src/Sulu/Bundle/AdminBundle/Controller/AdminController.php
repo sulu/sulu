@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
+use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
@@ -91,7 +92,7 @@ class AdminController
     /**
      * @var TranslatorBagInterface
      */
-    private $translator;
+    private $translatorBag;
 
     /**
      * @var ResourceMetadataPool
@@ -112,6 +113,11 @@ class AdminController
      * @var RouterInterface
      */
     private $router;
+
+    /**
+     * @var FieldTypeOptionRegistryInterface
+     */
+    private $fieldTypeOptionRegistry;
 
     /**
      * @var string
@@ -158,11 +164,12 @@ class AdminController
         ViewHandlerInterface $viewHandler,
         EngineInterface $engine,
         LocalizationManagerInterface $localizationManager,
-        TranslatorBagInterface $translator,
+        TranslatorBagInterface $translatorBag,
         ResourceMetadataPool $resourceMetadataPool,
         RouteRegistry $routeRegistry,
         NavigationRegistry $navigationRegistry,
         RouterInterface $router,
+        FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         $environment,
         $adminName,
         array $locales,
@@ -180,11 +187,12 @@ class AdminController
         $this->viewHandler = $viewHandler;
         $this->engine = $engine;
         $this->localizationManager = $localizationManager;
-        $this->translator = $translator;
+        $this->translatorBag = $translatorBag;
         $this->resourceMetadataPool = $resourceMetadataPool;
         $this->routeRegistry = $routeRegistry;
         $this->navigationRegistry = $navigationRegistry;
         $this->router = $router;
+        $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
         $this->environment = $environment;
         $this->adminName = $adminName;
         $this->locales = $locales;
@@ -259,6 +267,7 @@ class AdminController
 
         $view = View::create([
             'sulu_admin' => [
+                'field_type_options' => $this->fieldTypeOptionRegistry->toArray(),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
                 'endpoints' => $endpoints,
@@ -271,7 +280,7 @@ class AdminController
 
     public function translationsAction(Request $request): Response
     {
-        $catalogue = $this->translator->getCatalogue($request->query->get('locale'));
+        $catalogue = $this->translatorBag->getCatalogue($request->query->get('locale'));
         $fallbackCatalogue = $catalogue->getFallbackCatalogue();
 
         $translations = $catalogue->all(static::TRANSLATION_DOMAIN);

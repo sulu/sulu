@@ -27,6 +27,26 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
      */
     public function prepend(ContainerBuilder $container)
     {
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'field_type_options' => [
+                        'assignment' => [
+                            'snippet' => [
+                                'adapter' => 'table',
+                                'displayProperties' => ['title'],
+                                'icon' => 'su-snippet',
+                                'label' => 'sulu_snippet.assignment_label',
+                                'resourceKey' => 'snippets',
+                                'overlayTitle' => 'sulu_snippet.assignment_overlay_title',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('sulu_search')) {
             $container->prependExtensionConfig(
                 'sulu_search',

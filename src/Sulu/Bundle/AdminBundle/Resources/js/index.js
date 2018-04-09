@@ -6,7 +6,7 @@ import {render} from 'react-dom';
 import {configure} from 'mobx';
 import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
-import {setTranslations, translate} from './utils/Translator';
+import {setTranslations} from './utils/Translator';
 import Application from './containers/Application';
 import {Assignment, DatePicker, fieldRegistry, Input, ResourceLocator, SingleSelect, TextArea} from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
@@ -35,7 +35,7 @@ datagridAdapterRegistry.add('column_list', ColumnListAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
 datagridAdapterRegistry.add('table', TableAdapter);
 
-function registerFieldTypes() {
+function registerFieldTypes(fieldTypesConfig) {
     fieldRegistry.add('block', FieldBlocks);
     fieldRegistry.add('date', DatePicker);
     fieldRegistry.add('resource_locator', ResourceLocator);
@@ -43,28 +43,12 @@ function registerFieldTypes() {
     fieldRegistry.add('text_line', Input);
     fieldRegistry.add('text_area', TextArea);
 
-    // TODO move to correct bundle or even allow to register somehow via the config request
-    fieldRegistry.add('snippet', Assignment, {
-        adapter: 'table',
-        displayProperties: [
-            'title',
-        ],
-        icon: 'su-snippet',
-        label: translate('sulu_snippet.assignment_label'),
-        resourceKey: 'snippets',
-        overlayTitle: translate('sulu_snippet.assignment_overlay_title'),
-    });
-
-    fieldRegistry.add('internal_links', Assignment, {
-        adapter: 'column_list',
-        displayProperties: [
-            'title',
-        ],
-        icon: 'su-document',
-        label: translate('sulu_content.assignment_label'),
-        resourceKey: 'pages',
-        overlayTitle: translate('sulu_content.assignment_overlay_title'),
-    });
+    const assignmentConfigs = fieldTypesConfig['assignment'];
+    if (assignmentConfigs) {
+        for (const assignmentKey in assignmentConfigs) {
+            fieldRegistry.add(assignmentKey, Assignment, assignmentConfigs[assignmentKey]);
+        }
+    }
 }
 
 function startApplication() {
@@ -94,8 +78,8 @@ Promise.all([
     translationPromise,
     configPromise,
     bundlesReadyPromise,
-]).then(() => {
-    registerFieldTypes();
+]).then((values) => {
+    registerFieldTypes(values[1]['sulu_admin']['field_type_options']);
     startApplication();
 });
 
