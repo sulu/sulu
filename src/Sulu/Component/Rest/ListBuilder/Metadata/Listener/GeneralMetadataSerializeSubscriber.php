@@ -61,7 +61,8 @@ class GeneralMetadataSerializeSubscriber implements EventSubscriberInterface
 
         /** @var PropertyMetadata $propertyMetadata */
         $propertyMetadata = $metadata->get(PropertyMetadata::class);
-        $visitor->addData('display', $propertyMetadata->getDisplay());
+        // TODO: Remove this before 2.0 release!
+        $visitor->addData('display', $propertyMetadata->getVisibility());
 
         if (null !== $propertyMetadata->getFilterType()) {
             $visitor->addData('filter-type', $propertyMetadata->getFilterType());

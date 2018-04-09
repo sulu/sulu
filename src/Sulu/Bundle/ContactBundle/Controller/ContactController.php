@@ -26,6 +26,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -125,8 +126,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'fullName',
             'public.name',
             ' ',
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NEVER,
             'string',
             '',
             '',
@@ -147,8 +147,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     self::$accountContactEntityName . '.position'
                 ),
             ],
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NEVER,
             'string',
             '',
             '',
@@ -167,8 +166,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
                 ),
             ],
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NEVER,
             'radio',
             '',
             '',

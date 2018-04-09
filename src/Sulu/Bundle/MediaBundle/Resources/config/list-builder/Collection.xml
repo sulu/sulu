@@ -2,17 +2,17 @@
        xmlns:list="http://schemas.sulu.io/class/list"
        xmlns:orm="http://schemas.sulu.io/class/doctrine">
     <properties>
-        <property name="id" list:translation="public.id" display="no" list:type="integer">
+        <property name="id" list:translation="public.id" visibility="no" list:type="integer">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
         </property>
 
-        <property name="title" list:translation="public.title" display="yes" list:type="string">
+        <property name="title" list:translation="public.title" visibility="yes" list:type="string">
             <orm:field-name>title</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
         </property>
 
-        <property name="objectCount" list:translation="public.objectCount" display="yes" list:type="integer">
+        <property name="objectCount" list:translation="public.objectCount" visibility="yes" list:type="integer">
             <orm:field-name>objectCount</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
         </property>

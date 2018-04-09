@@ -12,20 +12,13 @@
 namespace Sulu\Component\Rest\ListBuilder\Metadata\General;
 
 use Metadata\PropertyMetadata as BasePropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 /**
  * Container for property-metadata.
  */
 class PropertyMetadata extends BasePropertyMetadata
 {
-    const DISPLAY_ALWAYS = 'always';
-
-    const DISPLAY_NEVER = 'never';
-
-    const DISPLAY_YES = 'yes';
-
-    const DISPLAY_NO = 'no';
-
     /**
      * @var string
      */
@@ -34,7 +27,7 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @var string
      */
-    private $display = self::DISPLAY_NO;
+    private $visibility = FieldDescriptorInterface::VISIBILITY_NO;
 
     /**
      * @var string
@@ -112,17 +105,17 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @return string
      */
-    public function getDisplay()
+    public function getVisibility()
     {
-        return $this->display;
+        return $this->visibility;
     }
 
     /**
-     * @param string $display
+     * @param string $visibility
      */
-    public function setDisplay($display)
+    public function setVisibility($visibility)
     {
-        $this->display = $display;
+        $this->visibility = $visibility;
     }
 
     /**
@@ -267,7 +260,7 @@ class PropertyMetadata extends BasePropertyMetadata
                 $this->class,
                 $this->name,
                 $this->translation,
-                $this->display,
+                $this->visibility,
                 $this->type,
                 $this->width,
                 $this->minWidth,
@@ -289,7 +282,7 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->class,
             $this->name,
             $this->translation,
-            $this->display,
+            $this->visibility,
             $this->type,
             $this->width,
             $this->minWidth,

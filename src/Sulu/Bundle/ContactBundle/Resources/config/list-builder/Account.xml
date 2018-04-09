@@ -23,7 +23,7 @@
     </orm:joins>
 
     <properties>
-        <property name="logo" display="always"
+        <property name="logo" visibility="always"
                   list:translation="public.logo" list:type="thumbnails" list:sortable="false">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
@@ -42,7 +42,7 @@
             <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
         </property>
 
-        <property name="name" display="always" filter-type="string"
+        <property name="name" visibility="always" filter-type="string"
                   list:translation="public.name" list:width="300px">
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
@@ -54,7 +54,7 @@
             <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
         </property>
 
-        <property name="city" filter-type="string" display="always"
+        <property name="city" filter-type="string" visibility="always"
                   list:translation="contact.address.city">
             <orm:field-name>city</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
@@ -62,7 +62,7 @@
             <orm:joins ref="address"/>
         </property>
 
-        <property name="zip" filter-type="string" display="no"
+        <property name="zip" filter-type="string" visibility="no"
                   list:translation="contact.address.zip">
             <orm:field-name>zip</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
@@ -91,7 +91,7 @@
             <orm:field property-ref="streetNumber"/>
         </concatenation-property>
 
-        <property name="state" filter-type="string" display="no"
+        <property name="state" filter-type="string" visibility="no"
                   list:translation="contact.address.state">
             <orm:field-name>state</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
@@ -99,7 +99,7 @@
             <orm:joins ref="address"/>
         </property>
 
-        <property name="countryCode" display="always" list:translation="contact.address.countryCode">
+        <property name="countryCode" visibility="always" list:translation="contact.address.countryCode">
             <orm:field-name>code</orm:field-name>
             <orm:entity-name>SuluContactBundle:Country</orm:entity-name>
 
@@ -111,7 +111,7 @@
             </orm:joins>
         </property>
 
-        <identity-property name="countryId" display="never" filter-type="auto-complete"
+        <identity-property name="countryId" visibility="never" filter-type="auto-complete"
                            list:translation="contact.address.countryCode">
             <orm:field-name>country</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
@@ -150,7 +150,7 @@
             <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
         </property>
 
-        <property name="mainEmail" display="always" filter-type="string" list:translation="public.email">
+        <property name="mainEmail" visibility="always" filter-type="string" list:translation="public.email">
             <orm:field-name>mainEmail</orm:field-name>
             <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
         </property>
@@ -197,7 +197,7 @@
             <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
         </property>
 
-        <group-concat-property name="tagIds" display="never" filter-type="tags"
+        <group-concat-property name="tagIds" visibility="never" filter-type="tags"
                                list:translation="public.tags"
                                orm:glue=",">
             <orm:field-name>id</orm:field-name>

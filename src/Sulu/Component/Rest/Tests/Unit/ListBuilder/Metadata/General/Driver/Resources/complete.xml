@@ -21,17 +21,17 @@
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="firstName" list:translation="contact.contacts.firstName" display="always">
+        <property name="firstName" list:translation="contact.contacts.firstName" visibility="always">
             <orm:field-name>firstName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="lastName" list:translation="contact.contacts.lastName" display="always">
+        <property name="lastName" list:translation="contact.contacts.lastName" visibility="always">
             <orm:field-name>lastName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="avatar" list:translation="public.avatar" display="always" list:type="thumbnails"
+        <property name="avatar" list:translation="public.avatar" visibility="always" list:type="thumbnails"
                   list:sortable="false">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>

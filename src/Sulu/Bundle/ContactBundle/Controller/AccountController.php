@@ -28,6 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -988,8 +989,7 @@ class AccountController extends RestController implements ClassResourceInterface
             self::$accountContactEntityName,
             'contact.contacts.main-contact',
             [],
-            false,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NO,
             '',
             '',
             '',
@@ -1002,8 +1002,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.main-contact',
             [],
-            false,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NO,
             '',
             '',
             '',
@@ -1029,8 +1028,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.firstname',
             $contactJoin,
-            false,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NO,
             '',
             '',
             '',
@@ -1043,8 +1041,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.lastName',
             $contactJoin,
-            false,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NO,
             '',
             '',
             '',
@@ -1071,8 +1068,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'fullName',
             'public.name',
             ' ',
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NEVER,
             '',
             '',
             '160px',
@@ -1090,8 +1086,7 @@ class AccountController extends RestController implements ClassResourceInterface
                     self::$accountContactEntityName . '.position'
                 ),
             ],
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NEVER,
             '',
             '',
             '',
@@ -1105,8 +1100,7 @@ class AccountController extends RestController implements ClassResourceInterface
             self::$accountContactEntityName,
             'contact.contacts.main-contact',
             [],
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NEVER,
             'radio',
             '',
             '',
@@ -1152,8 +1146,7 @@ class AccountController extends RestController implements ClassResourceInterface
             self::$addressEntityName,
             'contact.contacts.address',
             $addressJoin,
-            false,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NO,
             '',
             '',
             '',
@@ -1228,8 +1221,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'address',
             'public.address',
             ', ',
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NO,
             '',
             '',
             '300px'

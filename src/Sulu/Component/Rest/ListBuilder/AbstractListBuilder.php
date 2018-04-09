@@ -112,7 +112,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
                 /** @var PropertyMetadata $propertyMetadata */
                 $propertyMetadata = $fieldDescriptor->getMetadata()->get(PropertyMetadata::class);
 
-                return PropertyMetadata::DISPLAY_NEVER !== $propertyMetadata->getDisplay();
+                return FieldDescriptorInterface::VISIBILITY_NEVER !== $propertyMetadata->getVisibility();
             }
         );
     }

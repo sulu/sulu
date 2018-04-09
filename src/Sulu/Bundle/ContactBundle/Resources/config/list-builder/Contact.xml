@@ -25,7 +25,7 @@
     </orm:joins>
 
     <properties>
-        <property name="avatar" display="always"
+        <property name="avatar" visibility="always"
                   list:translation="public.avatar" list:type="thumbnails" list:sortable="false">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
@@ -45,25 +45,25 @@
             <orm:field property-ref="lastName"/>
         </concatenation-property>
 
-        <property name="firstName" display="always" filter-type="string"
+        <property name="firstName" visibility="always" filter-type="string"
                   list:translation="contact.contacts.firstName">
             <orm:field-name>firstName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="lastName" display="always" filter-type="string"
+        <property name="lastName" visibility="always" filter-type="string"
                   list:translation="contact.contacts.lastName">
             <orm:field-name>lastName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="mainEmail" display="always" filter-type="string"
+        <property name="mainEmail" visibility="always" filter-type="string"
                   list:translation="public.email">
             <orm:field-name>mainEmail</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="account" display="always" list:translation="contact.contacts.company">
+        <property name="account" visibility="always" list:translation="contact.contacts.company">
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
 
@@ -75,7 +75,7 @@
             </orm:joins>
         </property>
 
-        <identity-property name="accountId" display="never" filter-type="auto-complete"
+        <identity-property name="accountId" visibility="never" filter-type="auto-complete"
                   list:translation="contact.contacts.company">
             <orm:field-name>account</orm:field-name>
             <orm:entity-name>SuluContactBundle:AccountContact</orm:entity-name>
@@ -92,7 +92,7 @@
             </filter-type-parameters>
         </identity-property>
 
-        <property name="city" display="always" filter-type="string"
+        <property name="city" visibility="always" filter-type="string"
                   list:translation="contact.address.city">
             <orm:field-name>city</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
@@ -135,7 +135,7 @@
             <orm:joins ref="address"/>
         </property>
 
-        <property name="countryCode" display="always" list:translation="contact.address.countryCode">
+        <property name="countryCode" visibility="always" list:translation="contact.address.countryCode">
             <orm:field-name>code</orm:field-name>
             <orm:entity-name>SuluContactBundle:Country</orm:entity-name>
 
@@ -147,7 +147,7 @@
             </orm:joins>
         </property>
 
-        <identity-property name="countryId" display="never" filter-type="auto-complete"
+        <identity-property name="countryId" visibility="never" filter-type="auto-complete"
                   list:translation="contact.address.countryCode">
             <orm:field-name>country</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
@@ -162,7 +162,7 @@
             </filter-type-parameters>
         </identity-property>
 
-        <property name="mainPhone" display="always" filter-type="string" list:translation="public.phone">
+        <property name="mainPhone" visibility="always" filter-type="string" list:translation="public.phone">
             <orm:field-name>mainPhone</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
@@ -209,7 +209,7 @@
             </orm:joins>
         </property>
 
-        <identity-property name="titleId" display="never" filter-type="auto-complete"
+        <identity-property name="titleId" visibility="never" filter-type="auto-complete"
                            list:translation="public.title">
             <orm:field-name>title</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
@@ -249,7 +249,7 @@
             </orm:joins>
         </property>
 
-        <group-concat-property name="tagIds" display="never" filter-type="tags"
+        <group-concat-property name="tagIds" visibility="never" filter-type="tags"
                                list:translation="public.tags"
                                 orm:glue=",">
             <orm:field-name>id</orm:field-name>

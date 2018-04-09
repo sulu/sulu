@@ -15,6 +15,7 @@ use Metadata\Driver\AbstractFileDriver;
 use Metadata\Driver\DriverInterface;
 use Metadata\Driver\FileLocatorInterface;
 use Metadata\MergeableClassMetadata;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -108,8 +109,13 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             $propertyMetadata->setCssClass($cssClass);
         }
 
-        $propertyMetadata->setDisplay(
-            XmlUtil::getValueFromXPath('@display', $xpath, $propertyNode, PropertyMetadata::DISPLAY_NO)
+        $propertyMetadata->setVisibility(
+            XmlUtil::getValueFromXPath(
+                '@visibility',
+                $xpath,
+                $propertyNode,
+                FieldDescriptorInterface::VISIBILITY_NO
+            )
         );
         $propertyMetadata->setSortable(
             XmlUtil::getBooleanValueFromXPath('@list:sortable', $xpath, $propertyNode, true)

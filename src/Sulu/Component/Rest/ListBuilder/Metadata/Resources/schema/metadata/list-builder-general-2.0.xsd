@@ -83,7 +83,7 @@
     <xs:attributeGroup name="propertyAttributeGroup">
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute name="filter-type" type="xs:string"/>
-        <xs:attribute type="xs:string" name="display">
+        <xs:attribute type="xs:string" name="visibility">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="yes" />

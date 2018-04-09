@@ -14,6 +14,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\General\Driver;
 use Metadata\ClassMetadata;
 use Metadata\Driver\FileLocatorInterface;
 use Prophecy\Argument;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -77,7 +78,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'firstName',
                 'translation' => 'contact.contacts.firstName',
-                'display' => PropertyMetadata::DISPLAY_ALWAYS,
+                'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
             ],
             $result->propertyMetadata['firstName']
         );
@@ -85,7 +86,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'lastName',
                 'translation' => 'contact.contacts.lastName',
-                'display' => PropertyMetadata::DISPLAY_ALWAYS,
+                'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
             ],
             $result->propertyMetadata['lastName']
         );
@@ -93,7 +94,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'avatar',
                 'translation' => 'public.avatar',
-                'display' => PropertyMetadata::DISPLAY_ALWAYS,
+                'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
                 'type' => 'thumbnails',
                 'sortable' => false,
             ],
@@ -145,7 +146,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'firstName',
                 'translation' => 'contact.contacts.firstName',
-                'display' => PropertyMetadata::DISPLAY_ALWAYS,
+                'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
             ],
             $result->propertyMetadata['firstName']
         );
@@ -153,7 +154,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'lastName',
                 'translation' => 'contact.contacts.lastName',
-                'display' => PropertyMetadata::DISPLAY_ALWAYS,
+                'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
             ],
             $result->propertyMetadata['lastName']
         );
@@ -246,7 +247,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
                 'instance' => PropertyMetadata::class,
                 'name' => null,
                 'translation' => null,
-                'display' => PropertyMetadata::DISPLAY_NO,
+                'visibility' => FieldDescriptorInterface::VISIBILITY_NO,
                 'type' => 'string',
                 'width' => '',
                 'minWidth' => '',
@@ -264,7 +265,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected['translation'], $metadata->getTranslation());
         $this->assertEquals($expected['filter-type'], $metadata->getFilterType());
         $this->assertEquals($expected['filter-type-parameters'], $metadata->getFilterTypeParameters());
-        $this->assertEquals($expected['display'], $metadata->getDisplay());
+        $this->assertEquals($expected['visibility'], $metadata->getVisibility());
 
         $this->assertEquals($expected['type'], $metadata->getType());
         $this->assertEquals($expected['width'], $metadata->getWidth());

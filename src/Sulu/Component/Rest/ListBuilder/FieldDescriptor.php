@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Expose;
 use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
@@ -37,20 +38,12 @@ class FieldDescriptor implements FieldDescriptorInterface
     private $translation;
 
     /**
-     * Defines whether the field is disabled or not.
+     * Defines the visibility of the field.
      *
      * @var bool
      * @Expose
      */
-    private $disabled;
-
-    /**
-     * Defines whether the field is hideable or not.
-     *
-     * @var bool
-     * @Expose
-     */
-    private $default;
+    private $visibility;
 
     /**
      * Defines if this field is sortable.
@@ -109,8 +102,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     public function __construct(
         $name,
         $translation = null,
-        $disabled = false,
-        $default = false,
+        $visibilty = FieldDescriptorInterface::VISIBILITY_NO,
         $type = '',
         $width = '',
         $minWidth = '',
@@ -119,8 +111,7 @@ class FieldDescriptor implements FieldDescriptorInterface
         $cssClass = ''
     ) {
         $this->name = $name;
-        $this->disabled = $disabled;
-        $this->default = $default;
+        $this->visibility = $visibilty;
         $this->sortable = $sortable;
         $this->type = $type;
         $this->width = $width;
@@ -140,10 +131,15 @@ class FieldDescriptor implements FieldDescriptorInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @Serializer\VirtualProperty()
      */
     public function getDisabled()
     {
-        return $this->disabled;
+        return in_array(
+            $this->visibility,
+            [FieldDescriptorInterface::VISIBILITY_NEVER, FieldDescriptorInterface::VISIBILITY_NO]
+        );
     }
 
     /**
@@ -165,6 +161,14 @@ class FieldDescriptor implements FieldDescriptorInterface
     /**
      * {@inheritdoc}
      */
+    public function getVisibility()
+    {
+        return $this->visibility;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getWidth()
     {
         return $this->width;
@@ -172,10 +176,15 @@ class FieldDescriptor implements FieldDescriptorInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @Serializer\VirtualProperty()
      */
     public function getDefault()
     {
-        return $this->default;
+        return in_array(
+            $this->visibility,
+            [FieldDescriptorInterface::VISIBILITY_ALWAYS, FieldDescriptorInterface::VISIBILITY_YES]
+        );
     }
 
     /**
