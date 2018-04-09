@@ -14,7 +14,6 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 
 /**
  * This class defines the necessary information for a field to resolve it within a Doctrine Query for the ListBuilder.

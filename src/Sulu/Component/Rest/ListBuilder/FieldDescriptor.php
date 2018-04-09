@@ -131,6 +131,7 @@ class FieldDescriptor implements FieldDescriptorInterface
 
     /**
      * {@inheritdoc}
+     *
      * @Serializer\VirtualProperty()
      */
     public function getDisabled()
@@ -175,6 +176,7 @@ class FieldDescriptor implements FieldDescriptorInterface
 
     /**
      * {@inheritdoc}
+     *
      * @Serializer\VirtualProperty()
      */
     public function getDefault()
