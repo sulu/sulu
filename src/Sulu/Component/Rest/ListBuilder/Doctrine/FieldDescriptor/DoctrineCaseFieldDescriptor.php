@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 /**
  * This class defines the necessary information for a field to resolve it within a Doctrine Query for the ListBuilder.
@@ -35,8 +36,7 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
         DoctrineDescriptor $case1,
         DoctrineDescriptor $case2,
         $translation = null,
-        $disabled = false,
-        $default = false,
+        $visibility = FieldDescriptorInterface::VISIBILITY_NO,
         $type = '',
         $width = '',
         $minWidth = '',
@@ -47,8 +47,7 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
         parent::__construct(
             $name,
             $translation,
-            $disabled,
-            $default,
+            $visibility,
             $type,
             $width,
             $minWidth,

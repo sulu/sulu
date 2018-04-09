@@ -41,31 +41,31 @@
     </orm:joins>
 
     <properties>
-        <property name="id" list:translation="public.id" display="no" list:type="integer">
+        <property name="id" list:translation="public.id" visibility="no" list:type="integer">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
 
-        <property name="changed" list:translation="public.changed" display="no" list:type="datetime">
+        <property name="changed" list:translation="public.changed" visibility="no" list:type="datetime">
             <orm:field-name>changed</orm:field-name>
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
 
-        <property name="created" list:translation="public.created" display="no" list:type="datetime">
+        <property name="created" list:translation="public.created" visibility="no" list:type="datetime">
             <orm:field-name>created</orm:field-name>
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
 
-        <identity-property name="collection" display="never">
+        <identity-property name="collection" visibility="never">
             <orm:field-name>collection</orm:field-name>
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </identity-property>
 
-        <property name="thumbnails" list:translation="media.media.thumbnails" display="always" list:type="thumbnails"
+        <property name="thumbnails" list:translation="media.media.thumbnails" visibility="always" list:type="thumbnails"
                   list:sortable="false"/>
-        <property name="url" display="never"/>
+        <property name="url" visibility="never"/>
 
-        <property name="type" list:translation="public.type" display="always">
+        <property name="type" list:translation="public.type" visibility="always">
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>SuluMediaBundle:MediaType</orm:entity-name>
 
@@ -79,42 +79,42 @@
             <orm:joins ref="file"/>
         </property>
 
-        <property name="name" list:translation="public.name" display="always">
+        <property name="name" list:translation="public.name" visibility="always">
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
             <orm:joins ref="fileVersion"/>
         </property>
 
-        <property name="subVersion" display="none">
+        <property name="subVersion" visibility="none">
             <orm:field-name>subVersion</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
             <orm:joins ref="fileVersion"/>
         </property>
 
-        <property name="size" list:translation="media.media.size" display="always" list:type="bytes">
+        <property name="size" list:translation="media.media.size" visibility="always" list:type="bytes">
             <orm:field-name>size</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
             <orm:joins ref="fileVersion"/>
         </property>
 
-        <property name="mimeType" list:translation="media.media.mime-type" display="always">
+        <property name="mimeType" list:translation="media.media.mime-type" visibility="always">
             <orm:field-name>mimeType</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
             <orm:joins ref="fileVersion"/>
         </property>
 
-        <property name="storageOptions" display="never">
+        <property name="storageOptions" visibility="never">
             <orm:field-name>storageOptions</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
             <orm:joins ref="fileVersion"/>
         </property>
 
-        <case-property name="locale" display="never">
+        <case-property name="locale" visibility="never">
             <orm:field>
                 <orm:field-name>locale</orm:field-name>
                 <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
@@ -129,7 +129,7 @@
             </orm:field>
         </case-property>
 
-        <case-property name="title" list:translation="public.title" display="always" list:type="title">
+        <case-property name="title" list:translation="public.title" visibility="always" list:type="title">
             <orm:field>
                 <orm:field-name>title</orm:field-name>
                 <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
@@ -151,14 +151,14 @@
             <orm:joins ref="fileVersionMeta"/>
         </property>
 
-        <property name="lft" display="never">
+        <property name="lft" visibility="never">
             <orm:field-name>lft</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
 
             <orm:joins ref="collection"/>
         </property>
 
-        <property name="rgt" display="never">
+        <property name="rgt" visibility="never">
             <orm:field-name>rgt</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
 

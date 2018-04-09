@@ -184,8 +184,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $this->resolveOptions($fieldMetadata->getEntityName(), $options),
             $generalMetadata->getTranslation(),
             $joins,
-            $this->isDisabled($generalMetadata),
-            $this->isDefault($generalMetadata),
+            $generalMetadata->getVisibility(),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
@@ -222,8 +221,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $fieldMetadata->getEntityName(),
             $generalMetadata->getTranslation(),
             $joins,
-            $this->isDisabled($generalMetadata),
-            $this->isDefault($generalMetadata),
+            $generalMetadata->getVisibility(),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
@@ -257,8 +255,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $this->resolveOptions($generalMetadata->getName(), $options),
             $generalMetadata->getTranslation(),
             $this->resolveOptions($type->getGlue(), $options),
-            $this->isDisabled($generalMetadata),
-            $this->isDefault($generalMetadata),
+            $generalMetadata->getVisibility(),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
@@ -287,8 +284,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $this->resolveOptions($generalMetadata->getName(), $options),
             $this->resolveOptions($generalMetadata->getTranslation(), $options),
             $this->resolveOptions($type->getGlue(), $options),
-            $this->isDisabled($generalMetadata),
-            $this->isDefault($generalMetadata),
+            $generalMetadata->getVisibility(),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
@@ -321,8 +317,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $this->resolveOptions($fieldMetadata->getEntityName(), $options),
             $generalMetadata->getTranslation(),
             $this->getDoctrineJoins($fieldMetadata->getJoins(), $options),
-            $this->isDisabled($generalMetadata),
-            $this->isDefault($generalMetadata),
+            $generalMetadata->getVisibility(),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
@@ -362,8 +357,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
                 $this->getDoctrineJoins($case2->getJoins(), $options)
             ),
             $generalMetadata->getTranslation(),
-            $this->isDisabled($generalMetadata),
-            $this->isDefault($generalMetadata),
+            $generalMetadata->getVisibility(),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
@@ -385,8 +379,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         return new FieldDescriptor(
             $this->resolveOptions($generalMetadata->getName(), $options),
             $generalMetadata->getTranslation(),
-            $this->isDisabled($generalMetadata),
-            $this->isDefault($generalMetadata),
+            $generalMetadata->getVisibility(),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
@@ -436,32 +429,5 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         }
 
         return $joins;
-    }
-
-    /**
-     * Determine disabled state.
-     *
-     * @param GeneralPropertyMetadata $generalMetadata
-     *
-     * @return bool
-     */
-    private function isDisabled(GeneralPropertyMetadata $generalMetadata)
-    {
-        return in_array(
-            $generalMetadata->getDisplay(),
-            [GeneralPropertyMetadata::DISPLAY_NEVER, GeneralPropertyMetadata::DISPLAY_NO]
-        );
-    }
-
-    /**
-     * Determine default state.
-     *
-     * @param GeneralPropertyMetadata $generalMetadata
-     *
-     * @return bool
-     */
-    private function isDefault(GeneralPropertyMetadata $generalMetadata)
-    {
-        return GeneralPropertyMetadata::DISPLAY_ALWAYS === $generalMetadata->getDisplay();
     }
 }

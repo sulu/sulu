@@ -14,6 +14,7 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 
 /**
  * This class defines the necessary information for a field to resolve it within a Doctrine Query for the ListBuilder.
@@ -51,8 +52,7 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $entityName,
         $translation = null,
         $joins = [],
-        $disabled = false,
-        $default = false,
+        $visibility = FieldDescriptorInterface::VISIBILITY_NO,
         $type = '',
         $width = '',
         $minWidth = '',
@@ -63,8 +63,7 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
         parent::__construct(
             $name,
             $translation,
-            $disabled,
-            $default,
+            $visibility,
             $type,
             $width,
             $minWidth,

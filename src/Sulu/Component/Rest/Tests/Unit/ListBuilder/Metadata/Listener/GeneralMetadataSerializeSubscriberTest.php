@@ -64,10 +64,10 @@ class GeneralMetadataSerializeSubscriberTest extends \PHPUnit_Framework_TestCase
 
             if ($hasGeneralMetadata) {
                 $generalMetadata = $this->prophesize(GeneralPropertyMetadata::class);
-                $generalMetadata->getDisplay()->willReturn(GeneralPropertyMetadata::DISPLAY_YES);
+                $generalMetadata->getDisplay()->willReturn(FieldDescriptorInterface::VISIBILITY_YES);
 
                 $metadata->get(GeneralPropertyMetadata::class)->willReturn($generalMetadata->reveal());
-                $visitor->addData('display', GeneralPropertyMetadata::DISPLAY_YES)->shouldBeCalled();
+                $visitor->addData('visibility', FieldDescriptorInterface::VISIBILITY_YES)->shouldBeCalled();
 
                 if ($hasFilterType) {
                     $generalMetadata->getFilterType()->willReturn('test-input');

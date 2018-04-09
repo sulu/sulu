@@ -21,6 +21,7 @@ use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -292,8 +293,7 @@ class TagManager implements TagManagerInterface
             self::$tagEntityName,
             'public.id',
             [],
-            true,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NEVER,
             'integer',
             '50px'
         );
@@ -303,8 +303,7 @@ class TagManager implements TagManagerInterface
             self::$tagEntityName,
             'tags.name',
             [],
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_YES,
             'string',
             '',
             '',
@@ -317,8 +316,7 @@ class TagManager implements TagManagerInterface
             self::$tagEntityName,
             'public.created',
             [],
-            true,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NEVER,
             'date'
         );
         $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
@@ -327,8 +325,7 @@ class TagManager implements TagManagerInterface
             self::$tagEntityName,
             'public.changed',
             [],
-            true,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NEVER,
             'date'
         );
         $this->fieldDescriptors['creator'] = new DoctrineFieldDescriptor(
@@ -346,8 +343,7 @@ class TagManager implements TagManagerInterface
                     self::$userEntityName . '.contact'
                 ),
             ],
-            true,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NEVER,
             'string'
         );
     }

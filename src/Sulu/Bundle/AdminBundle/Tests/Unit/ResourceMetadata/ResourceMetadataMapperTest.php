@@ -62,9 +62,9 @@ class ResourceMetadataMapperTest extends \PHPUnit_Framework_TestCase
     public function testMapDatagrid()
     {
         $fieldDescriptors = [
-            new FieldDescriptor('test1', 'test_translation_key1', false, true, 'string'),
-            new FieldDescriptor('test2', 'test_translation_key2', false, false, 'int'),
-            new FieldDescriptor('test3', 'test_translation_key3', true, false, 'string'),
+            new FieldDescriptor('test1', 'test_translation_key1', FieldDescriptorInterface:DISPLAY_YES, 'string'),
+            new FieldDescriptor('test2', 'test_translation_key2', FieldDescriptorInterface:DISPLAY_NO, 'int'),
+            new FieldDescriptor('test3', 'test_translation_key3', FieldDescriptorInterface::DISPLAY_NEVER, 'string'),
         ];
         $this->fieldDescriptorFactory->getFieldDescriptorForClass('TestClass')->willReturn($fieldDescriptors);
 

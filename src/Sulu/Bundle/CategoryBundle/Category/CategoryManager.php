@@ -30,6 +30,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDe
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -120,7 +121,7 @@ class CategoryManager implements CategoryManagerInterface
                 self::$categoryEntityName,
                 'public.id',
                 [],
-                true
+                FieldDescriptorInterface::VISIBILITY_NEVER
             );
             $this->fieldDescriptors['lft'] = new DoctrineFieldDescriptor(
                 'lft',
@@ -128,7 +129,7 @@ class CategoryManager implements CategoryManagerInterface
                 self::$categoryEntityName,
                 'public.lft',
                 [],
-                true
+                FieldDescriptorInterface::VISIBILITY_NEVER
             );
             $this->fieldDescriptors['rgt'] = new DoctrineFieldDescriptor(
                 'rgt',
@@ -136,7 +137,7 @@ class CategoryManager implements CategoryManagerInterface
                 self::$categoryEntityName,
                 'public.rgt',
                 [],
-                true
+                FieldDescriptorInterface::VISIBILITY_NEVER
             );
             $this->fieldDescriptors['key'] = new DoctrineFieldDescriptor(
                 'key',
@@ -144,7 +145,7 @@ class CategoryManager implements CategoryManagerInterface
                 self::$categoryEntityName,
                 'public.key',
                 [],
-                true
+                FieldDescriptorInterface::VISIBILITY_NEVER
             );
             $this->fieldDescriptors['defaultLocale'] = new DoctrineFieldDescriptor(
                 'defaultLocale',
@@ -152,7 +153,7 @@ class CategoryManager implements CategoryManagerInterface
                 self::$categoryEntityName,
                 'public.default',
                 [],
-                false
+                FieldDescriptorInterface::VISIBILITY_NO
             );
             $this->fieldDescriptors['name'] = new DoctrineCaseFieldDescriptor(
                 'name',
@@ -179,8 +180,7 @@ class CategoryManager implements CategoryManagerInterface
                     ]
                 ),
                 'public.name',
-                false,
-                false,
+                FieldDescriptorInterface::VISIBILITY_NO,
                 '',
                 '',
                 '',
@@ -218,7 +218,7 @@ class CategoryManager implements CategoryManagerInterface
                 self::$categoryEntityName,
                 'public.created',
                 [],
-                true
+                FieldDescriptorInterface::VISIBILITY_NEVER
             );
             $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
                 'changed',
@@ -226,7 +226,7 @@ class CategoryManager implements CategoryManagerInterface
                 self::$categoryEntityName,
                 'public.changed',
                 [],
-                true
+                FieldDescriptorInterface::VISIBILITY_NEVER
             );
             $this->fieldDescriptors['depth'] = new DoctrineFieldDescriptor(
                 'depth',
@@ -234,7 +234,7 @@ class CategoryManager implements CategoryManagerInterface
                 self::$categoryEntityName,
                 'public.depth',
                 [],
-                false
+                FieldDescriptorInterface::VISIBILITY_NO
             );
             $this->fieldDescriptors['parent'] = new DoctrineFieldDescriptor(
                 'id',
@@ -247,7 +247,7 @@ class CategoryManager implements CategoryManagerInterface
                         self::$categoryEntityName . '.parent'
                     ),
                 ],
-                false
+                FieldDescriptorInterface::VISIBILITY_NO
             );
         }
 

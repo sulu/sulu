@@ -18,6 +18,14 @@ use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
  */
 interface FieldDescriptorInterface
 {
+    const VISIBILITY_ALWAYS = 'always';
+
+    const VISIBILITY_NEVER = 'never';
+
+    const VISIBILITY_YES = 'yes';
+
+    const VISIBILITY_NO = 'no';
+
     /**
      * Returns the name of the field.
      *

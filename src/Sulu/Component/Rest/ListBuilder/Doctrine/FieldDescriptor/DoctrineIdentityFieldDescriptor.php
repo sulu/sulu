@@ -52,7 +52,7 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $translation = null,
         $joins = [],
         $disabled = false,
-        $default = false,
+        $visibility = FieldDescriptorInterface::VISIBILITY_NO,
         $type = '',
         $width = '',
         $minWidth = '',
@@ -63,8 +63,7 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
         parent::__construct(
             $name,
             $translation,
-            $disabled,
-            $default,
+            $visibility,
             $type,
             $width,
             $minWidth,
