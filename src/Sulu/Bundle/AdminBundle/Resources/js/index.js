@@ -44,8 +44,10 @@ function registerFieldTypes(fieldTypesConfig) {
     fieldRegistry.add('text_area', TextArea);
 
     const assignmentConfigs = fieldTypesConfig['assignment'];
-    for (const assignmentKey in assignmentConfigs) {
-        fieldRegistry.add(assignmentKey, Assignment, assignmentConfigs[assignmentKey]);
+    if (assignmentConfigs) {
+        for (const assignmentKey in assignmentConfigs) {
+            fieldRegistry.add(assignmentKey, Assignment, assignmentConfigs[assignmentKey]);
+        }
     }
 }
 
