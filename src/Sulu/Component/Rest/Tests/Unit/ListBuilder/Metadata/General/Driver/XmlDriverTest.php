@@ -247,7 +247,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
                 'instance' => PropertyMetadata::class,
                 'name' => null,
                 'translation' => null,
-                'visibility' => PropertyMetadata::visibility_NO,
+                'visibility' => FieldDescriptorInterface::VISIBILITY_NO,
                 'type' => 'string',
                 'width' => '',
                 'minWidth' => '',

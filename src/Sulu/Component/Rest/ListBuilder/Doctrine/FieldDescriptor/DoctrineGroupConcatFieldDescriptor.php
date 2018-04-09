@@ -43,7 +43,6 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $name,
         $translation = null,
         $glue = ',',
-        $disabled = false,
         $visibility = FieldDescriptorInterface::VISIBILITY_NO,
         $type = '',
         $width = '',

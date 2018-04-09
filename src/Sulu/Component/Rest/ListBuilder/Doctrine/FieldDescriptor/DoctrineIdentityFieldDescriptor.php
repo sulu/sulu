@@ -51,7 +51,6 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $entityName,
         $translation = null,
         $joins = [],
-        $disabled = false,
         $visibility = FieldDescriptorInterface::VISIBILITY_NO,
         $type = '',
         $width = '',
