@@ -2,7 +2,7 @@
        xmlns:orm="http://schemas.sulu.io/class/doctrine"
        xmlns:list="http://schemas.sulu.io/class/list">
     <properties>
-        <property name="id" display="always" filter-type="string"
+        <property name="id" visibility="always" filter-type="string"
                   list:translation="public.id">
         </property>
     </properties>

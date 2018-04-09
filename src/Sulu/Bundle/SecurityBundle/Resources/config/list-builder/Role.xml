@@ -2,10 +2,10 @@
     xmlns:orm="http://schema.sulu.io/class/doctrine"
     xmlns:list="http://schema.sulu.io/class/list">
     <properties>
-        <property name="id" display="no" filter-type="string" list:translation="public.id"/>
-        <property name="name" display="yes" filter-type="string" list:translation="public.name"/>
-        <property name="system" display="yes" filter-type="string" list:translation="security.roles.system"/>
-        <property name="created" display="no" filter-type="string" list:translation="public.created"/>
-        <property name="changed" display="no" filter-type="string" list:translation="public.changed"/>
+        <property name="id" visibility="no" filter-type="string" list:translation="public.id"/>
+        <property name="name" visibility="yes" filter-type="string" list:translation="public.name"/>
+        <property name="system" visibility="yes" filter-type="string" list:translation="security.roles.system"/>
+        <property name="created" visibility="no" filter-type="string" list:translation="public.created"/>
+        <property name="changed" visibility="no" filter-type="string" list:translation="public.changed"/>
     </properties>
 </class>
