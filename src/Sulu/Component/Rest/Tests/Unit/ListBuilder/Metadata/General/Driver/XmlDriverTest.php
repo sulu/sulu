@@ -265,7 +265,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected['translation'], $metadata->getTranslation());
         $this->assertEquals($expected['filter-type'], $metadata->getFilterType());
         $this->assertEquals($expected['filter-type-parameters'], $metadata->getFilterTypeParameters());
-        $this->assertEquals($expected['visibility'], $metadata->getvisibility());
+        $this->assertEquals($expected['visibility'], $metadata->getVisibility());
 
         $this->assertEquals($expected['type'], $metadata->getType());
         $this->assertEquals($expected['width'], $metadata->getWidth());
