@@ -28,6 +28,9 @@ exports[`Render WebspaceOverview 1`] = `
     </div>
   </div>
   <div
+    class="toolbar"
+  />
+  <div
     class="datagrid"
   >
     <div

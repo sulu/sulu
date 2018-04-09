@@ -150,6 +150,7 @@ beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
         'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
+        'table': require('sulu-admin-bundle/containers/Datagrid/adapters/TableAdapter').default,
         'media_card_overview': MediaCardOverviewAdapter,
     });
 });

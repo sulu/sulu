@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render more than two buttons 1`] = `
+<div>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view"
+        class="su-view"
+      />
+    </span>
+  </button>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view2"
+        class="su-view2"
+      />
+    </span>
+  </button>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view"
+        class="su-view"
+      />
+    </span>
+  </button>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view2"
+        class="su-view2"
+      />
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Should render one button 1`] = `
+<div>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view"
+        class="su-view"
+      />
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Should render two buttons 1`] = `
+<div>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view"
+        class="su-view"
+      />
+    </span>
+  </button>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view2"
+        class="su-view2"
+      />
+    </span>
+  </button>
+</div>
+`;

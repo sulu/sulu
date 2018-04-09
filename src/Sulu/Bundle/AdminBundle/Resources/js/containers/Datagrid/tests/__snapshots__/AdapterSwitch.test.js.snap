@@ -1,27 +1,63 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render with current adapter "folder" 1`] = `
-<ul>
-  <li>
-    table
-  </li>
-  <li>
-    <i>
-      folder
-    </i>
-  </li>
-</ul>
+<div>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view"
+        class="su-view"
+      />
+    </span>
+  </button>
+  <button
+    class="button icon active button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view"
+        class="su-view"
+      />
+    </span>
+  </button>
+</div>
 `;
 
 exports[`The component should render with current adapter "table" 1`] = `
-<ul>
-  <li>
-    <i>
-      table
-    </i>
-  </li>
-  <li>
-    folder
-  </li>
-</ul>
+<div>
+  <button
+    class="button icon active button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view"
+        class="su-view"
+      />
+    </span>
+  </button>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-view"
+        class="su-view"
+      />
+    </span>
+  </button>
+</div>
 `;

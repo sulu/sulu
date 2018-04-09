@@ -1,6 +1,9 @@
 // @flow
 import React from 'react';
-import AdapterSwitchItem from './AdapterSwitchItem';
+import ButtonGroup from '../../components/ButtonGroup';
+import Button from '../../components/Button';
+import Icon from '../../components/Icon';
+import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 
 type Props = {
     adapters: Array<string>,
@@ -9,7 +12,11 @@ type Props = {
 };
 
 export default class AdapterSwitch extends React.PureComponent<Props> {
-    handleAdapterChange = (adapter: string) => {
+    handleAdapterChange = (adapter: ?string) => {
+        if (!adapter) {
+            return;
+        }
+
         this.props.onAdapterChange(adapter);
     };
 
@@ -24,16 +31,22 @@ export default class AdapterSwitch extends React.PureComponent<Props> {
         }
 
         return (
-            <ul>
-                {adapters.map((adapter, index) => (
-                    <AdapterSwitchItem
-                        adapter={adapter}
-                        key={index}
-                        active={adapter === currentAdapter}
-                        onClick={this.handleAdapterChange}
-                    />
-                ))}
-            </ul>
+            <ButtonGroup>
+                {adapters.map((adapter, index) => {
+                    const Adapter = datagridAdapterRegistry.get(adapter);
+
+                    return (
+                        <Button
+                            value={adapter}
+                            key={index}
+                            active={adapter === currentAdapter}
+                            onClick={this.handleAdapterChange}
+                        >
+                            <Icon name={Adapter.icon} />
+                        </Button>
+                    );
+                })}
+            </ButtonGroup>
         );
     }
 }

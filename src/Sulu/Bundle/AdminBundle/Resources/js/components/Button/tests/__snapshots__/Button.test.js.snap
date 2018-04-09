@@ -1,5 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Should render with skin icon 1`] = `
+<button
+  class="button icon"
+  type="button"
+>
+  <span
+    class="text"
+  />
+</button>
+`;
+
+exports[`Should render with skin icon and active 1`] = `
+<button
+  class="button icon active"
+  type="button"
+>
+  <span
+    class="text"
+  />
+</button>
+`;
+
 exports[`Should render with skin link 1`] = `
 <button
   class="button link"

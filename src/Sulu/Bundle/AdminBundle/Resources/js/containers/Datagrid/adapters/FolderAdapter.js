@@ -14,6 +14,8 @@ export default class FolderAdapter extends AbstractAdapter {
 
     static StructureStrategy = FlatStructureStrategy;
 
+    static icon = 'su-folder';
+
     static defaultProps = {
         data: [],
     };

@@ -6,4 +6,6 @@ export default class AbstractAdapter extends React.Component<DatagridAdapterProp
     static LoadingStrategy: Class<LoadingStrategyInterface>;
 
     static StructureStrategy: Class<StructureStrategyInterface>;
+
+    static icon: string;
 }

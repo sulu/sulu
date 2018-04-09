@@ -12,6 +12,10 @@ type Props = {
     name: string,
 };
 
+function logInvalidIconWarning(name: string) {
+    log.warn('Invalid icon given: "' + name + '"');
+}
+
 export default class Icon extends React.PureComponent<Props> {
     handleClick = (event: SyntheticEvent<HTMLElement>) => {
         const {onClick} = this.props;
@@ -28,6 +32,10 @@ export default class Icon extends React.PureComponent<Props> {
         const {className, name, onClick} = this.props;
         let fontClass = '';
 
+        if (!name || name.length <= 0) {
+            logInvalidIconWarning(name);
+        }
+
         switch (name.substr(0, 3)) {
             case 'su-':
                 fontClass = null;
@@ -36,7 +44,7 @@ export default class Icon extends React.PureComponent<Props> {
                 fontClass = 'fa';
                 break;
             default:
-                log.warn('Invalid icon given: ' + name);
+                logInvalidIconWarning(name);
         }
 
         const iconClass = classNames(
