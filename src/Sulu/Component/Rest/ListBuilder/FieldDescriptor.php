@@ -102,7 +102,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     public function __construct(
         $name,
         $translation = null,
-        $visibilty = FieldDescriptorInterface::VISIBILITY_NO,
+        $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
         $type = '',
         $width = '',
         $minWidth = '',
@@ -111,7 +111,7 @@ class FieldDescriptor implements FieldDescriptorInterface
         $cssClass = ''
     ) {
         $this->name = $name;
-        $this->visibility = $visibilty;
+        $this->visibility = $visibility;
         $this->sortable = $sortable;
         $this->type = $type;
         $this->width = $width;
@@ -138,7 +138,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     {
         return in_array(
             $this->visibility,
-            [FieldDescriptorInterface::VISIBILITY_NEVER, FieldDescriptorInterface::VISIBILITY_ALWAYS]
+            [FieldDescriptorInterface::VISIBILITY_YES, FieldDescriptorInterface::VISIBILITY_NO]
         );
     }
 

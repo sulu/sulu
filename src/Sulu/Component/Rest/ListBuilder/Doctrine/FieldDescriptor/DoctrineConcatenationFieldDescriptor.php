@@ -35,7 +35,7 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
         $name,
         $translation = null,
         $glue = ' ',
-        $visibility = FieldDescriptorInterface::VISIBILITY_NO,
+        $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
         $type = '',
         $width = '',
         $minWidth = '',
