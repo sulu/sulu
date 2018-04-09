@@ -138,7 +138,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     {
         return in_array(
             $this->visibility,
-            [FieldDescriptorInterface::VISIBILITY_NEVER, FieldDescriptorInterface::VISIBILITY_NO]
+            [FieldDescriptorInterface::VISIBILITY_NEVER, FieldDescriptorInterface::VISIBILITY_ALWAYS]
         );
     }
 
