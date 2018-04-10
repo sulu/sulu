@@ -1,5 +1,18 @@
 # Upgrade
 
+## dev-master
+
+### SEO Title
+
+The default length for the title field in the SEO tab has changed from 55 to 70, because Google has expanded
+the max length. If you want to have a different length for some reason you can change it in the configuration:
+
+```yaml
+sulu_content:
+    seo:
+        max_title_length: 55
+```
+
 ## 1.6.16
 
 ### Page index extension

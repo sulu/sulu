@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * ENHANCEMENT #3884 [ContentBundle]           Improved developer-experience when overriding content-teaser-provider
+    * ENHANCEMENT #3897 [ContentBundle]           SEO title length changed from 55 to 70
     * HOTFIX      #3870 [Husky]                   Updated husky to fix bug with thumbnails in datagrid
 
 * 1.6.16 (2018-03-19)
