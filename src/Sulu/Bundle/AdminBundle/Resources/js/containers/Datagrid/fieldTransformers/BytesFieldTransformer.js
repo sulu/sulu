@@ -1,8 +1,13 @@
 // @flow
+import type {Node} from 'react';
 import type {FieldTransformer} from '../types';
 
 export default class BytesFieldTransformer implements FieldTransformer {
-    transform(value: *): * {
+    transform(value: *): Node {
+        if (value === undefined) {
+            return undefined;
+        }
+
         if (value === 0) {
             return '0 Byte';
         }

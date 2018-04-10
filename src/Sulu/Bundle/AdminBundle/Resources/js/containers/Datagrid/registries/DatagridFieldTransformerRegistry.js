@@ -2,37 +2,37 @@
 import type {FieldTransformer} from '../types';
 
 class FieldTransformerRegistry {
-    fieldTransformes: {[string]: FieldTransformer};
+    fieldTransformers: {[string]: FieldTransformer};
 
     constructor() {
         this.clear();
     }
 
     clear() {
-        this.fieldTransformes = {};
+        this.fieldTransformers = {};
     }
 
     has(name: string) {
-        return !!this.fieldTransformes[name];
+        return !!this.fieldTransformers[name];
     }
 
     add(name: string, Type: FieldTransformer) {
-        if (name in this.fieldTransformes) {
+        if (name in this.fieldTransformers) {
             throw new Error('The key "' + name + '" has already been used for another field transformer');
         }
 
-        this.fieldTransformes[name] = Type;
+        this.fieldTransformers[name] = Type;
     }
 
     get(name: string): FieldTransformer {
-        if (!(name in this.fieldTransformes)) {
+        if (!(name in this.fieldTransformers)) {
             throw new Error(
                 'The datagrid field transformer with the key "' + name + '" is not defined. ' +
                 'You probably forgot to add it to the registry using the "add" method.'
             );
         }
 
-        return this.fieldTransformes[name];
+        return this.fieldTransformers[name];
     }
 }
 

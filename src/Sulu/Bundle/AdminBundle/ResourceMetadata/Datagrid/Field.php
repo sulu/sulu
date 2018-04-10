@@ -33,16 +33,6 @@ class Field
      */
     protected $visibility;
 
-    /**
-     * @var bool
-     */
-    protected $sortable;
-
-    /**
-     * @var bool
-     */
-    protected $editable;
-
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -81,25 +71,5 @@ class Field
     public function setVisibility(string $visibility): void
     {
         $this->visibility = $visibility;
-    }
-
-    public function isSortable(): bool
-    {
-        return $this->sortable;
-    }
-
-    public function setSortable(bool $sortable): void
-    {
-        $this->sortable = $sortable;
-    }
-
-    public function isEditable(): bool
-    {
-        return $this->editable;
-    }
-
-    public function setEditable(bool $editable): void
-    {
-        $this->editable = $editable;
     }
 }

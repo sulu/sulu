@@ -67,6 +67,57 @@ test('Render data with schema', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
+test('Render data with all different visibility types schema', () => {
+    const data = [
+        {
+            id: 1,
+            title: 'Title 1',
+            description: 'Description 1',
+        },
+        {
+            id: 2,
+            title: 'Title 2',
+            description: 'Description 2',
+        },
+    ];
+    const schema = {
+        title: {
+            type: 'string',
+            visibility: 'no',
+            label: 'Title',
+        },
+        description: {
+            type: 'string',
+            visibility: 'yes',
+            label: 'Description',
+        },
+        test1: {
+            type: 'string',
+            visibility: 'always',
+            label: 'Test 1',
+        },
+        test2: {
+            type: 'string',
+            visibility: 'never',
+            label: 'Test 2',
+        },
+    };
+    const tableAdapter = render(
+        <TableAdapter
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            page={2}
+            pageCount={5}
+            onPageChange={jest.fn()}
+            schema={schema}
+            selections={[]}
+        />
+    );
+
+    expect(tableAdapter).toMatchSnapshot();
+});
+
 test('Render data with schema and selections', () => {
     const data = [
         {

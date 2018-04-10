@@ -1,4 +1,5 @@
 // @flow
+import type {Node} from 'react';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import DatagridStore from './stores/DatagridStore';
 
@@ -68,5 +69,5 @@ export type TreeItem = {
 };
 
 export interface FieldTransformer {
-    transform(value: *): *,
+    transform(value: *): Node,
 }

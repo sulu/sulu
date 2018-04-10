@@ -97,13 +97,7 @@ function startApplication() {
 
 const translationPromise = Requester.get('/admin/v2/translations?locale=en');
 
-const configPromise = Requester.get('/admin/v2/config').then((response) => {
-    routeRegistry.addCollection(response['sulu_admin'].routes);
-    navigationRegistry.set(response['sulu_admin'].navigation);
-    resourceMetadataStore.setEndpoints(response['sulu_admin'].endpoints);
-
-    return response;
-});
+const configPromise = Requester.get('/admin/v2/config');
 
 Promise.all([
     translationPromise,
@@ -111,8 +105,14 @@ Promise.all([
     bundlesReadyPromise,
 ]).then(([translationResponse, configResponse]) => {
     setTranslations(translationResponse);
+
     registerFieldTypes(configResponse['sulu_admin']['field_type_options']);
+    routeRegistry.addCollection(configResponse['sulu_admin'].routes);
+    navigationRegistry.set(configResponse['sulu_admin'].navigation);
+    resourceMetadataStore.setEndpoints(configResponse['sulu_admin'].endpoints);
+
     registerDatagridFieldTypes();
+
     startApplication();
 });
 

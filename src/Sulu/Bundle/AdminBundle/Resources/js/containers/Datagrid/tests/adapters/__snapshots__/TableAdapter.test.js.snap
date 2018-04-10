@@ -1,5 +1,108 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render data with all different visibility types schema 1`] = `
+<section>
+  <div
+    class="tableContainer"
+  >
+    <table
+      class="table"
+    >
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerCell"
+          >
+            <span>
+              Description
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              Test 1
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            />
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <nav
+    class="pagination"
+  >
+    <div
+      class="loader"
+    />
+    <span
+      class="display"
+    >
+      Page: 2 of 5
+    </span>
+    <button
+      class="previous"
+    >
+      <span
+        aria-label="su-arrow-left"
+        class="su-arrow-left"
+      />
+    </button>
+    <button
+      class="next"
+    >
+      <span
+        aria-label="su-arrow-right"
+        class="su-arrow-right"
+      />
+    </button>
+  </nav>
+</section>
+`;
+
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
 <section>
   <div

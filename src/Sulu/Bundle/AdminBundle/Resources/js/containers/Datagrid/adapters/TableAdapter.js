@@ -1,5 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
+import {computed} from 'mobx';
 import React from 'react';
 import Pagination from '../../../components/Pagination';
 import Table from '../../../components/Table';
@@ -21,7 +22,7 @@ export default class TableAdapter extends AbstractAdapter {
         data: [],
     };
 
-    getSchema(): Schema {
+    @computed get schema(): Schema {
         const {
             schema,
         } = this.props;
@@ -39,10 +40,11 @@ export default class TableAdapter extends AbstractAdapter {
         return newSchema;
     }
 
-    renderCells(item: Object, schema: Object) {
-        const schemaKeys = Object.keys(schema);
+    renderCells(item: Object) {
+        const schemaKeys = Object.keys(this.schema);
+
         return schemaKeys.map((schemaKey) => {
-            const transformer = datagridFieldTransformerRegistry.get(schema[schemaKey].type);
+            const transformer = datagridFieldTransformerRegistry.get(this.schema[schemaKey].type);
             const value = transformer.transform(item[schemaKey]);
 
             return (
@@ -51,11 +53,11 @@ export default class TableAdapter extends AbstractAdapter {
         });
     }
 
-    renderHeaderCells(schema: Object) {
-        const schemaKeys = Object.keys(schema);
+    renderHeaderCells() {
+        const schemaKeys = Object.keys(this.schema);
 
         return schemaKeys.map((schemaKey) => {
-            const label = schema[schemaKey].label ? schema[schemaKey].label : schemaKey;
+            const label = this.schema[schemaKey].label ? this.schema[schemaKey].label : schemaKey;
 
             return(
                 <Table.HeaderCell key={schemaKey}>
@@ -77,7 +79,6 @@ export default class TableAdapter extends AbstractAdapter {
             pageCount,
             selections,
         } = this.props;
-        const schema = this.getSchema();
         const buttons = [];
 
         if (onItemClick) {
@@ -101,12 +102,12 @@ export default class TableAdapter extends AbstractAdapter {
                     onAllSelectionChange={onAllSelectionChange}
                 >
                     <Table.Header>
-                        {this.renderHeaderCells(schema)}
+                        {this.renderHeaderCells()}
                     </Table.Header>
                     <Table.Body>
                         {data.map((item) => (
                             <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
-                                {this.renderCells(item, schema)}
+                                {this.renderCells(item)}
                             </Table.Row>
                         ))}
                     </Table.Body>
