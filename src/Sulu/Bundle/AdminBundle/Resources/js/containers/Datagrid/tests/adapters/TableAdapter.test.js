@@ -43,12 +43,12 @@ test('Render data with schema', () => {
         title: {
             type: 'string',
             visibility: 'no',
-            description: 'Title',
+            label: 'Title',
         },
         description: {
             type: 'string',
             visibility: 'yes',
-            description: 'Description',
+            label: 'Description',
         },
     };
     const tableAdapter = render(
@@ -87,10 +87,12 @@ test('Render data with schema and selections', () => {
     ];
     const schema = {
         title: {
+            label: 'Title',
             type: 'string',
             visibility: 'no',
         },
         description: {
+            label: 'Description',
             type: 'string',
             visibility: 'yes',
         },
@@ -127,10 +129,12 @@ test('Render data with schema in different order', () => {
     ];
     const schema = {
         title: {
+            label: 'Title',
             type: 'string',
             visibility: 'no',
         },
         description: {
+            label: 'Description',
             type: 'string',
             visibility: 'yes',
         },
@@ -166,10 +170,12 @@ test('Render data with schema not containing all fields', () => {
     ];
     const schema = {
         title: {
+            label: 'Title',
             type: 'string',
             visibility: 'no',
         },
         description: {
+            label: 'Description',
             type: 'string',
             visibility: 'yes',
         },
@@ -206,10 +212,12 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     ];
     const schema = {
         title: {
+            label: 'Title',
             type: 'string',
             visibility: 'no',
         },
         description: {
+            label: 'Description',
             type: 'string',
             visibility: 'yes',
         },
@@ -247,10 +255,12 @@ test('Click on pencil should execute onItemEdit callback', () => {
     ];
     const schema = {
         title: {
+            label: 'Title',
             type: 'string',
             visibility: 'no',
         },
         description: {
+            label: 'Description',
             type: 'string',
             visibility: 'yes',
         },
@@ -292,10 +302,12 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
     ];
     const schema = {
         title: {
+            label: 'Title',
             type: 'string',
             visibility: 'no',
         },
         description: {
+            label: 'Description',
             type: 'string',
             visibility: 'yes',
         },
@@ -322,6 +334,7 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
     const data = [];
     const schema = {
         title: {
+            label: 'Title',
             type: 'string',
             visibility: 'no',
         },

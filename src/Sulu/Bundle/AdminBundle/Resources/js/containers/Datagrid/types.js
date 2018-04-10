@@ -6,8 +6,14 @@ export type DataItem = {
     id: string | number,
 };
 
+export type SchemaEntry = {
+    label: string,
+    type: string,
+    visibility: 'always' | 'yes' | 'no' | 'never',
+};
+
 export type Schema = {
-    [string]: {},
+    [string]: SchemaEntry,
 };
 
 export type DatagridAdapterProps = {

@@ -6,6 +6,7 @@ import Table from '../../../components/Table';
 import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
 import datagridFieldTransformerRegistry from '../registries/DatagridFieldTransformerRegistry';
+import type {Schema} from '../types';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
@@ -19,6 +20,24 @@ export default class TableAdapter extends AbstractAdapter {
     static defaultProps = {
         data: [],
     };
+
+    getSchema(): Schema {
+        const {
+            schema,
+        } = this.props;
+
+        const newSchema = {};
+
+        for (const key of Object.keys(schema)) {
+            if (schema[key].visibility === 'never' || schema[key].visibility === 'no') {
+                continue;
+            }
+
+            newSchema[key] = schema[key];
+        }
+
+        return newSchema;
+    }
 
     renderCells(item: Object, schema: Object) {
         const schemaKeys = Object.keys(schema);
@@ -44,24 +63,6 @@ export default class TableAdapter extends AbstractAdapter {
                 </Table.HeaderCell>
             );
         });
-    }
-
-    getSchema() {
-        const {
-            schema,
-        } = this.props;
-
-        const newSchema = {};
-
-        for (const key of Object.keys(schema)) {
-            if (schema[key].visibility === 'never' || schema[key].visibility === 'no') {
-                continue;
-            }
-
-            newSchema[key] = schema[key];
-        }
-
-        return newSchema;
     }
 
     render() {
