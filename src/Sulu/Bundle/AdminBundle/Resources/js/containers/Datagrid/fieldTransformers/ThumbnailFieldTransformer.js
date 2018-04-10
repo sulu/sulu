@@ -8,6 +8,6 @@ export default class ThumbnailFieldTransformer implements FieldTransformer {
             return;
         }
 
-        return <img src={value['sulu-50x50']} alt={value.alt} />;
+        return <img src={value['sulu-40x40']} alt={value.alt} />;
     }
 }
