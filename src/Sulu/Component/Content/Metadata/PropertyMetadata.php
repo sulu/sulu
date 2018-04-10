@@ -83,6 +83,11 @@ class PropertyMetadata extends ItemMetadata
     protected $maxOccurs = null;
 
     /**
+     * @var string
+     */
+    protected $onInvalid;
+
+    /**
      * @var StructureMetadata
      */
     protected $structure;
@@ -265,5 +270,15 @@ class PropertyMetadata extends ItemMetadata
         $this->type = $type;
 
         return $this;
+    }
+
+    public function getOnInvalid(): ?string
+    {
+        return $this->onInvalid;
+    }
+
+    public function setOnInvalid(?string $onInvalid)
+    {
+        $this->onInvalid = $onInvalid;
     }
 }

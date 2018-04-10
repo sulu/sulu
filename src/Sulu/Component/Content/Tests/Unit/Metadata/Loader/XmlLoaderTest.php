@@ -40,9 +40,13 @@ class XmlLoaderTest extends TestCase
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolverInterface::class);
 
-        $propertiesXmlParser = new PropertiesXmlParser($this->contentTypeManager->reveal());
+        $propertiesXmlParser = new PropertiesXmlParser();
 
-        $this->loader = new StructureXmlLoader($this->cacheLifetimeResolver->reveal(), $propertiesXmlParser);
+        $this->loader = new StructureXmlLoader(
+            $this->cacheLifetimeResolver->reveal(),
+            $propertiesXmlParser,
+            $this->contentTypeManager->reveal()
+        );
     }
 
     public function testLoadTemplate()
@@ -83,6 +87,7 @@ class XmlLoaderTest extends TestCase
         $this->contentTypeManager->has('text_editor')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
         $this->contentTypeManager->has('text_area')->willReturn(true);
+        $this->contentTypeManager->has('block')->willReturn(true);
 
         $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);
@@ -104,6 +109,7 @@ class XmlLoaderTest extends TestCase
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
         $this->contentTypeManager->has('text_area')->willReturn(true);
+        $this->contentTypeManager->has('block')->willReturn(true);
 
         $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);
