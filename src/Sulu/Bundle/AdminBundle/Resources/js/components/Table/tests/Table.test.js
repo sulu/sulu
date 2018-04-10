@@ -98,7 +98,7 @@ test('Table buttons should implement an onClick handler', () => {
     );
 
     expect(onClickSpy).toHaveBeenCalledTimes(0);
-    table.find('.buttonCell > button').simulate('click');
+    table.find('.buttonCell button').simulate('click');
     expect(onClickSpy).toHaveBeenCalledTimes(1);
 });
 

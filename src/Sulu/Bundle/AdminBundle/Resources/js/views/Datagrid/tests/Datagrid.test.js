@@ -2,6 +2,8 @@
 import React from 'react';
 import {mount, render} from 'enzyme';
 import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
+import datagridFieldTransformRegistry from '../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry';
+import StringFieldTransformer from '../../../containers/Datagrid/fieldTransformers/StringFieldTransformer';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
@@ -34,8 +36,16 @@ jest.mock(
         this.selectionIds = [];
         this.getPage = jest.fn().mockReturnValue(2);
         this.schema = {
-            title: {},
-            description: {},
+            title: {
+                type: 'string',
+                visibility: 'no',
+                label: 'Title',
+            },
+            description: {
+                type: 'string',
+                visibility: 'yes',
+                label: 'Description',
+            },
         };
         this.destroy = jest.fn();
         this.sendRequest = jest.fn();
@@ -44,6 +54,12 @@ jest.mock(
 );
 
 jest.mock('../../../containers/Datagrid/registries/DatagridAdapterRegistry', () => ({
+    add: jest.fn(),
+    get: jest.fn(),
+    has: jest.fn(),
+}));
+
+jest.mock('../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),
@@ -76,6 +92,8 @@ beforeEach(() => {
     const datagridAdapterRegistry = require('../../../containers/Datagrid/registries/DatagridAdapterRegistry');
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+
+    datagridFieldTransformRegistry.get.mockReturnValue(new StringFieldTransformer());
 });
 
 test('Should render the datagrid with the correct resourceKey', () => {

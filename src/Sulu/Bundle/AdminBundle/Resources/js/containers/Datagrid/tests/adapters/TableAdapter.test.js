@@ -2,6 +2,8 @@
 import React from 'react';
 import {render, shallow} from 'enzyme';
 import TableAdapter from '../../adapters/TableAdapter';
+import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
+import datagridFieldTransformerRegistry from '../../registries/DatagridFieldTransformerRegistry';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: function(key) {
@@ -13,6 +15,16 @@ jest.mock('../../../../utils/Translator', () => ({
         }
     },
 }));
+
+jest.mock('../../registries/DatagridFieldTransformerRegistry', () => ({
+    add: jest.fn(),
+    get: jest.fn(),
+    has: jest.fn(),
+}));
+
+beforeEach(() => {
+    datagridFieldTransformerRegistry.get.mockReturnValue(new StringFieldTransformer());
+});
 
 test('Render data with schema', () => {
     const data = [
@@ -28,8 +40,16 @@ test('Render data with schema', () => {
         },
     ];
     const schema = {
-        title: {},
-        description: {},
+        title: {
+            type: 'string',
+            visibility: 'no',
+            description: 'Title',
+        },
+        description: {
+            type: 'string',
+            visibility: 'yes',
+            description: 'Description',
+        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -66,8 +86,14 @@ test('Render data with schema and selections', () => {
         },
     ];
     const schema = {
-        title: {},
-        description: {},
+        title: {
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -100,8 +126,14 @@ test('Render data with schema in different order', () => {
         },
     ];
     const schema = {
-        description: {},
-        title: {},
+        title: {
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -133,7 +165,14 @@ test('Render data with schema not containing all fields', () => {
         },
     ];
     const schema = {
-        title: {},
+        title: {
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -166,7 +205,14 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         },
     ];
     const schema = {
-        title: {},
+        title: {
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -200,7 +246,14 @@ test('Click on pencil should execute onItemEdit callback', () => {
         },
     ];
     const schema = {
-        title: {},
+        title: {
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = shallow(
         <TableAdapter
@@ -238,7 +291,14 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
         },
     ];
     const schema = {
-        title: {},
+        title: {
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = shallow(
         <TableAdapter
@@ -261,7 +321,10 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
     const allSelectionChangeSpy = jest.fn();
     const data = [];
     const schema = {
-        title: {},
+        title: {
+            type: 'string',
+            visibility: 'no',
+        },
     };
     const tableAdapter = shallow(
         <TableAdapter

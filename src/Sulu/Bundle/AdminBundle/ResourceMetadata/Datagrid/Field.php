@@ -31,7 +31,7 @@ class Field
     /**
      * @var string
      */
-    protected $display;
+    protected $visibility;
 
     /**
      * @var bool
@@ -73,14 +73,14 @@ class Field
         $this->type = $type;
     }
 
-    public function getDisplay(): string
+    public function getVisibility(): string
     {
-        return $this->display;
+        return $this->visibility;
     }
 
-    public function setDisplay(string $display): void
+    public function setVisibility(string $visibility): void
     {
-        $this->display = $display;
+        $this->visibility = $visibility;
     }
 
     public function isSortable(): bool

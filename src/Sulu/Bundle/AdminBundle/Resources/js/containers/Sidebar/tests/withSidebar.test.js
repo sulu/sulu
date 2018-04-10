@@ -90,6 +90,10 @@ test('Recall sidebar-function when changing observable', () => {
 });
 
 test('Throw error when component has property sidebarDisposer', () => {
+    // catch error logging as described in https://github.com/facebook/react/issues/11098#issuecomment-335290556
+    // until better solution is availble
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
     const Component = class Component extends React.Component<*> {
         sidebarDisposer = true;
 

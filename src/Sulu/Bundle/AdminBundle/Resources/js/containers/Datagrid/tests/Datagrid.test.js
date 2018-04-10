@@ -5,9 +5,11 @@ import {observable} from 'mobx';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
 import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
+import datagridFieldTransformerRegistry from '../registries/DatagridFieldTransformerRegistry';
 import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
 import FolderAdapter from '../adapters/FolderAdapter';
+import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
@@ -18,7 +20,13 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.selections = [];
     this.selectionIds = [];
     this.loading = false;
-    this.schema = {test: {}};
+    this.schema = {
+        title: {
+            type: 'string',
+            visibility: 'yes',
+            label: 'Title',
+        },
+    };
     this.findById = jest.fn();
     this.select = jest.fn();
     this.deselect = jest.fn();
@@ -37,6 +45,12 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
+    add: jest.fn(),
+    get: jest.fn(),
+    has: jest.fn(),
+}));
+
+jest.mock('../registries/DatagridFieldTransformerRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),
@@ -86,6 +100,8 @@ class TestAdapter extends AbstractAdapter {
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.get.mockReturnValue(TestAdapter);
+
+    datagridFieldTransformerRegistry.get.mockReturnValue(new StringFieldTransformer());
 });
 
 test('Render TableAdapter with correct values', () => {
@@ -102,7 +118,13 @@ test('Render TableAdapter with correct values', () => {
     expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
     expect(tableAdapter.prop('active')).toEqual(3);
     expect(tableAdapter.prop('selections')).toEqual([1, 3]);
-    expect(tableAdapter.prop('schema')).toEqual({test: {}});
+    expect(tableAdapter.prop('schema')).toEqual({
+        title: {
+            type: 'string',
+            visibility: 'yes',
+            label: 'Title',
+        },
+    });
     expect(tableAdapter.prop('onItemClick')).toBe(editClickSpy);
     expect(tableAdapter.prop('onItemSelectionChange')).toBeInstanceOf(Function);
     expect(tableAdapter.prop('onAllSelectionChange')).toBeInstanceOf(Function);

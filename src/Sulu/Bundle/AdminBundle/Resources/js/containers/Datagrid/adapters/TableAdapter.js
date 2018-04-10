@@ -23,7 +23,8 @@ export default class TableAdapter extends AbstractAdapter {
     renderCells(item: Object, schema: Object) {
         const schemaKeys = Object.keys(schema);
         return schemaKeys.map((schemaKey) => {
-            const value = datagridFieldTransformerRegistry.get(schema[schemaKey].type).transform(item[schemaKey]);
+            const transformer = datagridFieldTransformerRegistry.get(schema[schemaKey].type);
+            const value = transformer.transform(item[schemaKey]);
 
             return (
                 <Table.Cell key={item.id + schemaKey}>{value}</Table.Cell>
@@ -53,7 +54,7 @@ export default class TableAdapter extends AbstractAdapter {
         const newSchema = {};
 
         for (const key of Object.keys(schema)) {
-            if (schema[key].display === 'never' || schema[key].display === 'no') {
+            if (schema[key].visibility === 'never' || schema[key].visibility === 'no') {
                 continue;
             }
 
