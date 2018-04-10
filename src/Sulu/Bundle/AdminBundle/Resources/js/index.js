@@ -15,6 +15,7 @@ import {
     Email,
     fieldRegistry,
     Input,
+    PasswordConfirmation,
     Phone,
     ResourceLocator,
     SingleSelect,
@@ -66,6 +67,7 @@ function registerFieldTypes(fieldTypesConfig) {
     fieldRegistry.add('checkbox', Checkbox);
     fieldRegistry.add('date', DatePicker);
     fieldRegistry.add('email', Email);
+    fieldRegistry.add('password_confirmation', PasswordConfirmation);
     fieldRegistry.add('phone', Phone);
     fieldRegistry.add('resource_locator', ResourceLocator);
     fieldRegistry.add('single_select', SingleSelect);
