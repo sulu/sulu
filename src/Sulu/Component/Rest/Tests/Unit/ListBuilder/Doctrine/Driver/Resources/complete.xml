@@ -1,4 +1,5 @@
 <class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:list="http://schemas.sulu.io/class/list"
        xmlns:orm="http://schemas.sulu.io/class/doctrine">
 
     <orm:joins name="address">
@@ -15,25 +16,22 @@
     </orm:joins>
 
     <properties>
-        <property name="id" translation="public.id" disabled="true" default="false" type="integer">
+        <property name="id" list:translation="public.id" visibility="never" list:type="integer">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="firstName" translation="contact.contacts.firstName" disabled="false" default="true"
-                  type="string">
+        <property name="firstName" list:translation="contact.contacts.firstName" visibility="yes" list:type="string">
             <orm:field-name>firstName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="lastName" translation="contact.contacts.lastName" disabled="false" default="true"
-                  type="string">
+        <property name="lastName" list:translation="contact.contacts.lastName" visibility="true" list:type="string">
             <orm:field-name>lastName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="avatar" translation="public.avatar" disabled="false" default="true" type="thumbnails"
-                  sortable="false">
+        <property name="avatar" list:translation="public.avatar" visibility="true" list:type="thumbnails" list:sortable="false">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
 
@@ -45,8 +43,8 @@
             </orm:joins>
         </property>
 
-        <concatenation-property name="fullName" orm:glue=" " translation="public.name" disabled="true" default="false"
-                                type="string" sortable="false">
+        <concatenation-property name="fullName" orm:glue=" " list:translation="public.name" visibility="never"
+                                list:type="string" list:sortable="false">
             <orm:field name="firstName">
                 <orm:field-name>firstName</orm:field-name>
                 <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
@@ -54,7 +52,7 @@
             <orm:field property-ref="lastName"/>
         </concatenation-property>
 
-        <property name="city" translation="contact.address.city" disabled="false" default="true" type="string">
+        <property name="city" list:translation="contact.address.city" visibility="true" list:type="string">
             <orm:field-name>city</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
 
