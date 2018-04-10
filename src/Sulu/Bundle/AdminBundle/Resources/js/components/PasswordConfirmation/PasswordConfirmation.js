@@ -1,12 +1,14 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Input from '../Input';
 import Grid from '../Grid';
+import passwordConfirmationStyles from './passwordConfirmation.scss';
 
 type Props = {|
     onChange: (value: ?string) => void,
+    valid: boolean,
 |};
 
 const LOCK_ICON = 'su-lock';
@@ -14,8 +16,20 @@ const INPUT_TYPE = 'password';
 
 @observer
 export default class PasswordConfirmation extends React.Component<Props> {
+    static defaultProps = {
+        valid: true,
+    };
+
     @observable firstValue = '';
     @observable secondValue = '';
+
+    @computed get passwordsMatch(): boolean {
+        return this.firstValue === this.secondValue;
+    }
+
+    @computed get valid(): boolean {
+        return this.passwordsMatch && this.props.valid;
+    }
 
     @action handleFirstChange = (value: ?string) => {
         this.firstValue = value;
@@ -26,7 +40,7 @@ export default class PasswordConfirmation extends React.Component<Props> {
     };
 
     handleBlur = () => {
-        if (this.firstValue !== this.secondValue) {
+        if (!this.passwordsMatch) {
             return;
         }
 
@@ -37,7 +51,7 @@ export default class PasswordConfirmation extends React.Component<Props> {
 
     render() {
         return (
-            <Grid>
+            <Grid className={passwordConfirmationStyles.grid}>
                 <Grid.Item size={6}>
                     <Input
                         icon={LOCK_ICON}
@@ -45,6 +59,7 @@ export default class PasswordConfirmation extends React.Component<Props> {
                         onChange={this.handleFirstChange}
                         type={INPUT_TYPE}
                         value={this.firstValue}
+                        valid={this.valid}
                     />
                 </Grid.Item>
                 <Grid.Item size={6}>
@@ -54,6 +69,7 @@ export default class PasswordConfirmation extends React.Component<Props> {
                         onChange={this.handleSecondChange}
                         type={INPUT_TYPE}
                         value={this.secondValue}
+                        valid={this.valid}
                     />
                 </Grid.Item>
             </Grid>
