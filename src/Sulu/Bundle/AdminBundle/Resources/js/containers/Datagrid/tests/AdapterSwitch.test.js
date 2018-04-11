@@ -75,3 +75,24 @@ test('The component should render with current adapter "table"', () => {
 
     expect(view).toMatchSnapshot();
 });
+
+test('The component should handle adapter change correctly', () => {
+    const adapters = ['table', 'folder'];
+    const currentAdapterKey = 'table';
+    const handleAdapterChange = jest.fn();
+    const view = mount(
+        <AdapterSwitch
+            adapters={adapters}
+            currentAdapter={currentAdapterKey}
+            onAdapterChange={handleAdapterChange}
+        />
+    );
+
+    // click on the active adapter shouldn't trigger the event
+    view.find('Button').at(0).simulate('click');
+    expect(handleAdapterChange).not.toBeCalled();
+
+    // click on not active should trigger the event correctly
+    view.find('Button').at(1).simulate('click');
+    expect(handleAdapterChange).toBeCalledWith('folder');
+});
