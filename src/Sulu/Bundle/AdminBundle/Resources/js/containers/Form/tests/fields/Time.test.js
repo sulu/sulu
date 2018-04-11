@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import moment from 'moment-timezone';
-import {mount, shallow} from 'enzyme';
+import {shallow} from 'enzyme';
 import Time from '../../fields/Time';
 import DatePickerComponent from '../../../../components/DatePicker';
 
