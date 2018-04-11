@@ -2,7 +2,7 @@
 /* eslint-disable import/no-nodejs-modules */
 const path = require('path');
 const fs = require('fs');
-const glob = require('glob');
+const fg = require('fast-glob');
 
 const firstLetterIsUppercase = (string) => {
     const first = string.charAt(0);
@@ -28,6 +28,62 @@ const javaScriptFileExists = (path, fileName) => {
     return fs.existsSync(`${path}/${fileName}.js`);
 };
 
+const isSection = (section) => (folderPath) => {
+    return path.basename(path.dirname(folderPath)) === section;
+};
+
+const folders = fg.sync(
+    ['./src/Sulu/Bundle/*/Resources/js/*/*', '!**/vendor', '!**/node_modules'],
+    {onlyDirectories: true }
+);
+
+const componentFolders = folders
+    .filter(isSection('components'))
+    .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
+    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
+    .sort(compareFolderName)
+    .map((folder) => {
+        const component = path.basename(folder);
+
+        return path.join(folder, component + '.js');
+    });
+const containerFolders = folders
+    .filter(isSection('containers'))
+    .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
+    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
+    .sort(compareFolderName)
+    .map((folder) => {
+        const component = path.basename(folder);
+
+        return path.join(folder, component + '.js');
+    });
+const serviceSections = folders
+    .filter(isSection('services'))
+    .filter((folder) => path.basename(folder) !== 'index.js')
+    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
+    .sort(compareFolderName)
+    .map((folder) => {
+        const component = path.basename(folder);
+
+        return {name: component, content: folder + '/README.md'};
+    });
+const viewSections = folders
+    .filter(isSection('views'))
+    .map((folder) => {
+        const component = path.basename(folder);
+        return {name: component, content: folder + '/README.md'};
+    });
+const highOrderComponentSections = folders
+    .filter((folder) => !firstLetterIsUppercase(path.basename(folder)))
+    .filter(isSection('components'))
+    .filter((folder) => path.basename(folder) !== 'index.js')
+    .sort(compareFolderName)
+    .map((folder) => {
+        const component = path.basename(folder);
+
+        return {name: component, content: folder + '/README.md'};
+    });
+
 module.exports = { // eslint-disable-line
     require: [
         'core-js/fn/array/includes',
@@ -47,80 +103,26 @@ module.exports = { // eslint-disable-line
         {
             name: 'Components',
             components: function() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
-                // filter out higher order components
-                folders = folders
-                    .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
-                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
-                    .sort(compareFolderName);
-
-                return folders.map((folder) => {
-                    const component = path.basename(folder);
-
-                    return path.join(folder, component + '.js');
-                });
+                return componentFolders;
             },
         },
         {
             name: 'Containers',
             components: function() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/containers/*');
-                // filter out containers
-                folders = folders
-                    .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
-                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
-                    .sort(compareFolderName);
-
-                return folders.map((folder) => {
-                    const component = path.basename(folder);
-
-                    return path.join(folder, component + '.js');
-                });
+                return containerFolders;
             },
         },
         {
             name: 'Services',
-            sections: (function() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/services/*');
-
-                return folders
-                    .filter((folder) => path.basename(folder) !== 'index.js')
-                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
-                    .sort(compareFolderName)
-                    .map((folder) => {
-                        const component = path.basename(folder);
-
-                        return {name: component, content: folder + '/README.md'};
-                    });
-            })(),
+            sections: serviceSections,
         },
         {
             name: 'Views',
-            sections: (function() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/views/*');
-
-                return folders
-                    .map((folder) => {
-                        const component = path.basename(folder);
-                        return {name: component, content: folder + '/README.md'};
-                    });
-            })(),
+            sections: viewSections,
         },
         {
             name: 'Higher-Order components',
-            sections: (function() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
-                folders = folders.filter((folder) => !firstLetterIsUppercase(path.basename(folder)));
-
-                return folders
-                    .filter((folder) => path.basename(folder) !== 'index.js')
-                    .sort(compareFolderName)
-                    .map((folder) => {
-                        const component = path.basename(folder);
-
-                        return {name: component, content: folder + '/README.md'};
-                    });
-            })(),
+            sections: highOrderComponentSections,
         },
     ],
     webpackConfig: {
