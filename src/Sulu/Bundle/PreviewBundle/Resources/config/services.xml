@@ -60,10 +60,6 @@
 
             <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_preview.preview"/>
         </service>
-
-        <service id="sulu_preview.preview.voter" class="Sulu\Bundle\PreviewBundle\Security\PreviewVoter" public="false">
-            <tag name="security.voter"/>
-        </service>
     </services>
 
 </container>
