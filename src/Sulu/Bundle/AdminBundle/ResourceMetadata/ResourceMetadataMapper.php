@@ -95,10 +95,10 @@ class ResourceMetadataMapper
         $section->setSize($property->getSize());
 
         foreach ($property->getChildren() as $component) {
-            if ($component instanceof PropertyMetadata) {
-                $item = $this->mapProperty($component, $locale);
-            } elseif ($component instanceof BlockMetadata) {
+            if ($component instanceof BlockMetadata) {
                 $item = $this->mapBlock($component, $locale);
+            } elseif ($component instanceof PropertyMetadata) {
+                $item = $this->mapProperty($component, $locale);
             } else {
                 throw new \Exception('Unsupported property given "' . get_class($property) . '"');
             }
