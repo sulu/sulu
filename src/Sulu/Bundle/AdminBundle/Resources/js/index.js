@@ -8,7 +8,16 @@ import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
 import {setTranslations} from './utils/Translator';
 import Application from './containers/Application';
-import {Assignment, DatePicker, fieldRegistry, Input, ResourceLocator, SingleSelect, TextArea} from './containers/Form';
+import {
+    Assignment,
+    DatePicker,
+    fieldRegistry,
+    Input,
+    ResourceLocator,
+    SingleSelect,
+    TextArea,
+    Time,
+} from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
 import {viewRegistry} from './containers/ViewRenderer';
 import {navigationRegistry} from './containers/Navigation';
@@ -42,6 +51,7 @@ function registerFieldTypes(fieldTypesConfig) {
     fieldRegistry.add('single_select', SingleSelect);
     fieldRegistry.add('text_line', Input);
     fieldRegistry.add('text_area', TextArea);
+    fieldRegistry.add('time', Time);
 
     const assignmentConfigs = fieldTypesConfig['assignment'];
     if (assignmentConfigs) {

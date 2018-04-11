@@ -63,6 +63,7 @@ exports[`DatePicker should render 1`] = `
               input={true}
               inputProps={
                 Object {
+                  "icon": "su-calender",
                   "placeholder": "MM/DD/YYYY",
                   "valid": true,
                 }

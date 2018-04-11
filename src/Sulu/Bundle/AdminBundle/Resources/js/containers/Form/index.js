@@ -10,6 +10,7 @@ import SingleSelect from './fields/SingleSelect';
 import ResourceLocator from './fields/ResourceLocator';
 import Renderer from './Renderer';
 import TextArea from './fields/TextArea';
+import Time from './fields/Time';
 import type {Schema, Types} from './types';
 
 export {
@@ -23,6 +24,7 @@ export {
     ResourceLocator,
     SingleSelect,
     TextArea,
+    Time,
 };
 export type {Schema, Types};
 export default Form;
