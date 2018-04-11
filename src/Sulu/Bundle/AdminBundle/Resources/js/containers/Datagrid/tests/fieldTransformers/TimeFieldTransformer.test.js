@@ -1,8 +1,13 @@
 // @flow
 import log from 'loglevel';
+import moment from 'moment-timezone';
 import TimeFieldTransformer from '../../fieldTransformers/TimeFieldTransformer';
 
 const timeFieldTransformer = new TimeFieldTransformer();
+
+beforeEach(() => {
+    moment.tz.setDefault('Europe/Vienna');
+});
 
 jest.mock('loglevel', () => ({
     error: jest.fn(),

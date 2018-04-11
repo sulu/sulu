@@ -1,6 +1,11 @@
 // @flow
 import log from 'loglevel';
+import moment from 'moment-timezone';
 import DateTimeFieldTransformer from '../../fieldTransformers/DateTimeFieldTransformer';
+
+beforeEach(() => {
+    moment.tz.setDefault('Europe/Vienna');
+});
 
 const dateTimeFieldTransformer = new DateTimeFieldTransformer();
 
