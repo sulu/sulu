@@ -1,6 +1,3 @@
-parameters:
-    sulu.preview.voter_class: 'Sulu\Bundle\PreviewBundle\Security\PreviewVoter'
-
 framework:
     session:
         storage_id: session.storage.mock_file
@@ -9,7 +6,7 @@ framework:
 
 services:
     sulu.preview.voter:
-        class: '%sulu.preview.voter_class%'
+        class: 'Sulu\Bundle\PreviewBundle\Security\PreviewVoter'
         public: false
         tags:
             - { name: security.voter }
