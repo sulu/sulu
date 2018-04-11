@@ -26,7 +26,8 @@ CHANGELOG for Sulu
     * FEATURE     #3816 [All]                     Validate if grunt build was run for all bundles with circleci
     * BUGFIX      #3806 [All]                     Fix compatibility on lowest and fix appveyor
     * BUGFIX      #3351 [ContentBundle]           Fix spacing between rows and section in content template generation
-
+    * BUGFIX      #3901 [PreviewBundle]           Add a voter to allow the PreviewKernel to access all uris.
+    
 * 1.6.15 (2018-02-27)
     * HOTFIX      #3802 [ContentBundle]           Fixed XmlLoader internal flag
     * HOTFIX      #3796 [HttpCache]               Increased priority of update-response-subscriber 
