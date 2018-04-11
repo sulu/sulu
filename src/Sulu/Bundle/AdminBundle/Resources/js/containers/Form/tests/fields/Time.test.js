@@ -1,13 +1,8 @@
 // @flow
 import React from 'react';
-import moment from 'moment-timezone';
 import {shallow} from 'enzyme';
 import Time from '../../fields/Time';
 import DatePickerComponent from '../../../../components/DatePicker';
-
-beforeEach(() => {
-    moment.tz.setDefault('Europe/Vienna');
-});
 
 test('Pass error correctly to Input component', () => {
     const error = {};
@@ -74,7 +69,7 @@ test('Should call onFinish callback on every onChange with correctly converted v
         />
     );
 
-    time.find(DatePickerComponent).simulate('change', new Date(2018, 3, 15, 6, 32, 20));
+    time.find(DatePickerComponent).simulate('change', new Date(Date.UTC(2018, 3, 15, 6, 32, 20)));
 
     expect(finishSpy).toBeCalled();
     expect(changeSpy).toBeCalledWith('06:32:20');

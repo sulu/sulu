@@ -11,7 +11,7 @@ function createStringValue(value: ?Date) {
         return undefined;
     }
 
-    return moment(value).format(format);
+    return moment.utc(value).format(format);
 }
 
 function getValue(value: ?string): ?moment {
@@ -19,7 +19,7 @@ function getValue(value: ?string): ?moment {
         return undefined;
     }
 
-    const momentObject = moment(value, format);
+    const momentObject = moment.utc(value, format);
 
     if (!momentObject.isValid()) {
         return undefined;
