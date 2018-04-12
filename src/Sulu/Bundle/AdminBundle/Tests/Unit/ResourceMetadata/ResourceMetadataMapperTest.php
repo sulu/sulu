@@ -203,7 +203,13 @@ class ResourceMetadataMapperTest extends \PHPUnit_Framework_TestCase
         $section = $form->getItems()['sectiontest'];
         $this->assertSame('sectiontest', $section->getName());
         $this->assertSame('Section Title', $section->getLabel());
-        $this->assertCount(3, $section->getItems());
+        $this->assertCount(4, $section->getItems());
+        $this->assertArrayHasKey('test1', $section->getItems());
+        $this->assertArrayHasKey('test2', $section->getItems());
+        $this->assertArrayHasKey('test3', $section->getItems());
+        $this->assertArrayHasKey('blocktest', $section->getItems());
+        $this->assertInstanceOf(Field::class, $section->getItems()['blocktest']);
+        $this->assertCount(2, $section->getItems()['blocktest']->getTypes());
     }
 
     private function getProperties(string $type): array
@@ -295,6 +301,7 @@ class ResourceMetadataMapperTest extends \PHPUnit_Framework_TestCase
         $section->addChild($property1);
         $section->addChild($property2);
         $section->addChild($property3);
+        $section->addChild($block);
 
         switch ($type) {
             case 'properties':
