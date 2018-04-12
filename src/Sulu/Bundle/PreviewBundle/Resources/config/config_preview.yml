@@ -3,3 +3,10 @@ framework:
         storage_id: session.storage.mock_file
     profiler:
         enabled: false
+
+services:
+    sulu.preview.voter:
+        class: Sulu\Bundle\PreviewBundle\Security\PreviewVoter
+        public: false
+        tags:
+            - { name: security.voter }
