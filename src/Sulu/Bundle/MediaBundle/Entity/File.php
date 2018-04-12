@@ -164,11 +164,30 @@ class File implements AuditableInterface
     /**
      * Get fileVersions.
      *
-     * @return FileVersion[]
+     * @return DoctrineCollection|FileVersion[]
      */
     public function getFileVersions()
     {
         return $this->fileVersions;
+    }
+
+    /**
+     * Get file version.
+     *
+     * @param int $version
+     *
+     * @return FileVersion|null
+     */
+    public function getFileVersion($version)
+    {
+        /** @var FileVersion $fileVersion */
+        foreach ($this->fileVersions as $fileVersion) {
+            if ($fileVersion->getVersion() === $version) {
+                return $fileVersion;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -178,14 +197,7 @@ class File implements AuditableInterface
      */
     public function getLatestFileVersion()
     {
-        /** @var FileVersion $fileVersion */
-        foreach ($this->fileVersions as $fileVersion) {
-            if ($fileVersion->getVersion() === $this->getVersion()) {
-                return $fileVersion;
-            }
-        }
-
-        return;
+        return $this->getFileVersion($this->version);
     }
 
     /**
@@ -205,7 +217,7 @@ class File implements AuditableInterface
     /**
      * Get media.
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function getMedia()
     {
