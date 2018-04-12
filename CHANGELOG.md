@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * FEATURE     #3906 [MediaBundle]             Add file version delete to media overlay
     * HOTFIX      #3912 [ContentBundle]           Fixed content-query when a child is broken
     * FEATURE     #3914 [ContactBundle]           Added latitude/longitude to address 
     * FEATURE     #3905 [MediaBundle]             Add canonical and robots noIndex headers to download of old versions 
