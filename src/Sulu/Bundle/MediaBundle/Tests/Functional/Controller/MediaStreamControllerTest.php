@@ -40,6 +40,38 @@ class MediaStreamControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
     }
 
+    public function testNotExistVersionDownloadAction()
+    {
+        $filePath = $this->createMediaFile('test.jpg');
+        $media = $this->createMedia($filePath, 'file-without-extension');
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', str_replace('v=1', 'v=99', $media->getUrl()));
+        $response = $client->getResponse();
+        $this->assertHttpStatusCode(404, $response);
+    }
+
+    public function testOldExistVersionDownloadAction()
+    {
+        $filePath = $this->createMediaFile('test.jpg');
+        $oldMedia = $this->createMedia($filePath, 'file-without-extension');
+        $newMedia = $this->createMediaVersion($oldMedia->getId(), $filePath, 'new-file-without-extension');
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', $oldMedia->getUrl());
+        $response = $client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertEquals(
+            sprintf(
+                '<%s>; rel="canonical"',
+                $newMedia->getUrl()
+            ),
+            $response->headers->get('Link')
+        );
+        $this->assertEquals(
+            'noindex, follow',
+            $response->headers->get('X-Robots-Tag')
+        );
+    }
+
     public function testDownloadWithoutExtensionAction()
     {
         $filePath = $this->createMediaFile('file-without-extension');
@@ -107,6 +139,20 @@ class MediaStreamControllerTest extends SuluTestCase
         return $this->getMediaManager()->save(
             $this->createUploadedFile($path),
             [
+                'title' => $title,
+                'collection' => $this->createCollection(),
+                'locale' => 'en',
+            ],
+            null
+        );
+    }
+
+    private function createMediaVersion($id, $path, $title)
+    {
+        return $this->getMediaManager()->save(
+            $this->createUploadedFile($path),
+            [
+                'id' => $id,
                 'title' => $title,
                 'collection' => $this->createCollection(),
                 'locale' => 'en',

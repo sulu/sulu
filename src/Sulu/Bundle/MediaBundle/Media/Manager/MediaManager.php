@@ -349,15 +349,7 @@ class MediaManager implements MediaManagerInterface
 
         $version = $file->getVersion();
 
-        $currentFileVersion = null;
-
-        foreach ($file->getFileVersions() as $fileVersion) {
-            /** @var FileVersion $fileVersion */
-            if ($version == $fileVersion->getVersion()) {
-                $currentFileVersion = $fileVersion;
-                break;
-            }
-        }
+        $currentFileVersion = $file->getFileVersion($version);
 
         if (!$currentFileVersion) {
             throw new FileVersionNotFoundException($mediaEntity->getId(), $version);

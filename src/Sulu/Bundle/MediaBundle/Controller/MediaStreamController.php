@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
@@ -67,7 +68,7 @@ class MediaStreamController extends Controller
      * @param Request $request
      * @param int $id
      *
-     * @return BinaryFileResponse
+     * @return Response
      */
     public function downloadAction(Request $request, $id)
     {
@@ -122,6 +123,7 @@ class MediaStreamController extends Controller
         $storageOptions = $fileVersion->getStorageOptions();
         $mimeType = $fileVersion->getMimeType();
         $version = $fileVersion->getVersion();
+        $lastModified = $fileVersion->getCreated(); // use created as file itself is not changed when entity is changed
 
         $path = $this->getStorage()->load($fileName, $version, $storageOptions);
 
@@ -134,10 +136,30 @@ class MediaStreamController extends Controller
             $this->cleanUpFileName($fileName, $locale, $fileVersion->getExtension())
         );
 
+        // Set headers for
+        $file = $fileVersion->getFile();
+        if ($fileVersion->getVersion() !== $file->getVersion()) {
+            $latestFileVersion = $file->getLatestFileVersion();
+
+            $response->headers->set(
+                'Link',
+                sprintf(
+                    '<%s>; rel="canonical"',
+                    $this->getMediaManager()->getUrl(
+                        $file->getMedia()->getId(),
+                        $latestFileVersion->getName(),
+                        $latestFileVersion->getVersion()
+                    )
+                )
+            );
+            $response->headers->set('X-Robots-Tag', 'noindex, follow');
+        }
+
         // Set headers
         $response->headers->set('Content-Type', !empty($mimeType) ? $mimeType : 'application/octet-stream');
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-length', $fileSize);
+        $response->headers->set('Last-Modified', $lastModified->format('D, d M Y H:i:s \G\M\T'));
 
         return $response;
     }
@@ -146,40 +168,36 @@ class MediaStreamController extends Controller
      * @param int $id
      * @param int $version
      *
-     * @return null|FileVersion
+     * @return FileVersion|null
      *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
      */
     protected function getFileVersion($id, $version)
     {
-        /*
-         * @var MediaInterface
-         */
+        /** @var MediaInterface $mediaEntity */
         $mediaEntity = $this->container->get('sulu.repository.media')->findMediaById($id);
 
         if (!$mediaEntity) {
-            return;
+            return null;
         }
-
-        $currentFileVersion = null;
-        $version = null === $version ? $mediaEntity->getFiles()[0]->getVersion() : $version;
 
         $file = $mediaEntity->getFiles()[0];
 
-        /*
-         * @var FileVersion
-         */
-        foreach ($file->getFileVersions() as $fileVersion) {
-            if ($fileVersion->getVersion() == $version) {
-                $currentFileVersion = $fileVersion;
-            }
+        if (!$file) {
+            return null;
         }
 
-        if (!$currentFileVersion) {
+        if (!$version) {
+            $version = $mediaEntity->getFiles()[0]->getVersion();
+        }
+
+        $fileVersion = $file->getFileVersion((int) $version);
+
+        if (!$fileVersion) {
             throw new FileVersionNotFoundException($id, $version);
         }
 
-        return $currentFileVersion;
+        return $fileVersion;
     }
 
     /**

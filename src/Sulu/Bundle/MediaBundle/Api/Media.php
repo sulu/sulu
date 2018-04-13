@@ -865,13 +865,11 @@ class Media extends ApiWrapper
             } else {
                 $version = $file->getVersion();
             }
-            /** @var FileVersion $fileVersion */
-            foreach ($file->getFileVersions() as $fileVersion) {
-                if ($fileVersion->getVersion() == $version) {
-                    $this->fileVersion = $fileVersion;
 
-                    return $fileVersion;
-                }
+            if ($fileVersion = $file->getFileVersion($version)) {
+                $this->fileVersion = $fileVersion;
+
+                return $fileVersion;
             }
             break; // currently only one file per media exists
         }
@@ -898,7 +896,7 @@ class Media extends ApiWrapper
             return $this->file;
         }
 
-        throw new FileNotFoundException($this->entity->getId(), $this->version);
+        throw new FileNotFoundException($this->entity->getId());
     }
 
     /**
