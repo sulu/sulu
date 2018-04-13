@@ -5,7 +5,9 @@ import fieldRegistry from './registries/FieldRegistry';
 import FormStore from './stores/FormStore';
 import Assignment from './fields/Assignment';
 import DatePicker from './fields/DatePicker';
+import Email from './fields/Email';
 import Input from './fields/Input';
+import Phone from './fields/Phone';
 import SingleSelect from './fields/SingleSelect';
 import ResourceLocator from './fields/ResourceLocator';
 import Renderer from './Renderer';
@@ -17,7 +19,9 @@ export {
     fieldRegistry,
     Assignment,
     DatePicker,
+    Email,
     Input,
+    Phone,
     FormInspector,
     FormStore,
     Renderer,
