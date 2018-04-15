@@ -56,12 +56,12 @@ class ResourceMetadata implements ResourceMetadataInterface, DatagridInterface, 
         $this->key = $key;
     }
 
-    public function getDatagrid(): Datagrid
+    public function getDatagrid(): ?Datagrid
     {
         return $this->datagrid;
     }
 
-    public function setDatagrid(Datagrid $datagrid): void
+    public function setDatagrid(?Datagrid $datagrid): void
     {
         $this->datagrid = $datagrid;
     }

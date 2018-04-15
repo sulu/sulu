@@ -128,13 +128,13 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
             $this->writeResourceMetadataCache(
                 $resourceKey,
                 $resource['form'],
-                $resource['datagrid'],
+                array_key_exists('datagrid', $resource) ? $resource['datagrid'] : null,
                 $resource['endpoint']
             );
         }
     }
 
-    private function writeResourceMetadataCache(string $resourceKey, array $forms, string $list, string $endpoint): void
+    private function writeResourceMetadataCache(string $resourceKey, array $forms, ?string $list, string $endpoint): void
     {
         $fileResources = [];
 

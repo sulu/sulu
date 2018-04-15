@@ -13,5 +13,6 @@ namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid;
 
 interface DatagridInterface
 {
-    public function getDatagrid(): Datagrid;
+    // FIXME this method should always return a datagrid and never null, see https://github.com/sulu/sulu/issues/3907
+    public function getDatagrid(): ?Datagrid;
 }
