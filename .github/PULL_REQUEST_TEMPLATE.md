@@ -36,3 +36,4 @@ Describe BC breaks/deprecations here. (remove this section if not needed)
 #### To Do
 
 - [ ] Create a documentation PR
+- [ ] Add UPGRADE

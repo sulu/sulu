@@ -19,6 +19,86 @@ doctrine:
                 is_bundle: false
 ```
 
+### Field Descriptor interface changed
+
+The field descriptor parameter `$default` and `$disabled` where combined into a new parameter `$visibility`:
+Use the following table for upgrading:
+
+| Disabled | Default  | Visiblity
+|----------|----------|--------------
+| true     | true     | FieldDescriptorInterface::VISIBILITY_ALWAYS (always)
+| true     | false    | FieldDescriptorInterface::VISIBILITY_NEVER (never)
+| false    | true     | FieldDescriptorInterface::VISIBILITY_YES (yes)
+| false    | false    | FieldDescriptorInterface::VISIBILITY_NO (no)
+
+**Before**
+
+```php
+new FieldDescriptor(
+    'name',
+    'translation',
+    false, // Disabled
+    true, // Default
+    // ...
+);
+```
+
+**After**
+
+```php
+new FieldDescriptor(
+   'name',
+   'translation',
+   FieldDescriptorInterface::VISIBILITY_YES, // Visibility
+   // ...
+);
+```
+
+The same is also for the `DoctrineFieldDescriptor`:
+
+**Before**
+
+```php
+new DoctrineFieldDescriptor(
+    'fieldName',
+    'name',
+    'entityName',
+    'translation',
+    [],
+    false, // Disabled
+    true, // Default
+    // ...
+);
+```
+
+**After**
+
+```php
+new DoctrineFieldDescriptor(
+    'fieldName',
+    'name',
+    'entityName',
+    'translation',
+    [],
+    FieldDescriptorInterface::VISIBILITY_YES, // Visibility
+    // ...
+);
+```
+
+In the xml definition of the list `display` was replaced with `visibility`:
+
+**Before**
+
+```xml
+<property display="yes">
+```
+
+**After**
+
+```xml
+<property visibility="yes">
+```
+
 ### Dependencies
 
 Removed required dependency `pulse00/ffmpeg-bundle`. If you want to use preview images for videos, run following 
