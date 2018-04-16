@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sulu';
-  src:  url('fonts/sulu.eot?qcxsgp');
-  src:  url('fonts/sulu.eot?qcxsgp#iefix') format('embedded-opentype'),
-  url('fonts/sulu.ttf?qcxsgp') format('truetype'),
-  url('fonts/sulu.woff?qcxsgp') format('woff'),
-  url('fonts/sulu.svg?qcxsgp#sulu') format('svg');
+  src:  url('fonts/sulu.eot?6j2f3x');
+  src:  url('fonts/sulu.eot?6j2f3x#iefix') format('embedded-opentype'),
+  url('fonts/sulu.ttf?6j2f3x') format('truetype'),
+  url('fonts/sulu.woff?6j2f3x') format('woff'),
+  url('fonts/sulu.svg?6j2f3x#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -147,9 +147,6 @@
 .su-bluetooth:before {
   content: "\e971";
 }
-.su-check2:before {
-  content: "\e972";
-}
 .su-check-circle:before {
   content: "\e973";
 }
@@ -228,9 +225,6 @@
 .su-upload:before {
   content: "\e994";
 }
-.su-code2:before {
-  content: "\e995";
-}
 .su-align-center:before {
   content: "\e996";
 }
@@ -285,7 +279,7 @@
 .su-checkbox:before {
   content: "\e91d";
 }
-.su-circle2:before {
+.su-circle:before {
   content: "\e906";
 }
 .su-exchange-alt:before {
@@ -345,7 +339,7 @@
 .su-angle-up:before {
   content: "\e916";
 }
-.su-newpaper:before {
+.su-newspaper:before {
   content: "\e917";
 }
 .su-battery-empty:before {
@@ -363,7 +357,7 @@
 .su-check:before {
   content: "\e92a";
 }
-.su-circle:before {
+.su-circle-full:before {
   content: "\e92c";
 }
 .su-bell:before {
