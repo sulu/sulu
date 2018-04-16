@@ -22,8 +22,8 @@ exports[`Render a simple MediaOverview 1`] = `
               All Media
             </button>
             <span
-              aria-label="su-arrow-right"
-              class="arrow su-arrow-right"
+              aria-label="su-angle-right"
+              class="arrow su-angle-right"
             />
           </li>
           <li>
@@ -47,8 +47,8 @@ exports[`Render a simple MediaOverview 1`] = `
             tabindex="0"
           />
           <span
-            aria-label="su-trash"
-            class="su-trash clickable"
+            aria-label="su-trash-alt"
+            class="su-trash-alt clickable"
             role="button"
             tabindex="0"
           />
@@ -140,16 +140,16 @@ exports[`Render a simple MediaOverview 1`] = `
               class="previous"
             >
               <span
-                aria-label="su-arrow-left"
-                class="su-arrow-left"
+                aria-label="su-angle-left"
+                class="su-angle-left"
               />
             </button>
             <button
               class="next"
             >
               <span
-                aria-label="su-arrow-right"
-                class="su-arrow-right"
+                aria-label="su-angle-right"
+                class="su-angle-right"
               />
             </button>
           </nav>
@@ -174,8 +174,8 @@ exports[`Render a simple MediaOverview 1`] = `
               class="text"
             >
               <span
-                aria-label="su-view"
-                class="su-view"
+                aria-label="su-th-large"
+                class="su-th-large"
               />
             </span>
           </button>
@@ -187,8 +187,8 @@ exports[`Render a simple MediaOverview 1`] = `
               class="text"
             >
               <span
-                aria-label="su-view2"
-                class="su-view2"
+                aria-label="su-align-justify"
+                class="su-align-justify"
               />
             </span>
           </button>

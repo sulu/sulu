@@ -12,7 +12,7 @@ exports[`The component should render in body when open 2`] = `
   <div class=\\"container\\">
     <div class=\\"overlay small\\">
       <section class=\\"content\\">
-        <header>My overlay title<span class=\\"icon su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <header>My overlay title<span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <p>My overlay content</p>
         </article>
@@ -35,7 +35,7 @@ exports[`The component should render in body with actions when open 2`] = `
   <div class=\\"container\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
-        <header>My overlay title<span class=\\"icon su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <header>My overlay title<span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <p>My overlay content</p>
         </article>
@@ -62,7 +62,7 @@ exports[`The component should render in body with loader instead of confirm butt
   <div class=\\"container\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
-        <header>My overlay title<span class=\\"icon su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <header>My overlay title<span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <p>My overlay content</p>
         </article>

@@ -31,8 +31,8 @@ exports[`The component should render 1`] = `
     </div>
   </div>
   <span
-    aria-label="su-arrow-down"
-    class="toggle su-arrow-down"
+    aria-label="su-angle-down"
+    class="toggle su-angle-down"
   />
 </button>
 `;
@@ -72,8 +72,8 @@ exports[`The component should render with an icon 1`] = `
     </div>
   </div>
   <span
-    aria-label="su-arrow-down"
-    class="toggle su-arrow-down"
+    aria-label="su-angle-down"
+    class="toggle su-angle-down"
   />
 </button>
 `;

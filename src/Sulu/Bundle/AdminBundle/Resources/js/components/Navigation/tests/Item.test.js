@@ -34,7 +34,7 @@ test('The component should render with children', () => {
     const handleClick = jest.fn();
     const item = render(
         <Item
-            icon="su-settings"
+            icon="su-cog"
             value="settings"
             title="Settings"
         >
@@ -57,7 +57,7 @@ test('The component should render with children an active child and expanded', (
     const handleClick = jest.fn();
     const item = render(
         <Item
-            icon="su-settings"
+            icon="su-cog"
             value="settings"
             title="Settings"
             expanded={true}
@@ -84,7 +84,7 @@ test('The component should handle clicks correctly', () => {
 
     const item = mount(
         <Item
-            icon="su-settings"
+            icon="su-cog"
             value="settings"
             title="Settings"
             onClick={handleItemClick}

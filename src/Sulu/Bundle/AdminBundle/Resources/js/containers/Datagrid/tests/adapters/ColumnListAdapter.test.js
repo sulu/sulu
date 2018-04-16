@@ -330,9 +330,9 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
         />
     );
 
-    columnListAdapter.find('Item').at(1).find('.su-checkmark').simulate('click');
+    columnListAdapter.find('Item').at(1).find('.su-check').simulate('click');
     expect(itemSelectionChangeSpy).toHaveBeenLastCalledWith(2, false);
 
-    columnListAdapter.find('Item').at(0).find('.su-checkmark').simulate('click');
+    columnListAdapter.find('Item').at(0).find('.su-check').simulate('click');
     expect(itemSelectionChangeSpy).toHaveBeenLastCalledWith(1, true);
 });

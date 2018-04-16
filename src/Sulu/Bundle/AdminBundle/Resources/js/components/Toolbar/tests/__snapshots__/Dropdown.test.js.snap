@@ -15,8 +15,8 @@ exports[`Render disabled dropdown 1`] = `
       Click to open
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="dropdownIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
     />
   </button>
 </div>
@@ -36,8 +36,8 @@ exports[`Render dropdown 1`] = `
       Click to open
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="dropdownIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
     />
   </button>
 </div>
@@ -57,8 +57,8 @@ exports[`Render dropdown with a different size 1`] = `
       Click to open
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="dropdownIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
     />
   </button>
 </div>
@@ -82,8 +82,8 @@ exports[`Render dropdown with a prepended icon 1`] = `
       Click to open
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="dropdownIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
     />
   </button>
 </div>
@@ -114,8 +114,8 @@ exports[`Render loading dropdown 1`] = `
       Click to open
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="dropdownIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
     />
   </button>
 </div>

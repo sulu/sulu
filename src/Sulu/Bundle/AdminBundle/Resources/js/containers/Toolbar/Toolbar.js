@@ -91,13 +91,13 @@ export default class Toolbar extends React.Component<*> {
                     <ToolbarComponent.Button
                         onClick={this.handleNavigationButtonClick}
                         primary={true}
-                        icon={navigationOpen ? 'su-x' : 'su-menu'}
+                        icon={navigationOpen ? 'su-times' : 'su-bars'}
                     />
                     }
                     {this.toolbarStore.hasBackButtonConfig() &&
                     <ToolbarComponent.Button
                         {...backButtonConfig}
-                        icon="su-arrow-long-left"
+                        icon="su-angle-left"
                     />
                     }
                     {this.toolbarStore.hasItemsConfig() &&

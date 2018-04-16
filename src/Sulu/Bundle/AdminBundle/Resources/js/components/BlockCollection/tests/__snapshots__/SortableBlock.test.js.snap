@@ -8,8 +8,8 @@ exports[`Render collapsed sortable block 1`] = `
     class="handle"
   >
     <span
-      aria-label="su-shift"
-      class="sortableHandle su-shift"
+      aria-label="su-more"
+      class="sortableHandle su-more"
     />
   </div>
   <div
@@ -28,8 +28,8 @@ exports[`Render expanded sortable block 1`] = `
     class="handle"
   >
     <span
-      aria-label="su-shift"
-      class="sortableHandle su-shift"
+      aria-label="su-more"
+      class="sortableHandle su-more"
     />
   </div>
   <div
@@ -42,14 +42,14 @@ exports[`Render expanded sortable block 1`] = `
         class="icons"
       >
         <span
-          aria-label="su-trash"
-          class="su-trash clickable"
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable"
           role="button"
           tabindex="0"
         />
         <span
-          aria-label="su-x"
-          class="su-x clickable"
+          aria-label="su-times"
+          class="su-times clickable"
           role="button"
           tabindex="0"
         />
@@ -70,8 +70,8 @@ exports[`Render expanded sortable block with types 1`] = `
     class="handle"
   >
     <span
-      aria-label="su-shift"
-      class="sortableHandle su-shift"
+      aria-label="su-more"
+      class="sortableHandle su-more"
     />
   </div>
   <div
@@ -116,8 +116,8 @@ exports[`Render expanded sortable block with types 1`] = `
               </div>
             </div>
             <span
-              aria-label="su-arrow-down"
-              class="toggle su-arrow-down"
+              aria-label="su-angle-down"
+              class="toggle su-angle-down"
             />
           </button>
         </div>
@@ -126,14 +126,14 @@ exports[`Render expanded sortable block with types 1`] = `
         class="icons"
       >
         <span
-          aria-label="su-trash"
-          class="su-trash clickable"
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable"
           role="button"
           tabindex="0"
         />
         <span
-          aria-label="su-x"
-          class="su-x clickable"
+          aria-label="su-times"
+          class="su-times clickable"
           role="button"
           tabindex="0"
         />
@@ -154,8 +154,8 @@ exports[`Render expanded sortable block without remove icon 1`] = `
     class="handle"
   >
     <span
-      aria-label="su-shift"
-      class="sortableHandle su-shift"
+      aria-label="su-more"
+      class="sortableHandle su-more"
     />
   </div>
   <div
@@ -168,8 +168,8 @@ exports[`Render expanded sortable block without remove icon 1`] = `
         class="icons"
       >
         <span
-          aria-label="su-x"
-          class="su-x clickable"
+          aria-label="su-times"
+          class="su-times clickable"
           role="button"
           tabindex="0"
         />

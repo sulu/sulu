@@ -21,8 +21,8 @@ exports[`Render WebspaceOverview 1`] = `
           class="buttonValue"
         />
         <span
-          aria-label="su-arrow-down"
-          class="buttonIcon su-arrow-down"
+          aria-label="su-angle-down"
+          class="buttonIcon su-angle-down"
         />
       </button>
     </div>

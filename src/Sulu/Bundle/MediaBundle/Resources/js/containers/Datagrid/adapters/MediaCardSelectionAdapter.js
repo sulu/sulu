@@ -4,7 +4,7 @@ import React from 'react';
 import {AbstractAdapter, FlatStructureStrategy, InfiniteLoadingStrategy} from 'sulu-admin-bundle/containers';
 import MediaCardAdapter from './MediaCardAdapter';
 
-const SELECT_ICON = 'su-checkmark';
+const SELECT_ICON = 'su-check';
 
 @observer
 export default class MediaCardSelectionAdapter extends AbstractAdapter {
@@ -12,7 +12,7 @@ export default class MediaCardSelectionAdapter extends AbstractAdapter {
 
     static StructureStrategy = FlatStructureStrategy;
 
-    static icon = 'su-view';
+    static icon = 'su-th-large';
 
     handleItemClick = (itemId: string | number, selected: boolean) => {
         const {onItemSelectionChange} = this.props;

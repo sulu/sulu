@@ -35,7 +35,7 @@ test('Render ArrowMenu closed', () => {
                 <ArrowMenu.Item value="sulu_doc">Sulu Doc</ArrowMenu.Item>
             </ArrowMenu.SingleItemSection>
             <ArrowMenu.SingleItemSection
-                icon="su-checkmark"
+                icon="su-check"
                 title="Columns"
                 value={value2}
                 onChange={handleChangeSection2}
@@ -75,7 +75,7 @@ test('Render ArrowMenu open', () => {
                 <ArrowMenu.Item value="sulu_doc">Sulu Doc</ArrowMenu.Item>
             </ArrowMenu.SingleItemSection>
             <ArrowMenu.SingleItemSection
-                icon="su-checkmark"
+                icon="su-check"
                 title="Columns"
                 value={value2}
                 onChange={handleChangeSection2}

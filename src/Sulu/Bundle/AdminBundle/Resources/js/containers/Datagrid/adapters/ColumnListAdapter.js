@@ -15,7 +15,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
     static StructureStrategy = TreeStructureStrategy;
 
-    static icon = 'su-list2';
+    static icon = 'su-th-list';
 
     static defaultProps = {
         data: [],
@@ -126,7 +126,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
         if (onItemSelectionChange) {
             buttons.push({
-                icon: 'su-checkmark',
+                icon: 'su-check',
                 onClick: this.handleItemSelectionChange,
             });
         }

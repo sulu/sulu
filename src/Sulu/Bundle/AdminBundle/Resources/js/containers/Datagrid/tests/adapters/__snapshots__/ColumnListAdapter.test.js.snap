@@ -23,8 +23,8 @@ exports[`Render data with disabled items 1`] = `
               class="buttons"
             >
               <span
-                aria-label="su-checkmark"
-                class="button su-checkmark clickable"
+                aria-label="su-check"
+                class="button su-check clickable"
                 role="button"
                 tabindex="0"
               />
@@ -59,8 +59,8 @@ exports[`Render data with disabled items 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-arrow-right"
-              class="children su-arrow-right"
+              aria-label="su-angle-right"
+              class="children su-angle-right"
             />
           </div>
         </div>
@@ -74,8 +74,8 @@ exports[`Render data with disabled items 1`] = `
               class="buttons"
             >
               <span
-                aria-label="su-checkmark"
-                class="button su-checkmark clickable"
+                aria-label="su-check"
+                class="button su-check clickable"
                 role="button"
                 tabindex="0"
               />
@@ -179,8 +179,8 @@ exports[`Render data with edit button 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-arrow-right"
-              class="children su-arrow-right"
+              aria-label="su-angle-right"
+              class="children su-angle-right"
             />
           </div>
           <div
@@ -273,8 +273,8 @@ exports[`Render data with edit button 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-arrow-right"
-              class="children su-arrow-right"
+              aria-label="su-angle-right"
+              class="children su-angle-right"
             />
           </div>
         </div>
@@ -339,8 +339,8 @@ exports[`Render data with loading column 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-arrow-right"
-              class="children su-arrow-right"
+              aria-label="su-angle-right"
+              class="children su-angle-right"
             />
           </div>
           <div
@@ -428,8 +428,8 @@ exports[`Render data with selection 1`] = `
               class="buttons"
             >
               <span
-                aria-label="su-checkmark"
-                class="button su-checkmark clickable"
+                aria-label="su-check"
+                class="button su-check clickable"
                 role="button"
                 tabindex="0"
               />
@@ -464,8 +464,8 @@ exports[`Render data with selection 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-arrow-right"
-              class="children su-arrow-right"
+              aria-label="su-angle-right"
+              class="children su-angle-right"
             />
           </div>
         </div>
@@ -527,8 +527,8 @@ exports[`Render data without edit button 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-arrow-right"
-              class="children su-arrow-right"
+              aria-label="su-angle-right"
+              class="children su-angle-right"
             />
           </div>
         </div>

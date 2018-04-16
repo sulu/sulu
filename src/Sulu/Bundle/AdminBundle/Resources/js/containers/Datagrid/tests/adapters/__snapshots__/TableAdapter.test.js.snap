@@ -89,16 +89,16 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
       disabled=""
     >
       <span
-        aria-label="su-arrow-left"
-        class="su-arrow-left"
+        aria-label="su-angle-left"
+        class="su-angle-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="su-arrow-right"
-        class="su-arrow-right"
+        aria-label="su-angle-right"
+        class="su-angle-right"
       />
     </button>
   </nav>
@@ -180,16 +180,16 @@ exports[`Render data with schema 1`] = `
       class="previous"
     >
       <span
-        aria-label="su-arrow-left"
-        class="su-arrow-left"
+        aria-label="su-angle-left"
+        class="su-angle-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="su-arrow-right"
-        class="su-arrow-right"
+        aria-label="su-angle-right"
+        class="su-angle-right"
       />
     </button>
   </nav>
@@ -262,8 +262,8 @@ exports[`Render data with schema and selections 1`] = `
                 />
                 <span>
                   <span
-                    aria-label="su-checkmark"
-                    class="su-checkmark"
+                    aria-label="su-check"
+                    class="su-check"
                   />
                 </span>
               </span>
@@ -330,8 +330,8 @@ exports[`Render data with schema and selections 1`] = `
                 />
                 <span>
                   <span
-                    aria-label="su-checkmark"
-                    class="su-checkmark"
+                    aria-label="su-check"
+                    class="su-check"
                   />
                 </span>
               </span>
@@ -367,16 +367,16 @@ exports[`Render data with schema and selections 1`] = `
       disabled=""
     >
       <span
-        aria-label="su-arrow-left"
-        class="su-arrow-left"
+        aria-label="su-angle-left"
+        class="su-angle-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="su-arrow-right"
-        class="su-arrow-right"
+        aria-label="su-angle-right"
+        class="su-angle-right"
       />
     </button>
   </nav>
@@ -458,16 +458,16 @@ exports[`Render data with schema in different order 1`] = `
       class="previous"
     >
       <span
-        aria-label="su-arrow-left"
-        class="su-arrow-left"
+        aria-label="su-angle-left"
+        class="su-angle-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="su-arrow-right"
-        class="su-arrow-right"
+        aria-label="su-angle-right"
+        class="su-angle-right"
       />
     </button>
   </nav>
@@ -533,16 +533,16 @@ exports[`Render data with schema not containing all fields 1`] = `
       disabled=""
     >
       <span
-        aria-label="su-arrow-left"
-        class="su-arrow-left"
+        aria-label="su-angle-left"
+        class="su-angle-left"
       />
     </button>
     <button
       class="next"
     >
       <span
-        aria-label="su-arrow-right"
-        class="su-arrow-right"
+        aria-label="su-angle-right"
+        class="su-angle-right"
       />
     </button>
   </nav>

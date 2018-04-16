@@ -31,7 +31,7 @@ abstract class Admin implements RouteProviderInterface, NavigationProviderInterf
     {
         $settings = new NavigationItem('sulu_admin.settings');
         $settings->setPosition(50);
-        $settings->setIcon('su-settings');
+        $settings->setIcon('su-cog');
 
         return $settings;
     }

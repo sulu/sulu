@@ -5,7 +5,7 @@ import Icon from '../Icon';
 import type {Skin} from './types';
 import optionStyles from './option.scss';
 
-const ICON_CHECKMARK = 'su-checkmark';
+const ICON_CHECKMARK = 'su-check';
 
 type Props = {
     label: string | number,

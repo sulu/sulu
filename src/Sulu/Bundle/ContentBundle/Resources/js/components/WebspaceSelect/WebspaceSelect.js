@@ -57,7 +57,7 @@ export default class WebspaceSelect extends React.Component<Props> {
                 >
                     <Icon className={webspaceSelectStyles.buttonIcon} name="su-webspace" />
                     <span className={webspaceSelectStyles.buttonValue}>{this.displayValue}</span>
-                    <Icon className={webspaceSelectStyles.buttonIcon} name="su-arrow-down" />
+                    <Icon className={webspaceSelectStyles.buttonIcon} name="su-angle-down" />
                 </button>
             </div>
         );

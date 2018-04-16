@@ -4,10 +4,10 @@ exports[`Render block with schema 1`] = `
 "<section class=\\"blockCollection\\">
   <div class=\\"sortableBlockList\\">
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid\\">
@@ -30,10 +30,10 @@ exports[`Render block with schema 1`] = `
       </div>
     </section>
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid\\">
@@ -65,10 +65,10 @@ exports[`Render block with schema and error on fields already being modified 1`]
 "<section class=\\"blockCollection\\">
   <div class=\\"sortableBlockList\\">
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid\\">
@@ -84,10 +84,10 @@ exports[`Render block with schema and error on fields already being modified 1`]
       </div>
     </section>
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid\\">
@@ -103,10 +103,10 @@ exports[`Render block with schema and error on fields already being modified 1`]
       </div>
     </section>
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid\\">
@@ -131,10 +131,10 @@ exports[`Render block with schema and error on fields already being modified 2`]
 "<section class=\\"blockCollection\\">
   <div class=\\"sortableBlockList\\">
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid\\">
@@ -150,10 +150,10 @@ exports[`Render block with schema and error on fields already being modified 2`]
       </div>
     </section>
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid\\">
@@ -169,10 +169,10 @@ exports[`Render block with schema and error on fields already being modified 2`]
       </div>
     </section>
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-shift\\" aria-label=\\"su-shift\\"></span></div>
+      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid\\">

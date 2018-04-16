@@ -7,7 +7,7 @@ import type {Button as ButtonProps} from './types';
 import buttonStyles from './button.scss';
 
 const LOADER_SIZE = 20;
-const ICON_ARROW_DOWN = 'su-arrow-down';
+const ICON_ANGLE_DOWN = 'su-angle-down';
 
 export default class Button extends React.PureComponent<ButtonProps> {
     static defaultProps = {
@@ -61,7 +61,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
                     <span className={buttonStyles.label}>{buttonContent}</span>
                 }
                 {hasOptions &&
-                    <Icon name={ICON_ARROW_DOWN} className={buttonStyles.dropdownIcon} />
+                    <Icon name={ICON_ANGLE_DOWN} className={buttonStyles.dropdownIcon} />
                 }
             </button>
         );

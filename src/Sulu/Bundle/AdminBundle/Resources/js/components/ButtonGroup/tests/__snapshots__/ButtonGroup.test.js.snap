@@ -10,8 +10,8 @@ exports[`Should render more than two buttons 1`] = `
       class="text"
     >
       <span
-        aria-label="su-view"
-        class="su-view"
+        aria-label="su-th-large"
+        class="su-th-large"
       />
     </span>
   </button>
@@ -23,8 +23,8 @@ exports[`Should render more than two buttons 1`] = `
       class="text"
     >
       <span
-        aria-label="su-view2"
-        class="su-view2"
+        aria-label="su-align-justify"
+        class="su-align-justify"
       />
     </span>
   </button>
@@ -36,8 +36,8 @@ exports[`Should render more than two buttons 1`] = `
       class="text"
     >
       <span
-        aria-label="su-view"
-        class="su-view"
+        aria-label="su-th-large"
+        class="su-th-large"
       />
     </span>
   </button>
@@ -49,8 +49,8 @@ exports[`Should render more than two buttons 1`] = `
       class="text"
     >
       <span
-        aria-label="su-view2"
-        class="su-view2"
+        aria-label="su-align-justify"
+        class="su-align-justify"
       />
     </span>
   </button>
@@ -67,8 +67,8 @@ exports[`Should render one button 1`] = `
       class="text"
     >
       <span
-        aria-label="su-view"
-        class="su-view"
+        aria-label="su-th-large"
+        class="su-th-large"
       />
     </span>
   </button>
@@ -85,8 +85,8 @@ exports[`Should render two buttons 1`] = `
       class="text"
     >
       <span
-        aria-label="su-view"
-        class="su-view"
+        aria-label="su-th-large"
+        class="su-th-large"
       />
     </span>
   </button>
@@ -98,8 +98,8 @@ exports[`Should render two buttons 1`] = `
       class="text"
     >
       <span
-        aria-label="su-view2"
-        class="su-view2"
+        aria-label="su-align-justify"
+        class="su-align-justify"
       />
     </span>
   </button>

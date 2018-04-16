@@ -17,8 +17,8 @@ exports[`Render WebspaceSelect closed 1`] = `
       Sulu
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="buttonIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="buttonIcon su-angle-down"
     />
   </button>
 </div>
@@ -43,8 +43,8 @@ exports[`Render WebspaceSelect opened 1`] = `
       Sulu
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="buttonIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="buttonIcon su-angle-down"
     />
   </button>
 </div>

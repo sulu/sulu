@@ -5,7 +5,7 @@ import {Icon} from 'sulu-admin-bundle/components';
 import type {ArrowDirection, Point} from './types';
 import imageFocusPointCellStyles from './imageFocusPointCell.scss';
 
-const ARROW_UP_ICON = 'su-arrow-up';
+const ICON_UP = 'su-angle-up';
 
 type Props = {
     size: number,
@@ -83,7 +83,7 @@ export default class ImageFocusPointCell extends React.PureComponent<Props> {
             >
                 {!!arrowDirection && !active &&
                     <div style={iconStyle}>
-                        <Icon name={ARROW_UP_ICON} />
+                        <Icon name={ICON_UP} />
                     </div>
                 }
             </button>

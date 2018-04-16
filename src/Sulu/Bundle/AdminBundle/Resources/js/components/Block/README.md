@@ -11,7 +11,7 @@ initialState = {expanded: true};
 const onCollapse = () => setState({expanded: false});
 const onExpand = () => setState({expanded: true});
 
-<Block expanded={state.expanded} onCollapse={onCollapse} onExpand={onExpand} dragHandle={<Icon name="su-shift" />}>
+<Block expanded={state.expanded} onCollapse={onCollapse} onExpand={onExpand} dragHandle={<Icon name="su-more" />}>
     That is the content of the block!
 </Block>
 ```

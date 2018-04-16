@@ -95,8 +95,8 @@ exports[`Application should not fail if current route does not exist 1`] = `
               class="button light primary"
             >
               <span
-                aria-label="su-menu"
-                class="icon su-menu"
+                aria-label="su-bars"
+                class="icon su-bars"
               />
             </button>
           </div>
@@ -208,8 +208,8 @@ exports[`Application should render based on current route 1`] = `
               class="button light primary"
             >
               <span
-                aria-label="su-menu"
-                class="icon su-menu"
+                aria-label="su-bars"
+                class="icon su-bars"
               />
             </button>
           </div>
@@ -414,7 +414,7 @@ exports[`Application should render opened navigation 1`] = `
                       active={false}
                       disabled={false}
                       hasOptions={false}
-                      icon="su-x"
+                      icon="su-times"
                       key=".0"
                       onClick={[Function]}
                       primary={true}
@@ -427,11 +427,11 @@ exports[`Application should render opened navigation 1`] = `
                       >
                         <Icon
                           className="icon"
-                          name="su-x"
+                          name="su-times"
                         >
                           <span
-                            aria-label="su-x"
-                            className="icon su-x"
+                            aria-label="su-times"
+                            className="icon su-times"
                           />
                         </Icon>
                       </button>

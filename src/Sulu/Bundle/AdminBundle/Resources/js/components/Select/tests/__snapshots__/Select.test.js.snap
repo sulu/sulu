@@ -34,8 +34,8 @@ exports[`The component should open the popover when the display value is clicked
       </div>
     </div>
     <span
-      aria-label="su-arrow-down"
-      class="toggle su-arrow-down"
+      aria-label="su-angle-down"
+      class="toggle su-angle-down"
     />
   </button>
 </div>
@@ -101,8 +101,8 @@ exports[`The component should render with an icon 1`] = `
       </div>
     </div>
     <span
-      aria-label="su-arrow-down"
-      class="toggle su-arrow-down"
+      aria-label="su-angle-down"
+      class="toggle su-angle-down"
     />
   </button>
 </div>
@@ -142,8 +142,8 @@ exports[`The component should render with the popover closed 1`] = `
       </div>
     </div>
     <span
-      aria-label="su-arrow-down"
-      class="toggle su-arrow-down"
+      aria-label="su-angle-down"
+      class="toggle su-angle-down"
     />
   </button>
 </div>

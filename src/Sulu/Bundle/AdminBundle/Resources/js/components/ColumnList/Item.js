@@ -69,7 +69,7 @@ export default class Item extends React.Component<Props> {
                     <CroppedText>{children}</CroppedText>
                 </span>
                 {hasChildren &&
-                    <Icon className={itemStyles.children} name="su-arrow-right" />
+                    <Icon className={itemStyles.children} name="su-angle-right" />
                 }
             </div>
         );
