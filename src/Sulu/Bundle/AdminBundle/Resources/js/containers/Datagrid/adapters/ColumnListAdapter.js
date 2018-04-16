@@ -135,7 +135,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
         if (onAddClick) {
             toolbarItems.push({
-                icon: 'su-add',
+                icon: 'su-plus-circle',
                 type: 'button',
                 onClick: this.handleColumnAdd,
             });

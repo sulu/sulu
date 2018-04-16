@@ -117,7 +117,7 @@ export default withToolbar(Datagrid, function() {
         items.push({
             type: 'button',
             value: translate('sulu_admin.add'),
-            icon: 'su-add',
+            icon: 'su-plus-circle',
             onClick: () => {
                 router.navigate(addRoute, {locale: this.locale.get()});
             },

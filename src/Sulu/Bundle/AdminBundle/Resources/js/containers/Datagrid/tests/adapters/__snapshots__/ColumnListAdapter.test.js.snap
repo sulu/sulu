@@ -556,8 +556,8 @@ exports[`Render with add button in toolbar when onAddClick callback is given 1`]
           class="item primary"
         >
           <span
-            aria-label="su-add"
-            class="su-add"
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
           />
         </div>
       </div>
