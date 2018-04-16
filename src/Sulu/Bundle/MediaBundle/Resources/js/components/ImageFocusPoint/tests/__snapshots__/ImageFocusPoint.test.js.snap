@@ -27,8 +27,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
         style="transform:rotate(-45deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -40,8 +40,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
         style="transform:rotate(0deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -53,8 +53,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
         style="transform:rotate(45deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -66,8 +66,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
         style="transform:rotate(-90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -84,8 +84,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
         style="transform:rotate(90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -124,8 +124,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
         style="transform:rotate(0deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -137,8 +137,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
         style="transform:rotate(45deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -159,8 +159,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
         style="transform:rotate(90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -207,8 +207,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
         style="transform:rotate(-45deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -220,8 +220,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
         style="transform:rotate(0deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -237,8 +237,8 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
         style="transform:rotate(-90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -270,8 +270,8 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
         style="transform:rotate(-45deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -283,8 +283,8 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
         style="transform:rotate(0deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -296,8 +296,8 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
         style="transform:rotate(45deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -309,8 +309,8 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
         style="transform:rotate(-90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -327,8 +327,8 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
         style="transform:rotate(90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -340,8 +340,8 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
         style="transform:rotate(225deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -353,8 +353,8 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
         style="transform:rotate(180deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -366,8 +366,8 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
         style="transform:rotate(125deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -394,8 +394,8 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
         style="transform:rotate(0deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -407,8 +407,8 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
         style="transform:rotate(45deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -429,8 +429,8 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
         style="transform:rotate(90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -446,8 +446,8 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
         style="transform:rotate(180deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -459,8 +459,8 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
         style="transform:rotate(125deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -495,8 +495,8 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
         style="transform:rotate(-45deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -508,8 +508,8 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
         style="transform:rotate(0deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -525,8 +525,8 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
         style="transform:rotate(-90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -547,8 +547,8 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
         style="transform:rotate(225deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -560,8 +560,8 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
         style="transform:rotate(180deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -588,8 +588,8 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
         style="transform:rotate(-90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -606,8 +606,8 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
         style="transform:rotate(90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -619,8 +619,8 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
         style="transform:rotate(225deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -632,8 +632,8 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
         style="transform:rotate(180deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -645,8 +645,8 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
         style="transform:rotate(125deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -690,8 +690,8 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
         style="transform:rotate(90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -707,8 +707,8 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
         style="transform:rotate(180deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -720,8 +720,8 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
         style="transform:rotate(125deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -768,8 +768,8 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
         style="transform:rotate(-90deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -790,8 +790,8 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
         style="transform:rotate(225deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>
@@ -803,8 +803,8 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
         style="transform:rotate(180deg)"
       >
         <span
-          aria-label="su-arrow-up"
-          class="su-arrow-up"
+          aria-label="su-angle-up"
+          class="su-angle-up"
         />
       </div>
     </button>

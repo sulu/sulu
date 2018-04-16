@@ -80,7 +80,7 @@ const items = [
       },
       {
         "label": "Einstellungen",
-        "icon": "su-settings",
+        "icon": "su-cog",
         "disabled": false,
         "id": "5aba0a9d7a619926740941",
         "items": [

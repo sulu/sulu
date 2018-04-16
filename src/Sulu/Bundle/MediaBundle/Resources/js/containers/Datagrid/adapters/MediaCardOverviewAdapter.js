@@ -12,7 +12,7 @@ export default class MediaCardOverviewAdapter extends AbstractAdapter {
 
     static StructureStrategy = FlatStructureStrategy;
 
-    static icon = 'su-view';
+    static icon = 'su-th-large';
 
     render() {
         return (

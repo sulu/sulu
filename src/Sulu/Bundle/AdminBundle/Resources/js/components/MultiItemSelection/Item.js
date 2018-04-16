@@ -5,8 +5,8 @@ import {SortableHandle} from 'react-sortable-hoc';
 import Icon from '../Icon';
 import itemStyles from './item.scss';
 
-const DRAG_ICON = 'su-shift';
-const REMOVE_ICON = 'su-trash';
+const DRAG_ICON = 'su-more';
+const REMOVE_ICON = 'su-trash-alt';
 
 type Props = {
     id: string | number,

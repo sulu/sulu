@@ -117,7 +117,7 @@ export default withToolbar(Datagrid, function() {
         items.push({
             type: 'button',
             value: translate('sulu_admin.add'),
-            icon: 'su-add',
+            icon: 'su-plus-circle',
             onClick: () => {
                 router.navigate(addRoute, {locale: this.locale.get()});
             },
@@ -127,7 +127,7 @@ export default withToolbar(Datagrid, function() {
     items.push({
         type: 'button',
         value: translate('sulu_admin.delete'),
-        icon: 'su-trash',
+        icon: 'su-trash-alt',
         disabled: this.datagridStore.selectionIds.length === 0,
         loading: this.deleting,
         onClick: action(() => {

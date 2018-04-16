@@ -10,10 +10,10 @@ const onClick = () => {
 
 <ButtonGroup>
     <Button onClick={onClick}>
-        <Icon name="su-view" />
+        <Icon name="su-th-large" />
     </Button>
     <Button onClick={onClick}>
-        <Icon name="su-view2" />
+        <Icon name="su-align-justify" />
     </Button>
 </ButtonGroup>
 ```
@@ -31,10 +31,10 @@ const onClick = () => {
         <Icon name="xxx" />
     </Button>
     <Button onClick={onClick}>
-        <Icon name="su-view2" />
+        <Icon name="su-align-justify" />
     </Button>
     <Button onClick={onClick}>
-        <Icon name="su-view" />
+        <Icon name="su-th-large" />
     </Button>
 </ButtonGroup>
 ```
@@ -49,7 +49,7 @@ const onClick = () => {
 
 <ButtonGroup>
     <Button onClick={onClick}>
-        <Icon name="su-view" />
+        <Icon name="su-th-large" />
     </Button>
 </ButtonGroup>
 ```

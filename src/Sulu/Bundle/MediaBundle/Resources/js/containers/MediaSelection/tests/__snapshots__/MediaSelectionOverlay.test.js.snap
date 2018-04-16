@@ -8,7 +8,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
   <div class=\\"container\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
-        <header>Select media<span class=\\"icon su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <header>Select media<span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <div class=\\"overlay\\">
             <div class=\\"dropzone\\" aria-disabled=\\"false\\">
@@ -19,8 +19,8 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                       <button disabled=\\"\\" class=\\"item\\"></button>
                     </li>
                   </ul>
-                  <div><span class=\\"su-plus clickable\\" aria-label=\\"su-plus\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-pen clickable\\" aria-label=\\"su-pen\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-trash clickable\\" aria-label=\\"su-trash\\" role=\\"button\\"
-                      tabindex=\\"0\\"></span></div>
+                  <div><span class=\\"su-plus clickable\\" aria-label=\\"su-plus\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-pen clickable\\" aria-label=\\"su-pen\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\"
+                      role=\\"button\\" tabindex=\\"0\\"></span></div>
                 </div>
                 <div class=\\"toolbar\\"></div>
                 <div class=\\"datagrid\\">
@@ -47,8 +47,8 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                     </ul>
                     <nav class=\\"pagination\\">
                       <div class=\\"loader\\"></div><span class=\\"display\\">Page: 2 of 3</span>
-                      <button class=\\"previous\\"><span class=\\"su-arrow-left\\" aria-label=\\"su-arrow-left\\"></span></button>
-                      <button class=\\"next\\"><span class=\\"su-arrow-right\\" aria-label=\\"su-arrow-right\\"></span></button>
+                      <button class=\\"previous\\"><span class=\\"su-angle-left\\" aria-label=\\"su-angle-left\\"></span></button>
+                      <button class=\\"next\\"><span class=\\"su-angle-right\\" aria-label=\\"su-angle-right\\"></span></button>
                     </nav>
                   </section>
                 </div>
@@ -90,7 +90,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                             </div>
                             <div class=\\"media\\">
                               <img alt=\\"Title 1\\" src=\\"http://lorempixel.com/240/100\\">
-                              <div class=\\"cover\\"><span class=\\"mediaIcon su-checkmark\\" aria-label=\\"su-checkmark\\"></span></div>
+                              <div class=\\"cover\\"><span class=\\"mediaIcon su-check\\" aria-label=\\"su-check\\"></span></div>
                             </div>
                           </div>
                         </li>
@@ -122,7 +122,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                             </div>
                             <div class=\\"media\\">
                               <img alt=\\"Title 2\\" src=\\"http://lorempixel.com/240/100\\">
-                              <div class=\\"cover\\"><span class=\\"mediaIcon su-checkmark\\" aria-label=\\"su-checkmark\\"></span></div>
+                              <div class=\\"cover\\"><span class=\\"mediaIcon su-check\\" aria-label=\\"su-check\\"></span></div>
                             </div>
                           </div>
                         </li>

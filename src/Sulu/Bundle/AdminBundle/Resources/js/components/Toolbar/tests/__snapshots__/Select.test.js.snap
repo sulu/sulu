@@ -15,8 +15,8 @@ exports[`Render disabled select 1`] = `
       Chose an option
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="dropdownIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
     />
   </button>
 </div>
@@ -47,8 +47,8 @@ exports[`Render loading select 1`] = `
       Chose an option
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="dropdownIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
     />
   </button>
 </div>
@@ -68,8 +68,8 @@ exports[`Render select 1`] = `
       Chose an option
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="dropdownIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
     />
   </button>
 </div>
@@ -89,8 +89,8 @@ exports[`Render select with a different size 1`] = `
       Chose an option
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="dropdownIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
     />
   </button>
 </div>
@@ -114,8 +114,8 @@ exports[`Render select with a prepended icon 1`] = `
       Chose an option
     </span>
     <span
-      aria-label="su-arrow-down"
-      class="dropdownIcon su-arrow-down"
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
     />
   </button>
 </div>

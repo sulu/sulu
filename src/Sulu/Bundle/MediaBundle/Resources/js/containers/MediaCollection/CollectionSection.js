@@ -153,7 +153,7 @@ export default class CollectionSection extends React.Component<Props> {
                                 <Icon name="su-pen" onClick={this.handleEditCollectionClick} />
                             }
                             {!!resourceStore.id &&
-                                <Icon name="su-trash" onClick={this.handleRemoveCollectionClick} />
+                                <Icon name="su-trash-alt" onClick={this.handleRemoveCollectionClick} />
                             }
                         </div>
                     </div>

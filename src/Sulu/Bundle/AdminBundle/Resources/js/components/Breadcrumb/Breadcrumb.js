@@ -5,7 +5,7 @@ import Icon from '../Icon';
 import Item from './Item';
 import breadcrumbStyles from './breadcrumb.scss';
 
-const ARROW_RIGHT = 'su-arrow-right';
+const ICON_ANGLE_RIGHT = 'su-angle-right';
 
 type Props = {
     children: ChildrenArray<Element<typeof Item>>,
@@ -28,7 +28,7 @@ export default class Breadcrumb extends React.PureComponent<Props> {
                         onClick: (!lastItem) ? this.handleItemClick : undefined,
                     })}
                     {!lastItem &&
-                        <Icon name={ARROW_RIGHT} className={breadcrumbStyles.arrow} />
+                        <Icon name={ICON_ANGLE_RIGHT} className={breadcrumbStyles.arrow} />
                     }
                 </li>
             );

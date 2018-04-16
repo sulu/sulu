@@ -8,7 +8,7 @@ exports[`Should open an overlay 1`] = `
   <div class=\\"container\\">
     <div class=\\"overlay large\\">
       <section class=\\"content\\">
-        <header>Assignment<span class=\\"icon su-x clickable\\" aria-label=\\"su-x\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <header>Assignment<span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <div class=\\"adapter-container table\\">
             <div class=\\"datagrid adapter table\\">
@@ -140,8 +140,8 @@ Array [
             class="dragHandle"
           >
             <span
-              aria-label="su-shift"
-              class="su-shift"
+              aria-label="su-more"
+              class="su-more"
             />
             <span
               class="index"
@@ -172,8 +172,8 @@ Array [
             type="button"
           >
             <span
-              aria-label="su-trash"
-              class="su-trash"
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
             />
           </button>
         </div>
@@ -188,8 +188,8 @@ Array [
             class="dragHandle"
           >
             <span
-              aria-label="su-shift"
-              class="su-shift"
+              aria-label="su-more"
+              class="su-more"
             />
             <span
               class="index"
@@ -220,8 +220,8 @@ Array [
             type="button"
           >
             <span
-              aria-label="su-trash"
-              class="su-trash"
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
             />
           </button>
         </div>
@@ -236,8 +236,8 @@ Array [
             class="dragHandle"
           >
             <span
-              aria-label="su-shift"
-              class="su-shift"
+              aria-label="su-more"
+              class="su-more"
             />
             <span
               class="index"
@@ -268,8 +268,8 @@ Array [
             type="button"
           >
             <span
-              aria-label="su-trash"
-              class="su-trash"
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
             />
           </button>
         </div>

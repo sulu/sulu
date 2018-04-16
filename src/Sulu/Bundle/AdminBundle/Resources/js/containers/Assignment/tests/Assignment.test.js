@@ -143,7 +143,7 @@ test('Should close an overlay using the close button', () => {
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
 
-    const closeButton = document.querySelector('.su-x');
+    const closeButton = document.querySelector('.su-times');
     if (closeButton) {
         closeButton.click();
     }

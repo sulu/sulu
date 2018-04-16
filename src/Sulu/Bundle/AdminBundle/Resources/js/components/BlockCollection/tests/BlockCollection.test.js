@@ -170,7 +170,7 @@ test('Should allow to collapse blocks', () => {
     expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(true);
     expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
 
-    blockCollection.find('Block').at(0).find('Icon[name="su-x"]').simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-times"]').simulate('click');
 
     expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
     expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
@@ -235,7 +235,7 @@ test('Should allow to remove an existing block', () => {
     );
 
     blockCollection.find('Block').at(0).simulate('click');
-    blockCollection.find('Block').at(0).find('Icon[name="su-trash"]').simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-trash-alt"]').simulate('click');
 
     expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
 });
@@ -249,7 +249,7 @@ test('Should not render the remove icon if less or the exact amount of items are
 
     blockCollection.find('Block').at(0).simulate('click');
 
-    expect(blockCollection.find('Block Icon[name="su-trash"]')).toHaveLength(0);
+    expect(blockCollection.find('Block Icon[name="su-trash-alt"]')).toHaveLength(0);
 });
 
 test('Should throw an exception if a block is removed and the minimum has already been reached', () => {

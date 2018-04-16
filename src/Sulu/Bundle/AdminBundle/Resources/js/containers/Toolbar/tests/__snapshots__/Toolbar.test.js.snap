@@ -39,8 +39,8 @@ exports[`Render the items from the ToolbarStore 1`] = `
               Save
             </span>
             <span
-              aria-label="su-arrow-down"
-              class="dropdownIcon su-arrow-down"
+              aria-label="su-angle-down"
+              class="dropdownIcon su-angle-down"
             />
           </button>
         </div>

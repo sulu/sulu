@@ -106,8 +106,8 @@ exports[`Should render navigation 1`] = `
         </div>
       </div>
       <span
-        aria-label="su-arrow-down"
-        class="childrenIndicator su-arrow-down clickable"
+        aria-label="su-angle-down"
+        class="childrenIndicator su-angle-down clickable"
         role="button"
         tabindex="0"
       />

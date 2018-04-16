@@ -74,7 +74,7 @@ class TestAdapter extends AbstractAdapter {
 
     static StructureStrategy = StructureStrategy;
 
-    static icon = 'su-view';
+    static icon = 'su-th-large';
 
     render() {
         return (
@@ -228,7 +228,7 @@ test('DatagridStore should be updated with current active element', () => {
             enhanceItem = jest.fn();
         };
 
-        static icon = 'su-view';
+        static icon = 'su-th-large';
 
         componentWillMount() {
             const {onItemActivation} = this.props;

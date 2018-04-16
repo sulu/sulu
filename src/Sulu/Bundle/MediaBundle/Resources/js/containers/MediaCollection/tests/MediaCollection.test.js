@@ -379,7 +379,7 @@ test('Confirming the delete dialog should delete the item', () => {
         />
     );
 
-    mediaCollection.find('Icon[name="su-trash"]').simulate('click');
+    mediaCollection.find('Icon[name="su-trash-alt"]').simulate('click');
 
     expect(mediaCollection.find('Dialog').prop('open')).toEqual(true);
     expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
@@ -433,7 +433,7 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
         />
     );
 
-    mediaCollection.find('Icon[name="su-trash"]').simulate('click');
+    mediaCollection.find('Icon[name="su-trash-alt"]').simulate('click');
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
     document.querySelector('button.primary').click();

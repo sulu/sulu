@@ -42,8 +42,8 @@ exports[`Clicking the left and right button inside the header should call the ri
           class="dragHandle"
         >
           <span
-            aria-label="su-shift"
-            class="su-shift"
+            aria-label="su-more"
+            class="su-more"
           />
           <span
             class="index"
@@ -68,8 +68,8 @@ exports[`Clicking the left and right button inside the header should call the ri
           class="dragHandle"
         >
           <span
-            aria-label="su-shift"
-            class="su-shift"
+            aria-label="su-more"
+            class="su-more"
           />
           <span
             class="index"
@@ -94,8 +94,8 @@ exports[`Clicking the left and right button inside the header should call the ri
           class="dragHandle"
         >
           <span
-            aria-label="su-shift"
-            class="su-shift"
+            aria-label="su-more"
+            class="su-more"
           />
           <span
             class="index"
@@ -170,8 +170,8 @@ exports[`Render an MultiItemSelection with children 1`] = `
           class="dragHandle"
         >
           <span
-            aria-label="su-shift"
-            class="su-shift"
+            aria-label="su-more"
+            class="su-more"
           />
           <span
             class="index"
@@ -196,8 +196,8 @@ exports[`Render an MultiItemSelection with children 1`] = `
           class="dragHandle"
         >
           <span
-            aria-label="su-shift"
-            class="su-shift"
+            aria-label="su-more"
+            class="su-more"
           />
           <span
             class="index"
@@ -222,8 +222,8 @@ exports[`Render an MultiItemSelection with children 1`] = `
           class="dragHandle"
         >
           <span
-            aria-label="su-shift"
-            class="su-shift"
+            aria-label="su-more"
+            class="su-more"
           />
           <span
             class="index"

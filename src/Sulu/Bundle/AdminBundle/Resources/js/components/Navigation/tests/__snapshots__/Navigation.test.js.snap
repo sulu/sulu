@@ -255,8 +255,8 @@ exports[`The component should render with all available props and handle clicks 
         </div>
       </div>
       <span
-        aria-label="su-arrow-down"
-        class="childrenIndicator su-arrow-down clickable"
+        aria-label="su-angle-down"
+        class="childrenIndicator su-angle-down clickable"
         role="button"
         tabindex="0"
       />
@@ -274,8 +274,8 @@ exports[`The component should render with all available props and handle clicks 
         Settings
       </div>
       <span
-        aria-label="su-arrow-right"
-        class="childrenIndicator su-arrow-right clickable"
+        aria-label="su-angle-right"
+        class="childrenIndicator su-angle-right clickable"
         role="button"
         tabindex="0"
       />

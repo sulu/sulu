@@ -32,7 +32,7 @@ class TestAdapter extends AbstractAdapter {
 
     static StructureStrategy = StructureStrategy;
 
-    static icon = 'su-view';
+    static icon = 'su-th-large';
 
     render() {
         return (

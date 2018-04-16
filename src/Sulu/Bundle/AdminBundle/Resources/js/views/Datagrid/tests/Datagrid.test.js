@@ -189,7 +189,7 @@ test('Should render the add button in the toolbar only if an addRoute has been p
     expect(toolbarConfig.items).toEqual(
         expect.arrayContaining(
             [
-                expect.objectContaining({icon: 'su-add', value: 'Add'}),
+                expect.objectContaining({icon: 'su-plus-circle', value: 'Add'}),
             ]
         )
     );

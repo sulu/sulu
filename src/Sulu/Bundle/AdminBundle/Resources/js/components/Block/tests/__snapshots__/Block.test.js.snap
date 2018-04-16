@@ -17,14 +17,14 @@ exports[`Passing a onRemove callback should render the remove icon 1`] = `
         class="icons"
       >
         <span
-          aria-label="su-trash"
-          class="su-trash clickable"
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable"
           role="button"
           tabindex="0"
         />
         <span
-          aria-label="su-x"
-          class="su-x clickable"
+          aria-label="su-times"
+          class="su-times clickable"
           role="button"
           tabindex="0"
         />
@@ -71,8 +71,8 @@ exports[`Render an expanded block 1`] = `
         class="icons"
       >
         <span
-          aria-label="su-x"
-          class="su-x clickable"
+          aria-label="su-times"
+          class="su-times clickable"
           role="button"
           tabindex="0"
         />
@@ -134,8 +134,8 @@ exports[`Render an expanded block with a multiple types 1`] = `
               </div>
             </div>
             <span
-              aria-label="su-arrow-down"
-              class="toggle su-arrow-down"
+              aria-label="su-angle-down"
+              class="toggle su-angle-down"
             />
           </button>
         </div>
@@ -144,8 +144,8 @@ exports[`Render an expanded block with a multiple types 1`] = `
         class="icons"
       >
         <span
-          aria-label="su-x"
-          class="su-x clickable"
+          aria-label="su-times"
+          class="su-times clickable"
           role="button"
           tabindex="0"
         />
@@ -175,8 +175,8 @@ exports[`Render an expanded block with a single type 1`] = `
         class="icons"
       >
         <span
-          aria-label="su-x"
-          class="su-x clickable"
+          aria-label="su-times"
+          class="su-times clickable"
           role="button"
           tabindex="0"
         />

@@ -40,8 +40,8 @@ exports[`Render button with dropdown indicator 1`] = `
   class="button"
 >
   <span
-    aria-label="su-arrow-down"
-    class="dropdownIcon su-arrow-down"
+    aria-label="su-angle-down"
+    class="dropdownIcon su-angle-down"
   />
 </button>
 `;
