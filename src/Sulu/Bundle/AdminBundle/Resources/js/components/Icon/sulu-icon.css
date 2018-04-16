@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sulu';
-  src:  url('fonts/sulu.eot?quw738');
-  src:  url('fonts/sulu.eot?quw738#iefix') format('embedded-opentype'),
-  url('fonts/sulu.ttf?quw738') format('truetype'),
-  url('fonts/sulu.woff?quw738') format('woff'),
-  url('fonts/sulu.svg?quw738#sulu') format('svg');
+  src:  url('fonts/sulu.eot?qcxsgp');
+  src:  url('fonts/sulu.eot?qcxsgp#iefix') format('embedded-opentype'),
+  url('fonts/sulu.ttf?qcxsgp') format('truetype'),
+  url('fonts/sulu.woff?qcxsgp') format('woff'),
+  url('fonts/sulu.svg?qcxsgp#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.su-expand:before {
+  content: "\e918";
+}
+.su-sync:before {
+  content: "\e919";
+}
+.su-columns:before {
+  content: "\e934";
+}
 .su-user:before {
   content: "\e91a";
 }
@@ -36,7 +45,7 @@
 .su-arrows-alt:before {
   content: "\e941";
 }
-.su-shift:before {
+.su-more:before {
   content: "\e94f";
 }
 .su-list-ol:before {
@@ -45,7 +54,7 @@
 .su-save:before {
   content: "\e952";
 }
-.su-clear:before {
+.su-clean:before {
   content: "\e953";
 }
 .su-language:before {
@@ -66,7 +75,7 @@
 .su-snippet:before {
   content: "\e959";
 }
-.su-warning:before {
+.su-exclamation-triangle:before {
   content: "\e95a";
 }
 .su-magic:before {
@@ -108,7 +117,7 @@
 .su-file-word:before {
   content: "\e965";
 }
-.su-hashtag3:before {
+.su-hashtag:before {
   content: "\e966";
 }
 .su-copyright:before {
@@ -138,10 +147,10 @@
 .su-bluetooth:before {
   content: "\e971";
 }
-.su-check:before {
+.su-check2:before {
   content: "\e972";
 }
-.su-checkmark2:before {
+.su-check-circle:before {
   content: "\e973";
 }
 .su-location-arrow:before {
@@ -207,14 +216,11 @@
 .su-archive:before {
   content: "\e98f";
 }
-.su-phone2:before {
+.su-phone:before {
   content: "\e990";
 }
 .su-webspace:before {
   content: "\e944";
-}
-.su-phone:before {
-  content: "\e991";
 }
 .su-download:before {
   content: "\e993";
@@ -222,16 +228,16 @@
 .su-upload:before {
   content: "\e994";
 }
-.su-code:before {
+.su-code2:before {
   content: "\e995";
 }
-.su-center:before {
+.su-align-center:before {
   content: "\e996";
 }
 .su-wifi:before {
   content: "\e997";
 }
-.su-view:before {
+.su-th-large:before {
   content: "\e998";
 }
 .su-sort:before {
@@ -240,34 +246,31 @@
 .su-rss-feed:before {
   content: "\e99a";
 }
-.su-left:before {
+.su-align-left:before {
   content: "\e99b";
 }
-.su-right:before {
+.su-align-right:before {
   content: "\e99c";
 }
 .su-link2:before {
   content: "\e99d";
 }
-.su-hashtag2:before {
-  content: "\e99e";
-}
-.su-settings:before {
+.su-cog:before {
   content: "\e900";
 }
-.su-x:before {
+.su-times:before {
   content: "\e901";
 }
-.su-arrow-long-up:before {
+.su-arrow-up:before {
   content: "\e902";
 }
-.su-arrow-long-down:before {
+.su-arrow-down:before {
   content: "\e903";
 }
-.su-arrow-long-right:before {
+.su-arrow-right:before {
   content: "\e904";
 }
-.su-arrow-long-left:before {
+.su-arrow-left:before {
   content: "\e905";
 }
 .su-document:before {
@@ -282,25 +285,25 @@
 .su-checkbox:before {
   content: "\e91d";
 }
-.su-circle:before {
+.su-circle2:before {
   content: "\e906";
 }
-.su-arrow-long-left-right:before {
+.su-exchange-alt:before {
   content: "\e907";
 }
-.su-arrow-long-up-down:before {
+.su-exchange-up:before {
   content: "\e908";
 }
-.su-arrow-empty-left:before {
+.su-caret-left:before {
   content: "\e909";
 }
-.su-arrow-empty-right:before {
+.su-caret-right:before {
   content: "\e90a";
 }
-.su-arrow-empty-up:before {
+.su-caret-up:before {
   content: "\e90b";
 }
-.su-arrow-empty-down:before {
+.su-caret-down:before {
   content: "\e90c";
 }
 .su-image:before {
@@ -312,37 +315,37 @@
 .su-plus:before {
   content: "\e92e";
 }
-.su-add:before {
+.su-plus-circle:before {
   content: "\e926";
 }
 .su-align:before {
   content: "\e925";
 }
-.su-arrow-down:before {
+.su-angle-down:before {
   content: "\e90f";
 }
-.su-arrow-filled-down:before {
+.su-caret-down-fill:before {
   content: "\e910";
 }
-.su-arrow-filled-left:before {
+.su-caret-left-fill:before {
   content: "\e911";
 }
-.su-arrow-filled-right:before {
+.su-caret-right-fill:before {
   content: "\e912";
 }
-.su-arrow-filled-up:before {
+.su-caret-up-fill:before {
   content: "\e913";
 }
-.su-arrow-left:before {
+.su-angle-left:before {
   content: "\e914";
 }
-.su-arrow-right:before {
+.su-angle-right:before {
   content: "\e915";
 }
-.su-arrow-up:before {
+.su-angle-up:before {
   content: "\e916";
 }
-.su-article:before {
+.su-newpaper:before {
   content: "\e917";
 }
 .su-battery-empty:before {
@@ -354,34 +357,34 @@
 .su-battery-low:before {
   content: "\e92f";
 }
-.su-calender:before {
+.su-calender-alt:before {
   content: "\e92d";
 }
-.su-checkmark:before {
+.su-check:before {
   content: "\e92a";
 }
-.su-circle-filled:before {
+.su-circle:before {
   content: "\e92c";
 }
-.su-clock:before {
+.su-bell:before {
   content: "\e929";
 }
-.su-close:before {
+.su-sign-out-alt:before {
   content: "\e92b";
 }
 .su-cloud:before {
   content: "\e928";
 }
-.su-code2:before {
+.su-code:before {
   content: "\e91e";
 }
-.su-communicate:before {
+.su-comment:before {
   content: "\e91f";
 }
 .su-copy:before {
   content: "\e920";
 }
-.su-creditcard:before {
+.su-credit-card:before {
   content: "\e921";
 }
 .su-cut:before {
@@ -402,25 +405,22 @@
 .su-flash:before {
   content: "\e933";
 }
-.su-hashtag:before {
-  content: "\e934";
-}
-.su-iPhone:before {
+.su-mobile:before {
   content: "\e935";
 }
 .su-link:before {
   content: "\e936";
 }
-.su-list2:before {
+.su-th-list:before {
   content: "\e937";
 }
 .su-lock:before {
   content: "\e938";
 }
-.su-media:before {
+.su-file-media-alt:before {
   content: "\e939";
 }
-.su-menu:before {
+.su-bars:before {
   content: "\e93a";
 }
 .su-news:before {
@@ -429,7 +429,7 @@
 .su-pen2:before {
   content: "\e93e";
 }
-.su-pin:before {
+.su-map-pin:before {
   content: "\e93f";
 }
 .su-process:before {
@@ -441,7 +441,7 @@
 .su-size:before {
   content: "\e94e";
 }
-.su-smaller:before {
+.su-small:before {
   content: "\e94d";
 }
 .su-storage:before {
@@ -450,12 +450,12 @@
 .su-sulu:before {
   content: "\e94b";
 }
-.su-time:before {
+.su-clock:before {
   content: "\e94a";
 }
-.su-trash:before {
+.su-trash-alt:before {
   content: "\e943";
 }
-.su-view2:before {
+.su-align-justify:before {
   content: "\e946";
 }
