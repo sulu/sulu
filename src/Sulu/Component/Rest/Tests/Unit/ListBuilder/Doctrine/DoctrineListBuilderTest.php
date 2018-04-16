@@ -665,13 +665,13 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $fieldDescriptors = [
             'id1' => new DoctrineFieldDescriptor(
-                    null, null, null, null, [
-                        new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_LEFT),
+                    '', '', '', '', [
+                        new DoctrineJoinDescriptor('', '', '', DoctrineJoinDescriptor::JOIN_METHOD_LEFT),
                     ]
                 ),
             'id2' => new DoctrineFieldDescriptor(
-                    null, null, null, null, [
-                        new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_INNER),
+                    '', '', '', '', [
+                        new DoctrineJoinDescriptor('', '', '', DoctrineJoinDescriptor::JOIN_METHOD_INNER),
                     ]
                 ),
         ];
@@ -693,28 +693,28 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $fieldDescriptors = [
             'id1' => new DoctrineFieldDescriptor(
-                null,
-                null,
-                null,
-                null,
+                '',
+                '',
+                '',
+                '',
                 [
                     self::$entityName . '1' => new DoctrineJoinDescriptor(
                         self::$entityName,
-                        null,
+                        '',
                         'field1 = value1',
                         DoctrineJoinDescriptor::JOIN_METHOD_LEFT
                     ),
                 ]
             ),
             'id2' => new DoctrineFieldDescriptor(
-                null,
-                null,
-                null,
-                null,
+                '',
+                '',
+                '',
+                '',
                 [
                     self::$entityName . '2' => new DoctrineJoinDescriptor(
                         self::$entityName,
-                        null,
+                        '',
                         'field2 = value2',
                         DoctrineJoinDescriptor::JOIN_METHOD_INNER,
                         DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_ON

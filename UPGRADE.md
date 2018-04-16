@@ -54,7 +54,7 @@ new FieldDescriptor(
 );
 ```
 
-The same is also for the `DoctrineFieldDescriptor`:
+The same is also for the `DoctrineFieldDescriptor`, `DoctrineJoinDescriptor`, ...:
 
 **Before**
 

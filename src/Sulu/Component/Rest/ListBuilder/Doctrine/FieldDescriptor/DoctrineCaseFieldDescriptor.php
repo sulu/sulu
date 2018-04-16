@@ -32,17 +32,17 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
     private $case2;
 
     public function __construct(
-        $name,
+        string $name,
         DoctrineDescriptor $case1,
         DoctrineDescriptor $case2,
-        $translation = null,
-        $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
-        $type = '',
-        $width = '',
-        $minWidth = '',
-        $sortable = true,
-        $editable = false,
-        $cssClass = ''
+        string $translation = null,
+        string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
+        string $type = '',
+        string $width = '',
+        string $minWidth = '',
+        bool $sortable = true,
+        bool $editable = false,
+        string $cssClass = ''
     ) {
         parent::__construct(
             $name,
