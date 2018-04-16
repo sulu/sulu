@@ -2,6 +2,23 @@
 
 ## dev-develop
 
+### Test Setup changed
+
+If you use the SuluTestBundle to test your custom sulu bundles you maybe need to change in your test config.yml
+the path to the gedmo extension:
+
+```yml
+doctrine:
+    orm:
+        mappings:
+            gedmo_tree:
+                type: xml
+                prefix: Gedmo\Tree\Entity
+                dir: "%kernel.root_dir%/../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                alias: GedmoTree
+                is_bundle: false
+```
+
 ### Dependencies
 
 Removed required dependency `pulse00/ffmpeg-bundle`. If you want to use preview images for videos, run following 
