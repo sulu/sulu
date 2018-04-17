@@ -13,6 +13,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
+
         <field name="title" type="string" column="title" length="255"/>
         <field name="description" type="text" column="description" nullable="true"/>
         <field name="copyright" type="text" column="copyright" nullable="true"/>

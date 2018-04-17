@@ -14,6 +14,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
+
         <field name="name" type="string" column="name" length="255" />
         <field name="version" type="integer" column="version" />
         <field name="subVersion" type="integer" column="subVersion">
@@ -42,22 +43,22 @@
         </one-to-one>
         <one-to-many field="contentLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage" mapped-by="fileVersion">
             <cascade>
-                <cascade-persist />
+                <cascade-all />
             </cascade>
         </one-to-many>
         <one-to-many field="publishLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage" mapped-by="fileVersion">
             <cascade>
-                <cascade-persist />
+                <cascade-all />
             </cascade>
         </one-to-many>
         <one-to-many field="meta" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta" mapped-by="fileVersion">
             <cascade>
-                <cascade-persist />
+                <cascade-all />
             </cascade>
         </one-to-many>
         <one-to-many field="formatOptions" target-entity="Sulu\Bundle\MediaBundle\Entity\FormatOptions" index-by="formatKey" mapped-by="fileVersion">
             <cascade>
-                <cascade-persist />
+                <cascade-all />
             </cascade>
         </one-to-many>
 

@@ -9,6 +9,7 @@
         <field name="name" type="string" column="name" length="255"/>
         <field name="key" type="string" column="collection_type_key" length="255" unique="true" nullable="true"/>
         <field name="description" type="text" column="description" nullable="true"/>
+
         <one-to-many field="collections" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionInterface"
                      mapped-by="type"/>
     </entity>

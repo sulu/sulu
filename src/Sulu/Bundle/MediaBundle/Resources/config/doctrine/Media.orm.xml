@@ -14,9 +14,13 @@
             <generator strategy="AUTO"/>
         </id>
 
+        <one-to-one field="previewImage" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
+            <join-column name="idPreviewImage" referenced-column-name="id"/>
+        </one-to-one>
+
         <one-to-many field="files" target-entity="Sulu\Bundle\MediaBundle\Entity\File" mapped-by="media">
             <cascade>
-                <cascade-persist />
+                <cascade-all/>
             </cascade>
         </one-to-many>
 
@@ -30,9 +34,5 @@
                 <join-column name="idMediaTypes" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
-
-        <one-to-one field="previewImage" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
-            <join-column name="idPreviewImage" referenced-column-name="id"/>
-        </one-to-one>
     </mapped-superclass>
 </doctrine-mapping>

@@ -8,6 +8,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
+
         <field name="style" type="string" column="style" length="255" nullable="true"/>
         <field name="lft" type="integer" column="lft">
             <gedmo:tree-left/>
