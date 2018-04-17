@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 1.5.13 (2018-04-23)
+    * BUGFIX      #3915 [ContactBundle]         Fix typehint in api ContactLocale constructor
     * BUGFIX      #3918 [RestComponent]         CSV Export: Fixed serialization of boolean
     * ENHANCEMENT #3876 [ContentBundle]         Reload data when changing template  
 
