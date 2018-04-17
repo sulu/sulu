@@ -254,6 +254,14 @@
                 <source>contact.address.add.label</source>
                 <target>Adresse hinzufügen</target>
             </trans-unit>
+            <trans-unit id="po642c992f1929c9e633a5ce2178d222050" resname="contact.address.latitude">
+                <source>contact.address.latitude</source>
+                <target>Breitengrad</target>
+            </trans-unit>
+            <trans-unit id="po642c992f1929c9e633a5ce2178d222051" resname="contact.address.longitude">
+                <source>contact.address.longitude</source>
+                <target>Längengrad</target>
+            </trans-unit>
             <trans-unit id="642c992f1929c9e633a5ce2178d2219c" resname="contact.accounts.type.conversion.message">
                 <source>contact.accounts.type.conversion.message</source>
                 <target>Die Operation die Sie machen möchten konvertiert diese Organisation und lässt sich nicht
