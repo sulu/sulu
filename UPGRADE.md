@@ -26,10 +26,10 @@ Use the following table for upgrading:
 
 | Disabled | Default  | Visiblity
 |----------|----------|--------------
-| true     | true     | FieldDescriptorInterface::VISIBILITY_ALWAYS (always)
-| true     | false    | FieldDescriptorInterface::VISIBILITY_NEVER (never)
-| false    | true     | FieldDescriptorInterface::VISIBILITY_YES (yes)
-| false    | false    | FieldDescriptorInterface::VISIBILITY_NO (no)
+| false    | true     | FieldDescriptorInterface::VISIBILITY_ALWAYS (always)
+| false    | false    | FieldDescriptorInterface::VISIBILITY_NEVER (never)
+| true     | true     | FieldDescriptorInterface::VISIBILITY_YES (yes)
+| true     | false    | FieldDescriptorInterface::VISIBILITY_NO (no)
 
 **Before**
 
