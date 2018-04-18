@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3912 [ContentBundle]           Fixed content-query when a child is broken
     * FEATURE     #3905 [MediaBundle]             Add canonical and robots noIndex headers to download of old versions 
     * ENHANCEMENT #3884 [ContentBundle]           Improved developer-experience when overriding content-teaser-provider
     * ENHANCEMENT #3897 [ContentBundle]           SEO title length changed from 55 to 70
