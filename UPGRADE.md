@@ -2,6 +2,21 @@
 
 ## dev-master
 
+### Address latitude/longitude
+
+The address of contact/account was extended by latitude and longitude - therefore the database has to be updated.
+Run the following command:
+
+```bash
+php bin/console doctrine:schema:update --force
+```
+
+or the following SQL statements on your database:
+
+```sql
+ALTER TABLE co_addresses ADD latitude DOUBLE PRECISION DEFAULT NULL, ADD longitude DOUBLE PRECISION DEFAULT NULL;
+```
+
 ### SEO Title
 
 The default length for the title field in the SEO tab has changed from 55 to 70, because Google has expanded

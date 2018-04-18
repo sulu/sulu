@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
@@ -72,14 +74,14 @@ class Address
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\AddressType
+     * @var AddressType
      * @Groups({"fullAccount", "fullContact"})
      * @Expose
      */
     private $addressType;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Country
+     * @var Country
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -128,12 +130,12 @@ class Address
     private $postboxCity;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $contactAddresses;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $accountAddresses;
 
@@ -152,12 +154,26 @@ class Address
     private $title;
 
     /**
+     * @var float
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
+     * @Expose
+     */
+    private $latitude;
+
+    /**
+     * @var float
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
+     * @Expose
+     */
+    private $longitude;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->accountAddresses = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->contactAddresses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accountAddresses = new ArrayCollection();
+        $this->contactAddresses = new ArrayCollection();
     }
 
     /**
@@ -317,11 +333,11 @@ class Address
     /**
      * Set addressType.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AddressType $addressType
+     * @param AddressType $addressType
      *
      * @return Address
      */
-    public function setAddressType(\Sulu\Bundle\ContactBundle\Entity\AddressType $addressType)
+    public function setAddressType(AddressType $addressType)
     {
         $this->addressType = $addressType;
 
@@ -331,7 +347,7 @@ class Address
     /**
      * Get addressType.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\AddressType
+     * @return AddressType
      */
     public function getAddressType()
     {
@@ -341,11 +357,11 @@ class Address
     /**
      * Set country.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Country $country
+     * @param Country $country
      *
      * @return Address
      */
-    public function setCountry(\Sulu\Bundle\ContactBundle\Entity\Country $country = null)
+    public function setCountry(Country $country = null)
     {
         $this->country = $country;
 
@@ -355,7 +371,7 @@ class Address
     /**
      * Get country.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Country
+     * @return Country
      */
     public function getCountry()
     {
@@ -509,11 +525,11 @@ class Address
     /**
      * Add contactAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     * @param ContactAddress $contactAddresses
      *
      * @return Address
      */
-    public function addContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    public function addContactAddress(ContactAddress $contactAddresses)
     {
         $this->contactAddresses[] = $contactAddresses;
 
@@ -523,9 +539,9 @@ class Address
     /**
      * Remove contactAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     * @param ContactAddress $contactAddresses
      */
-    public function removeContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    public function removeContactAddress(ContactAddress $contactAddresses)
     {
         $this->contactAddresses->removeElement($contactAddresses);
     }
@@ -533,7 +549,7 @@ class Address
     /**
      * Get contactAddresses.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getContactAddresses()
     {
@@ -543,11 +559,11 @@ class Address
     /**
      * Add accountAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @param AccountAddress $accountAddresses
      *
      * @return Address
      */
-    public function addAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    public function addAccountAddress(AccountAddress $accountAddresses)
     {
         $this->accountAddresses[] = $accountAddresses;
 
@@ -557,9 +573,9 @@ class Address
     /**
      * Remove accountAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @param AccountAddress $accountAddresses
      */
-    public function removeAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    public function removeAccountAddress(AccountAddress $accountAddresses)
     {
         $this->accountAddresses->removeElement($accountAddresses);
     }
@@ -567,7 +583,7 @@ class Address
     /**
      * Get accountAddresses.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getAccountAddresses()
     {
@@ -636,5 +652,53 @@ class Address
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Returns latitude.
+     *
+     * @return float
+     */
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    /**
+     * Set latitude.
+     *
+     * @param float $latitude
+     *
+     * @return Address
+     */
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    /**
+     * Returns longitude.
+     *
+     * @return float
+     */
+    public function getLongitude()
+    {
+        return $this->longitude;
+    }
+
+    /**
+     * Set longitude.
+     *
+     * @param float $longitude
+     *
+     * @return Address
+     */
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+
+        return $this;
     }
 }
