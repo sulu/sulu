@@ -159,6 +159,23 @@
             <hr class="dark-divider"/>
 
             <div class="grid-row m-bottom-40">
+                <div class="grid-col-6">
+                    <div class="form-group-vertical">
+                        <label for="latitude"><%=translate('contact.address.latitude')%></label>
+                        <input id="latitude" type="text" class="form-element" data-mapper-property="latitude" data-validation-regex="^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,15})?))$"/>
+                    </div>
+                </div>
+                <div class="grid-col-6">
+                    <div class="form-group-vertical">
+                        <label for="longitude"><%=translate('contact.address.longitude')%></label>
+                        <input id="longitude" type="text" class="form-element" data-mapper-property="longitude" data-validation-regex="^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,15})?))$"/>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="dark-divider"/>
+
+            <div class="grid-row m-bottom-40">
                 <div class="grid-col-12">
                     <div class="form-group-vertical">
                         <label for="addressNote"><%=translate('public.note')%></label>
