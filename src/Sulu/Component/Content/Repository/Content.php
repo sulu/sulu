@@ -270,6 +270,14 @@ class Content implements \ArrayAccess
     }
 
     /**
+     * @return bool
+     */
+    public function isBrokenTemplate()
+    {
+        return $this->brokenTemplate;
+    }
+
+    /**
      * @return array
      */
     public function getPermissions()
