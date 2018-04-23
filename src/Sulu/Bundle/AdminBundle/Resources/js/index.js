@@ -42,7 +42,7 @@ import type {FieldTypeProps} from './types';
 
 export type {FieldTypeProps};
 
-configure({enforceActions: true});
+configure({enforceActions: 'strict'});
 
 window.log = log;
 log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);
