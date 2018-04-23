@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-release/1.5
+    * BUGFIX      #3876 [RestComponent]         CSV Export: Fixed serialization of boolean
     * ENHANCEMENT #3876 [ContentBundle]         Reload data when changing template  
 
 * 1.5.12 (2018-03-19)
