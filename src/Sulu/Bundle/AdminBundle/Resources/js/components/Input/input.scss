@@ -59,7 +59,6 @@ $backgroundColor: $white;
     flex-grow: 0;
     color: $iconColor;
     padding: 0 10px;
-    border-right: $inputBorderWidth solid $inputBorderColor;
     line-height: calc($inputHeight - 2 * $iconBorderPadding);
 }
 
