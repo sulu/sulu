@@ -42,7 +42,9 @@ import type {FieldTypeProps} from './types';
 
 export type {FieldTypeProps};
 
-configure({enforceActions: 'strict'});
+// Bug in flow: https://github.com/facebook/flow/issues/6186
+// $FlowFixMe:
+configure({enforceActions: true});
 
 window.log = log;
 log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);
