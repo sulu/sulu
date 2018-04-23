@@ -318,7 +318,7 @@ abstract class RestController extends FOSRestController
      * is not found. The find method is injected by a callback.
      *
      * @param $id
-     * @param callback $findCallback
+     * @param callable $findCallback
      *
      * @return View
      */
@@ -369,10 +369,10 @@ abstract class RestController extends FOSRestController
      *
      * @param ApiEntity[] $entities
      * @param $requestEntities
-     * @param callback $deleteCallback
-     * @param callback $updateCallback
-     * @param callback $addCallback
-     * @param callback $entityIdCallback defines how to get the entity's id which will be compared with requestEntities' id
+     * @param callable $deleteCallback
+     * @param callable $updateCallback
+     * @param callable $addCallback
+     * @param callable $entityIdCallback defines how to get the entity's id which will be compared with requestEntities' id
      *
      * @return bool
      *
