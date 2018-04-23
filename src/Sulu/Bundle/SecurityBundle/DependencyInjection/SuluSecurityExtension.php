@@ -90,6 +90,10 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                             'datagrid' => '%sulu.model.role.class%',
                             'endpoint' => 'get_roles',
                         ],
+                        'users' => [
+                            'form' => ['@SuluSecurityBundle/Resources/config/forms/User.xml'],
+                            'endpoint' => 'get_users',
+                        ],
                     ],
                 ]
             );

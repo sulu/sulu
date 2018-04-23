@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -12,11 +13,35 @@ type Props = ViewProps & {
 };
 
 class Form extends React.PureComponent<Props> {
+    resourceStore: ResourceStore;
     formStore: FormStore;
     form: ?FormContainer;
 
+    @computed get hasOwnResourceStore() {
+        const {
+            resourceStore,
+            route: {
+                options: {
+                    resourceKey,
+                },
+            },
+        } = this.props;
+
+        return resourceKey && resourceStore.resourceKey !== resourceKey;
+    }
+
     componentWillMount() {
         const {resourceStore, router} = this.props;
+        const {
+            attributes: {
+                id,
+            },
+            route: {
+                options: {
+                    resourceKey,
+                },
+            },
+        } = router;
 
         if (!resourceStore) {
             throw new Error(
@@ -25,15 +50,25 @@ class Form extends React.PureComponent<Props> {
             );
         }
 
-        this.formStore = new FormStore(resourceStore);
+        if (this.hasOwnResourceStore) {
+            this.resourceStore = new ResourceStore(resourceKey, id);
+        } else {
+            this.resourceStore = resourceStore;
+        }
 
-        if (resourceStore.locale) {
-            router.bind('locale', resourceStore.locale);
+        this.formStore = new FormStore(this.resourceStore);
+
+        if (this.resourceStore.locale) {
+            router.bind('locale', this.resourceStore.locale);
         }
     }
 
     componentWillUnmount() {
         this.formStore.destroy();
+
+        if (this.hasOwnResourceStore) {
+            this.resourceStore.destroy();
+        }
     }
 
     handleSubmit = () => {
@@ -83,12 +118,11 @@ export default withToolbar(Form, function() {
     const {router} = this.props;
     const {backRoute, locales} = router.route.options;
     const formTypes = this.formStore.types;
+    const {resourceStore} = this;
 
     const backButton = backRoute
         ? {
             onClick: () => {
-                const {resourceStore} = this.props;
-
                 const options = {};
                 if (resourceStore.locale) {
                     options.locale = resourceStore.locale.get();
@@ -99,9 +133,9 @@ export default withToolbar(Form, function() {
         : undefined;
     const locale = locales
         ? {
-            value: this.props.resourceStore.locale.get(),
+            value: resourceStore.locale.get(),
             onChange: (locale) => {
-                this.props.resourceStore.setLocale(locale);
+                resourceStore.setLocale(locale);
             },
             options: locales.map((locale) => ({
                 value: locale,
@@ -115,8 +149,8 @@ export default withToolbar(Form, function() {
             type: 'button',
             value: translate('sulu_admin.save'),
             icon: 'su-save',
-            disabled: !this.props.resourceStore.dirty,
-            loading: this.props.resourceStore.saving,
+            disabled: !resourceStore.dirty,
+            loading: resourceStore.saving,
             onClick: () => {
                 this.form.submit();
             },
