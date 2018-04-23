@@ -13,7 +13,6 @@ import Popover from '../Popover';
 import './datePicker.scss';
 
 type Props = {
-    value: ?Date,
     /** Placeholder can be overwritten */
     placeholder?: string,
     /** Listen for changes of this component */
@@ -21,6 +20,7 @@ type Props = {
     /** Configure the datepicker to your needs, for more information have a look in the README.md */
     options: Object,
     valid: boolean,
+    value: ?Date,
 };
 
 @observer
@@ -139,7 +139,6 @@ export default class DatePicker extends React.Component<Props> {
         return ReactDOM.createPortal(
             <Input
                 {...props}
-                icon="su-calender"
                 onIconClick={this.handleOpenOverlay}
                 onChange={handleInputChange}
                 onBlur={this.handleInputBlur}
@@ -161,6 +160,7 @@ export default class DatePicker extends React.Component<Props> {
         const inputProps = {
             placeholder: placeholder ? placeholder : this.getPlaceholder(fieldOptions),
             valid: valid && !this.showError,
+            icon: fieldOptions.dateFormat ? 'su-calender' : 'su-time',
         };
 
         return (
