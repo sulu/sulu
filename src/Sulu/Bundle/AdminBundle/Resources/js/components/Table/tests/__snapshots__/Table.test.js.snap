@@ -51,27 +51,43 @@ exports[`Render a table with buttons 1`] = `
         <td
           class="buttonCell cell"
         >
-          <button>
-            <span
-              aria-label="fa-pencil"
-              class="fa fa-pencil"
-            />
-          </button>
+          <div
+            class="cellContent"
+          >
+            <button>
+              <span
+                aria-label="fa-pencil"
+                class="fa fa-pencil"
+              />
+            </button>
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
       </tr>
     </tbody>
@@ -172,17 +188,29 @@ exports[`Render the Table component 1`] = `
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
       </tr>
       <tr
@@ -191,17 +219,29 @@ exports[`Render the Table component 1`] = `
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
       </tr>
     </tbody>
@@ -268,34 +308,50 @@ exports[`Render the Table component in multiple selection mode 1`] = `
         <td
           class="cell small"
         >
-          <label
-            class="label"
+          <div
+            class="cellContent"
           >
-            <span
-              class="switch checkbox dark"
+            <label
+              class="label"
             >
-              <input
-                type="checkbox"
-                value="0"
-              />
-              <span />
-            </span>
-          </label>
+              <span
+                class="switch checkbox dark"
+              >
+                <input
+                  type="checkbox"
+                  value="0"
+                />
+                <span />
+              </span>
+            </label>
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
       </tr>
     </tbody>
@@ -349,34 +405,50 @@ exports[`Render the Table component in single selection mode 1`] = `
         <td
           class="cell small"
         >
-          <label
-            class="label"
+          <div
+            class="cellContent"
           >
-            <span
-              class="switch radio dark"
+            <label
+              class="label"
             >
-              <input
-                type="radio"
-                value="0"
-              />
-              <span />
-            </span>
-          </label>
+              <span
+                class="switch radio dark"
+              >
+                <input
+                  type="radio"
+                  value="0"
+                />
+                <span />
+              </span>
+            </label>
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
         <td
           class="cell"
         >
-          Column Text
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
         </td>
       </tr>
     </tbody>

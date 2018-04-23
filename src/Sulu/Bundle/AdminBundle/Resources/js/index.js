@@ -21,8 +21,19 @@ import {
 import FieldBlocks from './containers/FieldBlocks';
 import {viewRegistry} from './containers/ViewRenderer';
 import {navigationRegistry} from './containers/Navigation';
-import {ColumnListAdapter, datagridAdapterRegistry, FolderAdapter, TableAdapter} from './containers/Datagrid';
 import resourceMetadataStore from './stores/ResourceMetadataStore';
+import {
+    ColumnListAdapter,
+    datagridAdapterRegistry,
+    datagridFieldTransformerRegistry,
+    FolderAdapter,
+    TableAdapter,
+    BytesFieldTransformer,
+    DateFieldTransformer,
+    DateTimeFieldTransformer,
+    StringFieldTransformer,
+    ThumbnailFieldTransformer,
+} from './containers/Datagrid';
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
 import Datagrid from './views/Datagrid';
@@ -31,6 +42,8 @@ import type {FieldTypeProps} from './types';
 
 export type {FieldTypeProps};
 
+// Bug in flow: https://github.com/facebook/flow/issues/6186
+// $FlowFixMe:
 configure({enforceActions: true});
 
 window.log = log;
@@ -61,6 +74,17 @@ function registerFieldTypes(fieldTypesConfig) {
     }
 }
 
+function registerDatagridFieldTypes() {
+    datagridFieldTransformerRegistry.add('bytes', new BytesFieldTransformer());
+    datagridFieldTransformerRegistry.add('date', new DateFieldTransformer());
+    datagridFieldTransformerRegistry.add('datetime', new DateTimeFieldTransformer());
+    datagridFieldTransformerRegistry.add('string', new StringFieldTransformer());
+    datagridFieldTransformerRegistry.add('thumbnails', new ThumbnailFieldTransformer());
+
+    // TODO: Remove this type when not needed anymore
+    datagridFieldTransformerRegistry.add('title', new StringFieldTransformer());
+}
+
 function startApplication() {
     const router = new Router(createHistory());
     const id = 'application';
@@ -73,23 +97,24 @@ function startApplication() {
     render(<Application router={router} />, applicationElement);
 }
 
-const translationPromise = Requester.get('/admin/v2/translations?locale=en')
-    .then((response) => setTranslations(response));
+const translationPromise = Requester.get('/admin/v2/translations?locale=en');
 
-const configPromise = Requester.get('/admin/v2/config').then((response) => {
-    routeRegistry.addCollection(response['sulu_admin'].routes);
-    navigationRegistry.set(response['sulu_admin'].navigation);
-    resourceMetadataStore.setEndpoints(response['sulu_admin'].endpoints);
-
-    return response;
-});
+const configPromise = Requester.get('/admin/v2/config');
 
 Promise.all([
     translationPromise,
     configPromise,
     bundlesReadyPromise,
-]).then((values) => {
-    registerFieldTypes(values[1]['sulu_admin']['field_type_options']);
+]).then(([translationResponse, configResponse]) => {
+    setTranslations(translationResponse);
+
+    registerFieldTypes(configResponse['sulu_admin']['field_type_options']);
+    routeRegistry.addCollection(configResponse['sulu_admin'].routes);
+    navigationRegistry.set(configResponse['sulu_admin'].navigation);
+    resourceMetadataStore.setEndpoints(configResponse['sulu_admin'].endpoints);
+
+    registerDatagridFieldTypes();
+
     startApplication();
 });
 

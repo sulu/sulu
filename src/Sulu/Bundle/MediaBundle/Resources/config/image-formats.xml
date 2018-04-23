@@ -59,6 +59,15 @@
         </meta>
         <scale x="25" y="25"/>
     </format>
+    <format key="sulu-40x40" internal="true">
+        <meta>
+            <title lang="en">Small thumbnail (Sulu)</title>
+            <title lang="de">Kleines Thumbnail (Sulu)</title>
+            <title lang="fr">Image miniature (Sulu)</title>
+            <title lang="nl">Kleine thumbnail (Sulu)</title>
+        </meta>
+        <scale x="40" y="40"/>
+    </format>
     <format key="sulu-240x" internal="true">
         <meta>
             <title lang="en">Masonry preview (Sulu)</title>

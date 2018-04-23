@@ -1,5 +1,108 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render data with all different visibility types schema 1`] = `
+<section>
+  <div
+    class="tableContainer"
+  >
+    <table
+      class="table"
+    >
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerCell"
+          >
+            <span>
+              Description
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              Test 1
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            />
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <nav
+    class="pagination"
+  >
+    <div
+      class="loader"
+    />
+    <span
+      class="display"
+    >
+      Page: 2 of 5
+    </span>
+    <button
+      class="previous"
+    >
+      <span
+        aria-label="su-angle-left"
+        class="su-angle-left"
+      />
+    </button>
+    <button
+      class="next"
+    >
+      <span
+        aria-label="su-angle-right"
+        class="su-angle-right"
+      />
+    </button>
+  </nav>
+</section>
+`;
+
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
 <section>
   <div
@@ -26,7 +129,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             class="headerCell"
           >
             <span>
-              title
+              Description
             </span>
           </th>
         </tr>
@@ -38,17 +141,25 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           <td
             class="buttonCell cell"
           >
-            <button>
-              <span
-                aria-label="su-pen"
-                class="su-pen"
-              />
-            </button>
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-pen"
+                  class="su-pen"
+                />
+              </button>
+            </div>
           </td>
           <td
             class="cell"
           >
-            Title 1
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
           </td>
         </tr>
         <tr
@@ -57,17 +168,25 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           <td
             class="buttonCell cell"
           >
-            <button>
-              <span
-                aria-label="su-pen"
-                class="su-pen"
-              />
-            </button>
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-pen"
+                  class="su-pen"
+                />
+              </button>
+            </div>
           </td>
           <td
             class="cell"
           >
-            Title 2
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
           </td>
         </tr>
       </tbody>
@@ -121,14 +240,7 @@ exports[`Render data with schema 1`] = `
             class="headerCell"
           >
             <span>
-              title
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
-              description
+              Description
             </span>
           </th>
         </tr>
@@ -140,12 +252,11 @@ exports[`Render data with schema 1`] = `
           <td
             class="cell"
           >
-            Title 1
-          </td>
-          <td
-            class="cell"
-          >
-            Description 1
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
           </td>
         </tr>
         <tr
@@ -154,12 +265,11 @@ exports[`Render data with schema 1`] = `
           <td
             class="cell"
           >
-            Title 2
-          </td>
-          <td
-            class="cell"
-          >
-            Description 2
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
           </td>
         </tr>
       </tbody>
@@ -230,14 +340,7 @@ exports[`Render data with schema and selections 1`] = `
             class="headerCell"
           >
             <span>
-              title
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
-              description
+              Description
             </span>
           </th>
         </tr>
@@ -249,35 +352,38 @@ exports[`Render data with schema and selections 1`] = `
           <td
             class="cell small"
           >
-            <label
-              class="label"
+            <div
+              class="cellContent"
             >
-              <span
-                class="switch checkbox dark"
+              <label
+                class="label"
               >
-                <input
-                  checked=""
-                  type="checkbox"
-                  value="1"
-                />
-                <span>
-                  <span
-                    aria-label="su-check"
-                    class="su-check"
+                <span
+                  class="switch checkbox dark"
+                >
+                  <input
+                    checked=""
+                    type="checkbox"
+                    value="1"
                   />
+                  <span>
+                    <span
+                      aria-label="su-check"
+                      class="su-check"
+                    />
+                  </span>
                 </span>
-              </span>
-            </label>
+              </label>
+            </div>
           </td>
           <td
             class="cell"
           >
-            Title 1
-          </td>
-          <td
-            class="cell"
-          >
-            Description 1
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
           </td>
         </tr>
         <tr
@@ -286,29 +392,32 @@ exports[`Render data with schema and selections 1`] = `
           <td
             class="cell small"
           >
-            <label
-              class="label"
+            <div
+              class="cellContent"
             >
-              <span
-                class="switch checkbox dark"
+              <label
+                class="label"
               >
-                <input
-                  type="checkbox"
-                  value="2"
-                />
-                <span />
-              </span>
-            </label>
+                <span
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
+            </div>
           </td>
           <td
             class="cell"
           >
-            Title 2
-          </td>
-          <td
-            class="cell"
-          >
-            Description 2
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
           </td>
         </tr>
         <tr
@@ -317,35 +426,38 @@ exports[`Render data with schema and selections 1`] = `
           <td
             class="cell small"
           >
-            <label
-              class="label"
+            <div
+              class="cellContent"
             >
-              <span
-                class="switch checkbox dark"
+              <label
+                class="label"
               >
-                <input
-                  checked=""
-                  type="checkbox"
-                  value="3"
-                />
-                <span>
-                  <span
-                    aria-label="su-check"
-                    class="su-check"
+                <span
+                  class="switch checkbox dark"
+                >
+                  <input
+                    checked=""
+                    type="checkbox"
+                    value="3"
                   />
+                  <span>
+                    <span
+                      aria-label="su-check"
+                      class="su-check"
+                    />
+                  </span>
                 </span>
-              </span>
-            </label>
+              </label>
+            </div>
           </td>
           <td
             class="cell"
           >
-            Title 3
-          </td>
-          <td
-            class="cell"
-          >
-            Description 3
+            <div
+              class="cellContent"
+            >
+              Description 3
+            </div>
           </td>
         </tr>
       </tbody>
@@ -399,14 +511,7 @@ exports[`Render data with schema in different order 1`] = `
             class="headerCell"
           >
             <span>
-              description
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
-              title
+              Description
             </span>
           </th>
         </tr>
@@ -418,12 +523,11 @@ exports[`Render data with schema in different order 1`] = `
           <td
             class="cell"
           >
-            Description 1
-          </td>
-          <td
-            class="cell"
-          >
-            Title 1
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
           </td>
         </tr>
         <tr
@@ -432,12 +536,11 @@ exports[`Render data with schema in different order 1`] = `
           <td
             class="cell"
           >
-            Description 2
-          </td>
-          <td
-            class="cell"
-          >
-            Title 2
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
           </td>
         </tr>
       </tbody>
@@ -490,7 +593,7 @@ exports[`Render data with schema not containing all fields 1`] = `
             class="headerCell"
           >
             <span>
-              title
+              Description
             </span>
           </th>
         </tr>
@@ -502,7 +605,11 @@ exports[`Render data with schema not containing all fields 1`] = `
           <td
             class="cell"
           >
-            Title 1
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
           </td>
         </tr>
         <tr
@@ -511,7 +618,11 @@ exports[`Render data with schema not containing all fields 1`] = `
           <td
             class="cell"
           >
-            Title 2
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
           </td>
         </tr>
       </tbody>

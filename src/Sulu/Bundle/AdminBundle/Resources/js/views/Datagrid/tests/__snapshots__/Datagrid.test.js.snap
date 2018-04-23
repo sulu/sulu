@@ -46,14 +46,7 @@ exports[`Should render the datagrid with a title 1`] = `
                 class="headerCell"
               >
                 <span>
-                  title
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  description
+                  Description
                 </span>
               </th>
             </tr>
@@ -65,29 +58,32 @@ exports[`Should render the datagrid with a title 1`] = `
               <td
                 class="cell small"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellContent"
                 >
-                  <span
-                    class="switch checkbox dark"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                      value="1"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
               </td>
               <td
                 class="cell"
               >
-                Title 1
-              </td>
-              <td
-                class="cell"
-              >
-                Description 1
+                <div
+                  class="cellContent"
+                >
+                  Description 1
+                </div>
               </td>
             </tr>
             <tr
@@ -96,29 +92,32 @@ exports[`Should render the datagrid with a title 1`] = `
               <td
                 class="cell small"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellContent"
                 >
-                  <span
-                    class="switch checkbox dark"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
               </td>
               <td
                 class="cell"
               >
-                Title 2
-              </td>
-              <td
-                class="cell"
-              >
-                Description 2
+                <div
+                  class="cellContent"
+                >
+                  Description 2
+                </div>
               </td>
             </tr>
           </tbody>
@@ -200,14 +199,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
                 class="headerCell"
               >
                 <span>
-                  title
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  description
+                  Description
                 </span>
               </th>
             </tr>
@@ -219,29 +211,32 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
               <td
                 class="cell small"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellContent"
                 >
-                  <span
-                    class="switch checkbox dark"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                      value="1"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
               </td>
               <td
                 class="cell"
               >
-                Title 1
-              </td>
-              <td
-                class="cell"
-              >
-                Description 1
+                <div
+                  class="cellContent"
+                >
+                  Description 1
+                </div>
               </td>
             </tr>
             <tr
@@ -250,29 +245,32 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
               <td
                 class="cell small"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellContent"
                 >
-                  <span
-                    class="switch checkbox dark"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
               </td>
               <td
                 class="cell"
               >
-                Title 2
-              </td>
-              <td
-                class="cell"
-              >
-                Description 2
+                <div
+                  class="cellContent"
+                >
+                  Description 2
+                </div>
               </td>
             </tr>
           </tbody>
@@ -364,14 +362,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
                 class="headerCell"
               >
                 <span>
-                  title
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  description
+                  Description
                 </span>
               </th>
             </tr>
@@ -383,39 +374,46 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
               <td
                 class="buttonCell cell"
               >
-                <button>
-                  <span
-                    aria-label="su-pen"
-                    class="su-pen"
-                  />
-                </button>
+                <div
+                  class="cellContent"
+                >
+                  <button>
+                    <span
+                      aria-label="su-pen"
+                      class="su-pen"
+                    />
+                  </button>
+                </div>
               </td>
               <td
                 class="cell small"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellContent"
                 >
-                  <span
-                    class="switch checkbox dark"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                      value="1"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
               </td>
               <td
                 class="cell"
               >
-                Title 1
-              </td>
-              <td
-                class="cell"
-              >
-                Description 1
+                <div
+                  class="cellContent"
+                >
+                  Description 1
+                </div>
               </td>
             </tr>
             <tr
@@ -424,39 +422,46 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
               <td
                 class="buttonCell cell"
               >
-                <button>
-                  <span
-                    aria-label="su-pen"
-                    class="su-pen"
-                  />
-                </button>
+                <div
+                  class="cellContent"
+                >
+                  <button>
+                    <span
+                      aria-label="su-pen"
+                      class="su-pen"
+                    />
+                  </button>
+                </div>
               </td>
               <td
                 class="cell small"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellContent"
                 >
-                  <span
-                    class="switch checkbox dark"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
               </td>
               <td
                 class="cell"
               >
-                Title 2
-              </td>
-              <td
-                class="cell"
-              >
-                Description 2
+                <div
+                  class="cellContent"
+                >
+                  Description 2
+                </div>
               </td>
             </tr>
           </tbody>

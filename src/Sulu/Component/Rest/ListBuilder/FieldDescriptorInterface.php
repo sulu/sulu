@@ -79,6 +79,11 @@ interface FieldDescriptorInterface
     /**
      * @return string
      */
+    public function getVisibility();
+
+    /**
+     * @return string
+     */
     public function getMinWidth();
 
     /**

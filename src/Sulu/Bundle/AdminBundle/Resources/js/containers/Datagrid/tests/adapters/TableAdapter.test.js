@@ -2,6 +2,8 @@
 import React from 'react';
 import {render, shallow} from 'enzyme';
 import TableAdapter from '../../adapters/TableAdapter';
+import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
+import datagridFieldTransformerRegistry from '../../registries/DatagridFieldTransformerRegistry';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: function(key) {
@@ -13,6 +15,16 @@ jest.mock('../../../../utils/Translator', () => ({
         }
     },
 }));
+
+jest.mock('../../registries/DatagridFieldTransformerRegistry', () => ({
+    add: jest.fn(),
+    get: jest.fn(),
+    has: jest.fn(),
+}));
+
+beforeEach(() => {
+    datagridFieldTransformerRegistry.get.mockReturnValue(new StringFieldTransformer());
+});
 
 test('Render data with schema', () => {
     const data = [
@@ -28,8 +40,67 @@ test('Render data with schema', () => {
         },
     ];
     const schema = {
-        title: {},
-        description: {},
+        title: {
+            type: 'string',
+            visibility: 'no',
+            label: 'Title',
+        },
+        description: {
+            type: 'string',
+            visibility: 'yes',
+            label: 'Description',
+        },
+    };
+    const tableAdapter = render(
+        <TableAdapter
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            page={2}
+            pageCount={5}
+            onPageChange={jest.fn()}
+            schema={schema}
+            selections={[]}
+        />
+    );
+
+    expect(tableAdapter).toMatchSnapshot();
+});
+
+test('Render data with all different visibility types schema', () => {
+    const data = [
+        {
+            id: 1,
+            title: 'Title 1',
+            description: 'Description 1',
+        },
+        {
+            id: 2,
+            title: 'Title 2',
+            description: 'Description 2',
+        },
+    ];
+    const schema = {
+        title: {
+            type: 'string',
+            visibility: 'no',
+            label: 'Title',
+        },
+        description: {
+            type: 'string',
+            visibility: 'yes',
+            label: 'Description',
+        },
+        test1: {
+            type: 'string',
+            visibility: 'always',
+            label: 'Test 1',
+        },
+        test2: {
+            type: 'string',
+            visibility: 'never',
+            label: 'Test 2',
+        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -66,8 +137,16 @@ test('Render data with schema and selections', () => {
         },
     ];
     const schema = {
-        title: {},
-        description: {},
+        title: {
+            label: 'Title',
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            label: 'Description',
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -100,8 +179,16 @@ test('Render data with schema in different order', () => {
         },
     ];
     const schema = {
-        description: {},
-        title: {},
+        title: {
+            label: 'Title',
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            label: 'Description',
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -133,7 +220,16 @@ test('Render data with schema not containing all fields', () => {
         },
     ];
     const schema = {
-        title: {},
+        title: {
+            label: 'Title',
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            label: 'Description',
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -166,7 +262,16 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         },
     ];
     const schema = {
-        title: {},
+        title: {
+            label: 'Title',
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            label: 'Description',
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -200,7 +305,16 @@ test('Click on pencil should execute onItemEdit callback', () => {
         },
     ];
     const schema = {
-        title: {},
+        title: {
+            label: 'Title',
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            label: 'Description',
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = shallow(
         <TableAdapter
@@ -238,7 +352,16 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
         },
     ];
     const schema = {
-        title: {},
+        title: {
+            label: 'Title',
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            label: 'Description',
+            type: 'string',
+            visibility: 'yes',
+        },
     };
     const tableAdapter = shallow(
         <TableAdapter
@@ -261,7 +384,11 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
     const allSelectionChangeSpy = jest.fn();
     const data = [];
     const schema = {
-        title: {},
+        title: {
+            label: 'Title',
+            type: 'string',
+            visibility: 'no',
+        },
     };
     const tableAdapter = shallow(
         <TableAdapter

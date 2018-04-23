@@ -55,6 +55,7 @@ class ResourceMetadataMapper
 
             $field->setLabel($this->translator->trans($fieldDescriptor->getTranslation(), [], 'admin'));
             $field->setType($fieldDescriptor->getType());
+            $field->setVisibility($fieldDescriptor->getVisibility());
 
             $datagrid->addField($field);
         }

@@ -28,6 +28,11 @@ class Field
      */
     protected $type;
 
+    /**
+     * @var string
+     */
+    protected $visibility;
+
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -56,5 +61,15 @@ class Field
     public function setType(string $type): void
     {
         $this->type = $type;
+    }
+
+    public function getVisibility(): string
+    {
+        return $this->visibility;
+    }
+
+    public function setVisibility(string $visibility): void
+    {
+        $this->visibility = $visibility;
     }
 }

@@ -1,6 +1,22 @@
 // @flow
 import type {NavigationItem} from '../types';
 
+function findById(navigationItems: Array<NavigationItem>, id: string): ?NavigationItem {
+    for (const navigationItem of navigationItems) {
+        if (id === navigationItem.id) {
+            return navigationItem;
+        }
+
+        if (navigationItem.items) {
+            const foundNavigationItem = findById(navigationItem.items, id);
+
+            if (foundNavigationItem) {
+                return foundNavigationItem;
+            }
+        }
+    }
+}
+
 class NavigationRegistry {
     navigationItems: Array<NavigationItem>;
 
@@ -17,7 +33,7 @@ class NavigationRegistry {
     }
 
     get(id: string): NavigationItem {
-        const navigationItem = this.findById(this.navigationItems, id);
+        const navigationItem = findById(this.navigationItems, id);
 
         if (!navigationItem) {
             throw new Error('Navigation item with id "' + id + '" not found.');
@@ -28,22 +44,6 @@ class NavigationRegistry {
 
     getAll(): Array<NavigationItem> {
         return this.navigationItems;
-    }
-
-    findById(navigationItems: Array<NavigationItem>, id: string): ?NavigationItem {
-        for (const navigationItem of navigationItems) {
-            if (id === navigationItem.id) {
-                return navigationItem;
-            }
-
-            if (navigationItem.items) {
-                const foundNavigationItem = this.findById(navigationItem.items, id);
-
-                if (foundNavigationItem) {
-                    return foundNavigationItem;
-                }
-            }
-        }
     }
 }
 

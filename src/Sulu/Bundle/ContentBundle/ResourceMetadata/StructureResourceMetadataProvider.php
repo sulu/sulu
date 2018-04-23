@@ -46,6 +46,9 @@ class StructureResourceMetadataProvider implements ResourceMetadataProviderInter
         $this->resources = $resources;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAllResourceMetadata(string $locale): array
     {
         $resourceMetadataArray = [];
