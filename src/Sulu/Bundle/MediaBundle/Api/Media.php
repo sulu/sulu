@@ -406,16 +406,21 @@ class Media extends ApiWrapper
     public function getVersions()
     {
         $versions = [];
+
+        $file = $this->getFile();
+
         /** @var FileVersion $fileVersion */
-        foreach ($this->getFile()->getFileVersions() as $fileVersion) {
+        foreach ($file->getFileVersions() as $fileVersion) {
             $versionData = [];
             if (isset($this->additionalVersionData[$fileVersion->getVersion()])) {
                 $versionData = $this->additionalVersionData[$fileVersion->getVersion()];
             }
+
             $versionData['version'] = $fileVersion->getVersion();
             $versionData['name'] = $fileVersion->getName();
             $versionData['created'] = $fileVersion->getCreated();
             $versionData['changed'] = $fileVersion->getChanged();
+            $versionData['active'] = $fileVersion->isActive();
             $versions[$fileVersion->getVersion()] = $versionData;
         }
 

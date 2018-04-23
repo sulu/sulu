@@ -14,12 +14,12 @@
     padding: 15px 3px;
     border-bottom: 1px solid $grayLighter;
 
-    .fa-cloud-download {
+    .fa-cloud-download, .media-edit-link-actions {
         display: none;
     }
 
     &:hover {
-        .fa-cloud-download {
+        .fa-cloud-download, .media-edit-link-actions {
             display: inline-block;
         }
     }
@@ -35,7 +35,23 @@ a.media-edit-link,
     text-decoration: none;
 }
 
+.media-edit-link-actions {
+    display: inline-block;
+    float: right;
+}
+
+.media-edit-link-action {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    margin-left: 15px;
+    padding: 0;
+}
+
 .media-edit-title {
+    display: inline-block;
+    width: 83%;
+
     .active & {
         font-weight: bold;
     }

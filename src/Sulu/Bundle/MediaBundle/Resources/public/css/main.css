@@ -695,11 +695,11 @@
   border-bottom: 1px solid #ccc;
 }
 /* line 17, ../scss/modules/media-edit-overlay.scss */
-.media-edit-link .fa-cloud-download {
+.media-edit-link .fa-cloud-download, .media-edit-link .media-edit-link-actions {
   display: none;
 }
 /* line 22, ../scss/modules/media-edit-overlay.scss */
-.media-edit-link:hover .fa-cloud-download {
+.media-edit-link:hover .fa-cloud-download, .media-edit-link:hover .media-edit-link-actions {
   display: inline-block;
 }
 /* line 27, ../scss/modules/media-edit-overlay.scss */
@@ -714,25 +714,45 @@ a.media-edit-link,
   text-decoration: none;
 }
 
-/* line 39, ../scss/modules/media-edit-overlay.scss */
+/* line 38, ../scss/modules/media-edit-overlay.scss */
+.media-edit-link-actions {
+  display: inline-block;
+  float: right;
+}
+
+/* line 43, ../scss/modules/media-edit-overlay.scss */
+.media-edit-link-action {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  margin-left: 15px;
+  padding: 0;
+}
+
+/* line 51, ../scss/modules/media-edit-overlay.scss */
+.media-edit-title {
+  display: inline-block;
+  width: 83%;
+}
+/* line 55, ../scss/modules/media-edit-overlay.scss */
 .active .media-edit-title {
   font-weight: bold;
 }
 
-/* line 44, ../scss/modules/media-edit-overlay.scss */
+/* line 60, ../scss/modules/media-edit-overlay.scss */
 .media-edit-icons {
   float: right;
   color: #000;
   cursor: pointer;
 }
 
-/* line 50, ../scss/modules/media-edit-overlay.scss */
+/* line 66, ../scss/modules/media-edit-overlay.scss */
 .media-edit-created {
   float: right;
   color: #999;
 }
 
-/* line 55, ../scss/modules/media-edit-overlay.scss */
+/* line 71, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-loader {
   position: absolute;
   top: 0;
@@ -742,18 +762,18 @@ a.media-edit-link,
   border: 1px #fff solid;
   border-radius: 3px;
 }
-/* line 65, ../scss/modules/media-edit-overlay.scss */
+/* line 81, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-loader .loader {
   margin-top: 80px;
   opacity: 0.3;
 }
-/* line 70, ../scss/modules/media-edit-overlay.scss */
+/* line 86, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-loader .hint {
   color: #999;
   margin-top: 14px;
 }
 
-/* line 76, ../scss/modules/media-edit-overlay.scss */
+/* line 92, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image {
   position: absolute;
   top: 0;
@@ -766,20 +786,20 @@ a.media-edit-link,
   width: 100%;
   height: 100%;
 }
-/* line 89, ../scss/modules/media-edit-overlay.scss */
+/* line 105, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image[class^=fa-] {
   background: none;
   border: none;
   margin-top: 30px;
 }
-/* line 95, ../scss/modules/media-edit-overlay.scss */
+/* line 111, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image.icon {
   color: #999;
   font-size: 150px;
   text-align: center;
   vertical-align: middle;
 }
-/* line 102, ../scss/modules/media-edit-overlay.scss */
+/* line 118, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image .file-version-change,
 .media-edit-preview-image img {
   position: absolute;
@@ -793,30 +813,30 @@ a.media-edit-link,
   max-height: 100%;
   max-width: 100%;
 }
-/* line 113, ../scss/modules/media-edit-overlay.scss */
+/* line 129, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change {
   width: 100%;
   height: 100%;
 }
-/* line 117, ../scss/modules/media-edit-overlay.scss */
+/* line 133, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 125, ../scss/modules/media-edit-overlay.scss */
+/* line 141, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image-container {
   background-color: #ddd;
   position: relative;
   text-align: center;
 }
-/* line 131, ../scss/modules/media-edit-overlay.scss */
+/* line 147, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image-container:before {
   content: '';
   display: block;
   padding-top: 100%;
 }
-/* line 138, ../scss/modules/media-edit-overlay.scss */
+/* line 154, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change {
   position: absolute;
   top: 0;
@@ -826,18 +846,18 @@ a.media-edit-link,
   width: 100%;
   height: 100%;
 }
-/* line 148, ../scss/modules/media-edit-overlay.scss */
+/* line 164, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 155, ../scss/modules/media-edit-overlay.scss */
+/* line 171, ../scss/modules/media-edit-overlay.scss */
 .overlay-footer .btn.media-reset-preview-action.hide {
   display: none;
 }
 
-/* line 160, ../scss/modules/media-edit-overlay.scss */
+/* line 176, ../scss/modules/media-edit-overlay.scss */
 #media-info .info-label-container {
   overflow: visible;
   position: absolute;
@@ -846,17 +866,17 @@ a.media-edit-link,
   left: 0;
   right: 0;
 }
-/* line 169, ../scss/modules/media-edit-overlay.scss */
+/* line 185, ../scss/modules/media-edit-overlay.scss */
 #media-info textarea.description {
   height: 80px;
   min-height: 80px;
 }
-/* line 174, ../scss/modules/media-edit-overlay.scss */
+/* line 190, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview {
   position: relative;
   text-align: center;
 }
-/* line 178, ../scss/modules/media-edit-overlay.scss */
+/* line 194, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview:before {
   content: '';
   display: block;

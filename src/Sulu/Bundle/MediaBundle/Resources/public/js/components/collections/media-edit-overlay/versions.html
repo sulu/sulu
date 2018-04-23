@@ -7,8 +7,17 @@
                 <a class="media-edit-link <% if (versionNumber == media.version) { %>active<% } %>" href="<%= versionData.url %>&inline=1" target="_blank">
                     <span class="media-edit-title">
                         <%= translate('sulu.media.version') %> <%= versionNumber %>
-                        <% if (versionNumber == media.version) { %>
+                        <% if (versionData.active) { %>
                             (<%= translate('sulu.media.version.active') %>)
+                        <% } else { %>
+                            <span class="media-edit-link-actions">
+                                <button type="button"
+                                        class="media-edit-link-action media-edit-link-action-remove"
+                                        data-version="<%= versionNumber %>">
+                                    <i class="fa fa-remove"></i>
+                                    <%= translate('public.delete') %>
+                                </button>
+                            </span>
                         <% } %>
                     </span>
                     <span class="media-edit-created"><%= app.sandbox.date.format(versionData.created, true) %></span>
