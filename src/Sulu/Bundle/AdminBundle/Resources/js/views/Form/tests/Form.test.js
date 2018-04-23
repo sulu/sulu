@@ -67,7 +67,7 @@ test('Should reuse the passed resourceStore if the passed resourceKey is the sam
     expect(resourceStore).toBe(form.instance().resourceStore);
 });
 
-test('Should reuse the passed resourceStore if the passed resourceKey differs', () => {
+test('Should create a new resourceStore if the passed resourceKey differs', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 10);
@@ -87,6 +87,32 @@ test('Should reuse the passed resourceStore if the passed resourceKey differs', 
     expect(resourceStore).not.toBe(formResourceStore);
     expect(resourceStore.resourceKey).toEqual('snippets');
     expect(formResourceStore.resourceKey).toEqual('pages');
+    expect(formResourceStore.locale).toEqual(undefined);
+});
+
+test('Should create a new resourceStore if the passed resourceKey differs with locale', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const locale = observable.box('en');
+    const resourceStore = new ResourceStore('snippets', 10, {locale});
+    const route = {
+        options: {
+            resourceKey: 'pages',
+        },
+    };
+    const router = {
+        attributes: {},
+        bind: jest.fn(),
+        route,
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const formResourceStore = form.instance().resourceStore;
+
+    expect(resourceStore).not.toBe(formResourceStore);
+    expect(resourceStore.resourceKey).toEqual('snippets');
+    expect(formResourceStore.resourceKey).toEqual('pages');
+    expect(formResourceStore.locale.get()).toEqual('en');
 });
 
 test('Should navigate to defined route on back button click', () => {

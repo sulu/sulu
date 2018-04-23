@@ -51,7 +51,7 @@ class Form extends React.PureComponent<Props> {
         }
 
         if (this.hasOwnResourceStore) {
-            this.resourceStore = new ResourceStore(resourceKey, id);
+            this.resourceStore = new ResourceStore(resourceKey, id, {locale: resourceStore.locale});
         } else {
             this.resourceStore = resourceStore;
         }
