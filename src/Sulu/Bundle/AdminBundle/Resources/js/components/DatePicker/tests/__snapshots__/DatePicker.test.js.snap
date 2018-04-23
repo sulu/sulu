@@ -19,8 +19,8 @@ exports[`DatePicker should render 1`] = `
               class="prependedContainer"
             >
               <span
-                aria-label="su-calender"
-                class="icon iconClickable su-calender clickable"
+                aria-label="su-calender-alt"
+                class="icon iconClickable su-calender-alt clickable"
                 role="button"
                 tabindex="0"
               />
@@ -63,7 +63,7 @@ exports[`DatePicker should render 1`] = `
               input={true}
               inputProps={
                 Object {
-                  "icon": "su-calender",
+                  "icon": "su-calender-alt",
                   "placeholder": "MM/DD/YYYY",
                   "valid": true,
                 }
@@ -88,7 +88,7 @@ exports[`DatePicker should render 1`] = `
                 >
                   <Input
                     className="form-control"
-                    icon="su-calender"
+                    icon="su-calender-alt"
                     onBlur={[Function]}
                     onChange={[Function]}
                     onClick={[Function]}
@@ -108,12 +108,12 @@ exports[`DatePicker should render 1`] = `
                       >
                         <Icon
                           className="icon iconClickable"
-                          name="su-calender"
+                          name="su-calender-alt"
                           onClick={[Function]}
                         >
                           <span
-                            aria-label="su-calender"
-                            className="icon iconClickable su-calender clickable"
+                            aria-label="su-calender-alt"
+                            className="icon iconClickable su-calender-alt clickable"
                             onClick={[Function]}
                             role="button"
                             tabIndex={0}

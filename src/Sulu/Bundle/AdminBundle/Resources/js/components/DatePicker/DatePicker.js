@@ -160,7 +160,7 @@ export default class DatePicker extends React.Component<Props> {
         const inputProps = {
             placeholder: placeholder ? placeholder : this.getPlaceholder(fieldOptions),
             valid: valid && !this.showError,
-            icon: fieldOptions.dateFormat ? 'su-calender' : 'su-time',
+            icon: fieldOptions.dateFormat ? 'su-calender-alt' : 'su-clock',
         };
 
         return (
