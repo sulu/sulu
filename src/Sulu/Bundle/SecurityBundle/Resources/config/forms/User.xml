@@ -9,7 +9,7 @@
         </meta>
     </property>
 
-    <property name="password" type="password_confirmation" mandatory="true">
+    <property name="password" type="password_confirmation">
         <meta>
             <title lang="en">Password</title>
             <title lang="de">Passwort</title>

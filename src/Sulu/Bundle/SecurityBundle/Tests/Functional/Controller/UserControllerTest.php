@@ -215,7 +215,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(3, count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertEquals('admin@test.com', $response->_embedded->users[0]->email);
-        $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
+        $this->assertObjectNotHasAttribute('password', $response->_embedded->users[0]);
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
     }
 
@@ -229,7 +229,7 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertEquals('admin', $response->username);
         $this->assertEquals('admin@test.com', $response->email);
-        $this->assertEquals('securepassword', $response->password);
+        $this->assertObjectNotHasAttribute('password', $response);
         $this->assertEquals('de', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
@@ -693,7 +693,6 @@ class UserControllerTest extends SuluTestCase
             'PUT',
             '/api/users/' . $this->user1->getId(),
             [
-                'username' => 'manager',
                 'locale' => 'en',
                 'userRoles' => [
                     [
@@ -715,7 +714,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
-        $this->assertContains('password', $response->message);
+        $this->assertContains('username', $response->message);
     }
 
     public function testGetUserAndRolesByContact()
@@ -733,7 +732,7 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertEquals($this->user1->getId(), $response->_embedded->users[0]->id);
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
-        $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
+        $this->assertObjectNotHasAttribute('password', $response->_embedded->users[0]);
 
         $this->assertEquals('Role1', $response->_embedded->users[0]->userRoles[0]->role->name);
         $this->assertEquals('Sulu', $response->_embedded->users[0]->userRoles[0]->role->system);
@@ -766,7 +765,7 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertEquals(3, count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
-        $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
+        $this->assertObjectNotHasAttribute('password', $response->_embedded->users[0]);
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
     }
 
@@ -962,29 +961,15 @@ class UserControllerTest extends SuluTestCase
                 'contact' => [
                     'id' => $this->contact1->getId(),
                 ],
-                'userRoles' => [
-                    [
-                        'id' => $this->user1->getId(),
-                        'role' => [
-                            'id' => $this->role1->getId(),
-                        ],
-                        'locales' => ['de', 'en'],
-                    ],
-                    [
-                        'id' => 2,
-                        'role' => [
-                            'id' => $this->role2->getId(),
-                        ],
-                        'locales' => ['en'],
-                    ],
-                ],
             ]
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(0, $response->code);
-        $this->assertEquals('The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "password"-argument', $response->message);
+        $this->assertEquals('manager', $response->username);
+        $this->assertObjectNotHasAttribute('password', $response);
     }
 
     public function testPutWithEmptyPassword()
@@ -1023,7 +1008,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals('securepassword', $response->password);
+        $this->assertObjectNotHasAttribute('password', $response);
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);

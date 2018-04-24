@@ -96,7 +96,7 @@ class UserManager implements UserManagerInterface
      */
     public function getUserById($id)
     {
-        return $this->userRepository->find($id);
+        return $this->userRepository->findUserById($id);
     }
 
     /**

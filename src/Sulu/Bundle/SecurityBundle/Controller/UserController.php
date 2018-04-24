@@ -76,11 +76,6 @@ class UserController extends RestController implements ClassResourceInterface, S
             'email',
             $this->container->getParameter('sulu.model.user.class')
         );
-        $this->fieldDescriptors['password'] = new DoctrineFieldDescriptor(
-            'password',
-            'password',
-            $this->container->getParameter('sulu.model.user.class')
-        );
         $this->fieldDescriptors['locale'] = new DoctrineFieldDescriptor(
             'locale',
             'locale',
@@ -269,7 +264,7 @@ class UserController extends RestController implements ClassResourceInterface, S
         if (null == $request->get('username')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'username');
         }
-        if (null === $request->get('password')) {
+        if ($request->isMethod('POST') && null === $request->get('password')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'password');
         }
         if (null == $request->get('locale')) {
