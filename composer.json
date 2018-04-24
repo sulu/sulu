@@ -169,6 +169,7 @@
         },
         "sort-packages": true
     },
+    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "1.6-dev",
