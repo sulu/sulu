@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Factory for DoctrineListBuilders.
  */
-class DoctrineListBuilderFactory
+class DoctrineListBuilderFactory implements DoctrineListBuilderFactoryInterface
 {
     /**
      * @var EventDispatcherInterface
