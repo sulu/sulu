@@ -10,6 +10,9 @@ CHANGELOG for Sulu
     * ENHANCEMENT #3884 [ContentBundle]           Improved developer-experience when overriding content-teaser-provider
     * ENHANCEMENT #3897 [ContentBundle]           SEO title length changed from 55 to 70
     * HOTFIX      #3870 [Husky]                   Updated husky to fix bug with thumbnails in datagrid
+    * BUGFIX      #3915 [ContactBundle]           Fix typehint in api ContactLocale constructor
+    * BUGFIX      #3918 [RestComponent]           CSV Export: Fixed serialization of boolean
+    * ENHANCEMENT #3876 [ContentBundle]           Reload data when changing template
 
 * 1.6.16 (2018-03-19)
     * ENHANCEMENT #3849 [AdminBundle]             Add Twig main blocks to be able to use inheritance
