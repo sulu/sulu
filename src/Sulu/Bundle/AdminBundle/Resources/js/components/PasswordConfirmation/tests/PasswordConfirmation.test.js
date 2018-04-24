@@ -1,13 +1,17 @@
 // @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
+import debounce from 'debounce';
 import PasswordConfirmation from '../PasswordConfirmation';
 
-test('Should render two password fields', () => {
+jest.mock('debounce', () => jest.fn((value) => value));
+
+test('Should render two password fields and add a debounced function', () => {
     expect(render(<PasswordConfirmation onChange={jest.fn()} />)).toMatchSnapshot();
+    expect(debounce).toBeCalledWith(expect.any(Function), 500);
 });
 
-test('Should only call onChange when both values match on blur', () => {
+test('Should only call onChange when both values match after the debounced time', () => {
     const changeSpy = jest.fn();
     const passwordConfirmation = shallow(<PasswordConfirmation onChange={changeSpy} />);
 

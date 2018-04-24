@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, autorun, computed, observable} from 'mobx';
+import debounce from 'debounce';
 import {observer} from 'mobx-react';
 import Input from '../Input';
 import Grid from '../Grid';
@@ -20,15 +21,25 @@ export default class PasswordConfirmation extends React.Component<Props> {
         valid: true,
     };
 
-    @observable firstValue = '';
-    @observable secondValue = '';
+    @observable firstValue: ?string = '';
+    @observable secondValue: ?string = '';
+    @observable valid: boolean = true;
+    disposer: () => void;
+
+    componentDidMount() {
+        this.disposer = autorun(this.handleChange);
+    }
+
+    componentWillUnmount() {
+        this.disposer();
+    }
+
+    @action setValidFlag = (valid: boolean) => {
+        this.valid = valid;
+    };
 
     @computed get passwordsMatch(): boolean {
         return this.firstValue === this.secondValue;
-    }
-
-    @computed get valid(): boolean {
-        return this.passwordsMatch && this.props.valid;
     }
 
     @action handleFirstChange = (value: ?string) => {
@@ -39,15 +50,26 @@ export default class PasswordConfirmation extends React.Component<Props> {
         this.secondValue = value;
     };
 
-    handleBlur = () => {
-        if (!this.passwordsMatch) {
-            return;
-        }
+    handleChange = () => {
+        const {
+            firstValue,
+            secondValue,
+            passwordsMatch,
+            props: {
+                valid,
+            },
+        } = this;
 
-        const {onChange} = this.props;
-
-        onChange(this.firstValue);
+        this.handleChangeDebounced(valid && ((!firstValue || !secondValue) || passwordsMatch));
     };
+
+    handleChangeDebounced = debounce((valid) => {
+        this.setValidFlag(valid);
+
+        if (this.firstValue && this.passwordsMatch) {
+            this.props.onChange(this.firstValue);
+        }
+    }, 500);
 
     render() {
         return (
@@ -55,7 +77,6 @@ export default class PasswordConfirmation extends React.Component<Props> {
                 <Grid.Item size={6}>
                     <Input
                         icon={LOCK_ICON}
-                        onBlur={this.handleBlur}
                         onChange={this.handleFirstChange}
                         type={INPUT_TYPE}
                         value={this.firstValue}
@@ -65,7 +86,6 @@ export default class PasswordConfirmation extends React.Component<Props> {
                 <Grid.Item size={6}>
                     <Input
                         icon={LOCK_ICON}
-                        onBlur={this.handleBlur}
                         onChange={this.handleSecondChange}
                         type={INPUT_TYPE}
                         value={this.secondValue}
