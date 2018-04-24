@@ -15,14 +15,14 @@ type Props = {
 @observer
 export default class ViewRenderer extends React.Component<Props> {
     componentDidUpdate() {
-        this.checkForSidebar();
+        this.clearSidebarConfig();
     }
 
     componentDidMount() {
-        this.checkForSidebar();
+        this.clearSidebarConfig();
     }
 
-    checkForSidebar() {
+    clearSidebarConfig() {
         if (!this.hasSidebar()) {
             sidebarStore.clearConfig();
         }

@@ -317,9 +317,6 @@ test('Render view and not clear the sidebarstore when one of the parent componen
         },
     };
 
-    viewRegistry.get.mockReturnValue(Component);
-    viewRegistry.get.mockReturnValue(Component);
-
     viewRegistry.get.mockImplementation((view) => {
         switch (view) {
             case 'test':
