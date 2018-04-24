@@ -6,6 +6,7 @@ import {sidebarStore} from '../Sidebar';
 import Router from '../../services/Router';
 import type {Route} from '../../services/Router';
 import viewRegistry from './registries/ViewRegistry';
+import type {View} from './types';
 
 type Props = {
     router: Router,
@@ -13,6 +14,38 @@ type Props = {
 
 @observer
 export default class ViewRenderer extends React.Component<Props> {
+    componentDidUpdate() {
+        this.checkForSidebar();
+    }
+
+    componentDidMount() {
+        this.checkForSidebar();
+    }
+
+    checkForSidebar() {
+        if (!this.hasSidebar()) {
+            sidebarStore.clearConfig();
+        }
+    }
+
+    hasSidebar(route: ?Route): boolean {
+        route = route ? route : this.props.router.route;
+        const View = this.getView(route);
+
+        if (View.hasSidebar) {
+            return true;
+        }
+
+        if (route.parent) {
+            if (this.hasSidebar(route.parent)) {
+                return true;
+            }
+        }
+
+        // no sidebar found
+        return false;
+    }
+
     getKey = (route: Route) => {
         if (!route.rerenderAttributes) {
             return undefined;
@@ -35,16 +68,19 @@ export default class ViewRenderer extends React.Component<Props> {
         return rerenderAttributeValues.join('__');
     };
 
-    renderView(route: Route, child: Element<*> | null = null, hasSidebar: boolean = false) {
-        const {router} = this.props;
-        const {view} = route;
+    getView = (route: Route): View => {
+        const View = viewRegistry.get(route.view);
 
-        const View = viewRegistry.get(view);
         if (!View) {
-            throw new Error('View "' + view + '" has not been found');
+            throw new Error('View "' + route.view + '" has not been found');
         }
-        // if any view has sidebar - the sidebar will be visible
-        hasSidebar = View.hasSidebar ? true : hasSidebar;
+
+        return View;
+    };
+
+    renderView(route: Route, child: Element<*> | null = null) {
+        const {router} = this.props;
+        const View = this.getView(route);
 
         const element = (
             <View router={router} route={route} key={this.getKey(route)}>
@@ -53,14 +89,10 @@ export default class ViewRenderer extends React.Component<Props> {
         );
 
         if (!route.parent) {
-            if (!hasSidebar) {
-                sidebarStore.clearConfig();
-            }
-
             return element;
         }
 
-        return this.renderView(route.parent, element, hasSidebar);
+        return this.renderView(route.parent, element);
     }
 
     render() {
