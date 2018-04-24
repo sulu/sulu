@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Api;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\ContactBundle\Entity\ContactLocale as ContactLocaleEntity;
 use Sulu\Component\Rest\ApiWrapper;
 
 /**
@@ -24,9 +25,9 @@ use Sulu\Component\Rest\ApiWrapper;
 class ContactLocale extends ApiWrapper
 {
     /**
-     * @param ContactLocale $contactLocale
+     * @param ContactLocaleEntity $contactLocale
      */
-    public function __construct(self $contactLocale)
+    public function __construct(ContactLocaleEntity $contactLocale)
     {
         $this->entity = $contactLocale;
     }
@@ -48,7 +49,7 @@ class ContactLocale extends ApiWrapper
      *
      * @param string $locale
      *
-     * @return ContactLocale
+     * @return $this
      */
     public function setLocale($locale)
     {
