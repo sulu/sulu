@@ -454,7 +454,6 @@ exports[`Application should render opened navigation 1`] = `
           className="viewContainer"
         >
           <Test
-            key="test"
             router={
               Object {
                 "route": Object {

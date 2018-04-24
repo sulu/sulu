@@ -79,7 +79,7 @@ export default class Application extends React.Component<Props> {
 
                         <div className={applicationStyles.viewContainer}>
                             {router.route &&
-                            <ViewRenderer key={router.route.name} router={router} />
+                            <ViewRenderer router={router} />
                             }
                         </div>
                     </main>
