@@ -56,19 +56,20 @@ export default class Email extends React.Component<Props> {
             return;
         }
 
-        this.props.onChange(this.value);
         this.setShowError(false);
     };
 
     handleChange = (value: ?string) => {
         this.setValue(value);
 
-        if (this.showError) {
-            if (this.value && Isemail.validate(this.value)) {
-                this.props.onChange(this.value);
-                this.setShowError(false);
-            }
+        if (this.value && Isemail.validate(this.value)) {
+            this.setShowError(false);
+            this.props.onChange(this.value);
+
+            return;
         }
+
+        this.props.onChange(undefined);
     };
 
     render() {
