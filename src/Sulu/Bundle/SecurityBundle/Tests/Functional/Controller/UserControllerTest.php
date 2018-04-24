@@ -730,14 +730,14 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $this->assertEquals($this->user1->getId(), $response->_embedded->users[0]->id);
-        $this->assertEquals('admin', $response->_embedded->users[0]->username);
-        $this->assertObjectNotHasAttribute('password', $response->_embedded->users[0]);
+        $this->assertEquals($this->user1->getId(), $response->id);
+        $this->assertEquals('admin', $response->username);
+        $this->assertObjectNotHasAttribute('password', $response);
 
-        $this->assertEquals('Role1', $response->_embedded->users[0]->userRoles[0]->role->name);
-        $this->assertEquals('Sulu', $response->_embedded->users[0]->userRoles[0]->role->system);
-        $this->assertEquals('Role2', $response->_embedded->users[0]->userRoles[1]->role->name);
-        $this->assertEquals('Sulu', $response->_embedded->users[0]->userRoles[1]->role->system);
+        $this->assertEquals('Role1', $response->userRoles[0]->role->name);
+        $this->assertEquals('Sulu', $response->userRoles[0]->role->system);
+        $this->assertEquals('Role2', $response->userRoles[1]->role->name);
+        $this->assertEquals('Sulu', $response->userRoles[1]->role->system);
     }
 
     public function testGetUserAndRolesByContactNotExisting()
@@ -749,7 +749,8 @@ class UserControllerTest extends SuluTestCase
             '/api/users?contactId=1234'
         );
 
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertEquals('{}', $client->getResponse()->getContent());
     }
 
     public function testGetUserAndRolesWithoutParam()

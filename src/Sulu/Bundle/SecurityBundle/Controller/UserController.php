@@ -310,18 +310,14 @@ class UserController extends RestController implements ClassResourceInterface, S
             $contactId = $request->get('contactId');
 
             if (null != $contactId) {
-                $entities = [];
-                $entities[] = $this->getDoctrine()->getRepository(
+                $user = $this->getDoctrine()->getRepository(
                     $this->container->getParameter('sulu.model.user.class')
                 )->findUserByContact($contactId);
-                if (!$entities[0]) {
-                    $view = $this->view(null, 204);
-                }
+                $view = $this->view($user ?? new \stdClass(), 200);
             } else {
                 $entities = $this->getUserManager()->findAll();
+                $list = new CollectionRepresentation($entities, static::$entityKey);
             }
-
-            $list = new CollectionRepresentation($entities, static::$entityKey);
         }
 
         if (!$view) {

@@ -163,8 +163,8 @@ define([
             //TODO: fetch model (fetchUserByContactId)
 
             this.sandbox.util.load('/admin/api/users?contactId=' + this.options.id).then(function(data) {
-                if (!!data && !!data._embedded && !!data._embedded.users && data._embedded.users.length > 0) {
-                    this.user.set(data._embedded.users[0]);
+                if (Object.keys(data).length > 0) {
+                    this.user.set(data);
                     this.contact = this.user.get('contact').toJSON();
                     this.startComponent();
                 } else {
