@@ -35,8 +35,8 @@ sulu_content:
 The field `authored` are now added to massive_search index. Because of this the index has to be rebuild.
 
 ```bash
-bin/adminconsole massive:search:reindex --provider structure
-bin/websiteconsole massive:search:reindex --provider structure
+bin/adminconsole massive:search:reindex --provider sulu_structure
+bin/websiteconsole massive:search:reindex --provider sulu_structure
 ```
 
 ## 1.6.15
