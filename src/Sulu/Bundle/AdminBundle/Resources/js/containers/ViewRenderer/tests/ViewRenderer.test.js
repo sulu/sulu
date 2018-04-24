@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import ViewRenderer from '../ViewRenderer';
 import viewRegistry from '../registries/ViewRegistry';
 import sidebarStore from '../../Sidebar/stores/SidebarStore';
@@ -15,8 +15,8 @@ jest.mock('../../Sidebar/stores/SidebarStore', () => ({
 
 test('Render view returned from ViewRegistry', () => {
     viewRegistry.get.mockReturnValue(() => (<h1>Test</h1>));
-    const view = render(<ViewRenderer router={{route: {view: 'test'}}} />);
-    expect(view).toMatchSnapshot();
+    const view = mount(<ViewRenderer router={{route: {view: 'test'}}} />);
+    expect(render(view)).toMatchSnapshot();
     expect(viewRegistry.get).toBeCalledWith('test');
     expect(sidebarStore.clearConfig).toBeCalled();
 });
@@ -287,8 +287,48 @@ test('Render view and not clear the sidebarstore when component has sidebar', ()
     };
 
     viewRegistry.get.mockReturnValue(Component);
-    const view = render(<ViewRenderer router={{route: {view: 'test'}}} />);
-    expect(view).toMatchSnapshot();
+    const view = mount(<ViewRenderer router={{route: {view: 'test'}}} />);
+    expect(render(view)).toMatchSnapshot();
     expect(viewRegistry.get).toBeCalledWith('test');
+    expect(sidebarStore.clearConfig).not.toBeCalled();
+});
+
+test('Render view and not clear the sidebarstore when one of the parent component has sidebar', () => {
+    const Component = class Component extends React.Component {
+        static hasSidebar = false;
+
+        render() {
+            return <h1>{this.props.title}</h1>;
+        }
+    };
+
+    const ParentComponent = class Component extends React.Component {
+        static hasSidebar = true;
+
+        render() {
+            return <h1>{this.props.title}</h1>;
+        }
+    };
+
+    const route = {
+        view: 'test',
+        parent: {
+            view: 'parent',
+        },
+    };
+
+    viewRegistry.get.mockImplementation((view) => {
+        switch (view) {
+            case 'test':
+                return Component;
+            case 'parent':
+                return ParentComponent;
+        }
+    });
+
+    const view = mount(<ViewRenderer router={{route: route}} />);
+    expect(render(view)).toMatchSnapshot();
+    expect(viewRegistry.get).toBeCalledWith('test');
+    expect(viewRegistry.get).toBeCalledWith('parent');
     expect(sidebarStore.clearConfig).not.toBeCalled();
 });
