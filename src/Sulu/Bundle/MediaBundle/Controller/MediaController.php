@@ -17,6 +17,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -34,6 +35,8 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Makes media available through a REST API.
@@ -316,6 +319,50 @@ class MediaController extends AbstractMediaController implements
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @param $version
+     *
+     * @throws \Sulu\Component\Rest\Exception\MissingParameterException
+     */
+    public function deleteVersionAction(Request $request, $id, $version)
+    {
+        $locale = $this->getRequestParameter($request, 'locale', true);
+        $mediaManager = $this->getMediaManager();
+        $media = $mediaManager->getById($id, $locale);
+
+        if ($media->getVersion() === (int) $version) {
+            throw new BadRequestHttpException('Can\'t delete active version of a media.');
+        }
+
+        $currentFileVersion = null;
+
+        /** @var Media $mediaEntity */
+        foreach ($media->getFile()->getFileVersions() as $fileVersion) {
+            if ($fileVersion->getVersion() === (int) $version) {
+                $currentFileVersion = $fileVersion;
+                break;
+            }
+        }
+
+        if (!$currentFileVersion) {
+            throw new NotFoundHttpException(sprintf(
+                'Version "%s" for Media "%s"',
+                $version,
+                $id
+            ));
+        }
+
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $entityManager->remove($currentFileVersion);
+        $entityManager->flush();
+        // After successfully delete in the database remove file from storage
+        $this->get('sulu_media.storage')->remove($currentFileVersion->getStorageOptions());
+
+        return new Response('', 204);
     }
 
     /**

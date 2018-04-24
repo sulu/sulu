@@ -1311,6 +1311,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
             $address->setCity($addressData['city']);
             $address->setState($addressData['state']);
 
+            if (isset($addressData['latitude'])) {
+                $address->setLatitude($addressData['latitude']);
+            }
+            if (isset($addressData['longitude'])) {
+                $address->setLongitude($addressData['longitude']);
+            }
             if (isset($addressData['note'])) {
                 $address->setNote($addressData['note']);
             }
@@ -1389,6 +1395,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
                 $address->setCountry($country);
                 $address->setAddressType($addressType);
 
+                if (isset($entry['latitude'])) {
+                    $address->setLatitude($entry['latitude']);
+                }
+                if (isset($entry['longitude'])) {
+                    $address->setLongitude($entry['longitude']);
+                }
                 if (isset($entry['note'])) {
                     $address->setNote($entry['note']);
                 }

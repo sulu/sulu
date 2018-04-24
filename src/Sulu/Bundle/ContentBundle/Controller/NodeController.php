@@ -260,16 +260,18 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
         $complete = $this->getBooleanRequestParameter($request, 'complete', false, true);
         $ghostContent = $this->getBooleanRequestParameter($request, 'ghost-content', false, false);
+        $template = $this->getRequestParameter($request, 'template', false, null);
 
         $view = $this->responseGetById(
             $uuid,
-            function ($id) use ($language, $ghostContent) {
+            function ($id) use ($language, $ghostContent, $template) {
                 try {
                     return $this->getDocumentManager()->find(
                         $id,
                         $language,
                         [
                             'load_ghost_content' => $ghostContent,
+                            'structure_type' => $template,
                         ]
                     );
                 } catch (DocumentNotFoundException $ex) {

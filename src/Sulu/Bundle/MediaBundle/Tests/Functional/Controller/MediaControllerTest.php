@@ -1158,6 +1158,116 @@ class MediaControllerTest extends SuluTestCase
     /**
      * Test PUT to create a new FileVersion.
      */
+    public function testFileVersionDelete()
+    {
+        $media = $this->createMedia('photo');
+
+        $client = $this->createAuthenticatedClient();
+
+        $imagePath = $this->getImagePath();
+        $this->assertTrue(file_exists($imagePath));
+        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
+
+        $client->request(
+            'POST',
+            '/api/media/' . $media->getId() . '?action=new-version',
+            [],
+            [
+                'fileVersion' => $photo,
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertCount(2, (array) $response->versions);
+
+        $client->request(
+            'DELETE',
+            '/api/media/' . $media->getId() . '/versions/1?locale=en'
+        );
+
+        $this->assertHttpStatusCode(204, $client->getResponse());
+
+        $client->request(
+            'GET',
+            '/api/media/' . $media->getId() . '?locale=en'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertCount(1, (array) $response->versions);
+        $this->assertEquals(2, $response->version);
+    }
+
+    /**
+     * Test PUT to create a new FileVersion.
+     */
+    public function testFileVersionDeleteCurrentShould400()
+    {
+        $media = $this->createMedia('photo');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'DELETE',
+            '/api/media/' . $media->getId() . '/versions/1?locale=en'
+        );
+
+        $this->assertHttpStatusCode(400, $client->getResponse());
+    }
+
+    /**
+     * Test PUT to create a new FileVersion.
+     */
+    public function testFileVersionDeleteNotExistShould400()
+    {
+        $media = $this->createMedia('photo');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'DELETE',
+            '/api/media/' . $media->getId() . '/versions/2?locale=en'
+        );
+
+        $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
+    /**
+     * Test PUT to create a new FileVersion.
+     */
+    public function testFileVersionDeleteActiveShould400()
+    {
+        $media = $this->createMedia('photo');
+
+        $client = $this->createAuthenticatedClient();
+
+        $imagePath = $this->getImagePath();
+        $this->assertTrue(file_exists($imagePath));
+        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
+
+        $client->request(
+            'POST',
+            '/api/media/' . $media->getId() . '?action=new-version',
+            [],
+            [
+                'fileVersion' => $photo,
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertCount(2, (array) $response->versions);
+
+        $client->request(
+            'DELETE',
+            '/api/media/' . $media->getId() . '/versions/2?locale=en'
+        );
+
+        $this->assertHttpStatusCode(400, $client->getResponse());
+    }
+
+    /**
+     * Test PUT to create a new FileVersion.
+     */
     public function testPutWithoutFile()
     {
         $media = $this->createMedia('photo');

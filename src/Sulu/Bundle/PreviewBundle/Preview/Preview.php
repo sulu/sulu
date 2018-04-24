@@ -113,7 +113,7 @@ class Preview implements PreviewInterface
         $this->save($token, $object);
 
         $id = $provider->getId($object);
-        $html = $this->renderer->render($object, $id, $webspaceKey, $locale, true, $targetGroupId);
+        $html = $this->replaceLinks($this->renderer->render($object, $id, $webspaceKey, $locale, true, $targetGroupId));
 
         $extractor = new RdfaExtractor($html);
 
@@ -130,7 +130,9 @@ class Preview implements PreviewInterface
         if (0 === count($context)) {
             $id = $provider->getId($object);
 
-            return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
+            return $this->replaceLinks(
+                $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId)
+            );
         }
 
         // context
@@ -144,7 +146,7 @@ class Preview implements PreviewInterface
 
         $this->save($token, $object);
 
-        return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
+        return $this->replaceLinks($this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId));
     }
 
     /**
@@ -155,7 +157,19 @@ class Preview implements PreviewInterface
         $object = $this->fetch($token);
         $id = $this->getProvider(get_class($object))->getId($object);
 
-        return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
+        return $this->replaceLinks($this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId));
+    }
+
+    /**
+     * Replaces links with "#".
+     *
+     * @param string $html
+     *
+     * @return string
+     */
+    protected function replaceLinks($html)
+    {
+        return preg_replace('/(href|action)="[^"]*"/', '$1="#"', $html);
     }
 
     /**

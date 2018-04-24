@@ -613,7 +613,7 @@ define([
                 'husky.overlay.media-edit.language-changed', this.languageChangedSingle.bind(this)
             );
 
-            this.sandbox.dom.on(this.$el, 'click', function(e) {
+            this.sandbox.dom.on(this.$el, 'click.clipboard-copy', function(e) {
                 var $target = $(e.currentTarget),
                     $item = $target.parents('.media-edit-link'),
                     $info = $target.siblings('.media-edit-copied');
@@ -629,6 +629,8 @@ define([
                 }, 2000, $target, $item, $info);
             }.bind(this), '.fa-clipboard');
 
+            this.sandbox.dom.on(this.$el, 'click.version-remove', this.createVersionDeleteOverlay.bind(this), '.media-edit-link-action-remove');
+
             this.sandbox.on('husky.dropzone.file-version.uploading', function() {
                 this.sandbox.emit('husky.overlay.alert.close');
             }.bind(this));
@@ -641,6 +643,32 @@ define([
         },
 
         /**
+         * Create version delete overlay.
+         */
+        createVersionDeleteOverlay: function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var $target = $(event.currentTarget);
+            var version = $target.attr('data-version');
+            var mediaId = this.media.id;
+            var $container = this.sandbox.dom.createElement('<div/>');
+
+            $target.attr('disabled', true);
+
+            this.sandbox.dom.append(this.$el, $container);
+
+            this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    $.ajax('/admin/api/media/' + mediaId + '/versions/' + version + '?locale=' + this.options.locale,  {method: 'DELETE'});
+                    $target.closest('.media-edit-link').remove();
+                } else {
+                    $target.attr('disabled', false);
+                }
+            }.bind(this));
+        },
+
+        /**
          * Removes events related to the single-edit overlay
          */
         unbindSingleOverlayEvents: function() {
@@ -648,6 +676,8 @@ define([
             this.sandbox.off('husky.tabs.overlaymedia-edit.item.select');
             this.sandbox.off('husky.dropzone.file-version.files-added');
             this.sandbox.off('husky.dropzone.preview-image.files-added');
+            this.sandbox.dom.off(this.$el, 'click.version-remove');
+            this.sandbox.dom.off(this.$el, 'click.clipboard-copy');
         },
 
         /**

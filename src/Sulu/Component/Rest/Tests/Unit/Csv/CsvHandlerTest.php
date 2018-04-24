@@ -46,8 +46,8 @@ class CsvHandlerTest extends \PHPUnit_Framework_TestCase
         $listRepresentation->getRel()->willReturn('contacts');
         $listRepresentation->getData()->willReturn(
             [
-                ['id' => 1, 'fullName' => 'Max Mustermann', 'birthday' => new \DateTime('1976-02-01T00:00:00+01:00')],
-                ['id' => 2, 'fullName' => 'Erika Mustermann', 'birthday' => new \DateTime('1964-08-12T00:00:00+01:00')],
+                ['id' => 1, 'fullName' => 'Max Mustermann', 'birthday' => new \DateTime('1976-02-01T00:00:00+01:00'), 'enabled' => true],
+                ['id' => 2, 'fullName' => 'Erika Mustermann', 'birthday' => new \DateTime('1964-08-12T00:00:00+01:00'), 'enabled' => false],
             ]
         );
 
@@ -76,7 +76,7 @@ class CsvHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->headers->get('Content-Disposition'), 'attachment; filename="contacts.csv"');
 
         $this->assertEquals(
-            "id;fullName;birthday\n1;\"Max Mustermann\";1976-02-01T00:00:00+01:00\n2;\"Erika Mustermann\";1964-08-12T00:00:00+01:00\n",
+            "id;fullName;birthday;enabled\n1;\"Max Mustermann\";1976-02-01T00:00:00+01:00;1\n2;\"Erika Mustermann\";1964-08-12T00:00:00+01:00;0\n",
             $content
         );
     }

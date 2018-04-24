@@ -344,7 +344,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
 
         $fileVersion = $this->prophesize(FileVersion::class);
         $fileVersion->getVersion()->willReturn(1);
-        $file->getFileVersions()->willReturn([$fileVersion]);
+        $file->getFileVersion(1)->willReturn($fileVersion->reveal());
 
         $this->typeManager->getMediaType('img')->willReturn(2);
 
@@ -368,6 +368,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $fileVersion->getProperties()->willReturn([]);
         $fileVersion->getFocusPointX()->willReturn(null);
         $fileVersion->getFocusPointY()->willReturn(null);
+        $file->getFileVersion(1)->willReturn($fileVersion->reveal());
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
         $file->getVersion()->willReturn(1);
         $media->getFiles()->willReturn([$file->reveal()]);
@@ -403,6 +404,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $fileVersion->getProperties()->willReturn([]);
         $fileVersion->getFocusPointX()->willReturn(1);
         $fileVersion->getFocusPointY()->willReturn(2);
+        $file->getFileVersion(1)->willReturn($fileVersion->reveal());
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
         $file->getVersion()->willReturn(1);
         $media->getFiles()->willReturn([$file->reveal()]);

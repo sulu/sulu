@@ -287,6 +287,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
         $this->hydrateEvent->getOption('rehydrate')->willReturn(false);
+        $this->hydrateEvent->getOption('structure_type')->willReturn(null);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
@@ -309,6 +310,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
         $this->hydrateEvent->getOption('rehydrate')->willReturn(false);
+        $this->hydrateEvent->getOption('structure_type')->willReturn(null);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
@@ -320,6 +322,29 @@ class StructureSubscriberTest extends SubscriberTestCase
         // set the property container
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
         $this->accessor->set('structure', Argument::type(Structure::class))->shouldHaveBeenCalled();
+    }
+
+    /**
+     * It should load data the correct structure when template is given.
+     */
+    public function testHydrateOtherTemplate()
+    {
+        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
+        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
+        $this->hydrateEvent->getLocale()->willReturn('fr');
+        $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(false);
+        $this->hydrateEvent->getOption('structure_type')->willReturn('test');
+
+        // set the structure type
+        $this->encoder->contentName('template')->willReturn('i18n:fr-template');
+        $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn('foobar');
+
+        $this->document->setStructureType('test')->shouldBeCalled();
+
+        // set the property container
+        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+        $this->accessor->set('structure', Argument::type(ManagedStructure::class))->shouldHaveBeenCalled();
     }
 
     /**
@@ -338,6 +363,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
         $this->hydrateEvent->getOption('rehydrate')->willReturn(true);
+        $this->hydrateEvent->getOption('structure_type')->willReturn(null);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
@@ -362,6 +388,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
         $this->hydrateEvent->getOption('rehydrate')->willReturn(false);
+        $this->hydrateEvent->getOption('structure_type')->willReturn(null);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
@@ -389,6 +416,8 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
         $this->hydrateEvent->getOption('rehydrate')->willReturn(true);
+        $this->hydrateEvent->getOption('structure_type')->willReturn(null);
+
         $this->inspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
         $this->inspector->getMetadata($this->document->reveal())->willReturn($metadata->reveal());
 

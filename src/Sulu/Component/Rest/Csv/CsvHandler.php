@@ -132,6 +132,8 @@ class CsvHandler
         foreach ($row as $key => $value) {
             if ($value instanceof \DateTime) {
                 $row[$key] = $value->format(\DateTime::RFC3339);
+            } elseif (is_bool($value)) {
+                $row[$key] = true === $value ? 1 : 0;
             } elseif (is_array($value) || is_object($value)) {
                 $row[$key] = json_encode($value);
             }

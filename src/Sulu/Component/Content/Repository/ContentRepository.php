@@ -126,13 +126,14 @@ class ContentRepository implements ContentRepositoryInterface
         );
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        $rows = $queryBuilder->execute();
+        $queryResult = $queryBuilder->execute();
 
-        if (1 !== count(iterator_to_array($rows->getRows()))) {
+        $rows = iterator_to_array($queryResult->getRows());
+        if (1 !== count($rows)) {
             throw new ItemNotFoundException();
         }
 
-        return $this->resolveContent($rows->getRows()->current(), $locale, $locales, $mapping, $user);
+        return $this->resolveContent(current($rows), $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -797,7 +798,7 @@ class ContentRepository implements ContentRepositoryInterface
         }
 
         $structure = $this->structureManager->getStructure($template);
-        if (!$structure->hasTag('sulu.rlp')) {
+        if (!$structure || !$structure->hasTag('sulu.rlp')) {
             return;
         }
 

@@ -741,6 +741,16 @@ class FileVersion implements AuditableInterface
     }
 
     /**
+     * Is active.
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->version === $this->file->getVersion();
+    }
+
+    /**
      * Set storageType.
      *
      * @param string $storageType

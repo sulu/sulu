@@ -1,6 +1,16 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.17 (2018-04-23)
+    * FEATURE     #3906 [MediaBundle]             Add file version delete to media overlay
+    * HOTFIX      #3912 [ContentBundle]           Fixed content-query when a child is broken
+    * FEATURE     #3914 [ContactBundle]           Added latitude/longitude to address 
+    * FEATURE     #3905 [MediaBundle]             Add canonical and robots noIndex headers to download of old versions 
+    * ENHANCEMENT #3899 [PreviewBundle]           Replaced links in preview with '#'
+    * ENHANCEMENT #3884 [ContentBundle]           Improved developer-experience when overriding content-teaser-provider
+    * ENHANCEMENT #3897 [ContentBundle]           SEO title length changed from 55 to 70
+    * HOTFIX      #3870 [Husky]                   Updated husky to fix bug with thumbnails in datagrid
+
 * 1.6.16 (2018-03-19)
     * ENHANCEMENT #3849 [AdminBundle]             Add Twig main blocks to be able to use inheritance
     * HOTFIX      #3848 [ContentBundle]           Added check for unknown-document for "sulu_content_load"
@@ -21,7 +31,8 @@ CHANGELOG for Sulu
     * FEATURE     #3816 [All]                     Validate if grunt build was run for all bundles with circleci
     * BUGFIX      #3806 [All]                     Fix compatibility on lowest and fix appveyor
     * BUGFIX      #3351 [ContentBundle]           Fix spacing between rows and section in content template generation
-
+    * BUGFIX      #3901 [PreviewBundle]           Add a voter to allow the PreviewKernel to access all uris.
+    
 * 1.6.15 (2018-02-27)
     * HOTFIX      #3802 [ContentBundle]           Fixed XmlLoader internal flag
     * HOTFIX      #3796 [HttpCache]               Increased priority of update-response-subscriber 
@@ -200,6 +211,10 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.13 (2018-04-23)
+    * BUGFIX      #3918 [RestComponent]         CSV Export: Fixed serialization of boolean
+    * ENHANCEMENT #3876 [ContentBundle]         Reload data when changing template  
 
 * 1.5.12 (2018-03-19)
     * ENHANCEMENT #3830 [All]                   Avoid duplicated run of composer update for travis

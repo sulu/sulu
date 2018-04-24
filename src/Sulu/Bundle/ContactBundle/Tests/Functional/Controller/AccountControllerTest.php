@@ -214,6 +214,8 @@ class AccountControllerTest extends SuluTestCase
         $address->setPostboxPostcode('6850');
         $address->setPostboxNumber('4711');
         $address->setNote('note');
+        $address->setLatitude(47.4048346);
+        $address->setLongitude(9.7602198);
 
         $this->address = $address;
 
@@ -395,6 +397,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Musterland', $response->addresses[0]->country->name);
         $this->assertEquals('ML', $response->addresses[0]->country->code);
         $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+        $this->assertEquals(47.4048346, $response->addresses[0]->latitude);
+        $this->assertEquals(9.7602198, $response->addresses[0]->longitude);
         $this->assertEquals('Feldkirch', $response->placeOfJurisdiction);
 
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
@@ -645,6 +649,8 @@ class AccountControllerTest extends SuluTestCase
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
                         'note' => 'note',
+                        'latitude' => 47.4049309,
+                        'longitude' => 9.7593077,
                     ],
                 ],
                 'notes' => [
@@ -680,6 +686,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+        $this->assertEquals(47.4049309, $response->addresses[0]->latitude);
+        $this->assertEquals(9.7593077, $response->addresses[0]->longitude);
 
         $this->assertObjectHasAttribute('logo', $response);
         $this->assertEquals($this->logo->getId(), $response->logo->id);
@@ -1318,6 +1326,8 @@ class AccountControllerTest extends SuluTestCase
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
                         'note' => 'note',
+                        'latitude' => 47.4048168,
+                        'longitude' => 9.7585263,
                     ],
                     [
                         'street' => 'Rathausgasse',
@@ -1401,6 +1411,9 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
             $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
             $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+
+            $this->assertEquals(47.4048168, $response->addresses[0]->latitude);
+            $this->assertEquals(9.7585263, $response->addresses[0]->longitude);
 
             $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
             $this->assertEquals('3', $response->addresses[1]->number);
