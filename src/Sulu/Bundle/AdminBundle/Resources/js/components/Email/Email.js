@@ -31,12 +31,16 @@ export default class Email extends React.Component<Props> {
         this.showError = showError;
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (this.value && !nextProps.value) {
+    componentDidMount() {
+        this.setValue(this.props.value);
+    }
+
+    componentDidUpdate() {
+        if (this.value && !this.props.value) {
             return;
         }
 
-        this.setValue(nextProps.value);
+        this.setValue(this.props.value);
     }
 
     handleIconClick = () => {
@@ -45,31 +49,43 @@ export default class Email extends React.Component<Props> {
             return;
         }
 
-        window.location.href = 'mailto:' + value;
+        window.location.assign('mailto:' + value);
     };
 
     handleBlur = () => {
-        if (!this.value || !Isemail.validate(this.value)) {
+        if (this.isValidValue()) {
+            this.setShowError(false);
+        } else {
             this.props.onChange(undefined);
             this.setShowError(true);
-
-            return;
         }
 
-        this.setShowError(false);
+        const onBlur = this.props.onBlur;
+
+        if (onBlur) {
+            onBlur();
+        }
     };
 
     handleChange = (value: ?string) => {
         this.setValue(value);
 
-        if (this.value && Isemail.validate(this.value)) {
-            this.setShowError(false);
-            this.props.onChange(this.value);
+        if (!this.isValidValue()) {
+            this.props.onChange(undefined);
 
             return;
         }
 
-        this.props.onChange(undefined);
+        this.setShowError(false);
+        this.props.onChange(this.value);
+    };
+
+    isValidValue = (): boolean => {
+        if (!this.value) {
+            return true;
+        }
+
+        return Isemail.validate(this.value);
     };
 
     render() {

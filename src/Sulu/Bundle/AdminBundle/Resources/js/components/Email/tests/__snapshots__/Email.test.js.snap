@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Email should render 1`] = `
+<Email
+  onChange={[MockFunction]}
+  valid={true}
+  value={null}
+>
+  <Input
+    icon="su-envalope"
+    onBlur={[Function]}
+    onChange={[Function]}
+    type="email"
+    valid={true}
+    value={null}
+  >
+    <label
+      className="input"
+    >
+      <div
+        className="prependedContainer"
+      >
+        <Icon
+          className="icon"
+          name="su-envalope"
+        >
+          <span
+            aria-label="su-envalope"
+            className="icon su-envalope"
+          />
+        </Icon>
+      </div>
+      <input
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="email"
+        value=""
+      />
+    </label>
+  </Input>
+</Email>
+`;
+
+exports[`Email should render error 1`] = `
+<label
+  class="input error"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render error when invalid value is set 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render error when invalid value is set 2`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render null value as empty string 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render with placeholder 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    placeholder="My placeholder"
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render with value 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon iconClickable su-envalope clickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;

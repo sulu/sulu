@@ -22,7 +22,7 @@ export default class Phone extends React.PureComponent<Props> {
             return;
         }
 
-        window.location.href = 'tel:' + value;
+        window.location.assign('tel:' + value);
     };
 
     render() {
