@@ -90,7 +90,7 @@ test('Email should not set onIconClick when value is invalid', () => {
 });
 
 test('Email should set onIconClick when value is valid and window should be opened', () => {
-    global.window.location.assign = jest.fn();
+    window.location.assign = jest.fn();
 
     const onChange = jest.fn();
     const onBlur = jest.fn();
@@ -99,5 +99,5 @@ test('Email should set onIconClick when value is valid and window should be open
     const onIconClickFunction = email.find('Input').prop('onIconClick');
     expect(onIconClickFunction).toBeInstanceOf(Function);
     onIconClickFunction.call();
-    expect(global.window.location.assign).toBeCalledWith('mailto:abc@abc.abc');
+    expect(window.location.assign).toBeCalledWith('mailto:abc@abc.abc');
 });
