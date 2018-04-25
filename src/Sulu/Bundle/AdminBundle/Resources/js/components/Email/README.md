@@ -1,7 +1,7 @@
-The email component can be used to get phone from the user.
+The email component can be used to get a valid email from the user.
 
 ```javascript
-initialState = {value: ''};
+initialState = {value: undefined};
 const onChange = (newValue) => {
     setState({value: newValue});
 };

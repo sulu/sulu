@@ -1,10 +1,13 @@
-The phone component can be used to get phone from the user in the same way as with the native browser input tel.
+The phone component can be used to get a phone number from the user.
 
 ```javascript
-initialState = {value: ''};
+initialState = {value: undefined};
 const onChange = (newValue) => {
     setState({value: newValue});
 };
 
-<Phone value={state.value} onChange={onChange} />
+<div>
+    <div style={{paddingBottom: '50px'}}>Current value: {state.value ? state.value : 'null'}</div>
+    <Phone value={state.value} onChange={onChange} />
+</div>
 ```
