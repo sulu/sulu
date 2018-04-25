@@ -14,7 +14,7 @@ namespace Sulu\Component\Serializer\Tests\Unit;
 use JMS\Serializer\Naming\PropertyNamingStrategyInterface;
 use Sulu\Component\Serializer\ArraySerializationVisitor;
 
-class ArraySerializationVisitorTest extends \PHPUnit_Framework_TestCase
+class ArraySerializationVisitorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ArraySerializationVisitor

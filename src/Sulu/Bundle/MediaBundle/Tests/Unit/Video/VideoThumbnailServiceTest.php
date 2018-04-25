@@ -17,7 +17,7 @@ use FFMpeg\Media\Frame;
 use FFMpeg\Media\Video;
 use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService;
 
-class VideoThumbnailServiceTest extends \PHPUnit_Framework_TestCase
+class VideoThumbnailServiceTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Video

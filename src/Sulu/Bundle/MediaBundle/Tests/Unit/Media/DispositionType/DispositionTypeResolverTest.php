@@ -14,7 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\DispositionType;
 use Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeResolver;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class DispositionTypeResolverTest extends \PHPUnit_Framework_TestCase
+class DispositionTypeResolverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string

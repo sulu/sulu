@@ -28,7 +28,7 @@ use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
-class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
+class DocumentInspectorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DocumentRegistry

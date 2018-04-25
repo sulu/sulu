@@ -13,7 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Sulu\Component\Webspace\PortalInformation;
 
-class PortalInformationTest extends \PHPUnit_Framework_TestCase
+class PortalInformationTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PortalInformation

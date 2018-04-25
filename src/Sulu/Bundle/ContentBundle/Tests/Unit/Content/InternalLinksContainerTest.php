@@ -16,7 +16,7 @@ use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 
-class InternalLinksContainerTest extends \PHPUnit_Framework_TestCase
+class InternalLinksContainerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var InternalLinksContainer

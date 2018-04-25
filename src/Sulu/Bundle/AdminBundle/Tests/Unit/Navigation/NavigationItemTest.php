@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
-class NavigationItemTest extends \PHPUnit_Framework_TestCase
+class NavigationItemTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var NavigationItem

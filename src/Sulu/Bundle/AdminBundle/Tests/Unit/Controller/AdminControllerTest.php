@@ -39,7 +39,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 
-class AdminControllerTest extends \PHPUnit_Framework_TestCase
+class AdminControllerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AuthorizationCheckerInterface

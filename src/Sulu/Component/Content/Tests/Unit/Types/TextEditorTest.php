@@ -16,7 +16,7 @@ use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Types\TextEditor;
 
-class TextEditorTest extends \PHPUnit_Framework_TestCase
+class TextEditorTest extends \PHPUnit\Framework\TestCase
 {
     const VALIDATE_REMOVED = 'removed';
 

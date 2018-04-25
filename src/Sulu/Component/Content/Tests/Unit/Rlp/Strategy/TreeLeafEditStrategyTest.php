@@ -30,7 +30,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
-class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
+class TreeLeafEditStrategyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ResourceLocatorMapperInterface
@@ -210,7 +210,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveInvalid()
     {
-        $this->setExpectedException(ResourceLocatorNotValidException::class);
+        $this->expectException(ResourceLocatorNotValidException::class);
 
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
@@ -231,7 +231,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveAlreadyExist()
     {
-        $this->setExpectedException(ResourceLocatorAlreadyExistsException::class);
+        $this->expectException(ResourceLocatorAlreadyExistsException::class);
 
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';

@@ -15,7 +15,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Markup\MediaTag;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
-class MediaTagTest extends \PHPUnit_Framework_TestCase
+class MediaTagTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var MediaRepositoryInterface

@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class InitializeCommandTest extends \PHPUnit_Framework_TestCase
+class InitializeCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var mixed

@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit;
 
-class WebspaceTestCase extends \PHPUnit_Framework_TestCase
+class WebspaceTestCase extends \PHPUnit\Framework\TestCase
 {
     protected function getResourceDirectory()
     {

@@ -34,7 +34,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
-class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
+class ResourceSegmentSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PropertyEncoder

@@ -21,7 +21,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
+class SystemCollectionManagerTest extends \PHPUnit\Framework\TestCase
 {
     public function configProvider()
     {
@@ -393,7 +393,7 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetSystemCollection($data, $key, $expected, $exception = null)
     {
         if (null !== $exception) {
-            $this->setExpectedException($exception);
+            $this->expectException($exception);
         }
 
         $tokenStorage = $this->getTokenStorage();

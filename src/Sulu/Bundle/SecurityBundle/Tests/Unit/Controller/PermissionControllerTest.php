@@ -20,7 +20,7 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class PermissionControllerTest extends \PHPUnit_Framework_TestCase
+class PermissionControllerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PermissionController

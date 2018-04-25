@@ -21,7 +21,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class SnippetAreaTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class SnippetAreaTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DefaultSnippetManagerInterface

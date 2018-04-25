@@ -69,7 +69,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->loadFixtures();
 
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
-        $this->property = $this->getMock('Sulu\Component\Content\Compat\PropertyInterface');
+        $this->property = $this->getMockBuilder('Sulu\Component\Content\Compat\PropertyInterface')->getMock();
 
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
 
@@ -116,12 +116,10 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertEquals('Le grande budapest', $hotel1->getPropertyValue('i18n:de-title'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Property value must either be a UUID or a Snippet
-     */
     public function testPropertyWriteUnknownType()
     {
+        $this->expectExceptionMessage('Property value must either be a UUID or a Snippet');
+        $this->expectException(\InvalidArgumentException::class);
         $this->property->expects($this->once())
             ->method('getValue')
             ->will($this->returnValue(['ids' => 'this-aint-nuffin']));

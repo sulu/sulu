@@ -17,7 +17,7 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 
-class PermissionListenerTest extends \PHPUnit_Framework_TestCase
+class PermissionListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PermissionListener

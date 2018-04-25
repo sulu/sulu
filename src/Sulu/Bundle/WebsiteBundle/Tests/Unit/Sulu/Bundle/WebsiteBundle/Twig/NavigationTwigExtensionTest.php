@@ -13,7 +13,7 @@ use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
-class NavigationTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class NavigationTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     public function activeElementProvider()
     {

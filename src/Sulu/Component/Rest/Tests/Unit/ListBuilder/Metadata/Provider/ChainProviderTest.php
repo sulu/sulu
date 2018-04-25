@@ -18,7 +18,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Provider\ChainProvider;
 use Sulu\Component\Rest\ListBuilder\Metadata\ProviderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\VirtualPropertyMetadata;
 
-class ChainProviderTest extends \PHPUnit_Framework_TestCase
+class ChainProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * This is needed for tests to determine working virtual-property detection.

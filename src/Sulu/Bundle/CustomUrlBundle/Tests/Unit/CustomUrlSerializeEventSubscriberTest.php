@@ -21,7 +21,7 @@ use Sulu\Bundle\CustomUrlBundle\EventListener\CustomUrlSerializeEventSubscriber;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 
-class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
+class CustomUrlSerializeEventSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSubscribedEvents()
     {

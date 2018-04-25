@@ -27,7 +27,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class CustomUrlSubscriberTest extends \PHPUnit_Framework_TestCase
+class CustomUrlSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var CustomUrlSubscriber

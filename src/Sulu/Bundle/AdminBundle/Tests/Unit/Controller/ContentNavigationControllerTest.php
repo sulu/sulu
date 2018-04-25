@@ -20,7 +20,7 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistryInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContentNavigationControllerTest extends \PHPUnit_Framework_TestCase
+class ContentNavigationControllerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContentNavigationController

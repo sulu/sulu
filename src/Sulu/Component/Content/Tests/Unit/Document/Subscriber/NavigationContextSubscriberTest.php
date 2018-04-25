@@ -17,7 +17,7 @@ use Sulu\Component\Content\Document\Subscriber\NavigationContextSubscriber;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Metadata;
 
-class NavigationContextSubscriberTest extends \PHPUnit_Framework_TestCase
+class NavigationContextSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var NavigationContextSubscriber

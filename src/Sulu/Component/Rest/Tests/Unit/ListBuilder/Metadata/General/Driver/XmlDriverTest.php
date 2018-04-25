@@ -19,7 +19,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class XmlDriverTest extends \PHPUnit_Framework_TestCase
+class XmlDriverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var FileLocatorInterface

@@ -37,7 +37,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
-class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
+class ContentRouteProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DocumentManagerInterface

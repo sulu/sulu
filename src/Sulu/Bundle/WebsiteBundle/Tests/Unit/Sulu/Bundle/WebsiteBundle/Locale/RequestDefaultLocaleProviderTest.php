@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Portal;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class RequestDefaultLocaleProviderTest extends \PHPUnit_Framework_TestCase
+class RequestDefaultLocaleProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Portal

@@ -20,7 +20,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Sulu\Component\Import\Manager\ImportManagerInterface;
 
-class ExcerptStructureExtensionTest extends \PHPUnit_Framework_TestCase
+class ExcerptStructureExtensionTest extends \PHPUnit\Framework\TestCase
 {
     public function testSaveSetLocaleAndWebspace()
     {

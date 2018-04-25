@@ -14,7 +14,7 @@ namespace Sulu\Bundle\LocationBundle\Tests\Unit\Content\Types;
 use Sulu\Bundle\LocationBundle\Content\Types\LocationContentType;
 use Sulu\Component\Content\Compat\PropertyParameter;
 
-class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
+class LocationContentTypeTest extends \PHPUnit\Framework\TestCase
 {
     protected $nodeRepository;
 
@@ -24,10 +24,10 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->nodeRepository = $this->getMock('Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface');
-        $this->phpcrNode = $this->getMock('PHPCR\NodeInterface');
-        $this->suluProperty = $this->getMock('Sulu\Component\Content\Compat\PropertyInterface');
-        $this->mapManager = $this->getMock('Sulu\Bundle\LocationBundle\Map\MapManager');
+        $this->nodeRepository = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface')->getMock();
+        $this->phpcrNode = $this->getMockBuilder('PHPCR\NodeInterface')->getMock();
+        $this->suluProperty = $this->getMockBuilder('Sulu\Component\Content\Compat\PropertyInterface')->getMock();
+        $this->mapManager = $this->getMockBuilder('Sulu\Bundle\LocationBundle\Map\MapManager')->getMock();
         $this->locationContent = new LocationContentType(
             $this->nodeRepository,
             'Foo:bar.html.twig',

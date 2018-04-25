@@ -22,7 +22,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\EventListener\CacheInvalidationListener;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
-class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
+class CacheInvalidationListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var CacheManager

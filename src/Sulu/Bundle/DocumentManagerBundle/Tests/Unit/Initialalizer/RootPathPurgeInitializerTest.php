@@ -19,7 +19,7 @@ use Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurgeInitializer;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RootPathPurgeInitializerTest extends \PHPUnit_Framework_TestCase
+class RootPathPurgeInitializerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SessionInterface

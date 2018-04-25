@@ -28,7 +28,7 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory;
 use Symfony\Component\Translation\Translator;
 
-class ResourceMetadataMapperTest extends \PHPUnit_Framework_TestCase
+class ResourceMetadataMapperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ResourceMetadataMapper

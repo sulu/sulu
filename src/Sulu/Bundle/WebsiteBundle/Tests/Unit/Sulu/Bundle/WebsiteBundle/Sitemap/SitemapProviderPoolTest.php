@@ -16,7 +16,7 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\Sitemap;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPool;
 
-class SitemapProviderPoolTest extends \PHPUnit_Framework_TestCase
+class SitemapProviderPoolTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SitemapProviderInterface[]
@@ -52,7 +52,7 @@ class SitemapProviderPoolTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProviderNotExists()
     {
-        $this->setExpectedException(SitemapProviderNotFoundException::class);
+        $this->expectException(SitemapProviderNotFoundException::class);
 
         $this->pool->getProvider('test');
     }

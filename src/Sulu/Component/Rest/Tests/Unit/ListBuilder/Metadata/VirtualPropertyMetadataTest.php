@@ -14,7 +14,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata;
 use JMS\Serializer\Metadata\PropertyMetadata as BasePropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\VirtualPropertyMetadata;
 
-class VirtualPropertyMetadataTest extends \PHPUnit_Framework_TestCase
+class VirtualPropertyMetadataTest extends \PHPUnit\Framework\TestCase
 {
     public function testSerialize()
     {

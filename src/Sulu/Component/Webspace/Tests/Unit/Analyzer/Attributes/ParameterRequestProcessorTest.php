@@ -17,7 +17,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\HttpFoundation\Request;
 
-class ParameterRequestProcessorTest extends \PHPUnit_Framework_TestCase
+class ParameterRequestProcessorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var WebspaceManagerInterface

@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class PageRuleTest extends \PHPUnit_Framework_TestCase
+class PageRuleTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RequestStack

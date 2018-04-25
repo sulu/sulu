@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class UserLocaleListenerTest extends \PHPUnit_Framework_TestCase
+class UserLocaleListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TokenInterface

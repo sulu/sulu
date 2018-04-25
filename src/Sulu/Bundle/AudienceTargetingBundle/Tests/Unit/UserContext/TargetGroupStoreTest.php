@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Request;
 
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore;
 
-class TargetGroupStoreTest extends \PHPUnit_Framework_TestCase
+class TargetGroupStoreTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TargetGroupStore

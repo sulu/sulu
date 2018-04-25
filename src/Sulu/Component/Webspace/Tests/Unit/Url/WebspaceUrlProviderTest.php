@@ -16,7 +16,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
-class WebspaceUrlProviderTest extends \PHPUnit_Framework_TestCase
+class WebspaceUrlProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetUrls()
     {

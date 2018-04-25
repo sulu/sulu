@@ -14,7 +14,7 @@ namespace Sulu\Bundle\CoreBundle\Tests\Unit;
 use Sulu\Bundle\CoreBundle\DataFixtures\ReplacerXmlLoader;
 use Symfony\Component\Config\FileLocatorInterface;
 
-class ReplacerXmlLoaderTest extends \PHPUnit_Framework_TestCase
+class ReplacerXmlLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoad()
     {

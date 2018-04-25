@@ -22,7 +22,7 @@ use Sulu\Component\Security\Authorization\AccessControl\DoctrineAccessControlPro
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 
-class DoctrineAccessControlProviderTest extends \PHPUnit_Framework_TestCase
+class DoctrineAccessControlProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DoctrineAccessControlProvider

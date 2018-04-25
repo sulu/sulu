@@ -17,7 +17,7 @@ use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
-class SnippetResolverTest extends \PHPUnit_Framework_TestCase
+class SnippetResolverTest extends \PHPUnit\Framework\TestCase
 {
     public function dataProvider()
     {

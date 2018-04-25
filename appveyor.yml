@@ -6,7 +6,7 @@ platform:
 environment:
   matrix:
     # see http://windows.php.net/downloads/releases/ for available versions
-    - PHP_VERSION: 7.1.14
+    - PHP_VERSION: 7.2.4
       SULU_DATABASE_PASSWORD: Password12!
 
 services:

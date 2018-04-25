@@ -20,7 +20,7 @@ use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Hash\Serializer\Subscriber\HashSerializeEventSubscriber;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
-class HashSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
+class HashSerializeEventSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var HasherInterface

@@ -23,7 +23,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
+class DefaultSnippetManagerTest extends \PHPUnit\Framework\TestCase
 {
     private $defaultTypes = [
         'test' => [
@@ -98,7 +98,7 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
         $document = null;
         if ($exists) {
             if (!$sameType) {
-                $this->setExpectedException(WrongSnippetTypeException::class);
+                $this->expectException(WrongSnippetTypeException::class);
             }
 
             $document = $this->prophesize(SnippetDocument::class);
@@ -109,7 +109,7 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
             $node = $this->prophesize(NodeInterface::class);
             $registry->getNodeForDocument($document)->willReturn($node->reveal());
         } else {
-            $this->setExpectedException(SnippetNotFoundException::class);
+            $this->expectException(SnippetNotFoundException::class);
         }
 
         $documentManager->find($uuid, $locale, Argument::any())->shouldBeCalledTimes(1)->willReturn($document);
@@ -174,7 +174,7 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
         $node = null;
         if ($exists) {
             if (!$sameType) {
-                $this->setExpectedException(WrongSnippetTypeException::class);
+                $this->expectException(WrongSnippetTypeException::class);
             }
 
             $document = $this->prophesize(SnippetDocument::class);

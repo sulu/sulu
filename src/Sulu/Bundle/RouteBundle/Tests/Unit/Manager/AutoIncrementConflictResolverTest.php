@@ -15,7 +15,7 @@ use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Manager\AutoIncrementConflictResolver;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
-class AutoIncrementConflictResolverTest extends \PHPUnit_Framework_TestCase
+class AutoIncrementConflictResolverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RouteRepositoryInterface

@@ -22,7 +22,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class CustomUrlRouteProviderTest extends \PHPUnit_Framework_TestCase
+class CustomUrlRouteProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function dataProvider()
     {

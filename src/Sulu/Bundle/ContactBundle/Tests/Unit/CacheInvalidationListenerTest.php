@@ -20,7 +20,7 @@ use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Contact\Model\ContactInterface;
 
-class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
+class CacheInvalidationListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var CacheManager

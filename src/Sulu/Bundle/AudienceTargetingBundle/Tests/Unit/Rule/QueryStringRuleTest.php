@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class QueryStringRuleTest extends \PHPUnit_Framework_TestCase
+class QueryStringRuleTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RequestStack

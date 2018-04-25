@@ -16,7 +16,7 @@ use Sulu\Component\Content\Document\Structure\PropertyValue;
 /**
  * Tests for class PropertyValue.
  */
-class PropertyValueTest extends \PHPUnit_Framework_TestCase
+class PropertyValueTest extends \PHPUnit\Framework\TestCase
 {
     public function provideOffsetSetData()
     {

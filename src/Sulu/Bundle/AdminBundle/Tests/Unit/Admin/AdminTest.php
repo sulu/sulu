@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
-class AdminTest extends \PHPUnit_Framework_TestCase
+class AdminTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Admin

@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
-class NavigationTest extends \PHPUnit_Framework_TestCase
+class NavigationTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Navigation

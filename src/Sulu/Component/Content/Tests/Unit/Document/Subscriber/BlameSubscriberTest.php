@@ -23,7 +23,7 @@ use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
-class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
+class BlameSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PersistEvent

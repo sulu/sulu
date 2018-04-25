@@ -19,7 +19,7 @@ use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 
-class PreviewTest extends \PHPUnit_Framework_TestCase
+class PreviewTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Cache
@@ -88,7 +88,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testStartWithoutProvider()
     {
-        $this->setExpectedException(ProviderNotFoundException::class);
+        $this->expectException(ProviderNotFoundException::class);
 
         $preview = $this->getPreview();
         $preview->start('\\Example', 1, 1, 'sulu_io', 'de');
@@ -189,7 +189,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateTokenNotExists()
     {
-        $this->setExpectedException(TokenNotFoundException::class);
+        $this->expectException(TokenNotFoundException::class);
 
         $object = $this->prophesize(\stdClass::class);
 

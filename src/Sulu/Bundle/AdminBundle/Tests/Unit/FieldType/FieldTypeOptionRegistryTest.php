@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\FieldType;
 
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistry;
 
-class FieldTypeOptionRegistryTest extends \PHPUnit_Framework_TestCase
+class FieldTypeOptionRegistryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var FieldTypeOptionRegistry

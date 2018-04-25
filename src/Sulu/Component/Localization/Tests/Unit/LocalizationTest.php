@@ -13,7 +13,7 @@ namespace Sulu\Component\Localization\Tests\Unit;
 
 use Sulu\Component\Localization\Localization;
 
-class LocalizationTest extends \PHPUnit_Framework_TestCase
+class LocalizationTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Localization

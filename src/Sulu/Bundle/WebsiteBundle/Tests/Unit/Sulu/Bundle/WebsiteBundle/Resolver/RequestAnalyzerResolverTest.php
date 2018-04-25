@@ -18,7 +18,7 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
+class RequestAnalyzerResolverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RequestAnalyzerResolver

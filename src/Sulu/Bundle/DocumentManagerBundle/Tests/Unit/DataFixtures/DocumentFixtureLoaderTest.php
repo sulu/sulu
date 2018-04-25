@@ -14,7 +14,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class DocumentFixtureLoaderTest extends \PHPUnit_Framework_TestCase
+class DocumentFixtureLoaderTest extends \PHPUnit\Framework\TestCase
 {
     private $container;
 

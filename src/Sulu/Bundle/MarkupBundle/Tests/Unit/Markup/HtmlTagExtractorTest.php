@@ -16,7 +16,7 @@ use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
 /**
  * Tests for HtmlTagExtractor.
  */
-class HtmlTagExtractorTest extends \PHPUnit_Framework_TestCase
+class HtmlTagExtractorTest extends \PHPUnit\Framework\TestCase
 {
     public function provideTags()
     {

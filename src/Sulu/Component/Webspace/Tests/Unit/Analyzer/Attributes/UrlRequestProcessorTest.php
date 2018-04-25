@@ -15,7 +15,7 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\UrlRequestProcessor;
 use Symfony\Component\HttpFoundation\Request;
 
-class UrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
+class UrlRequestProcessorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var UrlRequestProcessor

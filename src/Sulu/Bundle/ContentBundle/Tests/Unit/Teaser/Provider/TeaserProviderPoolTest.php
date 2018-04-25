@@ -17,7 +17,7 @@ use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPool;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
 
-class TeaserProviderPoolTest extends \PHPUnit_Framework_TestCase
+class TeaserProviderPoolTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TeaserProviderInterface[]
@@ -53,7 +53,7 @@ class TeaserProviderPoolTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProviderNotFound()
     {
-        $this->setExpectedException(ProviderNotFoundException::class);
+        $this->expectException(ProviderNotFoundException::class);
 
         $this->teaserProviderPool->getProvider('test');
     }

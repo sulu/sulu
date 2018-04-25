@@ -17,7 +17,7 @@ use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\ContentBundle\Markup\LinkTag;
 
-class LinkTagTest extends \PHPUnit_Framework_TestCase
+class LinkTagTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var LinkProviderInterface[]

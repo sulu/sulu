@@ -70,11 +70,9 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testInvalidModelInterfaceMapping()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $bundle = new UsingPersistenceBundleTrait();
         $bundle->modelInterfaces = [
             'Sulu\Component\Persistence\Model\FooInterface' => 'sulu.model.foo.class',

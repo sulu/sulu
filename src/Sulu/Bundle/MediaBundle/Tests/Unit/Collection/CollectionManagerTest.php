@@ -22,7 +22,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
-class CollectionManagerTest extends \PHPUnit_Framework_TestCase
+class CollectionManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var CollectionRepository

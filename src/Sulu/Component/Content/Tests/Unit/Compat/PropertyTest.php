@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Compat;
 
 use Sulu\Component\Content\Compat\Property;
 
-class PropertyTest extends \PHPUnit_Framework_TestCase
+class PropertyTest extends \PHPUnit\Framework\TestCase
 {
     public function provideIsMultipleTest()
     {

@@ -24,7 +24,7 @@ use Sulu\Component\Webspace\Portal;
 /**
  * Tests for PagesSitemapProvider.
  */
-class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
+class PagesSitemapProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContentRepositoryInterface

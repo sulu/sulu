@@ -15,7 +15,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Request\ForwardedUrlRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\HttpFoundation\Request;
 
-class ForwardedUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
+class ForwardedUrlRequestProcessorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider provideProcess

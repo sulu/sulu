@@ -14,7 +14,7 @@ namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 
-class OrderByTraitTest extends \PHPUnit_Framework_TestCase
+class OrderByTraitTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var QueryBuilder

@@ -15,7 +15,7 @@ use Sulu\Bundle\RouteBundle\Generator\CannotEvaluateTokenException;
 use Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class SymfonyExpressionTokenProviderTest extends \PHPUnit_Framework_TestCase
+class SymfonyExpressionTokenProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testResolve()
     {
@@ -40,7 +40,7 @@ class SymfonyExpressionTokenProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveNotExists()
     {
-        $this->setExpectedException(CannotEvaluateTokenException::class);
+        $this->expectException(CannotEvaluateTokenException::class);
 
         $translator = $this->prophesize(TranslatorInterface::class);
         $entity = new \stdClass();

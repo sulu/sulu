@@ -44,7 +44,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class MediaManagerTest extends \PHPUnit_Framework_TestCase
+class MediaManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var MediaManager
@@ -320,7 +320,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveWrongVersionType()
     {
-        $this->setExpectedException(InvalidMediaTypeException::class);
+        $this->expectException(InvalidMediaTypeException::class);
 
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn('test.pdf');

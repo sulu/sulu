@@ -19,13 +19,14 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
-class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
+class FormatOptionsManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var EntityManagerInterface
@@ -137,11 +138,9 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(7, $formatOptions['cropWidth']);
     }
 
-    /**
-     * @expectedException \Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
-     */
     public function testGetNotExistingFormat()
     {
+        $this->expectException(FormatNotFoundException::class);
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
         $this->formatOptionsRepository->find(
             [
@@ -175,11 +174,9 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(19, $formatOptions['sulu-100x100']['cropWidth']);
     }
 
-    /**
-     * @expectedException \Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
-     */
     public function testGetAllNotExistingFormat()
     {
+        $this->expectException(FormatNotFoundException::class);
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
         $this->formatOptionsRepository->findBy(
             [
@@ -214,11 +211,9 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(13, $formatOptions->getCropWidth());
     }
 
-    /**
-     * @expectedException \Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
-     */
     public function testSaveNotExisting()
     {
+        $this->expectException(FormatNotFoundException::class);
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
 
         $this->formatOptionsManager->save(

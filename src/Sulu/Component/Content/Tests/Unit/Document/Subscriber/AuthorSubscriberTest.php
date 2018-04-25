@@ -28,7 +28,7 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 /**
  * Tests for author-subscriber.
  */
-class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
+class AuthorSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PropertyEncoder

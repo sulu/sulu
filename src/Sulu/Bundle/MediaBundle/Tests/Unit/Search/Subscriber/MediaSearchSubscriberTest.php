@@ -27,7 +27,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Search\Subscriber\MediaSearchSubscriber;
 use Sulu\Bundle\SearchBundle\Search\Document;
 
-class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
+class MediaSearchSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     private $mediaManager;
 

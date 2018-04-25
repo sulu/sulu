@@ -21,7 +21,7 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Websocket\MessageDispatcher\MessageBuilderInterface;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 
-class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
+class CollaborationMessageHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var UserRepositoryInterface

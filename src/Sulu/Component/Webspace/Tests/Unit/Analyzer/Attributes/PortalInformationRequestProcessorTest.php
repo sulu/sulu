@@ -20,7 +20,7 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
+class PortalInformationRequestProcessorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PortalInformationRequestProcessor

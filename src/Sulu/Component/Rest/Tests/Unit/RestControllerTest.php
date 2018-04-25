@@ -17,7 +17,7 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 
-class RestControllerTest extends \PHPUnit_Framework_TestCase
+class RestControllerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Sulu\Component\Rest\RestController

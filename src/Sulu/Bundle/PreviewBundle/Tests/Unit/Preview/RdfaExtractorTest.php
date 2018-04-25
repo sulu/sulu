@@ -13,7 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview;
 
 use Sulu\Bundle\PreviewBundle\Preview\RdfaExtractor;
 
-class RdfaExtractorTest extends \PHPUnit_Framework_TestCase
+class RdfaExtractorTest extends \PHPUnit\Framework\TestCase
 {
     public function providePropertyValueData()
     {

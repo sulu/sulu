@@ -28,7 +28,7 @@ use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
+class MediaDataProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetConfiguration()
     {

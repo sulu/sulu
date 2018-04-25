@@ -15,7 +15,7 @@ use Prophecy\Argument;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 
-class MemoizeTwigExtensionTraitTest extends \PHPUnit_Framework_TestCase
+class MemoizeTwigExtensionTraitTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var MemoizeTwigExtensionTrait

@@ -24,7 +24,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class LinkTagTest extends \PHPUnit_Framework_TestCase
+class LinkTagTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContentRepositoryInterface

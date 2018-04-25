@@ -18,7 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 
-class FormatManagerTest extends \PHPUnit_Framework_TestCase
+class FormatManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var MediaRepositoryInterface

@@ -22,7 +22,7 @@ use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 
-class StructureSubscriberTest extends \PHPUnit_Framework_TestCase
+class StructureSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SearchManagerInterface

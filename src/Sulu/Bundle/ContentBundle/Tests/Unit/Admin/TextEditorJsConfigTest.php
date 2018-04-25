@@ -18,7 +18,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class TextEditorJsConfigTest extends \PHPUnit_Framework_TestCase
+class TextEditorJsConfigTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TokenStorageInterface

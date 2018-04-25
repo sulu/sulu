@@ -21,7 +21,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
+class PageLinkProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContentRepositoryInterface

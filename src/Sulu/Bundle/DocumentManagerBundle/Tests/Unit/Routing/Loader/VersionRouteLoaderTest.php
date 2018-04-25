@@ -15,7 +15,7 @@ use Sulu\Bundle\DocumentManagerBundle\Routing\Loader\VersionRouteLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
-class VersionRouteLoaderTest extends \PHPUnit_Framework_TestCase
+class VersionRouteLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoadWithDisabledVersioning()
     {

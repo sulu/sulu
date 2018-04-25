@@ -1274,7 +1274,7 @@ class ContentMapperTest extends SuluTestCase
             'url' => '/news/test',
         ];
 
-        $this->setExpectedException(
+        $this->expectException(
             '\Sulu\Component\Content\Exception\MandatoryPropertyException',
             'Property "mandatory" in structure "mandatory" is required but no value was given.'
         );
@@ -1923,7 +1923,7 @@ class ContentMapperTest extends SuluTestCase
             'b' => 'de test2 b',
         ];
 
-        $this->setExpectedException(
+        $this->expectException(
             'Sulu\Component\Content\Exception\TranslatedNodeNotFoundException',
             'Node "' . $structure->getUuid() . '" not found in localization "de"'
         );

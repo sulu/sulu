@@ -27,7 +27,7 @@ use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\ScalerInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\TransformationPoolInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 
-class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
+class ImagineImageConverterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ImagineInterface
@@ -199,7 +199,7 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
 
     public function testConvertNotExistingMedia()
     {
-        $this->setExpectedException(ImageProxyMediaNotFoundException::class);
+        $this->expectException(ImageProxyMediaNotFoundException::class);
 
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');

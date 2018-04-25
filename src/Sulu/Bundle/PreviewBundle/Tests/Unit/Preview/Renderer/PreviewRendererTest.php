@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class PreviewRendererTest extends \PHPUnit_Framework_TestCase
+class PreviewRendererTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RouteDefaultsProviderInterface
@@ -273,7 +273,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderWebspaceNotFound()
     {
-        $this->setExpectedException(WebspaceNotFoundException::class);
+        $this->expectException(WebspaceNotFoundException::class);
         $object = new \stdClass();
 
         $request = new Request();
@@ -291,7 +291,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderWebspaceLocalizationNotFound()
     {
-        $this->setExpectedException(WebspaceLocalizationNotFoundException::class);
+        $this->expectException(WebspaceLocalizationNotFoundException::class);
 
         $request = new Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);
@@ -310,7 +310,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderRouteDefaultsProviderNotFound()
     {
-        $this->setExpectedException(RouteDefaultsProviderNotFoundException::class, '', 9902);
+        $this->expectException(RouteDefaultsProviderNotFoundException::class, '', 9902);
 
         $object = $this->prophesize(\stdClass::class);
 
@@ -344,7 +344,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderTwigError()
     {
-        $this->setExpectedException(TwigException::class, '', 9903);
+        $this->expectException(TwigException::class, '', 9903);
 
         $object = $this->prophesize(\stdClass::class);
 
@@ -378,7 +378,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderInvalidArgumentException()
     {
-        $this->setExpectedException(TemplateNotFoundException::class, '', 9904);
+        $this->expectException(TemplateNotFoundException::class, '', 9904);
 
         $object = $this->prophesize(\stdClass::class);
 
@@ -412,7 +412,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderHttpExceptionWithPreviousException()
     {
-        $this->setExpectedException(TemplateNotFoundException::class, '', 9904);
+        $this->expectException(TemplateNotFoundException::class, '', 9904);
 
         $object = $this->prophesize(\stdClass::class);
 
@@ -448,7 +448,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderHttpExceptionWithoutPreviousException()
     {
-        $this->setExpectedException(UnexpectedException::class, '', 9905);
+        $this->expectException(UnexpectedException::class, '', 9905);
 
         $object = $this->prophesize(\stdClass::class);
 

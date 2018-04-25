@@ -18,7 +18,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class SeoEnhancerTest extends \PHPUnit_Framework_TestCase
+class SeoEnhancerTest extends \PHPUnit\Framework\TestCase
 {
     public function testEnhance()
     {

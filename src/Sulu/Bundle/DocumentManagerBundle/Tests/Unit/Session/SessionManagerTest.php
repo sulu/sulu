@@ -15,7 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Session\SessionManager;
 
-class SessionManagerTest extends \PHPUnit_Framework_TestCase
+class SessionManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SessionInterface

@@ -18,7 +18,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 
-class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class MetaTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RequestAnalyzerInterface

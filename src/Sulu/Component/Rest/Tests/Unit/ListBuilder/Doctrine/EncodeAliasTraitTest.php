@@ -13,7 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine;
 
 use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
 
-class EncodeAliasTraitTest extends \PHPUnit_Framework_TestCase
+class EncodeAliasTraitTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var EncodeAliasTrait

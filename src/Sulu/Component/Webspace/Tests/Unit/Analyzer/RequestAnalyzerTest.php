@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
+class RequestAnalyzerTest extends \PHPUnit\Framework\TestCase
 {
     public function testAnalyzeAndValidate()
     {
@@ -39,10 +39,10 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException
      */
     public function testAnalyzeAndValidateWithError()
     {
+    $this->expectException(UrlMatchNotFoundException::class);
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = new Request();
 

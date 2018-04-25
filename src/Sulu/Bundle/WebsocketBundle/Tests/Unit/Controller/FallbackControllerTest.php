@@ -15,7 +15,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\WebsocketBundle\Controller\FallbackController;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class FallbackControllerTest extends \PHPUnit_Framework_TestCase
+class FallbackControllerTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp()
     {

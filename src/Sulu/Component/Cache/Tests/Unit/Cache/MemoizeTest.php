@@ -14,7 +14,7 @@ namespace Sulu\Component\Cache\Tests\Unit;
 use Doctrine\Common\Cache\Cache;
 use Sulu\Component\Cache\Memoize;
 
-class MemoizeTest extends \PHPUnit_Framework_TestCase
+class MemoizeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var MemoizeInterface

@@ -15,7 +15,7 @@ use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
-class TaggedServiceCollectorCompilerPassTest extends \PHPUnit_Framework_TestCase
+class TaggedServiceCollectorCompilerPassTest extends \PHPUnit\Framework\TestCase
 {
     public function testProcess()
     {

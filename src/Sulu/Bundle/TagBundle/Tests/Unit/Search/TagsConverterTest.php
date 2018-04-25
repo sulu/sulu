@@ -14,7 +14,7 @@ namespace Sulu\Bundle\TagBundle\Tests\Unit\Search;
 use Sulu\Bundle\TagBundle\Search\TagsConverter;
 use Sulu\Bundle\TagBundle\Tag\TagManager;
 
-class TagsConverterTest extends \PHPUnit_Framework_TestCase
+class TagsConverterTest extends \PHPUnit\Framework\TestCase
 {
     public function testConvert()
     {

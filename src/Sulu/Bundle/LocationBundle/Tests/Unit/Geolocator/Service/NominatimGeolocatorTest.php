@@ -17,7 +17,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\NominatimGeolocator;
 
-class NominatimGeolocatorTest extends \PHPUnit_Framework_TestCase
+class NominatimGeolocatorTest extends \PHPUnit\Framework\TestCase
 {
     public function provideLocate()
     {

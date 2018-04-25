@@ -19,7 +19,7 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CleanupHistoryCommandTest extends \PHPUnit_Framework_TestCase
+class CleanupHistoryCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SessionManagerInterface

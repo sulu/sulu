@@ -27,7 +27,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
-class PageBridgeHandlerTest extends \PHPUnit_Framework_TestCase
+class PageBridgeHandlerTest extends \PHPUnit\Framework\TestCase
 {
     public function testSerialize()
     {

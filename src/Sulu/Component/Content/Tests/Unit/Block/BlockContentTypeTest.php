@@ -27,7 +27,7 @@ use Sulu\Component\Content\Types\BlockContentType;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
 
-class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
+class BlockContentTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var BlockContentType

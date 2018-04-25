@@ -23,7 +23,7 @@ use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
-class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
+class WebspaceCollectionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var WebspaceCollection
@@ -209,11 +209,11 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Unknown portal environment "unknown"
      */
     public function testGetPortalInformationsUnknown()
     {
+        $this->expectExceptionMessage('Unknown portal environment "unknown"');
+    $this->expectException(\InvalidArgumentException::class);
         $this->webspaceCollection->getPortalInformations('unknown');
     }
 }

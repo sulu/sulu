@@ -18,7 +18,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider;
 use Sulu\Component\Webspace\Webspace;
 
-class WebspaceStructureProviderTest extends \PHPUnit_Framework_TestCase
+class WebspaceStructureProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetStructures()
     {

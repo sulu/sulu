@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
-class RequestListenerTest extends \PHPUnit_Framework_TestCase
+class RequestListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RequestAnalyzerInterface

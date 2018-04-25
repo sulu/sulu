@@ -17,7 +17,7 @@ use Sulu\Bundle\DocumentManagerBundle\Session\SessionManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface as DeprecatedSessionManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManager;
 
-class SettingsManagerTest extends \PHPUnit_Framework_TestCase
+class SettingsManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SettingsManager

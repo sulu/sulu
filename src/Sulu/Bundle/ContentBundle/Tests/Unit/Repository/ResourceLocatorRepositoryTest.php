@@ -26,7 +26,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
  * @group unit
  * @group repository
  */
-class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
+class ResourceLocatorRepositoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ResourceLocatorRepositoryInterface

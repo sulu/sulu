@@ -29,7 +29,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 
-class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
+class PublishSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SessionInterface

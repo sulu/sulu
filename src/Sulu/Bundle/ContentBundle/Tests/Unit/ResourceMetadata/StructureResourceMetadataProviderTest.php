@@ -23,7 +23,7 @@ use Sulu\Bundle\ContentBundle\ResourceMetadata\StructureResourceMetadataProvider
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
-class StructureResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
+class StructureResourceMetadataProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StructureResourceMetadataProvider

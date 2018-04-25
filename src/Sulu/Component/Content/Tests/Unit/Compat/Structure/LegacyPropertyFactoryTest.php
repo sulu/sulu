@@ -23,7 +23,10 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 
-class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
+/**
+ * @group legacy
+ */
+class LegacyPropertyFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var NamespaceRegistry

@@ -28,7 +28,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MaintainResourceLocatorCommandTest extends \PHPUnit_Framework_TestCase
+class MaintainResourceLocatorCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var WebspaceManagerInterface

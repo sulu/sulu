@@ -38,7 +38,7 @@ interface MyNodeInterface extends \PHPCR\NodeInterface, \Iterator
 /**
  * @group unit
  */
-class ContentTypeTest extends \PHPUnit_Framework_TestCase
+class ContentTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TagManagerInterface
@@ -589,7 +589,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         );
 
         if ($exception) {
-            $this->setExpectedException($exception);
+            $this->expectException($exception);
         }
 
         $property = $this->getMockForAbstractClass(
@@ -702,7 +702,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         );
 
         if ($exception) {
-            $this->setExpectedException($exception);
+            $this->expectException($exception);
         }
 
         $property = $this->getMockForAbstractClass(

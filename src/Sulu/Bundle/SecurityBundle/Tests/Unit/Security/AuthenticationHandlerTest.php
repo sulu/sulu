@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 
-class AuthenticationHandlerTest extends \PHPUnit_Framework_TestCase
+class AuthenticationHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AuthenticationHandler

@@ -15,7 +15,7 @@ use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class ListRestHelperTest extends \PHPUnit_Framework_TestCase
+class ListRestHelperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RequestStack

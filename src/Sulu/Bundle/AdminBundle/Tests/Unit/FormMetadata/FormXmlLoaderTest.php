@@ -16,7 +16,7 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 
-class FormXmlLoaderTest extends \PHPUnit_Framework_TestCase
+class FormXmlLoaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var FormXmlLoader
@@ -57,7 +57,7 @@ class FormXmlLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadFormInvalid()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->loader->load(
             __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_invalid.xml'

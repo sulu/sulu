@@ -20,7 +20,7 @@ use Sulu\Bundle\PreviewBundle\Websocket\PreviewMessageHandler;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerException;
 
-class PreviewMessageHandlerTest extends \PHPUnit_Framework_TestCase
+class PreviewMessageHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var EntityManager
@@ -91,7 +91,7 @@ class PreviewMessageHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleStartException()
     {
-        $this->setExpectedException(MessageHandlerException::class);
+        $this->expectException(MessageHandlerException::class);
 
         $connection = $this->prophesize(ConnectionInterface::class);
         $context = $this->prophesize(MessageHandlerContext::class);

@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\RouterListener as BaseRouteListener;
 
-class RouterListenerTest extends \PHPUnit_Framework_TestCase
+class RouterListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var BaseRouteListener

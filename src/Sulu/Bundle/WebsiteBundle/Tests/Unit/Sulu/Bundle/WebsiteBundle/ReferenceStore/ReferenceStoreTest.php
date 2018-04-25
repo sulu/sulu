@@ -13,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\ReferenceStore;
 
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 
-class ReferenceStoreTest extends \PHPUnit_Framework_TestCase
+class ReferenceStoreTest extends \PHPUnit\Framework\TestCase
 {
     public function testAdd()
     {

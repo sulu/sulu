@@ -13,7 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Sulu\Component\Webspace\Segment;
 
-class SegmentTest extends \PHPUnit_Framework_TestCase
+class SegmentTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

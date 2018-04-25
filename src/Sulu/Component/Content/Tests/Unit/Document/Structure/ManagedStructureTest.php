@@ -26,7 +26,7 @@ use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
-class ManagedStructureTest extends \PHPUnit_Framework_TestCase
+class ManagedStructureTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContentTypeManagerInterface

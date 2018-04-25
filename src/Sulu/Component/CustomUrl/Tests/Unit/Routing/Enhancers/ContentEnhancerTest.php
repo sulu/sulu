@@ -22,7 +22,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContentEnhancerTest extends \PHPUnit_Framework_TestCase
+class ContentEnhancerTest extends \PHPUnit\Framework\TestCase
 {
     public function enhanceProvider()
     {

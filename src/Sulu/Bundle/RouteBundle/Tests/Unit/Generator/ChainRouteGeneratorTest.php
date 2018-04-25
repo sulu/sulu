@@ -21,7 +21,7 @@ use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
-class ChainRouteGeneratorTest extends \PHPUnit_Framework_TestCase
+class ChainRouteGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var array
@@ -122,7 +122,7 @@ class ChainRouteGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateNoMapping()
     {
-        $this->setExpectedException(MissingClassMappingConfigurationException::class);
+        $this->expectException(MissingClassMappingConfigurationException::class);
         $entity = $this->prophesize(RoutableInterface::class);
 
         $this->chainRouteGenerator->generate($entity->reveal());

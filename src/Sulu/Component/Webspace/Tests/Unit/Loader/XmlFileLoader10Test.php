@@ -129,7 +129,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
 
     public function testLoadWithInvalidWebspaceKey()
     {
-        $this->setExpectedException(InvalidWebspaceException::class);
+        $this->expectException(InvalidWebspaceException::class);
 
         $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/sulu.io_deprecated_invalid_webspace_key.xml'

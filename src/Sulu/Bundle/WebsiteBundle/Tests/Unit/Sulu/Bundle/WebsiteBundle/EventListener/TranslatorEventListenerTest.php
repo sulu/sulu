@@ -16,7 +16,7 @@ use Sulu\Bundle\WebsiteBundle\EventListener\TranslatorEventListener;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class TranslatorEventListenerTest extends \PHPUnit_Framework_TestCase
+class TranslatorEventListenerTest extends \PHPUnit\Framework\TestCase
 {
     public function testSetLocaleOnPreviewPreRender()
     {

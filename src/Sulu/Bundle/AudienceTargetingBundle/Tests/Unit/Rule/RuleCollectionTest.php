@@ -15,7 +15,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollection;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleNotFoundException;
 
-class RuleCollectionTest extends \PHPUnit_Framework_TestCase
+class RuleCollectionTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetName()
     {
@@ -30,7 +30,7 @@ class RuleCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNotExistingName()
     {
-        $this->setExpectedException(RuleNotFoundException::class, 'The rule with the name "rule" could not be found.');
+        $this->expectException(RuleNotFoundException::class, 'The rule with the name "rule" could not be found.');
         $ruleCollection = new RuleCollection([]);
 
         $ruleCollection->getRule('rule');

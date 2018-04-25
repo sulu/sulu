@@ -14,7 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache;
 use Symfony\Component\Filesystem\Filesystem;
 
-class LocalFormatCacheTest extends \PHPUnit_Framework_TestCase
+class LocalFormatCacheTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var LocalFormatCache

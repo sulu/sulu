@@ -21,7 +21,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class NodeOrderBuilderTest extends \PHPUnit_Framework_TestCase
+class NodeOrderBuilderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SessionManagerInterface

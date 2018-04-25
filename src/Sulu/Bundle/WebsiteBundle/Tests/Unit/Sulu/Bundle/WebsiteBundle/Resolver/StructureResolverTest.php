@@ -18,7 +18,7 @@ use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
-class StructureResolverTest extends \PHPUnit_Framework_TestCase
+class StructureResolverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StructureResolverInterface

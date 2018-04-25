@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ListBuilderMetadataProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
+class ListBuilderMetadataProviderCompilerPassTest extends \PHPUnit\Framework\TestCase
 {
     public function testProcessProvider()
     {

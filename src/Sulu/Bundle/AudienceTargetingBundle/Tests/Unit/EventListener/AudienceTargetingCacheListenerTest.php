@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class AudienceTargetingCacheListenerTest extends \PHPUnit_Framework_TestCase
+class AudienceTargetingCacheListenerTest extends \PHPUnit\Framework\TestCase
 {
     public function testHandle()
     {

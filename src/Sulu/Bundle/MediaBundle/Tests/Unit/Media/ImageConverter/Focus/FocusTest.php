@@ -16,7 +16,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\Focus;
 
-class FocusTest extends \PHPUnit_Framework_TestCase
+class FocusTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Focus

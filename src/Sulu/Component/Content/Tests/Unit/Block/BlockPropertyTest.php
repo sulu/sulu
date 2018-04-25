@@ -16,7 +16,7 @@ use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 
-class BlockPropertyTest extends \PHPUnit_Framework_TestCase
+class BlockPropertyTest extends \PHPUnit\Framework\TestCase
 {
     public function testSetValue()
     {

@@ -17,7 +17,7 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
-class SubscriberTestCase extends \PHPUnit_Framework_TestCase
+class SubscriberTestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PersistEvent

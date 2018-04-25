@@ -17,7 +17,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 
-class XmlLoaderTest extends \PHPUnit_Framework_TestCase
+class XmlLoaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StructureXmlLoader
@@ -128,7 +128,7 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadInvalidWithoutIgnore()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);

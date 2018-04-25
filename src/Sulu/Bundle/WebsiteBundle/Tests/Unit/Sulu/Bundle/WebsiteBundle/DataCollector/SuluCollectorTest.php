@@ -20,7 +20,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SuluCollectorTest extends \PHPUnit_Framework_TestCase
+class SuluCollectorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Request

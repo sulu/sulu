@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CacheManagerTest extends \PHPUnit_Framework_TestCase
+class CacheManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var CacheManager

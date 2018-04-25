@@ -15,7 +15,7 @@ use Cron\CronExpression;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 
-class CacheLifetimeResolverTest extends \PHPUnit_Framework_TestCase
+class CacheLifetimeResolverTest extends \PHPUnit\Framework\TestCase
 {
     public function testSupportWrongType()
     {

@@ -19,7 +19,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator;
 
-class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
+class GoogleGeolocatorTest extends \PHPUnit\Framework\TestCase
 {
     public function provideLocate()
     {

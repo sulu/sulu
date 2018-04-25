@@ -15,7 +15,7 @@ use DeviceDetector\DeviceDetector;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\BrowserRule;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class BrowserRuleTest extends \PHPUnit_Framework_TestCase
+class BrowserRuleTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DeviceDetector

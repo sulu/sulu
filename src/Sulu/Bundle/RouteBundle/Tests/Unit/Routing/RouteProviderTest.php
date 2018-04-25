@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class RouteProviderTest extends \PHPUnit_Framework_TestCase
+class RouteProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RouteProvider

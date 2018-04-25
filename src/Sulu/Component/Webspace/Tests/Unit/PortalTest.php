@@ -17,7 +17,7 @@ use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url;
 
-class PortalTest extends \PHPUnit_Framework_TestCase
+class PortalTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Portal
@@ -58,14 +58,14 @@ class PortalTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNotExistringEnvironment()
     {
-        $this->setExpectedException(EnvironmentNotFoundException::class);
+        $this->expectException(EnvironmentNotFoundException::class);
 
         $this->portal->getEnvironment('dev');
     }
 
     public function testGetEnvironmentFromEmptyPortal()
     {
-        $this->setExpectedException(EnvironmentNotFoundException::class);
+        $this->expectException(EnvironmentNotFoundException::class);
         $this->portal->getEnvironment('dev');
     }
 

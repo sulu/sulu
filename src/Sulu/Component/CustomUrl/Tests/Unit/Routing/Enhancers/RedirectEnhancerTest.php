@@ -18,7 +18,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class RedirectEnhancerTest extends \PHPUnit_Framework_TestCase
+class RedirectEnhancerTest extends \PHPUnit\Framework\TestCase
 {
     public function testEnhance()
     {

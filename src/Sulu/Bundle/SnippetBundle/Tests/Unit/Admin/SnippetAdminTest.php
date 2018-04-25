@@ -16,7 +16,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
-class SnippetAdminTest extends \PHPUnit_Framework_TestCase
+class SnippetAdminTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SecurityChecker

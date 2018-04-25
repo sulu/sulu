@@ -21,7 +21,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class TagsSubscriberTest extends \PHPUnit_Framework_TestCase
+class TagsSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TagsSubscriber

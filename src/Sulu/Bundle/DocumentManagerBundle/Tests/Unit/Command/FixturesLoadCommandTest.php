@@ -23,7 +23,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
+class FixturesLoadCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DocumentFixtureLoader

@@ -22,7 +22,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 
-class InternalLinksTest extends \PHPUnit_Framework_TestCase
+class InternalLinksTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContentQueryExecutorInterface

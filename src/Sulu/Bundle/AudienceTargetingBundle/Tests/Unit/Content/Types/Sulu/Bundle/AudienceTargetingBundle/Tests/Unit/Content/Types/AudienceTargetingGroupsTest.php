@@ -19,7 +19,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
-class AudienceTargetingGroupsTest extends \PHPUnit_Framework_TestCase
+class AudienceTargetingGroupsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TargetGroupRepositoryInterface

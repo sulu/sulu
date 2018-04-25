@@ -18,7 +18,7 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrateg
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class WebspaceInputTypesJsConfigTest extends \PHPUnit_Framework_TestCase
+class WebspaceInputTypesJsConfigTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var WebspaceManagerInterface

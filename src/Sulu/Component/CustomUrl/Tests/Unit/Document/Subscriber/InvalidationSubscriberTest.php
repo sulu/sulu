@@ -22,7 +22,7 @@ use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
+class InvalidationSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     public function testInvalidateDocumentBeforePublishing()
     {

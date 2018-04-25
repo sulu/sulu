@@ -14,8 +14,9 @@ namespace Sulu\Component\Content\Tests\Unit\Form\DataTransformer;
 use Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Symfony\Component\Form\Exception\TransformationFailedException;
 
-class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
+class DocumentToUuidTransformerTest extends \PHPUnit\Framework\TestCase
 {
     private $documentManager;
 
@@ -45,21 +46,18 @@ class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * It should throw an exception if reverse transform is attempted with something
      * that is not a UUID.
-     *
-     * @expectedException \Symfony\Component\Form\Exception\TransformationFailedException
-     * @expectedExceptionMessage Given UUID is not a UUID
      */
     public function testReverseTransformNotUuid()
     {
+        $this->expectExceptionMessage('Given UUID is not a UUID');
+        $this->expectException(TransformationFailedException::class);
         $this->transformer->reverseTransform(1234);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Form\Exception\TransformationFailedException
-     * @expectedExceptionMessage Could not find document
-     */
     public function testReverseTransformNotFound()
     {
+        $this->expectExceptionMessage('Could not find document');
+        $this->expectException(TransformationFailedException::class);
         $uuid = '9fce0181-fabf-43d5-9b73-79f100ce2a9b';
         $this->documentManager->find($uuid)->willReturn(null);
         $this->transformer->reverseTransform($uuid);

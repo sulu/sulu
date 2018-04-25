@@ -23,7 +23,7 @@ use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
-class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
+class AccountDataProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetConfiguration()
     {

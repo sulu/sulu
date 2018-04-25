@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class WebsiteSearchControllerTest extends \PHPUnit_Framework_TestCase
+class WebsiteSearchControllerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SearchManagerInterface

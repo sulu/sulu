@@ -22,7 +22,7 @@ use Sulu\Component\Security\Serializer\Subscriber\SecuredEntitySubscriber;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class SecuredEntitySubscriberTest extends \PHPUnit_Framework_TestCase
+class SecuredEntitySubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SecuredEntitySubscriber

@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
-class WebspaceTest extends \PHPUnit_Framework_TestCase
+class WebspaceTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Webspace

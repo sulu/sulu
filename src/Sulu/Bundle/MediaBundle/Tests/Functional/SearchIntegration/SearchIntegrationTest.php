@@ -74,10 +74,10 @@ class SearchIntegrationTest extends SuluTestCase
     /**
      * @dataProvider provideIndex
      */
-    public function testIndex($format, $expectedException)
+    public function testIndex($format, $expectException)
     {
-        if ($expectedException) {
-            $this->setExpectedException($expectedException);
+        if ($expectException) {
+            $this->expectException($expectException);
         }
 
         $this->media->setFormats([

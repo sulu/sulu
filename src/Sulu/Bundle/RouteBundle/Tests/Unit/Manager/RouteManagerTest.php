@@ -22,7 +22,7 @@ use Sulu\Bundle\RouteBundle\Manager\RouteNotCreatedException;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
-class RouteManagerTest extends \PHPUnit_Framework_TestCase
+class RouteManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ChainRouteGeneratorInterface
@@ -131,14 +131,14 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->conflictResolver->resolve($route->reveal())->shouldNotBeCalled();
         $this->routeRepository->findByPath('/test', 'de')->willReturn($loadedRoute->reveal());
 
-        $this->setExpectedException(RouteIsNotUniqueException::class);
+        $this->expectException(RouteIsNotUniqueException::class);
 
         $this->manager->create($this->entity->reveal(), '/test', false);
     }
 
     public function testCreateAlreadyExists()
     {
-        $this->setExpectedException(RouteAlreadyCreatedException::class);
+        $this->expectException(RouteAlreadyCreatedException::class);
 
         $route = $this->prophesize(RouteInterface::class);
         $this->entity->getRoute()->willReturn($route->reveal());
@@ -313,7 +313,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateNoRoute()
     {
-        $this->setExpectedException(RouteNotCreatedException::class);
+        $this->expectException(RouteNotCreatedException::class);
 
         $this->entity->getRoute()->willReturn(null);
         $this->entity->getId()->willReturn('1');
@@ -380,7 +380,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->conflictResolver->resolve($newRoute->reveal())->shouldNotBeCalled()->willReturn($newRoute->reveal());
         $this->routeRepository->findByPath('/test-2', 'de')->willReturn($loadedRoute->reveal());
 
-        $this->setExpectedException(RouteIsNotUniqueException::class);
+        $this->expectException(RouteIsNotUniqueException::class);
 
         $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2', false));
     }

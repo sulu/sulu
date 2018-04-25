@@ -223,7 +223,7 @@ class TagControllerTest extends SuluTestCase
 
     public function testDeleteById()
     {
-        $mockedEventListener = $this->getMock('stdClass', ['onDelete']);
+        $mockedEventListener = $this->getMockBuilder('Mock')->setMethods(['onDelete'])->getMock();
         $mockedEventListener->expects($this->once())->method('onDelete');
 
         $client = $this->createAuthenticatedClient();
@@ -268,7 +268,7 @@ class TagControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $mockedEventListener = $this->getMock('stdClass', ['onMerge']);
+        $mockedEventListener = $this->getMockBuilder('Mock')->setMethods(['onMerge'])->getMock();
         $mockedEventListener->expects($this->once())->method('onMerge');
 
         $client = $this->createAuthenticatedClient();

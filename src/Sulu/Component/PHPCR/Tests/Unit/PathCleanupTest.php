@@ -14,7 +14,7 @@ namespace Sulu\Component\PHPCR\Tests\Unit;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 
-class PathCleanupTest extends \PHPUnit_Framework_TestCase
+class PathCleanupTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PathCleanupInterface

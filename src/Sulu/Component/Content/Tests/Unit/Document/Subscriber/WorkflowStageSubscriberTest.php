@@ -28,7 +28,7 @@ use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
-class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
+class WorkflowStageSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PropertyEncoder

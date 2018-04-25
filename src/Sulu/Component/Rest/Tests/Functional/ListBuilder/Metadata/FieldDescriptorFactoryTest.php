@@ -32,7 +32,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\ProviderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
+class FieldDescriptorFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string

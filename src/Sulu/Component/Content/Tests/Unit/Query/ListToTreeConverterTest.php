@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Query;
 
 use Sulu\Component\Content\Query\ListToTreeConverter;
 
-class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
+class ListToTreeConverterTest extends \PHPUnit\Framework\TestCase
 {
     private function createItem($path, $number)
     {

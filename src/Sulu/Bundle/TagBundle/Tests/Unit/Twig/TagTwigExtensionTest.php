@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class TagTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Returns memoize cache instance.

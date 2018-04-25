@@ -15,7 +15,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Component\Rest\Listing\ListRestHelper;
 use Symfony\Component\HttpFoundation\Request;
 
-class ListRestHelperTest extends \PHPUnit_Framework_TestCase
+class ListRestHelperTest extends \PHPUnit\Framework\TestCase
 {
     protected $em;
 

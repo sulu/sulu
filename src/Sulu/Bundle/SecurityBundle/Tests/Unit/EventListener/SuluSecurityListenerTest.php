@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
-class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
+class SuluSecurityListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SecurityListener

@@ -14,7 +14,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 
-class DoctrineGroupConcatFieldDescriptorTest extends \PHPUnit_Framework_TestCase
+class DoctrineGroupConcatFieldDescriptorTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSelect()
     {

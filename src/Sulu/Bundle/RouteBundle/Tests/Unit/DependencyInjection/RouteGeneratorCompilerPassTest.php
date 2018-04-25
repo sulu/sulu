@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
+class RouteGeneratorCompilerPassTest extends \PHPUnit\Framework\TestCase
 {
     public function testProcess()
     {

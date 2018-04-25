@@ -13,7 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit\Listing;
 
 use Sulu\Component\Rest\Listing\ListQueryBuilder;
 
-class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
+class ListQueryBuilderTest extends \PHPUnit\Framework\TestCase
 {
     public function testFind()
     {

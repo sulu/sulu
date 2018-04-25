@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
+class TargetGroupSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Twig_Environment

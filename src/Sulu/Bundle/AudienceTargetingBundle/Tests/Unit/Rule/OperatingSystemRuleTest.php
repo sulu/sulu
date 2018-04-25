@@ -15,7 +15,7 @@ use DeviceDetector\DeviceDetector;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\OperatingSystemRule;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class OperatingSystemRuleTest extends \PHPUnit_Framework_TestCase
+class OperatingSystemRuleTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DeviceDetector

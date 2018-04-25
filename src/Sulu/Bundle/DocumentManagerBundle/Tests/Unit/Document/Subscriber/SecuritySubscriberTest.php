@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class SecuritySubscriberTest extends \PHPUnit_Framework_TestCase
+class SecuritySubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TokenStorageInterface

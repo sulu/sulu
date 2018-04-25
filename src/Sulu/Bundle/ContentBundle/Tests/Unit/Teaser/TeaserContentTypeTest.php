@@ -23,7 +23,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\StructureInterface;
 
-class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
+class TeaserContentTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string

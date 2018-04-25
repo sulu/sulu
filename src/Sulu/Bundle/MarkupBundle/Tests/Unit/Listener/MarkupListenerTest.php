@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
-class MarkupListenerTest extends \PHPUnit_Framework_TestCase
+class MarkupListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var MarkupParserInterface

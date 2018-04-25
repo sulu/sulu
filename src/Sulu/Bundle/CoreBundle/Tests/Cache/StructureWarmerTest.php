@@ -13,7 +13,7 @@ namespace Sulu\Bundle\CoreBundle\Tests\Cache;
 
 use Sulu\Bundle\CoreBundle\Cache\StructureWarmer;
 
-class StructureWarmerTest extends \PHPUnit_Framework_TestCase
+class StructureWarmerTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

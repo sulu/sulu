@@ -28,7 +28,7 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
-class FormResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
+class FormResourceMetadataProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var FormResourceMetadataProvider

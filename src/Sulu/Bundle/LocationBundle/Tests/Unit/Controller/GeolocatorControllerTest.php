@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GeolocatorControllerTest extends \PHPUnit_Framework_TestCase
+class GeolocatorControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testQuery()
     {
@@ -47,7 +47,7 @@ class GeolocatorControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testQueryNotExistingProvider()
     {
-        $this->setExpectedException(NotFoundHttpException::class);
+        $this->expectException(NotFoundHttpException::class);
 
         $manager = $this->prophesize(GeolocatorManager::class);
         $manager->get('test-provider')->willThrow(new GeolocatorNotFoundException());

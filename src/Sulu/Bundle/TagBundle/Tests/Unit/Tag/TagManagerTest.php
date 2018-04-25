@@ -19,7 +19,7 @@ use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class TagManagerTest extends \PHPUnit_Framework_TestCase
+class TagManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TagRepositoryInterface

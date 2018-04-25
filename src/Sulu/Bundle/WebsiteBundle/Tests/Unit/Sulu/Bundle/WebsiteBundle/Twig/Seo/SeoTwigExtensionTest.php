@@ -20,7 +20,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class SeoTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SeoTwigExtension

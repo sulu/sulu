@@ -20,7 +20,7 @@ use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterfac
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class TargetGroupEvaluationControllerTest extends \PHPUnit_Framework_TestCase
+class TargetGroupEvaluationControllerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TargetGroupEvaluatorInterface

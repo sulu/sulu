@@ -27,7 +27,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\StructureInterface;
 
-class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
+class ContactSelectionContentTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string

@@ -16,7 +16,7 @@ use Sulu\Bundle\RouteBundle\Generator\TokenProviderInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 
-class RouteGeneratorTest extends \PHPUnit_Framework_TestCase
+class RouteGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TokenProviderInterface

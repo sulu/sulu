@@ -13,12 +13,11 @@ namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
-use PHPUnit_Framework_TestCase;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension;
 
-class ContactTwigExtensionTest extends PHPUnit_Framework_TestCase
+class ContactTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContactTwigExtension

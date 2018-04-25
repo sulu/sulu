@@ -73,12 +73,10 @@ class CreateUserCommandTest extends SuluTestCase
         $this->assertContains('Given locale "ax" is invalid, must be one of "', $this->tester->getDisplay());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage The system currently has no roles. Use the "sulu:security:role:create" command to create roles.
-     */
     public function testCreateUserNoRoles()
     {
+        $this->expectExceptionMessage('The system currently has no roles. Use the "sulu:security:role:create" command to create roles.');
+        $this->expectException(\RuntimeException::class);
         $this->createUser('sulu', 'blah');
     }
 

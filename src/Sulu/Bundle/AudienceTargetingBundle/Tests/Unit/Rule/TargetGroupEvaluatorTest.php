@@ -23,7 +23,7 @@ use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluator;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class TargetGroupEvaluatorTest extends \PHPUnit_Framework_TestCase
+class TargetGroupEvaluatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RuleCollectionInterface

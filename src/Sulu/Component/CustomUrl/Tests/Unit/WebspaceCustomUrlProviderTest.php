@@ -16,7 +16,7 @@ use Sulu\Component\CustomUrl\WebspaceCustomUrlProvider;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
-class WebspaceCustomUrlProviderTest extends \PHPUnit_Framework_TestCase
+class WebspaceCustomUrlProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetUrls()
     {

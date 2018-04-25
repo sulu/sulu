@@ -16,7 +16,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 
-class PortalDefaultLocaleProviderTest extends \PHPUnit_Framework_TestCase
+class PortalDefaultLocaleProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetDefaultLocale()
     {

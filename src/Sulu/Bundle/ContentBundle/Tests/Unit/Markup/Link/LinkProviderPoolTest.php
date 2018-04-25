@@ -17,7 +17,7 @@ use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\ContentBundle\Markup\Link\ProviderNotFoundException;
 
-class LinkProviderPoolTest extends \PHPUnit_Framework_TestCase
+class LinkProviderPoolTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var LinkProviderInterface[]
@@ -53,7 +53,7 @@ class LinkProviderPoolTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProviderNotFound()
     {
-        $this->setExpectedException(ProviderNotFoundException::class);
+        $this->expectException(ProviderNotFoundException::class);
 
         $this->pool->getProvider('test');
     }

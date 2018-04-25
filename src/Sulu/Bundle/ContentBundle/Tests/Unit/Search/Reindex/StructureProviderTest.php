@@ -24,7 +24,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\Query\Query;
 
-class StructureProviderTest extends \PHPUnit_Framework_TestCase
+class StructureProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var LocalizedReindexProviderInterface

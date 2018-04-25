@@ -13,7 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 
-class RequestAttributesTest extends \PHPUnit_Framework_TestCase
+class RequestAttributesTest extends \PHPUnit\Framework\TestCase
 {
     public function provideData()
     {

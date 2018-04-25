@@ -16,7 +16,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 
-class DoctrineOrExpressionTest extends \PHPUnit_Framework_TestCase
+class DoctrineOrExpressionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string

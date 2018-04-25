@@ -15,7 +15,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDe
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 
-class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
+class DoctrineCaseFieldDescriptorTest extends \PHPUnit\Framework\TestCase
 {
     public function dataProvider()
     {

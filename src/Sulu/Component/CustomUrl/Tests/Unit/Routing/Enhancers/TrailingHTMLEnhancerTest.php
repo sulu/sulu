@@ -16,7 +16,7 @@ use Sulu\Component\CustomUrl\Routing\Enhancers\TrailingHTMLEnhancer;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class TrailingHTMLEnhancerTest extends \PHPUnit_Framework_TestCase
+class TrailingHTMLEnhancerTest extends \PHPUnit\Framework\TestCase
 {
     public function testEnhance()
     {

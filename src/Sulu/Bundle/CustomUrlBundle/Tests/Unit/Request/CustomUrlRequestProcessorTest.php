@@ -27,7 +27,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
+class CustomUrlRequestProcessorTest extends \PHPUnit\Framework\TestCase
 {
     public function dataProvider()
     {

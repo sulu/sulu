@@ -13,7 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Sulu\Component\Webspace\Url;
 
-class UrlTest extends \PHPUnit_Framework_TestCase
+class UrlTest extends \PHPUnit\Framework\TestCase
 {
     public function provideIsValidLocale()
     {

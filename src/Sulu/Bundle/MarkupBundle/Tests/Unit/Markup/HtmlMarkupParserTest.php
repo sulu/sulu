@@ -19,7 +19,7 @@ use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagNotFoundException;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
 
-class HtmlMarkupParserTest extends \PHPUnit_Framework_TestCase
+class HtmlMarkupParserTest extends \PHPUnit\Framework\TestCase
 {
     const VALIDATE_UNPUBLISHED = 'unpublished';
 

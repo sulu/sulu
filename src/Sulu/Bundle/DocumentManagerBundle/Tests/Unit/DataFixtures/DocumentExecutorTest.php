@@ -17,7 +17,7 @@ use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
+class DocumentExecutorTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

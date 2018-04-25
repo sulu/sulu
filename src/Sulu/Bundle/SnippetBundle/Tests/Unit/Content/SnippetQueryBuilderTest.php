@@ -20,7 +20,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
-class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
+class SnippetQueryBuilderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StructureManagerInterface

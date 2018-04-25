@@ -45,7 +45,7 @@ class TestStructure extends Structure
     }
 }
 
-class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class ContentTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StructureResolverInterface
@@ -249,7 +249,7 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadParentStartPage()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException',
             'Parent for "321-321-321" not found (perhaps it is the startpage?)'
         );

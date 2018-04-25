@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Test snippet area compiler pass.
  */
-class SnippetAreaCompilerPassTest extends \PHPUnit_Framework_TestCase
+class SnippetAreaCompilerPassTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContainerBuilder

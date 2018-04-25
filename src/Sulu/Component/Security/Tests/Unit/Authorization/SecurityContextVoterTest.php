@@ -24,7 +24,7 @@ use Sulu\Component\Security\Authorization\SecurityContextVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
+class SecurityContextVoterTest extends \PHPUnit\Framework\TestCase
 {
     protected $permissions = [
         'view' => 64,

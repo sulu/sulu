@@ -18,7 +18,7 @@ use PHPCR\WorkspaceInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\WorkspaceInitializer;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class WorkspaceInitializerTest extends \PHPUnit_Framework_TestCase
+class WorkspaceInitializerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SessionInterface

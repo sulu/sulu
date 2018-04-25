@@ -17,7 +17,7 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 
-class PermissionListenerTest extends \PHPUnit_Framework_TestCase
+class PermissionListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PermissionListener

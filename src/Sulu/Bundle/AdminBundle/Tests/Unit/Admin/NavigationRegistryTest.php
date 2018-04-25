@@ -20,7 +20,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class NavigationRegistryTest extends \PHPUnit_Framework_TestCase
+class NavigationRegistryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var NavigationRegistry

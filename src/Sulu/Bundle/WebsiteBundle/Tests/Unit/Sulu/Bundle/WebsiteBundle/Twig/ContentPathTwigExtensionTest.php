@@ -18,7 +18,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class ContentPathTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class ContentPathTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var WebspaceManagerInterface

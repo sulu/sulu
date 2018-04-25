@@ -70,7 +70,7 @@ class PasteTransformationTest extends SuluTestCase
     {
         $image = $this->prophesize(ImageInterface::class);
 
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $returnImage = $this->pasteTransformation->execute(
             $image->reveal(),

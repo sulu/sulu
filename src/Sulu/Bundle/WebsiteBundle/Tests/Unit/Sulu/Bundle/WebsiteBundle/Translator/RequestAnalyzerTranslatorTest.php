@@ -16,7 +16,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class RequestAnalyzerTranslatorTest extends \PHPUnit_Framework_TestCase
+class RequestAnalyzerTranslatorTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetLocale()
     {

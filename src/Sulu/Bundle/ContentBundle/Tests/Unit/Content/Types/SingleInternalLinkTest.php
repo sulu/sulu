@@ -15,7 +15,7 @@ use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
-class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase
+class SingleInternalLinkTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PropertyInterface

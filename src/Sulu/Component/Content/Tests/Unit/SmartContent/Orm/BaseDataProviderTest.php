@@ -21,7 +21,7 @@ use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\ResourceItemInterface;
 
-class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
+class BaseDataProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetDefaultPropertyParameter()
     {

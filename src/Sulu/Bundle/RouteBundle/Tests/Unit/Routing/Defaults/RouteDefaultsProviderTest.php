@@ -14,7 +14,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Routing\Defaults;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProvider;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 
-class RouteDefaultsProviderTest extends \PHPUnit_Framework_TestCase
+class RouteDefaultsProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RouteDefaultsProviderInterface

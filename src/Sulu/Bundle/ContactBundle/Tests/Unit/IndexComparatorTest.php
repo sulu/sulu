@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Util;
 
-class IndexComparatorTest extends \PHPUnit_Framework_TestCase
+class IndexComparatorTest extends \PHPUnit\Framework\TestCase
 {
     public function usortProvider()
     {

@@ -18,7 +18,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension;
 
-class MediaTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class MediaTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     public function testResolveMedia()
     {

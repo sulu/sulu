@@ -20,7 +20,7 @@ use Sulu\Bundle\ContentBundle\Teaser\ContentTeaserProvider;
 use Sulu\Bundle\ContentBundle\Teaser\Teaser;
 use Sulu\Bundle\SearchBundle\Search\Document;
 
-class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
+class ContentTeaserProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SearchManagerInterface

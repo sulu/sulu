@@ -21,7 +21,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
-class XmlSitemapRendererTest extends \PHPUnit_Framework_TestCase
+class XmlSitemapRendererTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SitemapProviderPoolInterface

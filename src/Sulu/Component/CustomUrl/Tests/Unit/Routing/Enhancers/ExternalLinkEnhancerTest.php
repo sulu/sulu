@@ -16,7 +16,7 @@ use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\CustomUrl\Routing\Enhancers\ExternalLinkEnhancer;
 use Symfony\Component\HttpFoundation\Request;
 
-class ExternalLinkEnhancerTest extends \PHPUnit_Framework_TestCase
+class ExternalLinkEnhancerTest extends \PHPUnit\Framework\TestCase
 {
     public function testEnhance()
     {

@@ -18,7 +18,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 
-class SnippetContentTest extends \PHPUnit_Framework_TestCase
+class SnippetContentTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DefaultSnippetManagerInterface

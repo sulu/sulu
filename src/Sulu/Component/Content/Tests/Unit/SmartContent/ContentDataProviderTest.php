@@ -29,7 +29,7 @@ use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
 
-class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
+class ContentDataProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param array|null $initValue

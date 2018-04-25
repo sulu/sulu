@@ -20,7 +20,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata as General
 use Sulu\Component\Rest\ListBuilder\Metadata\Listener\GeneralMetadataSerializeSubscriber;
 use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
 
-class GeneralMetadataSerializeSubscriberTest extends \PHPUnit_Framework_TestCase
+class GeneralMetadataSerializeSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSubscribedEvents()
     {

@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Route;
 
-class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
+class RedirectExceptionSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RequestMatcherInterface

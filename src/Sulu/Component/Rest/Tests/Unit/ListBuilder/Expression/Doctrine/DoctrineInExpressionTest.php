@@ -15,7 +15,7 @@ use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineInExpression;
 
-class DoctrineInExpressionTest extends \PHPUnit_Framework_TestCase
+class DoctrineInExpressionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string

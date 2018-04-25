@@ -31,7 +31,7 @@ use Sulu\Component\Webspace\Portal;
 /**
  * Provides testcases for custom-url-manager.
  */
-class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
+class CustomUrlManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DocumentManagerInterface
@@ -325,7 +325,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             ]
         )->willThrow(NodeNameAlreadyExistsException::class);
 
-        $this->setExpectedException(TitleAlreadyExistsException::class);
+        $this->expectException(TitleAlreadyExistsException::class);
 
         $this->manager->save(
             '312-312-312',
@@ -371,7 +371,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteHistory()
     {
-        $this->setExpectedException(RouteNotRemovableException::class);
+        $this->expectException(RouteNotRemovableException::class);
 
         $document = $this->prophesize(RouteDocument::class);
         $customUrlDocument = $this->prophesize(CustomUrlDocument::class);

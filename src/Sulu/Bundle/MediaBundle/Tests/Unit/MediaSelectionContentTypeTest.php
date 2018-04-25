@@ -17,7 +17,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
-class MediaSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
+class MediaSelectionContentTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var MediaSelectionContentType

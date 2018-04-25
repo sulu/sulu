@@ -21,7 +21,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\Filesystem\Filesystem;
 
-class XmlSitemapDumperTest extends \PHPUnit_Framework_TestCase
+class XmlSitemapDumperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var XmlSitemapRendererInterface

@@ -41,7 +41,7 @@ use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class ContentRepositoryTest extends \PHPUnit_Framework_TestCase
+class ContentRepositoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SessionInterface

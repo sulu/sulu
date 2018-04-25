@@ -21,7 +21,7 @@ use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 
-class ShadowLocaleSubscriberTest extends \PHPUnit_Framework_TestCase
+class ShadowLocaleSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PropertyEncoder
@@ -71,7 +71,7 @@ class ShadowLocaleSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testHandlePersistForNonConcreteLocale()
     {
-        $this->setExpectedException(
+        $this->expectException(
             \RuntimeException::class,
             'Attempting to create shadow for "de" on a non-concrete locale "de_at" '
             . 'for document at "/cmf/sulu_io/contents/test". Concrete languages are "de", "en"'
@@ -99,7 +99,7 @@ class ShadowLocaleSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testHandlePersistForSameLocale()
     {
-        $this->setExpectedException(\RuntimeException::class, 'Document cannot be a shadow of itself for locale "de"');
+        $this->expectException(\RuntimeException::class, 'Document cannot be a shadow of itself for locale "de"');
 
         $document = $this->prophesize(ShadowLocaleBehavior::class)
             ->willImplement(LocaleBehavior::class);

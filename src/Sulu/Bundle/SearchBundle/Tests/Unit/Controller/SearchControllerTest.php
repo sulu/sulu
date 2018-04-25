@@ -23,7 +23,7 @@ use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-class SearchControllerTest extends \PHPUnit_Framework_TestCase
+class SearchControllerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SearchManagerInterface

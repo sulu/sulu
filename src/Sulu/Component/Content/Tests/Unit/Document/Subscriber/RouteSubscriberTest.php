@@ -27,7 +27,7 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
-class RouteSubscriberTest extends \PHPUnit_Framework_TestCase
+class RouteSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DocumentManagerInterface

@@ -16,7 +16,7 @@ use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class InitializerTest extends \PHPUnit_Framework_TestCase
+class InitializerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContainerInterface

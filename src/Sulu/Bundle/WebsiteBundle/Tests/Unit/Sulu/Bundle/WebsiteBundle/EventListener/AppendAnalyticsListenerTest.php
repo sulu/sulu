@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Templating\EngineInterface;
 
-class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
+class AppendAnalyticsListenerTest extends \PHPUnit\Framework\TestCase
 {
     public function formatProvider()
     {

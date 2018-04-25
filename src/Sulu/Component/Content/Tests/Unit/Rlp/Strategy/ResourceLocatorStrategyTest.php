@@ -23,7 +23,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
-class ResourceLocatorStrategyTest extends \PHPUnit_Framework_TestCase
+class ResourceLocatorStrategyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ResourceLocatorMapperInterface

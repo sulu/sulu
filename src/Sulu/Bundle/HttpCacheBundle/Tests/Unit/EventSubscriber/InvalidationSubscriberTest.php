@@ -35,7 +35,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
+class InvalidationSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var InvalidationSubscriber

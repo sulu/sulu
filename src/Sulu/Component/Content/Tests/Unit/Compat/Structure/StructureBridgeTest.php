@@ -23,7 +23,7 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
-class StructureBridgeTest extends \PHPUnit_Framework_TestCase
+class StructureBridgeTest extends \PHPUnit\Framework\TestCase
 {
     public function testCopyFrom()
     {

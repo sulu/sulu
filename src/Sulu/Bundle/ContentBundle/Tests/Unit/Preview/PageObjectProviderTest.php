@@ -20,7 +20,7 @@ use Sulu\Bundle\ContentBundle\Preview\PageObjectProvider;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
-class PageObjectProviderTest extends \PHPUnit_Framework_TestCase
+class PageObjectProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DocumentManagerInterface

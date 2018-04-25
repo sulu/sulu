@@ -17,7 +17,7 @@ use Sulu\Bundle\ContentBundle\Teaser\Teaser;
 use Sulu\Bundle\ContentBundle\Teaser\TeaserManager;
 use Sulu\Bundle\ContentBundle\Teaser\TeaserManagerInterface;
 
-class TeaserManagerTest extends \PHPUnit_Framework_TestCase
+class TeaserManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TeaserProviderPoolInterface

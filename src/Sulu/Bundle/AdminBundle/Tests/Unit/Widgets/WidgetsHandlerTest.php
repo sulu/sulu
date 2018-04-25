@@ -16,7 +16,7 @@ use Sulu\Bundle\AdminBundle\Widgets\WidgetsHandler;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetsHandlerInterface;
 use Symfony\Component\Templating\EngineInterface;
 
-class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
+class WidgetsHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var EngineInterface

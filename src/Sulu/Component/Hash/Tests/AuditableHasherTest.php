@@ -16,7 +16,7 @@ use Sulu\Component\Hash\AuditableHasher;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class AuditableHasherTest extends \PHPUnit_Framework_TestCase
+class AuditableHasherTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AuditableHasher
@@ -30,7 +30,7 @@ class AuditableHasherTest extends \PHPUnit_Framework_TestCase
 
     public function testHashWrongObject()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->hasher->hash(new \stdClass());
     }
 

@@ -29,7 +29,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Util\SuluNodeHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
+class ContentMapperSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DocumentInspector

@@ -20,7 +20,7 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class PortalLoaderTest extends \PHPUnit_Framework_TestCase
+class PortalLoaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PortalLoader

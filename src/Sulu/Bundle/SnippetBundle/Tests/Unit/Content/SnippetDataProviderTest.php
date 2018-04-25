@@ -22,7 +22,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
-class SnippetDataProviderTest extends \PHPUnit_Framework_TestCase
+class SnippetDataProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContentQueryExecutorInterface

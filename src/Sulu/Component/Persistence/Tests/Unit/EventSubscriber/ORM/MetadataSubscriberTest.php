@@ -14,7 +14,7 @@ namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 use Prophecy\Argument;
 use Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber;
 
-class MetadataSubscriberTest extends \PHPUnit_Framework_TestCase
+class MetadataSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Doctrine\ORM\Event\LoadClassMetadataEventArgs

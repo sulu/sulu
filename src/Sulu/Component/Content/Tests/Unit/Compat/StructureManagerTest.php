@@ -20,7 +20,7 @@ use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
-class StructureManagerTest extends \PHPUnit_Framework_TestCase
+class StructureManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StructureMetadataFactory

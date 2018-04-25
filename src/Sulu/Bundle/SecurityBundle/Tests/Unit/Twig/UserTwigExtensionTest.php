@@ -17,7 +17,7 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension;
 
-class UserTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class UserTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var UserTwigExtension

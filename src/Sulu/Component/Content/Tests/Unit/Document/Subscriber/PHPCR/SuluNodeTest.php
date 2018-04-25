@@ -21,7 +21,7 @@ use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 /**
  * Tests for calss SuluNode.
  */
-class SuluNodeTest extends \PHPUnit_Framework_TestCase
+class SuluNodeTest extends \PHPUnit\Framework\TestCase
 {
     public function provideDelegateData()
     {

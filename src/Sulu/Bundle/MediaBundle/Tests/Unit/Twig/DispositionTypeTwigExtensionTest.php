@@ -15,7 +15,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class DispositionTypeTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class DispositionTypeTwigExtensionTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetMediaUrlWithoutForceDispositionType()
     {

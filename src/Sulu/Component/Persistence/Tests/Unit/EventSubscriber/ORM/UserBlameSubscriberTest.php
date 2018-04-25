@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
-class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
+class UserBlameSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var LoadClassMetadataEventArgs

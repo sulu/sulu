@@ -15,7 +15,7 @@ use Sulu\Bundle\MarkupBundle\Markup\DelegatingTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\TagExtractorInterface;
 use Sulu\Bundle\MarkupBundle\Markup\TagMatchGroup;
 
-class DelegatingTagExtractorTest extends \PHPUnit_Framework_TestCase
+class DelegatingTagExtractorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string

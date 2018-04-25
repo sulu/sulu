@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Extension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
 
-class ExtensionManagerTest extends \PHPUnit_Framework_TestCase
+class ExtensionManagerTest extends \PHPUnit\Framework\TestCase
 {
     private function getExtension($name)
     {
@@ -178,7 +178,7 @@ class ExtensionManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetException($extensions, $type, $name, $exxceptionName)
     {
-        $this->setExpectedException($exxceptionName);
+        $this->expectException($exxceptionName);
 
         $manager = new ExtensionManager();
 

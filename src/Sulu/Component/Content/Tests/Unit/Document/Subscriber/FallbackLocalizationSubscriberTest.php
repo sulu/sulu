@@ -137,11 +137,10 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
     /**
      * It should throw an exception if no locale can be determined.
-     *
-     * @expectedException \RuntimeException
      */
     public function testNoLocale()
     {
+        $this->expectException(\RuntimeException::class);
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
         $this->inspector->getLocales($this->document)->willReturn([]);
         $this->node->getPath()->willReturn('/path/to');

@@ -22,7 +22,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 
-class StructureTypeFilingSubscriberTest extends \PHPUnit_Framework_TestCase
+class StructureTypeFilingSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PersistEvent

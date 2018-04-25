@@ -14,7 +14,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\Provider;
 use Metadata\MetadataFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\Provider\MetadataProvider;
 
-class MetadataProviderTest extends \PHPUnit_Framework_TestCase
+class MetadataProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetMetadataForClass()
     {

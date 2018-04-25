@@ -18,7 +18,7 @@ use Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension;
 /**
  * @group unit
  */
-class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
+class SeoStructureExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var NodeInterface

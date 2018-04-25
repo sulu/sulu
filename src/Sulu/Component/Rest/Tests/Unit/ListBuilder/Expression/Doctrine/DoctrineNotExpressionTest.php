@@ -16,7 +16,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineInExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineNotExpression;
 
-class DoctrineNotExpressionTest extends \PHPUnit_Framework_TestCase
+class DoctrineNotExpressionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string

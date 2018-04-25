@@ -20,7 +20,7 @@ use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\ContentBundle\Search\EventListener\HitListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class HitListenerTest extends \PHPUnit_Framework_TestCase
+class HitListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RequestAnalyzerInterface

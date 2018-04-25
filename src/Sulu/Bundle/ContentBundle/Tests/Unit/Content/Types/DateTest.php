@@ -16,7 +16,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Content\Types\Date;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
-class DateTest extends \PHPUnit_Framework_TestCase
+class DateTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()
     {

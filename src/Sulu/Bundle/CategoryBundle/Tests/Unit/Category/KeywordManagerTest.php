@@ -20,7 +20,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 
-class KeywordManagerTest extends \PHPUnit_Framework_TestCase
+class KeywordManagerTest extends \PHPUnit\Framework\TestCase
 {
     public function provideSaveData()
     {

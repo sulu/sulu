@@ -21,7 +21,7 @@ use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class CacheLifetimeEnhancerTest extends \PHPUnit_Framework_TestCase
+class CacheLifetimeEnhancerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var CacheLifetimeEnhancer

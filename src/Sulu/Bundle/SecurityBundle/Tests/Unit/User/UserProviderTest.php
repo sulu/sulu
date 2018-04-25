@@ -17,8 +17,10 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\User\UserProvider;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Exception\DisabledException;
+use Symfony\Component\Security\Core\Exception\LockedException;
 
-class UserProviderTest extends \PHPUnit_Framework_TestCase
+class UserProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var UserRepositoryInterface
@@ -54,20 +56,16 @@ class UserProviderTest extends \PHPUnit_Framework_TestCase
         $this->userRepository->findUserByIdentifier('sulu')->willReturn($this->user);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\DisabledException
-     */
     public function testLoginFailDisabledUser()
     {
+        $this->expectException(DisabledException::class);
         $this->user->setEnabled(false);
         $this->userProvider->loadUserByUsername('sulu');
     }
 
-    /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\LockedException
-     */
     public function testLoginFailLockedUser()
     {
+        $this->expectException(LockedException::class);
         $this->user->setLocked(true);
         $this->userProvider->loadUserByUsername('sulu');
     }
@@ -89,20 +87,16 @@ class UserProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->user->getUsername(), $this->userProvider->refreshUser($this->user)->getUsername());
     }
 
-    /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\LockedException
-     */
     public function testRefreshUserWithLockedUser()
     {
+        $this->expectException(LockedException::class);
         $this->user->setLocked(true);
         $this->userProvider->refreshUser($this->user);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\DisabledException
-     */
     public function testRefreshUserWithDisabledUser()
     {
+        $this->expectException(DisabledException::class);
         $this->user->setEnabled(false);
         $this->userProvider->refreshUser($this->user);
     }

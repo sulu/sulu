@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * Testing the TemplateAttributeResolver class.
  */
-class TemplateAttributeResolverTest extends \PHPUnit_Framework_TestCase
+class TemplateAttributeResolverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RequestAnalyzerInterface

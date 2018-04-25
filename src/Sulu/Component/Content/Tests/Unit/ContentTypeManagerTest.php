@@ -13,13 +13,13 @@ namespace Sulu\Component\Content\Tests\Unit;
 
 use Sulu\Component\Content\ContentTypeManager;
 
-class ContentTypeManagerTest extends \PHPUnit_Framework_TestCase
+class ContentTypeManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected $container;
 
     public function setUp()
     {
-        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $this->manager = new ContentTypeManager($this->container);
 
         $this->manager->mapAliasToServiceId('content_1.alias', 'content_1.service.id');
@@ -35,12 +35,10 @@ class ContentTypeManagerTest extends \PHPUnit_Framework_TestCase
         $this->manager->get('content_1.alias');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage has not been registered
-     */
     public function testGetContentTypeNotRegistered()
     {
+        $this->expectExceptionMessage('has not been registered');
+        $this->expectException(\InvalidArgumentException::class);
         $this->manager->get('invalid.alias');
     }
 

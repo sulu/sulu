@@ -13,7 +13,7 @@ namespace Sulu\Component\Websocket\Tests\Unit;
 
 use Sulu\Component\Websocket\RatchetAppManager;
 
-class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
+class RatchetAppManagerTest extends \PHPUnit\Framework\TestCase
 {
     public function testConstructor()
     {

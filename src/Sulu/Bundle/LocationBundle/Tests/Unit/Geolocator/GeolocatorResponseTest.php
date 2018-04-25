@@ -13,14 +13,14 @@ namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator;
 
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 
-class GeolocatorResponseTest extends \PHPUnit_Framework_TestCase
+class GeolocatorResponseTest extends \PHPUnit\Framework\TestCase
 {
     protected $geolocatorResponse;
 
     public function setUp()
     {
         $this->response = new GeolocatorResponse();
-        $this->location = $this->getMock('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation');
+        $this->location = $this->getMockBuilder('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation')->getMock();
     }
 
     public function testToArray()

@@ -13,7 +13,7 @@ namespace Sulu\Component\Util\Tests\Unit;
 
 use Sulu\Component\Util\WildcardUrlUtil;
 
-class WildcardUrlUtilTest extends \PHPUnit_Framework_TestCase
+class WildcardUrlUtilTest extends \PHPUnit\Framework\TestCase
 {
     public function provideMatchData()
     {

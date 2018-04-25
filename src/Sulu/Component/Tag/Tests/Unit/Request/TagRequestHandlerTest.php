@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class TagRequestHandlerTest extends \PHPUnit_Framework_TestCase
+class TagRequestHandlerTest extends \PHPUnit\Framework\TestCase
 {
     public function getProvider()
     {

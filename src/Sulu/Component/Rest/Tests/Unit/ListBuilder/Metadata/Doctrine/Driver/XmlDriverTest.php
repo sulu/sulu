@@ -25,7 +25,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class XmlDriverTest extends \PHPUnit_Framework_TestCase
+class XmlDriverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var FileLocatorInterface

@@ -15,7 +15,7 @@ use Prophecy\Argument;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Url;
 
-class EnvironmentTest extends \PHPUnit_Framework_TestCase
+class EnvironmentTest extends \PHPUnit\Framework\TestCase
 {
     public function testToArray()
     {

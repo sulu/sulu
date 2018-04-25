@@ -23,7 +23,7 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class AccessControlManagerTest extends \PHPUnit_Framework_TestCase
+class AccessControlManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AccessControlManager
