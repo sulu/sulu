@@ -30,7 +30,7 @@ matrix:
     - language: php
       php: 7.1
       env:
-        - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
+        - COMPOSER_FLAGS="--prefer-lowest --prefer-stable --prefer-dist --no-interaction"
         - DATABASE_URL=postgres://postgres:postgres@127.0.0.1/sulu_test
         - PHPCR_TRANSPORT=jackrabbit
         - DATABASE_CHARSET=UTF8
