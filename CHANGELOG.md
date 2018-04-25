@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* unrealeased
+    * BUGFIX      #3926 [WebsiteBundle]         Fix profiler for none sulu routes
+
 * 1.5.13 (2018-04-23)
     * BUGFIX      #3915 [ContactBundle]         Fix typehint in api ContactLocale constructor
     * BUGFIX      #3918 [RestComponent]         CSV Export: Fixed serialization of boolean

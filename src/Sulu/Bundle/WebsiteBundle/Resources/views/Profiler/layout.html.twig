@@ -79,6 +79,7 @@
         </tbody>
     </table>
     <h2>Structure</h2>
+    {% if collector.data('structure') %}
     <table>
         <tbody>
             {{ self.table_row('id', collector.data('structure').id) }}
@@ -101,6 +102,9 @@
             {{ self.table_row('changed', collector.data('structure').changed.format('Y-m-d H:i:s')) }}
         </tbody>
     </table>
+    {% else %}
+        No structure was found.
+    {% endif %}
 {% endblock %}
 
 {% macro table_row(field, value) %}
