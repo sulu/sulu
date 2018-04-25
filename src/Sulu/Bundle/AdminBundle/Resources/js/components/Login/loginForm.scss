@@ -4,7 +4,6 @@ $formTextColor: $white;
 $submitBackgroundColor: $shakespeare;
 
 .form {
-    width: 260px;
     margin: 0 auto;
     opacity: 0;
     pointer-events: none;
@@ -19,6 +18,27 @@ $submitBackgroundColor: $shakespeare;
         padding: 0;
         border: 0;
     }
+}
+
+.logo {
+    display: block;
+    margin: 0 auto 20px;
+}
+
+.header {
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 32px;
+    margin: 20px auto 80px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    width: 100%;
 }
 
 .login-form {
@@ -39,30 +59,9 @@ $submitBackgroundColor: $shakespeare;
 
 .input-field {
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .label-text {
     margin-bottom: 10px;
-}
-
-.submit {
-    width: 100%;
-    height: 30px;
-    color: $formTextColor;
-    background-color: $submitBackgroundColor;
-    border: 0;
-    border-radius: 3px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.change-form-button {
-    background-color: transparent;
-    border: 0;
-    color: $formTextColor;
-    margin-top: 10px;
-    font-size: 10px;
-    padding: 0;
-    cursor: pointer;
 }
