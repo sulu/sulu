@@ -1,12 +1,12 @@
 @import '../../containers/Application/colors.scss';
 
-$loginTextColor: $white;
-$formContainerBackgroundColor: rgba($black, .7);
+$loginTextColor: $black;
+$borderColor: $mercury;
+$formContainerBackgroundColor: $white;
+$formContainerBoxShadow: 0 2px 18px 0 rgba($black, .22);
 
 .login {
     height: 100vh;
-    background-image: url('./background.jpg');
-    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,25 +15,32 @@ $formContainerBackgroundColor: rgba($black, .7);
     font-size: 14px;
 }
 
-.logo {
-    display: block;
-    margin: 100px auto 120px;
+.login-container {
+    background-color: $formContainerBackgroundColor;
+    box-shadow: $formContainerBoxShadow;
+    min-width: 480px;
+    min-height: 615px;
+}
+
+.form-container {
+    padding: 80px 60px 60px 60px;
+}
+
+.back-link-container {
+    border-top: 1px solid $borderColor;
+    text-decoration: none;
+    display: flex;
+    width: 100%;
+    height: 85px;
+    align-items: center;
+    justify-content: center;
 }
 
 .back-link {
     color: $loginTextColor;
     text-decoration: none;
-    display: flex;
-    align-items: center;
 }
 
 .back-link-icon {
     margin-right: 10px;
-}
-
-.form-container {
-    background-color: $formContainerBackgroundColor;
-    padding: 40px;
-    width: 500px;
-    height: 680px;
 }
