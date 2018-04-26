@@ -528,6 +528,8 @@ class ContactRepositoryTest extends SuluTestCase
 
         $result = $repository->findByIds($ids);
 
+        $this->assertCount(count($expected), $result);
+
         for ($i = 0; $i < count($expected); ++$i) {
             $this->assertEquals($ids[$i], $result[$i]->getId());
             $this->assertEquals($expected[$i][0], $result[$i]->getFirstName());
