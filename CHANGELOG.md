@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * ENHANCEMENT #3930 [PreviewBundle]           Fixed preview style-link
+
 * 1.6.17 (2018-04-23)
     * FEATURE     #3906 [MediaBundle]             Add file version delete to media overlay
     * HOTFIX      #3912 [ContentBundle]           Fixed content-query when a child is broken
