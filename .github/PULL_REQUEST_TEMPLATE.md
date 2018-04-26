@@ -36,4 +36,4 @@ Describe BC breaks/deprecations here. (remove this section if not needed)
 #### To Do
 
 - [ ] Create a documentation PR
-- [ ] Add UPGRADE
+- [ ] Add breaking changes to UPGRADE.md
