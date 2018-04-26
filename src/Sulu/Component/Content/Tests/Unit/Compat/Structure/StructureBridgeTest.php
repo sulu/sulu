@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Compat\Structure;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -23,7 +24,7 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
-class StructureBridgeTest extends \PHPUnit\Framework\TestCase
+class StructureBridgeTest extends TestCase
 {
     public function testCopyFrom()
     {

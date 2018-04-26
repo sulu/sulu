@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Unit\Request;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\CustomUrlBundle\Request\CustomUrlRequestProcessor;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -27,7 +28,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class CustomUrlRequestProcessorTest extends \PHPUnit\Framework\TestCase
+class CustomUrlRequestProcessorTest extends TestCase
 {
     public function dataProvider()
     {

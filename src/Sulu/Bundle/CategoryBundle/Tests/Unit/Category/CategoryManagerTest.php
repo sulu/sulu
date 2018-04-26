@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
@@ -26,7 +27,7 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class CategoryManagerTest extends \PHPUnit\Framework\TestCase
+class CategoryManagerTest extends TestCase
 {
     /**
      * @var CategoryRepositoryInterface

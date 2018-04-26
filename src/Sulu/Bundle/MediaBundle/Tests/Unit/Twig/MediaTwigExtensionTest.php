@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Twig;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -18,7 +19,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension;
 
-class MediaTwigExtensionTest extends \PHPUnit\Framework\TestCase
+class MediaTwigExtensionTest extends TestCase
 {
     public function testResolveMedia()
     {

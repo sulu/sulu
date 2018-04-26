@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -23,12 +24,11 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-
 /**
  * Tests for author-subscriber.
- */
-class AuthorSubscriberTest extends \PHPUnit\Framework\TestCase
+ */use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+
+class AuthorSubscriberTest extends TestCase
 {
     /**
      * @var PropertyEncoder

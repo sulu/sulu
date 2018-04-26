@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
-class SingleInternalLinkTest extends \PHPUnit\Framework\TestCase
+class SingleInternalLinkTest extends TestCase
 {
     /**
      * @var PropertyInterface

@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollection;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleNotFoundException;
 
-class RuleCollectionTest extends \PHPUnit\Framework\TestCase
+class RuleCollectionTest extends TestCase
 {
     public function testGetName()
     {

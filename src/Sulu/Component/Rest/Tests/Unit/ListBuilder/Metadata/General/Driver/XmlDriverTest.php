@@ -13,13 +13,14 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\General\Driver;
 
 use Metadata\ClassMetadata;
 use Metadata\Driver\FileLocatorInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class XmlDriverTest extends \PHPUnit\Framework\TestCase
+class XmlDriverTest extends TestCase
 {
     /**
      * @var FileLocatorInterface

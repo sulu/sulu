@@ -13,6 +13,7 @@ namespace Sulu\Component\Media\Tests\Unit\SmartContent;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\Media;
@@ -28,7 +29,7 @@ use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class MediaDataProviderTest extends \PHPUnit\Framework\TestCase
+class MediaDataProviderTest extends TestCase
 {
     public function testGetConfiguration()
     {

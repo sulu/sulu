@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\Tests\Unit\Tag;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManager;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -19,7 +20,7 @@ use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class TagManagerTest extends \PHPUnit\Framework\TestCase
+class TagManagerTest extends TestCase
 {
     /**
      * @var TagRepositoryInterface

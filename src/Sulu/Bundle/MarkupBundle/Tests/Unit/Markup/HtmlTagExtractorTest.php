@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
-use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
-
+use PHPUnit\Framework\TestCase;
 /**
  * Tests for HtmlTagExtractor.
- */
-class HtmlTagExtractorTest extends \PHPUnit\Framework\TestCase
+ */use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
+
+class HtmlTagExtractorTest extends TestCase
 {
     public function provideTags()
     {

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\CacheLifetime;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\Cache\AbstractHttpCache;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
@@ -21,7 +22,7 @@ use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class CacheLifetimeEnhancerTest extends \PHPUnit\Framework\TestCase
+class CacheLifetimeEnhancerTest extends TestCase
 {
     /**
      * @var CacheLifetimeEnhancer

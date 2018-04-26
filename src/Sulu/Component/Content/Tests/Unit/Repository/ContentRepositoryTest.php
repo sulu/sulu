@@ -25,6 +25,7 @@ use PHPCR\Query\QueryManagerInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -41,7 +42,7 @@ use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class ContentRepositoryTest extends \PHPUnit\Framework\TestCase
+class ContentRepositoryTest extends TestCase
 {
     /**
      * @var SessionInterface

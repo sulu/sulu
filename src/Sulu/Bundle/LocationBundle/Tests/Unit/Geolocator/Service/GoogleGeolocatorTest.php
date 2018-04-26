@@ -17,9 +17,10 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator;
 
-class GoogleGeolocatorTest extends \PHPUnit\Framework\TestCase
+class GoogleGeolocatorTest extends TestCase
 {
     public function provideLocate()
     {

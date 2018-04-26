@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -18,7 +19,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 
-class FormatManagerTest extends \PHPUnit\Framework\TestCase
+class FormatManagerTest extends TestCase
 {
     /**
      * @var MediaRepositoryInterface

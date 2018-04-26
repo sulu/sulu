@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatOptionsManager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -26,7 +27,7 @@ use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
-class FormatOptionsManagerTest extends \PHPUnit\Framework\TestCase
+class FormatOptionsManagerTest extends TestCase
 {
     /**
      * @var EntityManagerInterface

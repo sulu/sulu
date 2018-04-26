@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Metadata\Factory;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -23,7 +24,7 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 
-class StructureMetadataFactoryTest extends \PHPUnit\Framework\TestCase
+class StructureMetadataFactoryTest extends TestCase
 {
     /**
      * @var string

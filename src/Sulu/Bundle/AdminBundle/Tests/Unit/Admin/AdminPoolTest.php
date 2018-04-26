@@ -11,13 +11,14 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Console\Command\Command;
 
-class AdminPoolTest extends \PHPUnit\Framework\TestCase
+class AdminPoolTest extends TestCase
 {
     /**
      * @var AdminPool

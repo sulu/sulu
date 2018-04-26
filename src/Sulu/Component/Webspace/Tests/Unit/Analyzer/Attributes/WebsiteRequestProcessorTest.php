@@ -24,8 +24,9 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
+use \PHPUnit\Framework\TestCase;
 
-class WebsiteRequestProcessorTest extends \PHPUnit\Framework\TestCase
+class WebsiteRequestProcessorTest extends TestCase
 {
     /**
      * @var WebsiteRequestProcessor

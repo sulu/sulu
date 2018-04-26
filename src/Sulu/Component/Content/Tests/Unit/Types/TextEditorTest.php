@@ -13,11 +13,12 @@ namespace Sulu\Component\Content\Tests\Unit\Types;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface as NodePropertyInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Types\TextEditor;
 
-class TextEditorTest extends \PHPUnit\Framework\TestCase
+class TextEditorTest extends TestCase
 {
     const VALIDATE_REMOVED = 'removed';
 

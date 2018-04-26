@@ -17,8 +17,9 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
+use \PHPUnit\Framework\TestCase;
 
-class AdminRequestProcessorTest extends \PHPUnit\Framework\TestCase
+class AdminRequestProcessorTest extends TestCase
 {
     public function provideData()
     {

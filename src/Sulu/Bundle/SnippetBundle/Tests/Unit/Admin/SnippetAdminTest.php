@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Admin;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
-class SnippetAdminTest extends \PHPUnit\Framework\TestCase
+class SnippetAdminTest extends TestCase
 {
     /**
      * @var SecurityChecker

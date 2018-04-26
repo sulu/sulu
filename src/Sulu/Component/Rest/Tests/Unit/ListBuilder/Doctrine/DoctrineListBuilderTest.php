@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -31,7 +32,7 @@ use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class DoctrineListBuilderTest extends \PHPUnit\Framework\TestCase
+class DoctrineListBuilderTest extends TestCase
 {
     /**
      * @var EventDispatcherInterface

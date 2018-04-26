@@ -12,9 +12,10 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\Provider;
 
 use Metadata\MetadataFactoryInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\Metadata\Provider\MetadataProvider;
 
-class MetadataProviderTest extends \PHPUnit\Framework\TestCase
+class MetadataProviderTest extends TestCase
 {
     public function testGetMetadataForClass()
     {

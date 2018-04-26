@@ -14,13 +14,14 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Preview;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\ContentBundle\Preview\PageObjectProvider;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
-class PageObjectProviderTest extends \PHPUnit\Framework\TestCase
+class PageObjectProviderTest extends TestCase
 {
     /**
      * @var DocumentManagerInterface

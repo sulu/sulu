@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\User;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Core\Exception\LockedException;
 
-class UserProviderTest extends \PHPUnit\Framework\TestCase
+class UserProviderTest extends TestCase
 {
     /**
      * @var UserRepositoryInterface

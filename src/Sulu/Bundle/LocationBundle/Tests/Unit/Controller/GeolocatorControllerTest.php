@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Controller;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Controller\GeolocatorController;
 use Sulu\Bundle\LocationBundle\Geolocator\Exception\GeolocatorNotFoundException;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GeolocatorControllerTest extends \PHPUnit\Framework\TestCase
+class GeolocatorControllerTest extends TestCase
 {
     public function testQuery()
     {

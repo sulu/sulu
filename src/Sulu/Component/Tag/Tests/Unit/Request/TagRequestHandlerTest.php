@@ -15,8 +15,9 @@ use Sulu\Component\Tag\Request\TagRequestHandler;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use \PHPUnit\Framework\TestCase;
 
-class TagRequestHandlerTest extends \PHPUnit\Framework\TestCase
+class TagRequestHandlerTest extends TestCase
 {
     public function getProvider()
     {

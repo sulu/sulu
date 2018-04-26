@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\QueryStringRule;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class QueryStringRuleTest extends \PHPUnit\Framework\TestCase
+class QueryStringRuleTest extends TestCase
 {
     /**
      * @var RequestStack

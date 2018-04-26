@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Request;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore;
 
-class TargetGroupStoreTest extends \PHPUnit\Framework\TestCase
+class TargetGroupStoreTest extends TestCase
 {
     /**
      * @var TargetGroupStore

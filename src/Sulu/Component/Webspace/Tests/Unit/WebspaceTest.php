@@ -18,8 +18,9 @@ use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
+use \PHPUnit\Framework\TestCase;
 
-class WebspaceTest extends \PHPUnit\Framework\TestCase
+class WebspaceTest extends TestCase
 {
     /**
      * @var Webspace

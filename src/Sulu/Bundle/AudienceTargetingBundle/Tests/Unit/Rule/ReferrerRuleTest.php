@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\ReferrerRule;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ReferrerRuleTest extends \PHPUnit\Framework\TestCase
+class ReferrerRuleTest extends TestCase
 {
     /**
      * @var RequestStack

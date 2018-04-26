@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\ResourceMetadata;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Exception\ResourceNotFoundException;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataProviderInterface;
 
-class ResourceMetadataPoolTest extends \PHPUnit\Framework\TestCase
+class ResourceMetadataPoolTest extends TestCase
 {
     /**
      * @var ResourceMetadataPool

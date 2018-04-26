@@ -13,6 +13,7 @@ namespace Sulu\Component\Contact\Tests\Unit\SmartContent;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -23,7 +24,7 @@ use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
-class ContactDataProviderTest extends \PHPUnit\Framework\TestCase
+class ContactDataProviderTest extends TestCase
 {
     public function testGetConfiguration()
     {

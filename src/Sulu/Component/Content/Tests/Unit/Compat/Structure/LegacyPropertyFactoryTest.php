@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Compat\Structure;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\PropertyInterface as LegacyPropertyInterface;
@@ -21,12 +22,11 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
-use Sulu\Component\DocumentManager\NamespaceRegistry;
-
 /**
  * @group legacy
- */
-class LegacyPropertyFactoryTest extends \PHPUnit\Framework\TestCase
+ */use Sulu\Component\DocumentManager\NamespaceRegistry;
+
+class LegacyPropertyFactoryTest extends TestCase
 {
     /**
      * @var NamespaceRegistry

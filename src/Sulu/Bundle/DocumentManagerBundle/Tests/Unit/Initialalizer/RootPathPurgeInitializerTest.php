@@ -15,11 +15,12 @@ use Doctrine\Common\Persistence\ConnectionRegistry;
 use PHPCR\NodeInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurgeInitializer;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RootPathPurgeInitializerTest extends \PHPUnit\Framework\TestCase
+class RootPathPurgeInitializerTest extends TestCase
 {
     /**
      * @var SessionInterface

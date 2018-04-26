@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
@@ -22,7 +23,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class CustomUrlRouteProviderTest extends \PHPUnit\Framework\TestCase
+class CustomUrlRouteProviderTest extends TestCase
 {
     public function dataProvider()
     {

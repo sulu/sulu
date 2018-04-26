@@ -9,6 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
@@ -18,7 +19,7 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class RequestAnalyzerResolverTest extends \PHPUnit\Framework\TestCase
+class RequestAnalyzerResolverTest extends TestCase
 {
     /**
      * @var RequestAnalyzerResolver

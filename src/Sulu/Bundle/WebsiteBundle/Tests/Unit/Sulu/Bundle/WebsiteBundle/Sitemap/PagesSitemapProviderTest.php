@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Sitemap;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\Sitemap\Provider\PagesSitemapProvider;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -19,12 +20,11 @@ use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Portal;
-
 /**
  * Tests for PagesSitemapProvider.
- */
-class PagesSitemapProviderTest extends \PHPUnit\Framework\TestCase
+ */use Sulu\Component\Webspace\Portal;
+
+class PagesSitemapProviderTest extends TestCase
 {
     /**
      * @var ContentRepositoryInterface

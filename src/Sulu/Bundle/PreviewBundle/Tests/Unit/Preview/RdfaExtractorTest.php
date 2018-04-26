@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\PreviewBundle\Preview\RdfaExtractor;
 
-class RdfaExtractorTest extends \PHPUnit\Framework\TestCase
+class RdfaExtractorTest extends TestCase
 {
     public function providePropertyValueData()
     {

@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Unit\Manager;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
@@ -26,12 +27,11 @@ use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Portal;
-
 /**
  * Provides testcases for custom-url-manager.
- */
-class CustomUrlManagerTest extends \PHPUnit\Framework\TestCase
+ */use Sulu\Component\Webspace\Portal;
+
+class CustomUrlManagerTest extends TestCase
 {
     /**
      * @var DocumentManagerInterface

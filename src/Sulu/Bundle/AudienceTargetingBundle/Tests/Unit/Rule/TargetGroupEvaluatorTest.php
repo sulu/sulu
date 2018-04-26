@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition;
@@ -23,7 +24,7 @@ use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluator;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class TargetGroupEvaluatorTest extends \PHPUnit\Framework\TestCase
+class TargetGroupEvaluatorTest extends TestCase
 {
     /**
      * @var RuleCollectionInterface

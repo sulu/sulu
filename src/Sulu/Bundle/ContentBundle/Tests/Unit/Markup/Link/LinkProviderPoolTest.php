@@ -11,13 +11,14 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Markup\Link;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\ContentBundle\Markup\Link\ProviderNotFoundException;
 
-class LinkProviderPoolTest extends \PHPUnit\Framework\TestCase
+class LinkProviderPoolTest extends TestCase
 {
     /**
      * @var LinkProviderInterface[]

@@ -12,6 +12,7 @@
 namespace Sulu\Component\Media\Tests\Unit\SystemCollections;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Component\Cache\CacheInterface;
@@ -21,7 +22,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class SystemCollectionManagerTest extends \PHPUnit\Framework\TestCase
+class SystemCollectionManagerTest extends TestCase
 {
     public function configProvider()
     {

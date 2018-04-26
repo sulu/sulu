@@ -16,12 +16,12 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
-use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
-
+use PHPUnit\Framework\TestCase;
 /**
  * Tests for calss SuluNode.
- */
-class SuluNodeTest extends \PHPUnit\Framework\TestCase
+ */use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
+
+class SuluNodeTest extends TestCase
 {
     public function provideDelegateData()
     {

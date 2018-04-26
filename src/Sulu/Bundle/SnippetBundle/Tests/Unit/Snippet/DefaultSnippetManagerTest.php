@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Snippet;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManager;
@@ -23,7 +24,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class DefaultSnippetManagerTest extends \PHPUnit\Framework\TestCase
+class DefaultSnippetManagerTest extends TestCase
 {
     private $defaultTypes = [
         'test' => [

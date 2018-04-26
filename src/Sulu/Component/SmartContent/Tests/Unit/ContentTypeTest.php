@@ -37,8 +37,9 @@ interface MyNodeInterface extends \PHPCR\NodeInterface, \Iterator
 
 /**
  * @group unit
- */
-class ContentTypeTest extends \PHPUnit\Framework\TestCase
+ */use \PHPUnit\Framework\TestCase;
+
+class ContentTypeTest extends TestCase
 {
     /**
      * @var TagManagerInterface

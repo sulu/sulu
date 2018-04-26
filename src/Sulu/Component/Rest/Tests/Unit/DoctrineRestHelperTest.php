@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\Rest\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\DoctrineRestHelper;
 
-class DoctrineRestHelperTest extends \PHPUnit\Framework\TestCase
+class DoctrineRestHelperTest extends TestCase
 {
     /**
      * @var DoctrineRestHelper

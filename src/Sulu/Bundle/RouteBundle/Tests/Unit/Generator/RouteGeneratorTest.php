@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\RouteBundle\Generator\RouteGenerator;
 use Sulu\Bundle\RouteBundle\Generator\TokenProviderInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 
-class RouteGeneratorTest extends \PHPUnit\Framework\TestCase
+class RouteGeneratorTest extends TestCase
 {
     /**
      * @var TokenProviderInterface

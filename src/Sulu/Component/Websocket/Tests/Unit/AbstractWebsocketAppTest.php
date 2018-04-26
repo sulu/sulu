@@ -12,8 +12,9 @@
 namespace Sulu\Component\Websocket\Tests\Unit;
 
 use Doctrine\Common\Cache\ArrayCache;
+use \PHPUnit\Framework\TestCase;
 
-class AbstractWebsocketAppTest extends \PHPUnit\Framework\TestCase
+class AbstractWebsocketAppTest extends TestCase
 {
     public function testOpen()
     {

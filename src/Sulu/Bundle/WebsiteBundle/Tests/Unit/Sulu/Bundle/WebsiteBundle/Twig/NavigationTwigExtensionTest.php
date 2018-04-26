@@ -9,11 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
-class NavigationTwigExtensionTest extends \PHPUnit\Framework\TestCase
+class NavigationTwigExtensionTest extends TestCase
 {
     public function activeElementProvider()
     {

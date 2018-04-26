@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Block;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 
-class BlockPropertyTest extends \PHPUnit\Framework\TestCase
+class BlockPropertyTest extends TestCase
 {
     public function testSetValue()
     {

@@ -11,10 +11,11 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Content\Types;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Content\Types\LocationContentType;
 use Sulu\Component\Content\Compat\PropertyParameter;
 
-class LocationContentTypeTest extends \PHPUnit\Framework\TestCase
+class LocationContentTypeTest extends TestCase
 {
     protected $nodeRepository;
 

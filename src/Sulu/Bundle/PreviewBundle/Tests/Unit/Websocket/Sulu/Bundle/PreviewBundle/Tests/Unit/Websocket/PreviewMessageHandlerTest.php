@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Websocket;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\TestCase;
 use Ratchet\ConnectionInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\WebspaceNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
@@ -20,7 +21,7 @@ use Sulu\Bundle\PreviewBundle\Websocket\PreviewMessageHandler;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerException;
 
-class PreviewMessageHandlerTest extends \PHPUnit\Framework\TestCase
+class PreviewMessageHandlerTest extends TestCase
 {
     /**
      * @var EntityManager

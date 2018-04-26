@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\UserManagerCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class UserManagerCompilerPassTest extends \PHPUnit\Framework\TestCase
+class UserManagerCompilerPassTest extends TestCase
 {
     /**
      * @var ContainerBuilder

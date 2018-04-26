@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -36,7 +37,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class InvalidationSubscriberTest extends \PHPUnit\Framework\TestCase
+class InvalidationSubscriberTest extends TestCase
 {
     /**
      * @var InvalidationSubscriber

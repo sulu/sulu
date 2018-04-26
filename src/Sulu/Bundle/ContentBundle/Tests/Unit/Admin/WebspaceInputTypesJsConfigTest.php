@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Admin;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigInterface;
 use Sulu\Bundle\ContentBundle\Admin\WebspaceInputTypesJsConfig;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
@@ -18,7 +19,7 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrateg
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class WebspaceInputTypesJsConfigTest extends \PHPUnit\Framework\TestCase
+class WebspaceInputTypesJsConfigTest extends TestCase
 {
     /**
      * @var WebspaceManagerInterface

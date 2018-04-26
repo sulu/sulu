@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\SmartContent\Orm;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -21,7 +22,7 @@ use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\ResourceItemInterface;
 
-class BaseDataProviderTest extends \PHPUnit\Framework\TestCase
+class BaseDataProviderTest extends TestCase
 {
     public function testGetDefaultPropertyParameter()
     {

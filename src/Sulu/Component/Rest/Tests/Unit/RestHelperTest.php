@@ -13,8 +13,9 @@ namespace Sulu\Component\Rest\Tests\Unit;
 
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\RestHelper;
+use \PHPUnit\Framework\TestCase;
 
-class RestHelperTest extends \PHPUnit\Framework\TestCase
+class RestHelperTest extends TestCase
 {
     /**
      * @var RestHelper

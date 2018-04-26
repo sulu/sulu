@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -37,7 +38,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
-class ContentRouteProviderTest extends \PHPUnit\Framework\TestCase
+class ContentRouteProviderTest extends TestCase
 {
     /**
      * @var DocumentManagerInterface

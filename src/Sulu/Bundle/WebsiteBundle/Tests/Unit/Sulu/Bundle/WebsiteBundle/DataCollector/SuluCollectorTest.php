@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\DataCollector;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SuluCollectorTest extends \PHPUnit\Framework\TestCase
+class SuluCollectorTest extends TestCase
 {
     /**
      * @var Request

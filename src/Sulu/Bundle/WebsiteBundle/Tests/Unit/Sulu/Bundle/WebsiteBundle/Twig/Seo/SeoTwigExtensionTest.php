@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig\Seo;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface;
 use Sulu\Component\Localization\Localization;
@@ -20,7 +21,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class SeoTwigExtensionTest extends \PHPUnit\Framework\TestCase
+class SeoTwigExtensionTest extends TestCase
 {
     /**
      * @var SeoTwigExtension

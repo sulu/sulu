@@ -11,10 +11,11 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Extension;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
 
-class ExtensionManagerTest extends \PHPUnit\Framework\TestCase
+class ExtensionManagerTest extends TestCase
 {
     private function getExtension($name)
     {

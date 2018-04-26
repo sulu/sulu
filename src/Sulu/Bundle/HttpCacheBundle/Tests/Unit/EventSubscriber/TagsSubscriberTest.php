@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
 
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\HttpCacheBundle\EventSubscriber\TagsSubscriber;
@@ -21,7 +22,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class TagsSubscriberTest extends \PHPUnit\Framework\TestCase
+class TagsSubscriberTest extends TestCase
 {
     /**
      * @var TagsSubscriber

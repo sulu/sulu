@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview\Renderer;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PreviewBundle\Preview\Events;
@@ -37,7 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class PreviewRendererTest extends \PHPUnit\Framework\TestCase
+class PreviewRendererTest extends TestCase
 {
     /**
      * @var RouteDefaultsProviderInterface

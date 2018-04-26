@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -20,7 +21,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 
-class KeywordManagerTest extends \PHPUnit\Framework\TestCase
+class KeywordManagerTest extends TestCase
 {
     public function provideSaveData()
     {

@@ -11,11 +11,12 @@
 
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine\FieldDescriptor;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 
-class DoctrineCaseFieldDescriptorTest extends \PHPUnit\Framework\TestCase
+class DoctrineCaseFieldDescriptorTest extends TestCase
 {
     public function dataProvider()
     {

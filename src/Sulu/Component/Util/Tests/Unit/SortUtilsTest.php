@@ -14,8 +14,9 @@ namespace Sulu\Component\Util\Tests\Unit;
 use Sulu\Component\Util\SortUtils;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use \PHPUnit\Framework\TestCase;
 
-class SortUtilsTest extends \PHPUnit\Framework\TestCase
+class SortUtilsTest extends TestCase
 {
     public function provideSortObjects()
     {

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Document\Subscriber;
 use PHPCR\NodeInterface;
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\Subscriber\PublishSubscriber;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
@@ -29,7 +30,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 
-class PublishSubscriberTest extends \PHPUnit\Framework\TestCase
+class PublishSubscriberTest extends TestCase
 {
     /**
      * @var SessionInterface

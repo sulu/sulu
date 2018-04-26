@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\ReferenceStore;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 
-class ReferenceStoreTest extends \PHPUnit\Framework\TestCase
+class ReferenceStoreTest extends TestCase
 {
     public function testAdd()
     {

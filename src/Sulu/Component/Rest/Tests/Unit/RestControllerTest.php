@@ -16,8 +16,9 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
+use \PHPUnit\Framework\TestCase;
 
-class RestControllerTest extends \PHPUnit\Framework\TestCase
+class RestControllerTest extends TestCase
 {
     /**
      * @var \Sulu\Component\Rest\RestController

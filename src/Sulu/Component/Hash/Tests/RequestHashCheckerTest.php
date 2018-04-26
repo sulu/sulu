@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\Hash\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Hash\RequestHashChecker;
 use Sulu\Component\Rest\Exception\InvalidHashException;
 use Symfony\Component\HttpFoundation\Request;
 
-class RequestHashCheckerTest extends \PHPUnit\Framework\TestCase
+class RequestHashCheckerTest extends TestCase
 {
     /**
      * @var HasherInterface

@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\Content\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\ContentTypeManager;
 
-class ContentTypeManagerTest extends \PHPUnit\Framework\TestCase
+class ContentTypeManagerTest extends TestCase
 {
     protected $container;
 

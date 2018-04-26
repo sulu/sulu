@@ -11,10 +11,11 @@
 
 namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber;
 
-class MetadataSubscriberTest extends \PHPUnit\Framework\TestCase
+class MetadataSubscriberTest extends TestCase
 {
     /**
      * @var \Doctrine\ORM\Event\LoadClassMetadataEventArgs

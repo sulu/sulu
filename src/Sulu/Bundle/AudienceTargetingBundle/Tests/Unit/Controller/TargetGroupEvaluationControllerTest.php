@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupEvaluationController;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
@@ -20,7 +21,7 @@ use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterfac
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class TargetGroupEvaluationControllerTest extends \PHPUnit\Framework\TestCase
+class TargetGroupEvaluationControllerTest extends TestCase
 {
     /**
      * @var TargetGroupEvaluatorInterface

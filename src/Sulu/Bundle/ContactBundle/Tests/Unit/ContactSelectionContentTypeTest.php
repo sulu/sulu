@@ -15,6 +15,7 @@ use Jackalope\Node;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
@@ -27,7 +28,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\StructureInterface;
 
-class ContactSelectionContentTypeTest extends \PHPUnit\Framework\TestCase
+class ContactSelectionContentTypeTest extends TestCase
 {
     /**
      * @var string

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Resolver;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolver;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -19,12 +20,11 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
-
 /**
  * Testing the TemplateAttributeResolver class.
- */
-class TemplateAttributeResolverTest extends \PHPUnit\Framework\TestCase
+ */use Symfony\Component\Routing\RouterInterface;
+
+class TemplateAttributeResolverTest extends TestCase
 {
     /**
      * @var RequestAnalyzerInterface

@@ -15,6 +15,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette\PaletteInterface;
 use Imagine\Image\Palette\RGB;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
@@ -27,7 +28,7 @@ use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\ScalerInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\TransformationPoolInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 
-class ImagineImageConverterTest extends \PHPUnit\Framework\TestCase
+class ImagineImageConverterTest extends TestCase
 {
     /**
      * @var ImagineInterface

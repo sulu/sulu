@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
-class NavigationItemTest extends \PHPUnit\Framework\TestCase
+class NavigationItemTest extends TestCase
 {
     /**
      * @var NavigationItem

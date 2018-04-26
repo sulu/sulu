@@ -17,8 +17,9 @@ use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Security\Authorization\AccessControl\PhpcrAccessControlProvider;
+use \PHPUnit\Framework\TestCase;
 
-class PhpcrAccessControlProviderTest extends \PHPUnit\Framework\TestCase
+class PhpcrAccessControlProviderTest extends TestCase
 {
     /**
      * @var PhpcrAccessControlProvider

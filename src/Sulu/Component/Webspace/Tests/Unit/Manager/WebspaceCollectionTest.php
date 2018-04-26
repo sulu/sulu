@@ -22,8 +22,9 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
+use \PHPUnit\Framework\TestCase;
 
-class WebspaceCollectionTest extends \PHPUnit\Framework\TestCase
+class WebspaceCollectionTest extends TestCase
 {
     /**
      * @var WebspaceCollection

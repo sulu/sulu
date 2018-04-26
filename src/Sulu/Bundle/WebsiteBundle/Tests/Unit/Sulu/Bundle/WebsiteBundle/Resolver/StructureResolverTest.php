@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -18,7 +19,7 @@ use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
-class StructureResolverTest extends \PHPUnit\Framework\TestCase
+class StructureResolverTest extends TestCase
 {
     /**
      * @var StructureResolverInterface

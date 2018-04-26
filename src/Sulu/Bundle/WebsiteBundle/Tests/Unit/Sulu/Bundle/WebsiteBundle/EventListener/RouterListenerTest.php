@@ -11,13 +11,14 @@
 
 namespace Unit\Sulu\Bundle\WebsiteBundle\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\EventListener\RouterListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\RouterListener as BaseRouteListener;
 
-class RouterListenerTest extends \PHPUnit\Framework\TestCase
+class RouterListenerTest extends TestCase
 {
     /**
      * @var BaseRouteListener

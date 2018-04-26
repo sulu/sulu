@@ -12,12 +12,13 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
-class MediaSelectionContentTypeTest extends \PHPUnit\Framework\TestCase
+class MediaSelectionContentTypeTest extends TestCase
 {
     /**
      * @var MediaSelectionContentType

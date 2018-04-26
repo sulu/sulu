@@ -15,6 +15,7 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SearchBundle\Controller\SearchController;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfiguration;
@@ -23,7 +24,7 @@ use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-class SearchControllerTest extends \PHPUnit\Framework\TestCase
+class SearchControllerTest extends TestCase
 {
     /**
      * @var SearchManagerInterface

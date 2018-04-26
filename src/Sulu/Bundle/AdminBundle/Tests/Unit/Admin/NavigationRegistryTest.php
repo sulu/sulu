@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
@@ -20,7 +21,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class NavigationRegistryTest extends \PHPUnit\Framework\TestCase
+class NavigationRegistryTest extends TestCase
 {
     /**
      * @var NavigationRegistry

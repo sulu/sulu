@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\Rest\Tests\Unit\Listing;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\Listing\ListQueryBuilder;
 
-class ListQueryBuilderTest extends \PHPUnit\Framework\TestCase
+class ListQueryBuilderTest extends TestCase
 {
     public function testFind()
     {

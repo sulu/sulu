@@ -14,13 +14,14 @@ namespace Sulu\Component\Rest\Tests\Unit\Csv;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use JMS\Serializer\SerializerInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\Csv\CsvHandler;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class CsvHandlerTest extends \PHPUnit\Framework\TestCase
+class CsvHandlerTest extends TestCase
 {
     public function testNonListResponse()
     {

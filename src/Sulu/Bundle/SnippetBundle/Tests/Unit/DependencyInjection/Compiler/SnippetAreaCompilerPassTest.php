@@ -11,15 +11,15 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler\SnippetAreaCompilerPass;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-
 /**
  * Test snippet area compiler pass.
- */
-class SnippetAreaCompilerPassTest extends \PHPUnit\Framework\TestCase
+ */use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+class SnippetAreaCompilerPassTest extends TestCase
 {
     /**
      * @var ContainerBuilder

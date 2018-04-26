@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Compat;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Property;
 
-class PropertyTest extends \PHPUnit\Framework\TestCase
+class PropertyTest extends TestCase
 {
     public function provideIsMultipleTest()
     {

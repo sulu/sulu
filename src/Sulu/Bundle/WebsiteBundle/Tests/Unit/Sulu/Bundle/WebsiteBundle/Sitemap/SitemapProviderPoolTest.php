@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Sitemap;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\Exception\SitemapProviderNotFoundException;
 use Sulu\Bundle\WebsiteBundle\Sitemap\Sitemap;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPool;
 
-class SitemapProviderPoolTest extends \PHPUnit\Framework\TestCase
+class SitemapProviderPoolTest extends TestCase
 {
     /**
      * @var SitemapProviderInterface[]

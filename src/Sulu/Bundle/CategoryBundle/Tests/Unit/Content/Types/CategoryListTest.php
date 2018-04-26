@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Content\Types;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
@@ -18,7 +19,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
 
-class CategoryListTest extends \PHPUnit\Framework\TestCase
+class CategoryListTest extends TestCase
 {
     public function testGetContentData()
     {

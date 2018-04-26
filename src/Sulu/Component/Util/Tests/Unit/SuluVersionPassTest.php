@@ -13,8 +13,9 @@ namespace Sulu\Component\Util\Tests\Unit;
 
 use Sulu\Component\Util\SuluVersionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use \PHPUnit\Framework\TestCase;
 
-class SuluVersionPassTest extends \PHPUnit\Framework\TestCase
+class SuluVersionPassTest extends TestCase
 {
     public function testProcess()
     {

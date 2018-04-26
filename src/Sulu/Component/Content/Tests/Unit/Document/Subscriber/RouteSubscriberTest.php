@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPCR\Util\PathHelper;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -27,7 +28,7 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
-class RouteSubscriberTest extends \PHPUnit\Framework\TestCase
+class RouteSubscriberTest extends TestCase
 {
     /**
      * @var DocumentManagerInterface

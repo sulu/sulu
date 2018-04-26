@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
@@ -28,7 +29,7 @@ use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
-class WorkflowStageSubscriberTest extends \PHPUnit\Framework\TestCase
+class WorkflowStageSubscriberTest extends TestCase
 {
     /**
      * @var PropertyEncoder

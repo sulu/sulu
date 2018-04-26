@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 
-class FormXmlLoaderTest extends \PHPUnit\Framework\TestCase
+class FormXmlLoaderTest extends TestCase
 {
     /**
      * @var FormXmlLoader

@@ -29,8 +29,9 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use \PHPUnit\Framework\TestCase;
 
-class RequestAnalyzerTest extends \PHPUnit\Framework\TestCase
+class RequestAnalyzerTest extends TestCase
 {
     /**
      * @var RequestAnalyzer

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
@@ -18,7 +19,7 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 
-class RouteRegistryTest extends \PHPUnit\Framework\TestCase
+class RouteRegistryTest extends TestCase
 {
     /**
      * @var RouteRegistry

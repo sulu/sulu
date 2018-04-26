@@ -11,10 +11,11 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
-class AdminTest extends \PHPUnit\Framework\TestCase
+class AdminTest extends TestCase
 {
     /**
      * @var Admin

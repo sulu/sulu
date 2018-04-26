@@ -16,6 +16,7 @@ use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -27,7 +28,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Search\Subscriber\MediaSearchSubscriber;
 use Sulu\Bundle\SearchBundle\Search\Document;
 
-class MediaSearchSubscriberTest extends \PHPUnit\Framework\TestCase
+class MediaSearchSubscriberTest extends TestCase
 {
     private $mediaManager;
 

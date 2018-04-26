@@ -22,8 +22,9 @@ use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use \PHPUnit\Framework\TestCase;
 
-class AccessControlManagerTest extends \PHPUnit\Framework\TestCase
+class AccessControlManagerTest extends TestCase
 {
     /**
      * @var AccessControlManager

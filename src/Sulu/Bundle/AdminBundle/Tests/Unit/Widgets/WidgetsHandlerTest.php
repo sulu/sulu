@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Widgets;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetsHandler;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetsHandlerInterface;
 use Symfony\Component\Templating\EngineInterface;
 
-class WidgetsHandlerTest extends \PHPUnit\Framework\TestCase
+class WidgetsHandlerTest extends TestCase
 {
     /**
      * @var EngineInterface

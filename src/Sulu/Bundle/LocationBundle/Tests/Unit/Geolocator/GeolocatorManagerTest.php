@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorManager;
 
-class GeolocatorManagerTest extends \PHPUnit\Framework\TestCase
+class GeolocatorManagerTest extends TestCase
 {
     protected $container;
 

@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedBlameBehavior;
@@ -23,7 +24,7 @@ use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
-class BlameSubscriberTest extends \PHPUnit\Framework\TestCase
+class BlameSubscriberTest extends TestCase
 {
     /**
      * @var PersistEvent

@@ -15,12 +15,13 @@ use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Teaser\ContentTeaserProvider;
 use Sulu\Bundle\ContentBundle\Teaser\Teaser;
 use Sulu\Bundle\SearchBundle\Search\Document;
 
-class ContentTeaserProviderTest extends \PHPUnit\Framework\TestCase
+class ContentTeaserProviderTest extends TestCase
 {
     /**
      * @var SearchManagerInterface

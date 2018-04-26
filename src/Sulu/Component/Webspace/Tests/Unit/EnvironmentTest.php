@@ -14,8 +14,9 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 use Prophecy\Argument;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Url;
+use \PHPUnit\Framework\TestCase;
 
-class EnvironmentTest extends \PHPUnit\Framework\TestCase
+class EnvironmentTest extends TestCase
 {
     public function testToArray()
     {

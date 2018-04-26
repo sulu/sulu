@@ -12,9 +12,10 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata;
 
 use JMS\Serializer\Metadata\PropertyMetadata as BasePropertyMetadata;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
 
-class PropertyMetadataTest extends \PHPUnit\Framework\TestCase
+class PropertyMetadataTest extends TestCase
 {
     public function testSerialize()
     {

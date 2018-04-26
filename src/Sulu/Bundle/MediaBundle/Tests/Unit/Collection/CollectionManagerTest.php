@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Collection;
 
 use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
@@ -22,7 +23,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
-class CollectionManagerTest extends \PHPUnit\Framework\TestCase
+class CollectionManagerTest extends TestCase
 {
     /**
      * @var CollectionRepository

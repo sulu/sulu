@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Markup;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Markup\MediaTag;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
-class MediaTagTest extends \PHPUnit\Framework\TestCase
+class MediaTagTest extends TestCase
 {
     /**
      * @var MediaRepositoryInterface

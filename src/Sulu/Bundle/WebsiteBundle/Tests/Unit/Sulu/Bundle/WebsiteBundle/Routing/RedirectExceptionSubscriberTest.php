@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Routing;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionSubscriber;
 use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
@@ -30,7 +31,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Route;
 
-class RedirectExceptionSubscriberTest extends \PHPUnit\Framework\TestCase
+class RedirectExceptionSubscriberTest extends TestCase
 {
     /**
      * @var RequestMatcherInterface

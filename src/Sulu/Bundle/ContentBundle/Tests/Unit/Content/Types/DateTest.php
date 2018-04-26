@@ -12,11 +12,12 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Content\Types\Date;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
-class DateTest extends \PHPUnit\Framework\TestCase
+class DateTest extends TestCase
 {
     public function testRead()
     {

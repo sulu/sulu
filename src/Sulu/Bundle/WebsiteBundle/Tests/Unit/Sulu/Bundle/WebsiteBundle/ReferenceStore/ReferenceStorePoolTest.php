@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\ReferenceStore;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool;
 
-class ReferenceStorePoolTest extends \PHPUnit\Framework\TestCase
+class ReferenceStorePoolTest extends TestCase
 {
     public function testGetStores()
     {

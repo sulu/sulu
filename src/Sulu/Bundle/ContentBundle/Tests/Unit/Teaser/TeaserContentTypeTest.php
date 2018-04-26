@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Teaser;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Teaser;
@@ -23,7 +24,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\StructureInterface;
 
-class TeaserContentTypeTest extends \PHPUnit\Framework\TestCase
+class TeaserContentTypeTest extends TestCase
 {
     /**
      * @var string

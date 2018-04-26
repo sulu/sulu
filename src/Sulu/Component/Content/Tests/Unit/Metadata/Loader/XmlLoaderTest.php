@@ -11,13 +11,14 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Metadata\Loader;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 
-class XmlLoaderTest extends \PHPUnit\Framework\TestCase
+class XmlLoaderTest extends TestCase
 {
     /**
      * @var StructureXmlLoader

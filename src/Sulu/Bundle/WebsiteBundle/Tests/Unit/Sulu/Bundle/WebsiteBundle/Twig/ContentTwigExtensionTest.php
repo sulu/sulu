@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
@@ -45,7 +46,7 @@ class TestStructure extends Structure
     }
 }
 
-class ContentTwigExtensionTest extends \PHPUnit\Framework\TestCase
+class ContentTwigExtensionTest extends TestCase
 {
     /**
      * @var StructureResolverInterface

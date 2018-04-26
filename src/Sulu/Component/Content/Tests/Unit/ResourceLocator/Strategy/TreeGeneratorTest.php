@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\Content\Tests\Functional\ResourceLocator\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeGenerator;
 
-class TreeGeneratorTest extends \PHPUnit\Framework\TestCase
+class TreeGeneratorTest extends TestCase
 {
     public function testGenerate()
     {

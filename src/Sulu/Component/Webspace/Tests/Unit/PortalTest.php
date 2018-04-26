@@ -16,8 +16,9 @@ use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url;
+use \PHPUnit\Framework\TestCase;
 
-class PortalTest extends \PHPUnit\Framework\TestCase
+class PortalTest extends TestCase
 {
     /**
      * @var Portal

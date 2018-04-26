@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Compat;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
@@ -20,7 +21,7 @@ use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
-class StructureManagerTest extends \PHPUnit\Framework\TestCase
+class StructureManagerTest extends TestCase
 {
     /**
      * @var StructureMetadataFactory

@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Translator;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\Translator\RequestAnalyzerTranslator;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class RequestAnalyzerTranslatorTest extends \PHPUnit\Framework\TestCase
+class RequestAnalyzerTranslatorTest extends TestCase
 {
     public function testGetLocale()
     {

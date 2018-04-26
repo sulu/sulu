@@ -11,10 +11,11 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\DispositionType;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeResolver;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class DispositionTypeResolverTest extends \PHPUnit\Framework\TestCase
+class DispositionTypeResolverTest extends TestCase
 {
     /**
      * @var string

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Routing;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\Routing\PortalLoader;
 use Sulu\Bundle\WebsiteBundle\Routing\PortalRoute;
@@ -20,7 +21,7 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class PortalLoaderTest extends \PHPUnit\Framework\TestCase
+class PortalLoaderTest extends TestCase
 {
     /**
      * @var PortalLoader

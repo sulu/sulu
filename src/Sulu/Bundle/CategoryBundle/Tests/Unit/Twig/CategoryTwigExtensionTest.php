@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Twig;
 use Doctrine\Common\Cache\ArrayCache;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category as ApiCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
@@ -27,7 +28,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CategoryTwigExtensionTest extends \PHPUnit\Framework\TestCase
+class CategoryTwigExtensionTest extends TestCase
 {
     /**
      * Returns memoize cache instance.

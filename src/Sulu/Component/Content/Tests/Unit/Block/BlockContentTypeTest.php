@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Block;
 
 use Jackalope\Node;
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
@@ -27,7 +28,7 @@ use Sulu\Component\Content\Types\BlockContentType;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
 
-class BlockContentTypeTest extends \PHPUnit\Framework\TestCase
+class BlockContentTypeTest extends TestCase
 {
     /**
      * @var BlockContentType

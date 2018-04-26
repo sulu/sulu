@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Form\DataTransformer;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
-class DocumentToUuidTransformerTest extends \PHPUnit\Framework\TestCase
+class DocumentToUuidTransformerTest extends TestCase
 {
     private $documentManager;
 

@@ -19,8 +19,9 @@ use Sulu\Component\Websocket\MessageDispatcher\MessageDispatcher;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerException;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;
+use \PHPUnit\Framework\TestCase;
 
-class MessageDispatcherTest extends \PHPUnit\Framework\TestCase
+class MessageDispatcherTest extends TestCase
 {
     /**
      * @var MessageBuilderInterface

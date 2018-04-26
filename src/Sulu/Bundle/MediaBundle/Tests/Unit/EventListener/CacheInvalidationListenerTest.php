@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
@@ -22,7 +23,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\EventListener\CacheInvalidationListener;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
-class CacheInvalidationListenerTest extends \PHPUnit\Framework\TestCase
+class CacheInvalidationListenerTest extends TestCase
 {
     /**
      * @var CacheManager

@@ -11,10 +11,11 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache;
 use Symfony\Component\Filesystem\Filesystem;
 
-class LocalFormatCacheTest extends \PHPUnit\Framework\TestCase
+class LocalFormatCacheTest extends TestCase
 {
     /**
      * @var LocalFormatCache

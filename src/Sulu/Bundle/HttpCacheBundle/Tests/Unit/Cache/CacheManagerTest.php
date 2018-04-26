@@ -13,13 +13,14 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\Cache;
 
 use FOS\HttpCache\ProxyClient\Invalidation\BanCapable;
 use FOS\HttpCacheBundle\CacheManager as FOSCacheManager;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CacheManagerTest extends \PHPUnit\Framework\TestCase
+class CacheManagerTest extends TestCase
 {
     /**
      * @var CacheManager

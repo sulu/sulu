@@ -11,11 +11,12 @@
 
 namespace Sulu\Component\Cache\Tests\Unit\Cache;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 
-class MemoizeTwigExtensionTraitTest extends \PHPUnit\Framework\TestCase
+class MemoizeTwigExtensionTraitTest extends TestCase
 {
     /**
      * @var MemoizeTwigExtensionTrait

@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Tag;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagNotFoundException;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistry;
 
-class TagRegistryTest extends \PHPUnit\Framework\TestCase
+class TagRegistryTest extends TestCase
 {
     public function testGetTag()
     {

@@ -12,10 +12,11 @@
 namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 
-class OrderByTraitTest extends \PHPUnit\Framework\TestCase
+class OrderByTraitTest extends TestCase
 {
     /**
      * @var QueryBuilder

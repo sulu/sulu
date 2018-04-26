@@ -13,13 +13,14 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Content\Types;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface as PHPCRPropertyInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\Content\Types\AudienceTargetingGroups;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
-class AudienceTargetingGroupsTest extends \PHPUnit\Framework\TestCase
+class AudienceTargetingGroupsTest extends TestCase
 {
     /**
      * @var TargetGroupRepositoryInterface

@@ -12,11 +12,12 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Expression\Doctrine;
 
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineAndExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 
-class DoctrineAndExpressionTest extends \PHPUnit\Framework\TestCase
+class DoctrineAndExpressionTest extends TestCase
 {
     /**
      * @var string

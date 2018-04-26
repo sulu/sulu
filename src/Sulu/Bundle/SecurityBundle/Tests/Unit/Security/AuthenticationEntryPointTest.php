@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security;
 
-class AuthenticationEntryPointTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class AuthenticationEntryPointTest extends TestCase
 {
     /**
      * @var AuthenticationEntryPoint

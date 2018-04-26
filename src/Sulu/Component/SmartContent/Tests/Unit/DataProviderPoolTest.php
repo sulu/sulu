@@ -15,8 +15,9 @@ use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPool;
 use Sulu\Component\SmartContent\Exception\DataProviderAliasAlreadyExistsException;
 use Sulu\Component\SmartContent\Exception\DataProviderNotExistsException;
+use \PHPUnit\Framework\TestCase;
 
-class DataProviderPoolTest extends \PHPUnit\Framework\TestCase
+class DataProviderPoolTest extends TestCase
 {
     public function addProvider()
     {

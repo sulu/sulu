@@ -15,12 +15,13 @@ use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\GenericSerializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\XmlSerializationVisitor;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Hash\Serializer\Subscriber\HashSerializeEventSubscriber;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
-class HashSerializeEventSubscriberTest extends \PHPUnit\Framework\TestCase
+class HashSerializeEventSubscriberTest extends TestCase
 {
     /**
      * @var HasherInterface

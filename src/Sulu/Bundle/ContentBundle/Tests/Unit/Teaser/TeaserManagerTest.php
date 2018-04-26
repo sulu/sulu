@@ -11,13 +11,14 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Teaser;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Teaser;
 use Sulu\Bundle\ContentBundle\Teaser\TeaserManager;
 use Sulu\Bundle\ContentBundle\Teaser\TeaserManagerInterface;
 
-class TeaserManagerTest extends \PHPUnit\Framework\TestCase
+class TeaserManagerTest extends TestCase
 {
     /**
      * @var TeaserProviderPoolInterface

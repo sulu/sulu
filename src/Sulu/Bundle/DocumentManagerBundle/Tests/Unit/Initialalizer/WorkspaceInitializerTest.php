@@ -15,10 +15,11 @@ use Doctrine\Common\Persistence\ConnectionRegistry;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\WorkspaceInitializer;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class WorkspaceInitializerTest extends \PHPUnit\Framework\TestCase
+class WorkspaceInitializerTest extends TestCase
 {
     /**
      * @var SessionInterface

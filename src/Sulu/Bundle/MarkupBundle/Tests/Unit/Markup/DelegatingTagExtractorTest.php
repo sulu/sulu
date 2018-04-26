@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MarkupBundle\Markup\DelegatingTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\TagExtractorInterface;
 use Sulu\Bundle\MarkupBundle\Markup\TagMatchGroup;
 
-class DelegatingTagExtractorTest extends \PHPUnit\Framework\TestCase
+class DelegatingTagExtractorTest extends TestCase
 {
     /**
      * @var string

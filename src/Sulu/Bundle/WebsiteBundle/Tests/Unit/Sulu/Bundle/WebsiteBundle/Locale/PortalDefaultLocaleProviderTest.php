@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Locale;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\Locale\PortalDefaultLocaleProvider;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 
-class PortalDefaultLocaleProviderTest extends \PHPUnit\Framework\TestCase
+class PortalDefaultLocaleProviderTest extends TestCase
 {
     public function testGetDefaultLocale()
     {

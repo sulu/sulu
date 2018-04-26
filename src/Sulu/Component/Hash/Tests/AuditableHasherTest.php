@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\Hash\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Hash\AuditableHasher;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class AuditableHasherTest extends \PHPUnit\Framework\TestCase
+class AuditableHasherTest extends TestCase
 {
     /**
      * @var AuditableHasher

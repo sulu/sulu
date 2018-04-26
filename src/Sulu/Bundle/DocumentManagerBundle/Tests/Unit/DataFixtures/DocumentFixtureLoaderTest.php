@@ -11,10 +11,11 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class DocumentFixtureLoaderTest extends \PHPUnit\Framework\TestCase
+class DocumentFixtureLoaderTest extends TestCase
 {
     private $container;
 

@@ -19,8 +19,9 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
+use \PHPUnit\Framework\TestCase;
 
-class PortalInformationRequestProcessorTest extends \PHPUnit\Framework\TestCase
+class PortalInformationRequestProcessorTest extends TestCase
 {
     /**
      * @var PortalInformationRequestProcessor

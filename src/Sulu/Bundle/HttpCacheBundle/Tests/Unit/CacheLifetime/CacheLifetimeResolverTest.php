@@ -12,10 +12,11 @@
 namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\CacheLifetime;
 
 use Cron\CronExpression;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 
-class CacheLifetimeResolverTest extends \PHPUnit\Framework\TestCase
+class CacheLifetimeResolverTest extends TestCase
 {
     public function testSupportWrongType()
     {

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\Controller\ExceptionController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
@@ -20,7 +21,7 @@ use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionCon
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Request;
 
-class ExceptionControllerTest extends \PHPUnit\Framework\TestCase
+class ExceptionControllerTest extends TestCase
 {
     /**
      * @var ExceptionController

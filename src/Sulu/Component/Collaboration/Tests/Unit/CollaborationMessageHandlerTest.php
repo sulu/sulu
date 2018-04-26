@@ -13,6 +13,7 @@ namespace Sulu\Component\Collaboration\Tests\Unit;
 
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Collaboration\CollaborationMessageHandler;
@@ -21,7 +22,7 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Websocket\MessageDispatcher\MessageBuilderInterface;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 
-class CollaborationMessageHandlerTest extends \PHPUnit\Framework\TestCase
+class CollaborationMessageHandlerTest extends TestCase
 {
     /**
      * @var UserRepositoryInterface

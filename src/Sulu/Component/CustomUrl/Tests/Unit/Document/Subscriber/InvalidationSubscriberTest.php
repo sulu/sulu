@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Unit\Document\Subscriber;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -22,7 +23,7 @@ use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class InvalidationSubscriberTest extends \PHPUnit\Framework\TestCase
+class InvalidationSubscriberTest extends TestCase
 {
     public function testInvalidateDocumentBeforePublishing()
     {

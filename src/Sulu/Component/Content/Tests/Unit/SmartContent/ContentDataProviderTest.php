@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\SmartContent;
 
 use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
@@ -29,7 +30,7 @@ use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
 
-class ContentDataProviderTest extends \PHPUnit\Framework\TestCase
+class ContentDataProviderTest extends TestCase
 {
     /**
      * @param array|null $initValue
