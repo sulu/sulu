@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {render, mount} from 'enzyme';
 import React from 'react';
 import Table from '../Table';
@@ -8,7 +8,11 @@ import Row from '../Row';
 import Cell from '../Cell';
 import HeaderCell from '../HeaderCell';
 
-afterEach(() => document.body.innerHTML = '');
+afterEach(() => {
+    if (document.body) {
+        document.body.innerHTML = '';
+    }
+});
 
 test('Render the Table component', () => {
     expect(render(
@@ -44,7 +48,7 @@ test('Render an empty table', () => {
                 <HeaderCell>Column Title</HeaderCell>
                 <HeaderCell>Column Title</HeaderCell>
             </Header>
-            <Body></Body>
+            <Body />
         </Table>
     )).toMatchSnapshot();
 });
@@ -74,10 +78,10 @@ test('Render a table with buttons', () => {
 });
 
 test('Table buttons should implement an onClick handler', () => {
-    const onClickSpy = jest.fn();
+    const clickSpy = jest.fn();
     const buttons = [{
         icon: 'fa-pencil',
-        onClick: onClickSpy,
+        onClick: clickSpy,
     }];
 
     const table = mount(
@@ -97,9 +101,9 @@ test('Table buttons should implement an onClick handler', () => {
         </Table>
     );
 
-    expect(onClickSpy).toHaveBeenCalledTimes(0);
+    expect(clickSpy).toHaveBeenCalledTimes(0);
     table.find('.buttonCell button').simulate('click');
-    expect(onClickSpy).toHaveBeenCalledTimes(1);
+    expect(clickSpy).toHaveBeenCalledTimes(1);
 });
 
 test('Render the Table component in single selection mode', () => {
@@ -238,15 +242,27 @@ test('Clicking the select-all checkbox should call the onAllSelectionChange call
     expect(onChangeSpy).toHaveBeenCalledWith(true);
 });
 
-test('Header cells with an attacked onClick handler should be clickable', () => {
-    const onClickSpy = jest.fn();
+test('Header cells with a defined sortOrder must show a sort indicator', () => {
+    const clickSpy = jest.fn();
+
+    expect(render(
+        <Table>
+            <Header>
+                <HeaderCell onClick={clickSpy} sortOrder="asc">ColumnTitle</HeaderCell>
+                <HeaderCell onClick={clickSpy} sortOrder="desc">ColumnTitle</HeaderCell>
+                <HeaderCell>ColumnTitle</HeaderCell>
+            </Header>
+        </Table>
+    )).toMatchSnapshot();
+});
+
+test('Header cells with an attached onClick handler should be clickable', () => {
+    const clickSpy = jest.fn();
 
     const table = mount(
         <Table>
             <Header>
-                <HeaderCell onClick={onClickSpy}>
-                    Column Title
-                </HeaderCell>
+                <HeaderCell onClick={clickSpy} name="column1">Column Title</HeaderCell>
                 <HeaderCell>Column Title</HeaderCell>
                 <HeaderCell>Column Title</HeaderCell>
             </Header>
@@ -261,5 +277,35 @@ test('Header cells with an attacked onClick handler should be clickable', () => 
     );
 
     table.find('HeaderCell').at(0).find('button').simulate('click');
-    expect(onClickSpy).toHaveBeenCalledTimes(1);
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+});
+
+test('Header cells with an attached name should call the onClick callback with the name and the new sortOrder', () => {
+    const clickSpy = jest.fn();
+
+    const table = mount(
+        <Table>
+            <Header>
+                <HeaderCell onClick={clickSpy} name="column1">Column Title</HeaderCell>
+                <HeaderCell onClick={clickSpy} name="column2" sortOrder="asc">Column Title</HeaderCell>
+                <HeaderCell onClick={clickSpy} name="column3" sortOrder="desc">Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    );
+
+    table.find('HeaderCell').at(0).find('button').simulate('click');
+    expect(clickSpy).lastCalledWith('column1', 'asc');
+
+    table.find('HeaderCell').at(1).find('button').simulate('click');
+    expect(clickSpy).lastCalledWith('column2', 'desc');
+
+    table.find('HeaderCell').at(2).find('button').simulate('click');
+    expect(clickSpy).lastCalledWith('column3', 'asc');
 });

@@ -14,6 +14,7 @@ import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer'
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
     this.setActive = jest.fn();
+    this.sort = jest.fn();
     this.updateStrategies = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
@@ -192,6 +193,21 @@ test('Selecting and unselecting all items on current page should update store', 
     expect(datagridStore.selectEntirePage).toBeCalledWith();
     headerCheckbox.simulate('change', {currentTarget: {checked: false}});
     expect(datagridStore.deselectEntirePage).toBeCalledWith();
+});
+
+test('Clicking a header cell should sort the table', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    datagridStore.structureStrategy.data = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
+
+    const headerCell = datagrid.find('th button').at(0);
+    headerCell.simulate('click');
+    expect(datagridStore.sort).toBeCalledWith('title', 'asc');
 });
 
 test('Switching the adapter should render the correct adapter', () => {

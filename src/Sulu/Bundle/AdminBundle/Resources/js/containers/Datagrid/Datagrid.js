@@ -3,6 +3,7 @@ import {observer} from 'mobx-react';
 import {observable, action, computed} from 'mobx';
 import React, {Fragment} from 'react';
 import equal from 'fast-deep-equal';
+import type {SortOrder} from './types';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -77,6 +78,10 @@ export default class Datagrid extends React.Component<Props> {
         this.props.store.setPage(page);
     };
 
+    handleSort = (column: string, order: SortOrder) => {
+        this.props.store.sort(column, order);
+    };
+
     handleItemSelectionChange = (id: string | number, selected?: boolean) => {
         const {store} = this.props;
         const row = store.findById(id);
@@ -128,15 +133,18 @@ export default class Datagrid extends React.Component<Props> {
                         data={store.data}
                         disabledIds={disabledIds}
                         loading={store.loading}
+                        onAddClick={onAddClick}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
                         onItemActivation={this.handleItemActivation}
                         onItemClick={onItemClick}
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
-                        onAddClick={onAddClick}
                         onPageChange={this.handlePageChange}
+                        onSort={this.handleSort}
                         page={store.getPage()}
                         pageCount={store.pageCount}
                         schema={store.schema}
+                        sortColumn={store.sortColumn}
+                        sortOrder={store.sortOrder}
                         selections={store.selectionIds}
                     />
                 </div>

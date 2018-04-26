@@ -4,31 +4,29 @@ import React from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import tableStyles from './table.scss';
+import type {SortOrder} from './types';
 
 const ASCENDING_ICON = 'su-angle-up';
 const DESCENDING_ICON = 'su-angle-down';
 
-type Props = {
+type Props = {|
     children?: Node,
     className?: string,
+    name?: string,
     /** Called when column was clicked */
-    onClick?: () => void,
+    onClick?: (sortColumn: string, sortOrder: SortOrder) => void, // TODO extract order to own type file
     /** If set, an indicator will show up */
-    sortMode: 'none' | 'ascending' | 'descending',
-};
+    sortOrder?: ?SortOrder,
+|};
 
 export default class HeaderCell extends React.PureComponent<Props> {
-    static defaultProps = {
-        sortMode: 'none',
-    };
+    getSortOrderIcon = () => {
+        const {sortOrder} = this.props;
 
-    getSortModeIcon = () => {
-        const {sortMode} = this.props;
-
-        switch (sortMode) {
-            case 'ascending':
+        switch (sortOrder) {
+            case 'asc':
                 return (<Icon name={ASCENDING_ICON} className={tableStyles.headerCellSortIcon} />);
-            case 'descending':
+            case 'desc':
                 return (<Icon name={DESCENDING_ICON} className={tableStyles.headerCellSortIcon} />);
             default:
                 return null;
@@ -36,8 +34,9 @@ export default class HeaderCell extends React.PureComponent<Props> {
     };
 
     handleOnClick = () => {
-        if (this.props.onClick) {
-            this.props.onClick();
+        const {name, onClick, sortOrder} = this.props;
+        if (onClick && name) {
+            onClick(name, sortOrder === 'asc' ? 'desc' : 'asc');
         }
     };
 
@@ -65,7 +64,7 @@ export default class HeaderCell extends React.PureComponent<Props> {
                         onClick={this.handleOnClick}
                     >
                         <span>{children}</span>
-                        {this.getSortModeIcon()}
+                        {this.getSortOrderIcon()}
                     </button>
                 }
             </th>

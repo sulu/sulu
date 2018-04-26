@@ -1,5 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell clickable"
+        >
+          <button>
+            <span>
+              ColumnTitle
+            </span>
+            <span
+              aria-label="su-angle-up"
+              class="headerCellSortIcon su-angle-up"
+            />
+          </button>
+        </th>
+        <th
+          class="headerCell clickable"
+        >
+          <button>
+            <span>
+              ColumnTitle
+            </span>
+            <span
+              aria-label="su-angle-down"
+              class="headerCellSortIcon su-angle-down"
+            />
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            ColumnTitle
+          </span>
+        </th>
+      </tr>
+    </thead>
+  </table>
+</div>
+`;
+
 exports[`Render a table with buttons 1`] = `
 <div
   class="tableContainer"

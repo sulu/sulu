@@ -54,13 +54,19 @@ export default class TableAdapter extends AbstractAdapter {
     }
 
     renderHeaderCells() {
+        const {sortColumn, sortOrder} = this.props;
         const schemaKeys = Object.keys(this.schema);
 
         return schemaKeys.map((schemaKey) => {
             const label = this.schema[schemaKey].label ? this.schema[schemaKey].label : schemaKey;
 
             return(
-                <Table.HeaderCell key={schemaKey}>
+                <Table.HeaderCell
+                    key={schemaKey}
+                    onClick={this.props.onSort}
+                    name={schemaKey}
+                    sortOrder={sortColumn === schemaKey ? sortOrder : undefined}
+                >
                     {label}
                 </Table.HeaderCell>
             );

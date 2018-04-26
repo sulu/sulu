@@ -1,5 +1,193 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render column with ascending sort icon 1`] = `
+<section>
+  <div
+    class="tableContainer"
+  >
+    <table
+      class="table"
+    >
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerCell clickable"
+          >
+            <button>
+              <span>
+                Title
+              </span>
+              <span
+                aria-label="su-angle-up"
+                class="headerCellSortIcon su-angle-up"
+              />
+            </button>
+          </th>
+          <th
+            class="headerCell clickable"
+          >
+            <button>
+              <span>
+                Description
+              </span>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Title 1
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <nav
+    class="pagination"
+  >
+    <div
+      class="loader"
+    />
+    <span
+      class="display"
+    >
+      Page: 1 of 3
+    </span>
+    <button
+      class="previous"
+      disabled=""
+    >
+      <span
+        aria-label="su-angle-left"
+        class="su-angle-left"
+      />
+    </button>
+    <button
+      class="next"
+    >
+      <span
+        aria-label="su-angle-right"
+        class="su-angle-right"
+      />
+    </button>
+  </nav>
+</section>
+`;
+
+exports[`Render column with descending sort icon 1`] = `
+<section>
+  <div
+    class="tableContainer"
+  >
+    <table
+      class="table"
+    >
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerCell clickable"
+          >
+            <button>
+              <span>
+                Title
+              </span>
+            </button>
+          </th>
+          <th
+            class="headerCell clickable"
+          >
+            <button>
+              <span>
+                Description
+              </span>
+              <span
+                aria-label="su-angle-down"
+                class="headerCellSortIcon su-angle-down"
+              />
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Title 1
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <nav
+    class="pagination"
+  >
+    <div
+      class="loader"
+    />
+    <span
+      class="display"
+    >
+      Page: 1 of 3
+    </span>
+    <button
+      class="previous"
+      disabled=""
+    >
+      <span
+        aria-label="su-angle-left"
+        class="su-angle-left"
+      />
+    </button>
+    <button
+      class="next"
+    >
+      <span
+        aria-label="su-angle-right"
+        class="su-angle-right"
+      />
+    </button>
+  </nav>
+</section>
+`;
+
 exports[`Render data with all different visibility types schema 1`] = `
 <section>
   <div
@@ -13,18 +201,22 @@ exports[`Render data with all different visibility types schema 1`] = `
       >
         <tr>
           <th
-            class="headerCell"
+            class="headerCell clickable"
           >
-            <span>
-              Description
-            </span>
+            <button>
+              <span>
+                Description
+              </span>
+            </button>
           </th>
           <th
-            class="headerCell"
+            class="headerCell clickable"
           >
-            <span>
-              Test 1
-            </span>
+            <button>
+              <span>
+                Test 1
+              </span>
+            </button>
           </th>
         </tr>
       </thead>
@@ -126,11 +318,13 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             </span>
           </th>
           <th
-            class="headerCell"
+            class="headerCell clickable"
           >
-            <span>
-              Description
-            </span>
+            <button>
+              <span>
+                Description
+              </span>
+            </button>
           </th>
         </tr>
       </thead>
@@ -237,11 +431,13 @@ exports[`Render data with schema 1`] = `
       >
         <tr>
           <th
-            class="headerCell"
+            class="headerCell clickable"
           >
-            <span>
-              Description
-            </span>
+            <button>
+              <span>
+                Description
+              </span>
+            </button>
           </th>
         </tr>
       </thead>
@@ -337,11 +533,13 @@ exports[`Render data with schema and selections 1`] = `
             </span>
           </th>
           <th
-            class="headerCell"
+            class="headerCell clickable"
           >
-            <span>
-              Description
-            </span>
+            <button>
+              <span>
+                Description
+              </span>
+            </button>
           </th>
         </tr>
       </thead>
@@ -508,11 +706,13 @@ exports[`Render data with schema in different order 1`] = `
       >
         <tr>
           <th
-            class="headerCell"
+            class="headerCell clickable"
           >
-            <span>
-              Description
-            </span>
+            <button>
+              <span>
+                Description
+              </span>
+            </button>
           </th>
         </tr>
       </thead>
@@ -590,11 +790,13 @@ exports[`Render data with schema not containing all fields 1`] = `
       >
         <tr>
           <th
-            class="headerCell"
+            class="headerCell clickable"
           >
-            <span>
-              Description
-            </span>
+            <button>
+              <span>
+                Description
+              </span>
+            </button>
           </th>
         </tr>
       </thead>

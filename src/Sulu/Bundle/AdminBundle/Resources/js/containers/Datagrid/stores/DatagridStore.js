@@ -1,6 +1,12 @@
 // @flow
 import {action, autorun, observable, computed} from 'mobx';
-import type {LoadingStrategyInterface, ObservableOptions, Schema, StructureStrategyInterface} from '../types';
+import type {
+    LoadingStrategyInterface,
+    ObservableOptions,
+    Schema,
+    SortOrder,
+    StructureStrategyInterface,
+} from '../types';
 import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
@@ -12,6 +18,8 @@ export default class DatagridStore {
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
     @observable options: Object;
+    @observable sortColumn: string;
+    @observable sortOrder: SortOrder;
     disposer: () => void;
     resourceKey: string;
     schema: Schema = {};
@@ -120,6 +128,14 @@ export default class DatagridStore {
             options.parent = this.active;
         }
 
+        if (this.sortColumn) {
+            options.sortBy = this.sortColumn;
+        }
+
+        if (this.sortOrder) {
+            options.sortOrder = this.sortOrder;
+        }
+
         this.loadingStrategy.load(
             data,
             this.resourceKey,
@@ -149,6 +165,11 @@ export default class DatagridStore {
 
     @action setActive(active: ?string | number) {
         this.active = active;
+    }
+
+    @action sort(column: string, order: SortOrder) {
+        this.sortColumn = column;
+        this.sortOrder = order;
     }
 
     @action select(row: Object) {

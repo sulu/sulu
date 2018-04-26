@@ -43,11 +43,13 @@ exports[`Should render the datagrid with a title 1`] = `
                 </span>
               </th>
               <th
-                class="headerCell"
+                class="headerCell clickable"
               >
-                <span>
-                  Description
-                </span>
+                <button>
+                  <span>
+                    Description
+                  </span>
+                </button>
               </th>
             </tr>
           </thead>
@@ -196,11 +198,13 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
                 </span>
               </th>
               <th
-                class="headerCell"
+                class="headerCell clickable"
               >
-                <span>
-                  Description
-                </span>
+                <button>
+                  <span>
+                    Description
+                  </span>
+                </button>
               </th>
             </tr>
           </thead>
@@ -359,11 +363,13 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
                 </span>
               </th>
               <th
-                class="headerCell"
+                class="headerCell clickable"
               >
-                <span>
-                  Description
-                </span>
+                <button>
+                  <span>
+                    Description
+                  </span>
+                </button>
               </th>
             </tr>
           </thead>
