@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+//@flow
 import {toJS} from 'mobx';
 import routeRegistry from '../../registries/RouteRegistry';
 
@@ -12,6 +12,9 @@ test('Clear routes from RouteRegistry', () => {
             name:'route',
             view: 'view',
             path: '/route',
+            options: {},
+            attributeDefaults: {},
+            rerenderAttributes: [],
         },
     ]);
 
@@ -26,17 +29,21 @@ test('Get routes from RouteRegistry', () => {
         name: 'route1',
         view: 'view1',
         path: '/route/1',
-        parameters: {
+        options: {
             test: 'value',
         },
+        attributeDefaults: {},
+        rerenderAttributes: [],
     };
     const route2 = {
         name: 'route2',
         view: 'view2',
         path: '/route/2',
-        parameters: {
+        options: {
             test2: 'value2',
         },
+        attributeDefaults: {},
+        rerenderAttributes: [],
     };
 
     routeRegistry.addCollection([route1, route2]);
@@ -48,20 +55,24 @@ test('Get routes from RouteRegistry', () => {
         name: 'route1',
         view: 'view1',
         path: '/route/1',
-        parameters: {
+        options: {
             test: 'value',
         },
         children: [],
+        attributeDefaults: {},
+        rerenderAttributes: [],
         parent: undefined,
     });
     expect(toJS(routes.route2)).toEqual({
         name: 'route2',
         view: 'view2',
         path: '/route/2',
-        parameters: {
+        options: {
             test2: 'value2',
         },
         children: [],
+        attributeDefaults: {},
+        rerenderAttributes: [],
         parent: undefined,
     });
 });
@@ -71,18 +82,22 @@ test('Add a route collection to the RouteRegistry', () => {
         name: 'route1',
         view: 'view1',
         path: '/route/1',
-        parameters: {
+        options: {
             test: 'value',
         },
+        attributeDefaults: {},
+        rerenderAttributes: [],
     };
 
     const route2 = {
         name: 'route2',
         view: 'view2',
         path: '/route/2',
-        parameters: {
+        options: {
             test2: 'value2',
         },
+        attributeDefaults: {},
+        rerenderAttributes: [],
     };
 
     routeRegistry.addCollection([route1, route2]);
@@ -91,21 +106,25 @@ test('Add a route collection to the RouteRegistry', () => {
         name: 'route1',
         view: 'view1',
         path: '/route/1',
-        parameters: {
+        options: {
             test: 'value',
         },
         parent: undefined,
         children: [],
+        attributeDefaults: {},
+        rerenderAttributes: [],
     });
     expect(toJS(routeRegistry.get('route2'))).toEqual({
         name: 'route2',
         view: 'view2',
         path: '/route/2',
-        parameters: {
+        options: {
             test2: 'value2',
         },
         parent: undefined,
         children: [],
+        attributeDefaults: {},
+        rerenderAttributes: [],
     });
 });
 
@@ -114,6 +133,9 @@ test('Add route with existing key should throw', () => {
         name: 'test_route',
         view: 'view',
         path: '/route',
+        options: {},
+        attributeDefaults: {},
+        rerenderAttributes: [],
     };
 
     routeRegistry.addCollection([route]);
@@ -127,18 +149,27 @@ test('Set parent and children routes based on passed RouteConfig', () => {
             name: 'sulu_snippet.form',
             view: 'sulu_admin.tab',
             path: '/snippets/:uuid',
+            options: {},
+            attributeDefaults: {},
+            rerenderAttributes: [],
         },
         {
             name: 'sulu_snippet.form.detail',
             parent: 'sulu_snippet.form',
             view: 'sulu_admin.form',
             path: '/detail',
+            options: {},
+            attributeDefaults: {},
+            rerenderAttributes: [],
         },
         {
             name: 'sulu_snippet.form.taxonomy',
             parent: 'sulu_snippet.form',
             view: 'sulu_admin.form',
             path: '/taxonomy',
+            options: {},
+            attributeDefaults: {},
+            rerenderAttributes: [],
         },
     ]);
 
@@ -154,4 +185,8 @@ test('Set parent and children routes based on passed RouteConfig', () => {
     expect(detailRoute.parent).toBe(formRoute);
     expect(taxonomyRoute.name).toBe('sulu_snippet.form.taxonomy');
     expect(taxonomyRoute.parent).toBe(formRoute);
+});
+
+test('Get a non-existing route should throw an exception', () => {
+    expect(() => routeRegistry.get('test')).toThrow(/"test"/);
 });

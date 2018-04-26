@@ -1,5 +1,5 @@
 // @flow
-export type RouteConfig = {
+export type RouteConfig = {|
     name: string,
     parent?: string,
     view: string,
@@ -7,9 +7,9 @@ export type RouteConfig = {
     options: Object,
     attributeDefaults: AttributeMap,
     rerenderAttributes: Array<string>,
-};
+|};
 
-export type Route = {
+export type Route = {|
     name: string,
     parent: ?Route,
     children: Array<Route>,
@@ -18,7 +18,7 @@ export type Route = {
     options: Object,
     attributeDefaults: AttributeMap,
     rerenderAttributes: Array<string>,
-};
+|};
 
 export type AttributeMap = {[string]: string};
 

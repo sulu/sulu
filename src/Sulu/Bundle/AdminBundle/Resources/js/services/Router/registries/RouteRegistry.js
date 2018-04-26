@@ -39,6 +39,10 @@ class RouteRegistry {
     }
 
     get(name: string): Route {
+        if (!(name in this.routes)) {
+            throw new Error('The route with the name "' + name + '" does not exist');
+        }
+
         return this.routes[name];
     }
 
