@@ -78,16 +78,14 @@ class CustomUrlRequestProcessorTest extends \PHPUnit\Framework\TestCase
         $customUrlManager = $this->prophesize(CustomUrlManager::class);
 
         if (!$exists) {
-            $customUrlManager->findRouteByUrl($route, $webspaceKey)->willReturn(null);
+            $customUrlManager->findRouteByUrl($route, $webspaceKey)->willReturn(null)->shouldBeCalled();
         } else {
             $routeDocument = $this->prophesize(RouteDocument::class);
             $routeDocument->isHistory()->willReturn($history);
             $routeDocument->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $route);
 
             if ($history) {
-                $target = $this->prophesize(RouteDocument::class);
-                $target->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $route . '-1');
-                $routeDocument->getTargetDocument()->willReturn($target->reveal());
+                $customUrlManager->findByUrl($route, $webspaceKey, 'de')->shouldNotBeCalled();
             } else {
                 $customUrl = $this->prophesize(CustomUrlDocument::class);
                 $customUrl->isPublished()->willReturn($published);
@@ -141,6 +139,13 @@ class CustomUrlRequestProcessorTest extends \PHPUnit\Framework\TestCase
             $webspaceManager->reveal(),
             'prod'
         );
-        $processor->process($request->reveal(), $requestAttributes);
+
+        $requestAttributes = $processor->process($request->reveal(), $requestAttributes);
+
+        if ($exists && !$noConcretePortal) {
+            $this->assertNotNull($requestAttributes->getAttribute('customUrlRoute'));
+        } else {
+            $this->assertNull($requestAttributes->getAttribute('customUrlRoute'));
+        }
     }
 }

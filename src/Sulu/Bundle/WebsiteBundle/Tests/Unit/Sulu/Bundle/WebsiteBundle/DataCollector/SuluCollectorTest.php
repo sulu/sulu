@@ -11,12 +11,14 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\DataCollector;
 
+use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,6 +28,11 @@ class SuluCollectorTest extends \PHPUnit\Framework\TestCase
      * @var Request
      */
     protected $request;
+
+    /**
+     * @var ParameterBag
+     */
+    protected $attributes;
 
     /**
      * @var Response
@@ -39,7 +46,9 @@ class SuluCollectorTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        $this->request = new Request();
+        $this->request = $this->prophesize(Request::class);
+        $this->attributes = $this->prophesize(ParameterBag::class);
+        $this->request->reveal()->attributes = $this->attributes->reveal();
         $this->response = $this->prophesize(Response::class);
 
         $this->suluCollector = new SuluCollector();
@@ -47,7 +56,9 @@ class SuluCollectorTest extends \PHPUnit\Framework\TestCase
 
     public function testCollectorNoComplexObjects()
     {
-        $this->suluCollector->collect($this->request, $this->response->reveal());
+        $this->attributes->has('_sulu')->willReturn(false)->shouldBeCalled();
+        $this->attributes->get(Argument::any())->shouldNotBeCalled();
+        $this->suluCollector->collect($this->request->reveal(), $this->response->reveal());
     }
 
     public function testCollector()
@@ -58,7 +69,8 @@ class SuluCollectorTest extends \PHPUnit\Framework\TestCase
         $portal = $this->prophesize(Portal::class);
         $segment = $this->prophesize(Segment::class);
 
-        $this->request->attributes->set('_sulu', new RequestAttributes(
+        $this->attributes->has('_sulu')->willReturn(true)->shouldBeCalled();
+        $this->attributes->get('_sulu')->willReturn(new RequestAttributes(
             [
                 'webspace' => $webspace->reveal(),
                 'portal' => $portal->reveal(),
@@ -70,14 +82,15 @@ class SuluCollectorTest extends \PHPUnit\Framework\TestCase
                 'resourceLocator' => '/asd',
                 'resourceLocatorPrefix' => '/asd/',
             ]
-        ));
+        ))->shouldBeCalled();
 
-        $this->request->attributes->set('_route_params', ['structure' => $structure->reveal()]);
+        $this->attributes->has('_route_params')->willReturn(true)->shouldBeCalled();
+        $this->attributes->get('_route_params')->willReturn(['structure' => $structure->reveal()])->shouldBeCalled();
 
         $webspace->toArray()->shouldBeCalled();
         $portal->toArray()->shouldBeCalled();
         $segment->toArray()->shouldBeCalled();
 
-        $this->suluCollector->collect($this->request, $this->response->reveal());
+        $this->suluCollector->collect($this->request->reveal(), $this->response->reveal());
     }
 }

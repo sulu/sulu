@@ -133,15 +133,15 @@ class SuluSecurityListenerTest extends \PHPUnit\Framework\TestCase
     public function testSubject()
     {
         $controller = $this->prophesize(SecuredControllerInterface::class);
-        $controller->getSecurityContext()->willReturn('sulu.media.collection');
+        $controller->getSecurityContext()->willReturn('sulu.media.collection')->shouldBeCalled();
         $controller->getLocale(Argument::any())->willReturn(null);
 
         $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn('GET');
         $request->get('id')->willReturn('1');
 
-        $this->filterControllerEvent->getRequest()->willReturn($request);
-        $this->filterControllerEvent->getController()->willReturn([$controller->reveal(), 'getAction']);
+        $this->filterControllerEvent->getRequest()->willReturn($request)->shouldBeCalled();
+        $this->filterControllerEvent->getController()->willReturn([$controller->reveal(), 'getAction'])->shouldBeCalled();
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
 

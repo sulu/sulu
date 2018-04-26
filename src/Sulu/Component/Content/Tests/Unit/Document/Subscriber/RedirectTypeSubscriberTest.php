@@ -56,13 +56,14 @@ class RedirectTypeSubscriberTest extends SubscriberTestCase
     public function testHandlePersist()
     {
         $this->document->setRedirectTarget(new \stdClass());
+        $this->document->getRedirectTarget()->shouldBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
     public function testHandlePersistSelf()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->document->getRedirectTarget()->willReturn($this->document->reveal());
+        $this->document->getRedirectTarget()->willReturn($this->document->reveal())->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }

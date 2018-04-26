@@ -21,6 +21,7 @@ use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
@@ -480,13 +481,15 @@ class InvalidationSubscriberTest extends \PHPUnit\Framework\TestCase
         $event = $this->prophesize(RemoveEvent::class);
         $document = $this->prophesize(ResourceSegmentBehavior::class)
             ->willImplement(ShadowLocaleBehavior::class)
-            ->willImplement(UuidBehavior::class);
-        $document->getUuid()->willReturn('some-uuid');
+            ->willImplement(UuidBehavior::class)
+            ->willImplement(WebspaceBehavior::class);
+        $document->getUuid()->willReturn('some-uuid')->shouldBeCalled();
+        $document->getWebspaceName()->willReturn('sulu')->shouldBeCalled();
         $this->documentInspector->getPublishedLocales($document->reveal())->willReturn(['de']);
         $event->getDocument()->willReturn($document->reveal());
 
         $this->resourceLocatorStrategy->loadByContentUuid(Argument::cetera())
-            ->willThrow(ResourceLocatorNotFoundException::class);
+            ->willThrow(ResourceLocatorNotFoundException::class)->shouldBeCalled();
         $this->resourceLocatorStrategy->loadHistoryByContentUuid(Argument::cetera())->willReturn([]);
 
         $this->invalidationSubscriber->invalidateDocumentBeforeRemoving($event->reveal());

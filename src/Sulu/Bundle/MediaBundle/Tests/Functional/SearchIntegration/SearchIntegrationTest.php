@@ -111,6 +111,8 @@ class SearchIntegrationTest extends SuluTestCase
 
     public function testIndexNoMedia()
     {
+        $testAdapter = $this->getContainer()->get('massive_search.adapter.test');
+
         $document = $this->documentManager->create('page');
         $document->setStructureType('images');
         $document->setTitle('Hallo');
@@ -118,5 +120,10 @@ class SearchIntegrationTest extends SuluTestCase
         $document->setParent($this->webspaceDocument);
         $this->documentManager->persist($document, 'de');
         $this->documentManager->flush();
+
+        $documents = $testAdapter->getDocuments();
+        $document = end($documents);
+        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $document);
+        $this->assertNull($document->getImageUrl());
     }
 }

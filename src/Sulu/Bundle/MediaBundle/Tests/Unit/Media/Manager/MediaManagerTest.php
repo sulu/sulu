@@ -430,11 +430,12 @@ class MediaManagerTest extends \PHPUnit\Framework\TestCase
         $uploadedFile->getPathname()->willReturn('');
         $uploadedFile->getSize()->willReturn('123');
         $uploadedFile->getMimeType()->willReturn('video/ogg');
-        $this->ffprobe->format(Argument::any())->willThrow(ExecutableNotFoundException::class);
+        $this->ffprobe->format(Argument::any())->willThrow(ExecutableNotFoundException::class)->shouldBeCalled();
 
         $this->mediaRepository->createNew()->willReturn(new Media());
 
-        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'test'], null);
+        $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'test'], null);
+        $this->assertNotNull($media);
     }
 
     public function provideGetByIds()

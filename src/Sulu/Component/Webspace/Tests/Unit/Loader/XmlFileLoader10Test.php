@@ -138,8 +138,10 @@ class XmlFileLoader10Test extends WebspaceTestCase
 
     public function testLoadDynamicOrder()
     {
-        $this->loader->load(
+        $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_deprecatedDynamicOrder.xml'
         );
+
+        $this->assertEquals('Sulu CMF', $webspace->getName());
     }
 }

@@ -148,6 +148,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     public function testPersistNotImplementing()
     {
         $this->persistEvent->getDocument()->willReturn($this->notImplementing);
+        $this->persistEvent->getNode()->shouldNotBeCalled();
         $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
@@ -158,6 +159,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     {
         $this->document->getStructureType()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
+        $this->persistEvent->getNode()->shouldNotBeCalled();
         $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
@@ -168,6 +170,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     {
         $this->persistEvent->getLocale()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
+        $this->persistEvent->getNode()->shouldNotBeCalled();
 
         $this->subscriber->saveStructureData($this->persistEvent->reveal());
 
@@ -273,6 +276,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     public function testHydrateNotImplementing()
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
+        $this->hydrateEvent->getOption(Argument::any())->shouldNotBeCalled();
 
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }

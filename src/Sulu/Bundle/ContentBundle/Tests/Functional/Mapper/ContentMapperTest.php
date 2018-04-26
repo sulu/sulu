@@ -2401,12 +2401,16 @@ class ContentMapperTest extends SuluTestCase
         ];
         $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
 
-        $this->save($testSiteData, 'with_snippet', 'sulu_io', 'en', 1, true, $uuid);
+        $document = $this->save($testSiteData, 'with_snippet', 'sulu_io', 'en', 1, true, $uuid);
+
+        $this->assertEquals('with_snippet', $document->getStructureType());
 
         // Change to Internal Link String
         $testSiteData['internal'] = $internalLink->getUuid();
         $testSiteData['nodeType'] = Structure::NODE_TYPE_INTERNAL_LINK;
         $this->save($testSiteData, 'internal-link', 'sulu_io', 'en', 1, true, $uuid);
+
+        $this->assertEquals('internal-link', $document->getStructureType());
     }
 
     /**

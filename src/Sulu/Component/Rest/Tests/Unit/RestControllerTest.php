@@ -79,7 +79,8 @@ class RestControllerTest extends \PHPUnit\Framework\TestCase
         $method = new \ReflectionMethod(RestController::class, 'processPut');
         $method->setAccessible(true);
 
-        $method->invoke($this->controller, [], [], $delete, $update, $add);
+        $result = $method->invoke($this->controller, [], [], $delete, $update, $add);
+        $this->assertTrue($result);
     }
 
     public function testProcessPutWithDelete()

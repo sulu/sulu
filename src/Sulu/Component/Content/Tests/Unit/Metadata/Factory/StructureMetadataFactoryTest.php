@@ -211,7 +211,7 @@ class StructureMetadataFactoryTest extends \PHPUnit\Framework\TestCase
      */
     public function testDirection()
     {
-        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
+        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($this->somethingStructure->reveal())->shouldBeCalled();
 
         $this->factory->getStructureMetadata('page', 'default');
     }

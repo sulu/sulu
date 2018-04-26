@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\Content\Document\Subscriber\StructureTypeFilingSubscriber;
@@ -114,6 +115,7 @@ class StructureTypeFilingSubscriberTest extends \PHPUnit\Framework\TestCase
     public function testPersistNotImplementing()
     {
         $this->persistEvent->getDocument()->willReturn(new \stdClass());
+        $this->persistEvent->setParentNode(Argument::any())->shouldNotBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 

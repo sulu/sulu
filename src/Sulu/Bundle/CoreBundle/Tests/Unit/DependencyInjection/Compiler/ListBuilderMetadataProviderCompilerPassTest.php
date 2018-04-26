@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class ListBuilderMetadataProviderCompilerPassTest extends \PHPUnit\Framework\TestCase
 {
-    public function testProcessProvider()
+    public function dataProcessProvider()
     {
         return [
             [false],
@@ -30,7 +30,7 @@ class ListBuilderMetadataProviderCompilerPassTest extends \PHPUnit\Framework\Tes
     }
 
     /**
-     * @dataProvider testProcessProvider
+     * @dataProvider dataProcessProvider
      */
     public function testProcess($hasDefinition, $taggedServices = [])
     {
@@ -67,6 +67,9 @@ class ListBuilderMetadataProviderCompilerPassTest extends \PHPUnit\Framework\Tes
                     }
                 )
             )->shouldBeCalled();
+        } else {
+            $container->getDefinition(ListBuilderMetadataProviderCompilerPass::CHAIN_PROVIDER_ID)
+                ->shouldNotBeCalled();
         }
 
         $compilerPass = new ListBuilderMetadataProviderCompilerPass();

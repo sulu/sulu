@@ -227,7 +227,7 @@ class PublishSubscriberTest extends \PHPUnit\Framework\TestCase
 
         $this->liveSession->getNode('/cmf/sulu')->willReturn($this->node->reveal());
 
-        $this->nodeHelper->move($this->node, 'uuid', 'name');
+        $this->nodeHelper->move($this->node, 'uuid', 'name')->shouldBeCalled();
 
         $this->publishSubscriber->moveNodeInPublicWorkspace($event->reveal());
     }

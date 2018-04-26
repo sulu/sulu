@@ -96,7 +96,7 @@ class PreviewTest extends \PHPUnit\Framework\TestCase
 
     public function testStop()
     {
-        $this->dataCache->contains('123-123-123')->willReturn(true);
+        $this->dataCache->contains('123-123-123')->willReturn(true)->shouldBeCalled();
         $this->dataCache->delete('123-123-123')->shouldBeCalled();
 
         $preview = $this->getPreview();
@@ -105,7 +105,8 @@ class PreviewTest extends \PHPUnit\Framework\TestCase
 
     public function testStopNotExists()
     {
-        $this->dataCache->contains('123-123-123')->willReturn(false);
+        $this->dataCache->contains('123-123-123')->willReturn(false)->shouldBeCalled();
+        $this->dataCache->delete(Argument::any())->shouldNotBeCalled();
 
         $preview = $this->getPreview();
         $preview->stop('123-123-123');

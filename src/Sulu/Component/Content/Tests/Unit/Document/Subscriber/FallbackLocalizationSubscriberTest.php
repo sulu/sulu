@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
+use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\LocalizationFinder;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -98,7 +99,8 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
      */
     public function testReturnEarly()
     {
-        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
+        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
+        $this->hydrateEvent->setLocale(Argument::any())->shouldNotBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 

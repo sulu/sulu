@@ -67,9 +67,9 @@ class SettingsManagerTest extends \PHPUnit\Framework\TestCase
             '/cmf/' . $webspaceKey,
             'settings:' . $key,
             (!($data instanceof NodeInterface) ? json_encode($data) : $data)
-        );
+        )->shouldBeCalled();
 
-        $this->sessionManager->flush();
+        $this->sessionManager->flush()->shouldBeCalled();
 
         $this->settingsManager->save($webspaceKey, $key, $data);
     }

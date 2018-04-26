@@ -72,7 +72,7 @@ class AccessControlManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testSetPermissionsWithoutProvider()
     {
-        $this->accessControlManager->setPermissions(\stdClass::class, '1', []);
+        $this->assertNull($this->accessControlManager->setPermissions(\stdClass::class, '1', []));
     }
 
     public function testGetPermissions()
@@ -92,7 +92,7 @@ class AccessControlManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testGetPermissionsWithoutProvider()
     {
-        $this->accessControlManager->getPermissions(\stdClass::class, '1');
+        $this->assertNull($this->accessControlManager->getPermissions(\stdClass::class, '1'));
     }
 
     /**

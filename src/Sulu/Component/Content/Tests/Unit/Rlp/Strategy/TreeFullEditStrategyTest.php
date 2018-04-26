@@ -196,7 +196,7 @@ class TreeFullEditStrategyTest extends \PHPUnit\Framework\TestCase
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
         $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
 
-        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('path/to/doc');
+        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('path/to/doc')->shouldBeCalled();
 
         $this->treeStrategy->save($document->reveal(), null);
     }

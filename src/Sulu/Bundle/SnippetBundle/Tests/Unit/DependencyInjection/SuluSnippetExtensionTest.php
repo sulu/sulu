@@ -25,6 +25,14 @@ class SuluSnippetExtensionTest extends AbstractExtensionTestCase
 
     public function testLoad()
     {
-        $this->load();
+        $this->load([
+            'twig' => [
+                'snippet' => [
+                    'cache_lifetime' => 20,
+                ],
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasParameter('sulu_snippet.twig.snippet.cache_lifetime', 20);
     }
 }

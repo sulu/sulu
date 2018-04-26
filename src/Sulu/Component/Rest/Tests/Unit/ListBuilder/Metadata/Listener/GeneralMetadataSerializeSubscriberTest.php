@@ -39,7 +39,7 @@ class GeneralMetadataSerializeSubscriberTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testPostSerializeProvider()
+    public function dataPostSerializeProvider()
     {
         return [
             [false],
@@ -50,7 +50,7 @@ class GeneralMetadataSerializeSubscriberTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider testPostSerializeProvider
+     * @dataProvider dataPostSerializeProvider
      */
     public function testPostSerialize($hasMetadata, $hasGeneralMetadata = false, $hasFilterType = false)
     {

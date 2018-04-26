@@ -163,6 +163,7 @@ class WorkflowStageSubscriberTest extends \PHPUnit\Framework\TestCase
     {
         $event = $this->getPersistEventMock();
         $event->getDocument()->willReturn(new \stdClass());
+        $event->getAccessor()->shouldNotBeCalled();
 
         $this->workflowStageSubscriber->setWorkflowStageToTest($event->reveal());
     }
@@ -219,6 +220,7 @@ class WorkflowStageSubscriberTest extends \PHPUnit\Framework\TestCase
     {
         $event = $this->getPublishEventMock();
         $event->getDocument()->willReturn(new \stdClass());
+        $event->getAccessor()->shouldNotBeCalled();
 
         $this->workflowStageSubscriber->setWorkflowStageToPublished($event->reveal());
     }

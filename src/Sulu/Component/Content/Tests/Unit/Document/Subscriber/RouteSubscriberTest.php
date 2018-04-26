@@ -113,10 +113,10 @@ class RouteSubscriberTest extends \PHPUnit\Framework\TestCase
 
         $targetDocument->getWebspaceName()->willReturn('sulu_io');
         $targetDocument->getResourceSegment()->willReturn('/test');
-        $this->sessionManager->getRoutePath('sulu_io', 'de', null)->willReturn('/cmf/sulu_io/routes/de');
+        $this->sessionManager->getRoutePath('sulu_io', 'de', null)->willReturn('/cmf/sulu_io/routes/de')->shouldBeCalled();
 
-        $persistEvent->getNode()->willReturn($routeNode);
-        $persistEvent->getDocument()->willReturn($routeDocument);
+        $persistEvent->getNode()->willReturn($routeNode)->shouldBeCalled();
+        $persistEvent->getDocument()->willReturn($routeDocument)->shouldBeCalled();
 
         $this->routeSubscriber->handlePersist($persistEvent->reveal());
     }

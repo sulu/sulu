@@ -103,14 +103,14 @@ class CollectionManagerTest extends \PHPUnit\Framework\TestCase
             ['test'],
             Argument::any(),
             Argument::any()
-        )->willReturn(new \ArrayIterator([]));
+        )->willReturn(new \ArrayIterator([]))->shouldBeCalled();
         $this->collectionRepository->countCollections(
             0,
             ['search' => 'test', 'locale' => 'de', 'systemCollections' => true],
             null
-        )->willReturn(0);
+        )->willReturn()->shouldBeCalled();
 
-        $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test']);
+        $tree = $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test']);
     }
 
     public function testGetTreeWithoutSystemCollections()
@@ -122,12 +122,12 @@ class CollectionManagerTest extends \PHPUnit\Framework\TestCase
             ['test'],
             Argument::any(),
             Argument::any()
-        )->willReturn(new \ArrayIterator([]));
+        )->willReturn(new \ArrayIterator([]))->shouldBeCalled();
         $this->collectionRepository->countCollections(
             0,
             ['search' => 'test', 'locale' => 'de', 'systemCollections' => false],
             null
-        )->willReturn(0);
+        )->willReturn(0)->shouldBeCalled();
 
         $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test'], false);
     }
