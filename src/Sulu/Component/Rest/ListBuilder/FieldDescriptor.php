@@ -100,15 +100,15 @@ class FieldDescriptor implements FieldDescriptorInterface
     private $metadata;
 
     public function __construct(
-        $name,
-        $translation = null,
-        $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
-        $type = '',
-        $width = '',
-        $minWidth = '',
-        $sortable = true,
-        $editable = false,
-        $cssClass = ''
+        string $name,
+        string $translation = null,
+        string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
+        string $type = '',
+        string $width = '',
+        string $minWidth = '',
+        bool $sortable = true,
+        bool $editable = false,
+        string $cssClass = ''
     ) {
         $this->name = $name;
         $this->visibility = $visibility;

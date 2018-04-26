@@ -32,16 +32,16 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
 
     public function __construct(
         array $fieldDescriptors,
-        $name,
-        $translation = null,
-        $glue = ' ',
-        $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
-        $type = '',
-        $width = '',
-        $minWidth = '',
-        $sortable = true,
-        $editable = false,
-        $cssClass = ''
+        string $name,
+        string $translation = null,
+        string $glue = ' ',
+        string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
+        string $type = '',
+        string $width = '',
+        string $minWidth = '',
+        bool $sortable = true,
+        bool $editable = false,
+        string $cssClass = ''
     ) {
         parent::__construct(
             $name,

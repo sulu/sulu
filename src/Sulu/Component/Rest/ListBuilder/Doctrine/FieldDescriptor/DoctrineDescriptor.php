@@ -35,7 +35,7 @@ class DoctrineDescriptor
      */
     public $joins;
 
-    public function __construct($entityName, $fieldName, array $joins = [])
+    public function __construct(string $entityName, string $fieldName, array $joins = [])
     {
         $this->entityName = $entityName;
         $this->fieldName = $fieldName;

@@ -19,7 +19,7 @@ class DoctrineGroupConcatFieldDescriptorTest extends \PHPUnit_Framework_TestCase
     public function testGetSelect()
     {
         $doctrineGroupConcatFieldDescriptor = new DoctrineGroupConcatFieldDescriptor(
-            new DoctrineFieldDescriptor('test', null, 'TestEntity'),
+            new DoctrineFieldDescriptor('test', '', 'TestEntity'),
             'test'
         );
 
@@ -32,9 +32,9 @@ class DoctrineGroupConcatFieldDescriptorTest extends \PHPUnit_Framework_TestCase
     public function testGetSelectWithGlue()
     {
         $doctrineGroupConcatFieldDescriptor = new DoctrineGroupConcatFieldDescriptor(
-            new DoctrineFieldDescriptor('test', null, 'TestEntity'),
+            new DoctrineFieldDescriptor('test', '', 'TestEntity'),
             'test',
-            null,
+            '',
             ', '
         );
 

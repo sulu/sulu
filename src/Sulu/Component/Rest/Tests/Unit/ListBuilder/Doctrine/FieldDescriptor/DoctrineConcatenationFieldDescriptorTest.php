@@ -20,9 +20,9 @@ class DoctrineConcatenationFieldDescriptorTest extends \PHPUnit_Framework_TestCa
     {
         $doctrineConcatenationFieldDescriptor = new DoctrineConcatenationFieldDescriptor(
             [
-                new DoctrineFieldDescriptor('test1', null, 'TestEntity1'),
-                new DoctrineFieldDescriptor('test2', null, 'TestEntity2'),
-                new DoctrineFieldDescriptor('test3', null, 'TestEntity3'),
+                new DoctrineFieldDescriptor('test1', '', 'TestEntity1'),
+                new DoctrineFieldDescriptor('test2', '', 'TestEntity2'),
+                new DoctrineFieldDescriptor('test3', '', 'TestEntity3'),
             ],
             'test'
         );
@@ -37,9 +37,9 @@ class DoctrineConcatenationFieldDescriptorTest extends \PHPUnit_Framework_TestCa
     {
         $doctrineConcatenationFieldDescriptor = new DoctrineConcatenationFieldDescriptor(
             [
-                new DoctrineFieldDescriptor('test1', null, 'TestEntity1'),
-                new DoctrineFieldDescriptor('test2', null, 'TestEntity2'),
-                new DoctrineFieldDescriptor('test3', null, 'TestEntity3'),
+                new DoctrineFieldDescriptor('test1', '', 'TestEntity1'),
+                new DoctrineFieldDescriptor('test2', '', 'TestEntity2'),
+                new DoctrineFieldDescriptor('test3', '', 'TestEntity3'),
             ],
             'test',
             'translation',

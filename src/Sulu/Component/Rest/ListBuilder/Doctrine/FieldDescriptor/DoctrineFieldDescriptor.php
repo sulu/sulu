@@ -46,18 +46,18 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
     private $joins;
 
     public function __construct(
-        $fieldName,
-        $name,
-        $entityName,
-        $translation = null,
-        $joins = [],
-        $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
-        $type = '',
-        $width = '',
-        $minWidth = '',
-        $sortable = true,
-        $editable = false,
-        $cssClass = ''
+        string $fieldName,
+        string $name,
+        string $entityName,
+        string $translation = null,
+        array $joins = [],
+        string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
+        string $type = '',
+        string $width = '',
+        string $minWidth = '',
+        bool $sortable = true,
+        bool $editable = false,
+        string $cssClass = ''
     ) {
         parent::__construct(
             $name,
