@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Controller;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
@@ -39,7 +40,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 
-class AdminControllerTest extends \PHPUnit_Framework_TestCase
+class AdminControllerTest extends TestCase
 {
     /**
      * @var AuthorizationCheckerInterface

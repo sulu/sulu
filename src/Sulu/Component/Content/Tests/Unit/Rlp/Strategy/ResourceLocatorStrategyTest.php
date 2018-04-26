@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -23,7 +24,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
-class ResourceLocatorStrategyTest extends \PHPUnit_Framework_TestCase
+class ResourceLocatorStrategyTest extends TestCase
 {
     /**
      * @var ResourceLocatorMapperInterface

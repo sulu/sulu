@@ -1274,7 +1274,7 @@ class ContentMapperTest extends SuluTestCase
             'url' => '/news/test',
         ];
 
-        $this->setExpectedException(
+        $this->expectException(
             '\Sulu\Component\Content\Exception\MandatoryPropertyException',
             'Property "mandatory" in structure "mandatory" is required but no value was given.'
         );
@@ -1923,7 +1923,7 @@ class ContentMapperTest extends SuluTestCase
             'b' => 'de test2 b',
         ];
 
-        $this->setExpectedException(
+        $this->expectException(
             'Sulu\Component\Content\Exception\TranslatedNodeNotFoundException',
             'Node "' . $structure->getUuid() . '" not found in localization "de"'
         );
@@ -2401,12 +2401,16 @@ class ContentMapperTest extends SuluTestCase
         ];
         $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
 
-        $this->save($testSiteData, 'with_snippet', 'sulu_io', 'en', 1, true, $uuid);
+        $document = $this->save($testSiteData, 'with_snippet', 'sulu_io', 'en', 1, true, $uuid);
+
+        $this->assertEquals('with_snippet', $document->getStructureType());
 
         // Change to Internal Link String
         $testSiteData['internal'] = $internalLink->getUuid();
         $testSiteData['nodeType'] = Structure::NODE_TYPE_INTERNAL_LINK;
         $this->save($testSiteData, 'internal-link', 'sulu_io', 'en', 1, true, $uuid);
+
+        $this->assertEquals('internal-link', $document->getStructureType());
     }
 
     /**

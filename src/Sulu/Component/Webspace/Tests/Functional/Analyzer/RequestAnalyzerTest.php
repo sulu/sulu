@@ -11,13 +11,14 @@
 
 namespace Sulu\Component\Webspace\Tests\Functional\Analyzer;
 
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject_MockObject;
 use Prophecy\Argument;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\PortalInformationRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\UrlRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor;
+use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -28,8 +29,9 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use \PHPUnit\Framework\TestCase;
 
-class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
+class RequestAnalyzerTest extends TestCase
 {
     /**
      * @var RequestAnalyzer
@@ -37,7 +39,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     private $requestAnalyzer;
 
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject
+     * @var PHPUnit\Framework\MockObject_MockObject
      */
     private $webspaceManager;
 
@@ -284,14 +286,14 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException
      */
     public function testAnalyzeNotExisting()
     {
+    $this->expectException(UrlMatchNotFoundException::class);
         $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())->willReturn([]);
         $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')->getMock();
         $request->request = new ParameterBag(['post' => 1]);
         $request->query = new ParameterBag(['get' => 1]);
         $request->attributes = new ParameterBag();

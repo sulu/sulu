@@ -15,8 +15,9 @@ use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\ParameterDataTypeException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
+use \PHPUnit\Framework\TestCase;
 
-class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
+class RequestParametersTraitTest extends TestCase
 {
     /**
      * @var RequestParametersTrait
@@ -82,7 +83,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRequestParameterFail()
     {
-        $this->setExpectedException(MissingParameterException::class);
+        $this->expectException(MissingParameterException::class);
 
         $getRequestParameterReflection = $this->getGetRequestParameterReflection();
         $request = new Request();
@@ -144,7 +145,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBooleanRequestParameterFail()
     {
-        $this->setExpectedException(MissingParameterException::class);
+        $this->expectException(MissingParameterException::class);
 
         $getRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
         $request = $this->prophesize(Request::class);
@@ -154,7 +155,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBooleanRequestWrongParameter()
     {
-        $this->setExpectedException(ParameterDataTypeException::class);
+        $this->expectException(ParameterDataTypeException::class);
 
         $getRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
         $request = $this->prophesize(Request::class);

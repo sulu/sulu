@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Routing\Enhancers\SeoEnhancer;
@@ -18,7 +19,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class SeoEnhancerTest extends \PHPUnit_Framework_TestCase
+class SeoEnhancerTest extends TestCase
 {
     public function testEnhance()
     {

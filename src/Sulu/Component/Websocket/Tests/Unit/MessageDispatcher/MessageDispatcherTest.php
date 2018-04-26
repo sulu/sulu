@@ -19,8 +19,9 @@ use Sulu\Component\Websocket\MessageDispatcher\MessageDispatcher;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerException;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;
+use \PHPUnit\Framework\TestCase;
 
-class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
+class MessageDispatcherTest extends TestCase
 {
     /**
      * @var MessageBuilderInterface
@@ -182,7 +183,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchNonHandler()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'Sulu\Component\Websocket\Exception\HandlerNotFoundException',
             'Handler "test" not found'
         );
@@ -196,7 +197,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchWrongHandler()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'Sulu\Component\Websocket\Exception\HandlerNotFoundException',
             'Handler "test-2" not found'
         );

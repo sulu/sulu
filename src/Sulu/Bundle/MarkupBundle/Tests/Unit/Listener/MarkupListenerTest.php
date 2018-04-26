@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Listener;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MarkupBundle\Listener\MarkupListener;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
-class MarkupListenerTest extends \PHPUnit_Framework_TestCase
+class MarkupListenerTest extends TestCase
 {
     /**
      * @var MarkupParserInterface

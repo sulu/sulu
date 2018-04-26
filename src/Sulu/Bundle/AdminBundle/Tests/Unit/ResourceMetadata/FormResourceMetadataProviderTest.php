@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\ResourceMetadata;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
@@ -28,7 +29,7 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
-class FormResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
+class FormResourceMetadataProviderTest extends TestCase
 {
     /**
      * @var FormResourceMetadataProvider

@@ -15,9 +15,10 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\NominatimGeolocator;
 
-class NominatimGeolocatorTest extends \PHPUnit_Framework_TestCase
+class NominatimGeolocatorTest extends TestCase
 {
     public function provideLocate()
     {

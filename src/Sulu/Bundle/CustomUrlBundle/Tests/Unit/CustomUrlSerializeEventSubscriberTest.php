@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CustomUrlBundle\Tests\Unit;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\JsonSerializationVisitor;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
@@ -21,7 +22,7 @@ use Sulu\Bundle\CustomUrlBundle\EventListener\CustomUrlSerializeEventSubscriber;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 
-class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
+class CustomUrlSerializeEventSubscriberTest extends TestCase
 {
     public function testGetSubscribedEvents()
     {

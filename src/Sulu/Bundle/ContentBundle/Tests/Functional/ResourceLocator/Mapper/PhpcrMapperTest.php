@@ -184,7 +184,7 @@ class PhpcrMapperTest extends SuluTestCase
 
     public function testSaveFailure()
     {
-        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException');
+        $this->expectException('Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException');
         $this->document1->setResourceSegment('/products/machines/drill');
         $this->phpcrMapper->save($this->document1);
     }
@@ -228,7 +228,7 @@ class PhpcrMapperTest extends SuluTestCase
         $content->addMixin('mix:referenceable');
         $this->defaultSession->save();
 
-        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
+        $this->expectException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
         $this->phpcrMapper->loadByContent($content, 'sulu_io', 'de');
     }
 
@@ -238,7 +238,7 @@ class PhpcrMapperTest extends SuluTestCase
         $content->addMixin('mix:referenceable');
         $this->defaultSession->save();
 
-        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
+        $this->expectException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
         $this->phpcrMapper->loadByContentUuid($content->getIdentifier(), 'sulu_io', 'de');
     }
 
@@ -264,7 +264,7 @@ class PhpcrMapperTest extends SuluTestCase
 
     public function testLoadFailure()
     {
-        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
+        $this->expectException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
         $this->phpcrMapper->loadByResourceLocator('/test/test-1', 'sulu_io', 'de');
     }
 
@@ -312,7 +312,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertEquals($this->document1->getUuid(), $result);
 
         // get content from history should throw an exception
-        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorMovedException');
+        $this->expectException('Sulu\Component\Content\Exception\ResourceLocatorMovedException');
         $this->phpcrMapper->loadByResourceLocator('/products/news/content1-news', 'sulu_io', 'de');
     }
 
@@ -353,7 +353,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertEquals($this->document1->getUuid(), $result);
 
         // get content from history should throw an exception
-        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorMovedException');
+        $this->expectException('Sulu\Component\Content\Exception\ResourceLocatorMovedException');
         $this->phpcrMapper->loadByResourceLocator('/products/news/content1-news', 'sulu_io', 'de');
     }
 
@@ -505,7 +505,7 @@ class PhpcrMapperTest extends SuluTestCase
      */
     public function testDeleteByPathWithInvalidArguments($invalidPath)
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->phpcrMapper->deleteByPath($invalidPath, 'sulu_io', 'en');
     }
 

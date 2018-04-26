@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Meta\MetaTwigExtension;
 use Sulu\Component\Localization\Localization;
@@ -18,7 +19,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 
-class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class MetaTwigExtensionTest extends TestCase
 {
     /**
      * @var RequestAnalyzerInterface

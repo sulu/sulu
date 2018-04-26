@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Locale;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
 use Sulu\Bundle\WebsiteBundle\Locale\RequestDefaultLocaleProvider;
 use Sulu\Component\Localization\Localization;
@@ -19,7 +20,7 @@ use Sulu\Component\Webspace\Portal;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class RequestDefaultLocaleProviderTest extends \PHPUnit_Framework_TestCase
+class RequestDefaultLocaleProviderTest extends TestCase
 {
     /**
      * @var Portal

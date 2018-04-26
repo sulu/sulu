@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Document\Subscriber\TitleSubscriber;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
@@ -19,7 +20,7 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
-class TitleSubscriberTest extends \PHPUnit_Framework_TestCase
+class TitleSubscriberTest extends TestCase
 {
     /**
      * @var PropertyEncoder

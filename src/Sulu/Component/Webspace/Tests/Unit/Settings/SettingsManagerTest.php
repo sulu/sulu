@@ -16,8 +16,9 @@ use PHPCR\PropertyInterface;
 use Sulu\Bundle\DocumentManagerBundle\Session\SessionManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface as DeprecatedSessionManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManager;
+use \PHPUnit\Framework\TestCase;
 
-class SettingsManagerTest extends \PHPUnit_Framework_TestCase
+class SettingsManagerTest extends TestCase
 {
     /**
      * @var SettingsManager
@@ -67,9 +68,9 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
             '/cmf/' . $webspaceKey,
             'settings:' . $key,
             (!($data instanceof NodeInterface) ? json_encode($data) : $data)
-        );
+        )->shouldBeCalled();
 
-        $this->sessionManager->flush();
+        $this->sessionManager->flush()->shouldBeCalled();
 
         $this->settingsManager->save($webspaceKey, $key, $data);
     }

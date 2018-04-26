@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Twig;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class DispositionTypeTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class DispositionTypeTwigExtensionTest extends TestCase
 {
     public function testGetMediaUrlWithoutForceDispositionType()
     {

@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\CoreBundle\Tests\Cache;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\CoreBundle\Cache\StructureWarmer;
 
-class StructureWarmerTest extends \PHPUnit_Framework_TestCase
+class StructureWarmerTest extends TestCase
 {
     public function setUp()
     {

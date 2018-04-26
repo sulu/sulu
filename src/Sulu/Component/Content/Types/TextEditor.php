@@ -114,7 +114,7 @@ class TextEditor extends SimpleContentType
      */
     private function removeValidation($content)
     {
-        return preg_replace('/sulu:validation-state="[a-zA-Z ]*"/', '', $content);
+        return preg_replace('/ sulu:validation-state="[a-zA-Z ]*"/', '', $content);
     }
 
     /**

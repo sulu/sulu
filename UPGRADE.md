@@ -130,9 +130,13 @@ The `setCurrentPosition` function was removed from the contact entity as this po
 
 Follow upgrade path of following libraries:
 
-* https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING-2.0.md
-* https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING-2.1.md
-* https://github.com/schmittjoh/JMSSerializerBundle/blob/master/UPGRADING.md
+ - **FOSRestBundle**:
+   - https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING-2.0.md
+   - https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING-2.1.md
+ - **JMSSerializerBundle**:
+   - https://github.com/schmittjoh/JMSSerializerBundle/blob/master/UPGRADING.md
+ - **PHPUnit 6**:
+   - https://thephp.cc/news/2017/02/migrating-to-phpunit-6
 
 ### Node api
 

@@ -15,8 +15,9 @@ use Prophecy\Argument;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use \PHPUnit\Framework\TestCase;
 
-class SecurityCheckerTest extends \PHPUnit_Framework_TestCase
+class SecurityCheckerTest extends TestCase
 {
     /**
      * @var SecurityCheckerInterface
@@ -84,7 +85,7 @@ class SecurityCheckerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsGrantedFail()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'Symfony\Component\Security\Core\Exception\AccessDeniedException',
             'Permission "view" in security context "sulu.media.collection" not granted'
         );

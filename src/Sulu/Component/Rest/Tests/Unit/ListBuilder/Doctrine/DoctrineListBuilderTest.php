@@ -15,7 +15,8 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -31,7 +32,7 @@ use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
+class DoctrineListBuilderTest extends TestCase
 {
     /**
      * @var EventDispatcherInterface
@@ -549,12 +550,12 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             $this->doctrineListBuilder->where($fieldDescriptors[$key], $value);
         }
 
-        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
-        $expressions = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'expressions');
+        $this->assertCount(2, Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
+        $expressions = Assert::readAttribute($this->doctrineListBuilder, 'expressions');
         $this->assertEquals(3, $expressions[0]->getValue());
         $this->assertEquals(1, $expressions[1]->getValue());
 
-        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
+        $this->assertCount(2, Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
         $this->assertEquals('title_id', $expressions[0]->getFieldName());
         $this->assertEquals('desc_id', $expressions[1]->getFieldName());
         $this->doctrineListBuilder->execute();
@@ -634,12 +635,12 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             $this->doctrineListBuilder->where($fieldDescriptors[$key], $value, ListBuilderInterface::WHERE_COMPARATOR_UNEQUAL);
         }
 
-        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
-        $expressions = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'expressions');
+        $this->assertCount(2, Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
+        $expressions = Assert::readAttribute($this->doctrineListBuilder, 'expressions');
         $this->assertEquals(3, $expressions[0]->getValue());
         $this->assertEquals(1, $expressions[1]->getValue());
 
-        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
+        $this->assertCount(2, Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
         $this->assertEquals('title_id', $expressions[0]->getFieldName());
         $this->assertEquals('desc_id', $expressions[1]->getFieldName());
         $this->doctrineListBuilder->execute();

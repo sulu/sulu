@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
@@ -44,7 +45,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class MediaManagerTest extends \PHPUnit_Framework_TestCase
+class MediaManagerTest extends TestCase
 {
     /**
      * @var MediaManager
@@ -320,7 +321,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveWrongVersionType()
     {
-        $this->setExpectedException(InvalidMediaTypeException::class);
+        $this->expectException(InvalidMediaTypeException::class);
 
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn('test.pdf');
@@ -430,11 +431,12 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $uploadedFile->getPathname()->willReturn('');
         $uploadedFile->getSize()->willReturn('123');
         $uploadedFile->getMimeType()->willReturn('video/ogg');
-        $this->ffprobe->format(Argument::any())->willThrow(ExecutableNotFoundException::class);
+        $this->ffprobe->format(Argument::any())->willThrow(ExecutableNotFoundException::class)->shouldBeCalled();
 
         $this->mediaRepository->createNew()->willReturn(new Media());
 
-        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'test'], null);
+        $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'test'], null);
+        $this->assertNotNull($media);
     }
 
     public function provideGetByIds()

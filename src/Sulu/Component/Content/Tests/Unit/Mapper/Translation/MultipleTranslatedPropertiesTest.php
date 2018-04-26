@@ -11,10 +11,11 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Mapper\Translation;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 
-class MultipleTranslatedPropertiesTest extends \PHPUnit_Framework_TestCase
+class MultipleTranslatedPropertiesTest extends TestCase
 {
     /**
      * @var MultipleTranslatedProperties

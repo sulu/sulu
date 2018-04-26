@@ -15,9 +15,10 @@ use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\Media\Frame;
 use FFMpeg\Media\Video;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService;
 
-class VideoThumbnailServiceTest extends \PHPUnit_Framework_TestCase
+class VideoThumbnailServiceTest extends TestCase
 {
     /**
      * @var Video

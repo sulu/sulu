@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
@@ -20,7 +21,7 @@ use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Contact\Model\ContactInterface;
 
-class CacheInvalidationListenerTest extends \PHPUnit_Framework_TestCase
+class CacheInvalidationListenerTest extends TestCase
 {
     /**
      * @var CacheManager

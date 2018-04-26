@@ -11,10 +11,11 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\DependencyInjection\Compiler\InitializerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class InitializerPassTest extends \PHPUnit_Framework_TestCase
+class InitializerPassTest extends TestCase
 {
     public function testPass()
     {

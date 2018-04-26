@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Command;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Command\MaintainResourceLocatorCommand;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -28,7 +29,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MaintainResourceLocatorCommandTest extends \PHPUnit_Framework_TestCase
+class MaintainResourceLocatorCommandTest extends TestCase
 {
     /**
      * @var WebspaceManagerInterface

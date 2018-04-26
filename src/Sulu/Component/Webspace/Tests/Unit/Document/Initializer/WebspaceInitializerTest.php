@@ -24,8 +24,9 @@ use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Output\Output;
+use \PHPUnit\Framework\TestCase;
 
-class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
+class WebspaceInitializerTest extends TestCase
 {
     /**
      * @var WebspaceManagerInterface

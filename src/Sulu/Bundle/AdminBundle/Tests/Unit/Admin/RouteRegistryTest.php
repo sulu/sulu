@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
@@ -18,7 +19,7 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 
-class RouteRegistryTest extends \PHPUnit_Framework_TestCase
+class RouteRegistryTest extends TestCase
 {
     /**
      * @var RouteRegistry
@@ -68,7 +69,7 @@ class RouteRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testFindRouteByNameException()
     {
-        $this->setExpectedException(RouteNotFoundException::class);
+        $this->expectException(RouteNotFoundException::class);
 
         $this->admin1->getRoutes()->willReturn([]);
         $this->admin2->getRoutes()->willReturn([]);
@@ -113,7 +114,7 @@ class RouteRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testRouteWithNonExistingParent()
     {
-        $this->setExpectedException(ParentRouteNotFoundException::class);
+        $this->expectException(ParentRouteNotFoundException::class);
 
         $route = new Route('test1', '/test1', 'test1');
         $route->setParent('not-existing');

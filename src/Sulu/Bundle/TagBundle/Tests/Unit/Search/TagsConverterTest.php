@@ -11,10 +11,11 @@
 
 namespace Sulu\Bundle\TagBundle\Tests\Unit\Search;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\TagBundle\Search\TagsConverter;
 use Sulu\Bundle\TagBundle\Tag\TagManager;
 
-class TagsConverterTest extends \PHPUnit_Framework_TestCase
+class TagsConverterTest extends TestCase
 {
     public function testConvert()
     {

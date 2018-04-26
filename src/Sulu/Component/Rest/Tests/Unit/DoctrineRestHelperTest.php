@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\Rest\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\DoctrineRestHelper;
 
-class DoctrineRestHelperTest extends \PHPUnit_Framework_TestCase
+class DoctrineRestHelperTest extends TestCase
 {
     /**
      * @var DoctrineRestHelper
@@ -21,7 +22,7 @@ class DoctrineRestHelperTest extends \PHPUnit_Framework_TestCase
     private $restHelper;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject_MockObject
      */
     private $listRestHelper;
 

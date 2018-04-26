@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -28,7 +29,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
-class TreeFullEditStrategyTest extends \PHPUnit_Framework_TestCase
+class TreeFullEditStrategyTest extends TestCase
 {
     /**
      * @var ResourceLocatorMapperInterface
@@ -196,14 +197,14 @@ class TreeFullEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
         $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
 
-        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('path/to/doc');
+        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('path/to/doc')->shouldBeCalled();
 
         $this->treeStrategy->save($document->reveal(), null);
     }
 
     public function testSaveInvalid()
     {
-        $this->setExpectedException(ResourceLocatorNotValidException::class);
+        $this->expectException(ResourceLocatorNotValidException::class);
 
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
@@ -224,7 +225,7 @@ class TreeFullEditStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveAlreadyExist()
     {
-        $this->setExpectedException(ResourceLocatorAlreadyExistsException::class);
+        $this->expectException(ResourceLocatorAlreadyExistsException::class);
 
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';

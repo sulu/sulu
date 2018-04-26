@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Command\FixturesLoadCommand;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
@@ -23,7 +24,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
+class FixturesLoadCommandTest extends TestCase
 {
     /**
      * @var DocumentFixtureLoader

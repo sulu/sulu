@@ -14,9 +14,10 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Focus;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\Focus;
 
-class FocusTest extends \PHPUnit_Framework_TestCase
+class FocusTest extends TestCase
 {
     /**
      * @var Focus

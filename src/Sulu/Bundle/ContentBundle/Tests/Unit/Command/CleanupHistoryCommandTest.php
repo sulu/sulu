@@ -14,12 +14,13 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Command;
 use Jackalope\Workspace;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Command\CleanupHistoryCommand;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CleanupHistoryCommandTest extends \PHPUnit_Framework_TestCase
+class CleanupHistoryCommandTest extends TestCase
 {
     /**
      * @var SessionManagerInterface

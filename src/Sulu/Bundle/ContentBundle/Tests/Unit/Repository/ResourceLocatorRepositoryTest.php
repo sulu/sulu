@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Repository;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
@@ -26,7 +27,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
  * @group unit
  * @group repository
  */
-class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
+class ResourceLocatorRepositoryTest extends TestCase
 {
     /**
      * @var ResourceLocatorRepositoryInterface

@@ -72,9 +72,15 @@ class PageDocumentSerializationTest extends SuluTestCase
             'integer' => 1234,
         ]);
 
-        $result = $this->serializer->serialize($page, 'json');
+        $jsonResult = $this->serializer->serialize($page, 'json');
+        $this->assertNotNull($jsonResult);
+        $result = json_decode($jsonResult, true);
 
-        return $result;
+        $this->assertEquals('Foobar', $result['title']);
+        $this->assertEquals(1234, $result['structure']['integer']);
+        $this->assertCount(2, $result['structure']['arrayOfObjects']);
+
+        return $jsonResult;
     }
 
     /**
@@ -107,9 +113,11 @@ class PageDocumentSerializationTest extends SuluTestCase
         $this->documentManager->persist($page, 'de');
         $this->documentManager->flush();
 
-        $result = $this->serializer->serialize($page, 'json');
+        $jsonResult = $this->serializer->serialize($page, 'json');
 
-        return $result;
+        $this->assertNotNull($jsonResult);
+        $result = json_decode($jsonResult, true);
+        $this->assertEquals('Hello', $result['title']);
     }
 
     /**

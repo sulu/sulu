@@ -18,6 +18,7 @@ use JMS\Serializer\Handler\HandlerRegistryInterface;
 use JMS\Serializer\VisitorInterface;
 use Metadata\MetadataFactoryInterface;
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Serializer\PageBridgeHandler;
@@ -27,7 +28,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
-class PageBridgeHandlerTest extends \PHPUnit_Framework_TestCase
+class PageBridgeHandlerTest extends TestCase
 {
     public function testSerialize()
     {

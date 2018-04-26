@@ -16,8 +16,9 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
+use \PHPUnit\Framework\TestCase;
 
-class RestControllerTest extends \PHPUnit_Framework_TestCase
+class RestControllerTest extends TestCase
 {
     /**
      * @var \Sulu\Component\Rest\RestController
@@ -79,7 +80,8 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod(RestController::class, 'processPut');
         $method->setAccessible(true);
 
-        $method->invoke($this->controller, [], [], $delete, $update, $add);
+        $result = $method->invoke($this->controller, [], [], $delete, $update, $add);
+        $this->assertTrue($result);
     }
 
     public function testProcessPutWithDelete()

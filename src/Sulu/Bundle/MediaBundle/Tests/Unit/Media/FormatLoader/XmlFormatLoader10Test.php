@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
 use Prophecy\Argument;
+use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Symfony\Component\Config\FileLocatorInterface;
 
@@ -132,11 +133,9 @@ class XmlFormatLoader10Test extends WebspaceTestCase
         $this->assertNotNull($result['3840x2160-retina']['internal']);
     }
 
-    /**
-     * @expectedException \Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException
-     */
     public function testLoadDeprecatedWithMissingDimension()
     {
+        $this->expectException(MissingScaleDimensionException::class);
         $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/version10_missing_dimension.xml');
     }
 }

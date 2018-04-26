@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Markup;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderPoolInterface;
@@ -24,7 +25,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class LinkTagTest extends \PHPUnit_Framework_TestCase
+class LinkTagTest extends TestCase
 {
     /**
      * @var ContentRepositoryInterface

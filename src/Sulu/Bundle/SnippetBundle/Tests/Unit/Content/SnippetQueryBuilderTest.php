@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SnippetBundle\Content\SnippetQueryBuilder;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure;
@@ -20,7 +21,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
-class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
+class SnippetQueryBuilderTest extends TestCase
 {
     /**
      * @var StructureManagerInterface

@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Tag;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagNotFoundException;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistry;
 
-class TagRegistryTest extends \PHPUnit_Framework_TestCase
+class TagRegistryTest extends TestCase
 {
     public function testGetTag()
     {
@@ -27,7 +28,7 @@ class TagRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTagNotFound()
     {
-        $this->setExpectedException(TagNotFoundException::class);
+        $this->expectException(TagNotFoundException::class);
 
         $registry = new TagRegistry(['test' => $this->prophesize(TagInterface::class)->reveal()]);
         $registry->getTag('test-2', 'html');
@@ -35,7 +36,7 @@ class TagRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTypeNotFound()
     {
-        $this->setExpectedException(TagNotFoundException::class);
+        $this->expectException(TagNotFoundException::class);
 
         $tag = $this->prophesize(TagInterface::class)->reveal();
         $registry = new TagRegistry(['html' => ['sulu' => ['test' => $tag]]]);
@@ -44,7 +45,7 @@ class TagRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTagNoTag()
     {
-        $this->setExpectedException(TagNotFoundException::class);
+        $this->expectException(TagNotFoundException::class);
 
         $registry = new TagRegistry([]);
         $registry->getTag('test-2', 'html');

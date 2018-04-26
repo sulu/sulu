@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\SecurityBundle\Util;
 
-class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class TokenGeneratorTest extends TestCase
 {
     public function testGenerateToken()
     {

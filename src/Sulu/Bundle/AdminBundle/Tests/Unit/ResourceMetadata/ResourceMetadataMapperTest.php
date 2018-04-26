@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\ResourceMetadata;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Field as DatagridField;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Field;
@@ -28,7 +29,7 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory;
 use Symfony\Component\Translation\Translator;
 
-class ResourceMetadataMapperTest extends \PHPUnit_Framework_TestCase
+class ResourceMetadataMapperTest extends TestCase
 {
     /**
      * @var ResourceMetadataMapper

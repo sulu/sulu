@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\CustomUrl\Routing\Enhancers\ExternalLinkEnhancer;
 use Symfony\Component\HttpFoundation\Request;
 
-class ExternalLinkEnhancerTest extends \PHPUnit_Framework_TestCase
+class ExternalLinkEnhancerTest extends TestCase
 {
     public function testEnhance()
     {

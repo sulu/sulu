@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\RouteBundle\DependencyInjection\RouteGeneratorCompilerPass;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
+class RouteGeneratorCompilerPassTest extends TestCase
 {
     public function testProcess()
     {

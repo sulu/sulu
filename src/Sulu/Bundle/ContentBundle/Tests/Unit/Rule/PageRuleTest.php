@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Rule;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Rule\PageRule;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class PageRuleTest extends \PHPUnit_Framework_TestCase
+class PageRuleTest extends TestCase
 {
     /**
      * @var RequestStack

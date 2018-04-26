@@ -11,13 +11,14 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
+class DocumentExecutorTest extends TestCase
 {
     public function setUp()
     {

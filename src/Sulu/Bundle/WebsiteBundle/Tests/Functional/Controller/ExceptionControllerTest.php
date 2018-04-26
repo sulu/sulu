@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\Controller\ExceptionController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
@@ -20,7 +21,7 @@ use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionCon
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Request;
 
-class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
+class ExceptionControllerTest extends TestCase
 {
     /**
      * @var ExceptionController
@@ -81,7 +82,7 @@ class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideShowAction
      */
-    public function testShowActionFormat($retrievedFormat, $templateAvailable, $expectedExceptionFormat)
+    public function testShowActionFormat($retrievedFormat, $templateAvailable, $expectExceptionFormat)
     {
         $request = new Request();
         $request->setRequestFormat($retrievedFormat);
@@ -93,7 +94,7 @@ class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
-        $this->twig->render(Argument::containingString($expectedExceptionFormat), Argument::any())->shouldBeCalled();
+        $this->twig->render(Argument::containingString($expectExceptionFormat), Argument::any())->shouldBeCalled();
         $this->loader->exists(Argument::any())->willReturn($templateAvailable);
 
         if ('html' === $retrievedFormat) {

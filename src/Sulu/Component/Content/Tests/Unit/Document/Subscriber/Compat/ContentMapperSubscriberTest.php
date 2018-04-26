@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber\Compat;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
@@ -29,7 +30,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Util\SuluNodeHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
+class ContentMapperSubscriberTest extends TestCase
 {
     /**
      * @var DocumentInspector

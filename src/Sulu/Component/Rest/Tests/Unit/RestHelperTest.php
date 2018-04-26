@@ -13,8 +13,9 @@ namespace Sulu\Component\Rest\Tests\Unit;
 
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\RestHelper;
+use \PHPUnit\Framework\TestCase;
 
-class RestHelperTest extends \PHPUnit_Framework_TestCase
+class RestHelperTest extends TestCase
 {
     /**
      * @var RestHelper
@@ -22,7 +23,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
     private $restHelper;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject_MockObject
      */
     private $listRestHelper;
 
@@ -142,7 +143,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testprocessSubEntitiesEmpty()
     {
-        $mock = $this->getMock('stdClass', ['delete', 'update', 'add', 'get']);
+        $mock = $this->getMockBuilder('Mock')->setMethods(['delete', 'update', 'add', 'get'])->getMock();
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->never())->method('add');
@@ -169,10 +170,10 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testprocessSubEntitiesWithDelete()
     {
-        $mockedObject = $this->getMock('stdClass', ['getId']);
+        $mockedObject = $this->getMockBuilder('Mock')->setMethods(['getId'])->getMock();
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
 
-        $mock = $this->getMock('stdClass', ['delete', 'update', 'add', 'get']);
+        $mock = $this->getMockBuilder('Mock')->setMethods(['delete', 'update', 'add', 'get'])->getMock();
         $mock->expects($this->once())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->never())->method('add');
@@ -208,10 +209,10 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testprocessSubEntitiesWithUpdate()
     {
-        $mockedObject = $this->getMock('stdClass', ['getId']);
+        $mockedObject = $this->getMockBuilder('Mock')->setMethods(['getId'])->getMock();
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
 
-        $mock = $this->getMock('stdClass', ['delete', 'update', 'add', 'get']);
+        $mock = $this->getMockBuilder('Mock')->setMethods(['delete', 'update', 'add', 'get'])->getMock();
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->once())->method('update');
         $mock->expects($this->never())->method('add');
@@ -251,7 +252,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testprocessSubEntitiesWithAdd()
     {
-        $mock = $this->getMock('stdClass', ['delete', 'update', 'add', 'get']);
+        $mock = $this->getMockBuilder('Mock')->setMethods(['delete', 'update', 'add', 'get'])->getMock();
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->once())->method('add');
@@ -289,14 +290,14 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testCompareEntitiesWithData()
     {
-        $mockedObject = $this->getMock('stdClass', ['getId', 'getValue']);
+        $mockedObject = $this->getMockBuilder('Mock')->setMethods(['getId', 'getValue'])->getMock();
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
         $mockedObject->expects($this->any())->method('getValue')->will($this->returnValue(2));
 
         $mockedObject2 = clone $mockedObject;
         $mockedObject3 = clone $mockedObject;
 
-        $mock = $this->getMock('stdClass', ['delete', 'update', 'add', 'get']);
+        $mock = $this->getMockBuilder('Mock')->setMethods(['delete', 'update', 'add', 'get'])->getMock();
         $mock->expects($this->once())->method('delete');
         $mock->expects($this->any())->method('update');
         $mock->expects($this->once())->method('add');

@@ -14,13 +14,14 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\Listener;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\JsonSerializationVisitor;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata as GeneralPropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Listener\GeneralMetadataSerializeSubscriber;
 use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
 
-class GeneralMetadataSerializeSubscriberTest extends \PHPUnit_Framework_TestCase
+class GeneralMetadataSerializeSubscriberTest extends TestCase
 {
     public function testGetSubscribedEvents()
     {
@@ -39,7 +40,7 @@ class GeneralMetadataSerializeSubscriberTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testPostSerializeProvider()
+    public function dataPostSerializeProvider()
     {
         return [
             [false],
@@ -50,7 +51,7 @@ class GeneralMetadataSerializeSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testPostSerializeProvider
+     * @dataProvider dataPostSerializeProvider
      */
     public function testPostSerialize($hasMetadata, $hasGeneralMetadata = false, $hasFilterType = false)
     {

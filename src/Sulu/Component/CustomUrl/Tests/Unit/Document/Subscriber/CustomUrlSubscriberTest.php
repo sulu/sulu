@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Unit\Document\Subscriber;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
@@ -27,7 +28,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class CustomUrlSubscriberTest extends \PHPUnit_Framework_TestCase
+class CustomUrlSubscriberTest extends TestCase
 {
     /**
      * @var CustomUrlSubscriber

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MarkupBundle\Markup\DelegatingTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlMarkupParser;
@@ -19,7 +20,7 @@ use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagNotFoundException;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
 
-class HtmlMarkupParserTest extends \PHPUnit_Framework_TestCase
+class HtmlMarkupParserTest extends TestCase
 {
     const VALIDATE_UNPUBLISHED = 'unpublished';
 

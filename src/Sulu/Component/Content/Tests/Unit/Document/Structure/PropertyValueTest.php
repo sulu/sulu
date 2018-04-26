@@ -11,12 +11,10 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Document\Structure;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 
-/**
- * Tests for class PropertyValue.
- */
-class PropertyValueTest extends \PHPUnit_Framework_TestCase
+class PropertyValueTest extends TestCase
 {
     public function provideOffsetSetData()
     {

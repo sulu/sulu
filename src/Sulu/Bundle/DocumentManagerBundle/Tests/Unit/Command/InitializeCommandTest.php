@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Command\InitializeCommand;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
@@ -20,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class InitializeCommandTest extends \PHPUnit_Framework_TestCase
+class InitializeCommandTest extends TestCase
 {
     /**
      * @var mixed

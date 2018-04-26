@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Structure;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension;
 use Sulu\Bundle\SearchBundle\Search\Factory;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -20,7 +21,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Sulu\Component\Import\Manager\ImportManagerInterface;
 
-class ExcerptStructureExtensionTest extends \PHPUnit_Framework_TestCase
+class ExcerptStructureExtensionTest extends TestCase
 {
     public function testSaveSetLocaleAndWebspace()
     {

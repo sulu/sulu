@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Search\Reindex;
 
 use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Search\Reindex\StructureProvider;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -24,7 +25,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\Query\Query;
 
-class StructureProviderTest extends \PHPUnit_Framework_TestCase
+class StructureProviderTest extends TestCase
 {
     /**
      * @var LocalizedReindexProviderInterface

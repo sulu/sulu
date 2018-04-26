@@ -12,11 +12,13 @@
 namespace Sulu\Component\Content\Tests\Unit\Types;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface as NodePropertyInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Types\TextEditor;
 
-class TextEditorTest extends \PHPUnit_Framework_TestCase
+class TextEditorTest extends TestCase
 {
     const VALIDATE_REMOVED = 'removed';
 
@@ -47,11 +49,17 @@ class TextEditorTest extends \PHPUnit_Framework_TestCase
      */
     private $property;
 
+    /**
+     * @var NodePropertyInterface
+     */
+    private $nodeProperty;
+
     public function setUp()
     {
         $this->markupParser = $this->prophesize(MarkupParserInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->property = $this->prophesize(PropertyInterface::class);
+        $this->nodeProperty = $this->prophesize(NodePropertyInterface::class);
 
         $this->textEditor = new TextEditor($this->template, $this->markupParser->reveal());
     }
@@ -122,7 +130,7 @@ EOT;
 EOT
         );
 
-        $this->node->setProperty('i18n:de-description', $content);
+        $this->node->setProperty('i18n:de-description', $content)->shouldBeCalled();
         $this->textEditor->write($this->node->reveal(), $this->property->reveal(), 1, 'sulu_io', 'de', null);
     }
 
@@ -130,8 +138,10 @@ EOT
     {
         $this->property->getName()->willReturn('i18n:de-description');
         $this->property->getValue()->willReturn(null);
+        $this->nodeProperty->remove()->shouldBeCalled();
 
-        $this->node->remove('i18n:de-description');
+        $this->node->hasProperty('i18n:de-description')->willReturn(true)->shouldBeCalled();
+        $this->node->getProperty('i18n:de-description')->willReturn($this->nodeProperty->reveal())->shouldBeCalled();
         $this->textEditor->write($this->node->reveal(), $this->property->reveal(), 1, 'sulu_io', 'de', null);
     }
 }

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\EventListener;
 use JMS\Serializer\Context;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\JsonSerializationVisitor;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\EventListener\WebspaceSerializeEventSubscriber;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\CustomUrl;
@@ -25,7 +26,7 @@ use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Url\WebspaceUrlProviderInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
+class WebspaceSerializeEventSubscriberTest extends TestCase
 {
     public function testGetSubscribedEvents()
     {

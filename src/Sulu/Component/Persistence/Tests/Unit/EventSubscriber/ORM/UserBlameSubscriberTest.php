@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber;
@@ -24,7 +25,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
-class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
+class UserBlameSubscriberTest extends TestCase
 {
     /**
      * @var LoadClassMetadataEventArgs

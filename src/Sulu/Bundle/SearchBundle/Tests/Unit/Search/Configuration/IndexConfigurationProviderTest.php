@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\SearchBundle\Search\Configuration;
 
-class IndexConfigurationProviderTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class IndexConfigurationProviderTest extends TestCase
 {
     public function testGetIndexConfigurations()
     {

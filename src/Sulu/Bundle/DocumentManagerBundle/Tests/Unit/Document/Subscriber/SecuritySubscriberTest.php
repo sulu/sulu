@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Document\Subscriber;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class SecuritySubscriberTest extends \PHPUnit_Framework_TestCase
+class SecuritySubscriberTest extends TestCase
 {
     /**
      * @var TokenStorageInterface

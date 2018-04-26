@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\FieldType;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistry;
 
-class FieldTypeOptionRegistryTest extends \PHPUnit_Framework_TestCase
+class FieldTypeOptionRegistryTest extends TestCase
 {
     /**
      * @var FieldTypeOptionRegistry

@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Bundle\WebsiteBundle\EventListener\TranslatorEventListener;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class TranslatorEventListenerTest extends \PHPUnit_Framework_TestCase
+class TranslatorEventListenerTest extends TestCase
 {
     public function testSetLocaleOnPreviewPreRender()
     {

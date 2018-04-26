@@ -11,10 +11,11 @@
 
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine\FieldDescriptor;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 
-class DoctrineGroupConcatFieldDescriptorTest extends \PHPUnit_Framework_TestCase
+class DoctrineGroupConcatFieldDescriptorTest extends TestCase
 {
     public function testGetSelect()
     {

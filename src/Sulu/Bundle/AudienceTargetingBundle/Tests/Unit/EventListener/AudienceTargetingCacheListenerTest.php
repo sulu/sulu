@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
 
 use FOS\HttpCache\SymfonyCache\CacheEvent;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\AudienceTargetingCacheListener;
 use Sulu\Bundle\HttpCacheBundle\Cache\AbstractHttpCache;
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class AudienceTargetingCacheListenerTest extends \PHPUnit_Framework_TestCase
+class AudienceTargetingCacheListenerTest extends TestCase
 {
     public function testHandle()
     {

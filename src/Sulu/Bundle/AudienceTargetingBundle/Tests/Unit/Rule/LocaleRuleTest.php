@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\LocaleRule;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class LocaleRuleTest extends \PHPUnit_Framework_TestCase
+class LocaleRuleTest extends TestCase
 {
     /**
      * @var Request

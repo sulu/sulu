@@ -11,10 +11,11 @@
 
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Routing\Defaults;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProvider;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 
-class RouteDefaultsProviderTest extends \PHPUnit_Framework_TestCase
+class RouteDefaultsProviderTest extends TestCase
 {
     /**
      * @var RouteDefaultsProviderInterface

@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * Base test tests which require the Sulu kernel / container.
  */
-abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
+abstract class KernelTestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContainerInterface

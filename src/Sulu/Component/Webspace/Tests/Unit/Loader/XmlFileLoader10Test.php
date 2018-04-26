@@ -129,7 +129,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
 
     public function testLoadWithInvalidWebspaceKey()
     {
-        $this->setExpectedException(InvalidWebspaceException::class);
+        $this->expectException(InvalidWebspaceException::class);
 
         $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/sulu.io_deprecated_invalid_webspace_key.xml'
@@ -138,8 +138,10 @@ class XmlFileLoader10Test extends WebspaceTestCase
 
     public function testLoadDynamicOrder()
     {
-        $this->loader->load(
+        $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_deprecatedDynamicOrder.xml'
         );
+
+        $this->assertEquals('Sulu CMF', $webspace->getName());
     }
 }

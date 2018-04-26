@@ -11,11 +11,12 @@
 
 namespace Sulu\Component\Cache\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Cache\CacheInterface;
 use Sulu\Component\Cache\DataCache;
 use Symfony\Component\Filesystem\Filesystem;
 
-class DataCacheTest extends \PHPUnit_Framework_TestCase
+class DataCacheTest extends TestCase
 {
     public function provideIsFreshData()
     {

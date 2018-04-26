@@ -12,8 +12,9 @@
 namespace Sulu\Component\Util\Tests\Unit;
 
 use Sulu\Component\Util\TextUtils;
+use \PHPUnit\Framework\TestCase;
 
-class TextUtilsTest extends \PHPUnit_Framework_TestCase
+class TextUtilsTest extends TestCase
 {
     public function provideTruncate()
     {

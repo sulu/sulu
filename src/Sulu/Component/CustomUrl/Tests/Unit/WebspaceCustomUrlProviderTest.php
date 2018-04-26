@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\CustomUrl\WebspaceCustomUrlProvider;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
-class WebspaceCustomUrlProviderTest extends \PHPUnit_Framework_TestCase
+class WebspaceCustomUrlProviderTest extends TestCase
 {
     public function testGetUrls()
     {

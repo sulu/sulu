@@ -11,13 +11,14 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Teaser\Provider;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\ProviderNotFoundException;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPool;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
 
-class TeaserProviderPoolTest extends \PHPUnit_Framework_TestCase
+class TeaserProviderPoolTest extends TestCase
 {
     /**
      * @var TeaserProviderInterface[]
@@ -53,7 +54,7 @@ class TeaserProviderPoolTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProviderNotFound()
     {
-        $this->setExpectedException(ProviderNotFoundException::class);
+        $this->expectException(ProviderNotFoundException::class);
 
         $this->teaserProviderPool->getProvider('test');
     }

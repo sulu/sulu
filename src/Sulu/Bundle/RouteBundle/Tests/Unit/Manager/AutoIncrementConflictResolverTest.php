@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Manager;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Manager\AutoIncrementConflictResolver;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
-class AutoIncrementConflictResolverTest extends \PHPUnit_Framework_TestCase
+class AutoIncrementConflictResolverTest extends TestCase
 {
     /**
      * @var RouteRepositoryInterface

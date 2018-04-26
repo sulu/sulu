@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
@@ -22,7 +23,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContentEnhancerTest extends \PHPUnit_Framework_TestCase
+class ContentEnhancerTest extends TestCase
 {
     public function enhanceProvider()
     {

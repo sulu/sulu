@@ -29,7 +29,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     private $loader;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject_MockObject
      */
     private $logger;
 

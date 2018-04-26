@@ -11,15 +11,16 @@
 
 namespace Sulu\Bundle\CoreBundle\Tests\Unit\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ListBuilderMetadataProviderCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ListBuilderMetadataProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
+class ListBuilderMetadataProviderCompilerPassTest extends TestCase
 {
-    public function testProcessProvider()
+    public function dataProcessProvider()
     {
         return [
             [false],
@@ -30,7 +31,7 @@ class ListBuilderMetadataProviderCompilerPassTest extends \PHPUnit_Framework_Tes
     }
 
     /**
-     * @dataProvider testProcessProvider
+     * @dataProvider dataProcessProvider
      */
     public function testProcess($hasDefinition, $taggedServices = [])
     {
@@ -67,6 +68,9 @@ class ListBuilderMetadataProviderCompilerPassTest extends \PHPUnit_Framework_Tes
                     }
                 )
             )->shouldBeCalled();
+        } else {
+            $container->getDefinition(ListBuilderMetadataProviderCompilerPass::CHAIN_PROVIDER_ID)
+                ->shouldNotBeCalled();
         }
 
         $compilerPass = new ListBuilderMetadataProviderCompilerPass();

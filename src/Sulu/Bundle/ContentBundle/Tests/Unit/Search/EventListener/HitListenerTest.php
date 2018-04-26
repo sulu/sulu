@@ -15,12 +15,13 @@ use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\ContentBundle\Search\EventListener\HitListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class HitListenerTest extends \PHPUnit_Framework_TestCase
+class HitListenerTest extends TestCase
 {
     /**
      * @var RequestAnalyzerInterface

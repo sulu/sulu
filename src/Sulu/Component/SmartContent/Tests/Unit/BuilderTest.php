@@ -13,8 +13,9 @@ namespace Sulu\Component\SmartContent\Tests\Unit;
 
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\Configuration\Builder;
+use \PHPUnit\Framework\TestCase;
 
-class BuilderTest extends \PHPUnit_Framework_TestCase
+class BuilderTest extends TestCase
 {
     public function provideBoolean()
     {

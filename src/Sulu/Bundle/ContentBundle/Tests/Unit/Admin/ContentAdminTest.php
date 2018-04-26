@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Admin;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -19,7 +20,7 @@ use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class ContentAdminTest extends \PHPUnit_Framework_TestCase
+class ContentAdminTest extends TestCase
 {
     /**
      * @var SecurityChecker

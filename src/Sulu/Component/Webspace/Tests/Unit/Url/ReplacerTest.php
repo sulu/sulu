@@ -12,8 +12,9 @@
 namespace Sulu\Component\Webspace\Tests\Unit\Url;
 
 use Sulu\Component\Webspace\Url\Replacer;
+use \PHPUnit\Framework\TestCase;
 
-class ReplacerTest extends \PHPUnit_Framework_TestCase
+class ReplacerTest extends TestCase
 {
     public function testHasLanguageReplacer()
     {

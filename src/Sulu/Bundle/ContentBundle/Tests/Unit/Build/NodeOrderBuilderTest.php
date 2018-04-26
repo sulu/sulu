@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Build;
 use Massive\Bundle\BuildBundle\Build\BuilderContext;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Build\NodeOrderBuilder;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -21,7 +22,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class NodeOrderBuilderTest extends \PHPUnit_Framework_TestCase
+class NodeOrderBuilderTest extends TestCase
 {
     /**
      * @var SessionManagerInterface

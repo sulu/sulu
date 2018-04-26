@@ -107,7 +107,7 @@ class NodeRepositoryTest extends SuluTestCase
 
         $this->nodeRepository->deleteNode($structure->getUuid(), 'sulu_io');
 
-        $this->setExpectedException(DocumentNotFoundException::class);
+        $this->expectException(DocumentNotFoundException::class);
         $this->nodeRepository->getNode($structure->getUuid(), 'sulu_io', 'en');
     }
 

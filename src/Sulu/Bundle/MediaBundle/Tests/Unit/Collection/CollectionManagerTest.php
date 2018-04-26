@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Collection;
 
 use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
@@ -22,7 +23,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
-class CollectionManagerTest extends \PHPUnit_Framework_TestCase
+class CollectionManagerTest extends TestCase
 {
     /**
      * @var CollectionRepository
@@ -103,14 +104,14 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
             ['test'],
             Argument::any(),
             Argument::any()
-        )->willReturn(new \ArrayIterator([]));
+        )->willReturn(new \ArrayIterator([]))->shouldBeCalled();
         $this->collectionRepository->countCollections(
             0,
             ['search' => 'test', 'locale' => 'de', 'systemCollections' => true],
             null
-        )->willReturn(0);
+        )->willReturn()->shouldBeCalled();
 
-        $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test']);
+        $tree = $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test']);
     }
 
     public function testGetTreeWithoutSystemCollections()
@@ -122,12 +123,12 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
             ['test'],
             Argument::any(),
             Argument::any()
-        )->willReturn(new \ArrayIterator([]));
+        )->willReturn(new \ArrayIterator([]))->shouldBeCalled();
         $this->collectionRepository->countCollections(
             0,
             ['search' => 'test', 'locale' => 'de', 'systemCollections' => false],
             null
-        )->willReturn(0);
+        )->willReturn(0)->shouldBeCalled();
 
         $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test'], false);
     }

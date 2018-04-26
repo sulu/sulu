@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
@@ -22,7 +23,7 @@ use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 
-class StructureSubscriberTest extends \PHPUnit_Framework_TestCase
+class StructureSubscriberTest extends TestCase
 {
     /**
      * @var SearchManagerInterface

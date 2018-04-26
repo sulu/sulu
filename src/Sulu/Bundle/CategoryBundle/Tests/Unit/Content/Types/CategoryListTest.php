@@ -11,18 +11,20 @@
 
 namespace Sulu\Bundle\CategoryBundle\Content\Types;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
 
-class CategoryListTest extends \PHPUnit_Framework_TestCase
+class CategoryListTest extends TestCase
 {
     public function testGetContentData()
     {
-        $entity1 = $this->prophesize(\Sulu\Bundle\CategoryBundle\Entity\CategoryInterface::class);
-        $entity2 = $this->prophesize(\Sulu\Bundle\CategoryBundle\Entity\CategoryInterface::class);
+        $entity1 = $this->prophesize(CategoryInterface::class);
+        $entity2 = $this->prophesize(CategoryInterface::class);
 
         $category1 = $this->prophesize(Category::class);
         $category1->toArray()->willReturn('someArrayData');

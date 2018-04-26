@@ -22,6 +22,7 @@ use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
+use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
@@ -147,6 +148,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     public function testPersistNotImplementing()
     {
         $this->persistEvent->getDocument()->willReturn($this->notImplementing);
+        $this->persistEvent->getNode()->shouldNotBeCalled();
         $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
@@ -157,6 +159,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     {
         $this->document->getStructureType()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
+        $this->persistEvent->getNode()->shouldNotBeCalled();
         $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
@@ -167,6 +170,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     {
         $this->persistEvent->getLocale()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
+        $this->persistEvent->getNode()->shouldNotBeCalled();
 
         $this->subscriber->saveStructureData($this->persistEvent->reveal());
 
@@ -203,11 +207,10 @@ class StructureSubscriberTest extends SubscriberTestCase
 
     /**
      * It should throw an exception if the property is required but the value is null.
-     *
-     * @expectedException \Sulu\Component\Content\Exception\MandatoryPropertyException
      */
     public function testThrowExceptionPropertyRequired()
     {
+        $this->expectException(MandatoryPropertyException::class);
         $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->getOptions()->willReturn([
@@ -273,6 +276,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     public function testHydrateNotImplementing()
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
+        $this->hydrateEvent->getOption(Argument::any())->shouldNotBeCalled();
 
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }

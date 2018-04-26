@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Functional\Generator;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\CustomUrl\Generator\Generator;
 use Sulu\Component\CustomUrl\Generator\MissingDomainPartException;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Url\Replacer;
 
-class GeneratorTest extends \PHPUnit_Framework_TestCase
+class GeneratorTest extends TestCase
 {
     public function provideGenerateData()
     {
@@ -140,7 +141,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGenerate($baseDomain, $domainParts, $locales, $expected, $exception = null)
     {
         if ($exception) {
-            self::setExpectedException($exception);
+            self::expectException($exception);
         }
 
         $generator = new Generator(new Replacer());

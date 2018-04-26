@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Admin;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Admin\TextEditorJsConfig;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleSettingInterface;
@@ -18,7 +19,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class TextEditorJsConfigTest extends \PHPUnit_Framework_TestCase
+class TextEditorJsConfigTest extends TestCase
 {
     /**
      * @var TokenStorageInterface

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Unit\Request;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\CustomUrlBundle\Request\CustomUrlRequestProcessor;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -27,7 +28,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
+class CustomUrlRequestProcessorTest extends TestCase
 {
     public function dataProvider()
     {
@@ -78,16 +79,14 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $customUrlManager = $this->prophesize(CustomUrlManager::class);
 
         if (!$exists) {
-            $customUrlManager->findRouteByUrl($route, $webspaceKey)->willReturn(null);
+            $customUrlManager->findRouteByUrl($route, $webspaceKey)->willReturn(null)->shouldBeCalled();
         } else {
             $routeDocument = $this->prophesize(RouteDocument::class);
             $routeDocument->isHistory()->willReturn($history);
             $routeDocument->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $route);
 
             if ($history) {
-                $target = $this->prophesize(RouteDocument::class);
-                $target->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $route . '-1');
-                $routeDocument->getTargetDocument()->willReturn($target->reveal());
+                $customUrlManager->findByUrl($route, $webspaceKey, 'de')->shouldNotBeCalled();
             } else {
                 $customUrl = $this->prophesize(CustomUrlDocument::class);
                 $customUrl->isPublished()->willReturn($published);
@@ -141,6 +140,13 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
             $webspaceManager->reveal(),
             'prod'
         );
-        $processor->process($request->reveal(), $requestAttributes);
+
+        $requestAttributes = $processor->process($request->reveal(), $requestAttributes);
+
+        if ($exists && !$noConcretePortal) {
+            $this->assertNotNull($requestAttributes->getAttribute('customUrlRoute'));
+        } else {
+            $this->assertNull($requestAttributes->getAttribute('customUrlRoute'));
+        }
     }
 }

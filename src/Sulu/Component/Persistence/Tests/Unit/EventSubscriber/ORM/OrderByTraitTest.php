@@ -12,9 +12,11 @@
 namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 
-class OrderByTraitTest extends \PHPUnit_Framework_TestCase
+class OrderByTraitTest extends TestCase
 {
     /**
      * @var QueryBuilder
@@ -59,6 +61,10 @@ class OrderByTraitTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddOrderBy($alias, $orderBy, $expectedOrderBy)
     {
+        if (0 === count($expectedOrderBy)) {
+            $this->queryBuilder->addOrderBy(Argument::any(), Argument::any())->shouldNotBeCalled();
+        }
+
         foreach ($expectedOrderBy as $field => $order) {
             $this->queryBuilder->addOrderBy($field, $order)->shouldBeCalledTimes(1);
         }

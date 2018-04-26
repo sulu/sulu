@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\Category\Tests\Unit\Request;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Category\Request\CategoryRequestHandler;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CategoryRequestHandlerTest extends \PHPUnit_Framework_TestCase
+class CategoryRequestHandlerTest extends TestCase
 {
     public function getProvider()
     {

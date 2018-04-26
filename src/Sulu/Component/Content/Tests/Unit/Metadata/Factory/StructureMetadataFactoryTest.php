@@ -11,9 +11,12 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Metadata\Factory;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Metadata\Factory\Exception\DocumentTypeNotFoundException;
+use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
@@ -21,7 +24,7 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 
-class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
+class StructureMetadataFactoryTest extends TestCase
 {
     /**
      * @var string
@@ -120,23 +123,21 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should throw an exception if a non existing document alias is given.
-     *
-     * @expectedException \Sulu\Component\Content\Metadata\Factory\Exception\DocumentTypeNotFoundException
-     * @expectedExceptionMessage Structure path for document type "non_existing" is not mapped. Mapped structure types: "page
      */
     public function testGetStructureBadType()
     {
+        $this->expectExceptionMessage('Structure path for document type "non_existing" is not mapped. Mapped structure types: "page');
+        $this->expectException(DocumentTypeNotFoundException::class);
         $this->factory->getStructureMetadata('non_existing', 'foo');
     }
 
     /**
      * It should throw an exception if a non existing structure type is given.
-     *
-     * @expectedException \Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException
-     * @expectedExceptionMessage Could not load structure type "overview_not_existing" for document type "page", looked in "
      */
     public function testGetStructureNonExisting()
     {
+        $this->expectExceptionMessage('Could not load structure type "overview_not_existing" for document type "page", looked in "');
+        $this->expectException(StructureTypeNotFoundException::class);
         $this->factory->getStructureMetadata('page', 'overview_not_existing');
     }
 
@@ -211,7 +212,7 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testDirection()
     {
-        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
+        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($this->somethingStructure->reveal())->shouldBeCalled();
 
         $this->factory->getStructureMetadata('page', 'default');
     }

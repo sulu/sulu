@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\ResourceMetadata;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
@@ -23,7 +24,7 @@ use Sulu\Bundle\ContentBundle\ResourceMetadata\StructureResourceMetadataProvider
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
-class StructureResourceMetadataProviderTest extends \PHPUnit_Framework_TestCase
+class StructureResourceMetadataProviderTest extends TestCase
 {
     /**
      * @var StructureResourceMetadataProvider

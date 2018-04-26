@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
@@ -45,7 +46,7 @@ class TestStructure extends Structure
     }
 }
 
-class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class ContentTwigExtensionTest extends TestCase
 {
     /**
      * @var StructureResolverInterface
@@ -249,7 +250,7 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadParentStartPage()
     {
-        $this->setExpectedException(
+        $this->expectException(
             'Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException',
             'Parent for "321-321-321" not found (perhaps it is the startpage?)'
         );

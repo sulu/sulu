@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -22,7 +23,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 
-class InternalLinksTest extends \PHPUnit_Framework_TestCase
+class InternalLinksTest extends TestCase
 {
     /**
      * @var ContentQueryExecutorInterface

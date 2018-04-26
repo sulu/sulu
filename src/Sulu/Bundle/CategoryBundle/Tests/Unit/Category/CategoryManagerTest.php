@@ -13,6 +13,8 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
@@ -25,7 +27,7 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class CategoryManagerTest extends \PHPUnit_Framework_TestCase
+class CategoryManagerTest extends TestCase
 {
     /**
      * @var CategoryRepositoryInterface
@@ -103,7 +105,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetApiObjects()
     {
-        $wrapperEntity = $this->prophesize(\Sulu\Bundle\CategoryBundle\Api\Category::class);
+        $wrapperEntity = $this->prophesize(Category::class);
         $wrapperEntity->getEntity()->willReturn($this->prophesize(CategoryInterface::class)->reveal());
 
         $entities = [

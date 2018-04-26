@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Controller\PermissionController;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
@@ -20,7 +21,7 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class PermissionControllerTest extends \PHPUnit_Framework_TestCase
+class PermissionControllerTest extends TestCase
 {
     /**
      * @var PermissionController

@@ -15,8 +15,9 @@ use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Url\WebspaceUrlChainProvider;
 use Sulu\Component\Webspace\Url\WebspaceUrlProviderInterface;
 use Sulu\Component\Webspace\Webspace;
+use \PHPUnit\Framework\TestCase;
 
-class WebspaceUrlChainProviderTest extends \PHPUnit_Framework_TestCase
+class WebspaceUrlChainProviderTest extends TestCase
 {
     public function testGetUrls()
     {

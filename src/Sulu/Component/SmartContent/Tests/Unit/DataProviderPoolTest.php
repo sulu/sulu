@@ -15,8 +15,9 @@ use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPool;
 use Sulu\Component\SmartContent\Exception\DataProviderAliasAlreadyExistsException;
 use Sulu\Component\SmartContent\Exception\DataProviderNotExistsException;
+use \PHPUnit\Framework\TestCase;
 
-class DataProviderPoolTest extends \PHPUnit_Framework_TestCase
+class DataProviderPoolTest extends TestCase
 {
     public function addProvider()
     {
@@ -71,7 +72,7 @@ class DataProviderPoolTest extends \PHPUnit_Framework_TestCase
     public function testAdd(DataProviderPool $pool, $providers, $expectedProviders, $exceptionName = null)
     {
         if ($exceptionName) {
-            $this->setExpectedException($exceptionName);
+            $this->expectException($exceptionName);
         }
 
         foreach ($providers as $item) {
@@ -136,7 +137,7 @@ class DataProviderPoolTest extends \PHPUnit_Framework_TestCase
     public function testGet(DataProviderPool $pool, $alias, $expectedProvider, $exceptionName = null)
     {
         if ($exceptionName) {
-            $this->setExpectedException($exceptionName);
+            $this->expectException($exceptionName);
         }
 
         $this->assertEquals($expectedProvider, $pool->get($alias));

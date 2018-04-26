@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
 
-class EncodeAliasTraitTest extends \PHPUnit_Framework_TestCase
+class EncodeAliasTraitTest extends TestCase
 {
     /**
      * @var EncodeAliasTrait

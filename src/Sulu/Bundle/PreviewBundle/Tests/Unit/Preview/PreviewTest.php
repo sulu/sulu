@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview;
 
 use Doctrine\Common\Cache\Cache;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
@@ -19,7 +20,7 @@ use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 
-class PreviewTest extends \PHPUnit_Framework_TestCase
+class PreviewTest extends TestCase
 {
     /**
      * @var Cache
@@ -88,7 +89,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testStartWithoutProvider()
     {
-        $this->setExpectedException(ProviderNotFoundException::class);
+        $this->expectException(ProviderNotFoundException::class);
 
         $preview = $this->getPreview();
         $preview->start('\\Example', 1, 1, 'sulu_io', 'de');
@@ -96,7 +97,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testStop()
     {
-        $this->dataCache->contains('123-123-123')->willReturn(true);
+        $this->dataCache->contains('123-123-123')->willReturn(true)->shouldBeCalled();
         $this->dataCache->delete('123-123-123')->shouldBeCalled();
 
         $preview = $this->getPreview();
@@ -105,7 +106,8 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testStopNotExists()
     {
-        $this->dataCache->contains('123-123-123')->willReturn(false);
+        $this->dataCache->contains('123-123-123')->willReturn(false)->shouldBeCalled();
+        $this->dataCache->delete(Argument::any())->shouldNotBeCalled();
 
         $preview = $this->getPreview();
         $preview->stop('123-123-123');
@@ -189,7 +191,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateTokenNotExists()
     {
-        $this->setExpectedException(TokenNotFoundException::class);
+        $this->expectException(TokenNotFoundException::class);
 
         $object = $this->prophesize(\stdClass::class);
 

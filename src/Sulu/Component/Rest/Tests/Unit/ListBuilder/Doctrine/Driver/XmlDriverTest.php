@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver;
 
 use Metadata\ClassMetadata;
 use Metadata\Driver\FileLocatorInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
@@ -21,7 +22,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMeta
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class XmlDriverTest extends \PHPUnit_Framework_TestCase
+class XmlDriverTest extends TestCase
 {
     /**
      * @var FileLocatorInterface

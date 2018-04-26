@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Twig;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Twig\ContentTwigExtension;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 
-class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class ContentTwigExtensionTest extends TestCase
 {
     /**
      * @var ContentTypeManagerInterface

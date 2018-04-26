@@ -18,8 +18,9 @@ use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Util\SuluNodeHelper;
+use \PHPUnit\Framework\TestCase;
 
-class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
+class SuluNodeHelperTest extends TestCase
 {
     /**
      * @var SessionInterface
@@ -191,7 +192,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
     public function testExtractSnippetTypeFromPath($path, $expected, $valid = true)
     {
         if (false === $valid) {
-            $this->setExpectedException('\InvalidArgumentException');
+            $this->expectException('\InvalidArgumentException');
         }
 
         $res = $this->helper->extractSnippetTypeFromPath($path);

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Bridge;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
@@ -28,7 +29,7 @@ use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
-class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
+class DocumentInspectorTest extends TestCase
 {
     /**
      * @var DocumentRegistry

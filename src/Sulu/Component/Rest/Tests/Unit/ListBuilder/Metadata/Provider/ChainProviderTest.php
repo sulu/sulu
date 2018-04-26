@@ -13,12 +13,13 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\Provider;
 
 use Metadata\MergeableClassMetadata;
 use Metadata\PropertyMetadata;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\Metadata\ClassMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Provider\ChainProvider;
 use Sulu\Component\Rest\ListBuilder\Metadata\ProviderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\VirtualPropertyMetadata;
 
-class ChainProviderTest extends \PHPUnit_Framework_TestCase
+class ChainProviderTest extends TestCase
 {
     /**
      * This is needed for tests to determine working virtual-property detection.

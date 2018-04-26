@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\ReferenceStore;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool;
 
-class ReferenceStorePoolTest extends \PHPUnit_Framework_TestCase
+class ReferenceStorePoolTest extends TestCase
 {
     public function testGetStores()
     {
@@ -34,11 +36,9 @@ class ReferenceStorePoolTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($innerStore->reveal(), $store->getStore('test'));
     }
 
-    /**
-     * @expectedException \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException
-     */
     public function testGetStoreNotExisting()
     {
+        $this->expectException(ReferenceStoreNotExistsException::class);
         $store = new ReferenceStorePool([]);
 
         $store->getStore('test');

@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorManager;
 
-class GeolocatorManagerTest extends \PHPUnit_Framework_TestCase
+class GeolocatorManagerTest extends TestCase
 {
     protected $container;
 
@@ -21,8 +22,8 @@ class GeolocatorManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $this->geolocator = $this->getMock('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface');
+        $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
+        $this->geolocator = $this->getMockBuilder('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface')->getMock();
 
         $this->manager = new GeolocatorManager($this->container);
     }

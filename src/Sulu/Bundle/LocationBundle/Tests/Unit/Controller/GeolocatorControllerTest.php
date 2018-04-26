@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Controller;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Controller\GeolocatorController;
 use Sulu\Bundle\LocationBundle\Geolocator\Exception\GeolocatorNotFoundException;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GeolocatorControllerTest extends \PHPUnit_Framework_TestCase
+class GeolocatorControllerTest extends TestCase
 {
     public function testQuery()
     {
@@ -47,7 +48,7 @@ class GeolocatorControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testQueryNotExistingProvider()
     {
-        $this->setExpectedException(NotFoundHttpException::class);
+        $this->expectException(NotFoundHttpException::class);
 
         $manager = $this->prophesize(GeolocatorManager::class);
         $manager->get('test-provider')->willThrow(new GeolocatorNotFoundException());

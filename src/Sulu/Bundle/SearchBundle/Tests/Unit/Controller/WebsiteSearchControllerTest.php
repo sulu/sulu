@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SearchBundle\Tests\Unit\Controller;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SearchBundle\Controller\WebsiteSearchController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Localization\Localization;
@@ -22,7 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class WebsiteSearchControllerTest extends \PHPUnit_Framework_TestCase
+class WebsiteSearchControllerTest extends TestCase
 {
     /**
      * @var SearchManagerInterface

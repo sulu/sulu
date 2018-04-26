@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-class RedirectControllerTest extends \PHPUnit_Framework_TestCase
+class RedirectControllerTest extends TestCase
 {
     /**
      * @var RedirectController
@@ -128,7 +129,7 @@ class RedirectControllerTest extends \PHPUnit_Framework_TestCase
         $queryData = []
     ) {
         if ($statusCode >= 400) {
-            $this->setExpectedException(HttpException::class);
+            $this->expectException(HttpException::class);
         }
 
         $attributes = $this->prophesize(ParameterBag::class);

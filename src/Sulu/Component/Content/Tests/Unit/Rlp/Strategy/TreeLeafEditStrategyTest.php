@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -30,7 +31,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
-class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
+class TreeLeafEditStrategyTest extends TestCase
 {
     /**
      * @var ResourceLocatorMapperInterface
@@ -203,14 +204,14 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
         $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
 
-        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('path/to/doc');
+        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('path/to/doc')->shouldBeCalled();
 
         $this->treeStrategy->save($document->reveal(), null);
     }
 
     public function testSaveInvalid()
     {
-        $this->setExpectedException(ResourceLocatorNotValidException::class);
+        $this->expectException(ResourceLocatorNotValidException::class);
 
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
@@ -231,7 +232,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveAlreadyExist()
     {
-        $this->setExpectedException(ResourceLocatorAlreadyExistsException::class);
+        $this->expectException(ResourceLocatorAlreadyExistsException::class);
 
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';

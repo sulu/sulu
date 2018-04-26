@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Routing\Enhancers\TrailingHTMLEnhancer;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class TrailingHTMLEnhancerTest extends \PHPUnit_Framework_TestCase
+class TrailingHTMLEnhancerTest extends TestCase
 {
     public function testEnhance()
     {

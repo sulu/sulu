@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationAliasNotFoundException;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
@@ -20,7 +21,7 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistryInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContentNavigationControllerTest extends \PHPUnit_Framework_TestCase
+class ContentNavigationControllerTest extends TestCase
 {
     /**
      * @var ContentNavigationController

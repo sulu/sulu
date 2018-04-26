@@ -11,13 +11,14 @@
 
 namespace Sulu\Bundle\SnippetBundle\Snippet;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
-class SnippetResolverTest extends \PHPUnit_Framework_TestCase
+class SnippetResolverTest extends TestCase
 {
     public function dataProvider()
     {

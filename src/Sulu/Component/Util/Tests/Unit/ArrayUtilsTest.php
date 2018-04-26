@@ -12,8 +12,9 @@
 namespace Sulu\Component\Util\Tests\Unit;
 
 use Sulu\Component\Util\ArrayUtils;
+use \PHPUnit\Framework\TestCase;
 
-class ArrayUtilsTest extends \PHPUnit_Framework_TestCase
+class ArrayUtilsTest extends TestCase
 {
     public function provideData()
     {

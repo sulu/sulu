@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\ResourceMetadata;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Exception\ResourceNotFoundException;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataProviderInterface;
 
-class ResourceMetadataPoolTest extends \PHPUnit_Framework_TestCase
+class ResourceMetadataPoolTest extends TestCase
 {
     /**
      * @var ResourceMetadataPool
@@ -60,7 +61,7 @@ class ResourceMetadataPoolTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNotExistingResourceMetadata()
     {
-        $this->setExpectedException(ResourceNotFoundException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $this->provider1->getResourceMetadata('resource_key_not_existing', 'de')->willReturn(null);
         $this->provider2->getResourceMetadata('resource_key_not_existing', 'de')->willReturn(null);

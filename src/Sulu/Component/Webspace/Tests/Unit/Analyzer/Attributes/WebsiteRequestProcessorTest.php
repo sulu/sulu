@@ -24,8 +24,9 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
+use \PHPUnit\Framework\TestCase;
 
-class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
+class WebsiteRequestProcessorTest extends TestCase
 {
     /**
      * @var WebsiteRequestProcessor
@@ -253,7 +254,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
     public function testValidate($attributes, $exception = null, $message = '')
     {
         if (null !== $exception) {
-            $this->setExpectedException($exception, $message);
+            $this->expectException($exception, $message);
         }
 
         $this->assertTrue($this->provider->validate(new RequestAttributes($attributes)));

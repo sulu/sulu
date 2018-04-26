@@ -12,10 +12,11 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
 use DeviceDetector\DeviceDetector;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\DeviceTypeRule;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class DeviceTypeRuleTest extends \PHPUnit_Framework_TestCase
+class DeviceTypeRuleTest extends TestCase
 {
     /**
      * @var DeviceDetector

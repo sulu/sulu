@@ -334,7 +334,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testLoadWithIncorrectUrlDefinition()
     {
-        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException');
+        $this->expectException('\Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException');
 
         $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart_withIncorrectUrls.xml'
@@ -342,17 +342,17 @@ class XmlFileLoader11Test extends WebspaceTestCase
     }
 
     /**
-     * @expectedException \Sulu\Component\Webspace\Exception\InvalidWebspaceException
-     * @expectedExceptionMessage Could not parse webspace XML file
      */
     public function testLoadInvalid()
     {
+        $this->expectExceptionMessage('Could not parse webspace XML file');
+        $this->expectException(InvalidWebspaceException::class);
         $this->loader->load($this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart.xml');
     }
 
     public function testLoadWithNotExistingDefault()
     {
-        $this->setExpectedException(
+        $this->expectException(
             '\Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException'
         );
 
@@ -363,7 +363,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testLoadWithoutDefaultSegment()
     {
-        $this->setExpectedException(
+        $this->expectException(
             '\Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException'
         );
 
@@ -374,7 +374,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testLoadWithTwoDefaultLocalization()
     {
-        $this->setExpectedException(
+        $this->expectException(
             '\Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException'
         );
 
@@ -438,7 +438,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testLoadWithInvalidWebspaceKey()
     {
-        $this->setExpectedException(InvalidWebspaceException::class);
+        $this->expectException(InvalidWebspaceException::class);
 
         $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/sulu.io_invalid_webspace_key.xml'
@@ -447,7 +447,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testTemplateWithNonUniqueType()
     {
-        $this->setExpectedException(InvalidWebspaceException::class);
+        $this->expectException(InvalidWebspaceException::class);
 
         $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/sulu.io_multiple_template_types.xml'
@@ -489,7 +489,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testInvalidCustomUrl()
     {
-        $this->setExpectedException(InvalidCustomUrlException::class);
+        $this->expectException(InvalidCustomUrlException::class);
 
         $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart_invalid_custom_url.xml'
@@ -498,8 +498,10 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testLoadDynamicOrder()
     {
-        $this->loader->load(
+        $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_dynamicOrder.xml'
         );
+
+        $this->assertEquals('Sulu CMF', $webspace->getName());
     }
 }

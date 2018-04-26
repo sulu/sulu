@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Markup\Link;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\ContentBundle\Markup\Link\PageLinkProvider;
@@ -21,7 +22,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
+class PageLinkProviderTest extends TestCase
 {
     /**
      * @var ContentRepositoryInterface

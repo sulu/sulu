@@ -11,11 +11,12 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\Request\ForwardedUrlRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\HttpFoundation\Request;
 
-class ForwardedUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
+class ForwardedUrlRequestProcessorTest extends TestCase
 {
     /**
      * @dataProvider provideProcess

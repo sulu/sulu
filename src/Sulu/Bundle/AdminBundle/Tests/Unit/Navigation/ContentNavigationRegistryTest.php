@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationAliasNotFoundException;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
@@ -18,7 +19,7 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistry;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
+class ContentNavigationRegistryTest extends TestCase
 {
     /**
      * @var ContentNavigationRegistryInterface
@@ -151,7 +152,7 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNavigationItemsWithNotExistentAlias()
     {
-        $this->setExpectedException(ContentNavigationAliasNotFoundException::class);
+        $this->expectException(ContentNavigationAliasNotFoundException::class);
 
         $this->contentNavigationCollector->getNavigationItems('not_existent_alias');
     }
