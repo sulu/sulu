@@ -143,8 +143,8 @@ export default class Datagrid extends React.Component<Props> {
                         page={store.getPage()}
                         pageCount={store.pageCount}
                         schema={store.schema}
-                        sortColumn={store.sortColumn}
-                        sortOrder={store.sortOrder}
+                        sortColumn={store.sortColumn.get()}
+                        sortOrder={store.sortOrder.get()}
                         selections={store.selectionIds}
                     />
                 </div>

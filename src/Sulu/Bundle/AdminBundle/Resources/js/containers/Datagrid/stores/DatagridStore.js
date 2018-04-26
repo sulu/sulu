@@ -1,5 +1,6 @@
 // @flow
 import {action, autorun, observable, computed} from 'mobx';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import type {
     LoadingStrategyInterface,
     ObservableOptions,
@@ -18,8 +19,8 @@ export default class DatagridStore {
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
     @observable options: Object;
-    @observable sortColumn: string;
-    @observable sortOrder: SortOrder;
+    sortColumn: IObservableValue<string> = observable.box();
+    sortOrder: IObservableValue<SortOrder> = observable.box();
     disposer: () => void;
     resourceKey: string;
     schema: Schema = {};
@@ -128,13 +129,8 @@ export default class DatagridStore {
             options.parent = this.active;
         }
 
-        if (this.sortColumn) {
-            options.sortBy = this.sortColumn;
-        }
-
-        if (this.sortOrder) {
-            options.sortOrder = this.sortOrder;
-        }
+        options.sortBy = this.sortColumn.get();
+        options.sortOrder = this.sortOrder.get();
 
         this.loadingStrategy.load(
             data,
@@ -168,8 +164,8 @@ export default class DatagridStore {
     }
 
     @action sort(column: string, order: SortOrder) {
-        this.sortColumn = column;
-        this.sortOrder = order;
+        this.sortColumn.set(column);
+        this.sortOrder.set(order);
     }
 
     @action select(row: Object) {

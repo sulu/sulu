@@ -19,6 +19,12 @@ jest.mock(
         this.options = options;
         this.loading = false;
         this.pageCount = 3;
+        this.sortColumn = {
+            get: jest.fn(),
+        };
+        this.sortOrder = {
+            get: jest.fn(),
+        };
         this.updateStrategies = jest.fn();
         this.data = [
             {
@@ -175,12 +181,15 @@ test('Should destroy the store on unmount', () => {
     const page = router.bind.mock.calls[0][1];
     const locale = router.bind.mock.calls[1][1];
 
+    const datagridStore = datagrid.instance().datagridStore;
+
     expect(page.get()).toBe(undefined);
     expect(locale.get()).toBe(undefined);
     expect(router.bind).toBeCalledWith('page', page, 1);
     expect(router.bind).toBeCalledWith('locale', locale);
+    expect(router.bind).toBeCalledWith('sortColumn', datagridStore.sortColumn);
+    expect(router.bind).toBeCalledWith('sortOrder', datagridStore.sortOrder);
 
-    const datagridStore = datagrid.instance().datagridStore;
     datagrid.unmount();
 
     expect(datagridStore.destroy).toBeCalled();

@@ -50,6 +50,9 @@ class Datagrid extends React.Component<ViewProps> {
         }
 
         this.datagridStore = new DatagridStore(resourceKey, observableOptions, apiOptions);
+
+        router.bind('sortColumn', this.datagridStore.sortColumn);
+        router.bind('sortOrder', this.datagridStore.sortOrder);
     }
 
     componentWillUnmount() {
