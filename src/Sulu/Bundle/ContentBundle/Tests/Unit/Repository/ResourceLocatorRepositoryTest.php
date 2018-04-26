@@ -21,11 +21,12 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+
 /**
  * @group unit
  * @group repository
- */use Sulu\Component\DocumentManager\DocumentManagerInterface;
-
+ */
 class ResourceLocatorRepositoryTest extends TestCase
 {
     /**

@@ -20,9 +20,7 @@ use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-/**
- * Tests for PagesSitemapProvider.
- */use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Portal;
 
 class PagesSitemapProviderTest extends TestCase
 {

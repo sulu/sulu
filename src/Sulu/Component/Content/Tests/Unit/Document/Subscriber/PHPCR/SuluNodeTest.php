@@ -17,9 +17,7 @@ use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
-/**
- * Tests for calss SuluNode.
- */use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
+use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 
 class SuluNodeTest extends TestCase
 {

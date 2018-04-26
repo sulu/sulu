@@ -20,9 +20,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-/**
- * Testing the TemplateAttributeResolver class.
- */use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class TemplateAttributeResolverTest extends TestCase
 {

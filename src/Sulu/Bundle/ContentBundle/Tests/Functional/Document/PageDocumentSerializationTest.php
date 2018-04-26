@@ -79,6 +79,8 @@ class PageDocumentSerializationTest extends SuluTestCase
         $this->assertEquals('Foobar', $result['title']);
         $this->assertEquals(1234, $result['structure']['integer']);
         $this->assertCount(2, $result['structure']['arrayOfObjects']);
+
+        return $jsonResult;
     }
 
     /**

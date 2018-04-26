@@ -14,10 +14,11 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Structure;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension;
+
 /**
  * @group unit
- */use Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension;
-
+ */
 class SeoStructureExtensionTest extends TestCase
 {
     /**

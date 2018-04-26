@@ -12,9 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Structure;
 
 use PHPUnit\Framework\TestCase;
-/**
- * Tests for class PropertyValue.
- */use Sulu\Component\Content\Document\Structure\PropertyValue;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 class PropertyValueTest extends TestCase
 {

@@ -24,9 +24,7 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-/**
- * Tests for author-subscriber.
- */use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 class AuthorSubscriberTest extends TestCase
 {

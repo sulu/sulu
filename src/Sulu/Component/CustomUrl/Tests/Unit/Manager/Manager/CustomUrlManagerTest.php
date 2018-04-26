@@ -27,9 +27,7 @@ use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-/**
- * Provides testcases for custom-url-manager.
- */use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Portal;
 
 class CustomUrlManagerTest extends TestCase
 {

@@ -15,9 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler\SnippetAreaCompilerPass;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-/**
- * Test snippet area compiler pass.
- */use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SnippetAreaCompilerPassTest extends TestCase
 {

@@ -22,10 +22,11 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
+
 /**
  * @group legacy
- */use Sulu\Component\DocumentManager\NamespaceRegistry;
-
+ */
 class LegacyPropertyFactoryTest extends TestCase
 {
     /**
