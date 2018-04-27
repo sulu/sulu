@@ -16,6 +16,22 @@ exports[`The component should render in checked state 1`] = `
 </label>
 `;
 
+exports[`The component should render in inactive state 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch inactive"
+  >
+    <input
+      disabled=""
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
 exports[`The component should render in unchecked state 1`] = `
 <label
   class="label"

@@ -8,6 +8,7 @@ import checkboxStyles from './checkbox.scss';
 type Props = SwitchProps & {
     skin: 'dark' | 'light',
     className?: string,
+    active: boolean,
     onChange?: (checked: boolean, value?: string | number) => void,
 };
 
@@ -16,6 +17,7 @@ const CHECKED_ICON = 'su-check';
 export default class Checkbox extends React.PureComponent<Props> {
     static defaultProps = {
         skin: 'dark',
+        active: true,
     };
 
     render() {
@@ -27,6 +29,7 @@ export default class Checkbox extends React.PureComponent<Props> {
             onChange,
             children,
             className,
+            active,
         } = this.props;
         const checkboxClass = classNames(
             checkboxStyles.checkbox,
@@ -42,6 +45,7 @@ export default class Checkbox extends React.PureComponent<Props> {
                 name={name}
                 icon={checked ? CHECKED_ICON : undefined}
                 onChange={onChange}
+                active={active}
             >
                 {children}
             </Switch>

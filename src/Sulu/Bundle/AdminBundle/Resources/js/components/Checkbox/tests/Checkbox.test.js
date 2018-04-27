@@ -13,6 +13,11 @@ test('The component should render in dark skin', () => {
     expect(checkbox).toMatchSnapshot();
 });
 
+test('The component should render inactive', () => {
+    const checkbox = render(<Checkbox active={false} />);
+    expect(checkbox).toMatchSnapshot();
+});
+
 test('The component pass the props correctly to the generic checkbox', () => {
     const onChange = jest.fn().mockReturnValue('my-on-change');
     const checkbox = shallow(

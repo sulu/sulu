@@ -9,12 +9,14 @@ type Props = SwitchProps & {
     className?: string,
     icon?: string,
     type: string,
+    active: boolean,
     onChange?: (checked: boolean, value?: string | number) => void,
 };
 
 export default class Switch extends React.PureComponent<Props> {
     static defaultProps = {
         type: 'checkbox',
+        active: true,
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -32,9 +34,13 @@ export default class Switch extends React.PureComponent<Props> {
             checked,
             children,
             className,
+            active,
         } = this.props;
         const switchClass = classNames(
             switchStyles.switch,
+            {
+                [switchStyles.inactive]: !active,
+            },
             className
         );
 
@@ -46,6 +52,7 @@ export default class Switch extends React.PureComponent<Props> {
                         name={name}
                         value={value}
                         checked={checked}
+                        disabled={!active}
                         onChange={this.handleChange}
                     />
                     <span>

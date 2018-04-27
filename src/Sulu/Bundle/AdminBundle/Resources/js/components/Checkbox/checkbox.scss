@@ -3,6 +3,7 @@
 $length: 16px;
 $primaryColor: $blueZodiac;
 $secondaryColor: $white;
+$inactiveColor: $silver;
 
 .checkbox {
     width: $length;
@@ -50,5 +51,17 @@ $secondaryColor: $white;
 
     input:checked + span {
         background: $secondaryColor;
+    }
+}
+
+.checkbox {
+    input:disabled + span {
+        border-color: $inactiveColor;
+        color: $inactiveColor;
+    }
+
+    input:disabled:checked + span {
+        background: $inactiveColor;
+        color: $white;
     }
 }

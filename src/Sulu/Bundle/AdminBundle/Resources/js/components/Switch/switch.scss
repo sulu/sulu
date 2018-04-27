@@ -32,3 +32,10 @@ $marginBottom: 10px;
         z-index: 1;
     }
 }
+
+.switch.inactive {
+    input,
+    label {
+        cursor: default;
+    }
+}
