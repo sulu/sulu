@@ -10,22 +10,45 @@ Translator.setTranslations({
     "sulu_admin.login": "Login",
     "sulu_admin.to_login": "Back to login",
     "sulu_admin.reset": "Reset",
-    "sulu_admin.forgot_password": "Forgot password"
+    "sulu_admin.forgot_password": "Forgot password",
+    "sulu_admin.welcome": "Welcome",
+    "sulu_admin.reset_password_success": "An email with instrucions how to reset your password has been sent to:",
 });
 
 const handleLogin = (user, password) => {
+    const loginError = (user === 'test' && password === 'test') ? undefined : 'Uncool error, username or password is wrong!';
     setState({
         user,
-        password
+        password,
+        loginError,
     });
 };
 
 const handleResetPassword = (user) => {
-    setState({user});
+    const resetError = (user === 'test') ? undefined : 'Uncool error, username or password is wrong!';
+    const resetSuccess = resetError ? undefined : 'test@test.com';
+    setState({
+        resetError,
+        resetSuccess,
+    });
 };
 
+const handleClearError = () => {
+    setState({
+        loginError: undefined,
+        resetError: undefined,
+    });
+}
+
 <div>
-    <Login onLogin={handleLogin} onResetPassword={handleResetPassword} />
+    <Login
+        onLogin={handleLogin}
+        onResetPassword={handleResetPassword}
+        onClearError={handleClearError}
+        loginError={state.loginError}
+        resetError={state.resetError}
+        resetSuccess={state.resetSuccess}
+    />
     <div>User: {state.user}</div>
     <div>Password: {state.password}</div>
 </div>

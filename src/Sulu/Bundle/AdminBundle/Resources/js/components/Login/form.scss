@@ -1,0 +1,34 @@
+@import '../../containers/Application/colors.scss';
+
+$formTextColor: $white;
+$submitBackgroundColor: $shakespeare;
+$errorColor: $roman;
+
+.form {
+    width: 100%;
+
+    fieldset {
+        padding: 0;
+        border: 0;
+    }
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.input-field {
+    display: block;
+    margin-bottom: 10px;
+
+    &.error {
+        color: $errorColor;
+    }
+}
+
+.label-text {
+    margin-bottom: 10px;
+}
