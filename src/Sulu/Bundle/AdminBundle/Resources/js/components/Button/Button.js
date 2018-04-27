@@ -29,7 +29,7 @@ export default class Button extends React.PureComponent<Props> {
         loading: false,
         size: 'large',
         skin: 'secondary',
-        type: 'button'
+        type: 'button',
     };
 
     handleClick = (event: SyntheticEvent<HTMLButtonElement>) => {
@@ -49,6 +49,7 @@ export default class Button extends React.PureComponent<Props> {
             disabled,
             icon,
             loading,
+            onClick,
             skin,
             type,
         } = this.props;
@@ -63,7 +64,12 @@ export default class Button extends React.PureComponent<Props> {
         );
 
         return (
-            <button className={buttonClass} onClick={this.handleClick} disabled={loading || disabled} type={type}>
+            <button
+                className={buttonClass}
+                onClick={onClick ? this.handleClick : undefined}
+                disabled={loading || disabled}
+                type={type}
+            >
                 {icon && <Icon name={icon} className={buttonStyles.buttonIcon} />}
                 <span className={buttonStyles.text}>{children}</span>
                 {loading &&
