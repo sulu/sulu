@@ -53,7 +53,6 @@ test('Convert value and pass it correctly to component', () => {
         />
     );
 
-    // should be of type date
     expect(datePicker.find(DatePickerComponent).prop('value')).toBeInstanceOf(Date);
 });
 
