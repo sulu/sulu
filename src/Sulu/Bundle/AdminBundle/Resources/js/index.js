@@ -33,6 +33,7 @@ import {
     DateTimeFieldTransformer,
     StringFieldTransformer,
     ThumbnailFieldTransformer,
+    BoolFieldTransformer,
 } from './containers/Datagrid';
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
@@ -80,6 +81,7 @@ function registerDatagridFieldTypes() {
     datagridFieldTransformerRegistry.add('datetime', new DateTimeFieldTransformer());
     datagridFieldTransformerRegistry.add('string', new StringFieldTransformer());
     datagridFieldTransformerRegistry.add('thumbnails', new ThumbnailFieldTransformer());
+    datagridFieldTransformerRegistry.add('bool', new BoolFieldTransformer());
 
     // TODO: Remove this type when not needed anymore
     datagridFieldTransformerRegistry.add('title', new StringFieldTransformer());

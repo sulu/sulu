@@ -18,6 +18,11 @@ test('The component should render with class', () => {
     expect(component).toMatchSnapshot();
 });
 
+test('The component should render in inactive state', () => {
+    const component = render(<Switch active={false} />);
+    expect(component).toMatchSnapshot();
+});
+
 test('The component should render with name', () => {
     const component = render(<Switch name="my-name" checked={false} />);
     expect(component).toMatchSnapshot();

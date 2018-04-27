@@ -29,3 +29,19 @@ exports[`The component should render in light skin 1`] = `
   </span>
 </label>
 `;
+
+exports[`The component should render inactive 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch inactive checkbox dark"
+  >
+    <input
+      disabled=""
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;

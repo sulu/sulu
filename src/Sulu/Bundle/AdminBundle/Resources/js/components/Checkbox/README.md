@@ -10,12 +10,20 @@ onChange = (checked, value) => setState({['checked' + value]: checked});
 </div>
 ```
 
-The checkbox also comes with a light skin.
+The checkbox also comes with a light skin and active attribute.
 
 ```
 initialState = {checked: false};
 onChange = (checked) => setState({checked});
 <div style={{background: 'black', padding: '10px'}}>
     <Checkbox skin="light" checked={state.checked} onChange={onChange} />
+</div>
+```
+
+```
+initialState = {checked: false};
+onChange = (checked) => setState({checked});
+<div style={{background: 'black', padding: '10px'}}>
+    <Checkbox active={false} checked={state.checked} onChange={onChange} />
 </div>
 ```

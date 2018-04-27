@@ -5,6 +5,7 @@ import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import datagridFieldTransformerRegistry from './registries/DatagridFieldTransformerRegistry';
 import ThumbnailFieldTransformer from './fieldTransformers/ThumbnailFieldTransformer';
 import StringFieldTransformer from './fieldTransformers/StringFieldTransformer';
+import BoolFieldTransformer from './fieldTransformers/BoolFieldTransformer';
 import BytesFieldTransformer from './fieldTransformers/BytesFieldTransformer';
 import DateFieldTransformer from './fieldTransformers/DateFieldTransformer';
 import DateTimeFieldTransformer from './fieldTransformers/DateTimeFieldTransformer';
@@ -38,6 +39,7 @@ export {
     DateTimeFieldTransformer,
     StringFieldTransformer,
     ThumbnailFieldTransformer,
+    BoolFieldTransformer,
 };
 export type {
     DatagridAdapterProps,
