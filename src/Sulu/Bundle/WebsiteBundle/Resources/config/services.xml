@@ -174,7 +174,7 @@
         <service id="sulu_website.routing.request_listener" class="Sulu\Bundle\WebsiteBundle\Routing\RequestListener">
             <argument type="service" id="router"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
-            <tag name="kernel.event_listener" event="kernel.request" method="onRequest" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onRequest" priority="31" />
         </service>
 
         <!-- exception controller -->
