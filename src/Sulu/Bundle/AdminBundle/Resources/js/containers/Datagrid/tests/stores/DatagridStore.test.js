@@ -1,11 +1,17 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import 'url-search-params-polyfill';
 import {observable, toJS, when} from 'mobx';
+import userStore from '../../../../stores/UserStore';
 import DatagridStore from '../../stores/DatagridStore';
 import metadataStore from '../../stores/MetadataStore';
 
 jest.mock('../../stores/MetadataStore', () => ({
     getSchema: jest.fn(() => Promise.resolve()),
+}));
+
+jest.mock('../../../../stores/UserStore', () => ({
+    getPersistentSetting: jest.fn(),
+    setPersistentSetting: jest.fn(),
 }));
 
 function LoadingStrategy() {
@@ -21,6 +27,10 @@ class StructureStrategy {
     getData = jest.fn().mockReturnValue(this.data);
     enhanceItem = jest.fn((item) => item);
 }
+
+beforeEach(() => {
+    userStore.getPersistentSetting.mockReset();
+});
 
 test('The loading strategy should be called when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
@@ -211,6 +221,29 @@ test('The loading strategy should be called with the defined sortings', () => {
     );
 
     datagridStore.destroy();
+});
+
+test('Should update the persistent settings in the UserStore if the sorting changes', () => {
+    userStore.getPersistentSetting.mockImplementation((key) => {
+        switch (key) {
+            case 'datagrid.snippets.sort_column':
+                return 'title';
+            case 'datagrid.snippets.sort_order':
+                return 'asc';
+        }
+    });
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    expect(datagridStore.sortColumn.get()).toEqual('title');
+    expect(datagridStore.sortOrder.get()).toEqual('asc');
+
+    datagridStore.sort('description', 'desc');
+
+    expect(datagridStore.sortColumn.get()).toEqual('description');
+    expect(datagridStore.sortOrder.get()).toEqual('desc');
 });
 
 test('The loading strategy should be called with the active item as parent', () => {
@@ -516,4 +549,17 @@ test('Should reset the data array and set page to 1 when the reload method is ca
             done();
         }
     );
+});
+
+test('Should call all disposers if destroy is called', () => {
+    const datagridStore = new DatagridStore('snippets', {page: observable.box()});
+    datagridStore.sendRequestDisposer = jest.fn();
+    datagridStore.sortColumnDisposer = jest.fn();
+    datagridStore.sortOrderDisposer = jest.fn();
+
+    datagridStore.destroy();
+
+    expect(datagridStore.sendRequestDisposer).toBeCalledWith();
+    expect(datagridStore.sortColumnDisposer).toBeCalledWith();
+    expect(datagridStore.sortOrderDisposer).toBeCalledWith();
 });
