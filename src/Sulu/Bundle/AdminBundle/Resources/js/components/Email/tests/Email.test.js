@@ -5,7 +5,7 @@ import Email from '../Email';
 
 test('Email should render', () => {
     const onChange = jest.fn();
-    expect(mount(<Email value={null} onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<Email value={null} onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Email should render with placeholder', () => {
@@ -39,7 +39,6 @@ test('Email should render error when invalid value is set', () => {
     email.update();
     expect(email.instance().showError).toBe(true);
 
-    // snapshot
     expect(render(email)).toMatchSnapshot();
 
     // now add a valid value
@@ -48,7 +47,6 @@ test('Email should render error when invalid value is set', () => {
     email.update();
     expect(email.instance().showError).toBe(false);
 
-    // snapshot
     expect(render(email)).toMatchSnapshot();
 });
 

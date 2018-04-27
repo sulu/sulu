@@ -5,14 +5,14 @@ import type {FieldTypeProps} from '../../../types';
 
 export default class Input extends React.Component<FieldTypeProps<?string>> {
     render() {
-        const {error, value, onChange, onFinish} = this.props;
+        const {error, onChange, onFinish, value} = this.props;
 
         return (
             <InputComponent
                 onChange={onChange}
                 onBlur={onFinish}
-                value={value}
                 valid={!error}
+                value={value}
             />
         );
     }

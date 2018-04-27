@@ -5,7 +5,7 @@ import Phone from '../Phone';
 
 test('Phone should render', () => {
     const onChange = jest.fn();
-    expect(mount(<Phone value={null} onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<Phone value={null} onChange={onChange} />)).toMatchSnapshot();
 });
 
 test('Phone should render with placeholder', () => {

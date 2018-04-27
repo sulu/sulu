@@ -2,7 +2,7 @@
 import React from 'react';
 import Isemail from 'isemail';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import Input from '../Input';
 
 type Props = {|
@@ -31,6 +31,14 @@ export default class Email extends React.Component<Props> {
         this.showError = showError;
     }
 
+    @computed get isValidValue(): boolean {
+        if (!this.value) {
+            return true;
+        }
+
+        return Isemail.validate(this.value);
+    }
+
     componentDidMount() {
         this.setValue(this.props.value);
     }
@@ -53,14 +61,14 @@ export default class Email extends React.Component<Props> {
     };
 
     handleBlur = () => {
-        if (this.isValidValue()) {
+        if (this.isValidValue) {
             this.setShowError(false);
         } else {
             this.props.onChange(undefined);
             this.setShowError(true);
         }
 
-        const onBlur = this.props.onBlur;
+        const {onBlur} = this.props;
 
         if (onBlur) {
             onBlur();
@@ -70,7 +78,7 @@ export default class Email extends React.Component<Props> {
     handleChange = (value: ?string) => {
         this.setValue(value);
 
-        if (!this.isValidValue()) {
+        if (!this.isValidValue) {
             this.props.onChange(undefined);
 
             return;
@@ -78,14 +86,6 @@ export default class Email extends React.Component<Props> {
 
         this.setShowError(false);
         this.props.onChange(this.value);
-    };
-
-    isValidValue = (): boolean => {
-        if (!this.value) {
-            return true;
-        }
-
-        return Isemail.validate(this.value);
     };
 
     render() {

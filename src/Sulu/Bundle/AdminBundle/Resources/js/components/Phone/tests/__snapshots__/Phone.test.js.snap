@@ -1,43 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Phone should render 1`] = `
-<Phone
-  onChange={[MockFunction]}
-  valid={true}
-  value={null}
+<label
+  class="input"
 >
-  <Input
-    icon="su-phone"
-    onChange={[MockFunction]}
-    type="tel"
-    valid={true}
-    value={null}
+  <div
+    class="prependedContainer"
   >
-    <label
-      className="input"
-    >
-      <div
-        className="prependedContainer"
-      >
-        <Icon
-          className="icon"
-          name="su-phone"
-        >
-          <span
-            aria-label="su-phone"
-            className="icon su-phone"
-          />
-        </Icon>
-      </div>
-      <input
-        onBlur={[Function]}
-        onChange={[Function]}
-        type="tel"
-        value=""
-      />
-    </label>
-  </Input>
-</Phone>
+    <span
+      aria-label="su-phone"
+      class="icon su-phone"
+    />
+  </div>
+  <input
+    type="tel"
+    value=""
+  />
+</label>
 `;
 
 exports[`Phone should render error 1`] = `

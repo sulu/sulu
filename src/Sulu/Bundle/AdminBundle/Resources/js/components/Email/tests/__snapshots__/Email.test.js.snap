@@ -1,44 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Email should render 1`] = `
-<Email
-  onChange={[MockFunction]}
-  valid={true}
-  value={null}
+<label
+  class="input"
 >
-  <Input
-    icon="su-envalope"
-    onBlur={[Function]}
-    onChange={[Function]}
-    type="email"
-    valid={true}
-    value={null}
+  <div
+    class="prependedContainer"
   >
-    <label
-      className="input"
-    >
-      <div
-        className="prependedContainer"
-      >
-        <Icon
-          className="icon"
-          name="su-envalope"
-        >
-          <span
-            aria-label="su-envalope"
-            className="icon su-envalope"
-          />
-        </Icon>
-      </div>
-      <input
-        onBlur={[Function]}
-        onChange={[Function]}
-        type="email"
-        value=""
-      />
-    </label>
-  </Input>
-</Email>
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
 `;
 
 exports[`Email should render error 1`] = `
