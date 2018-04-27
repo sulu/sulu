@@ -53,18 +53,12 @@ export default class Login extends React.PureComponent<Props> {
     };
 
     @action handleUserChange = (user: ?string) => {
-        if (this.props.loginError || this.props.resetError) {
-            this.props.onClearError();
-        }
-
+        this.props.onClearError();
         this.user = user;
     };
 
     @action handlePasswordChange = (password: ?string) => {
-        if (this.props.loginError || this.props.resetError) {
-            this.props.onClearError();
-        }
-
+        this.props.onClearError();
         this.password = password;
     };
 

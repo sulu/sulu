@@ -37,6 +37,7 @@ const handleClearError = () => {
     setState({
         loginError: undefined,
         resetError: undefined,
+        resetSuccess: undefined,
     });
 }
 
