@@ -72,7 +72,7 @@ export default class Header extends React.PureComponent<Props> {
             let {children} = props;
 
             if (0 === index) {
-                children = this.modifyFirstCell(children);
+                children = this.createFirstCell(children);
             }
 
             return React.cloneElement(
@@ -86,7 +86,7 @@ export default class Header extends React.PureComponent<Props> {
         });
     };
 
-    modifyFirstCell = (children: ChildrenArray<Element <*>>) => {
+    createFirstCell = (children: *) => {
         if (!this.props.selectInFirstCell || !this.isMultipleSelect()) {
             return children;
         }

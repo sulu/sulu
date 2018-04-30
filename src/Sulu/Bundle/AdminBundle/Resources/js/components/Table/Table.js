@@ -30,12 +30,12 @@ type Props = {
      * Callback function to notify about open of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
-    onRowExpand?: (rowId: string | number, expanded: boolean) => void,
+    onRowExpand?: (rowId: string | number) => void,
     /**
      * Callback function to notify about close of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
-    onRowClose?: (rowId: string | number, expanded: boolean) => void,
+    onRowCollapse?: (rowId: string | number) => void,
     /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
     onAllSelectionChange?: (checked: boolean) => void,
     /** Text shown when the table has no entries */
@@ -121,14 +121,16 @@ export default class Table extends React.Component<Props> {
     };
 
     handleRowExpand = (rowId: string | number) => {
-        if (this.props.onRowExpand) {
-            this.props.onRowExpand(rowId);
+        const {onRowExpand} = this.props;
+        if (onRowExpand) {
+            onRowExpand(rowId);
         }
     };
 
     handleRowCollapse = (rowId: string | number) => {
-        if (this.props.onRowCollapse) {
-            this.props.onRowCollapse(rowId);
+        const {onRowCollapse} = this.props;
+        if (onRowCollapse) {
+            onRowCollapse(rowId);
         }
     };
 

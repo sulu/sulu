@@ -51,8 +51,8 @@ export default class Row extends React.PureComponent<Props> {
         depthPadding: 25,
     };
 
-    getIdentifier = () => {
-        const {id, selected, rowIndex} = this.props;
+    getIdentifier = (): (string | number) => {
+        const {id, rowIndex} = this.props;
         return id || rowIndex;
     };
 
@@ -96,13 +96,13 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     cloneCells = (originalCells: ChildrenArray<Element<typeof Cell>>) => {
-        return React.Children.map(originalCells, (cell, index) => {
+        return React.Children.map(originalCells, (cell: Element<typeof Cell>, index) => {
             const key = `row-${index}`;
             const {props} = cell;
             let {children} = props;
 
             if (0 === index) {
-                children = this.modifyFirstCell(children);
+                children = this.createFirstCell(children);
             }
 
             return React.cloneElement(
@@ -110,13 +110,13 @@ export default class Row extends React.PureComponent<Props> {
                 {
                     ...props,
                     key,
-                    children: children
+                    children: children,
                 }
             );
         });
     };
 
-    modifyFirstCell = (children: ChildrenArray<Element <*>>) => {
+    createFirstCell = (children: *) => {
         let toggler = null;
         let select = null;
         let style = {};
@@ -125,8 +125,8 @@ export default class Row extends React.PureComponent<Props> {
             toggler = this.createToggler();
         }
 
-        if (this.props.depth) {
-            style.paddingLeft = (this.props.depth * this.props.depthPadding) + 'px'
+        if (this.props.depth && this.props.depthPadding) {
+            style.paddingLeft = (this.props.depth * this.props.depthPadding) + 'px';
         }
 
         if (this.props.selectInFirstCell) {
@@ -155,16 +155,19 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createToggler = () => {
-        const icon = <Icon name={this.props.expanded ? 'su-arrow-filled-down' : 'su-arrow-filled-right'} />;
-
-        if (this.props.isLoading) {
-            icon = <Loader size={10}/>
-        }
+        const {isLoading} = this.props;
 
         return (
-            <span onClick={this.props.expanded ? this.handleExpand : this.handleCollapse}
-                     lassName={tableStyles.toggleIcon}>
-                {icon}
+            <span
+                onClick={this.props.expanded ? this.handleExpand : this.handleCollapse}
+                className={tableStyles.toggleIcon}
+            >
+                {isLoading &&
+                    <Loader size={10} />
+                }
+                {!isLoading &&
+                    <Icon name={this.props.expanded ? 'su-angle-down' : 'su-angle-right'} />
+                }
             </span>
         );
     };
@@ -196,7 +199,7 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createButtonCells = () => {
-        const {buttons} = this.props;
+        const {buttons, rowIndex} = this.props;
         const identifier = this.getIdentifier();
 
         if (!buttons) {
@@ -219,14 +222,16 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     handleCollapse = () => {
-        if (this.props.onCollapse) {
-            this.props.onCollapse(this.getIdentifier());
+        const {onCollapse} = this.props;
+        if (onCollapse) {
+            onCollapse(this.getIdentifier());
         }
     };
 
     handleExpand = () => {
-        if (this.props.onExpand) {
-            this.props.onExpand(this.getIdentifier());
+        const {onExpand} = this.props;
+        if (onExpand) {
+            onExpand(this.getIdentifier());
         }
     };
 

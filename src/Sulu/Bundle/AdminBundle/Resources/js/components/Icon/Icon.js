@@ -34,6 +34,8 @@ export default class Icon extends React.PureComponent<Props> {
 
         if (!name || name.length <= 0) {
             logInvalidIconWarning(name);
+
+            return null;
         }
 
         switch (name.substr(0, 3)) {
@@ -45,6 +47,8 @@ export default class Icon extends React.PureComponent<Props> {
                 break;
             default:
                 logInvalidIconWarning(name);
+
+                return null;
         }
 
         const iconClass = classNames(

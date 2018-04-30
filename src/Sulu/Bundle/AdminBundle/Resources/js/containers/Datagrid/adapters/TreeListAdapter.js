@@ -1,17 +1,19 @@
 // @flow
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import React, {Fragment} from 'react';
+import React from 'react';
 import Table from '../../../components/Table';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
+import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import AbstractAdapter from './AbstractAdapter';
-import FullLoadingStrategy from "../loadingStrategies/FullLoadingStrategy";
 
 @observer
 export default class TreeListAdapter extends AbstractAdapter {
     static LoadingStrategy = FullLoadingStrategy;
 
     static StructureStrategy = TreeStructureStrategy;
+
+    static icon = 'fa-sitemap';
 
     static defaultProps = {
         data: [],
@@ -98,15 +100,19 @@ export default class TreeListAdapter extends AbstractAdapter {
             const {data} = item;
             const schemaKeys = Object.keys(schema);
 
-            return <Table.Row key={data.id}
-                             id={data.id}
-                             depth={item.depth}
-                             isLoading={this.props.active === data.id && this.props.loading}
-                             hasChildren={data.hasChildren}
-                             expanded={item.expanded}
-                             selected={selections.includes(data.id)}>
-                {this.renderCells(data, schemaKeys)}
-            </Table.Row>
+            return (
+                <Table.Row
+                    key={data.id}
+                    id={data.id}
+                    depth={item.depth}
+                    isLoading={this.props.active === data.id && this.props.loading}
+                    hasChildren={data.hasChildren}
+                    expanded={item.expanded}
+                    selected={selections.includes(data.id)}
+                >
+                    {this.renderCells(data, schemaKeys)}
+                </Table.Row>
+            );
         });
     }
 
@@ -138,8 +144,8 @@ export default class TreeListAdapter extends AbstractAdapter {
                 buttons={buttons}
                 selectInFirstCell={true}
                 selectMode="multiple"
-                onRowCollapse={this.handleRowCollapse.bind(this)}
-                onRowExpand={this.handleRowExpand.bind(this)}
+                onRowCollapse={this.handleRowCollapse}
+                onRowExpand={this.handleRowExpand}
                 onRowSelectionChange={onItemSelectionChange}
                 onAllSelectionChange={onAllSelectionChange}
             >
