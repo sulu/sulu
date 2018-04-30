@@ -18,7 +18,7 @@ class Datagrid extends React.Component<ViewProps> {
     datagridStore: DatagridStore;
     @observable deleting = false;
 
-    componentWillMount() {
+    @action componentWillMount() {
         const router = this.props.router;
         const {
             route: {

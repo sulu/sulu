@@ -42,8 +42,10 @@ export default class DatagridStore {
         this.observableOptions = observableOptions;
         this.options = options;
 
-        this.sortColumn.set(userStore.getPersistentSetting(this.sortColumnSettingKey));
-        this.sortOrder.set(userStore.getPersistentSetting(this.sortOrderSettingKey));
+        this.sort(
+            userStore.getPersistentSetting(this.sortColumnSettingKey),
+            userStore.getPersistentSetting(this.sortOrderSettingKey)
+        );
 
         this.sendRequestDisposer = autorun(this.sendRequest);
         this.sortColumnDisposer = autorun(
