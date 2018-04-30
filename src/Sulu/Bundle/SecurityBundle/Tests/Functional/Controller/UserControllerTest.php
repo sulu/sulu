@@ -254,15 +254,12 @@ class UserControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/users',
+            '/api/users?contactId=' . $this->contact1->getId(),
             [
                 'username' => 'manager',
                 'email' => 'manager@test.com',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
                 'userRoles' => [
                     [
                         'role' => [
@@ -332,6 +329,44 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->userGroups[0]->locales[1]);
         $this->assertEquals('Group2', $response->userGroups[1]->group->name);
         $this->assertEquals('en', $response->userGroups[1]->locales[0]);
+    }
+
+    public function testPostWithEntireContactObject()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'POST',
+            '/api/users',
+            [
+                'username' => 'manager',
+                'email' => 'manager@test.com',
+                'password' => 'verysecurepassword',
+                'locale' => 'en',
+                'contact' => [
+                    'id' => $this->contact1->getId(),
+                ],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('manager', $response->username);
+        $this->assertEquals('manager@test.com', $response->email);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
+        $this->assertEquals('en', $response->locale);
+
+        $client->request(
+            'GET',
+            '/api/users/' . $response->id
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('manager', $response->username);
+        $this->assertEquals('manager@test.com', $response->email);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
+        $this->assertEquals('en', $response->locale);
     }
 
     public function testPostWithMissingArgument()

@@ -53,6 +53,20 @@ test('Should load without locale the data with the ResourceRequester', () => {
     });
 });
 
+test('Should load with the idQueryParameter and reset after successful load', () => {
+    const promise = Promise.resolve({id: 5, value: 'test'});
+    ResourceRequester.get.mockReturnValue(promise);
+    const resourceStore = new ResourceStore('users', 2, {}, {}, 'contactId');
+    expect(resourceStore.idQueryParameter).toEqual('contactId');
+    expect(ResourceRequester.get).toBeCalledWith('users', undefined, {contactId: 2});
+
+    return promise.then(() => {
+        expect(resourceStore.data).toEqual({id: 5, value: 'test'});
+        expect(resourceStore.idQueryParameter).toEqual(undefined);
+        expect(resourceStore.id).toEqual(5);
+    });
+});
+
 test('Should not load the data with the ResourceRequester if no resource-id is provided', () => {
     const promise = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise);
@@ -256,6 +270,23 @@ test('Saving and dirty flag should be set to false when saving has failed', (don
                 done();
             }
         );
+    });
+});
+
+test('Saving should consider the passed idQueryParameter flag and reset it after the correct id was passed', () => {
+    const promise = Promise.resolve({id: 3});
+    ResourceRequester.get.mockReturnValue(Promise.resolve({}));
+    ResourceRequester.post.mockReturnValue(promise);
+    const resourceStore = new ResourceStore('users', 2, {}, {}, 'contactId');
+    expect(resourceStore.idQueryParameter).toEqual('contactId');
+    expect(ResourceRequester.get).toBeCalledWith('users', undefined, {contactId: 2});
+
+    resourceStore.save();
+
+    return promise.then(() => {
+        expect(resourceStore.data).toEqual({id: 3});
+        expect(resourceStore.idQueryParameter).toEqual(undefined);
+        expect(resourceStore.id).toEqual(3);
     });
 });
 

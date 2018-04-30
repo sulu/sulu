@@ -38,6 +38,7 @@ class Form extends React.PureComponent<Props> {
             },
             route: {
                 options: {
+                    idQueryParameter,
                     resourceKey,
                 },
             },
@@ -51,7 +52,9 @@ class Form extends React.PureComponent<Props> {
         }
 
         if (this.hasOwnResourceStore) {
-            this.resourceStore = new ResourceStore(resourceKey, id, {locale: resourceStore.locale});
+            this.resourceStore = idQueryParameter
+                ? new ResourceStore(resourceKey, id, {locale: resourceStore.locale}, {}, idQueryParameter)
+                : new ResourceStore(resourceKey, id, {locale: resourceStore.locale});
         } else {
             this.resourceStore = resourceStore;
         }

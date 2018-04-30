@@ -115,6 +115,27 @@ test('Should create a new resourceStore if the passed resourceKey differs with l
     expect(formResourceStore.locale.get()).toEqual('en');
 });
 
+test('Should instantiate the ResourceStore with the idQueryParameter if given', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 10);
+    const route = {
+        options: {
+            idQueryParameter: 'contactId',
+            resourceKey: 'pages',
+        },
+    };
+    const router = {
+        attributes: {},
+        route,
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const formResourceStore = form.instance().resourceStore;
+
+    expect(formResourceStore.idQueryParameter).toEqual('contactId');
+});
+
 test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;

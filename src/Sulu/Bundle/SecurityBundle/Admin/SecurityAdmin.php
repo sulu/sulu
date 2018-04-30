@@ -110,7 +110,8 @@ class SecurityAdmin extends Admin
                 ->addOption('tabTitle', 'sulu_security.permissions')
                 ->addOption('backRoute', 'sulu_contact.contacts_datagrid')
                 ->addOption('resourceKey', 'users')
-                ->setParent('sulu_contact.edit_form'),
+                ->addOption('idQueryParameter', 'contactId')
+                ->setParent('sulu_contact.contact_edit_form'),
         ];
     }
 

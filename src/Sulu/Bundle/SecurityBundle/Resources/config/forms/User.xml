@@ -15,4 +15,28 @@
             <title lang="de">Passwort</title>
         </meta>
     </property>
+
+    <property name="locale" type="single_select" mandatory="true" colspan="6">
+        <meta>
+            <title lang="en">System language</title>
+            <title lang="de">Systemsprache</title>
+        </meta>
+        <params>
+            <param name="default_value" value="de"/>
+            <param name="values" type="collection">
+                <param name="de" value="de">
+                    <meta>
+                        <title lang="en">German</title>
+                        <title lang="de">Deutsch</title>
+                    </meta>
+                </param>
+                <param name="en" value="en">
+                    <meta>
+                        <title lang="en">English</title>
+                        <title lang="de">Englisch</title>
+                    </meta>
+                </param>
+            </param>
+        </params>
+    </property>
 </properties>
