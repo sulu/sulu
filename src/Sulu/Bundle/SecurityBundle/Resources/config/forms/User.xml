@@ -2,10 +2,17 @@
 <properties xmlns="http://schemas.sulu.io/template/template"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
-    <property name="username" type="text_line" mandatory="true" colspan="6" spaceAfter="6">
+    <property name="username" type="text_line" mandatory="true" colspan="6">
         <meta>
             <title lang="en">Username</title>
             <title lang="de">Username</title>
+        </meta>
+    </property>
+
+    <property name="email" type="email" colspan="6">
+        <meta>
+            <title lang="en">Email</title>
+            <title lang="de">Email</title>
         </meta>
     </property>
 
