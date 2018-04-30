@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Phone should render 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-phone"
+      class="icon su-phone"
+    />
+  </div>
+  <input
+    type="tel"
+    value=""
+  />
+</label>
+`;
+
+exports[`Phone should render error 1`] = `
+<label
+  class="input error"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-phone"
+      class="icon su-phone"
+    />
+  </div>
+  <input
+    type="tel"
+    value=""
+  />
+</label>
+`;
+
+exports[`Phone should render null value as empty string 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-phone"
+      class="icon su-phone"
+    />
+  </div>
+  <input
+    type="tel"
+    value=""
+  />
+</label>
+`;
+
+exports[`Phone should render with placeholder 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-phone"
+      class="icon su-phone"
+    />
+  </div>
+  <input
+    placeholder="My placeholder"
+    type="tel"
+    value=""
+  />
+</label>
+`;
+
+exports[`Phone should render with value 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-phone"
+      class="icon iconClickable su-phone clickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+  <input
+    type="tel"
+    value="test@test.com"
+  />
+</label>
+`;

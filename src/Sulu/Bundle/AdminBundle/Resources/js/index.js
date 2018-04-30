@@ -11,8 +11,10 @@ import Application from './containers/Application';
 import {
     Assignment,
     DatePicker,
+    Email,
     fieldRegistry,
     Input,
+    Phone,
     ResourceLocator,
     SingleSelect,
     TextArea,
@@ -61,6 +63,8 @@ datagridAdapterRegistry.add('table', TableAdapter);
 function registerFieldTypes(fieldTypesConfig) {
     fieldRegistry.add('block', FieldBlocks);
     fieldRegistry.add('date', DatePicker);
+    fieldRegistry.add('email', Email);
+    fieldRegistry.add('phone', Phone);
     fieldRegistry.add('resource_locator', ResourceLocator);
     fieldRegistry.add('single_select', SingleSelect);
     fieldRegistry.add('text_line', Input);

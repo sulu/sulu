@@ -1,0 +1,137 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Email should render 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render error 1`] = `
+<label
+  class="input error"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render error when invalid value is set 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render error when invalid value is set 2`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render null value as empty string 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render with placeholder 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon su-envalope"
+    />
+  </div>
+  <input
+    placeholder="My placeholder"
+    type="email"
+    value=""
+  />
+</label>
+`;
+
+exports[`Email should render with value 1`] = `
+<label
+  class="input"
+>
+  <div
+    class="prependedContainer"
+  >
+    <span
+      aria-label="su-envalope"
+      class="icon iconClickable su-envalope clickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+  <input
+    type="email"
+    value=""
+  />
+</label>
+`;

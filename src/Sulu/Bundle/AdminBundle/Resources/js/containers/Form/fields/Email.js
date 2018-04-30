@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
-import InputComponent from '../../../components/Input';
+import {default as EmailComponent} from '../../../components/Email';
 import type {FieldTypeProps} from '../../../types';
 
-export default class Input extends React.Component<FieldTypeProps<?string>> {
+export default class Email extends React.Component<FieldTypeProps<?string>> {
     render() {
         const {error, onChange, onFinish, value} = this.props;
 
         return (
-            <InputComponent
+            <EmailComponent
                 onChange={onChange}
                 onBlur={onFinish}
                 valid={!error}

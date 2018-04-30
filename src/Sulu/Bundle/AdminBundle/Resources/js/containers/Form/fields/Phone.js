@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
-import InputComponent from '../../../components/Input';
+import {default as PhoneComponent} from '../../../components/Phone';
 import type {FieldTypeProps} from '../../../types';
 
-export default class Input extends React.Component<FieldTypeProps<?string>> {
+export default class Phone extends React.Component<FieldTypeProps<?string>> {
     render() {
         const {error, onChange, onFinish, value} = this.props;
 
         return (
-            <InputComponent
+            <PhoneComponent
                 onChange={onChange}
                 onBlur={onFinish}
                 valid={!error}
