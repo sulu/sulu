@@ -52,7 +52,7 @@ class SnippetTypeTwigExtension extends \Twig_Extension
     /**
      * Load global snippets by type.
      *
-     * @param string type
+     * @param string $type
      * @param string $locale
      *
      * @return array
@@ -68,7 +68,7 @@ class SnippetTypeTwigExtension extends \Twig_Extension
         $helper = [];
 
         // get all snippets by their type
-        if ($snippets = $this->snippetRepository->getSnippets($locale, $type)) {
+        if ($snippets = $this->snippetRepository->getSnippets($locale, $type, null, null, null, null, null, false)) {
             // convert snippet documents to array
             foreach ($snippets as $snippet) {
                 $helper[] = $snippet->getStructure()->toArray();
