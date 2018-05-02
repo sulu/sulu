@@ -118,7 +118,11 @@ exports[`Render a table with buttons 1`] = `
           <div
             class="cellContent"
           >
-            Column Text
+            <div
+              class="cellContent"
+            >
+              Column Text
+            </div>
           </div>
         </td>
         <td
@@ -241,7 +245,11 @@ exports[`Render the Table component 1`] = `
           <div
             class="cellContent"
           >
-            Column Text
+            <div
+              class="cellContent"
+            >
+              Column Text
+            </div>
           </div>
         </td>
         <td
@@ -272,7 +280,11 @@ exports[`Render the Table component 1`] = `
           <div
             class="cellContent"
           >
-            Column Text
+            <div
+              class="cellContent"
+            >
+              Column Text
+            </div>
           </div>
         </td>
         <td
@@ -382,7 +394,11 @@ exports[`Render the Table component in multiple selection mode 1`] = `
           <div
             class="cellContent"
           >
-            Column Text
+            <div
+              class="cellContent"
+            >
+              Column Text
+            </div>
           </div>
         </td>
         <td
@@ -479,7 +495,158 @@ exports[`Render the Table component in single selection mode 1`] = `
           <div
             class="cellContent"
           >
+            <div
+              class="cellContent"
+            >
+              Column Text
+            </div>
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
             Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render the Table component in tree structure 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <div
+              class="cellContent"
+            >
+              Column Text
+            </div>
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <div
+              class="cellContent"
+              style="padding-left:25px"
+            >
+              Column Text
+            </div>
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <div
+              class="cellContent"
+              style="padding-left:50px"
+            >
+              Column Text
+            </div>
           </div>
         </td>
         <td

@@ -157,9 +157,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
                             adapters={['tree_list', 'column_list']}
                             onItemClick={this.handleEditClick}
                             onAddClick={this.handleAddClick}
-                            onItemClick={this.handleEditClick}
                             selectable={false}
-                            store={this.datagridStore}
                         />
                     </Fragment>
                 }

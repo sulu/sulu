@@ -84,7 +84,11 @@ exports[`Should render the datagrid with a title 1`] = `
                 <div
                   class="cellContent"
                 >
-                  Description 1
+                  <div
+                    class="cellContent"
+                  >
+                    Description 1
+                  </div>
                 </div>
               </td>
             </tr>
@@ -118,7 +122,11 @@ exports[`Should render the datagrid with a title 1`] = `
                 <div
                   class="cellContent"
                 >
-                  Description 2
+                  <div
+                    class="cellContent"
+                  >
+                    Description 2
+                  </div>
                 </div>
               </td>
             </tr>
@@ -239,7 +247,11 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
                 <div
                   class="cellContent"
                 >
-                  Description 1
+                  <div
+                    class="cellContent"
+                  >
+                    Description 1
+                  </div>
                 </div>
               </td>
             </tr>
@@ -273,7 +285,11 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
                 <div
                   class="cellContent"
                 >
-                  Description 2
+                  <div
+                    class="cellContent"
+                  >
+                    Description 2
+                  </div>
                 </div>
               </td>
             </tr>
@@ -418,7 +434,11 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
                 <div
                   class="cellContent"
                 >
-                  Description 1
+                  <div
+                    class="cellContent"
+                  >
+                    Description 1
+                  </div>
                 </div>
               </td>
             </tr>
@@ -466,7 +486,11 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
                 <div
                   class="cellContent"
                 >
-                  Description 2
+                  <div
+                    class="cellContent"
+                  >
+                    Description 2
+                  </div>
                 </div>
               </td>
             </tr>

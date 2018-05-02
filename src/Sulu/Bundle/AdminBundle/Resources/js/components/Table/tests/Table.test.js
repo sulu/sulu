@@ -38,6 +38,35 @@ test('Render the Table component', () => {
     )).toMatchSnapshot();
 });
 
+test('Render the Table component in tree structure', () => {
+    expect(render(
+        <Table>
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row depth={0}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row depth={1}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row depth={2}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    )).toMatchSnapshot();
+});
+
 test('Render an empty table', () => {
     const placeholderText = 'No entries';
 

@@ -230,7 +230,11 @@ exports[`Render data with all different visibility types schema 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              <div
+                class="cellContent"
+              >
+                Description 1
+              </div>
             </div>
           </td>
           <td
@@ -250,7 +254,11 @@ exports[`Render data with all different visibility types schema 1`] = `
             <div
               class="cellContent"
             >
-              Description 2
+              <div
+                class="cellContent"
+              >
+                Description 2
+              </div>
             </div>
           </td>
           <td
@@ -352,7 +360,11 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <div
               class="cellContent"
             >
-              Description 1
+              <div
+                class="cellContent"
+              >
+                Description 1
+              </div>
             </div>
           </td>
         </tr>
@@ -379,7 +391,11 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <div
               class="cellContent"
             >
-              Description 2
+              <div
+                class="cellContent"
+              >
+                Description 2
+              </div>
             </div>
           </td>
         </tr>
@@ -451,7 +467,11 @@ exports[`Render data with schema 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              <div
+                class="cellContent"
+              >
+                Description 1
+              </div>
             </div>
           </td>
         </tr>
@@ -464,7 +484,11 @@ exports[`Render data with schema 1`] = `
             <div
               class="cellContent"
             >
-              Description 2
+              <div
+                class="cellContent"
+              >
+                Description 2
+              </div>
             </div>
           </td>
         </tr>
@@ -580,7 +604,11 @@ exports[`Render data with schema and selections 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              <div
+                class="cellContent"
+              >
+                Description 1
+              </div>
             </div>
           </td>
         </tr>
@@ -614,7 +642,11 @@ exports[`Render data with schema and selections 1`] = `
             <div
               class="cellContent"
             >
-              Description 2
+              <div
+                class="cellContent"
+              >
+                Description 2
+              </div>
             </div>
           </td>
         </tr>
@@ -654,7 +686,11 @@ exports[`Render data with schema and selections 1`] = `
             <div
               class="cellContent"
             >
-              Description 3
+              <div
+                class="cellContent"
+              >
+                Description 3
+              </div>
             </div>
           </td>
         </tr>
@@ -726,7 +762,11 @@ exports[`Render data with schema in different order 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              <div
+                class="cellContent"
+              >
+                Description 1
+              </div>
             </div>
           </td>
         </tr>
@@ -739,7 +779,11 @@ exports[`Render data with schema in different order 1`] = `
             <div
               class="cellContent"
             >
-              Description 2
+              <div
+                class="cellContent"
+              >
+                Description 2
+              </div>
             </div>
           </td>
         </tr>
@@ -810,7 +854,11 @@ exports[`Render data with schema not containing all fields 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              <div
+                class="cellContent"
+              >
+                Description 1
+              </div>
             </div>
           </td>
         </tr>
@@ -823,7 +871,11 @@ exports[`Render data with schema not containing all fields 1`] = `
             <div
               class="cellContent"
             >
-              Description 2
+              <div
+                class="cellContent"
+              >
+                Description 2
+              </div>
             </div>
           </td>
         </tr>

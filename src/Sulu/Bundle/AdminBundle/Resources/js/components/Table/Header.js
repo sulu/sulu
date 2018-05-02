@@ -80,7 +80,7 @@ export default class Header extends React.PureComponent<Props> {
                 {
                     ...props,
                     key,
-                    children: children
+                    children: children,
                 }
             );
         });
@@ -118,7 +118,7 @@ export default class Header extends React.PureComponent<Props> {
                     key={key}
                     className={tableStyles.headerButtonCell}
                 >
-                    <Icon name={button.icon}/>
+                    <Icon name={button.icon} />
                 </HeaderCell>
             );
         });
@@ -142,7 +142,7 @@ export default class Header extends React.PureComponent<Props> {
         const key = 'header-empty';
 
         return (
-            <HeaderCell key={key}/>
+            <HeaderCell key={key} />
         );
     };
 

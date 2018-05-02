@@ -1,30 +1,39 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
-import AbstractAdapter from './AbstractAdapter';
+import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
-export default class TreeListAdapter extends AbstractAdapter {
+export default class TreeListAdapter extends AbstractTableAdapter {
     static LoadingStrategy = FullLoadingStrategy;
 
     static StructureStrategy = TreeStructureStrategy;
 
     static icon = 'fa-sitemap';
 
-    static defaultProps = {
-        data: [],
-    };
-
     @observable expandedRows: Array<string | number> = [];
 
-    getDataList() {
+    @action handleRowCollapse = (rowId: string | number) => {
+        this.expandedRows.splice(this.expandedRows.indexOf(rowId), 1);
+    };
+
+    @action handleRowExpand = (rowId: string | number) => {
+        this.expandedRows.push(rowId);
+
+        if (this.props.onItemActivation) {
+            this.props.onItemActivation(rowId);
+        }
+    };
+
+    @computed get data(): Array<Object> {
         let dataList = [],
             depth = 0;
-        dataList = this.flattenData(this.props.data, dataList, depth);
+
+        this.flattenData(this.props.data, dataList, depth);
 
         return dataList;
     }
@@ -45,60 +54,14 @@ export default class TreeListAdapter extends AbstractAdapter {
                 this.flattenData(item.children, dataList, depth + 1);
             }
         });
-
-        return dataList;
     }
 
-    @action handleRowCollapse(rowId: string | number) {
-        this.expandedRows.splice(this.expandedRows.indexOf(rowId), 1);
-    }
-
-    @action handleRowExpand(rowId: string | number) {
-        this.expandedRows.push(rowId);
-
-        if (this.props.onItemActivation) {
-            this.props.onItemActivation(rowId);
-        }
-    }
-
-    renderCells(item: Object, schemaKeys: Array<string>) {
-        return schemaKeys.map((schemaKey) => {
-            let cellContent = item[schemaKey];
-
-            // TODO: Remove this when a datafield mapping is built
-            if (typeof item[schemaKey] === 'object') {
-                cellContent = 'Object!';
-            }
-
-            return (
-                <Table.Cell key={item.id + schemaKey}>
-                    {cellContent}
-                </Table.Cell>
-            );
-        });
-    }
-
-    renderHeaderCells() {
-        const {
-            schema,
-        } = this.props;
-        const schemaKeys = Object.keys(schema);
-
-        return schemaKeys.map((schemaKey) => (
-            <Table.HeaderCell key={schemaKey}>
-                {schemaKey}
-            </Table.HeaderCell>
-        ));
-    }
-
-    renderRows(items: Array<Object>) {
-        return items.map((item) => {
+    renderRows() {
+        return this.data.map((item) => {
             const {
-                schema,
                 selections,
             } = this.props;
             const {data} = item;
-            const schemaKeys = Object.keys(schema);
 
             return (
                 <Table.Row
@@ -110,7 +73,7 @@ export default class TreeListAdapter extends AbstractAdapter {
                     expanded={item.expanded}
                     selected={selections.includes(data.id)}
                 >
-                    {this.renderCells(data, schemaKeys)}
+                    {this.renderCells(data)}
                 </Table.Row>
             );
         });
@@ -152,9 +115,8 @@ export default class TreeListAdapter extends AbstractAdapter {
                 <Table.Header>
                     {this.renderHeaderCells()}
                 </Table.Header>
-
                 <Table.Body>
-                    {this.renderRows(this.getDataList())}
+                    {this.renderRows()}
                 </Table.Body>
             </Table>
         );

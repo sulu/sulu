@@ -3,14 +3,14 @@ import React from 'react';
 import type {ChildrenArray, Element} from 'react';
 import Checkbox from '../Checkbox';
 import {Radio} from '../Radio';
+import Icon from '../Icon/Icon';
+import Loader from '../Loader/Loader';
 import type {ButtonConfig, SelectMode} from './types';
 import ButtonCell from './ButtonCell';
 import Cell from './Cell';
 import tableStyles from './table.scss';
-import Icon from "../Icon/Icon";
-import Loader from "../Loader/Loader";
 
-type Props = {
+type Props = {|
     children: ChildrenArray<Element<typeof Cell>>,
     /** The index of the row inside the body */
     rowIndex: number,
@@ -21,15 +21,15 @@ type Props = {
     /** @ignore */
     selectMode?: SelectMode,
     /** If set to true the select is in first cell */
-    selectInFirstCell?: boolean,
+    selectInFirstCell: boolean,
     /** If set to true the row is selected */
-    selected?: boolean,
+    selected: boolean,
     /** If set to true the row can load children */
-    hasChildren?: boolean,
+    hasChildren: boolean,
     /** If set to true the row child are open */
-    expanded?: boolean,
+    expanded: boolean,
     /** If set to true the childs will be loaded */
-    isLoading?: boolean,
+    isLoading: boolean,
     /** The depth of the element in the row */
     depth?: number,
     /** The depth padding in px */
@@ -40,12 +40,15 @@ type Props = {
     onCollapse?: (rowId: string | number) => void,
     /** @ignore */
     onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
-};
+|};
 
 export default class Row extends React.PureComponent<Props> {
     static defaultProps = {
         selected: false,
         selectInFirstCell: false,
+        hasChildren: false,
+        expanded: false,
+        isLoading: false,
         rowIndex: 0,
         depth: 0,
         depthPadding: 25,
@@ -155,18 +158,18 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createToggler = () => {
-        const {isLoading} = this.props;
+        const {isLoading, expanded} = this.props;
 
         return (
             <span
-                onClick={this.props.expanded ? this.handleExpand : this.handleCollapse}
+                onClick={expanded === false ? this.handleExpand : this.handleCollapse}
                 className={tableStyles.toggleIcon}
             >
                 {isLoading &&
                     <Loader size={10} />
                 }
                 {!isLoading &&
-                    <Icon name={this.props.expanded ? 'su-angle-down' : 'su-angle-right'} />
+                    <Icon name={expanded === true ? 'su-angle-down' : 'su-angle-right'} />
                 }
             </span>
         );
