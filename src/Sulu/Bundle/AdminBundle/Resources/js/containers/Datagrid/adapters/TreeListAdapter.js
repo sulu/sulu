@@ -3,6 +3,7 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
+import Loader from '../../../components/Loader';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import AbstractTableAdapter from './AbstractTableAdapter';
@@ -81,12 +82,18 @@ export default class TreeListAdapter extends AbstractTableAdapter {
 
     render() {
         const {
+            active,
+            loading,
             onItemClick,
             onAddClick,
             onAllSelectionChange,
             onItemSelectionChange,
         } = this.props;
         const buttons = [];
+
+        if (!active && loading) {
+            return <Loader />;
+        }
 
         if (onItemClick) {
             buttons.push({

@@ -1,13 +1,11 @@
 // @flow
 import {computed} from 'mobx';
-import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
 import datagridFieldTransformerRegistry from '../registries/DatagridFieldTransformerRegistry';
 import type {Schema} from '../types';
 import AbstractAdapter from './AbstractAdapter';
 
-@observer
 export default class AbstractTableAdapter extends AbstractAdapter {
     static defaultProps = {
         data: [],
