@@ -19,7 +19,7 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
     @observable popoverOpen: boolean = false;
     @observable popoverAnchorElement: ?ElementRef<*>;
 
-    @action handleOptionClick = (event: SyntheticEvent<HTMLOptionElement>) => {
+    @action handleClick = (event: SyntheticEvent<HTMLOptionElement>) => {
         this.popoverAnchorElement = event.currentTarget;
         this.popoverOpen = true;
     };
@@ -28,7 +28,7 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
         this.popoverOpen = false;
     };
 
-    render = () => {
+    render() {
         const {icon, options, skin, columnIndex} = this.props;
 
         const className = classNames(
@@ -38,7 +38,7 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
 
         return (
             <Fragment>
-                <div onClick={this.handleOptionClick} className={className}>
+                <div onClick={this.handleClick} className={className}>
                     <Icon name={icon} />
                 </div>
                 <Popover
@@ -63,6 +63,6 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
                 </Popover>
             </Fragment>
         );
-    };
+    }
 }
 

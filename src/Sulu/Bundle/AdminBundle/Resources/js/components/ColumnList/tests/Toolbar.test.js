@@ -40,6 +40,5 @@ test('The Toolbar component should render with active', () => {
     // check for opened dropdown in body
     expect(body.innerHTML).toBe('');
     toolbar.find(ToolbarDropdown).simulate('click');
-    expect(body.innerHTML).not.toBe('');
     expect(pretty(body.innerHTML)).toMatchSnapshot();
 });
