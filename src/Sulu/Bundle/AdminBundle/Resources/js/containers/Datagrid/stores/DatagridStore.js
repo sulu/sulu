@@ -11,7 +11,7 @@ import type {
 import userStore from '../../../stores/UserStore';
 import metadataStore from './MetadataStore';
 
-const USER_SETTING_PREFIX = 'datagrid';
+const USER_SETTING_PREFIX = 'sulu_admin.datagrid';
 const USER_SETTING_SORT_COLUMN = 'sort_column';
 const USER_SETTING_SORT_ORDER = 'sort_order';
 

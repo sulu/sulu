@@ -226,9 +226,9 @@ test('The loading strategy should be called with the defined sortings', () => {
 test('Should update the persistent settings in the UserStore if the sorting changes', () => {
     userStore.getPersistentSetting.mockImplementation((key) => {
         switch (key) {
-            case 'datagrid.snippets.sort_column':
+            case 'sulu_admin.datagrid.snippets.sort_column':
                 return 'title';
-            case 'datagrid.snippets.sort_order':
+            case 'sulu_admin.datagrid.snippets.sort_order':
                 return 'asc';
         }
     });
