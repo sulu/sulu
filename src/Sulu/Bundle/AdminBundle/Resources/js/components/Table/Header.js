@@ -17,11 +17,11 @@ type Props = {
     /** @ignore */
     selectMode?: SelectMode,
     /** @ignore */
-    selectInFirstCell?: boolean,
+    selectInFirstCell: boolean,
     /** @ignore */
     onAllSelectionChange?: (checked: boolean) => void,
     /** If true the "select all" checkbox is checked. */
-    allSelected?: boolean,
+    allSelected: boolean,
 };
 
 export default class Header extends React.PureComponent<Props> {

@@ -11,7 +11,7 @@ type Props = {
     /** @ignore */
     selectMode?: SelectMode,
     /** @ignore */
-    selectInFirstCell?: boolean,
+    selectInFirstCell: boolean,
     /** @ignore */
     onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     /** @ignore */
