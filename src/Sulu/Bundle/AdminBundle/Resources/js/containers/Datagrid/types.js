@@ -45,8 +45,10 @@ export type ObservableOptions = {
 };
 
 export type LoadOptions = {
-    page?: number,
     locale?: ?string,
+    page?: number,
+    sortBy?: string,
+    sortOrder?: SortOrder,
 };
 
 export type ItemEnhancer = (item: Object) => Object;
