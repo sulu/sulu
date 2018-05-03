@@ -169,7 +169,7 @@ class Preview implements PreviewInterface
      */
     protected function replaceLinks($html)
     {
-        return preg_replace('/(href|action)="[^"]*"/', '$1="#"', $html);
+        return preg_replace('/((?:a|form)(?:[^>]*)(?:href|action))="[^"]*"/', '$1="#"', $html);
     }
 
     /**

@@ -475,6 +475,61 @@ class PreviewTest extends TestCase
         $this->assertEquals('<a property="title" href="#">test</a>', $response);
     }
 
+    public function testRenderWithStyle()
+    {
+        $object = $this->prophesize(\stdClass::class);
+
+        $token = '123-123-123';
+        $this->dataCache->contains($token)->willReturn(true);
+        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+
+        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->getId($object->reveal())->willReturn(1);
+
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
+            ->willReturn('<link rel="stylesheet" type="text/css" href="theme.css">');
+
+        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $response = $preview->render($token, 'sulu_io', 'de');
+
+        $this->assertEquals('<link rel="stylesheet" type="text/css" href="theme.css">', $response);
+    }
+
+    public function testRenderWithMultipleTags()
+    {
+        $object = $this->prophesize(\stdClass::class);
+
+        $token = '123-123-123';
+        $this->dataCache->contains($token)->willReturn(true);
+        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+
+        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->getId($object->reveal())->willReturn(1);
+
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
+            ->willReturn(
+                '<link rel="stylesheet" type="text/css" href="theme.css">' .
+                '<a property="title" href="/test">test</a>' .
+                '<a href="/test">test</a>' .
+                '<form action="/test"></form>' .
+                '<form class="form" action="/test"></form>'
+            );
+
+        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $response = $preview->render($token, 'sulu_io', 'de');
+
+        $this->assertEquals(
+            '<link rel="stylesheet" type="text/css" href="theme.css">' .
+            '<a property="title" href="#">test</a>' .
+            '<a href="#">test</a>' .
+            '<form action="#"></form>' .
+            '<form class="form" action="#"></form>',
+            $response
+        );
+    }
+
     public function testRenderWithTargetGroup()
     {
         $object = $this->prophesize(\stdClass::class);
