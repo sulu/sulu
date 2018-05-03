@@ -34,7 +34,7 @@ class TagManager implements TagManagerInterface
 
     protected static $userEntityName = 'Sulu\Component\Security\Authentication\UserInterface';
 
-    protected static $contactEntityName = 'Sulu\Component\Contact\Model\ContactInterface';
+    protected static $contactEntityName = 'Sulu\Bundle\ContactBundle\Model\ContactInterface';
 
     /**
      * The repository for communication with the database.

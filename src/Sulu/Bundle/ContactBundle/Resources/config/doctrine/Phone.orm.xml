@@ -12,7 +12,7 @@
                 <join-column name="idPhoneTypes" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
-        <many-to-many field="contacts" target-entity="Sulu\Component\Contact\Model\ContactInterface" mapped-by="phones"/>
-        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" mapped-by="phones"/>
+        <many-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Model\ContactInterface" mapped-by="phones"/>
+        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Model\AccountInterface" mapped-by="phones"/>
     </entity>
 </doctrine-mapping>

@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Model\AccountInterface;
 
 /**
  * Class AccountListener.

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Command;
 
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\ContactBundle\Model\AccountRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -192,10 +193,10 @@ class AccountRecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * @return EntityRepository
+     * @return AccountRepositoryInterface
      */
     private function getEntityRepository()
     {
-        return $this->getContainer()->get('sulu_contact.account_repository');
+        return $this->getContainer()->get('sulu.respository.account');
     }
 }

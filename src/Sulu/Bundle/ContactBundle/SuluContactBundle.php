@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\ContactBundle;
 
+use Sulu\Bundle\ContactBundle\Model\AccountInterface;
+use Sulu\Bundle\ContactBundle\Model\ContactInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -28,7 +30,8 @@ class SuluContactBundle extends Bundle
 
         $this->buildPersistence(
             [
-                'Sulu\Component\Contact\Model\ContactInterface' => 'sulu.model.contact.class',
+                ContactInterface::class => 'sulu.model.contact.class',
+                AccountInterface::class => 'sulu.model.account.class',
             ],
             $container
         );

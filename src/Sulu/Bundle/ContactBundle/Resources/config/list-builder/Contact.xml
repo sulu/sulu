@@ -65,11 +65,11 @@
 
         <property name="account" visibility="always" list:translation="contact.contacts.company">
             <orm:field-name>name</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
 
             <orm:joins ref="accountContact">
                 <orm:join>
-                    <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+                    <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
                     <orm:field-name>SuluContactBundle:AccountContact.account</orm:field-name>
                 </orm:join>
             </orm:joins>

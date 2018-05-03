@@ -18,7 +18,8 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Component\Contact\Model\ContactInterface;
+use Sulu\Bundle\ContactBundle\Model\AccountInterface;
+use Sulu\Bundle\ContactBundle\Model\ContactInterface;
 
 /**
  * Social media profile belonging to account or contact.

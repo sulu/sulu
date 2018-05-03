@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Contact\Model;
+namespace Sulu\Bundle\ContactBundle\Model;
 
 use Sulu\Component\Persistence\Repository\RepositoryInterface;
 

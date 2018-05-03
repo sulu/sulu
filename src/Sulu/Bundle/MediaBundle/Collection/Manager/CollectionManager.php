@@ -44,7 +44,7 @@ class CollectionManager implements CollectionManagerInterface
 
     private static $entityUser = 'Sulu\Component\Security\Authentication\UserInterface';
 
-    private static $entityContact = 'Sulu\Component\Contact\Model\ContactInterface';
+    private static $entityContact = 'Sulu\Bundle\ContactBundle\Model\ContactInterface';
 
     /**
      * @var CollectionRepositoryInterface

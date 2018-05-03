@@ -9,12 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Contact\Model;
+namespace Sulu\Bundle\ContactBundle\Model;
 
 use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
-use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactLocale;

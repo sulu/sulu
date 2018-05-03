@@ -11,6 +11,10 @@
 
 namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
+use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -113,8 +117,15 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('contact')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('model')->defaultValue('Sulu\Bundle\ContactBundle\Entity\Contact')->end()
-                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\ContactBundle\Entity\ContactRepository')->end()
+                                ->scalarNode('model')->defaultValue(Contact::class)->end()
+                                ->scalarNode('repository')->defaultValue(ContactRepository::class)->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('account')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue(Account::class)->end()
+                                ->scalarNode('repository')->defaultValue(AccountRepository::class)->end()
                             ->end()
                         ->end()
                     ->end()

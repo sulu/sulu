@@ -11,7 +11,8 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Sulu\Component\Contact\Model\ContactInterface;
+use Sulu\Bundle\ContactBundle\Model\AccountInterface;
+use Sulu\Bundle\ContactBundle\Model\ContactInterface;
 
 /**
  * AccountContact.
