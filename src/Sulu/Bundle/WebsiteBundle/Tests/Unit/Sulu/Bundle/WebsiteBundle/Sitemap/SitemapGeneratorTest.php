@@ -264,6 +264,17 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->documentManager->persist($document, $locale);
         $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
+
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('overview');
+        $document->setTitle('SEO-NoSitemap ' . $locale);
+        $document->setResourceSegment('/seo-no-sitemap');
+        $document->setNavigationContexts(['footer']);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $document->setExtension('seo', ['hideInSitemap' => true]);
+        $this->documentManager->persist($document, $locale, ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->publish($document, $locale);
+        $this->documentManager->flush();
     }
 
     public function testGenerateAllFlat()
