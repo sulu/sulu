@@ -236,9 +236,13 @@ define([], function() {
         },
 
         loadSelectedNode = function() {
-            this.sandbox.util.load(getSingleUrl(this.options.url, this.data)).then(function(data) {
-                this.$input.val((data.title || this.sandbox.translate(this.options.translations.noTitle)) + ' (' + data.url + ')');
-            }.bind(this));
+            this.sandbox.util.load(getSingleUrl(this.options.url, this.data))
+                .fail(function() {
+                    setData.call(this);
+                }.bind(this))
+                .then(function(data) {
+                    this.$input.val((data.title || this.sandbox.translate(this.options.translations.noTitle)) + ' (' + data.url + ')');
+                }.bind(this));
         },
 
         getSingleUrl = function(url, data) {

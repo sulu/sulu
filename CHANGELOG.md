@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * unrealeased
+    * HOTFIX      #XXXX [ContentBundle]         Single internal link: Clear selection when target doesn't exists
     * HOTFIX      #3941 [WebsiteBundle]         Fix hideInSitemap flag for sitemap twig extension
     * BUGFIX      #3926 [WebsiteBundle]         Fix profiler for none sulu routes
 
