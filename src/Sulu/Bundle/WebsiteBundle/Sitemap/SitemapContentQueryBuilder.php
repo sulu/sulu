@@ -32,7 +32,7 @@ class SitemapContentQueryBuilder extends ContentQueryBuilder
                 page.[i18n:%s-seo-hideInSitemap] IS NULL
                 OR page.[i18n:%s-seo-hideInSitemap] = false
             )
-        )", $webspaceKey, $webspaceKey, $locale, $locale, $locale);
+        )", $webspaceKey, $webspaceKey, $locale, $locale);
     }
 
     /**

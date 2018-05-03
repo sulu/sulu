@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * unrealeased
+    * HOTFIX      #3941 [WebsiteBundle]         Fix hideInSitemap flag for sitemap twig extension
     * BUGFIX      #3926 [WebsiteBundle]         Fix profiler for none sulu routes
 
 * 1.5.13 (2018-04-23)
