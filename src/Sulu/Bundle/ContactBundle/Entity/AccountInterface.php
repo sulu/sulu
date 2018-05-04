@@ -15,635 +15,204 @@ use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * interface for accounts.
  */
-interface AccountInterface
+interface AccountInterface extends AuditableInterface
 {
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return AccountInterface
-     */
-    public function setName($name);
-
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName();
-
-    /**
-     * Set externalId.
-     *
-     * @param string $externalId
-     *
-     * @return AccountInterface
-     */
-    public function setExternalId($externalId);
-
-    /**
-     * Get externalId.
-     *
-     * @return string
-     */
-    public function getExternalId();
-
-    /**
-     * Set number.
-     *
-     * @param string $number
-     *
-     * @return AccountInterface
-     */
-    public function setNumber($number);
-
-    /**
-     * Get number.
-     *
-     * @return string
-     */
-    public function getNumber();
-
-    /**
-     * Set corporation.
-     *
-     * @param string $corporation
-     *
-     * @return AccountInterface
-     */
-    public function setCorporation($corporation);
-
-    /**
-     * Get corporation.
-     *
-     * @return string
-     */
-    public function getCorporation();
-
-    /**
-     * Set uid.
-     *
-     * @param string $uid
-     *
-     * @return AccountInterface
-     */
-    public function setUid($uid);
+    public function setName(string $name): self;
 
-    /**
-     * Get uid.
-     *
-     * @return string
-     */
-    public function getUid();
+    public function getName(): string;
 
-    /**
-     * Set registerNumber.
-     *
-     * @param string $registerNumber
-     *
-     * @return AccountInterface
-     */
-    public function setRegisterNumber($registerNumber);
+    public function setExternalId(string $externalId): self;
 
-    /**
-     * Get registerNumber.
-     *
-     * @return string
-     */
-    public function getRegisterNumber();
+    public function getExternalId(): ?string;
 
-    /**
-     * Set placeOfJurisdiction.
-     *
-     * @param string $placeOfJurisdiction
-     *
-     * @return AccountInterface
-     */
-    public function setPlaceOfJurisdiction($placeOfJurisdiction);
+    public function setNumber(string $number): self;
 
-    /**
-     * Get placeOfJurisdiction.
-     *
-     * @return string
-     */
-    public function getPlaceOfJurisdiction();
+    public function getNumber(): ?string;
 
-    /**
-     * Set mainEmail.
-     *
-     * @param string $mainEmail
-     *
-     * @return AccountInterface
-     */
-    public function setMainEmail($mainEmail);
+    public function setCorporation(?string $corporation): self;
 
-    /**
-     * Get mainEmail.
-     *
-     * @return string
-     */
-    public function getMainEmail();
+    public function getCorporation(): ?string;
 
-    /**
-     * Set mainPhone.
-     *
-     * @param string $mainPhone
-     *
-     * @return AccountInterface
-     */
-    public function setMainPhone($mainPhone);
+    public function setUid(string $uid): self;
 
-    /**
-     * Get mainPhone.
-     *
-     * @return string
-     */
-    public function getMainPhone();
+    public function getUid(): ?string;
 
-    /**
-     * Set mainFax.
-     *
-     * @param string $mainFax
-     *
-     * @return AccountInterface
-     */
-    public function setMainFax($mainFax);
+    public function setRegisterNumber(string $registerNumber): self;
 
-    /**
-     * Set logo.
-     *
-     * @param Media $logo
-     *
-     * @return AccountInterface
-     */
-    public function setLogo($logo);
+    public function getRegisterNumber(): ?string;
 
-    /**
-     * Get logo.
-     *
-     * @return Media
-     */
-    public function getLogo();
+    public function setPlaceOfJurisdiction(string $placeOfJurisdiction): self;
 
-    /**
-     * Get mainFax.
-     *
-     * @return string
-     */
-    public function getMainFax();
+    public function getPlaceOfJurisdiction(): ?string;
 
-    /**
-     * Set mainUrl.
-     *
-     * @param string $mainUrl
-     *
-     * @return AccountInterface
-     */
-    public function setMainUrl($mainUrl);
+    public function setMainEmail(?string $mainEmail = null): self;
 
-    /**
-     * Get mainUrl.
-     *
-     * @return string
-     */
-    public function getMainUrl();
+    public function getMainEmail(): ?string;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId();
+    public function setMainPhone(?string $mainPhone = null): self;
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreated();
+    public function getMainPhone(): ?string;
 
-    /**
-     * @param \DateTime $created
-     */
-    public function setCreated($created);
+    public function setMainFax(?string $mainFax = null): self;
 
-    /**
-     * @return \DateTime
-     */
-    public function getChanged();
+    public function setLogo(MediaInterface $logo): self;
 
-    /**
-     * @param \DateTime $changed
-     */
-    public function setChanged($changed);
+    public function getLogo(): ?MediaInterface;
 
-    /**
-     * @return mixed
-     */
-    public function getChanger();
+    public function getMainFax(): ?string;
 
-    /**
-     * @param mixed $changer
-     */
-    public function setChanger($changer);
+    public function setMainUrl(?string $mainUrl = null): self;
 
-    /**
-     * @return mixed
-     */
-    public function getCreator();
+    public function getMainUrl(): ?string;
 
-    /**
-     * @param mixed $creator
-     */
-    public function setCreator($creator);
+    public function getId(): int;
 
-    /**
-     * @return Contact
-     */
-    public function getMainContact();
+    public function getMainContact(): ?ContactInterface;
 
-    /**
-     * @param Contact $mainContact
-     */
-    public function setMainContact($mainContact);
+    public function setMainContact(?ContactInterface $mainContact = null): self;
 
-    /**
-     * Set lft.
-     *
-     * @param int $lft
-     *
-     * @return Account
-     */
-    public function setLft($lft);
+    public function setLft(int $lft): self;
 
-    /**
-     * Get lft.
-     *
-     * @return int
-     */
-    public function getLft();
+    public function getLft(): int;
 
-    /**
-     * Set rgt.
-     *
-     * @param int $rgt
-     *
-     * @return Account
-     */
-    public function setRgt($rgt);
+    public function setRgt(int $rgt): self;
 
-    /**
-     * Get rgt.
-     *
-     * @return int
-     */
-    public function getRgt();
+    public function getRgt(): int;
 
-    /**
-     * Set depth.
-     *
-     * @param int $depth
-     *
-     * @return Account
-     */
-    public function setDepth($depth);
+    public function setDepth(int $depth): self;
 
-    /**
-     * Get depth.
-     *
-     * @return int
-     */
-    public function getDepth();
+    public function getDepth(): int;
 
-    /**
-     * Set parent.
-     *
-     * @param AccountInterface $parent
-     *
-     * @return Account
-     */
-    public function setParent(self $parent = null);
+    public function setParent(?self $parent = null): self;
 
-    /**
-     * Get parent.
-     *
-     * @return AccountInterface
-     */
-    public function getParent();
+    public function getParent(): ?self;
 
-    /**
-     * Add urls.
-     *
-     * @param Url $urls
-     *
-     * @return Account
-     */
-    public function addUrl(Url $urls);
+    public function addUrl(Url $url): self;
 
-    /**
-     * Remove urls.
-     *
-     * @param Url $urls
-     */
-    public function removeUrl(Url $urls);
+    public function removeUrl(Url $url): self;
 
     /**
-     * Get urls.
-     *
-     * @return Collection
+     * @return Collection|Url[]
      */
-    public function getUrls();
+    public function getUrls(): Collection;
 
-    /**
-     * Add phones.
-     *
-     * @param Phone $phones
-     *
-     * @return Account
-     */
-    public function addPhone(Phone $phones);
+    public function addPhone(Phone $phone): self;
 
-    /**
-     * Remove phones.
-     *
-     * @param Phone $phones
-     */
-    public function removePhone(Phone $phones);
+    public function removePhone(Phone $phone): self;
 
     /**
-     * Get phones.
-     *
-     * @return Collection
+     * @return Collection|Phone[]
      */
-    public function getPhones();
+    public function getPhones(): Collection;
 
-    /**
-     * Add emails.
-     *
-     * @param Email $emails
-     *
-     * @return Account
-     */
-    public function addEmail(Email $emails);
+    public function addEmail(Email $email): self;
 
-    /**
-     * Remove emails.
-     *
-     * @param Email $emails
-     */
-    public function removeEmail(Email $emails);
+    public function removeEmail(Email $emails): self;
 
     /**
-     * Get emails.
-     *
-     * @return Collection
+     * @return Collection|Email[]
      */
-    public function getEmails();
+    public function getEmails(): Collection;
 
-    /**
-     * Add notes.
-     *
-     * @param Note $notes
-     *
-     * @return Account
-     */
-    public function addNote(Note $notes);
+    public function addNote(Note $note): self;
 
-    /**
-     * Remove notes.
-     *
-     * @param Note $notes
-     */
-    public function removeNote(Note $notes);
+    public function removeNote(Note $note): self;
 
     /**
-     * Get notes.
-     *
-     * @return Collection
+     * @return Collection|Note[]
      */
-    public function getNotes();
+    public function getNotes(): Collection;
 
     /**
-     * Get children.
-     *
-     * @return Collection
+     * @return Collection|AccountInterface[]
      */
-    public function getChildren();
+    public function getChildren(): Collection;
 
-    /**
-     * Add faxes.
-     *
-     * @param Fax $faxes
-     *
-     * @return Account
-     */
-    public function addFax(Fax $faxes);
+    public function addFax(Fax $fax): self;
 
-    /**
-     * Remove faxes.
-     *
-     * @param Fax $faxes
-     */
-    public function removeFax(Fax $faxes);
+    public function removeFax(Fax $fax): self;
 
     /**
-     * Get faxes.
-     *
-     * @return Collection
+     * @return Collection|Fax[]
      */
-    public function getFaxes();
+    public function getFaxes(): Collection;
 
-    /**
-     * Add social media profile.
-     *
-     * @param SocialMediaProfile $socialMediaProfile
-     *
-     * @return Account
-     */
-    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
+    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile): self;
 
-    /**
-     * Remove social media profile.
-     *
-     * @param SocialMediaProfile $socialMediaProfile
-     */
-    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
+    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile): self;
 
     /**
-     * Get social media profiles.
-     *
-     * @return Collection
+     * @return Collection|SocialMediaProfile[]
      */
-    public function getSocialMediaProfiles();
+    public function getSocialMediaProfiles(): Collection;
 
-    /**
-     * Add bankAccounts.
-     *
-     * @param BankAccount $bankAccounts
-     *
-     * @return Account
-     */
-    public function addBankAccount(BankAccount $bankAccounts);
+    public function addBankAccount(BankAccount $bankAccount): self;
 
-    /**
-     * Remove bankAccounts.
-     *
-     * @param BankAccount $bankAccounts
-     */
-    public function removeBankAccount(BankAccount $bankAccounts);
+    public function removeBankAccount(BankAccount $bankAccount): self;
 
     /**
-     * Get bankAccounts.
-     *
-     * @return Collection
+     * @return Collection|BankAccount[]
      */
-    public function getBankAccounts();
+    public function getBankAccounts(): Collection;
 
-    /**
-     * Add tags.
-     *
-     * @param TagInterface $tags
-     *
-     * @return Account
-     */
-    public function addTag(TagInterface $tags);
+    public function addTag(TagInterface $tag): self;
 
-    /**
-     * Remove tags.
-     *
-     * @param TagInterface $tags
-     */
-    public function removeTag(TagInterface $tags);
+    public function removeTag(TagInterface $tag): self;
 
     /**
-     * Get tags.
-     *
-     * @return Collection
+     * @return Collection|TagInterface[]
      */
-    public function getTags();
+    public function getTags(): Collection;
 
-    /**
-     * Add accountContacts.
-     *
-     * @param AccountContact $accountContacts
-     *
-     * @return Account
-     */
-    public function addAccountContact(AccountContact $accountContacts);
+    public function addAccountContact(AccountContact $accountContact): self;
 
-    /**
-     * Remove accountContacts.
-     *
-     * @param AccountContact $accountContacts
-     */
-    public function removeAccountContact(AccountContact $accountContacts);
+    public function removeAccountContact(AccountContact $accountContact): self;
 
     /**
-     * Get accountContacts.
-     *
-     * @return Collection
+     * @return Collection|AccountContact[]
      */
-    public function getAccountContacts();
+    public function getAccountContacts(): Collection;
 
     /**
-     * Get accountAddresses.
-     *
-     * @return Collection
+     * @return Collection|AccountAddress[]
      */
-    public function getAccountAddresses();
+    public function getAccountAddresses(): Collection;
 
-    /**
-     * Returns the main address.
-     *
-     * @return mixed
-     */
-    public function getMainAddress();
+    public function getMainAddress(): ?Address;
 
     /**
-     * Get contacts.
-     *
-     * @return Collection
+     * @return ContactInterface[]
      */
-    public function getContacts();
+    public function getContacts(): array;
 
-    /**
-     * Add media.
-     *
-     * @param MediaInterface $media
-     *
-     * @return Account
-     */
-    public function addMedia(MediaInterface $media);
+    public function addMedia(MediaInterface $media): self;
 
-    /**
-     * Remove media.
-     *
-     * @param MediaInterface $media
-     */
-    public function removeMedia(MediaInterface $media);
+    public function removeMedia(MediaInterface $media): self;
 
     /**
-     * Get medias.
-     *
-     * @return Collection
+     * @return Collection|MediaInterface[]
      */
-    public function getMedias();
+    public function getMedias(): Collection;
 
-    /**
-     * Add accountAddresses.
-     *
-     * @param AccountAddress $accountAddresses
-     *
-     * @return Account
-     */
-    public function addAccountAddress(AccountAddress $accountAddresses);
+    public function addAccountAddress(AccountAddress $accountAddress): self;
 
-    /**
-     * Remove accountAddresses.
-     *
-     * @param AccountAddress $accountAddresses
-     */
-    public function removeAccountAddress(AccountAddress $accountAddresses);
+    public function removeAccountAddress(AccountAddress $accountAddress): self;
 
-    /**
-     * Add children.
-     *
-     * @param AccountInterface $child
-     *
-     * @return Account
-     */
-    public function addChild(self $child);
+    public function addChild(self $child): self;
 
-    /**
-     * Remove children.
-     *
-     * @param AccountInterface $child
-     */
-    public function removeChild(self $child);
+    public function removeChild(self $child): self;
 
-    /**
-     * Add categories.
-     *
-     * @param CategoryInterface $category
-     *
-     * @return Account
-     */
-    public function addCategory(CategoryInterface $category);
+    public function addCategory(CategoryInterface $category): self;
 
-    /**
-     * Remove categories.
-     *
-     * @param CategoryInterface $category
-     */
-    public function removeCategory(CategoryInterface $category);
+    public function removeCategory(CategoryInterface $category): self;
 
     /**
-     * Get categories.
-     *
-     * @return Collection
+     * @return Collection|CategoryInterface[]
      */
-    public function getCategories();
+    public function getCategories(): Collection;
 }

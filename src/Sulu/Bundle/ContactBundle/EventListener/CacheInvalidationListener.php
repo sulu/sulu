@@ -14,9 +14,9 @@ namespace Sulu\Bundle\ContactBundle\EventListener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Component\Contact\Model\ContactInterface;
 
 /**
  * Invalidate references when account/contact are persisted.

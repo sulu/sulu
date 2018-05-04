@@ -19,6 +19,7 @@ use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -114,9 +115,7 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         if ('true' == $request->get('flat')) {
             /* @var AccountInterface $account */
-            $account = $this->getDoctrine()
-                ->getRepository($this->getAccountEntityName())
-                ->find($id);
+            $account = $this->getRepository()->findById($id);
 
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->getRestHelper();
@@ -225,10 +224,7 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         try {
             // Get account.
-            /** @var AccountInterface $account */
-            $account = $this->getDoctrine()
-                ->getRepository($this->getAccountEntityName())
-                ->find($accountId);
+            $account = $this->getRepository()->findById($accountId);
             if (!$account) {
                 throw new EntityNotFoundException('account', $accountId);
             }
@@ -541,10 +537,7 @@ class AccountController extends RestController implements ClassResourceInterface
     public function putAction($id, Request $request)
     {
         try {
-            /** @var AccountInterface $account */
-            $account = $this->getDoctrine()
-                ->getRepository($this->getAccountEntityName())
-                ->findAccountById($id);
+            $account = $this->getRepository()->findAccountById($id);
 
             if (!$account) {
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
@@ -630,9 +623,7 @@ class AccountController extends RestController implements ClassResourceInterface
     private function setParent($parentData, AccountInterface $account)
     {
         if (null != $parentData && isset($parentData['id']) && 'null' != $parentData['id'] && '' != $parentData['id']) {
-            $parent = $this->getDoctrine()
-                ->getRepository($this->getAccountEntityName())
-                ->findAccountById($parentData['id']);
+            $parent = $this->getRepository()->findAccountById($parentData['id']);
             if (!$parent) {
                 throw new EntityNotFoundException($this->getAccountEntityName(), $parentData['id']);
             }
@@ -655,9 +646,7 @@ class AccountController extends RestController implements ClassResourceInterface
         $em = $this->getDoctrine()->getManager();
 
         try {
-            /** @var AccountInterface $account */
-            $account = $em->getRepository($this->getAccountEntityName())
-                ->findAccountById($id);
+            $account = $this->getRepository()->findAccountById($id);
 
             if (!$account) {
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
@@ -742,10 +731,7 @@ class AccountController extends RestController implements ClassResourceInterface
     public function deleteAction($id, Request $request)
     {
         $delete = function ($id) use ($request) {
-            /* @var AccountInterface $account */
-            $account = $this->getDoctrine()
-                ->getRepository($this->getAccountEntityName())
-                ->findAccountByIdAndDelete($id);
+            $account = $this->getRepository()->findAccountByIdAndDelete($id);
 
             if (!$account) {
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
@@ -795,10 +781,7 @@ class AccountController extends RestController implements ClassResourceInterface
         $numChildren = 0;
 
         foreach ($ids as $id) {
-            /** @var AccountInterface $account */
-            $account = $this->getDoctrine()
-                ->getRepository($this->getAccountEntityName())
-                ->countDistinctAccountChildrenAndContacts($id);
+            $account = $this->getRepository()->countDistinctAccountChildrenAndContacts($id);
 
             // Get number of subaccounts.
             $numChildren += $account['numChildren'];
@@ -829,10 +812,7 @@ class AccountController extends RestController implements ClassResourceInterface
         $response = [];
         $response['contacts'] = [];
 
-        /** @var AccountInterface $account */
-        $account = $this->getDoctrine()
-            ->getRepository($this->getAccountEntityName())
-            ->findChildrenAndContacts($id);
+        $account = $this->getRepository()->findChildrenAndContacts($id);
 
         if (null != $account) {
             // Return a maximum of 3 accounts.
@@ -1012,11 +992,11 @@ class AccountController extends RestController implements ClassResourceInterface
         $this->accountContactFieldDescriptors['account'] = new DoctrineFieldDescriptor(
             'id',
             'accountId',
-            $this->container->getParameter('sulu_contact.account.entity'),
+            $this->container->getParameter('sulu.model.account.class'),
             '',
             [
-                $this->container->getParameter('sulu_contact.account.entity') => new DoctrineJoinDescriptor(
-                    $this->container->getParameter('sulu_contact.account.entity'),
+                $this->container->getParameter('sulu.model.account.class') => new DoctrineJoinDescriptor(
+                    $this->container->getParameter('sulu.model.account.class'),
                     self::$accountContactEntityName . '.account'
                 ),
             ]
@@ -1243,7 +1223,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function getAccountEntityName()
     {
-        return $this->container->getParameter('sulu_contact.account.entity');
+        return $this->container->getParameter('sulu.model.account.class');
     }
 
     /**
@@ -1300,5 +1280,13 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $filter;
+    }
+
+    /**
+     * @return AccountRepositoryInterface
+     */
+    private function getRepository()
+    {
+        return $this->get('sulu.repository.account');
     }
 }

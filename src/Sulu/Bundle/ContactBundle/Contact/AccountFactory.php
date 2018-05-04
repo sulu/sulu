@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Sulu\Bundle\ContactBundle\Api\Account as AccountApi;
-use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 /**
@@ -21,11 +20,23 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 class AccountFactory implements AccountFactoryInterface
 {
     /**
+     * @var string
+     */
+    private $entityName;
+
+    public function __construct(string $entityName)
+    {
+        $this->entityName = $entityName;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function createEntity()
     {
-        return new AccountEntity();
+        $entityName = $this->entityName;
+
+        return new $entityName();
     }
 
     /**

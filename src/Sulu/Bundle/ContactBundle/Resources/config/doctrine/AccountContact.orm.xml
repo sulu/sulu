@@ -19,7 +19,7 @@
                 <join-column name="idPositions" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-        <many-to-one field="contact" target-entity="Sulu\Component\Contact\Model\ContactInterface" inversed-by="accountContacts">
+        <many-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface" inversed-by="accountContacts">
             <join-columns>
                 <join-column name="idContacts" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
             </join-columns>

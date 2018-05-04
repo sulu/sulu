@@ -5,7 +5,7 @@
     <orm:joins name="address">
         <orm:join>
             <orm:entity-name>SuluContactBundle:AccountAddress</orm:entity-name>
-            <orm:field-name>%sulu_contact.account.entity%.accountAddresses</orm:field-name>
+            <orm:field-name>%sulu.model.account.class%.accountAddresses</orm:field-name>
             <orm:method>LEFT</orm:method>
             <orm:condition>SuluContactBundle:AccountAddress.main = TRUE</orm:condition>
         </orm:join>
@@ -18,7 +18,7 @@
     <orm:joins name="mainContact">
         <orm:join>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
-            <orm:field-name>%sulu_contact.account.entity%.mainContact</orm:field-name>
+            <orm:field-name>%sulu.model.account.class%.mainContact</orm:field-name>
         </orm:join>
     </orm:joins>
 
@@ -31,7 +31,7 @@
             <orm:joins>
                 <orm:join>
                     <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
-                    <orm:field-name>%sulu_contact.account.entity%.logo</orm:field-name>
+                    <orm:field-name>%sulu.model.account.class%.logo</orm:field-name>
                 </orm:join>
             </orm:joins>
         </property>
@@ -39,19 +39,19 @@
         <property name="number" filter-type="string"
                   list:translation="contact.accounts.number" list:width="90px">
             <orm:field-name>number</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="name" visibility="always" filter-type="string"
                   list:translation="public.name" list:width="300px">
             <orm:field-name>name</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="corporation" filter-type="string"
                   list:translation="contact.accounts.corporation">
             <orm:field-name>corporation</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="city" filter-type="string" visibility="always"
@@ -147,54 +147,54 @@
 
         <property name="mainPhone" filter-type="string" list:translation="public.phone">
             <orm:field-name>mainPhone</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="mainEmail" visibility="always" filter-type="string" list:translation="public.email">
             <orm:field-name>mainEmail</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="mainFax" filter-type="string" list:translation="public.fax">
             <orm:field-name>mainFax</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="mainUrl" filter-type="string" list:translation="public.url">
             <orm:field-name>mainUrl</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="created" filter-type="datetime" list:translation="public.created" list:type="datetime">
             <orm:field-name>created</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="changed" filter-type="datetime" list:translation="public.changed" list:type="datetime">
             <orm:field-name>changed</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="id" filter-type="integer" list:translation="public.id" list:type="integer">
             <orm:field-name>id</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="uid" filter-type="string" list:translation="contact.accounts.uid" list:type="integer">
             <orm:field-name>uid</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="registerNumber" filter-type="string"
                   list:translation="contact.accounts.registerNumber" list:type="string">
             <orm:field-name>registerNumber</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <property name="placeOfJurisdiction" filter-type="string"
                   list:translation="contact.accounts.placeOfJurisdiction" list:type="string">
             <orm:field-name>placeOfJurisdiction</orm:field-name>
-            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
         <group-concat-property name="tagIds" visibility="never" filter-type="tags"
@@ -206,7 +206,7 @@
             <orm:joins>
                 <orm:join>
                     <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
-                    <orm:field-name>%sulu_contact.account.entity%.tags</orm:field-name>
+                    <orm:field-name>%sulu.model.account.class%.tags</orm:field-name>
                 </orm:join>
             </orm:joins>
         </group-concat-property>

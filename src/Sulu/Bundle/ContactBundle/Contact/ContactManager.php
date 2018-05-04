@@ -15,7 +15,7 @@ use DateTime;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
-use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
@@ -36,7 +36,7 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 class ContactManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
     /**
-     * @var AccountRepository
+     * @var AccountRepositoryInterface
      */
     private $accountRepository;
 
@@ -59,7 +59,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * @param ObjectManager $em
      * @param TagManagerInterface $tagManager
      * @param MediaManagerInterface $mediaManager
-     * @param AccountRepository $accountRepository
+     * @param AccountRepositoryInterface $accountRepository
      * @param ContactTitleRepository $contactTitleRepository
      * @param ContactRepository $contactRepository
      * @param MediaRepositoryInterface $mediaRepository
@@ -68,7 +68,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         ObjectManager $em,
         TagManagerInterface $tagManager,
         MediaManagerInterface $mediaManager,
-        AccountRepository $accountRepository,
+        AccountRepositoryInterface $accountRepository,
         ContactTitleRepository $contactTitleRepository,
         ContactRepository $contactRepository,
         MediaRepositoryInterface $mediaRepository

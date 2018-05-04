@@ -114,13 +114,20 @@ Removed following Classes:
 
 * Sulu\Bundle\CoreBundle\Build\CacheBuilder
 
+Removed following services:
+
+* `sulu_contact.account_repository` (use `sulu.repository.account`)
+* `sulu_contact.contact_repository` (use `sulu.repository.contact`)
+
 Renamed following Methods:
 
 * Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface::count => Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface::countCollections
 
-Rename following classes:
+Rename following classes/interfaces:
 
 * Sulu\Component\HttpCache\HttpCache => Sulu\Bundle\HttpCacheBundle\Cache\AbstractHttpCache
+* Sulu\Component\Contact\Model\ContactInterface => Sulu\Bundle\ContactBundle\Entity\ContactInterface
+* Sulu\Component\Contact\Model\ContactRepositoryInterface => Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface
 
 ### Contact temporarily position removed
 

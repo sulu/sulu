@@ -12,6 +12,6 @@
         <field name="public" type="boolean" column="public" nullable="false"/>
 
         <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" mapped-by="bankAccounts"/>
-        <many-to-many field="contacts" target-entity="Sulu\Component\Contact\Model\ContactInterface" mapped-by="bankAccounts"/>
+        <many-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface" mapped-by="bankAccounts"/>
     </entity>
 </doctrine-mapping>

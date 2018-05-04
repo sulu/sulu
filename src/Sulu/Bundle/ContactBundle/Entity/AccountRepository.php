@@ -17,22 +17,16 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
-/**
- * Repository for the Codes, implementing some additional functions
- * for querying objects.
- */
-class AccountRepository extends NestedTreeRepository implements DataProviderRepositoryInterface
+class AccountRepository extends NestedTreeRepository implements DataProviderRepositoryInterface, AccountRepositoryInterface
 {
     use DataProviderRepositoryTrait;
 
-    /**
-     * Searches for accounts with a specific contact.
-     *
-     * @param $contactId
-     *
-     * @return array
-     */
-    public function findOneByContactId($contactId)
+    public function findById(int $id): ?AccountInterface
+    {
+        return $this->find($id);
+    }
+
+    public function findOneByContactId(int $contactId): AccountInterface
     {
         $qb = $this->createQueryBuilder('a')
             ->join(
@@ -47,7 +41,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
         return $query->getSingleResult();
     }
 
-    public function findAccountOnly($id)
+    public function findAccountOnly(int $id): ?AccountInterface
     {
         try {
             $qb = $this->createQueryBuilder('account')
@@ -58,19 +52,11 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return;
+            return null;
         }
     }
 
-    /**
-     * Get account by id.
-     *
-     * @param $id
-     * @param $contacts
-     *
-     * @return mixed
-     */
-    public function findAccountById($id, $contacts = false)
+    public function findAccountById(int $id, bool $contacts = false): ?AccountInterface
     {
         try {
             $qb = $this->createQueryBuilder('account')
@@ -132,18 +118,11 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return;
+            return null;
         }
     }
 
-    /**
-     * Get account by id.
-     *
-     * @param $ids
-     *
-     * @return mixed
-     */
-    public function findByIds($ids)
+    public function findByIds(array $ids): array
     {
         if (0 === count($ids)) {
             return [];
@@ -203,10 +182,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findByFilter(array $filter)
+    public function findByFilter(array $filter): ?array
     {
         try {
             $qb = $this->createQueryBuilder('account');
@@ -224,18 +200,11 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
             return $query->getResult();
         } catch (NoResultException $ex) {
-            return;
+            return null;
         }
     }
 
-    /**
-     * finds all accounts but only selects given fields.
-     *
-     * @param array $fields
-     *
-     * @return array
-     */
-    public function findAllSelect($fields = [])
+    public function findAllSelect(array $fields = []): array
     {
         $qb = $this->getEntityManager()
             ->createQueryBuilder()
@@ -250,14 +219,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
         return $query->getArrayResult();
     }
 
-    /**
-     * Get account by id to delete.
-     *
-     * @param $id
-     *
-     * @return mixed
-     */
-    public function findAccountByIdAndDelete($id)
+    public function findAccountByIdAndDelete(int $id): ?AccountInterface
     {
         try {
             $qb = $this->createQueryBuilder('account')
@@ -328,18 +290,11 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return;
+            return null;
         }
     }
 
-    /**
-     * distinct count account's children and contacts.
-     *
-     * @param $id
-     *
-     * @return mixed
-     */
-    public function countDistinctAccountChildrenAndContacts($id)
+    public function countDistinctAccountChildrenAndContacts(int $id): array
     {
         try {
             $qb = $this->createQueryBuilder('account')
@@ -355,18 +310,11 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return;
+            return 0;
         }
     }
 
-    /**
-     * distinct count account's children and contacts.
-     *
-     * @param $id
-     *
-     * @return mixed
-     */
-    public function findChildrenAndContacts($id)
+    public function findChildrenAndContacts(int $id): ?AccountInterface
     {
         try {
             $qb = $this->createQueryBuilder('account')
@@ -384,7 +332,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return;
+            return null;
         }
     }
 
@@ -415,5 +363,12 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
             ->leftJoin($alias . '.tags', 'tags')
             ->leftJoin($alias . '.categories', 'categories')
             ->leftJoin('categories.translations', 'translations');
+    }
+
+    public function createNew()
+    {
+        $className = $this->getClassName();
+
+        return new $className();
     }
 }

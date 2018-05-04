@@ -17,7 +17,7 @@ use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
-use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
@@ -39,7 +39,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     private $accountFactory;
 
     /**
-     * @var AccountRepository
+     * @var AccountRepositoryInterface
      */
     private $accountRepository;
 
@@ -58,7 +58,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param TagManagerInterface $tagManager
      * @param MediaManagerInterface $mediaManager
      * @param AccountFactory $accountFactory
-     * @param AccountRepository $accountRepository
+     * @param AccountRepositoryInterface $accountRepository
      * @param ContactRepository $contactRepository
      * @param MediaRepositoryInterface $mediaRepository
      */
@@ -67,7 +67,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         TagManagerInterface $tagManager,
         MediaManagerInterface $mediaManager,
         AccountFactory $accountFactory,
-        AccountRepository $accountRepository,
+        AccountRepositoryInterface $accountRepository,
         ContactRepository $contactRepository,
         MediaRepositoryInterface $mediaRepository
     ) {

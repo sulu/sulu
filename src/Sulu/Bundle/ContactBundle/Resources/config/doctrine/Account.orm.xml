@@ -4,8 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
 
-    <entity name="Sulu\Bundle\ContactBundle\Entity\Account" table="co_accounts"
-            repository-class="Sulu\Bundle\ContactBundle\Entity\AccountRepository">
+    <mapped-superclass name="Sulu\Bundle\ContactBundle\Entity\Account" table="co_accounts">
         <indexes>
             <index columns="name"/>
         </indexes>
@@ -20,6 +19,27 @@
             <gedmo:tree-level/>
         </field>
 
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="name" type="string" column="name" length="150"/>
+
+        <field name="externalId" type="string" column="externalId" length="255" nullable="true" />
+        <field name="number" type="string" column="number" length="255" nullable="true"/>
+
+        <field name="corporation" type="string" column="corporation" length="255" nullable="true"/>
+
+        <!-- financial infos -->
+        <field name="uid" type="string" column="uid" length="50" nullable="true" />
+        <field name="registerNumber" type="string" column="registerNumber" nullable="true" />
+        <field name="placeOfJurisdiction" type="string" column="placeOfJurisdiction" nullable="true" />
+
+        <!-- relational data flattened -->
+        <field name="mainEmail" type="string" column="mainEmail" nullable="true"/>
+        <field name="mainPhone" type="string" column="mainPhone" nullable="true"/>
+        <field name="mainFax" type="string" column="mainFax" nullable="true"/>
+        <field name="mainUrl" type="string" column="mainUrl" nullable="true"/>
+
         <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="account"/>
 
         <one-to-many field="accountAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountAddress" mapped-by="account"/>
@@ -27,6 +47,12 @@
         <!-- enabled EXTRA_LAZY loading to avoid overhead while using slice() to get contacts -->
         <one-to-many field="children" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" mapped-by="parent"
                      fetch="EXTRA_LAZY"/>
+
+        <many-to-one field="mainContact" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface">
+            <join-columns>
+                <join-column name="idContactsMain" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
 
         <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" inversed-by="children">
             <join-columns>
@@ -197,5 +223,5 @@
             </order-by>
         </many-to-many>
         <gedmo:tree type="nested"/>
-    </entity>
+    </mapped-superclass>
 </doctrine-mapping>

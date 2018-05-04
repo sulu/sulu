@@ -15,7 +15,7 @@
             </join-columns>
         </many-to-one>
         <many-to-many field="contacts"
-                      target-entity="Sulu\Component\Contact\Model\ContactInterface"
+                      target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface"
                       mapped-by="socialMediaProfiles"/>
         <many-to-many field="accounts"
                       target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface"

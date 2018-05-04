@@ -7,7 +7,7 @@
             <generator strategy="AUTO"/>
         </id>
         <field name="locale" type="string" column="locale" length="60"/>
-        <many-to-one field="contact" target-entity="Sulu\Component\Contact\Model\ContactInterface" inversed-by="locales">
+        <many-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface" inversed-by="locales">
             <join-columns>
                 <join-column name="idContacts" referenced-column-name="id" nullable="false"/>
             </join-columns>

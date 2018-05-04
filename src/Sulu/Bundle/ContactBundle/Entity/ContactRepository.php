@@ -14,7 +14,6 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Component\Contact\Model\ContactRepositoryInterface;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
