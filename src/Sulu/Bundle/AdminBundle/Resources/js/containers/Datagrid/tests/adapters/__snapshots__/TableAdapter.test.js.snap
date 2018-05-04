@@ -46,7 +46,11 @@ exports[`Render column with ascending sort icon 1`] = `
             <div
               class="cellContent"
             >
-              Title 1
+              <div
+                class="cellContent"
+              >
+                Title 1
+              </div>
             </div>
           </td>
           <td
@@ -140,7 +144,11 @@ exports[`Render column with descending sort icon 1`] = `
             <div
               class="cellContent"
             >
-              Title 1
+              <div
+                class="cellContent"
+              >
+                Title 1
+              </div>
             </div>
           </td>
           <td
@@ -832,53 +840,15 @@ exports[`Render data with schema not containing all fields 1`] = `
       <thead
         class="header"
       >
-        <tr>
-          <th
-            class="headerCell clickable"
-          >
-            <button>
-              <span>
-                Description
-              </span>
-            </button>
-          </th>
-        </tr>
+        <tr />
       </thead>
       <tbody>
         <tr
           class="row"
-        >
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              <div
-                class="cellContent"
-              >
-                Description 1
-              </div>
-            </div>
-          </td>
-        </tr>
+        />
         <tr
           class="row"
-        >
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              <div
-                class="cellContent"
-              >
-                Description 2
-              </div>
-            </div>
-          </td>
-        </tr>
+        />
       </tbody>
     </table>
   </div>
