@@ -6,7 +6,15 @@ const updateRouterAttributesFromView: UpdateAttributesHook = function (route) {
     const View = viewRegistry.get(route.view);
 
     if (typeof(View.getDerivedRouteAttributes) === 'function') {
-        return View.getDerivedRouteAttributes(route);
+        const attributes = View.getDerivedRouteAttributes(route);
+
+        if (typeof attributes !== 'object') {
+            throw new Error(
+                'The "getDerivedRouteAttributes" function of the "' + route.view + '" view did not return an object.'
+            );
+        }
+
+        return attributes;
     }
 
     return {};
