@@ -1,15 +1,18 @@
 // @flow
-import {action, observable, computed} from 'mobx';
+import {action, autorun, observable, computed} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers';
 import {Loader} from 'sulu-admin-bundle/components';
+import {userStore} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import WebspaceSelect from '../../components/WebspaceSelect';
 import WebspaceStore from '../../stores/WebspaceStore';
 import type {Webspace, Localization} from '../../stores/WebspaceStore/types';
 import webspaceOverviewStyles from './webspaceOverview.scss';
+
+const USER_SETTING_WEBSPACE = 'sulu_content.webspace_overview.webspace';
 
 @observer
 class WebspaceOverview extends React.Component<ViewProps> {
@@ -18,6 +21,13 @@ class WebspaceOverview extends React.Component<ViewProps> {
     webspace: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
     @observable webspaces: Array<Webspace>;
+    webspaceDisposer: () => void;
+
+    static getDerivedRouteAttributes() {
+        return {
+            webspace: userStore.getPersistentSetting(USER_SETTING_WEBSPACE),
+        };
+    }
 
     @action handleWebspaceChange = (value: string) => {
         this.webspace.set(value);
@@ -68,7 +78,11 @@ class WebspaceOverview extends React.Component<ViewProps> {
         });
     }
 
-    componentWillMount() {
+    @action componentDidMount() {
+        this.webspaceDisposer = autorun(() => {
+            userStore.setPersistentSetting(USER_SETTING_WEBSPACE, this.webspace.get());
+        });
+
         const router = this.props.router;
         const observableOptions = {};
         const apiOptions = {};
@@ -91,6 +105,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
 
     componentWillUnmount() {
         this.datagridStore.destroy();
+        this.webspaceDisposer();
     }
 
     handleEditClick = (id: string | number) => {

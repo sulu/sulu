@@ -11,6 +11,11 @@ jest.mock('../../../containers/Datagrid/stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue({}),
 }));
 
+jest.mock('../../../stores/UserStore', () => ({
+    setPersistentSetting: jest.fn(),
+    getPersistentSetting: jest.fn(),
+}));
+
 jest.mock(
     '../../../containers/Datagrid/stores/DatagridStore',
     () => jest.fn(function(resourceKey, observableOptions, options) {
@@ -190,9 +195,19 @@ test('Should destroy the store on unmount', () => {
     expect(router.bind).toBeCalledWith('sortColumn', datagridStore.sortColumn);
     expect(router.bind).toBeCalledWith('sortOrder', datagridStore.sortOrder);
 
+    expect(datagrid.instance().sortColumnDisposer).toBeDefined();
+    expect(datagrid.instance().sortOrderDisposer).toBeDefined();
+
+    const sortColumnDisposerSpy = jest.fn();
+    const sortOrderDisposerSpy = jest.fn();
+    datagrid.instance().sortColumnDisposer = sortColumnDisposerSpy;
+    datagrid.instance().sortOrderDisposer = sortOrderDisposerSpy;
+
     datagrid.unmount();
 
     expect(datagridStore.destroy).toBeCalled();
+    expect(sortColumnDisposerSpy).toBeCalledWith();
+    expect(sortOrderDisposerSpy).toBeCalledWith();
 });
 
 test('Should render the add button in the toolbar only if an addRoute has been passed in options', () => {
@@ -318,6 +333,49 @@ test('Should navigate without locale when pencil button is clicked', () => {
     const datagrid = mount(<Datagrid router={router} />);
     datagrid.find('ButtonCell button').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
+});
+
+test('Should update user settings when sorting is changed', () => {
+    const userStore = require('../../../stores/UserStore');
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+                adapters: ['table'],
+            },
+        },
+    };
+
+    mount(<Datagrid router={router} />);
+
+    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.datagrid.test.sort_order', undefined);
+    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.datagrid.test.sort_column', undefined);
+});
+
+test('Should load the route attributes from the UserStore', () => {
+    const Datagrid = require('../Datagrid').default;
+    const userStore = require('../../../stores/UserStore');
+
+    userStore.getPersistentSetting.mockImplementation((key) => {
+        switch(key) {
+            case 'sulu_admin.datagrid.test.sort_column':
+                return 'title';
+            case 'sulu_admin.datagrid.test.sort_order':
+                return 'desc';
+        }
+    });
+
+    expect(Datagrid.getDerivedRouteAttributes({
+        options: {
+            resourceKey: 'test',
+        },
+    })).toEqual({
+        sortColumn: 'title',
+        sortOrder: 'desc',
+    });
 });
 
 test('Should render the delete item enabled only if something is selected', () => {

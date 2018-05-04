@@ -8,12 +8,7 @@ import type {
     SortOrder,
     StructureStrategyInterface,
 } from '../types';
-import userStore from '../../../stores/UserStore';
 import metadataStore from './MetadataStore';
-
-const USER_SETTING_PREFIX = 'sulu_admin.datagrid';
-const USER_SETTING_SORT_COLUMN = 'sort_column';
-const USER_SETTING_SORT_ORDER = 'sort_order';
 
 export default class DatagridStore {
     @observable pageCount: number = 0;
@@ -30,8 +25,6 @@ export default class DatagridStore {
     schema: Schema = {};
     observableOptions: ObservableOptions;
     sendRequestDisposer: () => void;
-    sortColumnDisposer: () => void;
-    sortOrderDisposer: () => void;
 
     constructor(
         resourceKey: string,
@@ -42,32 +35,13 @@ export default class DatagridStore {
         this.observableOptions = observableOptions;
         this.options = options;
 
-        this.sort(
-            userStore.getPersistentSetting(this.sortColumnSettingKey),
-            userStore.getPersistentSetting(this.sortOrderSettingKey)
-        );
-
         this.sendRequestDisposer = autorun(this.sendRequest);
-        this.sortColumnDisposer = autorun(
-            () => userStore.setPersistentSetting(this.sortColumnSettingKey, this.sortColumn.get())
-        );
-        this.sortOrderDisposer = autorun(
-            () => userStore.setPersistentSetting(this.sortOrderSettingKey, this.sortOrder.get())
-        );
 
         metadataStore.getSchema(this.resourceKey)
             .then(action((schema) => {
                 this.schema = schema;
                 this.schemaLoading = false;
             }));
-    }
-
-    get sortColumnSettingKey(): string {
-        return [USER_SETTING_PREFIX, this.resourceKey, USER_SETTING_SORT_COLUMN].join('.');
-    }
-
-    get sortOrderSettingKey(): string {
-        return [USER_SETTING_PREFIX, this.resourceKey, USER_SETTING_SORT_ORDER].join('.');
     }
 
     @computed get initialized(): boolean {
@@ -241,7 +215,5 @@ export default class DatagridStore {
 
     destroy() {
         this.sendRequestDisposer();
-        this.sortColumnDisposer();
-        this.sortOrderDisposer();
     }
 }

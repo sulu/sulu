@@ -1,15 +1,29 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React from 'react';
 import {default as DatagridContainer} from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
-import ResourceRequester from '../../services/ResourceRequester';
-import {translate} from '../../utils/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
+import ResourceRequester from '../../services/ResourceRequester';
+import type {Route} from '../../services/Router/types';
+import userStore from '../../stores/UserStore';
+import {translate} from '../../utils/Translator';
 import datagridStyles from './datagrid.scss';
+
+const USER_SETTING_PREFIX = 'sulu_admin.datagrid';
+const USER_SETTING_SORT_COLUMN = 'sort_column';
+const USER_SETTING_SORT_ORDER = 'sort_order';
+
+function getSortColumnSettingKey(resourceKey): string {
+    return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_SORT_COLUMN].join('.');
+}
+
+function getSortOrderSettingKey(resourceKey): string {
+    return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_SORT_ORDER].join('.');
+}
 
 @observer
 class Datagrid extends React.Component<ViewProps> {
@@ -17,6 +31,21 @@ class Datagrid extends React.Component<ViewProps> {
     locale: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
     @observable deleting = false;
+    sortColumnDisposer: () => void;
+    sortOrderDisposer: () => void;
+
+    static getDerivedRouteAttributes(route: Route) {
+        const {
+            options: {
+                resourceKey,
+            },
+        } = route;
+
+        return {
+            sortColumn: userStore.getPersistentSetting(getSortColumnSettingKey(resourceKey)),
+            sortOrder: userStore.getPersistentSetting(getSortOrderSettingKey(resourceKey)),
+        };
+    }
 
     @action componentWillMount() {
         const router = this.props.router;
@@ -53,10 +82,24 @@ class Datagrid extends React.Component<ViewProps> {
 
         router.bind('sortColumn', this.datagridStore.sortColumn);
         router.bind('sortOrder', this.datagridStore.sortOrder);
+
+        const {
+            sortColumn,
+            sortOrder,
+        } = this.datagridStore;
+
+        this.sortColumnDisposer = autorun(
+            () => userStore.setPersistentSetting(getSortColumnSettingKey(resourceKey), sortColumn.get())
+        );
+        this.sortOrderDisposer = autorun(
+            () => userStore.setPersistentSetting(getSortOrderSettingKey(resourceKey), sortOrder.get())
+        );
     }
 
     componentWillUnmount() {
         this.datagridStore.destroy();
+        this.sortColumnDisposer();
+        this.sortOrderDisposer();
     }
 
     handleEditClick = (rowId) => {
