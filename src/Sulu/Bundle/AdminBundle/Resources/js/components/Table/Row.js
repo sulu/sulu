@@ -10,7 +10,7 @@ import ButtonCell from './ButtonCell';
 import Cell from './Cell';
 import tableStyles from './table.scss';
 
-type Props = {|
+type Props = {
     children: ChildrenArray<Element<typeof Cell>>,
     /** The index of the row inside the body */
     rowIndex: number,
@@ -40,7 +40,7 @@ type Props = {|
     onCollapse?: (rowId: string | number) => void,
     /** @ignore */
     onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
-|};
+};
 
 export default class Row extends React.PureComponent<Props> {
     static defaultProps = {
@@ -80,7 +80,7 @@ export default class Row extends React.PureComponent<Props> {
         }
 
         if (!this.props.selectInFirstCell) {
-            let select = this.createSelect();
+            const select = this.createSelect();
 
             if (select) {
                 prependedCells.push(
