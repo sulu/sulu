@@ -14,8 +14,6 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use Sulu\Bundle\ContactBundle\Model\AccountInterface;
-use Sulu\Bundle\ContactBundle\Model\AccountRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
@@ -367,11 +365,6 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
             ->leftJoin('categories.translations', 'translations');
     }
 
-    /**
-     * Create a new instance of a model.
-     *
-     * @return mixed
-     */
     public function createNew()
     {
         $className = $this->getClassName();

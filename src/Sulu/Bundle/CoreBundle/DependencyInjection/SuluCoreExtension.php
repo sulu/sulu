@@ -13,7 +13,7 @@ namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
 use Oro\ORM\Query\AST\Functions\String\GroupConcat;
 use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Model\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;

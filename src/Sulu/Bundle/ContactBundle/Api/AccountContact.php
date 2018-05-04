@@ -16,8 +16,8 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
-use Sulu\Bundle\ContactBundle\Model\AccountInterface;
 use Sulu\Component\Rest\ApiWrapper;
 
 /**

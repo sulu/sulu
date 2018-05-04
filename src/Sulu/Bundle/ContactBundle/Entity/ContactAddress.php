@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
-use Sulu\Bundle\ContactBundle\Model\ContactInterface;
 
 /**
  * ContactAddress.

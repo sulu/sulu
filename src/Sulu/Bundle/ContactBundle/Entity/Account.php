@@ -16,8 +16,6 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\ContactBundle\Model\AccountInterface;
-use Sulu\Bundle\ContactBundle\Model\ContactInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Security\Authentication\UserInterface;

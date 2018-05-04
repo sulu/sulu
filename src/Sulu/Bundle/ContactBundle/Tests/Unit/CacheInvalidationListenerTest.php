@@ -16,9 +16,9 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\EventListener\CacheInvalidationListener;
-use Sulu\Bundle\ContactBundle\Model\AccountInterface;
-use Sulu\Bundle\ContactBundle\Model\ContactInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 

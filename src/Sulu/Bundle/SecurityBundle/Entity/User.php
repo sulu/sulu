@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\ContactBundle\Model\ContactInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 
 /**
  * User.

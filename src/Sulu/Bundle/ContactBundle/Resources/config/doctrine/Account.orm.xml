@@ -45,16 +45,16 @@
         <one-to-many field="accountAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountAddress" mapped-by="account"/>
 
         <!-- enabled EXTRA_LAZY loading to avoid overhead while using slice() to get contacts -->
-        <one-to-many field="children" target-entity="Sulu\Bundle\ContactBundle\Model\AccountInterface" mapped-by="parent"
+        <one-to-many field="children" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" mapped-by="parent"
                      fetch="EXTRA_LAZY"/>
 
-        <many-to-one field="mainContact" target-entity="Sulu\Bundle\ContactBundle\Model\ContactInterface">
+        <many-to-one field="mainContact" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface">
             <join-columns>
                 <join-column name="idContactsMain" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
 
-        <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Model\AccountInterface" inversed-by="children">
+        <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" inversed-by="children">
             <join-columns>
                 <join-column name="idAccountsParent" referenced-column-name="id"/>
             </join-columns>

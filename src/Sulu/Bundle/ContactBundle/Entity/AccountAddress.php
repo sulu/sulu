@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Sulu\Bundle\ContactBundle\Model\AccountInterface;
-
 /**
  * AccountAddress.
  */

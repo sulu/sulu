@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Command;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\ContactBundle\Model\AccountRepositoryInterface;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

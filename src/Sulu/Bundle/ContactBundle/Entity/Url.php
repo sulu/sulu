@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
-use Sulu\Bundle\ContactBundle\Model\AccountInterface;
 
 /**
  * Url.
@@ -153,11 +152,11 @@ class Url
     /**
      * Add contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Model\ContactInterface $contacts
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts
      *
      * @return Url
      */
-    public function addContact(\Sulu\Bundle\ContactBundle\Model\ContactInterface $contacts)
+    public function addContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -167,9 +166,9 @@ class Url
     /**
      * Remove contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Model\ContactInterface $contacts
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts
      */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Model\ContactInterface $contacts)
+    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
     {
         $this->contacts->removeElement($contacts);
     }

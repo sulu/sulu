@@ -9,20 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContactBundle\Model;
+namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\ContactBundle\Entity\AccountContact;
-use Sulu\Bundle\ContactBundle\Entity\BankAccount;
-use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
-use Sulu\Bundle\ContactBundle\Entity\ContactLocale;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
-use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;

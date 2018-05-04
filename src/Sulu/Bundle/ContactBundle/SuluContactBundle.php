@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\ContactBundle;
 
-use Sulu\Bundle\ContactBundle\Model\AccountInterface;
-use Sulu\Bundle\ContactBundle\Model\ContactInterface;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;

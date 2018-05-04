@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Command;
 
-use Sulu\Bundle\ContactBundle\Model\ContactInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Persistence\Repository\RepositoryInterface;

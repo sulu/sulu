@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Sulu\Bundle\ContactBundle\Api\Account as AccountApi;
-use Sulu\Bundle\ContactBundle\Model\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 /**
  * factory to encapsulate account creation.

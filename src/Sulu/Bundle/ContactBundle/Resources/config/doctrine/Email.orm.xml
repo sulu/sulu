@@ -16,7 +16,7 @@
                 <join-column name="idEmailTypes" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
-        <many-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Model\ContactInterface" mapped-by="emails"/>
-        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Model\AccountInterface" mapped-by="emails"/>
+        <many-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface" mapped-by="emails"/>
+        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" mapped-by="emails"/>
     </entity>
 </doctrine-mapping>

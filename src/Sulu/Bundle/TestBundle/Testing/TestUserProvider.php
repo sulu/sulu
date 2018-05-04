@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\ContactBundle\Model\ContactRepositoryInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;

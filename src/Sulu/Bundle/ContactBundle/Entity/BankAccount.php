@@ -13,8 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Exclude;
-use Sulu\Bundle\ContactBundle\Model\AccountInterface;
-use Sulu\Bundle\ContactBundle\Model\ContactInterface;
 
 /**
  * BankAccount.

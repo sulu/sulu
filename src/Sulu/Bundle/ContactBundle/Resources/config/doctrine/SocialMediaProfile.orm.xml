@@ -15,10 +15,10 @@
             </join-columns>
         </many-to-one>
         <many-to-many field="contacts"
-                      target-entity="Sulu\Bundle\ContactBundle\Model\ContactInterface"
+                      target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface"
                       mapped-by="socialMediaProfiles"/>
         <many-to-many field="accounts"
-                      target-entity="Sulu\Bundle\ContactBundle\Model\AccountInterface"
+                      target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface"
                       mapped-by="socialMediaProfiles"/>
     </entity>
 </doctrine-mapping>
