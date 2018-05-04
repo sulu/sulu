@@ -126,9 +126,8 @@ Renamed following Methods:
 Rename following classes/interfaces:
 
 * Sulu\Component\HttpCache\HttpCache => Sulu\Bundle\HttpCacheBundle\Cache\AbstractHttpCache
-* Sulu\Component\Contact\Model\ContactInterface => Sulu\Bundle\ContactBundle\Model\ContactInterface
-* Sulu\Component\Contact\Model\ContactRepositoryInterface => Sulu\Bundle\ContactBundle\Model\ContactRepositoryInterface
-* Sulu\Bundle\ContactBundle\Entity\AccountInterface => Sulu\Bundle\ContactBundle\Model\AccountInterface
+* Sulu\Component\Contact\Model\ContactInterface => Sulu\Bundle\ContactBundle\Entity\ContactInterface
+* Sulu\Component\Contact\Model\ContactRepositoryInterface => Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface
 
 ### Contact temporarily position removed
 
