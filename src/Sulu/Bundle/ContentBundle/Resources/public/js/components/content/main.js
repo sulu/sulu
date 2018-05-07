@@ -1148,7 +1148,7 @@ define([
 
                     this.sandbox.emit('husky.label.header.loading');
 
-                    ContentManager.removeDraft(this.data.id, this.options.language)
+                    ContentManager.removeDraft(this.data.id, this.options.language, this.options.webspace)
                         .then(function(response) {
                             this.sandbox.emit(
                                 'sulu.router.navigate',
