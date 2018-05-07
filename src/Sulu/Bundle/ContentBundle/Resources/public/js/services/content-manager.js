@@ -68,10 +68,10 @@ define(['jquery'], function ($) {
             return deferred.promise();
         },
 
-        removeDraft: function(id, locale) {
+        removeDraft: function(id, locale, webspace) {
             var deferred = $.Deferred();
             $.ajax(
-                [baseUrl, '/', id, '?action=remove-draft&language=' + locale].join(''),
+                [baseUrl, '/', id, '?action=remove-draft&webspace=', webspace, '&language=', locale].join(''),
                 {
                     method: 'POST',
                     contentType: 'application/json; charset=utf-8',
