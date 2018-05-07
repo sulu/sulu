@@ -170,6 +170,28 @@ test('Apply updateAttributesHooks before applying default attributes but after p
     expect(router.attributes.value).toEqual('test');
 });
 
+test('Apply attribute defaults if value of passed attribute is undefined', () => {
+    routeRegistry.getAll.mockReturnValue({
+        webspace_overview: {
+            name: 'webspace_overview',
+            view: 'webspace_overview',
+            path: '/webspace/:webspace/:locale',
+            attributeDefaults: {
+                webspace: 'webspace1',
+                sortOrder: 'desc',
+            },
+        },
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.handleNavigation('webspace_overview', {locale: 'en', webspace: undefined});
+
+    expect(router.attributes.webspace).toEqual('webspace1');
+    expect(router.attributes.locale).toEqual('en');
+});
+
 test('Update observable attribute on route change', () => {
     routeRegistry.getAll.mockReturnValue({
         list: {
