@@ -4,6 +4,7 @@ import FormInspector from './FormInspector';
 import fieldRegistry from './registries/FieldRegistry';
 import FormStore from './stores/FormStore';
 import Assignment from './fields/Assignment';
+import Checkbox from './fields/Checkbox';
 import DatePicker from './fields/DatePicker';
 import Email from './fields/Email';
 import Input from './fields/Input';
@@ -18,6 +19,7 @@ import type {Schema, Types} from './types';
 export {
     fieldRegistry,
     Assignment,
+    Checkbox,
     DatePicker,
     Email,
     Input,
