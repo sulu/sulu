@@ -4,7 +4,7 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import pathToRegexp, {compile} from 'path-to-regexp';
-import type {Route, AttributeMap} from './types';
+import type {AttributeMap, Route, UpdateAttributesHook} from './types';
 import routeRegistry from './registries/RouteRegistry';
 
 export default class Router {
@@ -14,6 +14,7 @@ export default class Router {
     @observable bindings: Map<string, IObservableValue<*>> = new Map();
     bindingDefaults: Map<string, ?string | number> = new Map();
     attributesHistory: {[string]: Array<AttributeMap>} = {};
+    updateAttributesHooks: Array<UpdateAttributesHook> = [];
 
     constructor(history: Object) {
         this.history = history;
@@ -34,6 +35,10 @@ export default class Router {
                 this.history.push(url);
             }
         });
+    }
+
+    addUpdateAttributesHook(hook: UpdateAttributesHook) {
+        this.updateAttributesHooks.push(hook);
     }
 
     @action bind(key: string, value: IObservableValue<*>, defaultValue: ?string | number = undefined) {
@@ -113,19 +118,29 @@ export default class Router {
     }
 
     @action update(name: string, attributes: Object) {
-        this.route = routeRegistry.get(name);
+        const route = routeRegistry.get(name);
+
+        const updatedAttributes = {
+            ...this.updateAttributesHooks.reduce((hookAttributes, updateAttributeHook) => ({
+                ...updateAttributeHook(route),
+                ...hookAttributes,
+            }), {}),
+            ...attributes,
+        };
+
+        this.route = route;
 
         const attributeDefaults = this.route.attributeDefaults;
         Object.keys(attributeDefaults).forEach((key) => {
             // set default attributes if not passed, to automatically set important omitted attributes everywhere
             // e.g. allows to always pass the default locale if nothing is passed
-            if (attributes[key] !== undefined) {
+            if (updatedAttributes[key] !== undefined) {
                 return;
             }
-            attributes[key] = attributeDefaults[key];
+            updatedAttributes[key] = attributeDefaults[key];
         });
 
-        this.attributes = attributes;
+        this.attributes = updatedAttributes;
 
         for (const [key, observableValue] of this.bindings.entries()) {
             const value: any = this.attributes[key] || this.bindingDefaults.get(key);

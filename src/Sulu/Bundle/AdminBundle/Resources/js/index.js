@@ -22,7 +22,7 @@ import {
     Time,
 } from './containers/Form';
 import FieldBlocks from './containers/FieldBlocks';
-import {viewRegistry} from './containers/ViewRenderer';
+import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
 import {navigationRegistry} from './containers/Navigation';
 import resourceMetadataStore from './stores/ResourceMetadataStore';
 import {
@@ -95,6 +95,7 @@ function registerDatagridFieldTypes() {
 
 function startApplication() {
     const router = new Router(createHistory());
+    router.addUpdateAttributesHook(updateRouterAttributesFromView);
     const id = 'application';
     const applicationElement = document.getElementById(id);
 

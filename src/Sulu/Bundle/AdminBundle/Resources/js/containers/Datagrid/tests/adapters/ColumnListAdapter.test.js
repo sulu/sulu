@@ -49,10 +49,13 @@ test('Render data with edit button', () => {
             loading={false}
             onItemClick={jest.fn()}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={undefined}
             pageCount={0}
             schema={{}}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -87,10 +90,13 @@ test('Render data without edit button', () => {
             disabledIds={[]}
             loading={false}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={undefined}
             pageCount={0}
             schema={{}}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -126,10 +132,13 @@ test('Render data with selection', () => {
             loading={false}
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={undefined}
             pageCount={0}
             schema={{}}
             selections={[1]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -165,10 +174,13 @@ test('Render data with disabled items', () => {
             loading={false}
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={undefined}
             pageCount={0}
             schema={{}}
             selections={[1]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -186,10 +198,13 @@ test('Render with add button in toolbar when onAddClick callback is given', () =
             loading={false}
             onAddClick={jest.fn()}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={undefined}
             pageCount={0}
             schema={{}}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -223,10 +238,13 @@ test('Render data with loading column', () => {
             disabledIds={[]}
             loading={true}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={undefined}
             pageCount={0}
             schema={{}}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -281,10 +299,13 @@ test('Execute onItemActivation callback when an item is clicked with the correct
             loading={false}
             onItemActivation={onItemActivationSpy}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={undefined}
             pageCount={0}
             schema={{}}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -323,10 +344,13 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
             loading={false}
             onItemSelectionChange={itemSelectionChangeSpy}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={undefined}
             pageCount={0}
             schema={{}}
             selections={[2]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 

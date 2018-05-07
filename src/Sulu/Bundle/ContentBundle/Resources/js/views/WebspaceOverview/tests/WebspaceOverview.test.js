@@ -3,30 +3,41 @@ import React from 'react';
 import {mount} from 'enzyme';
 import WebspaceStore from '../../../stores/WebspaceStore';
 
-jest.mock('sulu-admin-bundle/containers', () => {
-    return {
-        withToolbar: jest.fn((Component) => Component),
-        Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
-        DatagridStore: jest.fn(function() {
-            this.selections = [];
-            this.selectionIds = [];
-            this.getPage = jest.fn().mockReturnValue(1);
-            this.destroy = jest.fn();
-            this.sendRequest = jest.fn();
-            this.updateStrategies = jest.fn();
-        }),
-        FlatStructureStrategy: require(
-            'sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStructureStrategy'
-        ).default,
-        FullLoadingStrategy: require(
-            'sulu-admin-bundle/containers/Datagrid/loadingStrategies/FullLoadingStrategy'
-        ).default,
-    };
-});
+jest.mock('sulu-admin-bundle/containers', () => ({
+    withToolbar: jest.fn((Component) => Component),
+    Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
+    DatagridStore: jest.fn(function() {
+        this.sortColumn = {
+            get: jest.fn(),
+        };
+        this.sortOrder = {
+            get: jest.fn(),
+        };
+        this.selections = [];
+        this.selectionIds = [];
+        this.getPage = jest.fn().mockReturnValue(1);
+        this.destroy = jest.fn();
+        this.sendRequest = jest.fn();
+        this.updateStrategies = jest.fn();
+    }),
+    FlatStructureStrategy: require(
+        'sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStructureStrategy'
+    ).default,
+    FullLoadingStrategy: require(
+        'sulu-admin-bundle/containers/Datagrid/loadingStrategies/FullLoadingStrategy'
+    ).default,
+}));
 
 jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => ({
     get: jest.fn().mockReturnValue(require('sulu-admin-bundle/containers/Datagrid/adapters/ColumnListAdapter').default),
     has: jest.fn().mockReturnValue(true),
+}));
+
+jest.mock('sulu-admin-bundle/stores', () => ({
+    userStore: {
+        setPersistentSetting: jest.fn(),
+        getPersistentSetting: jest.fn(),
+    },
 }));
 
 jest.mock('../../../stores/WebspaceStore', () => ({
@@ -78,6 +89,7 @@ test('Should change webspace when value of webspace select is changed', () => {
     const toolbarFunction = withToolbar.mock.calls[0][1];
     // $FlowFixMe
     const webspaceStore: typeof WebspaceStore = require('../../../stores/WebspaceStore');
+    const userStore = require('sulu-admin-bundle/stores').userStore;
 
     const promise = Promise.resolve(
         [
@@ -123,10 +135,9 @@ test('Should change webspace when value of webspace select is changed', () => {
 
         webspaceOverview.update();
         webspaceOverview.find('WebspaceSelect').prop('onChange')('sulu_blog');
-        // check if webspace is correctly set
         expect(webspaceOverview.instance().webspace.get()).toBe('sulu_blog');
-        // check if default locale of selected webspace is set
         expect(webspaceOverview.instance().locale.get()).toBe('de');
+        expect(userStore.setPersistentSetting).lastCalledWith('sulu_content.webspace_overview.webspace', 'sulu_blog');
 
         const toolbarConfigNew = toolbarFunction.call(webspaceOverview.instance());
         expect(toolbarConfigNew.locale.value).toBe('de');
@@ -137,6 +148,22 @@ test('Should change webspace when value of webspace select is changed', () => {
                 ]
             )
         );
+    });
+});
+
+test('Should load webspace route attribute from userStore', () => {
+    const WebspaceOverview = require('../WebspaceOverview').default;
+    const userStore = require('sulu-admin-bundle/stores').userStore;
+
+    userStore.getPersistentSetting.mockImplementation((key) => {
+        if (key === 'sulu_content.webspace_overview.webspace') {
+            return 'sulu';
+        }
+    });
+
+    // $FlowFixMe
+    expect(WebspaceOverview.getDerivedRouteAttributes()).toEqual({
+        webspace: 'sulu',
     });
 });
 

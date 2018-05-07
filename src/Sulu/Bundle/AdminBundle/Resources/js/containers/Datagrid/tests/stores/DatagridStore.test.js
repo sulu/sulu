@@ -183,6 +183,36 @@ test('The loading strategy should be called with a different locale when a reque
     datagridStore.destroy();
 });
 
+test('The loading strategy should be called with the defined sortings', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore(
+        'snippets',
+        {
+            page,
+        }
+    );
+
+    const data = [{id: 1}];
+    structureStrategy.getData.mockReturnValue(data);
+    datagridStore.sort('title', 'desc');
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    expect(loadingStrategy.load).toBeCalledWith(
+        data,
+        'snippets',
+        {
+            page: 1,
+            sortBy: 'title',
+            sortOrder: 'desc',
+        },
+        structureStrategy.enhanceItem
+    );
+
+    datagridStore.destroy();
+});
+
 test('The loading strategy should be called with the active item as parent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -486,4 +516,13 @@ test('Should reset the data array and set page to 1 when the reload method is ca
             done();
         }
     );
+});
+
+test('Should call all disposers if destroy is called', () => {
+    const datagridStore = new DatagridStore('snippets', {page: observable.box()});
+    datagridStore.sendRequestDisposer = jest.fn();
+
+    datagridStore.destroy();
+
+    expect(datagridStore.sendRequestDisposer).toBeCalledWith();
 });

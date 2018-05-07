@@ -76,6 +76,12 @@ jest.mock('sulu-admin-bundle/containers', () => {
 
             this.loading = false;
             this.pageCount = 3;
+            this.sortColumn = {
+                get: jest.fn(),
+            };
+            this.sortOrder = {
+                get: jest.fn(),
+            };
             this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
                 ? collectionData
                 : mediaData;

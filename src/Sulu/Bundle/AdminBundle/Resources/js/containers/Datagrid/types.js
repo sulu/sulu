@@ -17,6 +17,8 @@ export type Schema = {
     [string]: SchemaEntry,
 };
 
+export type SortOrder = 'asc' | 'desc';
+
 export type DatagridAdapterProps = {
     active?: ?string | number,
     data: Array<*>,
@@ -28,10 +30,13 @@ export type DatagridAdapterProps = {
     onAddClick?: (id: string | number) => void,
     onItemSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     onPageChange: (page: number) => void,
+    onSort: (column: string, order: SortOrder) => void,
     page: ?number,
     pageCount: number,
     schema: Schema,
     selections: Array<number | string>,
+    sortColumn: ?string,
+    sortOrder: ?SortOrder,
 };
 
 export type ObservableOptions = {
@@ -40,8 +45,10 @@ export type ObservableOptions = {
 };
 
 export type LoadOptions = {
-    page?: number,
     locale?: ?string,
+    page?: number,
+    sortBy?: string,
+    sortOrder?: SortOrder,
 };
 
 export type ItemEnhancer = (item: Object) => Object;

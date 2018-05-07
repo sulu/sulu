@@ -117,3 +117,42 @@ router.unbind('value', value); // unbind to avoid leaking listeners
 
 Mind that the bindings will be cleared on every `navigate` call. This is necessary to avoid superfluous updates because
 of wrong update on observers.
+
+In addition to the normal navigating there are the `updateAttributesHooks`. These hooks can be added using the
+`addUpdateAttributesHook` function. These hooks will get the route to which is currently navigated as its first
+argument, and the hook can decide using that argument what attributes it will return. These attributes will be merged
+with the attribute passed to the `navigate` or `restore` call, whereby the arguments from the function call take
+precedence. Finally the attribute defaults will only be applied if the given attribute has not been in either of the
+previous two described ways. So the priorities of the available attributes is as follows:
+
+- arguments from `navigate` or `restore` call
+- return value from `updateAttributesHooks`
+- attribute defaults
+
+If the attribute is mandatory (i.e. in the path and not a query parameter) and it is not passed in any of these ways,
+then an error will be thrown.
+
+See the following example for a better understanding.
+
+```javascript static
+routeRegistry.addCollection([
+    {
+        name: 'sulu_webspace.webspace_overview',
+        path: '/webspace/:webspace/:locale',
+        view: 'sulu_content.webspace_overview',
+        attributeDefaults: {
+            webspace: 'example',
+            locale: 'en',
+            utf: true,
+        },
+    },
+]);
+
+router.addUpdateAttributesHooks((route) => ({
+    route: route.name,
+    locale: 'de',
+}));
+
+// navigates to #/webspace/sulu_io/de?utf=true&test=true
+router.navigate('sulu_webspace.webspace_overview', {webspace: 'sulu_io', test: true})
+```

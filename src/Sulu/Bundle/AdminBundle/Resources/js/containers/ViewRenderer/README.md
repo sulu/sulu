@@ -74,3 +74,10 @@ const router = {
 
 <ViewRenderer router={router} />
 ```
+
+In addition to all of that the View can also have an influence on the routing process. The optional static
+`getDerivedRouteAttributes` function of each view is called before the navigating to a certain route is executed. In
+there an object can be returned, which will be used to supplement the attributes of the routing. The [router](#router)
+will merge these returned attributes with the attributes that has been passed to its `navigate` call. The default
+attributes of the route will only be applied if neither the attributes are passed nor set in the
+`getDerivedRouteAttributes` call.

@@ -5,7 +5,7 @@ import type {ButtonConfig, SelectMode} from './types';
 import Row from './Row';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Row>>,
+    children?: ChildrenArray<Element<typeof Row>>,
     /** @ignore */
     buttons?: Array<ButtonConfig>,
     /** @ignore */
@@ -19,7 +19,11 @@ export default class Body extends React.PureComponent<Props> {
         selectMode: 'none',
     };
 
-    cloneRows = (originalRows: ChildrenArray<Element<typeof Row>>) => {
+    cloneRows = (originalRows: ?ChildrenArray<Element<typeof Row>>) => {
+        if (!originalRows) {
+            return undefined;
+        }
+
         const {buttons, selectMode} = this.props;
         return React.Children.map(originalRows, (row, index) => React.cloneElement(
             row,

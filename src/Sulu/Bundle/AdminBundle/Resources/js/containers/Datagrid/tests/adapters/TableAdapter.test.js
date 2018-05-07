@@ -59,8 +59,11 @@ test('Render data with schema', () => {
             page={2}
             pageCount={5}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             schema={schema}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -110,8 +113,11 @@ test('Render data with all different visibility types schema', () => {
             page={2}
             pageCount={5}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             schema={schema}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -155,10 +161,13 @@ test('Render data with schema and selections', () => {
             loading={false}
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
             selections={[1, 3]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -196,10 +205,13 @@ test('Render data with schema in different order', () => {
             disabledIds={[]}
             loading={false}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={2}
             pageCount={3}
             schema={schema}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -237,10 +249,13 @@ test('Render data with schema not containing all fields', () => {
             disabledIds={[]}
             loading={false}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -280,10 +295,91 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
             loading={false}
             onItemClick={rowEditClickSpy}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    expect(tableAdapter).toMatchSnapshot();
+});
+
+test('Render column with ascending sort icon', () => {
+    const data = [
+        {
+            id: 1,
+            title: 'Title 1',
+            description: 'Description 1',
+        },
+    ];
+    const schema = {
+        title: {
+            label: 'Title',
+            type: 'string',
+            visibility: 'yes',
+        },
+        description: {
+            label: 'Description',
+            type: 'string',
+            visibility: 'yes',
+        },
+    };
+    const tableAdapter = render(
+        <TableAdapter
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            onPageChange={jest.fn()}
+            onSort={jest.fn()}
+            page={1}
+            pageCount={3}
+            schema={schema}
+            selections={[]}
+            sortColumn="title"
+            sortOrder="asc"
+        />
+    );
+
+    expect(tableAdapter).toMatchSnapshot();
+});
+
+test('Render column with descending sort icon', () => {
+    const data = [
+        {
+            id: 1,
+            title: 'Title 1',
+            description: 'Description 1',
+        },
+    ];
+    const schema = {
+        title: {
+            label: 'Title',
+            type: 'string',
+            visibility: 'yes',
+        },
+        description: {
+            label: 'Description',
+            type: 'string',
+            visibility: 'yes',
+        },
+    };
+    const tableAdapter = render(
+        <TableAdapter
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            onPageChange={jest.fn()}
+            onSort={jest.fn()}
+            page={1}
+            pageCount={3}
+            schema={schema}
+            selections={[]}
+            sortColumn="description"
+            sortOrder="desc"
         />
     );
 
@@ -323,10 +419,13 @@ test('Click on pencil should execute onItemEdit callback', () => {
             loading={false}
             onItemClick={rowEditClickSpy}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
     const buttons = tableAdapter.find('Table').prop('buttons');
@@ -370,10 +469,13 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
             loading={false}
             onItemSelectionChange={rowSelectionChangeSpy}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -397,10 +499,13 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
             loading={false}
             onAllSelectionChange={allSelectionChangeSpy}
             onPageChange={jest.fn()}
+            onSort={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -414,10 +519,13 @@ test('Pagination should be passed correct props', () => {
             disabledIds={[]}
             loading={false}
             onPageChange={pageChangeSpy}
+            onSort={jest.fn()}
             page={2}
             pageCount={7}
             schema={{}}
             selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
     expect(tableAdapter.find('Pagination').get(0).props).toEqual({

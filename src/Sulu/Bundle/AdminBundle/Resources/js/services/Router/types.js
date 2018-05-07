@@ -23,3 +23,5 @@ export type Route = {|
 export type AttributeMap = {[string]: string};
 
 export type RouteMap = {[string]: Route};
+
+export type UpdateAttributesHook = (route: Route) => AttributeMap;

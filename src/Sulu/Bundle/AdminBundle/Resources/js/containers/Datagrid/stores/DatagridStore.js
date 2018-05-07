@@ -1,6 +1,13 @@
 // @flow
 import {action, autorun, observable, computed} from 'mobx';
-import type {LoadingStrategyInterface, ObservableOptions, Schema, StructureStrategyInterface} from '../types';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {
+    LoadingStrategyInterface,
+    ObservableOptions,
+    Schema,
+    SortOrder,
+    StructureStrategyInterface,
+} from '../types';
 import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
@@ -12,10 +19,12 @@ export default class DatagridStore {
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
     @observable options: Object;
-    disposer: () => void;
+    sortColumn: IObservableValue<string> = observable.box();
+    sortOrder: IObservableValue<SortOrder> = observable.box();
     resourceKey: string;
     schema: Schema = {};
     observableOptions: ObservableOptions;
+    sendRequestDisposer: () => void;
 
     constructor(
         resourceKey: string,
@@ -25,7 +34,8 @@ export default class DatagridStore {
         this.resourceKey = resourceKey;
         this.observableOptions = observableOptions;
         this.options = options;
-        this.disposer = autorun(this.sendRequest);
+
+        this.sendRequestDisposer = autorun(this.sendRequest);
 
         metadataStore.getSchema(this.resourceKey)
             .then(action((schema) => {
@@ -120,6 +130,9 @@ export default class DatagridStore {
             options.parent = this.active;
         }
 
+        options.sortBy = this.sortColumn.get();
+        options.sortOrder = this.sortOrder.get();
+
         this.loadingStrategy.load(
             data,
             this.resourceKey,
@@ -149,6 +162,11 @@ export default class DatagridStore {
 
     @action setActive(active: ?string | number) {
         this.active = active;
+    }
+
+    @action sort(column: string, order: SortOrder) {
+        this.sortColumn.set(column);
+        this.sortOrder.set(order);
     }
 
     @action select(row: Object) {
@@ -196,6 +214,6 @@ export default class DatagridStore {
     }
 
     destroy() {
-        this.disposer();
+        this.sendRequestDisposer();
     }
 }
