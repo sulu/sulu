@@ -449,7 +449,6 @@ const Row = Table.Row;
 const Cell = Table.Cell;
 const HeaderCell = Table.HeaderCell;
 
-
 const buttons = [{
         icon: 'su-pen',
         onClick: (rowId) => {

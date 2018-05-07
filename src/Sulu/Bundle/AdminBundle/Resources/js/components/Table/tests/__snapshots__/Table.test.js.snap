@@ -573,6 +573,14 @@ exports[`Render the Table component in tree structure 1`] = `
             <div
               class="cellContent"
             >
+              <span
+                class="toggleIcon"
+              >
+                <span
+                  aria-label="su-angle-right"
+                  class="su-angle-right"
+                />
+              </span>
               Column Text
             </div>
           </div>
@@ -609,6 +617,14 @@ exports[`Render the Table component in tree structure 1`] = `
               class="cellContent"
               style="padding-left:25px"
             >
+              <span
+                class="toggleIcon"
+              >
+                <span
+                  aria-label="su-angle-right"
+                  class="su-angle-right"
+                />
+              </span>
               Column Text
             </div>
           </div>
