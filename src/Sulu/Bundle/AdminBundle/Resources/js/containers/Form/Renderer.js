@@ -86,7 +86,7 @@ export default class Renderer extends React.Component<Props> {
     }
 
     renderItem(schemaField: SchemaEntry, schemaKey: string) {
-        if (schemaField.type === 'section') {
+        if ('section' === schemaField.type) {
             return this.renderGridSection(schemaField, schemaKey);
         }
 

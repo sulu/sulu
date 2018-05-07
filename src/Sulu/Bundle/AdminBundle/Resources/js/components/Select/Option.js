@@ -64,7 +64,7 @@ export default class Option extends React.PureComponent<Props> {
     };
 
     renderSelectedVisualization() {
-        if (this.props.selectedVisualization === 'icon') {
+        if ('icon' === this.props.selectedVisualization) {
             return this.props.selected ? <Icon className={optionStyles.icon} name={'su-check'} /> : null;
         }
 

@@ -15,13 +15,13 @@ const ajv = new Ajv({allErrors: true, jsonPointers: true});
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
 
-    if (type !== 'section') {
+    if ('section' !== type) {
         data[key] = undefined;
     }
 
     const items = schema[key].items;
 
-    if (type === 'section' && items) {
+    if ('section' === type && items) {
         Object.keys(items)
             .reduce((object, childKey) => addSchemaProperties(data, childKey, items), data);
     }
@@ -100,7 +100,7 @@ export default class FormStore {
     };
 
     @computed get hasTypes(): boolean {
-        return Object.keys(this.types).length > 0;
+        return 0 < Object.keys(this.types).length;
     }
 
     @computed get defaultType(): ?string {
@@ -153,7 +153,7 @@ export default class FormStore {
     @action save(options: Object = {}): Promise<Object> {
         this.validate();
 
-        if (Object.keys(this.errors).length > 0) {
+        if (0 < Object.keys(this.errors).length) {
             return Promise.reject('Errors occured when trying to save the data from the FormStore');
         }
 
@@ -193,7 +193,7 @@ export default class FormStore {
     }
 
     validateTypes() {
-        if (Object.keys(this.types).length === 0) {
+        if (0 === Object.keys(this.types).length) {
             throw new Error(
                 'The resource "' + this.resourceStore.resourceKey + '" handled by this FormStore cannot handle types'
             );

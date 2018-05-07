@@ -156,7 +156,7 @@ test('Should load webspace route attribute from userStore', () => {
     const userStore = require('sulu-admin-bundle/stores').userStore;
 
     userStore.getPersistentSetting.mockImplementation((key) => {
-        if (key === 'sulu_content.webspace_overview.webspace') {
+        if ('sulu_content.webspace_overview.webspace' === key) {
             return 'sulu';
         }
     });

@@ -71,7 +71,7 @@ export default class Block extends React.Component<Props> {
                 <div className={blockStyles.content}>
                     {expanded &&
                         <header className={blockStyles.header}>
-                            {types && Object.keys(types).length > 1 &&
+                            {types && 1 < Object.keys(types).length &&
                                 <div className={blockStyles.types}>
                                     <SingleSelect onChange={this.handleTypeChange} value={activeType}>
                                         {Object.keys(types).map((key) => (

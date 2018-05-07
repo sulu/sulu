@@ -32,7 +32,7 @@ export default class Tabs extends React.PureComponent<Props> {
     }
 
     handleSelectionChange = (selectedTabIndex: ?number) => {
-        if (typeof(selectedTabIndex) !== 'undefined' && selectedTabIndex !== null) {
+        if ('undefined' !== typeof(selectedTabIndex) && null !== selectedTabIndex) {
             this.props.onSelect(selectedTabIndex);
         }
     };

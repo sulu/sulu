@@ -20,7 +20,7 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
             value,
         } = this.props;
 
-        if (schemaOptions && schemaOptions.type && schemaOptions.type.value === 'toggler') {
+        if (schemaOptions && schemaOptions.type && 'toggler' === schemaOptions.type.value) {
             return <Toggler checked={!!value} onChange={this.handleChange} />;
         }
 

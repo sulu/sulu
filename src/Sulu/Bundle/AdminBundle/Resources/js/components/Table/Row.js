@@ -31,18 +31,18 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     isMultipleSelect = () => {
-        return this.props.selectMode === 'multiple';
+        return 'multiple' === this.props.selectMode;
     };
 
     isSingleSelect = () => {
-        return this.props.selectMode === 'single';
+        return 'single' === this.props.selectMode;
     };
 
     createCells = (cells: ChildrenArray<Element<typeof Cell>>) => {
         const {buttons} = this.props;
         const prependedCells = [];
 
-        if (buttons && buttons.length > 0) {
+        if (buttons && 0 < buttons.length) {
             const createdItems = this.createButtonCells();
 
             if (createdItems) {

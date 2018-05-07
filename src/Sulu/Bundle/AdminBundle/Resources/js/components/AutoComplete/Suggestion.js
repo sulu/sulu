@@ -26,7 +26,7 @@ export default class Suggestion extends React.PureComponent<Props> {
         const regex = new RegExp(query, 'gi');
         const matches = text.match(regex);
 
-        if (!matches || query.length === 0) {
+        if (!matches || 0 === query.length) {
             return text;
         }
 
@@ -68,10 +68,10 @@ export default class Suggestion extends React.PureComponent<Props> {
                         className={suggestionStyles.icon}
                     />
                 }
-                {typeof children === 'string' &&
+                {'string' === typeof children &&
                     this.highlightMatchingTextPart(children)
                 }
-                {typeof children === 'function' &&
+                {'function' === typeof children &&
                     children(this.highlightMatchingTextPart)
                 }
             </button>

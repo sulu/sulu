@@ -38,7 +38,7 @@ export default class MultiSelect extends React.PureComponent<Props> {
             }
         });
 
-        if (selectedValues.length === 0) {
+        if (0 === selectedValues.length) {
             return this.props.noneSelectedText;
         }
 
@@ -57,7 +57,7 @@ export default class MultiSelect extends React.PureComponent<Props> {
         const newValues = [...this.props.values];
         const index = newValues.indexOf(value);
 
-        if (index === -1) {
+        if (-1 === index) {
             newValues.push(value);
         } else {
             newValues.splice(index, 1);

@@ -51,7 +51,7 @@ export type {FieldTypeProps};
 configure({enforceActions: true});
 
 window.log = log;
-log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);
+log.setDefaultLevel('production' === process.env.NODE_ENV ? log.levels.ERROR : log.levels.TRACE);
 
 viewRegistry.add('sulu_admin.form', Form);
 viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);

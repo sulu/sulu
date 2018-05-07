@@ -96,7 +96,7 @@ export default class DatagridStore {
         const page = this.getPage();
         this.structureStrategy.clear();
 
-        if (page && page > 1) {
+        if (page && 1 < page) {
             this.setPage(1);
         } else {
             this.sendRequest();
@@ -171,7 +171,7 @@ export default class DatagridStore {
 
     @action select(row: Object) {
         // TODO do not hardcode id but use metdata instead
-        if (this.selections.findIndex((item) => item.id === row.id) !== -1) {
+        if (-1 !== this.selections.findIndex((item) => item.id === row.id)) {
             return;
         }
 
@@ -187,7 +187,7 @@ export default class DatagridStore {
     @action deselect(row: Object) {
         // TODO do not hardcode id but use metdata instead
         const index = this.selections.findIndex((item) => item.id === row.id);
-        if (index === -1) {
+        if (-1 === index) {
             return;
         }
 

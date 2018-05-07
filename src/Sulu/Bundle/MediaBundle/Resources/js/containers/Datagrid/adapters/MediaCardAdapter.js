@@ -19,7 +19,7 @@ export default class MediaCardAdapter extends React.Component<Props> {
         const megaByteThreshold = 1000000;
         const kiloByteThreshold = 1000;
 
-        if (size > 1000000) {
+        if (1000000 < size) {
             return `${(size / megaByteThreshold).toFixed(2)} MB`;
         } else {
             return `${(size / kiloByteThreshold).toFixed(2)} KB`;

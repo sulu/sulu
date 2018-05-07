@@ -385,7 +385,7 @@ test('Should initialize the ResourceStore with a schema', () => {
 
 test('Should render save button disabled only if form is not dirty', () => {
     function getSaveItem() {
-        return toolbarFunction.call(form.instance()).items.find((item) => item.value === 'Save');
+        return toolbarFunction.call(form.instance()).items.find((item) => 'Save' === item.value);
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -534,7 +534,7 @@ test('Should pass store and schema handler to FormContainer', () => {
 
 test('Should render save button loading only if form is saving', () => {
     function getSaveItem() {
-        return toolbarFunction.call(form.instance()).items.find((item) => item.value === 'Save');
+        return toolbarFunction.call(form.instance()).items.find((item) => 'Save' === item.value);
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');

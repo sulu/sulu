@@ -30,7 +30,7 @@ export default class TableAdapter extends AbstractAdapter {
         const newSchema = {};
 
         for (const key of Object.keys(schema)) {
-            if (schema[key].visibility === 'never' || schema[key].visibility === 'no') {
+            if ('never' === schema[key].visibility || 'no' === schema[key].visibility) {
                 continue;
             }
 

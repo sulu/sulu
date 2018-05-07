@@ -141,7 +141,7 @@ export default withToolbar(PageForm, function() {
         },
     ];
 
-    if (this.formStore.typesLoading || Object.keys(formTypes).length > 0) {
+    if (this.formStore.typesLoading || 0 < Object.keys(formTypes).length) {
         items.push({
             type: 'select',
             icon: 'fa-paint-brush',

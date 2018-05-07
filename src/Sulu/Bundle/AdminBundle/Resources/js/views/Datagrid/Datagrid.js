@@ -174,7 +174,7 @@ export default withToolbar(Datagrid, function() {
         type: 'button',
         value: translate('sulu_admin.delete'),
         icon: 'su-trash-alt',
-        disabled: this.datagridStore.selectionIds.length === 0,
+        disabled: 0 === this.datagridStore.selectionIds.length,
         loading: this.deleting,
         onClick: action(() => {
             this.deleting = true;

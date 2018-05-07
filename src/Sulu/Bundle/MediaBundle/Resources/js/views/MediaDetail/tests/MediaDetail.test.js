@@ -216,7 +216,7 @@ test('Should initialize the ResourceStore with a schema', () => {
 
 test('Should render save button disabled only if form is not dirty', () => {
     function getSaveItem() {
-        return toolbarFunction.call(form).items.find((item) => item.value === 'Save');
+        return toolbarFunction.call(form).items.find((item) => 'Save' === item.value);
     }
 
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;

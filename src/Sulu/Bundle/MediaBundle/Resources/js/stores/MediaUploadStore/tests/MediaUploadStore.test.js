@@ -70,7 +70,7 @@ test('After the request was successful the progress will be reset', (done) => {
     mediaUploadStore.update(testId, fileData);
 
     when(
-        () => mediaUploadStore.progress === 0,
+        () => 0 === mediaUploadStore.progress,
         (): void => {
             expect(mediaUploadStore.uploading).toBe(false);
             expect(mediaUploadStore.progress).toBe(0);

@@ -96,7 +96,7 @@ export default class PopoverPositioner {
         if (dimensions.top < PADDING_TO_WINDOW) {
             let newHeight = dimensions.height + dimensions.top - PADDING_TO_WINDOW;
             newDimensions.top = PADDING_TO_WINDOW;
-            newDimensions.height = (newHeight < 0) ? dimensions.height : newHeight;
+            newDimensions.height = (0 > newHeight) ? dimensions.height : newHeight;
             newDimensions.scrollTop = -dimensions.top + PADDING_TO_WINDOW;
             touchesTopBorder = true;
         }

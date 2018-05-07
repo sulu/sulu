@@ -33,7 +33,7 @@ export default class CollectionFormOverlay extends React.Component<Props> {
         const {operationType} = nextProps;
 
         if (operationType) {
-            this.title = operationType === 'create'
+            this.title = 'create' === operationType
                 ? translate('sulu_media.add_collection')
                 : translate('sulu_media.edit_collection');
         }
@@ -68,7 +68,7 @@ export default class CollectionFormOverlay extends React.Component<Props> {
             overlayType,
             resourceStore,
         } = this.props;
-        const open = operationType === 'create' || operationType === 'update';
+        const open = 'create' === operationType || 'update' === operationType;
         const confirmText = translate('sulu_admin.ok');
         const cancelText = translate('sulu_admin.cancel');
         const form = (
@@ -79,7 +79,7 @@ export default class CollectionFormOverlay extends React.Component<Props> {
             />
         );
 
-        if (overlayType === 'dialog') {
+        if ('dialog' === overlayType) {
             return (
                 <Dialog
                     open={open}

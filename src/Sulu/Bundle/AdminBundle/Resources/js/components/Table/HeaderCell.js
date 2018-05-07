@@ -36,7 +36,7 @@ export default class HeaderCell extends React.PureComponent<Props> {
     handleOnClick = () => {
         const {name, onClick, sortOrder} = this.props;
         if (onClick && name) {
-            onClick(name, sortOrder === 'asc' ? 'desc' : 'asc');
+            onClick(name, 'asc' === sortOrder ? 'desc' : 'asc');
         }
     };
 

@@ -46,7 +46,7 @@ export default class Field extends React.Component<Props> {
             return;
         }
 
-        if (typeof error.keyword === 'string') {
+        if ('string' === typeof error.keyword) {
             return error.keyword;
         }
 

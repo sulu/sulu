@@ -130,7 +130,7 @@ export default class ColumnList extends React.Component<Props> {
         const columnListContainerClass = classNames(
             columnListStyles.columnListContainer,
             {
-                [columnListStyles.firstVisibleColumnActive]: toolbarPosition <= 0,
+                [columnListStyles.firstVisibleColumnActive]: 0 >= toolbarPosition,
                 [columnListStyles.lastVisibleColumnActive]: toolbarPosition >= this.containerWidth - this.columnWidth,
             }
         );

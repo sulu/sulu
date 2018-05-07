@@ -103,7 +103,7 @@ export default class Router {
     }
 
     restore(name: string, attributes: Object = {}) {
-        if (!this.attributesHistory[name] || this.attributesHistory[name].length === 0) {
+        if (!this.attributesHistory[name] || 0 === this.attributesHistory[name].length) {
             this.update(name, attributes);
             return;
         }

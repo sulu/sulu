@@ -54,7 +54,7 @@ export default class CollectionBreadcrumb extends React.Component<Props> {
                     <Item>{rootItemTitle}</Item>
                 </Breadcrumb>
             );
-        } else if (breadcrumb.length === 1) {
+        } else if (1 === breadcrumb.length) {
             const firstItem = breadcrumb[0];
 
             return (

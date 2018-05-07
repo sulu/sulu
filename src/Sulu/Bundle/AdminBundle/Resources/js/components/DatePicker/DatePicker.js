@@ -80,7 +80,7 @@ export default class DatePicker extends React.Component<Props> {
             return;
         }
 
-        if (typeof date === 'string') {
+        if ('string' === typeof date) {
             this.setValue(date);
 
             return;
@@ -96,7 +96,7 @@ export default class DatePicker extends React.Component<Props> {
     };
 
     handleInputBlur = () => {
-        if (this.inputChanged && typeof this.value === 'string') {
+        if (this.inputChanged && 'string' === typeof this.value) {
             this.handleChange(undefined);
         }
     };

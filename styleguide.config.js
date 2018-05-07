@@ -84,7 +84,7 @@ module.exports = { // eslint-disable-line
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/services/*');
 
                 return folders
-                    .filter((folder) => path.basename(folder) !== 'index.js')
+                    .filter((folder) => 'index.js' !== path.basename(folder))
                     .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
                     .sort(compareFolderName)
                     .map((folder) => {
@@ -113,7 +113,7 @@ module.exports = { // eslint-disable-line
                 folders = folders.filter((folder) => !firstLetterIsUppercase(path.basename(folder)));
 
                 return folders
-                    .filter((folder) => path.basename(folder) !== 'index.js')
+                    .filter((folder) => 'index.js' !== path.basename(folder))
                     .sort(compareFolderName)
                     .map((folder) => {
                         const component = path.basename(folder);

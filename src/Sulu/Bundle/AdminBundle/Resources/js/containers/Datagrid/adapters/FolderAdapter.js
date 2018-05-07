@@ -21,7 +21,7 @@ export default class FolderAdapter extends AbstractAdapter {
     };
 
     static getInfoText(item: Object) {
-        const label = (item.objectCount === 1)
+        const label = (1 === item.objectCount)
             ? translate('sulu_admin.object')
             : translate('sulu_admin.objects');
 

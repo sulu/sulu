@@ -16,7 +16,7 @@ function bundleReady() {
 const bundlesReadyPromise: Promise<*> = new Promise((resolve, reject) => {
     resolveBundlesPromise = resolve;
 
-    if (typeof BUNDLE_ENTRIES_COUNT !== 'undefined') {
+    if ('undefined' !== typeof BUNDLE_ENTRIES_COUNT) {
         setTimeout(() => {
             reject(
                 'Timeout exceeded: Check if you correctly call the "bundleReady" function in the ' +

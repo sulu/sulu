@@ -35,7 +35,7 @@ export default class SingleSelect extends React.PureComponent<Props> {
     isOptionSelected = (option: Element<typeof SingleSelect.Option>): boolean => {
         const {value} = this.props;
 
-        if (value == null) {
+        if (null == value) {
             return false;
         }
 

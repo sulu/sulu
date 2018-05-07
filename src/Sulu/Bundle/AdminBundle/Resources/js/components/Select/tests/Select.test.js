@@ -100,7 +100,7 @@ test('The component should trigger the select callback and close the popover whe
 
 test('The component should pass the centered child node to the popover', () => {
     const onSelect = jest.fn();
-    const isOptionSelected = jest.fn((child) => child.props.value === 'option-3');
+    const isOptionSelected = jest.fn((child) => 'option-3' === child.props.value);
     const selectedOption = (<Option value="option-3">Option 3</Option>);
     const select = mount(
         <Select
