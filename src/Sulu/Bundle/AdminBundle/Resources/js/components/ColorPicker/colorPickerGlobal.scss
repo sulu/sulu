@@ -1,0 +1,19 @@
+@import '../../containers/Application/colors.scss';
+
+$fontColor: $scorpion;
+$backgroundColorActive: $shakespeare;
+$borderColorToday: $blueZodiac;
+$borderColor: $silver;
+$iconColor: $dustyGray;
+$iconBorderPadding: 5px;
+$placeholderColor: $dustyGray;
+$borderWidth: 1px;
+$borderRadius: 3px;
+$inputHeight: 30px;
+$inputColor: $black;
+$inputFontSize: 12px;
+
+:global {
+    .rdtPicker {
+    }
+}
