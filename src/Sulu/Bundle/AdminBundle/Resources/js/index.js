@@ -10,6 +10,7 @@ import {setTranslations} from './utils/Translator';
 import Application from './containers/Application';
 import {
     Assignment,
+    Checkbox,
     DatePicker,
     Email,
     fieldRegistry,
@@ -62,6 +63,7 @@ datagridAdapterRegistry.add('table', TableAdapter);
 
 function registerFieldTypes(fieldTypesConfig) {
     fieldRegistry.add('block', FieldBlocks);
+    fieldRegistry.add('checkbox', Checkbox);
     fieldRegistry.add('date', DatePicker);
     fieldRegistry.add('email', Email);
     fieldRegistry.add('phone', Phone);
