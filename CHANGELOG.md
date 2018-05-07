@@ -2,10 +2,11 @@ CHANGELOG for Sulu
 ==================
 
 * 1.6.18 (2018-05-03)
+    * HOTFIX      #3949 [ContentBundle]           Fix security check for deleting draft
     * ENHANCEMENT #3930 [PreviewBundle]           Fixed preview style-link
-    * HOTFIX      #3946 [ContentBundle]         Single internal link: Clear selection when target doesn't exists
-    * HOTFIX      #3941 [WebsiteBundle]         Fix hideInSitemap flag for sitemap twig extension
-    * BUGFIX      #3926 [WebsiteBundle]         Fix profiler for none sulu routes
+    * HOTFIX      #3946 [ContentBundle]           Single internal link: Clear selection when target doesn't exists
+    * HOTFIX      #3941 [WebsiteBundle]           Fix hideInSitemap flag for sitemap twig extension
+    * BUGFIX      #3926 [WebsiteBundle]           Fix profiler for none sulu routes
 
 * 1.6.17 (2018-04-23)
     * FEATURE     #3906 [MediaBundle]             Add file version delete to media overlay
