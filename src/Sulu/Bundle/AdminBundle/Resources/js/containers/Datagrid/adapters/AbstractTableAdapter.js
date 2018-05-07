@@ -11,10 +11,6 @@ export default class AbstractTableAdapter extends AbstractAdapter {
         data: [],
     };
 
-    @computed get data(): Array<Object> {
-        return this.props.data;
-    }
-
     @computed get schema(): Schema {
         const {schema} = this.props;
 
@@ -65,9 +61,9 @@ export default class AbstractTableAdapter extends AbstractAdapter {
     }
 
     renderRows() {
-        const {selections} = this.props;
+        const {data, selections} = this.props;
 
-        return this.data.map((item) => {
+        return data.map((item) => {
             return (
                 <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
                     {this.renderCells(item)}

@@ -465,7 +465,8 @@ const buttons = [{
 <Table
     selectMode="multiple"
     buttons={buttons}
-    selectInFirstCell="true">
+    selectInFirstCell="true"
+>
     <Header>
         <HeaderCell>Column 1</HeaderCell>
         <HeaderCell>Column 2</HeaderCell>

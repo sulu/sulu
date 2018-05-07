@@ -457,8 +457,8 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     expect(treeListAdapter).toMatchSnapshot();
 });
 
-test('Render data with plus button when onItemEdit callback is passed', () => {
-    const rowEditClickSpy = jest.fn();
+test('Render data with plus button when onItemAdd callback is passed', () => {
+    const rowAddClickSpy = jest.fn();
     const test1 = {
         data: {
             id: 2,
@@ -492,7 +492,7 @@ test('Render data with plus button when onItemEdit callback is passed', () => {
             onPageChange={jest.fn()}
             page={1}
             pageCount={1}
-            onItemClick={rowEditClickSpy}
+            onItemAdd={rowAddClickSpy}
         />
     );
 

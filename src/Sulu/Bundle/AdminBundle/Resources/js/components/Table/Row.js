@@ -10,6 +10,8 @@ import ButtonCell from './ButtonCell';
 import Cell from './Cell';
 import tableStyles from './table.scss';
 
+const DEPTH_PADDING = 25;
+
 type Props = {
     children: ChildrenArray<Element<typeof Cell>>,
     /** The index of the row inside the body */
@@ -20,20 +22,12 @@ type Props = {
     buttons?: Array<ButtonConfig>,
     /** @ignore */
     selectMode?: SelectMode,
-    /** If set to true the select is in first cell */
     selectInFirstCell: boolean,
-    /** If set to true the row is selected */
     selected: boolean,
-    /** If set to true the row can load children */
     hasChildren: boolean,
-    /** If set to true the row child are open */
     expanded: boolean,
-    /** If set to true the childs will be loaded */
     isLoading: boolean,
-    /** The depth of the element in the row */
     depth?: number,
-    /** The depth padding in px */
-    depthPadding?: number,
     /** @ignore */
     onExpand?: (rowId: string | number) => void,
     /** @ignore */
@@ -51,7 +45,6 @@ export default class Row extends React.PureComponent<Props> {
         isLoading: false,
         rowIndex: 0,
         depth: 0,
-        depthPadding: 25,
     };
 
     getIdentifier = (): (string | number) => {
@@ -68,7 +61,7 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createCells = (cells: ChildrenArray<Element<typeof Cell>>) => {
-        const {buttons} = this.props;
+        const {buttons, selectInFirstCell} = this.props;
         const prependedCells = [];
 
         if (buttons && buttons.length > 0) {
@@ -79,7 +72,7 @@ export default class Row extends React.PureComponent<Props> {
             }
         }
 
-        if (!this.props.selectInFirstCell) {
+        if (!selectInFirstCell) {
             const select = this.createSelect();
 
             if (select) {
@@ -100,7 +93,7 @@ export default class Row extends React.PureComponent<Props> {
 
     cloneCells = (originalCells: ChildrenArray<Element<typeof Cell>>) => {
         return React.Children.map(originalCells, (cell: Element<typeof Cell>, index) => {
-            const key = `row-${index}`;
+            const key = `cell-${index}`;
             const {props} = cell;
             let {children} = props;
 
@@ -120,30 +113,23 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createFirstCell = (children: *) => {
-        let toggler = null;
-        let select = null;
-        let style = {};
+        const style = {};
+        const {depth, hasChildren, selectInFirstCell} = this.props;
 
-        if (this.props.hasChildren) {
-            toggler = this.createToggler();
-        }
-
-        if (this.props.depth && this.props.depthPadding) {
-            style.paddingLeft = (this.props.depth * this.props.depthPadding) + 'px';
-        }
-
-        if (this.props.selectInFirstCell) {
-            select = (
-                <div className={tableStyles.cellSelect}>
-                    {this.createSelect()}
-                </div>
-            );
+        if (depth) {
+            style.paddingLeft = (depth * DEPTH_PADDING) + 'px';
         }
 
         return (
             <div className={tableStyles.cellContent} style={style}>
-                {select}
-                {toggler}
+                {selectInFirstCell &&
+                    <div className={tableStyles.cellSelect}>
+                        {this.createSelect()}
+                    </div>
+                }
+                {hasChildren &&
+                    this.createToggler()
+                }
                 {children}
             </div>
         );
@@ -165,11 +151,9 @@ export default class Row extends React.PureComponent<Props> {
                 onClick={expanded === false ? this.handleExpand : this.handleCollapse}
                 className={tableStyles.toggleIcon}
             >
-                {isLoading &&
-                    <Loader size={10} />
-                }
-                {!isLoading &&
-                    <Icon name={expanded === true ? 'su-angle-down' : 'su-angle-right'} />
+                {isLoading
+                    ? <Loader size={10} />
+                    : <Icon name={expanded === true ? 'su-angle-down' : 'su-angle-right'} />
                 }
             </span>
         );
@@ -203,7 +187,6 @@ export default class Row extends React.PureComponent<Props> {
 
     createButtonCells = () => {
         const {buttons, rowIndex} = this.props;
-        const identifier = this.getIdentifier();
 
         if (!buttons) {
             return null;
@@ -217,7 +200,7 @@ export default class Row extends React.PureComponent<Props> {
                 <ButtonCell
                     key={key}
                     icon={button.icon}
-                    rowId={identifier}
+                    rowId={this.getIdentifier()}
                     onClick={handleClick}
                 />
             );

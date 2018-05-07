@@ -503,6 +503,85 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
 </div>
 `;
 
+exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            <div
+              class="cellContent"
+            >
+              <div
+                class="cellSelect"
+              >
+                <label
+                  class="label"
+                >
+                  <span
+                    class="switch checkbox light"
+                  >
+                    <input
+                      type="checkbox"
+                    />
+                    <span />
+                  </span>
+                </label>
+              </div>
+              Description
+            </div>
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <div
+              class="cellContent"
+            >
+              <div
+                class="cellSelect"
+              >
+                <label
+                  class="label"
+                >
+                  <span
+                    class="switch checkbox dark"
+                  >
+                    <input
+                      type="checkbox"
+                      value="2"
+                    />
+                    <span />
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
 exports[`Render data with plus button when onItemEdit callback is passed 1`] = `
 <div
   class="tableContainer"

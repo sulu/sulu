@@ -40,7 +40,7 @@ export default class Header extends React.PureComponent<Props> {
     };
 
     createHeader = (originalCells: ChildrenArray<Element<typeof HeaderCell>>) => {
-        const {buttons} = this.props;
+        const {buttons, selectInFirstCell} = this.props;
         const prependCells = [];
         const cells = this.createHeaderCells(originalCells);
 
@@ -52,7 +52,7 @@ export default class Header extends React.PureComponent<Props> {
             }
         }
 
-        if (!this.props.selectInFirstCell) {
+        if (!selectInFirstCell) {
             if (this.isMultipleSelect()) {
                 prependCells.push(this.createCheckboxCell());
             } else if (this.isSingleSelect()) {
@@ -87,7 +87,8 @@ export default class Header extends React.PureComponent<Props> {
     };
 
     createFirstCell = (children: *) => {
-        if (!this.props.selectInFirstCell || !this.isMultipleSelect()) {
+        const {allSelected, selectInFirstCell} = this.props;
+        if (!selectInFirstCell || !this.isMultipleSelect()) {
             return children;
         }
 
@@ -95,7 +96,7 @@ export default class Header extends React.PureComponent<Props> {
             <div className={tableStyles.cellSelect}>
                 <Checkbox
                     skin="light"
-                    checked={!!this.props.allSelected}
+                    checked={!!allSelected}
                     onChange={this.handleAllSelectionChange}
                 />
             </div>

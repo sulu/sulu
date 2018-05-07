@@ -19,7 +19,6 @@ type Props = {
     buttons?: Array<ButtonConfig>,
     /** Can be set to "single" or "multiple". Defaults is "none". */
     selectMode?: SelectMode,
-    /** Can be set to  */
     selectInFirstCell?: boolean,
     /**
      * Callback function to notify about selection and deselection of a row.
