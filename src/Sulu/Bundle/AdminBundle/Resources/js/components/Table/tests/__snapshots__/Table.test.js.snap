@@ -118,11 +118,7 @@ exports[`Render a table with buttons 1`] = `
           <div
             class="cellContent"
           >
-            <div
-              class="cellContent"
-            >
-              Column Text
-            </div>
+            Column Text
           </div>
         </td>
         <td
@@ -245,11 +241,7 @@ exports[`Render the Table component 1`] = `
           <div
             class="cellContent"
           >
-            <div
-              class="cellContent"
-            >
-              Column Text
-            </div>
+            Column Text
           </div>
         </td>
         <td
@@ -280,11 +272,7 @@ exports[`Render the Table component 1`] = `
           <div
             class="cellContent"
           >
-            <div
-              class="cellContent"
-            >
-              Column Text
-            </div>
+            Column Text
           </div>
         </td>
         <td
@@ -394,11 +382,7 @@ exports[`Render the Table component in multiple selection mode 1`] = `
           <div
             class="cellContent"
           >
-            <div
-              class="cellContent"
-            >
-              Column Text
-            </div>
+            Column Text
           </div>
         </td>
         <td
@@ -495,11 +479,7 @@ exports[`Render the Table component in single selection mode 1`] = `
           <div
             class="cellContent"
           >
-            <div
-              class="cellContent"
-            >
-              Column Text
-            </div>
+            Column Text
           </div>
         </td>
         <td
@@ -570,19 +550,15 @@ exports[`Render the Table component in tree structure 1`] = `
           <div
             class="cellContent"
           >
-            <div
-              class="cellContent"
+            <span
+              class="toggleIcon"
             >
               <span
-                class="toggleIcon"
-              >
-                <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Column Text
-            </div>
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Column Text
           </div>
         </td>
         <td
@@ -612,21 +588,17 @@ exports[`Render the Table component in tree structure 1`] = `
         >
           <div
             class="cellContent"
+            style="padding-left:25px"
           >
-            <div
-              class="cellContent"
-              style="padding-left:25px"
+            <span
+              class="toggleIcon"
             >
               <span
-                class="toggleIcon"
-              >
-                <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Column Text
-            </div>
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Column Text
           </div>
         </td>
         <td
@@ -656,13 +628,9 @@ exports[`Render the Table component in tree structure 1`] = `
         >
           <div
             class="cellContent"
+            style="padding-left:50px"
           >
-            <div
-              class="cellContent"
-              style="padding-left:50px"
-            >
-              Column Text
-            </div>
+            Column Text
           </div>
         </td>
         <td

@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ChildrenArray, Element} from 'react';
 import Checkbox from '../Checkbox';
 import {Radio} from '../Radio';
@@ -9,8 +9,6 @@ import type {ButtonConfig, SelectMode} from './types';
 import ButtonCell from './ButtonCell';
 import Cell from './Cell';
 import tableStyles from './table.scss';
-
-const DEPTH_PADDING = 25;
 
 type Props = {
     children: ChildrenArray<Element<typeof Cell>>,
@@ -86,7 +84,7 @@ export default class Row extends React.PureComponent<Props> {
 
         const clonedCells = this.cloneCells(cells);
 
-        clonedCells.unshift(...prependedCells);
+        clonedCells.unshift(prependedCells);
 
         return clonedCells;
     };
@@ -95,9 +93,11 @@ export default class Row extends React.PureComponent<Props> {
         return React.Children.map(originalCells, (cell: Element<typeof Cell>, index) => {
             const key = `cell-${index}`;
             const {props} = cell;
+            const firstCell = 0 === index;
+            const {depth} = this.props;
             let {children} = props;
 
-            if (0 === index) {
+            if (firstCell) {
                 children = this.createFirstCell(children);
             }
 
@@ -106,22 +106,18 @@ export default class Row extends React.PureComponent<Props> {
                 {
                     ...props,
                     key,
-                    children: children,
+                    children,
+                    depth: firstCell && depth ? depth : undefined,
                 }
             );
         });
     };
 
     createFirstCell = (children: *) => {
-        const style = {};
-        const {depth, hasChildren, selectInFirstCell} = this.props;
-
-        if (depth) {
-            style.paddingLeft = (depth * DEPTH_PADDING) + 'px';
-        }
+        const {hasChildren, selectInFirstCell} = this.props;
 
         return (
-            <div className={tableStyles.cellContent} style={style}>
+            <Fragment>
                 {selectInFirstCell &&
                     <div className={tableStyles.cellSelect}>
                         {this.createSelect()}
@@ -131,7 +127,7 @@ export default class Row extends React.PureComponent<Props> {
                     this.createToggler()
                 }
                 {children}
-            </div>
+            </Fragment>
         );
     };
 

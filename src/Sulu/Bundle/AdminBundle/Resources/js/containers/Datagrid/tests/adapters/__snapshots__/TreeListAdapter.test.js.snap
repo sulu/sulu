@@ -52,69 +52,23 @@ exports[`Execute onItemActivation callback when an item is expanded 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              Test1
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <div
-              class="cellContent"
-            >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="3"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              <span
-                class="toggleIcon"
+              <label
+                class="label"
               >
                 <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Test2
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            Test1
           </div>
         </td>
       </tr>
@@ -128,35 +82,31 @@ exports[`Execute onItemActivation callback when an item is expanded 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="6"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              <span
-                class="toggleIcon"
+              <label
+                class="label"
               >
                 <span
-                  aria-label="su-angle-down"
-                  class="su-angle-down"
-                />
-              </span>
-              Test3
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="3"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Test2
           </div>
         </td>
       </tr>
@@ -170,28 +120,31 @@ exports[`Execute onItemActivation callback when an item is expanded 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
-              style="padding-left: 25px;"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
+              <label
+                class="label"
               >
-                <label
-                  class="label"
+                <span
+                  class="switch checkbox dark"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="7"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              Test3.1
+                  <input
+                    type="checkbox"
+                    value="6"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-down"
+                class="su-angle-down"
+              />
+            </span>
+            Test3
           </div>
         </td>
       </tr>
@@ -203,30 +156,57 @@ exports[`Execute onItemActivation callback when an item is expanded 1`] = `
         >
           <div
             class="cellContent"
+            style="padding-left: 25px;"
           >
             <div
-              class="cellContent"
-              style="padding-left: 25px;"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
+              <label
+                class="label"
               >
-                <label
-                  class="label"
+                <span
+                  class="switch checkbox dark"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="8"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              Test3.2
+                  <input
+                    type="checkbox"
+                    value="7"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            Test3.1
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+            style="padding-left: 25px;"
+          >
+            <div
+              class="cellSelect"
+            >
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="8"
+                  />
+                  <span />
+                </span>
+              </label>
+            </div>
+            Test3.2
           </div>
         </td>
       </tr>
@@ -287,27 +267,23 @@ exports[`Execute onItemActivation callback when an item is expanded 2`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
+              <label
+                class="label"
               >
-                <label
-                  class="label"
+                <span
+                  class="switch checkbox dark"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              Test1
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            Test1
           </div>
         </td>
       </tr>
@@ -321,35 +297,31 @@ exports[`Execute onItemActivation callback when an item is expanded 2`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="3"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              <span
-                class="toggleIcon"
+              <label
+                class="label"
               >
                 <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Test2
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="3"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Test2
           </div>
         </td>
       </tr>
@@ -363,35 +335,31 @@ exports[`Execute onItemActivation callback when an item is expanded 2`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="6"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              <span
-                class="toggleIcon"
+              <label
+                class="label"
               >
                 <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Test3
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="6"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Test3
           </div>
         </td>
       </tr>
@@ -475,25 +443,21 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
+              <label
+                class="label"
               >
-                <label
-                  class="label"
+                <span
+                  class="switch checkbox dark"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
           </div>
         </td>
@@ -554,25 +518,21 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
+              <label
+                class="label"
               >
-                <label
-                  class="label"
+                <span
+                  class="switch checkbox dark"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
           </div>
         </td>
@@ -657,128 +617,21 @@ exports[`Render data with plus button when onItemEdit callback is passed 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
+              <label
+                class="label"
               >
-                <label
-                  class="label"
+                <span
+                  class="switch checkbox dark"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-`;
-
-exports[`Render data with plus button when onItemEdit callback is passed 2`] = `
-<div
-  class="tableContainer"
->
-  <table
-    class="table"
-  >
-    <thead
-      class="header"
-    >
-      <tr>
-        <th
-          class="headerButtonCell headerCell"
-        >
-          <span>
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            <div
-              class="cellContent"
-            >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox light"
-                  >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              Description
-            </div>
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
-      >
-        <td
-          class="buttonCell cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <button>
-              <span
-                aria-label="su-pen"
-                class="su-pen"
-              />
-            </button>
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <div
-              class="cellContent"
-            >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
           </div>
         </td>
@@ -839,27 +692,23 @@ exports[`Render data with schema 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
+              <label
+                class="label"
               >
-                <label
-                  class="label"
+                <span
+                  class="switch checkbox dark"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              Test1
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            Test1
           </div>
         </td>
       </tr>
@@ -873,35 +722,31 @@ exports[`Render data with schema 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="3"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              <span
-                class="toggleIcon"
+              <label
+                class="label"
               >
                 <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Test2
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="3"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Test2
           </div>
         </td>
       </tr>
@@ -915,35 +760,31 @@ exports[`Render data with schema 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="6"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              <span
-                class="toggleIcon"
+              <label
+                class="label"
               >
                 <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Test3
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="6"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Test3
           </div>
         </td>
       </tr>
@@ -1003,27 +844,23 @@ exports[`Render data with schema and selections 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
+              <label
+                class="label"
               >
-                <label
-                  class="label"
+                <span
+                  class="switch checkbox dark"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              Test1
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            Test1
           </div>
         </td>
       </tr>
@@ -1037,41 +874,37 @@ exports[`Render data with schema and selections 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      checked=""
-                      type="checkbox"
-                      value="3"
-                    />
-                    <span>
-                      <span
-                        aria-label="su-check"
-                        class="su-check"
-                      />
-                    </span>
-                  </span>
-                </label>
-              </div>
-              <span
-                class="toggleIcon"
+              <label
+                class="label"
               >
                 <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Test2
+                  class="switch checkbox dark"
+                >
+                  <input
+                    checked=""
+                    type="checkbox"
+                    value="3"
+                  />
+                  <span>
+                    <span
+                      aria-label="su-check"
+                      class="su-check"
+                    />
+                  </span>
+                </span>
+              </label>
             </div>
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Test2
           </div>
         </td>
       </tr>
@@ -1085,35 +918,31 @@ exports[`Render data with schema and selections 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="6"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              <span
-                class="toggleIcon"
+              <label
+                class="label"
               >
                 <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Test3
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="6"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Test3
           </div>
         </td>
       </tr>
@@ -1180,27 +1009,23 @@ exports[`Render data with two columns 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
+              <label
+                class="label"
               >
-                <label
-                  class="label"
+                <span
+                  class="switch checkbox dark"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              Test1
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            Test1
           </div>
         </td>
         <td
@@ -1223,35 +1048,31 @@ exports[`Render data with two columns 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="3"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              <span
-                class="toggleIcon"
+              <label
+                class="label"
               >
                 <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Test2
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="3"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Test2
           </div>
         </td>
         <td
@@ -1274,35 +1095,31 @@ exports[`Render data with two columns 1`] = `
             class="cellContent"
           >
             <div
-              class="cellContent"
+              class="cellSelect"
             >
-              <div
-                class="cellSelect"
-              >
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="6"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </div>
-              <span
-                class="toggleIcon"
+              <label
+                class="label"
               >
                 <span
-                  aria-label="su-angle-right"
-                  class="su-angle-right"
-                />
-              </span>
-              Test3
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="6"
+                  />
+                  <span />
+                </span>
+              </label>
             </div>
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Test3
           </div>
         </td>
         <td

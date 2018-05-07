@@ -39,8 +39,8 @@ exports[`Render WebspaceOverview 1`] = `
           class="text"
         >
           <span
-            aria-label="su-th-list"
-            class="su-th-list"
+            aria-label="su-columns"
+            class="su-columns"
           />
         </span>
       </button>
@@ -52,8 +52,8 @@ exports[`Render WebspaceOverview 1`] = `
           class="text"
         >
           <span
-            aria-label="su-th-list"
-            class="su-th-list"
+            aria-label="su-columns"
+            class="su-columns"
           />
         </span>
       </button>
