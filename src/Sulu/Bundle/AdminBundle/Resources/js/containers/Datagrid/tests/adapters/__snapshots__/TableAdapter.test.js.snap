@@ -46,11 +46,7 @@ exports[`Render column with ascending sort icon 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="cellContent"
-              >
-                Title 1
-              </div>
+              Title 1
             </div>
           </td>
           <td
@@ -144,11 +140,7 @@ exports[`Render column with descending sort icon 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="cellContent"
-              >
-                Title 1
-              </div>
+              Title 1
             </div>
           </td>
           <td
