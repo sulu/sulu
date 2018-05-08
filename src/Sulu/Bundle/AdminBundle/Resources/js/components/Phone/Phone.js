@@ -45,7 +45,7 @@ export default class Phone extends React.PureComponent<Props> {
                 name={name}
                 placeholder={placeholder}
                 onBlur={onBlur}
-                onIconClick={(value && 1 < value.length) ? this.handleIconClick : undefined}
+                onIconClick={(value && value.length > 1) ? this.handleIconClick : undefined}
             />
         );
     }

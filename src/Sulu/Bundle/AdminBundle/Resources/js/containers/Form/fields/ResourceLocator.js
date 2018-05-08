@@ -7,7 +7,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
     componentWillMount() {
         const {onChange, value} = this.props;
 
-        if (value === undefined || '' === value) {
+        if (value === undefined || value === '') {
             onChange('/');
         }
     }

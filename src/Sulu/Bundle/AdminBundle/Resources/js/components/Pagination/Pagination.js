@@ -26,7 +26,7 @@ export default class Pagination extends React.PureComponent<PaginationProps> {
             return false;
         }
 
-        return 1 < current;
+        return current > 1;
     };
 
     handlePreviousClick = () => {

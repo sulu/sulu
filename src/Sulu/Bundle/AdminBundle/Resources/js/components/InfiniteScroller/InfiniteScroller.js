@@ -51,7 +51,7 @@ export default class InfiniteScroller extends React.PureComponent<PaginationProp
     isScrollable(el: ElementRef<*>): boolean {
         const overflowY = window.getComputedStyle(el)['overflow-y'];
 
-        return 'auto' === overflowY || 'scroll' === overflowY;
+        return overflowY === 'auto' || overflowY === 'scroll';
     }
 
     setRef = (ref: ?ElementRef<'section'>) => {

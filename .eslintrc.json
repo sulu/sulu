@@ -85,7 +85,7 @@
         "space-infix-ops": "error",
         "yoda": [
             "error",
-            "always"
+            "never"
         ],
         "import/order": "error",
         "import/no-dynamic-require": "error",

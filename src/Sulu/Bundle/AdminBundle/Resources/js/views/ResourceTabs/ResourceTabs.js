@@ -29,8 +29,8 @@ export default class ResourceTabs extends React.Component<ViewProps> {
 
         const options = {};
         if (
-            ('boolean' === typeof locales && true === locales)
-            || ((Array.isArray(locales) || isObservableArray(locales)) && 0 < locales.length)
+            (typeof locales === 'boolean' && locales === true)
+            || ((Array.isArray(locales) || isObservableArray(locales)) && locales.length > 0)
         ) {
             options.locale = observable.box();
         }

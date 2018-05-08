@@ -397,12 +397,12 @@ test('Should render the delete item enabled only if something is selected', () =
 
     let toolbarConfig, item;
     toolbarConfig = toolbarFunction.call(datagrid.instance());
-    item = toolbarConfig.items.find((item) => 'Delete' === item.value);
+    item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(true);
 
     datagridStore.selectionIds.push(1);
     toolbarConfig = toolbarFunction.call(datagrid.instance());
-    item = toolbarConfig.items.find((item) => 'Delete' === item.value);
+    item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(false);
 });
 
@@ -499,7 +499,7 @@ test('Should not pass the locale observable to the DatagridStore if no locales a
 
 test('Should delete selected items when click on delete button', () => {
     function getDeleteItem() {
-        return toolbarFunction.call(datagrid.instance()).items.find((item) => 'Delete' === item.value);
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Delete');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');

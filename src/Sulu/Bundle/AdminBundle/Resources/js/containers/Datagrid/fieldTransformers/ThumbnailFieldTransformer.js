@@ -12,7 +12,7 @@ export default class ThumbnailFieldTransformer implements FieldTransformer {
             return undefined;
         }
 
-        if ('object' !== typeof value) {
+        if (typeof value !== 'object') {
             log.error('Invalid type given: "' + typeof value + '". "object" is needed.');
 
             return undefined;

@@ -60,7 +60,7 @@ export default class ArrowMenu extends React.Component<Props> {
                 >
                     {
                         (setPopoverElementRef, popoverStyle, verticalPosition) => {
-                            const arrowVerticalPosition = 'top' === verticalPosition ? 'bottom' : 'top';
+                            const arrowVerticalPosition = verticalPosition === 'top' ? 'bottom' : 'top';
 
                             return this.renderMenu(setPopoverElementRef, popoverStyle, arrowVerticalPosition);
                         }
@@ -83,10 +83,10 @@ export default class ArrowMenu extends React.Component<Props> {
         const arrowClass = classNames(
             arrowMenuStyles.arrow,
             {
-                [arrowMenuStyles.top]: 'top' === arrowVerticalPosition,
-                [arrowMenuStyles.bottom]: 'bottom' === arrowVerticalPosition,
-                [arrowMenuStyles.left]: 'left' === arrowHorizontalPosition,
-                [arrowMenuStyles.right]: 'right' === arrowHorizontalPosition,
+                [arrowMenuStyles.top]: arrowVerticalPosition === 'top',
+                [arrowMenuStyles.bottom]: arrowVerticalPosition === 'bottom',
+                [arrowMenuStyles.left]: arrowHorizontalPosition === 'left',
+                [arrowMenuStyles.right]: arrowHorizontalPosition === 'right',
             }
         );
 

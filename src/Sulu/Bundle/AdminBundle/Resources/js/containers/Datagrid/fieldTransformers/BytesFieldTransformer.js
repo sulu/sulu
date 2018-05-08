@@ -8,7 +8,7 @@ export default class BytesFieldTransformer implements FieldTransformer {
             return undefined;
         }
 
-        if (0 === value) {
+        if (value === 0) {
             return '0 Byte';
         }
 

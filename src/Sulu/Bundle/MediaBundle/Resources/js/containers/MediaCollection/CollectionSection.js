@@ -43,7 +43,7 @@ export default class CollectionSection extends React.Component<Props> {
         const {resourceStore, locale} = this.props;
         const {data} = resourceStore;
 
-        if ('update' === this.openedCollectionOperationOverlayType) {
+        if (this.openedCollectionOperationOverlayType === 'update') {
             return resourceStore.clone();
         }
 
@@ -85,7 +85,7 @@ export default class CollectionSection extends React.Component<Props> {
         const options = {};
         options.breadcrumb = true;
 
-        if (this.collectionId && 'create' === this.openedCollectionOperationOverlayType) {
+        if (this.collectionId && this.openedCollectionOperationOverlayType === 'create') {
             options.parent = this.collectionId;
         }
 
@@ -94,7 +94,7 @@ export default class CollectionSection extends React.Component<Props> {
     };
 
     handleSaveResponse = (resourceStore: ResourceStore) => {
-        if ('update' === this.openedCollectionOperationOverlayType) {
+        if (this.openedCollectionOperationOverlayType === 'update') {
             this.props.resourceStore.setMultiple(resourceStore.data);
         } else {
             this.props.onCollectionNavigate(resourceStore.id);
@@ -172,7 +172,7 @@ export default class CollectionSection extends React.Component<Props> {
                 />
                 <Dialog
                     title={translate('sulu_media.remove_collection')}
-                    open={'remove' === operationType}
+                    open={operationType === 'remove'}
                     confirmLoading={resourceStore.saving}
                     confirmText={translate('sulu_admin.ok')}
                     cancelText={translate('sulu_admin.cancel')}

@@ -147,7 +147,7 @@ test('Apply updateAttributesHooks before applying default attributes but after p
     const router = new Router(history);
 
     router.addUpdateAttributesHook((route) => {
-        if ('webspace_overview' !== route.view) {
+        if (route.view !== 'webspace_overview') {
             return {};
         }
 

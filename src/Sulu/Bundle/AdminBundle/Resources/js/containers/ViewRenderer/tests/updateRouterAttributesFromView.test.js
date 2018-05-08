@@ -8,7 +8,7 @@ jest.mock('../registries/ViewRegistry', () => ({
 
 test('Return an empty object if the corresponding View has no getDerivedRouterAttributes function', () => {
     viewRegistry.get.mockImplementation((key) => {
-        if ('test' === key) {
+        if (key === 'test') {
             return {};
         }
     });
@@ -27,7 +27,7 @@ test('Return an empty object if the corresponding View has no getDerivedRouterAt
 
 test('Return the attributes returned from the getDerivedRouterAttributes function', () => {
     viewRegistry.get.mockImplementation((key) => {
-        if ('test' === key) {
+        if (key === 'test') {
             return {
                 getDerivedRouteAttributes: jest.fn().mockReturnValue({
                     value1: 'test1',
@@ -51,7 +51,7 @@ test('Return the attributes returned from the getDerivedRouterAttributes functio
 
 test('Throw an error if attributes returned from the getDerivedRouterAttributes function are not an object', () => {
     viewRegistry.get.mockImplementation((key) => {
-        if ('test' === key) {
+        if (key === 'test') {
             return {
                 getDerivedRouteAttributes: jest.fn().mockReturnValue('test'),
             };

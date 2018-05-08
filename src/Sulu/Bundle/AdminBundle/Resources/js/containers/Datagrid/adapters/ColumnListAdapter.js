@@ -36,7 +36,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
     };
 
     handleColumnAdd = (index?: string | number) => {
-        if (!index || 'number' !== typeof index) {
+        if (!index || typeof index !== 'number') {
             return;
         }
 

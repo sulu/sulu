@@ -124,7 +124,7 @@ export default class AutoComplete extends React.Component<Props> {
         } = this.props;
         const {inputValue} = this;
         const suggestions = this.createSuggestions(children);
-        const showSuggestionList = (!!inputValue && 0 < inputValue.length) && 0 < React.Children.count(children);
+        const showSuggestionList = (!!inputValue && inputValue.length > 0) && React.Children.count(children) > 0;
 
         return (
             <div className={autoCompleteStyles.autoComplete}>

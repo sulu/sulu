@@ -21,7 +21,7 @@ export default function withContainerSize(Component: ComponentType<*>, container
         componentDidMount() {
             window.addEventListener('resize', this.handleWindowResize);
 
-            if ('function' === typeof this.component.containerDidMount) {
+            if (typeof this.component.containerDidMount === 'function') {
                 afterElementsRendered(this.component.containerDidMount);
             }
         }

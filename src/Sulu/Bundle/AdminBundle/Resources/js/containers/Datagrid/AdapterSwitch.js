@@ -26,7 +26,7 @@ export default class AdapterSwitch extends React.PureComponent<Props> {
             adapters,
         } = this.props;
 
-        if (2 > adapters.length) {
+        if (adapters.length < 2) {
             return null;
         }
 

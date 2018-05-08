@@ -50,9 +50,9 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
     }
 
     getLabel(itemCount: number) {
-        if (1 === itemCount) {
+        if (itemCount === 1) {
             return `1 ${translate('sulu_media.media_selected_singular')}`;
-        } else if (1 < itemCount) {
+        } else if (itemCount > 1) {
             return `${itemCount} ${translate('sulu_media.media_selected_plural')}`;
         }
 

@@ -106,7 +106,7 @@ export default class Email extends React.Component<Props> {
                 name={name}
                 placeholder={placeholder}
                 onBlur={this.handleBlur}
-                onIconClick={(value && 1 < value.length) ? this.handleIconClick : undefined}
+                onIconClick={(value && value.length > 1) ? this.handleIconClick : undefined}
             />
         );
     }

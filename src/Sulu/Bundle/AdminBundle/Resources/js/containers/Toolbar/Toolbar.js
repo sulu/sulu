@@ -70,7 +70,7 @@ export default class Toolbar extends React.Component<*> {
     render() {
         const {onNavigationButtonClick, navigationOpen} = this.props;
         const loadingItems = this.toolbarStore.getItemsConfig().filter((item) => item.loading);
-        const disableAllButtons = this.toolbarStore.disableAll || 0 < loadingItems.length;
+        const disableAllButtons = this.toolbarStore.disableAll || loadingItems.length > 0;
         const backButtonConfig = this.toolbarStore.getBackButtonConfig();
         const itemsConfig = this.toolbarStore.getItemsConfig();
 

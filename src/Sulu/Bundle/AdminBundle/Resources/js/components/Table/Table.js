@@ -138,7 +138,7 @@ export default class Table extends React.Component<Props> {
         });
 
         const clonedBody = this.cloneBody(body);
-        const emptyBody = (clonedBody && 0 === React.Children.count(clonedBody.props.children));
+        const emptyBody = (clonedBody && React.Children.count(clonedBody.props.children) === 0);
         const allRowsSelected = (clonedBody && !emptyBody) ? this.checkAllRowsSelected(clonedBody) : false;
         const clonedHeader = this.cloneHeader(header, allRowsSelected);
 

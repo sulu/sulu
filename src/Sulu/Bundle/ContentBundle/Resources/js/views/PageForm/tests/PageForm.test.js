@@ -345,7 +345,7 @@ test('Should change template on click in template chooser', () => {
 test('Should render save buttons disabled only if form is not dirty', () => {
     function getSaveItem(label) {
         const saveButtonDropdown = toolbarFunction.call(pageForm.instance())
-            .items.find((item) => 'Save' === item.label);
+            .items.find((item) => item.label === 'Save');
         return saveButtonDropdown.options.find((option) => option.label === label);
     }
 

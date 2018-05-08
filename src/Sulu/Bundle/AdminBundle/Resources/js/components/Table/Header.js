@@ -29,11 +29,11 @@ export default class Header extends React.PureComponent<Props> {
     };
 
     isMultipleSelect = () => {
-        return 'multiple' === this.props.selectMode;
+        return this.props.selectMode === 'multiple';
     };
 
     isSingleSelect = () => {
-        return 'single' === this.props.selectMode;
+        return this.props.selectMode === 'single';
     };
 
     createHeader = (originalCells: ChildrenArray<Element<typeof HeaderCell>>) => {
@@ -41,7 +41,7 @@ export default class Header extends React.PureComponent<Props> {
         const prependCells = [];
         const cells = this.createHeaderCells(originalCells);
 
-        if (buttons && 0 < buttons.length) {
+        if (buttons && buttons.length > 0) {
             const buttonCells = this.createHeaderButtonCells();
 
             if (buttonCells) {
