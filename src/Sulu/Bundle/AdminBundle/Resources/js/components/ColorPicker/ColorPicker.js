@@ -88,7 +88,7 @@ export default class ColorPicker extends React.Component<Props> {
         const {onBlur, onChange} = this.props;
 
         this.setShowError(false);
-        onChange(value.hex);
+        onChange(value && value instanceof Object && value.hasOwnProperty('hex') ? value.hex : undefined);
 
         if (onBlur) {
             onBlur();
@@ -148,7 +148,7 @@ export default class ColorPicker extends React.Component<Props> {
                                 ref={setPopoverElementRef}
                             >
                                 <SketchPicker
-                                    color={this.value}
+                                    color={this.value ? this.value : undefined}
                                     onChangeComplete={this.handleChange}
                                     disableAlpha={true}
                                     presetColors={[]}
