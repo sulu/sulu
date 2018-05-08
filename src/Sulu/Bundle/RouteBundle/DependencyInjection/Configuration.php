@@ -39,6 +39,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('generator')->isRequired()->end()
                             ->arrayNode('options')
                                 ->isRequired()
+                                ->normalizeKeys(false)
                                 ->useAttributeAsKey('name')
                                 ->prototype('scalar')->end()
                             ->end()
