@@ -44,7 +44,7 @@ export default class PopoverPositioner {
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
         // First, the popover is positioned without taking the screen borders or the minimum height into account.
-        let dimensions = {
+        const dimensions = {
             top: anchorTop + verticalOffset - centerChildOffsetTop,
             left: anchorLeft + horizontalOffset,
             height: popoverHeight,
@@ -89,12 +89,12 @@ export default class PopoverPositioner {
     }
 
     static cropVerticalDimensions(dimensions: PopoverDimensions, windowHeight: number): VerticalCrop {
-        let newDimensions = {...dimensions};
+        const newDimensions = {...dimensions};
         let touchesTopBorder = false;
         let touchesBottomBorder = false;
 
         if (dimensions.top < PADDING_TO_WINDOW) {
-            let newHeight = dimensions.height + dimensions.top - PADDING_TO_WINDOW;
+            const newHeight = dimensions.height + dimensions.top - PADDING_TO_WINDOW;
             newDimensions.top = PADDING_TO_WINDOW;
             newDimensions.height = (newHeight < 0) ? dimensions.height : newHeight;
             newDimensions.scrollTop = -dimensions.top + PADDING_TO_WINDOW;
@@ -114,7 +114,7 @@ export default class PopoverPositioner {
         windowWidth: number,
         popoverWidth: number
     ): PopoverDimensions {
-        let newDimensions = {...dimensions};
+        const newDimensions = {...dimensions};
         newDimensions.left = Math.max(PADDING_TO_WINDOW, newDimensions.left);
         newDimensions.left = Math.min(windowWidth - popoverWidth - PADDING_TO_WINDOW, newDimensions.left);
 

@@ -82,6 +82,7 @@
         "curly": "error",
         "no-case-declarations": "off",
         "no-multi-spaces": "error",
+        "prefer-const": "error",
         "space-infix-ops": "error",
         "import/order": "error",
         "import/no-dynamic-require": "error",

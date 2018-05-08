@@ -53,7 +53,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
     };
 
     findDefaultLocale = (localizations: Array<Localization>): ?string => {
-        for (let localization of localizations) {
+        for (const localization of localizations) {
             if (localization.default) {
                 return localization.locale;
             }

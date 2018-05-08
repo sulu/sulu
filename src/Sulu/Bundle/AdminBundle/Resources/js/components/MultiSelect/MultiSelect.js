@@ -23,7 +23,7 @@ export default class MultiSelect extends React.PureComponent<Props> {
     static Divider = Select.Divider;
 
     get displayValue(): string {
-        let selectedValues = [];
+        const selectedValues = [];
         let countOptions = 0;
 
         React.Children.forEach(this.props.children, (child: any) => {
