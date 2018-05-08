@@ -112,6 +112,9 @@ test('Render data with schema', () => {
             onPageChange={jest.fn()}
             page={1}
             pageCount={2}
+            onSort={jest.fn()}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -216,6 +219,9 @@ test('Render data with two columns', () => {
             onPageChange={jest.fn()}
             page={1}
             pageCount={2}
+            onSort={jest.fn()}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -308,6 +314,9 @@ test('Render data with schema and selections', () => {
             onPageChange={jest.fn()}
             page={1}
             pageCount={2}
+            onSort={jest.fn()}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -402,6 +411,9 @@ test('Execute onItemActivation callback when an item is expanded', () => {
             page={1}
             pageCount={1}
             onItemActivation={onItemActivationSpy}
+            onSort={jest.fn()}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -451,6 +463,9 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
             page={1}
             pageCount={1}
             onItemClick={rowEditClickSpy}
+            onSort={jest.fn()}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -493,6 +508,9 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
             page={1}
             pageCount={1}
             onItemAdd={rowAddClickSpy}
+            onSort={jest.fn()}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -535,6 +553,9 @@ test('Render data with plus button when onItemEdit callback is passed', () => {
             page={1}
             pageCount={1}
             onItemClick={rowEditClickSpy}
+            onSort={jest.fn()}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
 
@@ -577,6 +598,9 @@ test('Click on pencil should execute onItemClick callback', () => {
             page={1}
             pageCount={1}
             onItemClick={rowEditClickSpy}
+            onSort={jest.fn()}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
     const buttons = treeListAdapter.find('Table').prop('buttons');
@@ -623,6 +647,9 @@ test('Click on add should execute onAddClick callback', () => {
             page={1}
             pageCount={1}
             onAddClick={rowAddClickSpy}
+            onSort={jest.fn()}
+            sortColumn={undefined}
+            sortOrder={undefined}
         />
     );
     const buttons = treeListAdapter.find('Table').prop('buttons');
