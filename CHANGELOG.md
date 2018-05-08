@@ -1,8 +1,11 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3950 [ContactBundle]           Fixed empty latitude and longitude
+    * HOTFIX      #3949 [ContentBundle]           Fixed security check for deleting draft
+
 * 1.6.18 (2018-05-03)
-    * HOTFIX      #3949 [ContentBundle]           Fix security check for deleting draft
     * ENHANCEMENT #3930 [PreviewBundle]           Fixed preview style-link
     * HOTFIX      #3946 [ContentBundle]           Single internal link: Clear selection when target doesn't exists
     * HOTFIX      #3941 [WebsiteBundle]           Fix hideInSitemap flag for sitemap twig extension

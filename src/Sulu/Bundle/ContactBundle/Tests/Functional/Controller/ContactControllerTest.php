@@ -723,6 +723,8 @@ class ContactControllerTest extends SuluTestCase
                         'postboxPostcode' => '6850',
                         'postboxNumber' => '4711',
                         'note' => 'note',
+                        'latitude' => 47.4049309,
+                        'longitude' => 9.7593077,
                     ],
                 ],
                 'notes' => [
@@ -773,6 +775,8 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+        $this->assertEquals(47.4049309, $response->addresses[0]->latitude);
+        $this->assertEquals(9.7593077, $response->addresses[0]->longitude);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
@@ -824,6 +828,61 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
 
         $this->assertEquals(2, count($response->categories));
+    }
+
+    public function testPostEmptyLatitude()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/contacts',
+            [
+                'firstName' => 'Erika',
+                'lastName' => 'Mustermann',
+                'title' => $this->contactTitle->getId(),
+                'addresses' => [
+                    [
+                        'title' => 'Home',
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => [
+                            'id' => $this->country->getId(),
+                            'name' => 'Musterland',
+                            'code' => 'ML',
+                        ],
+                        'addressType' => [
+                            'id' => $this->addressType->getId(),
+                            'name' => 'Private',
+                        ],
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711',
+                        'note' => 'note',
+                        'latitude' => 47.4049309,
+                        'longitude' => '',
+                    ],
+                ],
+                'formOfAddress' => [
+                    'id' => 0,
+                ],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('Erika', $response['firstName']);
+        $this->assertEquals('Mustermann', $response['lastName']);
+
+        $this->assertEquals('Home', $response['addresses'][0]['title']);
+        $this->assertEquals(47.4049309, $response['addresses'][0]['latitude']);
+        $this->assertArrayNotHasKey('longitude', $response['addresses'][0]);
     }
 
     public function testPostWithoutAdditionalData()
