@@ -33,8 +33,8 @@ export default class TreeListAdapter extends AbstractTableAdapter {
     };
 
     @computed get data(): Array<Object> {
-        let dataList = [],
-            depth = 0;
+        const dataList = [];
+        const depth = 0;
 
         this.flattenData(this.props.data, dataList, depth);
 
