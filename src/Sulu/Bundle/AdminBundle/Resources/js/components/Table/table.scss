@@ -47,15 +47,22 @@ $borderWidth: 1px;
         border-radius: 0 3px 3px 0;
     }
 
+    > span {
+        display: inline-flex;
+        align-items: center;
+    }
+
     &.clickable {
         padding: 0;
 
-        & > button {
+        button {
             height: 60px;
-            padding: 20px;
+            padding: 5px 20px;
             color: inherit;
             border: none;
             background: none;
+            display: inline-flex;
+            align-items: center;
 
             &:not(:disabled) {
                 cursor: pointer;
@@ -71,6 +78,21 @@ $borderWidth: 1px;
     overflow: hidden;
     max-width: 250px;
     text-align: left;
+}
+
+.cell-content {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-icon {
+    cursor: pointer;
+    display: inline-block;
+    width: 20px;
+}
+
+.cell-select {
+    padding-right: 10px;
 }
 
 .header-cell-sort-icon {

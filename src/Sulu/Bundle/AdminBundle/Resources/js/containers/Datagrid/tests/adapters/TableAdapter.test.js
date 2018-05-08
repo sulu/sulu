@@ -237,11 +237,6 @@ test('Render data with schema not containing all fields', () => {
             type: 'string',
             visibility: 'no',
         },
-        description: {
-            label: 'Description',
-            type: 'string',
-            visibility: 'yes',
-        },
     };
     const tableAdapter = render(
         <TableAdapter
@@ -386,7 +381,7 @@ test('Render column with descending sort icon', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
-test('Click on pencil should execute onItemEdit callback', () => {
+test('Click on pencil should execute onItemClick callback', () => {
     const rowEditClickSpy = jest.fn();
     const data = [
         {

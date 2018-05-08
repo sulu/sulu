@@ -15,9 +15,7 @@ exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = 
           class="headerCell clickable"
         >
           <button>
-            <span>
-              ColumnTitle
-            </span>
+            ColumnTitle
             <span
               aria-label="su-angle-up"
               class="headerCellSortIcon su-angle-up"
@@ -28,9 +26,7 @@ exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = 
           class="headerCell clickable"
         >
           <button>
-            <span>
-              ColumnTitle
-            </span>
+            ColumnTitle
             <span
               aria-label="su-angle-down"
               class="headerCellSortIcon su-angle-down"
@@ -356,27 +352,6 @@ exports[`Render the Table component in multiple selection mode 1`] = `
         class="row"
       >
         <td
-          class="cell small"
-        >
-          <div
-            class="cellContent"
-          >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
-              >
-                <input
-                  type="checkbox"
-                  value="0"
-                />
-                <span />
-              </span>
-            </label>
-          </div>
-        </td>
-        <td
           class="cell"
         >
           <div
@@ -453,24 +428,12 @@ exports[`Render the Table component in single selection mode 1`] = `
         class="row"
       >
         <td
-          class="cell small"
+          class="cell"
         >
           <div
             class="cellContent"
           >
-            <label
-              class="label"
-            >
-              <span
-                class="switch radio dark"
-              >
-                <input
-                  type="radio"
-                  value="0"
-                />
-                <span />
-              </span>
-            </label>
+            Column Text
           </div>
         </td>
         <td
@@ -478,6 +441,148 @@ exports[`Render the Table component in single selection mode 1`] = `
         >
           <div
             class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render the Table component in tree structure 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+            style="padding-left:25px"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+            style="padding-left:50px"
           >
             Column Text
           </div>

@@ -32,6 +32,7 @@ import {
     datagridFieldTransformerRegistry,
     FolderAdapter,
     TableAdapter,
+    TreeListAdapter,
     BytesFieldTransformer,
     DateFieldTransformer,
     DateTimeFieldTransformer,
@@ -61,6 +62,7 @@ viewRegistry.add('sulu_admin.datagrid', Datagrid);
 datagridAdapterRegistry.add('column_list', ColumnListAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
 datagridAdapterRegistry.add('table', TableAdapter);
+datagridAdapterRegistry.add('tree_list', TreeListAdapter);
 
 function registerFieldTypes(fieldTypesConfig) {
     fieldRegistry.add('block', FieldBlocks);

@@ -135,14 +135,8 @@ class WebspaceOverview extends React.Component<ViewProps> {
     render() {
         return (
             <div className={webspaceOverviewStyles.webspaceOverview}>
-                {!this.webspaces &&
-                    <div>
-                        <Loader />
-                    </div>
-                }
-
-                {!!this.webspaces &&
-                    <Fragment>
+                {this.webspaces
+                    ? <Fragment>
                         <div className={webspaceOverviewStyles.webspaceSelect}>
                             <WebspaceSelect value={this.webspace.get()} onChange={this.handleWebspaceChange}>
                                 {this.webspaces.map((webspace) => (
@@ -153,13 +147,16 @@ class WebspaceOverview extends React.Component<ViewProps> {
                             </WebspaceSelect>
                         </div>
                         <Datagrid
-                            adapters={['column_list']}
+                            adapters={['column_list', 'tree_list']}
                             onAddClick={this.handleAddClick}
                             onItemClick={this.handleEditClick}
                             selectable={false}
                             store={this.datagridStore}
                         />
                     </Fragment>
+                    : <div>
+                        <Loader />
+                    </div>
                 }
             </div>
         );

@@ -19,11 +19,22 @@ type Props = {
     buttons?: Array<ButtonConfig>,
     /** Can be set to "single" or "multiple". Defaults is "none". */
     selectMode?: SelectMode,
+    selectInFirstCell?: boolean,
     /**
      * Callback function to notify about selection and deselection of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
     onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    /**
+     * Callback function to notify about open of a row.
+     * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
+     */
+    onRowExpand?: (rowId: string | number) => void,
+    /**
+     * Callback function to notify about close of a row.
+     * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
+     */
+    onRowCollapse?: (rowId: string | number) => void,
     /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
     onAllSelectionChange?: (checked: boolean) => void,
     /** Text shown when the table has no entries */
@@ -57,7 +68,8 @@ export default class Table extends React.Component<Props> {
                 allSelected: allSelected,
                 buttons: this.props.buttons,
                 selectMode: this.props.selectMode,
-                onAllSelectionChange: this.handleAllSelectionChange,
+                selectInFirstCell: this.props.selectInFirstCell,
+                onAllSelectionChange: this.props.onAllSelectionChange ? this.handleAllSelectionChange : undefined,
             }
         );
     };
@@ -72,7 +84,10 @@ export default class Table extends React.Component<Props> {
             {
                 buttons: this.props.buttons,
                 selectMode: this.props.selectMode,
-                onRowSelectionChange: this.handleRowSelectionChange,
+                selectInFirstCell: this.props.selectInFirstCell,
+                onRowSelectionChange: this.props.onRowSelectionChange ? this.handleRowSelectionChange : undefined,
+                onRowExpand: this.handleRowExpand,
+                onRowCollapse: this.handleRowCollapse,
             }
         );
     };
@@ -104,15 +119,31 @@ export default class Table extends React.Component<Props> {
         );
     };
 
+    handleRowExpand = (rowId: string | number) => {
+        const {onRowExpand} = this.props;
+        if (onRowExpand) {
+            onRowExpand(rowId);
+        }
+    };
+
+    handleRowCollapse = (rowId: string | number) => {
+        const {onRowCollapse} = this.props;
+        if (onRowCollapse) {
+            onRowCollapse(rowId);
+        }
+    };
+
     handleAllSelectionChange = (checked: boolean) => {
-        if (this.props.onAllSelectionChange) {
-            this.props.onAllSelectionChange(checked);
+        const {onAllSelectionChange} = this.props;
+        if (onAllSelectionChange) {
+            onAllSelectionChange(checked);
         }
     };
 
     handleRowSelectionChange = (rowId: string | number, selected?: boolean) => {
-        if (this.props.onRowSelectionChange) {
-            this.props.onRowSelectionChange(rowId, selected);
+        const {onRowSelectionChange} = this.props;
+        if (onRowSelectionChange) {
+            onRowSelectionChange(rowId, selected);
         }
     };
 

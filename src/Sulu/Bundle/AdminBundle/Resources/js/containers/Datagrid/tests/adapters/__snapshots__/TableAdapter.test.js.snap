@@ -16,9 +16,7 @@ exports[`Render column with ascending sort icon 1`] = `
             class="headerCell clickable"
           >
             <button>
-              <span>
-                Title
-              </span>
+              Title
               <span
                 aria-label="su-angle-up"
                 class="headerCellSortIcon su-angle-up"
@@ -29,9 +27,7 @@ exports[`Render column with ascending sort icon 1`] = `
             class="headerCell clickable"
           >
             <button>
-              <span>
-                Description
-              </span>
+              Description
             </button>
           </th>
         </tr>
@@ -110,18 +106,14 @@ exports[`Render column with descending sort icon 1`] = `
             class="headerCell clickable"
           >
             <button>
-              <span>
-                Title
-              </span>
+              Title
             </button>
           </th>
           <th
             class="headerCell clickable"
           >
             <button>
-              <span>
-                Description
-              </span>
+              Description
               <span
                 aria-label="su-angle-down"
                 class="headerCellSortIcon su-angle-down"
@@ -204,18 +196,14 @@ exports[`Render data with all different visibility types schema 1`] = `
             class="headerCell clickable"
           >
             <button>
-              <span>
-                Description
-              </span>
+              Description
             </button>
           </th>
           <th
             class="headerCell clickable"
           >
             <button>
-              <span>
-                Test 1
-              </span>
+              Test 1
             </button>
           </th>
         </tr>
@@ -321,9 +309,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             class="headerCell clickable"
           >
             <button>
-              <span>
-                Description
-              </span>
+              Description
             </button>
           </th>
         </tr>
@@ -434,9 +420,7 @@ exports[`Render data with schema 1`] = `
             class="headerCell clickable"
           >
             <button>
-              <span>
-                Description
-              </span>
+              Description
             </button>
           </th>
         </tr>
@@ -536,9 +520,7 @@ exports[`Render data with schema and selections 1`] = `
             class="headerCell clickable"
           >
             <button>
-              <span>
-                Description
-              </span>
+              Description
             </button>
           </th>
         </tr>
@@ -709,9 +691,7 @@ exports[`Render data with schema in different order 1`] = `
             class="headerCell clickable"
           >
             <button>
-              <span>
-                Description
-              </span>
+              Description
             </button>
           </th>
         </tr>
@@ -788,45 +768,15 @@ exports[`Render data with schema not containing all fields 1`] = `
       <thead
         class="header"
       >
-        <tr>
-          <th
-            class="headerCell clickable"
-          >
-            <button>
-              <span>
-                Description
-              </span>
-            </button>
-          </th>
-        </tr>
+        <tr />
       </thead>
       <tbody>
         <tr
           class="row"
-        >
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              Description 1
-            </div>
-          </td>
-        </tr>
+        />
         <tr
           class="row"
-        >
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              Description 2
-            </div>
-          </td>
-        </tr>
+        />
       </tbody>
     </table>
   </div>

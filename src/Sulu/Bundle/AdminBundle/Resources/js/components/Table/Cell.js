@@ -10,7 +10,10 @@ type Props = {
     /** If set to true, the cell will not stretch and stay at minimal width */
     small: boolean,
     colspan?: number,
+    depth?: number,
 };
+
+const DEPTH_PADDING = 25;
 
 export default class Cell extends React.PureComponent<Props> {
     static defaultProps = {
@@ -19,10 +22,11 @@ export default class Cell extends React.PureComponent<Props> {
 
     render() {
         const {
-            small,
             colspan,
             children,
             className,
+            depth,
+            small,
         } = this.props;
         const cellClass = classNames(
             className,
@@ -31,13 +35,18 @@ export default class Cell extends React.PureComponent<Props> {
                 [tableStyles.small]: small,
             }
         );
+        const style = {};
+
+        if (depth) {
+            style.paddingLeft = (depth * DEPTH_PADDING) + 'px';
+        }
 
         return (
             <td
                 colSpan={colspan}
                 className={cellClass}
             >
-                <div className={tableStyles.cellContent}>
+                <div className={tableStyles.cellContent} style={style}>
                     {children}
                 </div>
             </td>

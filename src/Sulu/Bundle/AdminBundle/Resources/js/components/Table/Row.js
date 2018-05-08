@@ -1,8 +1,10 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ChildrenArray, Element} from 'react';
 import Checkbox from '../Checkbox';
 import {Radio} from '../Radio';
+import Icon from '../Icon/Icon';
+import Loader from '../Loader/Loader';
 import type {ButtonConfig, SelectMode} from './types';
 import ButtonCell from './ButtonCell';
 import Cell from './Cell';
@@ -18,8 +20,16 @@ type Props = {
     buttons?: Array<ButtonConfig>,
     /** @ignore */
     selectMode?: SelectMode,
-    /** If set to true the row is selected */
-    selected?: boolean,
+    selectInFirstCell: boolean,
+    selected: boolean,
+    hasChildren: boolean,
+    expanded: boolean,
+    isLoading: boolean,
+    depth?: number,
+    /** @ignore */
+    onExpand?: (rowId: string | number) => void,
+    /** @ignore */
+    onCollapse?: (rowId: string | number) => void,
     /** @ignore */
     onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
 };
@@ -27,7 +37,17 @@ type Props = {
 export default class Row extends React.PureComponent<Props> {
     static defaultProps = {
         selected: false,
+        selectInFirstCell: false,
+        hasChildren: false,
+        expanded: false,
+        isLoading: false,
         rowIndex: 0,
+        depth: 0,
+    };
+
+    getIdentifier = (): (string | number) => {
+        const {id, rowIndex} = this.props;
+        return id || rowIndex;
     };
 
     isMultipleSelect = () => {
@@ -39,7 +59,7 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createCells = (cells: ChildrenArray<Element<typeof Cell>>) => {
-        const {buttons} = this.props;
+        const {buttons, selectInFirstCell} = this.props;
         const prependedCells = [];
 
         if (buttons && buttons.length > 0) {
@@ -50,75 +70,123 @@ export default class Row extends React.PureComponent<Props> {
             }
         }
 
-        if (this.isSingleSelect()) {
-            prependedCells.push(this.createRadioCell());
-        } else if (this.isMultipleSelect()) {
-            prependedCells.push(this.createCheckboxCell());
+        if (!selectInFirstCell) {
+            const select = this.createSelect();
+
+            if (select) {
+                prependedCells.push(
+                    <Cell key={'choice'} small={true}>
+                        {select}
+                    </Cell>
+                );
+            }
         }
 
         const clonedCells = this.cloneCells(cells);
 
-        clonedCells.unshift(...prependedCells);
+        clonedCells.unshift(prependedCells);
 
         return clonedCells;
     };
 
     cloneCells = (originalCells: ChildrenArray<Element<typeof Cell>>) => {
-        const {rowIndex} = this.props;
+        return React.Children.map(originalCells, (cell: Element<typeof Cell>, index) => {
+            const key = `cell-${index}`;
+            const {props} = cell;
+            const firstCell = 0 === index;
+            const {depth} = this.props;
+            let {children} = props;
 
-        return React.Children.map(originalCells, (cell, index) => {
+            if (firstCell) {
+                children = this.createFirstCell(children);
+            }
+
             return React.cloneElement(
                 cell,
                 {
-                    key: `cell-${rowIndex}-${index}`,
+                    ...props,
+                    key,
+                    children,
+                    depth: firstCell && depth ? depth : undefined,
                 }
             );
         });
     };
 
-    createRadioCell = () => {
-        const {id, selected, rowIndex} = this.props;
-        const key = `radio-${rowIndex}`;
-        const identifier = id || rowIndex;
+    createFirstCell = (children: *) => {
+        const {hasChildren, selectInFirstCell, onSelectionChange} = this.props;
 
         return (
-            <Cell
-                key={key}
-                small={true}
+            <Fragment>
+                {selectInFirstCell && onSelectionChange &&
+                    <div className={tableStyles.cellSelect}>
+                        {this.createSelect()}
+                    </div>
+                }
+                {hasChildren &&
+                    this.createToggler()
+                }
+                {children}
+            </Fragment>
+        );
+    };
+
+    createSelect = () => {
+        if (!this.props.onSelectionChange) {
+            return null;
+        }
+
+        if (this.isSingleSelect()) {
+            return this.createRadioCell();
+        } else if (this.isMultipleSelect()) {
+            return this.createCheckboxCell();
+        }
+    };
+
+    createToggler = () => {
+        const {isLoading, expanded} = this.props;
+
+        return (
+            <span
+                onClick={expanded === false ? this.handleExpand : this.handleCollapse}
+                className={tableStyles.toggleIcon}
             >
-                <Radio
-                    skin="dark"
-                    value={identifier}
-                    checked={!!selected}
-                    onChange={this.handleSingleSelectionChange}
-                />
-            </Cell>
+                {isLoading
+                    ? <Loader size={10} />
+                    : <Icon name={expanded === true ? 'su-angle-down' : 'su-angle-right'} />
+                }
+            </span>
+        );
+    };
+
+    createRadioCell = () => {
+        const {selected} = this.props;
+
+        return (
+            <Radio
+                skin="dark"
+                value={this.getIdentifier()}
+                checked={selected}
+                onChange={this.handleSingleSelectionChange}
+            />
         );
     };
 
     createCheckboxCell = () => {
-        const {id, selected, rowIndex} = this.props;
-        const key = `checkbox-${rowIndex}`;
-        const identifier = id || rowIndex;
+        const {selected} = this.props;
 
         return (
-            <Cell
-                key={key}
-                small={true}
-            >
-                <Checkbox
-                    skin="dark"
-                    value={identifier}
-                    checked={!!selected}
-                    onChange={this.handleMultipleSelectionChange}
-                />
-            </Cell>
+            <Checkbox
+                skin="dark"
+                value={this.getIdentifier()}
+                checked={selected}
+                onChange={this.handleMultipleSelectionChange}
+            />
         );
     };
 
     createButtonCells = () => {
-        const {id, rowIndex} = this.props;
-        const {buttons} = this.props;
+        const {buttons, rowIndex} = this.props;
 
         if (!buttons) {
             return null;
@@ -127,28 +195,43 @@ export default class Row extends React.PureComponent<Props> {
         return buttons.map((button: ButtonConfig, index) => {
             const key = `control-${rowIndex}-${index}`;
             const handleClick = button.onClick;
-            const identifier = id || rowIndex;
 
             return (
                 <ButtonCell
                     key={key}
                     icon={button.icon}
-                    rowId={identifier}
+                    rowId={this.getIdentifier()}
                     onClick={handleClick}
                 />
             );
         });
     };
 
+    handleCollapse = () => {
+        const {onCollapse} = this.props;
+        if (onCollapse) {
+            onCollapse(this.getIdentifier());
+        }
+    };
+
+    handleExpand = () => {
+        const {onExpand} = this.props;
+        if (onExpand) {
+            onExpand(this.getIdentifier());
+        }
+    };
+
     handleSingleSelectionChange = (rowId?: string | number) => {
-        if (this.props.onSelectionChange && rowId) {
-            this.props.onSelectionChange(rowId);
+        const {onSelectionChange} = this.props;
+        if (onSelectionChange && rowId) {
+            onSelectionChange(rowId);
         }
     };
 
     handleMultipleSelectionChange = (checked: boolean, rowId?: string | number) => {
-        if (this.props.onSelectionChange && rowId) {
-            this.props.onSelectionChange(rowId, checked);
+        const {onSelectionChange} = this.props;
+        if (onSelectionChange && rowId) {
+            onSelectionChange(rowId, checked);
         }
     };
 

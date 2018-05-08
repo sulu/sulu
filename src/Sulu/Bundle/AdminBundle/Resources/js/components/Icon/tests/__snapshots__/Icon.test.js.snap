@@ -1,5 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Icon should not render with empty string 1`] = `null`;
+
+exports[`Icon should not render with invalid icon 1`] = `null`;
+
 exports[`Icon should render 1`] = `
 <span
   aria-label="su-save"

@@ -1,81 +1,22 @@
 // @flow
 import {observer} from 'mobx-react';
-import {computed} from 'mobx';
 import React from 'react';
 import Pagination from '../../../components/Pagination';
 import Table from '../../../components/Table';
 import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
-import datagridFieldTransformerRegistry from '../registries/DatagridFieldTransformerRegistry';
-import type {Schema} from '../types';
-import AbstractAdapter from './AbstractAdapter';
+import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
-export default class TableAdapter extends AbstractAdapter {
+export default class TableAdapter extends AbstractTableAdapter {
     static LoadingStrategy = PaginatedLoadingStrategy;
 
     static StructureStrategy = FlatStructureStrategy;
 
     static icon = 'su-align-justify';
 
-    static defaultProps = {
-        data: [],
-    };
-
-    @computed get schema(): Schema {
-        const {
-            schema,
-        } = this.props;
-
-        const newSchema = {};
-
-        for (const key of Object.keys(schema)) {
-            if (schema[key].visibility === 'never' || schema[key].visibility === 'no') {
-                continue;
-            }
-
-            newSchema[key] = schema[key];
-        }
-
-        return newSchema;
-    }
-
-    renderCells(item: Object) {
-        const schemaKeys = Object.keys(this.schema);
-
-        return schemaKeys.map((schemaKey) => {
-            const transformer = datagridFieldTransformerRegistry.get(this.schema[schemaKey].type);
-            const value = transformer.transform(item[schemaKey]);
-
-            return (
-                <Table.Cell key={item.id + schemaKey}>{value}</Table.Cell>
-            );
-        });
-    }
-
-    renderHeaderCells() {
-        const {sortColumn, sortOrder} = this.props;
-        const schemaKeys = Object.keys(this.schema);
-
-        return schemaKeys.map((schemaKey) => {
-            const label = this.schema[schemaKey].label ? this.schema[schemaKey].label : schemaKey;
-
-            return(
-                <Table.HeaderCell
-                    key={schemaKey}
-                    onClick={this.props.onSort}
-                    name={schemaKey}
-                    sortOrder={sortColumn === schemaKey ? sortOrder : undefined}
-                >
-                    {label}
-                </Table.HeaderCell>
-            );
-        });
-    }
-
     render() {
         const {
-            data,
             loading,
             onItemClick,
             onAllSelectionChange,
@@ -83,7 +24,6 @@ export default class TableAdapter extends AbstractAdapter {
             onPageChange,
             page,
             pageCount,
-            selections,
         } = this.props;
         const buttons = [];
 
@@ -108,14 +48,10 @@ export default class TableAdapter extends AbstractAdapter {
                     onAllSelectionChange={onAllSelectionChange}
                 >
                     <Table.Header>
-                        {this.renderHeaderCells()}
+                        {this.renderHeaderCells(true)}
                     </Table.Header>
                     <Table.Body>
-                        {data.map((item) => (
-                            <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
-                                {this.renderCells(item)}
-                            </Table.Row>
-                        ))}
+                        {this.renderRows()}
                     </Table.Body>
                 </Table>
             </Pagination>

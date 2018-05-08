@@ -38,6 +38,35 @@ test('Render the Table component', () => {
     )).toMatchSnapshot();
 });
 
+test('Render the Table component in tree structure', () => {
+    expect(render(
+        <Table>
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row depth={0} hasChildren={true}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row depth={1} hasChildren={true}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row depth={2}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    )).toMatchSnapshot();
+});
+
 test('Render an empty table', () => {
     const placeholderText = 'No entries';
 
@@ -308,4 +337,76 @@ test('Header cells with an attached name should call the onClick callback with t
 
     table.find('HeaderCell').at(2).find('button').simulate('click');
     expect(clickSpy).lastCalledWith('column3', 'asc');
+});
+
+test('Collapse should be called correctly', () => {
+    const onRowCollapse = jest.fn();
+
+    const table = mount(
+        <Table
+            onRowCollapse={onRowCollapse}
+        >
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row depth={0} hasChildren={true} expanded={true}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row depth={1} hasChildren={true} expanded={true}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row depth={2}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    );
+
+    table.find('Row').at(1).find('span.toggleIcon').simulate('click');
+    expect(onRowCollapse).toHaveBeenCalledTimes(1);
+});
+
+test('Expand should be called correctly', () => {
+    const onRowExpand = jest.fn();
+
+    const table = mount(
+        <Table
+            onRowExpand={onRowExpand}
+        >
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row depth={0} hasChildren={true} expanded={true}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row depth={1} hasChildren={true} expanded={false}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row depth={2}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    );
+
+    table.find('Row').at(1).find('span.toggleIcon').simulate('click');
+    expect(onRowExpand).toHaveBeenCalledTimes(1);
 });

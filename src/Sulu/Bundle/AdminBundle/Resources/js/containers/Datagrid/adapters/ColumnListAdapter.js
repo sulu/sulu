@@ -15,7 +15,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
     static StructureStrategy = TreeStructureStrategy;
 
-    static icon = 'su-th-list';
+    static icon = 'su-columns';
 
     static defaultProps = {
         data: [],

@@ -11,12 +11,19 @@ type Props = {
     /** @ignore */
     selectMode?: SelectMode,
     /** @ignore */
+    selectInFirstCell: boolean,
+    /** @ignore */
     onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    /** @ignore */
+    onRowExpand?: (rowId: string | number) => void,
+    /** @ignore */
+    onRowCollapse?: (rowId: string | number) => void,
 };
 
 export default class Body extends React.PureComponent<Props> {
     static defaultProps = {
         selectMode: 'none',
+        selectInFirstCell: false,
     };
 
     cloneRows = (originalRows: ?ChildrenArray<Element<typeof Row>>) => {
@@ -33,14 +40,32 @@ export default class Body extends React.PureComponent<Props> {
                 rowIndex: index,
                 buttons: buttons,
                 selectMode: selectMode,
-                onSelectionChange: this.handleRowSelectionChange,
+                selectInFirstCell: this.props.selectInFirstCell,
+                onSelectionChange: this.props.onRowSelectionChange ? this.handleRowSelectionChange : undefined,
+                onExpand: this.handleRowExpand,
+                onCollapse: this.handleRowCollapse,
             }
         ));
     };
 
     handleRowSelectionChange = (rowId: string | number, selected?: boolean) => {
-        if (this.props.onRowSelectionChange) {
-            this.props.onRowSelectionChange(rowId, selected);
+        const {onRowSelectionChange} = this.props;
+        if (onRowSelectionChange) {
+            onRowSelectionChange(rowId, selected);
+        }
+    };
+
+    handleRowExpand = (rowId: string | number) => {
+        const {onRowExpand} = this.props;
+        if (onRowExpand) {
+            onRowExpand(rowId);
+        }
+    };
+
+    handleRowCollapse = (rowId: string | number) => {
+        const {onRowCollapse} = this.props;
+        if (onRowCollapse) {
+            onRowCollapse(rowId);
         }
     };
 
