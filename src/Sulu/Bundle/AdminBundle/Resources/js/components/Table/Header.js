@@ -71,7 +71,7 @@ export default class Header extends React.PureComponent<Props> {
             const {props} = headerCell;
             let {children} = props;
 
-            if (0 === index) {
+            if (index === 0) {
                 children = this.createFirstCell(children);
             }
 

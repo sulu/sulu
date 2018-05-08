@@ -93,7 +93,7 @@ export default class Row extends React.PureComponent<Props> {
         return React.Children.map(originalCells, (cell: Element<typeof Cell>, index) => {
             const key = `cell-${index}`;
             const {props} = cell;
-            const firstCell = 0 === index;
+            const firstCell = index === 0;
             const {depth} = this.props;
             let {children} = props;
 

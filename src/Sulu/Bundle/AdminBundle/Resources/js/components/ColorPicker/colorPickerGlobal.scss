@@ -7,7 +7,7 @@ $borderRadius: 3px;
 $inputColor: $black;
 
 :global {
-    .sketch-picker  {
+    .sketch-picker {
         box-shadow: none !important;
         border-radius: 0 0 $borderRadius $borderRadius !important;
         border: 1px solid $borderColor;
