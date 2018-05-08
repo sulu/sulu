@@ -5,10 +5,10 @@ import viewRegistry from './registries/ViewRegistry';
 const updateRouterAttributesFromView: UpdateAttributesHook = function (route) {
     const View = viewRegistry.get(route.view);
 
-    if ('function' === typeof View.getDerivedRouteAttributes) {
+    if (typeof View.getDerivedRouteAttributes === 'function') {
         const attributes = View.getDerivedRouteAttributes(route);
 
-        if ('object' !== typeof attributes) {
+        if (typeof attributes !== 'object') {
             throw new Error(
                 'The "getDerivedRouteAttributes" function of the "' + route.view + '" view did not return an object.'
             );

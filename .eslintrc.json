@@ -84,6 +84,10 @@
         "no-multi-spaces": "error",
         "prefer-const": "error",
         "space-infix-ops": "error",
+        "yoda": [
+            "error",
+            "never"
+        ],
         "import/order": "error",
         "import/no-dynamic-require": "error",
         "import/no-webpack-loader-syntax": "error",
