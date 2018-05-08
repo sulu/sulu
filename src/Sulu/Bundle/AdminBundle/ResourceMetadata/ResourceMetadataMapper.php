@@ -45,8 +45,12 @@ class ResourceMetadataMapper
         $this->translator = $translator;
     }
 
-    public function mapDatagrid(string $class, string $locale): Datagrid
+    public function mapDatagrid(?string $class, string $locale): ?Datagrid
     {
+        if (!$class) {
+            return null;
+        }
+
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptorForClass($class);
 
         $datagrid = new Datagrid();

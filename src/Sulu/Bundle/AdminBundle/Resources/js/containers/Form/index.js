@@ -8,6 +8,7 @@ import Checkbox from './fields/Checkbox';
 import DatePicker from './fields/DatePicker';
 import Email from './fields/Email';
 import Input from './fields/Input';
+import PasswordConfirmation from './fields/PasswordConfirmation';
 import Phone from './fields/Phone';
 import SingleSelect from './fields/SingleSelect';
 import ResourceLocator from './fields/ResourceLocator';
@@ -23,9 +24,10 @@ export {
     DatePicker,
     Email,
     Input,
-    Phone,
     FormInspector,
     FormStore,
+    PasswordConfirmation,
+    Phone,
     Renderer,
     ResourceLocator,
     SingleSelect,

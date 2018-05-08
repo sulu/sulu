@@ -28,6 +28,14 @@ test('Should send a get request and return the promise', () => {
     expect(result).toBe(promise);
 });
 
+test('Should send a get request without an ID and return the promise', () => {
+    const promise = {};
+    Requester.get.mockReturnValue(promise);
+    const result = ResourceRequester.get('snippets');
+    expect(Requester.get).toBeCalledWith('/snippets');
+    expect(result).toBe(promise);
+});
+
 test('Should send a get request with passed options as query parameters', () => {
     const options = {locale: 'en', action: 'publish'};
     ResourceRequester.get('snippets', 5, options);

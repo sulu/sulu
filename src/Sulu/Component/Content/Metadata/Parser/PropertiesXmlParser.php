@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Metadata\Parser;
 
-use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
@@ -56,17 +55,6 @@ class PropertiesXmlParser
         'author',
         'authored',
     ];
-
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
-
-    public function __construct(
-        ContentTypeManagerInterface $contentTypeManager
-    ) {
-        $this->contentTypeManager = $contentTypeManager;
-    }
 
     public function loadAndCreateProperties(
         $templateKey,
@@ -410,18 +398,6 @@ class PropertiesXmlParser
             return $this->createSection($propertyName, $propertyData);
         }
 
-        if (!$this->contentTypeManager->has($propertyData['type'])) {
-            if ('ignore' !== $propertyData['onInvalid']) {
-                throw new \InvalidArgumentException(sprintf(
-                    'Content type with alias "%s" has not been registered. Known content types are: "%s"',
-                    $propertyData['type'],
-                    implode('", "', array_keys($this->contentTypeManager->getAll() ?: []))
-                ));
-            }
-
-            return null;
-        }
-
         $property = new PropertyMetadata();
         $property->setName($propertyName);
         $this->mapProperty($property, $propertyData);
@@ -499,6 +475,7 @@ class PropertiesXmlParser
         $property->setMinOccurs(null !== $data['minOccurs'] ? intval($data['minOccurs']) : null);
         $property->setMaxOccurs(null !== $data['maxOccurs'] ? intval($data['maxOccurs']) : null);
         $property->setParameters($data['params']);
+        $property->setOnInvalid(array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
         $this->mapMeta($property, $data['meta']);
     }
 

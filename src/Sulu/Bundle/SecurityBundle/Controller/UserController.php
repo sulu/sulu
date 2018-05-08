@@ -76,11 +76,6 @@ class UserController extends RestController implements ClassResourceInterface, S
             'email',
             $this->container->getParameter('sulu.model.user.class')
         );
-        $this->fieldDescriptors['password'] = new DoctrineFieldDescriptor(
-            'password',
-            'password',
-            $this->container->getParameter('sulu.model.user.class')
-        );
         $this->fieldDescriptors['locale'] = new DoctrineFieldDescriptor(
             'locale',
             'locale',
@@ -131,6 +126,7 @@ class UserController extends RestController implements ClassResourceInterface, S
             $this->checkArguments($request);
             $locale = $this->getRequestParameter($request, 'locale', true);
             $data = $request->request->all();
+            $data['contactId'] = $request->query->get('contactId');
             $user = $this->getUserManager()->save($data, $locale);
             $view = $this->view($user, 200);
         } catch (UsernameNotUniqueException $exc) {
@@ -269,13 +265,13 @@ class UserController extends RestController implements ClassResourceInterface, S
         if (null == $request->get('username')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'username');
         }
-        if (null === $request->get('password')) {
+        if ($request->isMethod('POST') && null === $request->get('password')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'password');
         }
         if (null == $request->get('locale')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'locale');
         }
-        if (null == $request->get('contact')) {
+        if (null == $request->get('contact') && null == $request->get('contactId')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'contact');
         }
     }
@@ -315,18 +311,15 @@ class UserController extends RestController implements ClassResourceInterface, S
             $contactId = $request->get('contactId');
 
             if (null != $contactId) {
-                $entities = [];
-                $entities[] = $this->getDoctrine()->getRepository(
+                $user = $this->getDoctrine()->getRepository(
                     $this->container->getParameter('sulu.model.user.class')
                 )->findUserByContact($contactId);
-                if (!$entities[0]) {
-                    $view = $this->view(null, 204);
-                }
+
+                $view = $this->view($user ?? new \stdClass(), 200);
             } else {
                 $entities = $this->getUserManager()->findAll();
+                $list = new CollectionRepresentation($entities, static::$entityKey);
             }
-
-            $list = new CollectionRepresentation($entities, static::$entityKey);
         }
 
         if (!$view) {

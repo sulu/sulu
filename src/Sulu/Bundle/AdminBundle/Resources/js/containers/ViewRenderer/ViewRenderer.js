@@ -47,10 +47,6 @@ export default class ViewRenderer extends React.Component<Props> {
     }
 
     getKey = (route: Route) => {
-        if (!route.rerenderAttributes) {
-            return undefined;
-        }
-
         const {
             router: {
                 attributes,
@@ -59,13 +55,15 @@ export default class ViewRenderer extends React.Component<Props> {
 
         const rerenderAttributeValues = [];
 
-        route.rerenderAttributes.forEach((rerenderAttribute) => {
-            if (attributes.hasOwnProperty(rerenderAttribute)) {
-                rerenderAttributeValues.push(attributes[rerenderAttribute]);
-            }
-        });
+        if (route.rerenderAttributes) {
+            route.rerenderAttributes.forEach((rerenderAttribute) => {
+                if (attributes.hasOwnProperty(rerenderAttribute)) {
+                    rerenderAttributeValues.push(attributes[rerenderAttribute]);
+                }
+            });
+        }
 
-        return rerenderAttributeValues.join('__');
+        return route.name + (rerenderAttributeValues.length > 0 ? '-' + rerenderAttributeValues.join('__') : '');
     };
 
     getView = (route: Route): View => {

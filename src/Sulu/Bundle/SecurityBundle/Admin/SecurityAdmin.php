@@ -106,6 +106,12 @@ class SecurityAdmin extends Admin
                 ->addOption('title', 'sulu_security.roles')
                 ->addOption('adapters', ['table'])
                 ->addOption('resourceKey', 'roles'),
+            (new Route('sulu_security.form.permissions', '/permissions', 'sulu_admin.form'))
+                ->addOption('tabTitle', 'sulu_security.permissions')
+                ->addOption('backRoute', 'sulu_contact.contacts_datagrid')
+                ->addOption('resourceKey', 'users')
+                ->addOption('idQueryParameter', 'contactId')
+                ->setParent('sulu_contact.contact_edit_form'),
         ];
     }
 

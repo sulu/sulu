@@ -179,9 +179,13 @@ class StructureMetadataFactoryTest extends TestCase
         $cacheLifeTimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);
 
-        $propertiesXmlLoader = new PropertiesXmlParser($contentTypeManager->reveal());
+        $propertiesXmlLoader = new PropertiesXmlParser();
 
-        $xmlLoader = new StructureXmlLoader($cacheLifeTimeResolver->reveal(), $propertiesXmlLoader);
+        $xmlLoader = new StructureXmlLoader(
+            $cacheLifeTimeResolver->reveal(),
+            $propertiesXmlLoader,
+            $contentTypeManager->reveal()
+        );
 
         $loadResult = $xmlLoader->load($this->apostropheMappingFile, 'page');
 

@@ -48,6 +48,94 @@ beforeEach(() => {
     jest.resetModules();
 });
 
+test('Should reuse the passed resourceStore if the passed resourceKey is the same', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 10);
+    const route = {
+        options: {
+            resourceKey: 'snippets',
+        },
+    };
+    const router = {
+        attributes: {},
+        route,
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+
+    expect(resourceStore).toBe(form.instance().resourceStore);
+});
+
+test('Should create a new resourceStore if the passed resourceKey differs', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 10);
+    const route = {
+        options: {
+            resourceKey: 'pages',
+        },
+    };
+    const router = {
+        attributes: {},
+        route,
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const formResourceStore = form.instance().resourceStore;
+
+    expect(resourceStore).not.toBe(formResourceStore);
+    expect(resourceStore.resourceKey).toEqual('snippets');
+    expect(formResourceStore.resourceKey).toEqual('pages');
+    expect(formResourceStore.locale).toEqual(undefined);
+});
+
+test('Should create a new resourceStore if the passed resourceKey differs with locale', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const locale = observable.box('en');
+    const resourceStore = new ResourceStore('snippets', 10, {locale});
+    const route = {
+        options: {
+            resourceKey: 'pages',
+        },
+    };
+    const router = {
+        attributes: {},
+        bind: jest.fn(),
+        route,
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const formResourceStore = form.instance().resourceStore;
+
+    expect(resourceStore).not.toBe(formResourceStore);
+    expect(resourceStore.resourceKey).toEqual('snippets');
+    expect(formResourceStore.resourceKey).toEqual('pages');
+    expect(formResourceStore.locale.get()).toEqual('en');
+});
+
+test('Should instantiate the ResourceStore with the idQueryParameter if given', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 10);
+    const route = {
+        options: {
+            idQueryParameter: 'contactId',
+            resourceKey: 'pages',
+        },
+    };
+    const router = {
+        attributes: {},
+        route,
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const formResourceStore = form.instance().resourceStore;
+
+    expect(formResourceStore.idQueryParameter).toEqual('contactId');
+});
+
 test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
@@ -55,18 +143,19 @@ test('Should navigate to defined route on back button click', () => {
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
+    const route = {
+        options: {
+            backRoute: 'test_route',
+            locales: [],
+        },
+    };
     const router = {
         restore: jest.fn(),
         bind: jest.fn(),
-        route: {
-            options: {
-                backRoute: 'test_route',
-                locales: [],
-            },
-        },
+        route,
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
     resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
@@ -81,17 +170,18 @@ test('Should navigate to defined route on back button click without locale', () 
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const resourceStore = new ResourceStore('snippet', 1);
 
+    const route = {
+        options: {
+            backRoute: 'test_route',
+        },
+    };
     const router = {
         restore: jest.fn(),
         bind: jest.fn(),
-        route: {
-            options: {
-                backRoute: 'test_route',
-            },
-        },
+        route,
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
@@ -105,15 +195,16 @@ test('Should not render back button when no editLink is configured', () => {
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const resourceStore = new ResourceStore('snippet', 1);
 
+    const route = {
+        options: {},
+    };
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
-        route: {
-            options: {},
-        },
+        route,
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.backButton).toBe(undefined);
@@ -126,18 +217,19 @@ test('Should change locale in form store via locale chooser', () => {
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
+    const route = {
+        options: {
+            backRoute: 'test_route',
+            locales: [],
+        },
+    };
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
-        route: {
-            options: {
-                backRoute: 'test_route',
-                locales: [],
-            },
-        },
+        route,
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
     resourceStore.locale.set('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
@@ -152,17 +244,18 @@ test('Should show locales from router options in toolbar', () => {
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
+    const route = {
+        options: {
+            locales: ['en', 'de'],
+        },
+    };
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['en', 'de'],
-            },
-        },
+        route,
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.locale.options).toEqual([
@@ -178,16 +271,17 @@ test('Should show loading templates chooser in toolbar while types are loading',
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const resourceStore = new ResourceStore('snippet', 1);
 
+    const route = {
+        options: {},
+    };
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
-        route: {
-            options: {},
-        },
+        route,
         attributes: {},
     };
 
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig).toMatchSnapshot();
@@ -203,10 +297,12 @@ test('Should change template on click in template chooser', (done) => {
     resourceStore.loading = false;
     resourceStore.data.template = 'sidebar';
 
+    const route = {
+        options: {},
+    };
     const router = {
-        route: {
-            options: {},
-        },
+        attributes: {},
+        route,
     };
 
     const typesPromise = Promise.resolve({
@@ -247,7 +343,7 @@ test('Should change template on click in template chooser', (done) => {
     });
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     Promise.all([typesPromise, sidebarPromise, footerPromise, jsonSchemaPromise]).then(() => {
         const toolbarOptions = withToolbar.mock.calls[0][1].call(form.instance());
@@ -273,12 +369,13 @@ test('Should show templates chooser in toolbar if types are available', () => {
     const resourceStore = new ResourceStore('snippet', 1);
     const metadataStore = require('../../../containers/Form/stores/MetadataStore');
 
+    const route = {
+        options: {},
+    };
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
-        route: {
-            options: {},
-        },
+        route,
         attributes: {},
     };
 
@@ -288,7 +385,7 @@ test('Should show templates chooser in toolbar if types are available', () => {
     });
     metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
 
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     return typesPromise.then(() => {
         const toolbarConfig = toolbarFunction.call(form.instance());
@@ -304,19 +401,20 @@ test('Should not show templates chooser in toolbar if types are not available', 
     const resourceStore = new ResourceStore('snippet', 1);
     const metadataStore = require('../../../containers/Form/stores/MetadataStore');
 
+    const route = {
+        options: {},
+    };
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
-        route: {
-            options: {},
-        },
+        route,
         attributes: {},
     };
 
     const typesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
 
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     return typesPromise.then(() => {
         const toolbarConfig = toolbarFunction.call(form.instance());
@@ -331,15 +429,16 @@ test('Should not show a locale chooser if no locales are passed in router option
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const resourceStore = new ResourceStore('snippet', 1);
 
+    const route = {
+        options: {},
+    };
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
-        route: {
-            options: {},
-        },
+        route,
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.locale).toBe(undefined);
@@ -351,13 +450,14 @@ test('Should initialize the ResourceStore with a schema', () => {
     const resourceStore = new ResourceStore('snippets', 12);
     const metadataStore = require('../../../containers/Form/stores/MetadataStore');
 
+    const route = {
+        options: {
+            locales: [],
+        },
+    };
     const router = {
         bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
+        route,
         attributes: {
             id: 12,
         },
@@ -371,7 +471,7 @@ test('Should initialize the ResourceStore with a schema', () => {
     });
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    mount(<Form router={router} resourceStore={resourceStore} />);
+    mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     return Promise.all([schemaTypesPromise, schemaPromise]).then(() => {
         expect(resourceStore.resourceKey).toBe('snippets');
@@ -394,15 +494,16 @@ test('Should render save button disabled only if form is not dirty', () => {
     const toolbarFunction = withToolbar.mock.calls[0][1];
     const resourceStore = new ResourceStore('snippets', 12);
 
+    const route = {
+        options: {},
+    };
     const router = {
         bind: jest.fn(),
         navigate: jest.fn(),
-        route: {
-            options: {},
-        },
+        route,
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     expect(getSaveItem().disabled).toBe(true);
 
@@ -430,19 +531,20 @@ test('Should save form when submitted', (done) => {
     });
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
+    const route = {
+        options: {
+            locales: [],
+        },
+    };
     const router = {
         bind: jest.fn(),
         navigate: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
+        route,
         attributes: {
             id: 8,
         },
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
@@ -481,17 +583,19 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
     });
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
-    const router = {
-        bind: jest.fn(),
-        navigate: jest.fn(),
-        route: {
-            options: {
-                editRoute: 'editRoute',
-                locales: [],
-            },
+    const route = {
+        options: {
+            editRoute: 'editRoute',
+            locales: [],
         },
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const router = {
+        attributes: {},
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+    };
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
@@ -514,18 +618,19 @@ test('Should pass store and schema handler to FormContainer', () => {
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12);
 
+    const route = {
+        options: {
+            locales: [],
+        },
+    };
     const router = {
         bind: jest.fn(),
         navigate: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
+        route,
         attributes: {},
     };
 
-    const form = shallow(<Form router={router} resourceStore={resourceStore} />);
+    const form = shallow(<Form router={router} route={route} resourceStore={resourceStore} />);
     const formContainer = form.find('Form');
 
     expect(formContainer.prop('store').resourceStore).toEqual(resourceStore);
@@ -543,15 +648,16 @@ test('Should render save button loading only if form is saving', () => {
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12);
 
+    const route = {
+        options: {},
+    };
     const router = {
         bind: jest.fn(),
         navigate: jest.fn(),
-        route: {
-            options: {},
-        },
+        route,
         attributes: {},
     };
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     expect(getSaveItem().loading).toBe(false);
 
@@ -563,18 +669,20 @@ test('Should destroy the store on unmount', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12, {locale: observable.box()});
+    resourceStore.destroy = jest.fn();
+    const route = {
+        options: {
+            resourceKey: 'snippets',
+            locales: [],
+        },
+    };
     const router = {
         bind: jest.fn(),
-        route: {
-            options: {
-                resourceKey: 'snippets',
-                locales: [],
-            },
-        },
+        route,
         attributes: {},
     };
 
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
     const locale = form.find('Form').at(1).prop('store').locale;
 
     expect(router.bind).toBeCalledWith('locale', locale);
@@ -584,24 +692,50 @@ test('Should destroy the store on unmount', () => {
 
     form.unmount();
     expect(formStore.destroy).toBeCalled();
+    expect(resourceStore.destroy).not.toBeCalled();
+});
+
+test('Should destroy the own resourceStore if existing on unmount', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 11);
+    resourceStore.destroy = jest.fn();
+
+    const route = {
+        options: {
+            resourceKey: 'pages',
+        },
+    };
+    const router = {
+        attributes: {},
+        route,
+    };
+    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const formResourceStore = form.instance().resourceStore;
+    formResourceStore.destroy = jest.fn();
+
+    form.unmount();
+    expect(resourceStore.destroy).not.toBeCalled();
+    expect(formResourceStore.destroy).toBeCalled();
 });
 
 test('Should not bind the locale if no locales have been passed via options', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12);
+    const route = {
+        options: {
+            resourceKey: 'snippets',
+        },
+    };
     const router = {
         bind: jest.fn(),
         unbind: jest.fn(),
-        route: {
-            options: {
-                resourceKey: 'snippets',
-            },
-        },
+        route,
         attributes: {},
     };
 
-    const form = mount(<Form router={router} resourceStore={resourceStore} />);
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     expect(router.bind).not.toBeCalled();
 
@@ -610,6 +744,12 @@ test('Should not bind the locale if no locales have been passed via options', ()
 });
 
 test('Should throw an error if the resourceStore is not passed for some reason', () => {
+    const router = {
+        attributes: {},
+        route: {
+            options: {},
+        },
+    };
     const Form = require('../Form').default;
-    expect(() => shallow(<Form />)).toThrow(/"ResourceTabs"/);
+    expect(() => shallow(<Form router={router} />)).toThrow(/"ResourceTabs"/);
 });

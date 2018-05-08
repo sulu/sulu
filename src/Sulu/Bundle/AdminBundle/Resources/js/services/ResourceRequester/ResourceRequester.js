@@ -22,9 +22,9 @@ export default class ResourceRequester {
         return '?' + searchParameters.toString().replace(/%2C/gi, ',');
     }
 
-    static get(resourceKey: string, id: number | string, queryOptions: ?Object) {
+    static get(resourceKey: string, id: ?number | string, queryOptions: ?Object) {
         const endpoint = resourceMetadataStore.getEndpoint(resourceKey);
-        return Requester.get(endpoint + '/' + id + ResourceRequester.buildQueryString(queryOptions));
+        return Requester.get(endpoint + (id ? '/' + id : '') + ResourceRequester.buildQueryString(queryOptions));
     }
 
     static post(resourceKey: string, data: Object, queryOptions: ?Object) {

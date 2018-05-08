@@ -150,6 +150,7 @@ class UserManager implements UserManagerInterface
         $flush = true
     ) {
         $username = $this->getProperty($data, 'username');
+        $contactId = $this->getProperty($data, 'contactId');
         $contact = $this->getProperty($data, 'contact');
         $email = $this->getProperty($data, 'email');
         $password = $this->getProperty($data, 'password');
@@ -207,8 +208,15 @@ class UserManager implements UserManagerInterface
                 }
             }
 
-            if (!$patch || null !== $contact) {
-                $user->setContact($this->getContact($contact['id']));
+            if (!$patch || (null !== $contact || null !== $contactId)) {
+                if ($contact && !$contactId) {
+                    @trigger_error(
+                        'Usage of the contact object to define the contact corresponding to the user is deprecated'
+                        . ' since version 1.4 and will be removed in 2.0. Use the contactId query parameter instead.',
+                        E_USER_DEPRECATED
+                    );
+                }
+                $user->setContact($this->getContact($contactId ? $contactId : $contact['id']));
             }
 
             if (!$patch || null !== $locale) {

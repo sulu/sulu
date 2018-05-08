@@ -12,9 +12,11 @@
 namespace Sulu\Component\Content\Metadata\Loader;
 
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
@@ -48,12 +50,19 @@ class StructureXmlLoader extends AbstractLoader
      */
     private $propertiesXmlParser;
 
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    private $contentTypeManager;
+
     public function __construct(
         CacheLifetimeResolverInterface $cacheLifetimeResolver,
-        PropertiesXmlParser $propertiesXmlParser
+        PropertiesXmlParser $propertiesXmlParser,
+        ContentTypeManagerInterface $contentTypeManager
     ) {
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
         $this->propertiesXmlParser = $propertiesXmlParser;
+        $this->contentTypeManager = $contentTypeManager;
 
         parent::__construct(
             self::SCHEME_PATH,
@@ -111,6 +120,27 @@ class StructureXmlLoader extends AbstractLoader
             $tags,
             $xpath
         );
+
+        $result['properties'] = array_filter($result['properties'], function($property) {
+            if (!$property instanceof PropertyMetadata) {
+                return true;
+            }
+
+            $propertyType = $property->getType();
+            if ($this->contentTypeManager->has($propertyType)) {
+                return true;
+            }
+
+            if ('ignore' === $property->getOnInvalid()) {
+                return false;
+            }
+
+            throw new \InvalidArgumentException(sprintf(
+                'Content type with alias "%s" has not been registered. Known content types are: "%s"',
+                $propertyType,
+                implode('", "', array_keys($this->contentTypeManager->getAll() ?: []))
+            ));
+        });
 
         // FIXME until excerpt-template is no page template anymore
         // - https://github.com/sulu-io/sulu/issues/1220#issuecomment-110704259

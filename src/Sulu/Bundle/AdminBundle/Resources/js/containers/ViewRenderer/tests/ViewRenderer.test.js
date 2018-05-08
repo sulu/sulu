@@ -191,6 +191,7 @@ test('Render view with not existing parent should throw', () => {
 test('Render view with route that has no rerenderAttributes', () => {
     const router = {
         route: {
+            name: 'route',
             view: 'webspaceOverview',
         },
         attributes: {
@@ -212,12 +213,13 @@ test('Render view with route that has no rerenderAttributes', () => {
     });
 
     const viewRenderer = shallow(<ViewRenderer router={router} />);
-    expect(viewRenderer.key()).toBe(undefined);
+    expect(viewRenderer.key()).toBe('route');
 });
 
 test('Render view with route that has rerenderAttributes', () => {
     const router = {
         route: {
+            name: 'route',
             view: 'webspaceOverview',
             rerenderAttributes: [
                 'webspace',
@@ -242,12 +244,13 @@ test('Render view with route that has rerenderAttributes', () => {
     });
 
     const viewRenderer = shallow(<ViewRenderer router={router} />);
-    expect(viewRenderer.key()).toBe('test');
+    expect(viewRenderer.key()).toBe('route-test');
 });
 
 test('Render view with route that has more than one rerenderAttributes', () => {
     const router = {
         route: {
+            name: 'route',
             view: 'webspaceOverview',
             rerenderAttributes: [
                 'webspace',
@@ -274,7 +277,7 @@ test('Render view with route that has more than one rerenderAttributes', () => {
     });
 
     const viewRenderer = shallow(<ViewRenderer router={router} />);
-    expect(viewRenderer.key()).toBe('test__de');
+    expect(viewRenderer.key()).toBe('route-test__de');
 });
 
 test('Render view and not clear the sidebarstore when component has sidebar', () => {

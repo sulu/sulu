@@ -14,6 +14,7 @@ export default class ResourceStore {
     @observable data: Object = {};
     @observable dirty: boolean = false;
     loadOptions: Object = {};
+    idQueryParameter: ?string;
     preventLoadingOnce: boolean;
 
     constructor(
@@ -21,22 +22,26 @@ export default class ResourceStore {
         id: ?string | number,
         observableOptions: ObservableOptions = {},
         loadOptions: Object = {},
-        preventLoadingOnce: boolean = true
+        idQueryParameter: ?string,
+        preventLoadingOnce: boolean = false
     ) {
         this.resourceKey = resourceKey;
         this.id = id;
         this.observableOptions = observableOptions;
         this.loadOptions = loadOptions;
+        this.idQueryParameter = idQueryParameter;
         this.preventLoadingOnce = preventLoadingOnce;
         this.disposer = autorun(this.load);
     }
 
     load = () => {
-        const id = this.id;
+        const {
+            id,
+        } = this;
         const options = {};
 
-        if (!this.preventLoadingOnce) {
-            this.preventLoadingOnce = true;
+        if (this.preventLoadingOnce) {
+            this.preventLoadingOnce = false;
             return;
         }
 
@@ -54,12 +59,26 @@ export default class ResourceStore {
         }
 
         this.setLoading(true);
-        ResourceRequester.get(this.resourceKey, id, {...options, ...this.loadOptions})
-            .then(this.handleResponse);
+
+        const promise = this.idQueryParameter
+            ? ResourceRequester.get(
+                this.resourceKey,
+                undefined,
+                {...options, ...this.loadOptions, [this.idQueryParameter]: id}
+            )
+            : ResourceRequester.get(this.resourceKey, id, {...options, ...this.loadOptions});
+
+        promise.then(this.handleResponse);
     };
 
     @action handleResponse = (response: Object) => {
-        this.data = response;
+        if (this.idQueryParameter) {
+            this.handleIdQueryParameterResponse(response);
+            this.data = {...this.data, ...response};
+        } else {
+            this.data = response;
+        }
+
         this.setLoading(false);
     };
 
@@ -85,7 +104,7 @@ export default class ResourceStore {
             options.locale = locale.get();
         }
 
-        if (!this.id) {
+        if (this.idQueryParameter || !this.id) {
             return this.create(options);
         }
 
@@ -95,9 +114,15 @@ export default class ResourceStore {
     @action create(options: Object): Promise<*> {
         this.saving = true;
 
-        return ResourceRequester.post(this.resourceKey, this.data, options)
+        const requestOptions = options;
+
+        if (this.idQueryParameter) {
+            requestOptions[this.idQueryParameter] = this.id;
+        }
+
+        return ResourceRequester.post(this.resourceKey, this.data, requestOptions)
             .then(action((response) => {
-                this.id = response.id;
+                this.handleIdQueryParameterResponse(response);
                 this.data = response;
                 this.saving = false;
                 this.dirty = false;
@@ -169,7 +194,8 @@ export default class ResourceStore {
             this.id,
             this.observableOptions,
             this.loadOptions,
-            false
+            undefined,
+            true
         );
 
         clonedResourceStore.data = toJS(this.data);
@@ -183,5 +209,13 @@ export default class ResourceStore {
 
     destroy() {
         this.disposer();
+    }
+
+    @action handleIdQueryParameterResponse(response: Object) {
+        if (response.id) {
+            this.idQueryParameter = undefined;
+            this.id = response.id;
+            this.preventLoadingOnce = true;
+        }
     }
 }

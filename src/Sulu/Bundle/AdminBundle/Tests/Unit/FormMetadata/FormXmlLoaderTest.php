@@ -14,7 +14,6 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
-use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 
 class FormXmlLoaderTest extends TestCase
@@ -31,11 +30,7 @@ class FormXmlLoaderTest extends TestCase
 
     public function setUp()
     {
-        $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
-        $this->contentTypeManager->has('text_line')->willReturn(true);
-        $this->contentTypeManager->has('single_select')->willReturn(true);
-
-        $propertiesXmlParser = new PropertiesXmlParser($this->contentTypeManager->reveal());
+        $propertiesXmlParser = new PropertiesXmlParser();
 
         $this->loader = new FormXmlLoader($propertiesXmlParser);
     }
