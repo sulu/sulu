@@ -1,0 +1,15 @@
+sulu_route:
+    mappings:
+        Sulu\Bundle\ArticleBundle\Document\ArticleDocument:
+            generator: template
+            options:
+                test: "/{object.getTitle()}"
+                test-dash: "/{object.getDashTitle()}"
+                test_underline: "/{object.getUnderlineTitle()}"
+    content_types:
+        route:
+            template: "@Test/route.html.twig"
+    objects:
+        route:
+            model: TestRouteEntity
+            repository: TestRouteRepository
