@@ -65,7 +65,7 @@ test('Call life-cycle events of rendered component', () => {
 
     const ComponentWithToolbar = withToolbar(Component, () => {});
 
-    let component = mount(<ComponentWithToolbar />);
+    const component = mount(<ComponentWithToolbar />);
     expect(component.instance().componentWillMount).toBeCalled();
     expect(component.instance().render).toBeCalled();
 
@@ -87,7 +87,7 @@ test('Recall toolbar-function when changing observable', () => {
         return {disableAll: this.test};
     });
 
-    let component = mount(<ComponentWithToolbar />);
+    const component = mount(<ComponentWithToolbar />);
 
     expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(DEFAULT_STORE_KEY, {
         disableAll: true,

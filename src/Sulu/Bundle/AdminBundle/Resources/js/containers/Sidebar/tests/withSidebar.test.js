@@ -55,7 +55,7 @@ test('Call life-cycle events of rendered component', () => {
         return {};
     });
 
-    let component = mount(<ComponentWithSidebar />);
+    const component = mount(<ComponentWithSidebar />);
     expect(component.instance().componentWillMount).toBeCalled();
     expect(component.instance().render).toBeCalled();
 
@@ -77,7 +77,7 @@ test('Recall sidebar-function when changing observable', () => {
         return {view: this.sidebarView};
     });
 
-    let component = mount(<ComponentWithSidebar />);
+    const component = mount(<ComponentWithSidebar />);
 
     expect(sidebarStore.setConfig).toBeCalledWith({
         view: 'preview',

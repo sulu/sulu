@@ -81,7 +81,7 @@ module.exports = { // eslint-disable-line
         {
             name: 'Services',
             sections: (function() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/services/*');
+                const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/services/*');
 
                 return folders
                     .filter((folder) => path.basename(folder) !== 'index.js')
@@ -97,7 +97,7 @@ module.exports = { // eslint-disable-line
         {
             name: 'Views',
             sections: (function() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/views/*');
+                const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/views/*');
 
                 return folders
                     .map((folder) => {

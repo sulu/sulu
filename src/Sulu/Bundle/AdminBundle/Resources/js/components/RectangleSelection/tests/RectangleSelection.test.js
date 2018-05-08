@@ -24,13 +24,12 @@ test('The component should render with children', () => {
 });
 
 test('The component should render with initial selection', (done) => {
-    let view;
     const spy = jest.fn(() => {
         expect(view.render()).toMatchSnapshot();
         done();
     });
 
-    view = mount(
+    const view = mount(
         <MockedRectangleSelection
             containerWidth={2000}
             containerHeight={1000}
@@ -43,13 +42,12 @@ test('The component should render with initial selection', (done) => {
 });
 
 test('The component should maximize the selection when no initial values given', (done) => {
-    let view;
     const spy = jest.fn(() => {
         expect(view.render()).toMatchSnapshot();
         done();
     });
 
-    view = mount(
+    const view = mount(
         <MockedRectangleSelection mountSpy={spy} containerWidth={2000} containerHeight={1000}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
@@ -88,7 +86,6 @@ test('The component should center and maximize the selection when a minHeight an
 });
 
 test('The component should publish the new selection when the rectangle changes', (done) => {
-    let view;
     let selection = {};
     const setSelection = jest.fn((s) => selection = s);
     const spy = jest.fn(() => {
@@ -97,7 +94,7 @@ test('The component should publish the new selection when the rectangle changes'
         done();
     });
 
-    view = mount(
+    const view = mount(
         <MockedRectangleSelection
             mountSpy={spy}
             onChange={setSelection}
@@ -110,7 +107,6 @@ test('The component should publish the new selection when the rectangle changes'
 });
 
 test('The component should not allow the selection to move over the borders', (done) => {
-    let view;
     let selection = {};
     const setSelection = jest.fn((s) => selection = s);
     const spy = jest.fn(() => {
@@ -119,7 +115,7 @@ test('The component should not allow the selection to move over the borders', (d
         done();
     });
 
-    view = mount(
+    const view = mount(
         <MockedRectangleSelection mountSpy={spy} onChange={setSelection} containerWidth={2000} containerHeight={1000}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
@@ -127,7 +123,6 @@ test('The component should not allow the selection to move over the borders', (d
 });
 
 test('The component should not allow the selection to be bigger than the container', (done) => {
-    let view;
     let selection = {};
     const setSelection = jest.fn((s) => selection = s);
     const spy = jest.fn(() => {
@@ -136,7 +131,7 @@ test('The component should not allow the selection to be bigger than the contain
         done();
     });
 
-    view = mount(
+    const view = mount(
         <MockedRectangleSelection
             mountSpy={spy}
             onChange={setSelection}
@@ -149,7 +144,6 @@ test('The component should not allow the selection to be bigger than the contain
 });
 
 test('The component should enforce a ratio on the selection if minWidth and minHeight are given', (done) => {
-    let view;
     let selection = {};
     const setSelection = jest.fn((s) => selection = s);
     const spy = jest.fn(() => {
@@ -158,7 +152,7 @@ test('The component should enforce a ratio on the selection if minWidth and minH
         done();
     });
 
-    view = mount(
+    const view = mount(
         <MockedRectangleSelection
             containerWidth={2000}
             containerHeight={1000}
