@@ -15,9 +15,7 @@ exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = 
           class="headerCell clickable"
         >
           <button>
-            <span>
-              ColumnTitle
-            </span>
+            ColumnTitle
             <span
               aria-label="su-angle-up"
               class="headerCellSortIcon su-angle-up"
@@ -28,9 +26,7 @@ exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = 
           class="headerCell clickable"
         >
           <button>
-            <span>
-              ColumnTitle
-            </span>
+            ColumnTitle
             <span
               aria-label="su-angle-down"
               class="headerCellSortIcon su-angle-down"

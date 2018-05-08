@@ -1,6 +1,6 @@
 // @flow
 import type {ChildrenArray, Element} from 'react';
-import React from 'react';
+import React, {Fragment} from 'react';
 import Checkbox from '../Checkbox';
 import Icon from '../Icon';
 import HeaderCell from './HeaderCell';
@@ -93,15 +93,16 @@ export default class Header extends React.PureComponent<Props> {
         }
 
         return (
-            <div className={tableStyles.cellSelect}>
-                <Checkbox
-                    skin="light"
-                    checked={allSelected}
-                    onChange={this.handleAllSelectionChange}
-                >
-                    {children}
-                </Checkbox>
-            </div>
+            <Fragment>
+                <span className={tableStyles.cellSelect}>
+                    <Checkbox
+                        skin="light"
+                        checked={allSelected}
+                        onChange={this.handleAllSelectionChange}
+                    />
+                </span>
+                {children}
+            </Fragment>
         );
     };
 

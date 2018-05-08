@@ -63,7 +63,7 @@ export default class HeaderCell extends React.PureComponent<Props> {
                     <button
                         onClick={this.handleOnClick}
                     >
-                        <span>{children}</span>
+                        {children}
                         {this.getSortOrderIcon()}
                     </button>
                 }

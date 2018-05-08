@@ -56,13 +56,11 @@ $borderWidth: 1px;
             color: inherit;
             border: none;
             background: none;
+            display: inline-flex;
+            align-items: center;
 
             &:not(:disabled) {
                 cursor: pointer;
-            }
-
-            span {
-                display: inline-block;
             }
         }
     }
