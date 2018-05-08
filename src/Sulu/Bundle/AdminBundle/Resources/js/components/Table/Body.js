@@ -41,7 +41,7 @@ export default class Body extends React.PureComponent<Props> {
                 buttons: buttons,
                 selectMode: selectMode,
                 selectInFirstCell: this.props.selectInFirstCell,
-                onSelectionChange: this.handleRowSelectionChange,
+                onSelectionChange: this.props.onRowSelectionChange ? this.handleRowSelectionChange : undefined,
                 onExpand: this.handleRowExpand,
                 onCollapse: this.handleRowCollapse,
             }

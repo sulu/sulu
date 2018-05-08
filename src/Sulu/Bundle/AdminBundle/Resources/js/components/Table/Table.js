@@ -69,7 +69,7 @@ export default class Table extends React.Component<Props> {
                 buttons: this.props.buttons,
                 selectMode: this.props.selectMode,
                 selectInFirstCell: this.props.selectInFirstCell,
-                onAllSelectionChange: this.handleAllSelectionChange,
+                onAllSelectionChange: this.props.onAllSelectionChange ? this.handleAllSelectionChange : undefined,
             }
         );
     };
@@ -85,7 +85,7 @@ export default class Table extends React.Component<Props> {
                 buttons: this.props.buttons,
                 selectMode: this.props.selectMode,
                 selectInFirstCell: this.props.selectInFirstCell,
-                onRowSelectionChange: this.handleRowSelectionChange,
+                onRowSelectionChange: this.props.onRowSelectionChange ? this.handleRowSelectionChange : undefined,
                 onRowExpand: this.handleRowExpand,
                 onRowCollapse: this.handleRowCollapse,
             }
@@ -134,14 +134,16 @@ export default class Table extends React.Component<Props> {
     };
 
     handleAllSelectionChange = (checked: boolean) => {
-        if (this.props.onAllSelectionChange) {
-            this.props.onAllSelectionChange(checked);
+        const {onAllSelectionChange} = this.props;
+        if (onAllSelectionChange) {
+            onAllSelectionChange(checked);
         }
     };
 
     handleRowSelectionChange = (rowId: string | number, selected?: boolean) => {
-        if (this.props.onRowSelectionChange) {
-            this.props.onRowSelectionChange(rowId, selected);
+        const {onRowSelectionChange} = this.props;
+        if (onRowSelectionChange) {
+            onRowSelectionChange(rowId, selected);
         }
     };
 

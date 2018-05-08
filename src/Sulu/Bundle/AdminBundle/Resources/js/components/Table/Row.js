@@ -114,11 +114,11 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createFirstCell = (children: *) => {
-        const {hasChildren, selectInFirstCell} = this.props;
+        const {hasChildren, selectInFirstCell, onSelectionChange} = this.props;
 
         return (
             <Fragment>
-                {selectInFirstCell &&
+                {selectInFirstCell && onSelectionChange &&
                     <div className={tableStyles.cellSelect}>
                         {this.createSelect()}
                     </div>
@@ -132,6 +132,10 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     createSelect = () => {
+        if (!this.props.onSelectionChange) {
+            return null;
+        }
+
         if (this.isSingleSelect()) {
             return this.createRadioCell();
         } else if (this.isMultipleSelect()) {
@@ -162,7 +166,7 @@ export default class Row extends React.PureComponent<Props> {
             <Radio
                 skin="dark"
                 value={this.getIdentifier()}
-                checked={!!selected}
+                checked={selected}
                 onChange={this.handleSingleSelectionChange}
             />
         );
@@ -175,7 +179,7 @@ export default class Row extends React.PureComponent<Props> {
             <Checkbox
                 skin="dark"
                 value={this.getIdentifier()}
-                checked={!!selected}
+                checked={selected}
                 onChange={this.handleMultipleSelectionChange}
             />
         );
@@ -218,14 +222,16 @@ export default class Row extends React.PureComponent<Props> {
     };
 
     handleSingleSelectionChange = (rowId?: string | number) => {
-        if (this.props.onSelectionChange && rowId) {
-            this.props.onSelectionChange(rowId);
+        const {onSelectionChange} = this.props;
+        if (onSelectionChange && rowId) {
+            onSelectionChange(rowId);
         }
     };
 
     handleMultipleSelectionChange = (checked: boolean, rowId?: string | number) => {
-        if (this.props.onSelectionChange && rowId) {
-            this.props.onSelectionChange(rowId, checked);
+        const {onSelectionChange} = this.props;
+        if (onSelectionChange && rowId) {
+            onSelectionChange(rowId, checked);
         }
     };
 

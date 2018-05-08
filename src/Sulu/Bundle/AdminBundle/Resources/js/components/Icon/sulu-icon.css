@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sulu';
-  src:  url('fonts/sulu.eot?6j2f3x');
-  src:  url('fonts/sulu.eot?6j2f3x#iefix') format('embedded-opentype'),
-  url('fonts/sulu.ttf?6j2f3x') format('truetype'),
-  url('fonts/sulu.woff?6j2f3x') format('woff'),
-  url('fonts/sulu.svg?6j2f3x#sulu') format('svg');
+  src:  url('fonts/sulu.eot?isyheo');
+  src:  url('fonts/sulu.eot?isyheo#iefix') format('embedded-opentype'),
+  url('fonts/sulu.ttf?isyheo') format('truetype'),
+  url('fonts/sulu.woff?isyheo') format('woff'),
+  url('fonts/sulu.svg?isyheo#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.su-tree-list:before {
+  content: "\e947";
+}
+.su-subscript2:before {
+  content: "\e948";
+}
+.su-superscript:before {
+  content: "\e950";
+}
+.su-square:before {
+  content: "\e945";
+}
 .su-expand:before {
   content: "\e918";
 }
@@ -69,7 +81,7 @@
 .su-list-check:before {
   content: "\e957";
 }
-.su-envalope:before {
+.su-envelope:before {
   content: "\e958";
 }
 .su-snippet:before {
@@ -98,9 +110,6 @@
 }
 .su-inbox:before {
   content: "\e99f";
-}
-.su-superscript:before {
-  content: "\e95f";
 }
 .su-italic:before {
   content: "\e960";
@@ -351,7 +360,7 @@
 .su-battery-low:before {
   content: "\e92f";
 }
-.su-calender-alt:before {
+.su-calendar:before {
   content: "\e92d";
 }
 .su-check:before {

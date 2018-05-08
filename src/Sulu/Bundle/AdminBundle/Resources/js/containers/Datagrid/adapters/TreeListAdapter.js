@@ -14,8 +14,7 @@ export default class TreeListAdapter extends AbstractTableAdapter {
 
     static StructureStrategy = TreeStructureStrategy;
 
-    // TODO: When it's created use the correct icon here
-    static icon = 'fa-sitemap';
+    static icon = 'su-tree-list';
 
     @observable expandedRows: Array<string | number> = [];
 
@@ -121,7 +120,7 @@ export default class TreeListAdapter extends AbstractTableAdapter {
                 onAllSelectionChange={onAllSelectionChange}
             >
                 <Table.Header>
-                    {this.renderHeaderCells()}
+                    {this.renderHeaderCells(false)}
                 </Table.Header>
                 <Table.Body>
                     {this.renderRows()}

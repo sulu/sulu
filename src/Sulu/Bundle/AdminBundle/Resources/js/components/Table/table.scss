@@ -52,13 +52,17 @@ $borderWidth: 1px;
 
         button {
             height: 60px;
-            padding: 20px;
+            padding: 5px 20px;
             color: inherit;
             border: none;
             background: none;
 
             &:not(:disabled) {
                 cursor: pointer;
+            }
+
+            span {
+                display: inline-block;
             }
         }
     }

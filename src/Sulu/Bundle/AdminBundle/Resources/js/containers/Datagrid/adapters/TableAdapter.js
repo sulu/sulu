@@ -48,7 +48,7 @@ export default class TableAdapter extends AbstractTableAdapter {
                     onAllSelectionChange={onAllSelectionChange}
                 >
                     <Table.Header>
-                        {this.renderHeaderCells()}
+                        {this.renderHeaderCells(true)}
                     </Table.Header>
                     <Table.Body>
                         {this.renderRows()}

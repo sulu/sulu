@@ -87,19 +87,21 @@ export default class Header extends React.PureComponent<Props> {
     };
 
     createFirstCell = (children: *) => {
-        const {allSelected, selectInFirstCell} = this.props;
+        const {allSelected, selectInFirstCell, onAllSelectionChange} = this.props;
         if (!selectInFirstCell || !this.isMultipleSelect()) {
             return children;
         }
 
         return (<div className={tableStyles.cellContent}>
-            <div className={tableStyles.cellSelect}>
-                <Checkbox
-                    skin="light"
-                    checked={!!allSelected}
-                    onChange={this.handleAllSelectionChange}
-                />
-            </div>
+            {onAllSelectionChange &&
+                <div className={tableStyles.cellSelect}>
+                    <Checkbox
+                        skin="light"
+                        checked={allSelected}
+                        onChange={this.handleAllSelectionChange}
+                    />
+                </div>
+            }
             {children}
         </div>);
     };
@@ -132,7 +134,7 @@ export default class Header extends React.PureComponent<Props> {
             <HeaderCell key={key}>
                 <Checkbox
                     skin="light"
-                    checked={!!this.props.allSelected}
+                    checked={this.props.allSelected}
                     onChange={this.handleAllSelectionChange}
                 />
             </HeaderCell>
@@ -148,8 +150,9 @@ export default class Header extends React.PureComponent<Props> {
     };
 
     handleAllSelectionChange = (checked: boolean) => {
-        if (this.props.onAllSelectionChange) {
-            this.props.onAllSelectionChange(checked);
+        const {onAllSelectionChange} = this.props;
+        if (onAllSelectionChange) {
+            onAllSelectionChange(checked);
         }
     };
 
