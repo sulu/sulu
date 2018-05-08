@@ -11,10 +11,11 @@ import './colorPickerGlobal.scss';
 
 type Props = {|
     name?: string,
-    valid: boolean,
-    value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
+    placeholder?: string,
+    valid: boolean,
+    value: ?string,
 |};
 
 @observer
@@ -109,6 +110,8 @@ export default class ColorPicker extends React.Component<Props> {
 
     render() {
         const {
+            name,
+            placeholder,
             valid,
         } = this.props;
 
@@ -119,22 +122,24 @@ export default class ColorPicker extends React.Component<Props> {
         return (
             <Fragment>
                 <Input
-                    inputRef={this.setRef}
                     onBlur={this.handleBlur}
                     onChange={this.handleInputChange}
                     onIconClick={this.handlePopoverOpen}
                     icon="su-square"
-                    value={this.value}
-                    valid={valid && !this.showError}
-                    iconStyle={iconStyle}
                     iconClassName={colorPickerStyles.icon}
+                    iconStyle={iconStyle}
+                    inputRef={this.setRef}
+                    name={name}
+                    placeholder={placeholder}
+                    valid={valid && !this.showError}
+                    value={this.value}
                 />
                 <Popover
-                    open={this.popoverOpen}
                     anchorElement={this.popoverAnchorElement}
+                    open={this.popoverOpen}
                     onClose={this.handlePopoverClose}
-                    verticalOffset={-29}
                     horizontalOffset={35}
+                    verticalOffset={-30}
                 >
                     {
                         (setPopoverElementRef, popoverStyle) => (
@@ -143,10 +148,10 @@ export default class ColorPicker extends React.Component<Props> {
                                 ref={setPopoverElementRef}
                             >
                                 <SketchPicker
-                                    presetColors={[]}
                                     color={this.value}
                                     onChangeComplete={this.handleChange}
                                     disableAlpha={true}
+                                    presetColors={[]}
                                 />
                             </div>
                         )

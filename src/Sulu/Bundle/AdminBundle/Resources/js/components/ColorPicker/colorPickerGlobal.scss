@@ -1,19 +1,27 @@
 @import '../../containers/Application/colors.scss';
 
 $fontColor: $scorpion;
-$backgroundColorActive: $shakespeare;
-$borderColorToday: $blueZodiac;
 $borderColor: $silver;
-$iconColor: $dustyGray;
-$iconBorderPadding: 5px;
-$placeholderColor: $dustyGray;
 $borderWidth: 1px;
 $borderRadius: 3px;
-$inputHeight: 30px;
 $inputColor: $black;
-$inputFontSize: 12px;
 
 :global {
-    .rdtPicker {
+    .sketch-picker  {
+        box-shadow: none !important;
+        border-radius: 0 0 $borderRadius $borderRadius !important;
+        border: 1px solid $borderColor;
+        color: $fontColor;
+
+        input {
+            border-radius: $borderRadius;
+            font-size: 12px;
+            color: $inputColor;
+            text-align: center;
+        }
+
+        span {
+            width: 80%;
+        }
     }
 }

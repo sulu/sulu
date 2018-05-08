@@ -18,7 +18,7 @@ $inputFontSize: 12px;
         padding: 0 12px;
         box-shadow: none;
         border: 1px solid $borderColor;
-        border-radius: 0 0 3px 3px;
+        border-radius: 0 0 $borderRadius $borderRadius;
         color: $fontColor;
         position: inherit;
         width: auto;

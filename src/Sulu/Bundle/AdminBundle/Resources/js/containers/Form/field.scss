@@ -4,8 +4,11 @@
 $labelColor: $scorpion;
 $labelErrorColor: $roman;
 $errorLabelColor: $persianRed;
-$errorLabelBorderColor: $roman;
 $errorLabelBackgroundColor: $roman;
+
+$exceptionColor: $white;
+$exceptionBackgroundColor: $roman;
+$exceptionBorderColor: $persianRed;
 
 $errorLabelHeight: 20px;
 
@@ -37,8 +40,8 @@ $errorLabelHeight: 20px;
 }
 
 .field-exception {
-    color: $errorLabelColor;
-    background: $errorLabelBorderColor;
+    color: $exceptionColor;
+    background: $exceptionBackgroundColor;
     border: 1px solid $errorLabelColor;
     padding: 0 20px;
     border-radius: 3px;

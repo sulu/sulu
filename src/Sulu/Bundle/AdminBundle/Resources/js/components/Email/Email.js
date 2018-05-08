@@ -98,7 +98,7 @@ export default class Email extends React.Component<Props> {
 
         return (
             <Input
-                icon="su-envalope"
+                icon="su-envelope"
                 onChange={this.handleChange}
                 value={this.value}
                 type="email"
