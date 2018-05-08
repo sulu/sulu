@@ -517,51 +517,6 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
     expect(treeListAdapter).toMatchSnapshot();
 });
 
-test('Render data with plus button when onItemEdit callback is passed', () => {
-    const rowEditClickSpy = jest.fn();
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const data = [
-        test1,
-    ];
-    const schema = {
-        title: {
-            label: 'Title',
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            label: 'Description',
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const treeListAdapter = render(
-        <TreeListAdapter
-            data={data}
-            disabledIds={[]}
-            loading={false}
-            schema={schema}
-            selections={[]}
-            onPageChange={jest.fn()}
-            page={1}
-            pageCount={1}
-            onItemClick={rowEditClickSpy}
-            onSort={jest.fn()}
-            sortColumn={undefined}
-            sortOrder={undefined}
-        />
-    );
-
-    expect(treeListAdapter).toMatchSnapshot();
-});
-
 test('Click on pencil should execute onItemClick callback', () => {
     const rowEditClickSpy = jest.fn();
     const test1 = {

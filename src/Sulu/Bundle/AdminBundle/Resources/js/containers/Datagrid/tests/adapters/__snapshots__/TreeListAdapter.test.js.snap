@@ -12,32 +12,34 @@ exports[`Execute onItemActivation callback when an item is expanded 1`] = `
     >
       <tr>
         <th
-          class="headerCell"
+          class="headerCell clickable"
         >
-          <span>
-            <div
-              class="cellContent"
-            >
+          <button>
+            <span>
               <div
-                class="cellSelect"
+                class="cellContent"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellSelect"
                 >
-                  <span
-                    class="switch checkbox light"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                      value=""
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                        value=""
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+                Title
               </div>
-              Title
-            </div>
-          </span>
+            </span>
+          </button>
         </th>
       </tr>
     </thead>
@@ -227,32 +229,34 @@ exports[`Execute onItemActivation callback when an item is expanded 2`] = `
     >
       <tr>
         <th
-          class="headerCell"
+          class="headerCell clickable"
         >
-          <span>
-            <div
-              class="cellContent"
-            >
+          <button>
+            <span>
               <div
-                class="cellSelect"
+                class="cellContent"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellSelect"
                 >
-                  <span
-                    class="switch checkbox light"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                      value=""
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                        value=""
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+                Title
               </div>
-              Title
-            </div>
-          </span>
+            </span>
+          </button>
         </th>
       </tr>
     </thead>
@@ -390,31 +394,33 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           </span>
         </th>
         <th
-          class="headerCell"
+          class="headerCell clickable"
         >
-          <span>
-            <div
-              class="cellContent"
-            >
+          <button>
+            <span>
               <div
-                class="cellSelect"
+                class="cellContent"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellSelect"
                 >
-                  <span
-                    class="switch checkbox light"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+                Description
               </div>
-              Description
-            </div>
-          </span>
+            </span>
+          </button>
         </th>
       </tr>
     </thead>
@@ -479,31 +485,33 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
     >
       <tr>
         <th
-          class="headerCell"
+          class="headerCell clickable"
         >
-          <span>
-            <div
-              class="cellContent"
-            >
+          <button>
+            <span>
               <div
-                class="cellSelect"
+                class="cellContent"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellSelect"
                 >
-                  <span
-                    class="switch checkbox light"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+                Description
               </div>
-              Description
-            </div>
-          </span>
+            </span>
+          </button>
         </th>
       </tr>
     </thead>
@@ -564,31 +572,33 @@ exports[`Render data with plus button when onItemEdit callback is passed 1`] = `
           </span>
         </th>
         <th
-          class="headerCell"
+          class="headerCell clickable"
         >
-          <span>
-            <div
-              class="cellContent"
-            >
+          <button>
+            <span>
               <div
-                class="cellSelect"
+                class="cellContent"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellSelect"
                 >
-                  <span
-                    class="switch checkbox light"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+                Description
               </div>
-              Description
-            </div>
-          </span>
+            </span>
+          </button>
         </th>
       </tr>
     </thead>
@@ -653,31 +663,33 @@ exports[`Render data with schema 1`] = `
     >
       <tr>
         <th
-          class="headerCell"
+          class="headerCell clickable"
         >
-          <span>
-            <div
-              class="cellContent"
-            >
+          <button>
+            <span>
               <div
-                class="cellSelect"
+                class="cellContent"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellSelect"
                 >
-                  <span
-                    class="switch checkbox light"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+                Title
               </div>
-              Title
-            </div>
-          </span>
+            </span>
+          </button>
         </th>
       </tr>
     </thead>
@@ -805,31 +817,33 @@ exports[`Render data with schema and selections 1`] = `
     >
       <tr>
         <th
-          class="headerCell"
+          class="headerCell clickable"
         >
-          <span>
-            <div
-              class="cellContent"
-            >
+          <button>
+            <span>
               <div
-                class="cellSelect"
+                class="cellContent"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellSelect"
                 >
-                  <span
-                    class="switch checkbox light"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+                Title
               </div>
-              Title
-            </div>
-          </span>
+            </span>
+          </button>
         </th>
       </tr>
     </thead>
@@ -963,38 +977,42 @@ exports[`Render data with two columns 1`] = `
     >
       <tr>
         <th
-          class="headerCell"
+          class="headerCell clickable"
         >
-          <span>
-            <div
-              class="cellContent"
-            >
+          <button>
+            <span>
               <div
-                class="cellSelect"
+                class="cellContent"
               >
-                <label
-                  class="label"
+                <div
+                  class="cellSelect"
                 >
-                  <span
-                    class="switch checkbox light"
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+                Title
               </div>
-              Title
-            </div>
-          </span>
+            </span>
+          </button>
         </th>
         <th
-          class="headerCell"
+          class="headerCell clickable"
         >
-          <span>
-            Title2
-          </span>
+          <button>
+            <span>
+              Title2
+            </span>
+          </button>
         </th>
       </tr>
     </thead>

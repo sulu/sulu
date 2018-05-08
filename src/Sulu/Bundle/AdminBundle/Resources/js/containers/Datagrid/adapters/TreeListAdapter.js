@@ -14,7 +14,7 @@ export default class TreeListAdapter extends AbstractTableAdapter {
 
     static StructureStrategy = TreeStructureStrategy;
 
-    // TODO: When it's creating use the correct icon here
+    // TODO: When it's created use the correct icon here
     static icon = 'fa-sitemap';
 
     @observable expandedRows: Array<string | number> = [];

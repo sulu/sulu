@@ -63,8 +63,9 @@ export default class Body extends React.PureComponent<Props> {
     };
 
     handleRowCollapse = (rowId: string | number) => {
-        if (this.props.onRowCollapse) {
-            this.props.onRowCollapse(rowId);
+        const {onRowCollapse} = this.props;
+        if (onRowCollapse) {
+            onRowCollapse(rowId);
         }
     };
 
