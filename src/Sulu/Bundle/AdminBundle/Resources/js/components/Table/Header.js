@@ -88,22 +88,21 @@ export default class Header extends React.PureComponent<Props> {
 
     createFirstCell = (children: *) => {
         const {allSelected, selectInFirstCell, onAllSelectionChange} = this.props;
-        if (!selectInFirstCell || !this.isMultipleSelect()) {
+        if (!selectInFirstCell || !this.isMultipleSelect() || !onAllSelectionChange) {
             return children;
         }
 
-        return (<div className={tableStyles.cellContent}>
-            {onAllSelectionChange &&
-                <div className={tableStyles.cellSelect}>
-                    <Checkbox
-                        skin="light"
-                        checked={allSelected}
-                        onChange={this.handleAllSelectionChange}
-                    />
-                </div>
-            }
-            {children}
-        </div>);
+        return (
+            <div className={tableStyles.cellSelect}>
+                <Checkbox
+                    skin="light"
+                    checked={allSelected}
+                    onChange={this.handleAllSelectionChange}
+                >
+                    {children}
+                </Checkbox>
+            </div>
+        );
     };
 
     createHeaderButtonCells = () => {

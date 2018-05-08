@@ -15,11 +15,7 @@ exports[`Execute onItemActivation callback when an item is expanded 1`] = `
           class="headerCell"
         >
           <span>
-            <div
-              class="cellContent"
-            >
-              Title
-            </div>
+            Title
           </span>
         </th>
       </tr>
@@ -128,11 +124,7 @@ exports[`Execute onItemActivation callback when an item is expanded 2`] = `
           class="headerCell"
         >
           <span>
-            <div
-              class="cellContent"
-            >
-              Title
-            </div>
+            Title
           </span>
         </th>
       </tr>
@@ -223,11 +215,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           class="headerCell"
         >
           <span>
-            <div
-              class="cellContent"
-            >
-              Description
-            </div>
+            Description
           </span>
         </th>
       </tr>
@@ -278,11 +266,7 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
           class="headerCell"
         >
           <span>
-            <div
-              class="cellContent"
-            >
-              Description
-            </div>
+            Description
           </span>
         </th>
       </tr>
@@ -319,11 +303,7 @@ exports[`Render data with schema 1`] = `
           class="headerCell"
         >
           <span>
-            <div
-              class="cellContent"
-            >
-              Title
-            </div>
+            Title
           </span>
         </th>
       </tr>
@@ -404,11 +384,7 @@ exports[`Render data with schema and selections 1`] = `
           class="headerCell"
         >
           <span>
-            <div
-              class="cellContent"
-            >
-              Title
-            </div>
+            Title
           </span>
         </th>
       </tr>
@@ -489,11 +465,7 @@ exports[`Render data with two columns 1`] = `
           class="headerCell"
         >
           <span>
-            <div
-              class="cellContent"
-            >
-              Title
-            </div>
+            Title
           </span>
         </th>
         <th
