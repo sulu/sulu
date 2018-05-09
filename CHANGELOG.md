@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* unreleased
+    * HOTFIX      #3953 [RouteBundle]           Fix route options with dash
+
 * 1.5.14 (2018-05-03)
     * HOTFIX      #3946 [ContentBundle]         Single internal link: Clear selection when target doesn't exists
     * HOTFIX      #3941 [WebsiteBundle]         Fix hideInSitemap flag for sitemap twig extension
