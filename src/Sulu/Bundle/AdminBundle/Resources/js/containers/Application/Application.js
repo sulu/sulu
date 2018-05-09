@@ -3,13 +3,16 @@ import './global.scss';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import classNames from 'classnames';
-import React from 'react';
+import React, {Fragment} from 'react';
 import Navigation from '../Navigation';
 import Router from '../../services/Router';
+import initializer from '../../services/Initializer';
 import Sidebar, {sidebarStore} from '../Sidebar';
 import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
+import userStore from '../../stores/UserStore';
 import {Backdrop} from '../../components';
+import Login from '../../components/Login/Login';
 import applicationStyles from './application.scss';
 
 type Props = {
@@ -30,6 +33,27 @@ export default class Application extends React.Component<Props> {
 
     handleNavigate = () => {
         this.toggleNavigation();
+    };
+
+    handleLogin = (user: string, password: string) => {
+        const {router} = this.props;
+        userStore.login(user, password).then(() => {
+            router.reload();
+        });
+    };
+
+    handleLogout = () => {
+        userStore.logout().then(() => {
+            this.toggleNavigation();
+        });
+    };
+
+    handleClearError = () => {
+        userStore.clearError();
+    };
+
+    handleResetPassword = (user: string) => {
+        userStore.resetPassword(user);
     };
 
     render() {
@@ -57,35 +81,51 @@ export default class Application extends React.Component<Props> {
         );
 
         return (
-            <div className={rootClass}>
-                <nav className={applicationStyles.navigation}>
-                    <Navigation router={router} onNavigate={this.handleNavigate} />
-                </nav>
-                <div className={contentClass}>
-                    <Backdrop
-                        open={this.navigationVisible}
-                        visible={false}
-                        onClick={this.handleNavigationButtonClick}
-                        local={true}
-                        fixed={false}
-                    />
-                    <main className={applicationStyles.main}>
-                        <header className={applicationStyles.header}>
-                            <Toolbar
-                                navigationOpen={this.navigationVisible}
-                                onNavigationButtonClick={this.handleNavigationButtonClick}
+            <Fragment>
+                {initializer.translationInitialized && !userStore.loggedIn &&
+                    <div className={applicationStyles.login}>
+                        <Login
+                            onClearError={this.handleClearError}
+                            onLogin={this.handleLogin}
+                            onResetPassword={this.handleResetPassword}
+                            loginError={userStore.loginError}
+                            resetError={userStore.resetError}
+                            resetSuccess={userStore.resetSuccess}
+                            loading={userStore.loading}
+                        />
+                    </div>
+                }
+                {initializer.initialized &&
+                    <div className={rootClass}>
+                        <nav className={applicationStyles.navigation}>
+                            <Navigation router={router} onNavigate={this.handleNavigate} onLogout={this.handleLogout} />
+                        </nav>
+                        <div className={contentClass}>
+                            <Backdrop
+                                open={this.navigationVisible}
+                                visible={false}
+                                onClick={this.handleNavigationButtonClick}
+                                local={true}
+                                fixed={false}
                             />
-                        </header>
-
-                        <div className={applicationStyles.viewContainer}>
-                            {router.route &&
-                            <ViewRenderer router={router} />
-                            }
+                            <main className={applicationStyles.main}>
+                                <header className={applicationStyles.header}>
+                                    <Toolbar
+                                        navigationOpen={this.navigationVisible}
+                                        onNavigationButtonClick={this.handleNavigationButtonClick}
+                                    />
+                                </header>
+                                <div className={applicationStyles.viewContainer}>
+                                    {router.route &&
+                                    <ViewRenderer router={router} />
+                                    }
+                                </div>
+                            </main>
+                            <Sidebar className={sidebarClass} />
                         </div>
-                    </main>
-                    <Sidebar className={sidebarClass} />
-                </div>
-            </div>
+                    </div>
+                }
+            </Fragment>
         );
     }
 }

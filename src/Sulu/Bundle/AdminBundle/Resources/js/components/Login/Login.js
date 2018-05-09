@@ -23,7 +23,7 @@ type Props = {
 };
 
 @observer
-export default class Login extends React.PureComponent<Props> {
+export default class Login extends React.Component<Props> {
     static defaultProps = {
         backLink: '/',
     };

@@ -5,47 +5,16 @@ import React from 'react';
 import {render} from 'react-dom';
 import {configure} from 'mobx';
 import Requester from './services/Requester';
-import Router, {routeRegistry} from './services/Router';
-import {setTranslations} from './utils/Translator';
+import Router from './services/Router';
 import Application from './containers/Application';
-import {
-    Assignment,
-    Checkbox,
-    ColorPicker,
-    DatePicker,
-    Email,
-    fieldRegistry,
-    Input,
-    PasswordConfirmation,
-    Phone,
-    ResourceLocator,
-    SingleSelect,
-    TextArea,
-    Time,
-} from './containers/Form';
-import FieldBlocks from './containers/FieldBlocks';
 import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
-import {navigationRegistry} from './containers/Navigation';
-import resourceMetadataStore from './stores/ResourceMetadataStore';
-import {
-    ColumnListAdapter,
-    datagridAdapterRegistry,
-    datagridFieldTransformerRegistry,
-    FolderAdapter,
-    TableAdapter,
-    TreeListAdapter,
-    BytesFieldTransformer,
-    DateFieldTransformer,
-    DateTimeFieldTransformer,
-    StringFieldTransformer,
-    ThumbnailFieldTransformer,
-    BoolFieldTransformer,
-} from './containers/Datagrid';
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
 import Datagrid from './views/Datagrid';
 import {bundleReady, bundlesReadyPromise} from './services/Bundles';
+import initializer from './services/Initializer';
 import type {FieldTypeProps} from './types';
+import userStore from './stores/UserStore';
 
 export type {FieldTypeProps};
 
@@ -54,48 +23,15 @@ configure({enforceActions: true});
 window.log = log;
 log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);
 
+Requester.handleResponseHooks.push((response: Object) => {
+    if (response.status === 401) {
+        userStore.clearUser();
+    }
+});
+
 viewRegistry.add('sulu_admin.form', Form);
 viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
 viewRegistry.add('sulu_admin.datagrid', Datagrid);
-
-datagridAdapterRegistry.add('column_list', ColumnListAdapter);
-datagridAdapterRegistry.add('folder', FolderAdapter);
-datagridAdapterRegistry.add('table', TableAdapter);
-datagridAdapterRegistry.add('tree_list', TreeListAdapter);
-
-function registerFieldTypes(fieldTypesConfig) {
-    fieldRegistry.add('block', FieldBlocks);
-    fieldRegistry.add('checkbox', Checkbox);
-    fieldRegistry.add('color', ColorPicker);
-    fieldRegistry.add('date', DatePicker);
-    fieldRegistry.add('email', Email);
-    fieldRegistry.add('password_confirmation', PasswordConfirmation);
-    fieldRegistry.add('phone', Phone);
-    fieldRegistry.add('resource_locator', ResourceLocator);
-    fieldRegistry.add('single_select', SingleSelect);
-    fieldRegistry.add('text_line', Input);
-    fieldRegistry.add('text_area', TextArea);
-    fieldRegistry.add('time', Time);
-
-    const assignmentConfigs = fieldTypesConfig['assignment'];
-    if (assignmentConfigs) {
-        for (const assignmentKey in assignmentConfigs) {
-            fieldRegistry.add(assignmentKey, Assignment, assignmentConfigs[assignmentKey]);
-        }
-    }
-}
-
-function registerDatagridFieldTypes() {
-    datagridFieldTransformerRegistry.add('bytes', new BytesFieldTransformer());
-    datagridFieldTransformerRegistry.add('date', new DateFieldTransformer());
-    datagridFieldTransformerRegistry.add('datetime', new DateTimeFieldTransformer());
-    datagridFieldTransformerRegistry.add('string', new StringFieldTransformer());
-    datagridFieldTransformerRegistry.add('thumbnails', new ThumbnailFieldTransformer());
-    datagridFieldTransformerRegistry.add('bool', new BoolFieldTransformer());
-
-    // TODO: Remove this type when not needed anymore
-    datagridFieldTransformerRegistry.add('title', new StringFieldTransformer());
-}
 
 function startApplication() {
     const router = new Router(createHistory());
@@ -110,27 +46,10 @@ function startApplication() {
     render(<Application router={router} />, applicationElement);
 }
 
-const translationPromise = Requester.get('/admin/v2/translations?locale=en');
+initializer.registerDatagrid();
 
-const configPromise = Requester.get('/admin/v2/config');
-
-Promise.all([
-    translationPromise,
-    configPromise,
-    bundlesReadyPromise,
-]).then(([translationResponse, configResponse]) => {
-    setTranslations(translationResponse);
-
-    registerFieldTypes(configResponse['sulu_admin']['field_type_options']);
-    routeRegistry.addCollection(configResponse['sulu_admin'].routes);
-    navigationRegistry.set(configResponse['sulu_admin'].navigation);
-    resourceMetadataStore.setEndpoints(configResponse['sulu_admin'].endpoints);
-
-    registerDatagridFieldTypes();
-
+Promise.all([bundlesReadyPromise, initializer.initialize()]).then(() => {
     startApplication();
 });
-
-export {configPromise};
 
 bundleReady();

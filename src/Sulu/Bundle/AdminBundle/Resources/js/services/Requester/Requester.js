@@ -1,4 +1,6 @@
 // @flow
+import userStore from '../../stores/UserStore';
+
 const defaultOptions = {
     credentials: 'same-origin',
     headers: {
@@ -6,14 +8,21 @@ const defaultOptions = {
     },
 };
 
-function handleResponse(response) {
-    if (!response.ok) {
-        throw new Error(response.statusText);
+function handleResponse(response: Object) {
+    for (const handleResponseHook of Requester.handleResponseHooks) {
+        handleResponseHook(response);
     }
+
+    if (!response.ok) {
+        return Promise.reject(response);
+    }
+
     return response.json();
 }
 
 export default class Requester {
+    static handleResponseHooks: Array<(response: Object) => void> = [];
+
     static get(url: string): Promise<Object> {
         return fetch(url, defaultOptions)
             .then(handleResponse);
