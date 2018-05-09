@@ -3,6 +3,7 @@ const defaultOptions = {
     credentials: 'same-origin',
     headers: {
         'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
     },
 };
 
