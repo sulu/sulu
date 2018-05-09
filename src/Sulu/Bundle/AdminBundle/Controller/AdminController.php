@@ -271,6 +271,11 @@ class AdminController
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
                 'endpoints' => $endpoints,
+                'user' => $this->serializer->serialize(
+                    $user,
+                    'array',
+                    SerializationContext::create()->setGroups(['frontend'])
+                ),
             ],
         ]);
         $view->setFormat('json');
@@ -280,6 +285,13 @@ class AdminController
 
     public function translationsAction(Request $request): Response
     {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if (!$user) {
+            // TODO: Check if user has access for system sulu
+            // TODO: Deliver here only public translations
+        }
+
         $catalogue = $this->translatorBag->getCatalogue($request->query->get('locale'));
         $fallbackCatalogue = $catalogue->getFallbackCatalogue();
 

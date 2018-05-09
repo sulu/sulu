@@ -6,9 +6,13 @@ const defaultOptions = {
     },
 };
 
-function handleResponse(response) {
+function handleResponse(response: Object) {
+    for (const handleResponseHook of Requester.handleResponseHooks) {
+        handleResponseHook(response);
+    }
+
     if (!response.ok) {
-        throw new Error(response.statusText);
+        return Promise.reject(response);
     }
 
     if (response.status === 204) {
@@ -20,6 +24,8 @@ function handleResponse(response) {
 }
 
 export default class Requester {
+    static handleResponseHooks: Array<(response: Object) => void> = [];
+
     static get(url: string): Promise<Object> {
         return fetch(url, defaultOptions)
             .then(handleResponse);

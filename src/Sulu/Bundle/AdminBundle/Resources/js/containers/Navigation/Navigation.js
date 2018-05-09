@@ -8,6 +8,7 @@ import type {NavigationItem} from './types';
 type Props = {
     router: Router,
     onNavigate: (route: string) => void,
+    onLogout: () => void,
 };
 
 const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
@@ -18,10 +19,6 @@ export default class Navigation extends React.Component<Props> {
 
         this.props.router.navigate(navigationItem.mainRoute);
         this.props.onNavigate(navigationItem.mainRoute);
-    };
-
-    handleLogoutClick = () => {
-        // TODO: Logout user here.
     };
 
     handleProfileEditClick = () => {
@@ -48,7 +45,7 @@ export default class Navigation extends React.Component<Props> {
                 username="Hikaru Sulu" // TODO: Get this data from logged in user
                 suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
                 suluVersionLink={SULU_CHANGELOG_URL}
-                onLogoutClick={this.handleLogoutClick}
+                onLogoutClick={this.props.onLogout}
                 onProfileClick={this.handleProfileEditClick}
             >
                 {navigationItems.map((navigationItem: NavigationItem) => (
