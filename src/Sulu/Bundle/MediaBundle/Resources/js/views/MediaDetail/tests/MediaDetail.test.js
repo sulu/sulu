@@ -2,7 +2,7 @@
 import 'url-search-params-polyfill';
 import React from 'react';
 import {observable} from 'mobx';
-import {mount, render} from 'enzyme';
+import {mount} from 'enzyme';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
@@ -42,7 +42,10 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 }));
 
 jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
+    this.id = 1;
     this.update = jest.fn();
+    this.upload = jest.fn();
+    this.getThumbnail = jest.fn();
 }));
 
 beforeEach(() => {
@@ -64,9 +67,9 @@ test('Render a loading MediaDetail view', () => {
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
     resourceStore.loading = true;
 
-    expect(render(
+    expect(mount(
         <MediaDetail router={router} resourceStore={resourceStore} />
-    )).toMatchSnapshot();
+    ).render()).toMatchSnapshot();
 });
 
 test('Should change locale via locale chooser', () => {
@@ -145,7 +148,7 @@ test('Should show locales from router options in toolbar', () => {
     ]);
 });
 
-test('Should call update method of MediaUploadStore if a file was dropped', (done) => {
+test('Should call update method of MediaUploadStore if a file was dropped', () => {
     const testId = 1;
     const testFile = {name: 'test.jpg'};
     const MediaDetail = require('../MediaDetail').default;
@@ -166,14 +169,9 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
     };
     const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
 
-    mediaDetail.instance().mediaUploadStore.update.mockReturnValue(promise);
-    mediaDetail.instance().handleMediaDrop(testFile);
-    expect(mediaDetail.instance().mediaUploadStore.update).toHaveBeenCalledWith(testId, testFile);
-
-    promise.then(() => {
-        expect(resourceStore.data).toEqual({id: 1, name: 'test.jpg'});
-        done();
-    });
+    mediaDetail.instance().mediaUploadStore.upload.mockReturnValue(promise);
+    mediaDetail.find('SingleMediaDropzone').prop('onDrop')(testFile);
+    expect(mediaDetail.instance().mediaUploadStore.update).toHaveBeenCalledWith(testFile);
 });
 
 test('Should initialize the ResourceStore with a schema', () => {

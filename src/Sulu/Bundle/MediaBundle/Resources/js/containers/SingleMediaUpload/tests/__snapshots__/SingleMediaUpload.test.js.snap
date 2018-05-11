@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a SingleMediaUpload 1`] = `
+<div
+  aria-disabled="false"
+  class="mediaContainer"
+>
+  <div
+    class="uploadIndicatorContainer"
+  >
+    <div
+      class="uploadIndicator"
+    >
+      <div>
+        <span
+          aria-label="fa-cloud-upload"
+          class="uploadIcon fa fa-cloud-upload"
+        />
+        <div
+          class="uploadInfoText"
+        >
+          Upload media
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mimeTypeIndicator"
+    style="color:#fff;font-size:100px;background-color:#585858"
+  >
+    <span
+      aria-label="fa-file-o"
+      class="fa fa-file-o"
+    />
+  </div>
+  <input
+    autocomplete="off"
+    style="display:none"
+    type="file"
+  />
+</div>
+`;

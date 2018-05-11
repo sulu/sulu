@@ -32,7 +32,7 @@ exports[`Render a loading MediaDetail view 1`] = `
       </div>
       <div
         class="mimeTypeIndicator"
-        style="color:#fff;font-size:100px;background-color:#585858"
+        style="color: rgb(255, 255, 255); font-size: 100px; background-color: rgb(88, 88, 88);"
       >
         <span
           aria-label="fa-file-o"
@@ -41,7 +41,7 @@ exports[`Render a loading MediaDetail view 1`] = `
       </div>
       <input
         autocomplete="off"
-        style="display:none"
+        style="display: none;"
         type="file"
       />
     </div>
@@ -51,7 +51,7 @@ exports[`Render a loading MediaDetail view 1`] = `
   >
     <div
       class="spinner"
-      style="width:40px;height:40px"
+      style="width: 40px; height: 40px;"
     >
       <div
         class="doubleBounce1"
