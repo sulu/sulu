@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import {Navigation as NavigationComponent} from '../../components';
-import Router from '../../services/Router/Router';
+import Router from '../../services/Router';
+import userStore from '../../stores/UserStore';
 import navigationRegistry from './registries/NavigationRegistry';
 import type {NavigationItem} from './types';
 
@@ -36,13 +37,30 @@ export default class Navigation extends React.Component<Props> {
             (navigationItem.childRoutes && navigationItem.childRoutes.includes(router.route.name));
     };
 
+    getUsername() {
+        if (!userStore.loggedIn || !userStore.contact) {
+            return '';
+        }
+
+        return userStore.contact.fullName;
+    }
+
+    getUserImage() {
+        if (!userStore.loggedIn || !userStore.contact || !userStore.contact.avatar) {
+            return undefined;
+        }
+
+        return userStore.contact.avatar.thumbnails['sulu-50x50'];
+    }
+
     render() {
         const navigationItems = navigationRegistry.getAll();
 
         return (
             <NavigationComponent
                 title="Sulu" // TODO: Get this dynamically from server
-                username="Hikaru Sulu" // TODO: Get this data from logged in user
+                username={this.getUsername()}
+                userImage={this.getUserImage()}
                 suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
                 suluVersionLink={SULU_CHANGELOG_URL}
                 onLogoutClick={this.props.onLogout}

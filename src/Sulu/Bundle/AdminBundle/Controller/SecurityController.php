@@ -11,13 +11,8 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
-use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -42,18 +37,6 @@ class SecurityController extends Controller
         }
 
         return $this->render($this->getTemplate(), $this->getParameters());
-    }
-
-    public function loginV2Action(Request $request)
-    {
-        return new JsonResponse('Success', Response::HTTP_OK);
-    }
-
-    public function logoutAction(Request $request)
-    {
-        $request->getSession()->clear();
-
-        return new JsonResponse('Success', Response::HTTP_OK);
     }
 
     /**

@@ -244,4 +244,16 @@ class User extends BaseUser
         return null !== $this->getContact() ?
             $this->getContact()->getFullName() : $this->getUsername();
     }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("username")
+     * @Groups({"frontend", "fullUser"})
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return parent::getUsername();
+    }
 }

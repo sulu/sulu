@@ -1,6 +1,4 @@
 // @flow
-import userStore from '../../stores/UserStore';
-
 const defaultOptions = {
     credentials: 'same-origin',
     headers: {
