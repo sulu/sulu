@@ -18,7 +18,7 @@ test('Should execute GET request and return JSON', () => {
 
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
 
     return requestPromise;
@@ -38,7 +38,7 @@ test('Should execute GET request and throw error if response contains error', ()
 
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
 });
 
@@ -65,7 +65,7 @@ test('Should execute POST request and return JSON', () => {
         method: 'POST',
         body: JSON.stringify(data),
         credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
 
     return requestPromise;
@@ -94,7 +94,7 @@ test('Should execute PUT request and return JSON', () => {
         method: 'PUT',
         body: JSON.stringify(data),
         credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
 
     return requestPromise;
@@ -118,7 +118,7 @@ test('Should execute DELETE request and return JSON', () => {
     expect(window.fetch).toBeCalledWith('/some-url', {
         method: 'DELETE',
         credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
 
     return requestPromise;

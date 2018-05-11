@@ -15,37 +15,32 @@ type Props = {
     onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void,
     onChangeForm: () => void,
     onUserChange: (user: ?string) => void,
-    error: ?string,
-    success: ?string,
+    success: boolean,
 };
 
 @observer
 export default class ResetForm extends React.Component<Props> {
+    static defaultProps = {
+        loading: false,
+        success: false,
+    };
+
     @computed get submitButtonDisabled(): boolean {
-        return !!this.props.error || !(this.props.user);
+        return !(this.props.user);
     }
 
     renderHeader() {
-        if (this.props.error) {
-            return (
-                <Header small={true}>
-                    {this.props.error}
-                </Header>
-            );
-        }
-
         if (this.props.success) {
             return (
                 <Header small={true}>
-                    {translate('sulu_admin.reset_password_success')}<br /><br />
-                    <b>{this.props.success}</b>
+                    {translate('sulu_admin.reset_password_success')}
                 </Header>
             );
         }
 
         return (
             <Header>
-                {translate('sulu_admin.welcome')}
+                {translate('sulu_admin.reset_password')}
             </Header>
         );
     }
@@ -65,7 +60,11 @@ export default class ResetForm extends React.Component<Props> {
                             <div className={formStyles.labelText}>
                                 {translate('sulu_admin.username_or_email')}
                             </div>
-                            <Input icon="su-user" value={this.props.user} onChange={this.props.onUserChange} />
+                            <Input
+                                icon="su-user"
+                                value={this.props.user}
+                                onChange={this.props.onUserChange}
+                            />
                         </label>
                         <div className={formStyles.buttons}>
                             <Button skin="link" onClick={this.props.onChangeForm}>
@@ -77,7 +76,9 @@ export default class ResetForm extends React.Component<Props> {
                                 skin="primary"
                                 loading={this.props.loading}
                             >
-                                {translate('sulu_admin.reset')}
+                                {this.props.success
+                                    ? translate('sulu_admin.reset_resend') : translate('sulu_admin.reset')
+                                }
                             </Button>
                         </div>
                     </fieldset>

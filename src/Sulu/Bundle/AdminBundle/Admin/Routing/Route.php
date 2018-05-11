@@ -11,43 +11,70 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Expose;
+
 /**
  * Represents a route for adminstration frontend.
+ *
+ * @ExclusionPolicy("all")
  */
 class Route
 {
     /**
      * @var string
+     *
+     * @Expose()
+     * @Groups({"fullRoute"})
      */
     private $name;
 
     /**
      * @var string
+     *
+     * @Expose()
+     * @Groups({"fullRoute"})
      */
     private $view;
 
     /**
      * @var string
+     *
+     * @Expose()
+     * @Groups({"fullRoute"})
      */
     private $path;
 
     /**
      * @var array
+     *
+     * @Expose()
+     * @Groups({"fullRoute"})
      */
     private $options = [];
 
     /**
      * @var array
+     *
+     * @Expose()
+     * @Groups({"fullRoute"})
      */
     private $attributeDefaults = [];
 
     /**
      * @var string
+     *
+     * @Expose()
+     * @Groups({"fullRoute"})
      */
     private $parent;
 
     /**
      * @var array
+     *
+     * @Expose()
+     * @Groups({"fullRoute"})
      */
     private $rerenderAttributes;
 

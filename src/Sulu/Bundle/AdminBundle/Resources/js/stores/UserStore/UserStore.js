@@ -1,39 +1,53 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, observable} from 'mobx';
+import moment from 'moment';
 import Requester from '../../services/Requester';
 import initializer from '../../services/Initializer';
+import type {Contact, User} from './types';
 
 class UserStore {
     persistentSettings: {[string]: *} = {};
 
+    @observable loggedIn: boolean = false;
     @observable loading: boolean = false;
-    @observable user: ?Object = undefined;
-    @observable loginError: ?string = undefined;
-    @observable resetError: ?string = undefined;
-    @observable resetSuccess: ?string = undefined;
+    @observable user: ?User = undefined;
+    @observable contact: ?Contact = undefined;
+    @observable loginError: boolean = false;
+    @observable resetSuccess: boolean = false;
 
-    @computed get loggedIn(): boolean {
-        return !!this.user;
+    @action clear(stillLoading: boolean = false) {
+        this.persistentSettings = {};
+        this.loggedIn = false;
+        this.loading = stillLoading;
+        this.user = undefined;
+        this.contact = undefined;
+        this.loginError = false;
+        this.resetSuccess = false;
+    }
+
+    @action setLoggedIn(loggedIn: boolean) {
+        this.loggedIn = loggedIn;
     }
 
     @action setLoading(loading: boolean) {
         this.loading = loading;
     }
 
-    @action setLoginError(error: string) {
-        this.loginError = error;
+    @action setLoginError(loginError: boolean) {
+        this.loginError = loginError;
     }
 
-    @action setUser(user: Object) {
+    @action setResetSuccess(resetSuccess: boolean) {
+        this.resetSuccess = resetSuccess;
+    }
+
+    @action setUser(user: User) {
         this.user = user;
+        moment.locale(user.locale);
     }
 
-    @action clearUser() {
-        this.user = undefined;
-    }
-
-    clear() {
-        this.persistentSettings = {};
+    @action setContact(contact: Contact) {
+        this.contact = contact;
     }
 
     login = (user: string, password: string) => {
@@ -41,6 +55,18 @@ class UserStore {
 
         return Requester.post('/admin/v2/login', {username: user, password: password})
             .then(() => {
+                // when the user was logged in already and comes again with the same user we don't need to initialize
+                if (this.user) {
+                    if (user === this.user.username) {
+                        this.setLoggedIn(true);
+                        this.setLoading(false);
+
+                        return;
+                    }
+
+                    this.clear(true);
+                }
+
                 return initializer.initialize().then(() => {
                     this.setLoading(false);
                 });
@@ -51,22 +77,42 @@ class UserStore {
                     return Promise.reject(error);
                 }
 
-                this.setLoginError('Invalid credentials');
+                this.setLoginError(true);
             });
     };
 
     @action clearError = () => {
-        this.loginError = undefined;
-        this.resetError = undefined;
+        this.loginError = false;
+        this.resetSuccess = false;
     };
 
     resetPassword(user: string) {
+        this.setLoading(true);
 
+        if (this.resetSuccess) {
+            // if email was already sent use differnt api
+            return Requester.post('/admin/security/reset/email/resend', {user: user})
+                .catch(() => {})
+                // Bug in flow: https://github.com/facebook/flow/issues/5810
+                // $FlowFixMe:
+                .finally(() => {
+                    this.setLoading(false);
+                });
+        }
+
+        return Requester.post('/admin/security/reset/email', {user: user})
+            .catch(() => {})
+            // Bug in flow: https://github.com/facebook/flow/issues/5810
+            // $FlowFixMe:
+            .finally(() => {
+                this.setLoading(false);
+                this.setResetSuccess(true);
+            });
     }
 
     logout() {
-        return Requester.get('/admin/v2/logout').then(() => {
-            this.clearUser();
+        return Requester.get('/admin/logout').then(() => {
+            this.setLoggedIn(false);
         });
     }
 

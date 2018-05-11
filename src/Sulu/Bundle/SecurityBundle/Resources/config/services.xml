@@ -52,8 +52,6 @@
             <argument type="service" id="router"/>
         </service>
 
-        <service id="sulu_security.authentication_entry_point_v2" class="Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPointV2" />
-
         <service id="sulu_security.authentication_handler" class="%sulu_security.authentication_handler.class%">
             <argument type="service" id="router"/>
             <argument type="service" id="session"/>

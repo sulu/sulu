@@ -87,6 +87,8 @@ function initializeConfig(config: Object, initialized: boolean) {
     }
 
     userStore.setUser(config['sulu_admin'].user);
+    userStore.setContact(config['sulu_admin'].contact);
+    userStore.setLoggedIn(true);
 }
 
 class Initializer {

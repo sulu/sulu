@@ -89,7 +89,6 @@ export default class Application extends React.Component<Props> {
                             onLogin={this.handleLogin}
                             onResetPassword={this.handleResetPassword}
                             loginError={userStore.loginError}
-                            resetError={userStore.resetError}
                             resetSuccess={userStore.resetSuccess}
                             loading={userStore.loading}
                         />

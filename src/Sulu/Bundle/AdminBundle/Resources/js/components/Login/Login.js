@@ -13,9 +13,8 @@ const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
 type Props = {
     backLink: string,
-    loginError: ?string,
-    resetError: ?string,
-    resetSuccess: ?string,
+    loginError: boolean,
+    resetSuccess: boolean,
     loading: boolean,
     onLogin: (user: string, password: string) => void,
     onResetPassword: (user: string) => void,
@@ -26,6 +25,9 @@ type Props = {
 export default class Login extends React.Component<Props> {
     static defaultProps = {
         backLink: '/',
+        loading: false,
+        loginError: false,
+        resetSuccess: false,
     };
 
     @observable visibleForm: 'login' | 'reset' = 'login';
@@ -107,7 +109,6 @@ export default class Login extends React.Component<Props> {
                     onUserChange={this.handleUserChange}
                     onChangeForm={this.handleChangeToLoginForm}
                     success={this.props.resetSuccess}
-                    error={this.props.resetError}
                 />
             );
         }

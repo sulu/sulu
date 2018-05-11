@@ -17,24 +17,25 @@ type Props = {
     onChangeForm: () => void,
     onUserChange: (user: ?string) => void,
     onPasswordChange: (user: ?string) => void,
-    error: ?string,
+    error: boolean,
 };
 
 @observer
 export default class LoginForm extends React.Component<Props> {
-    @computed get submitButtonDisabled(): boolean {
-        return !!this.props.error || !(this.props.user && this.props.password);
-    }
+    static defaultProps = {
+        loading: false,
+        error: false,
+    };
 
-    @computed get error(): boolean {
-        return !!this.props.error;
+    @computed get submitButtonDisabled(): boolean {
+        return this.props.error || !(this.props.user && this.props.password);
     }
 
     renderHeader() {
         if (this.props.error) {
             return (
                 <Header small={true}>
-                    {this.props.error}
+                    {translate('sulu_admin.login_error')}
                 </Header>
             );
         }
@@ -69,7 +70,7 @@ export default class LoginForm extends React.Component<Props> {
                                 {translate('sulu_admin.username_or_email')}
                             </div>
                             <Input
-                                valid={!this.error}
+                                valid={!this.props.error}
                                 icon="su-user"
                                 value={this.props.user}
                                 onChange={this.props.onUserChange}
@@ -80,7 +81,7 @@ export default class LoginForm extends React.Component<Props> {
                                 {translate('sulu_admin.password')}
                             </div>
                             <Input
-                                valid={!this.error}
+                                valid={!this.props.error}
                                 icon="su-lock"
                                 type="password"
                                 value={this.props.password}

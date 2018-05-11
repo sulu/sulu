@@ -25,7 +25,7 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 
 Requester.handleResponseHooks.push((response: Object) => {
     if (response.status === 401) {
-        userStore.clearUser();
+        userStore.setLoggedIn(false);
     }
 });
 
