@@ -16,7 +16,7 @@ export type Types = {[key: string]: Type};
 
 export type SchemaEntry = {
     items?: Schema,
-    label: string,
+    label?: string,
     maxOccurs?: number,
     minOccurs?: number,
     options?: Object,

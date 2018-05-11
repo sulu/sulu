@@ -47,7 +47,7 @@ abstract class Item
         return $this->name;
     }
 
-    public function getLabel(): string
+    public function getLabel(): ?string
     {
         return $this->label;
     }

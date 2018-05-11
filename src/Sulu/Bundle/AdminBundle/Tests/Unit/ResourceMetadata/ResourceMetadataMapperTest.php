@@ -213,6 +213,18 @@ class ResourceMetadataMapperTest extends TestCase
         $this->assertCount(2, $section->getItems()['blocktest']->getTypes());
     }
 
+    public function testMapFormSectionWithoutLabel()
+    {
+        $section = new SectionMetadata('sectiontest');
+
+        $form = $this->resourceMetadataMapper->mapForm([$section], 'de');
+
+        /** @var Section $section */
+        $section = $form->getItems()['sectiontest'];
+        $this->assertEquals('sectiontest', $section->getName());
+        $this->assertNull($section->getLabel());
+    }
+
     private function getProperties(string $type): array
     {
         $property1 = new PropertyMetadata('test1');

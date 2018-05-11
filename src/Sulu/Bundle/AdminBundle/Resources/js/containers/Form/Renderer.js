@@ -45,11 +45,13 @@ export default class Renderer extends React.Component<Props> {
         const {items, size} = schemaField;
         return (
             <Grid.Section key={schemaKey} className={rendererStyles.gridSection} size={size}>
-                <Grid.Item size={12}>
-                    <Divider>
-                        {schemaField.label}
-                    </Divider>
-                </Grid.Item>
+                {schemaField.label &&
+                    <Grid.Item size={12}>
+                        <Divider>
+                            {schemaField.label}
+                        </Divider>
+                    </Grid.Item>
+                }
                 {items &&
                     Object.keys(items).map((key) => this.renderItem(items[key], key))
                 }

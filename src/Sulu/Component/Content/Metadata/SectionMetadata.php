@@ -31,11 +31,15 @@ class SectionMetadata extends ItemMetadata
      */
     protected $size = null;
 
-    /**
-     * Return the colspan.
-     *
-     * @return int
-     */
+    public function getTitle($locale)
+    {
+        if (!array_key_exists($locale, $this->titles)) {
+            return;
+        }
+
+        return $this->titles[$locale];
+    }
+
     public function getColSpan()
     {
         @trigger_error(

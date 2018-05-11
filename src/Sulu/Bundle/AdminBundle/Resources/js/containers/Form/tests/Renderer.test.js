@@ -323,3 +323,43 @@ test('Should render sections with size', () => {
         />
     )).toMatchSnapshot();
 });
+
+test('Should render sections without label', () => {
+    const changeSpy = jest.fn();
+
+    const schema = {
+        section1: {
+            type: 'section',
+            size: 8,
+            items: {
+                item11: {
+                    label: 'Item 1.1',
+                    type: 'text_line',
+                },
+            },
+        },
+        section2: {
+            label: 'Section 2',
+            type: 'section',
+            size: 4,
+            items: {
+                item21: {
+                    label: 'Item 2.1',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    expect(render(
+        <Renderer
+            data={{}}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFieldFinish={jest.fn()}
+            schema={schema}
+        />
+    )).toMatchSnapshot();
+});
