@@ -20,13 +20,19 @@ test('Pass error correctly to component', () => {
 });
 
 test('Pass props correctly to component', () => {
+    const onFinish = jest.fn();
+    const onChange = jest.fn();
+
     const field = shallow(
         <ColorPicker
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            value={'xyz'}
+            onChange={onChange}
+            onFinish={onFinish}
+            value={'#123123'}
         />
     );
 
-    expect(field.find(ColorPickerComponent).prop('valid')).toBe(true);
+    const component = field.find(ColorPickerComponent);
+    expect(component.prop('valid')).toBe(true);
+    expect(component.prop('onChange')).toBe(onChange);
+    expect(component.prop('onBlur')).toBe(onFinish);
 });
