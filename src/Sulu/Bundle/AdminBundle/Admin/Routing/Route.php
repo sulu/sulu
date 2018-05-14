@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Represents a route for adminstration frontend.
