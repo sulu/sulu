@@ -40,7 +40,9 @@ export default class BlockCollection extends React.Component<Props> {
         return Object.keys(types)[0];
     }
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         this.fillArrays();
     }
 

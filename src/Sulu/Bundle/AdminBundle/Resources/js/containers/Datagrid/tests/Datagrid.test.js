@@ -286,7 +286,9 @@ test('DatagridStore should be updated with current active element', () => {
 
         static icon = 'su-th-large';
 
-        componentWillMount() {
+        constructor(props: *) {
+            super(props);
+
             const {onItemActivation} = this.props;
             if (onItemActivation) {
                 onItemActivation('some-uuid');

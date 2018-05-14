@@ -32,7 +32,9 @@ export default class Datagrid extends React.Component<Props> {
         return datagridAdapterRegistry.get(this.currentAdapterKey);
     }
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         this.validateAdapters();
     }
 

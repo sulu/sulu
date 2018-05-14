@@ -13,7 +13,9 @@ import resourceTabsStyle from './resourceTabs.scss';
 export default class ResourceTabs extends React.Component<ViewProps> {
     resourceStore: ResourceStore;
 
-    componentWillMount() {
+    constructor(props: ViewProps) {
+        super(props);
+
         const {router, route} = this.props;
         const {
             attributes: {

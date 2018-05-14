@@ -30,7 +30,9 @@ export default class DatagridOverlay extends React.Component<Props> {
         preSelectedItems: [],
     };
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         const {locale, preSelectedItems, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;

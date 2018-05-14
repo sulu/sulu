@@ -46,7 +46,6 @@ test('Bind sidebar method to component instance', () => {
 
 test('Call life-cycle events of rendered component', () => {
     const Component = class Component extends React.Component<*> {
-        componentWillMount = jest.fn();
         componentWillUnmount = jest.fn();
         render = jest.fn();
     };
@@ -56,7 +55,6 @@ test('Call life-cycle events of rendered component', () => {
     });
 
     const component = mount(<ComponentWithSidebar />);
-    expect(component.instance().componentWillMount).toBeCalled();
     expect(component.instance().render).toBeCalled();
 
     const componentWillUnmount = component.instance().componentWillUnmount;

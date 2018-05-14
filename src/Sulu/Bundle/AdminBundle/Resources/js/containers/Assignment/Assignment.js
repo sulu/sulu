@@ -36,7 +36,9 @@ export default class Assignment extends React.Component<Props> {
 
     @observable overlayOpen: boolean = false;
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         const {onChange, locale, resourceKey, value} = this.props;
 
         this.assignmentStore = new AssignmentStore(resourceKey, value, locale);

@@ -39,7 +39,9 @@ export default class Overlay extends React.Component<Props> {
     @observable visible: boolean = false;
     @observable openHasChanged: boolean = false;
 
-    @action componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         Mousetrap.bind('esc', this.close);
         this.openHasChanged = this.props.open;
     }

@@ -25,7 +25,9 @@ class MediaOverview extends React.Component<ViewProps> {
     @observable collectionStore: CollectionStore;
     disposer: () => void;
 
-    componentWillMount() {
+    constructor(props: ViewProps) {
+        super(props);
+
         const {router} = this.props;
 
         this.mediaPage.set(1);

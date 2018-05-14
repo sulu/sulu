@@ -34,7 +34,9 @@ export default class Navigation extends React.Component<Props> {
         this.findDefaultExpandedChild(newProps.children);
     }
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         this.findDefaultExpandedChild(this.props.children);
     }
 
