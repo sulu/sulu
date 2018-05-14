@@ -129,42 +129,58 @@ class ResourceMetadataMapper
         $field->setSpaceAfter($property->getSpaceAfter());
 
         foreach ($property->getParameters() as $parameter) {
-            $option = new Option();
-            $option->setName($parameter['name']);
-
-            if ('collection' === $parameter['type']) {
-                foreach ($parameter['value'] as $parameterName => $parameterValue) {
-                    $valueOption = new Option();
-                    $valueOption->setName($parameterName);
-                    $valueOption->setValue($parameterValue['value']);
-
-                    if (array_key_exists('meta', $parameterValue)) {
-                        foreach ($parameterValue['meta'] as $metaKey => $metaValues) {
-                            if (array_key_exists($locale, $metaValues)) {
-                                switch ($metaKey) {
-                                    case 'title':
-                                        $valueOption->setTitle($metaValues[$locale]);
-                                        break;
-                                    case 'placeholder':
-                                        $valueOption->setPlaceholder($metaValues[$locale]);
-                                        break;
-                                }
-                            }
-                        }
-                    }
-
-                    $option->addValueOption($valueOption);
-                }
-            } elseif ('string' === $parameter['type']) {
-                $option->setValue($parameter['value']);
-            } else {
-                throw new \Exception('Unsupported parameter given "' . get_class($parameter) . '"');
-            }
-
-            $field->addOption($option);
+            $field->addOption($this->mapOption($parameter, $locale));
         }
 
         return $field;
+    }
+
+    protected function mapOption($parameter, string $locale): Option
+    {
+        $option = new Option();
+        $option->setName($parameter['name']);
+
+        if ('collection' === $parameter['type']) {
+            foreach ($parameter['value'] as $parameterName => $parameterValue) {
+                $valueOption = new Option();
+                $valueOption->setName($parameterName);
+                $valueOption->setValue($parameterValue['value']);
+
+                $this->mapOptionMeta($parameterValue, $locale, $valueOption);
+
+                $option->addValueOption($valueOption);
+            }
+        } elseif ('string' === $parameter['type']) {
+            $option->setValue($parameter['value']);
+            $this->mapOptionMeta($parameter, $locale, $option);
+        } else {
+            throw new \Exception('Unsupported parameter given "' . get_class($parameter) . '"');
+        }
+
+        return $option;
+    }
+
+    protected function mapOptionMeta($parameterValue, string $locale, Option $option)
+    {
+        if (!array_key_exists('meta', $parameterValue)) {
+            return;
+        }
+
+        foreach ($parameterValue['meta'] as $metaKey => $metaValues) {
+            if (array_key_exists($locale, $metaValues)) {
+                switch ($metaKey) {
+                    case 'title':
+                        $option->setTitle($metaValues[$locale]);
+                        break;
+                    case 'info_text':
+                        $option->setInfotext($metaValues[$locale]);
+                        break;
+                    case 'placeholder':
+                        $option->setPlaceholder($metaValues[$locale]);
+                        break;
+                }
+            }
+        }
     }
 
     protected function mapBlock(BlockMetadata $property, string $locale): FormField

@@ -100,6 +100,8 @@ export default class MediaUploadStore {
         this.setUploading(false);
         this.setProgress(0);
         this.resourceStore.setMultiple(media);
+
+        return media;
     };
 
     upload(file: File, url: string): Promise<*> {

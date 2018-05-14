@@ -7,22 +7,48 @@ import MediaUploadStore from '../../stores/MediaUploadStore';
 const THUMBNAIL_SIZE = 'sulu-400x400-inset';
 
 type Props = {|
+    collectionId?: number,
     mediaUploadStore: MediaUploadStore,
+    onUploadComplete?: (media: Object) => void,
     uploadText: string,
 |};
 
 @observer
 export default class SingleMediaUpload extends React.Component<Props> {
-    handleMediaDrop = (file: File) => {
+    constructor(props: Props) {
+        super(props);
+
         const {
+            collectionId,
             mediaUploadStore,
         } = this.props;
 
-        if (!mediaUploadStore.id){
-            return;
+        if (!mediaUploadStore.id && !collectionId) {
+            throw new Error('If a new item is supposed to be uploaded a "collectionId" is required!');
         }
+    }
 
-        mediaUploadStore.update(file);
+    handleMediaDrop = (file: File) => {
+        const {
+            collectionId,
+            mediaUploadStore,
+        } = this.props;
+
+        if (mediaUploadStore.id) {
+            mediaUploadStore.update(file)
+                .then(this.callUploadComplete);
+        } else if(collectionId) {
+            mediaUploadStore.create(collectionId, file)
+                .then(this.callUploadComplete);
+        }
+    };
+
+    callUploadComplete = (media: Object) => {
+        const {onUploadComplete} = this.props;
+
+        if (onUploadComplete) {
+            onUploadComplete(media);
+        }
     };
 
     render() {

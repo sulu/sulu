@@ -138,7 +138,8 @@ class ResourceMetadataMapperTest extends TestCase
         /** @var Option $option1 */
         $option1 = $field3->getOptions()['default_value'];
         $this->assertSame($option1->getName(), 'default_value');
-        $this->assertSame($option1->getTitle(), null);
+        $this->assertSame($option1->getTitle(), 'Default value');
+        $this->assertSame($option1->getInfotext(), 'Description of default value');
         $this->assertSame($option1->getValue(), 0);
 
         /** @var Option $option2 */
@@ -254,6 +255,14 @@ class ResourceMetadataMapperTest extends TestCase
                 [
                     'name' => 'default_value',
                     'type' => 'string',
+                    'meta' => [
+                        'title' => [
+                            'de' => 'Default value',
+                        ],
+                        'info_text' => [
+                            'de' => 'Description of default value',
+                        ],
+                    ],
                     'value' => 0,
                 ],
                 [

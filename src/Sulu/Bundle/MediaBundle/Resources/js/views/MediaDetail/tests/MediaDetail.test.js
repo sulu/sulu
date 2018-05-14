@@ -169,7 +169,7 @@ test('Should call update method of MediaUploadStore if a file was dropped', () =
     };
     const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
 
-    mediaDetail.instance().mediaUploadStore.upload.mockReturnValue(promise);
+    mediaDetail.instance().mediaUploadStore.update.mockReturnValue(promise);
     mediaDetail.find('SingleMediaDropzone').prop('onDrop')(testFile);
     expect(mediaDetail.instance().mediaUploadStore.update).toHaveBeenCalledWith(testFile);
 });
