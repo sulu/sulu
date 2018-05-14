@@ -10,6 +10,7 @@ type Props = {
     className?: string,
     onClick?: () => void,
     name: string,
+    style?: Object,
 };
 
 function logInvalidIconWarning(name: string) {
@@ -29,7 +30,7 @@ export default class Icon extends React.PureComponent<Props> {
     };
 
     render() {
-        const {className, name, onClick} = this.props;
+        const {className, name, onClick, style} = this.props;
         let fontClass = '';
 
         if (!name || name.length <= 0) {
@@ -69,7 +70,7 @@ export default class Icon extends React.PureComponent<Props> {
             : {};
 
         return (
-            <span className={iconClass} aria-label={name} {...onClickProperties} />
+            <span style={style} className={iconClass} aria-label={name} {...onClickProperties} />
         );
     }
 }

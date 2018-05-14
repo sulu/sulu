@@ -5,6 +5,7 @@ import fieldRegistry from './registries/FieldRegistry';
 import FormStore from './stores/FormStore';
 import Assignment from './fields/Assignment';
 import Checkbox from './fields/Checkbox';
+import ColorPicker from './fields/ColorPicker';
 import DatePicker from './fields/DatePicker';
 import Email from './fields/Email';
 import Input from './fields/Input';
@@ -21,6 +22,7 @@ export {
     fieldRegistry,
     Assignment,
     Checkbox,
+    ColorPicker,
     DatePicker,
     Email,
     Input,

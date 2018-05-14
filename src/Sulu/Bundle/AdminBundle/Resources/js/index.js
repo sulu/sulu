@@ -11,6 +11,7 @@ import Application from './containers/Application';
 import {
     Assignment,
     Checkbox,
+    ColorPicker,
     DatePicker,
     Email,
     fieldRegistry,
@@ -67,6 +68,7 @@ datagridAdapterRegistry.add('tree_list', TreeListAdapter);
 function registerFieldTypes(fieldTypesConfig) {
     fieldRegistry.add('block', FieldBlocks);
     fieldRegistry.add('checkbox', Checkbox);
+    fieldRegistry.add('color', ColorPicker);
     fieldRegistry.add('date', DatePicker);
     fieldRegistry.add('email', Email);
     fieldRegistry.add('password_confirmation', PasswordConfirmation);

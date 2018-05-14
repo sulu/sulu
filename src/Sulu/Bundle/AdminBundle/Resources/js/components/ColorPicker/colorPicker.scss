@@ -1,0 +1,11 @@
+@import '../../containers/Application/colors.scss';
+
+$borderColor: $silver;
+
+.icon {
+    line-height: 1em;
+    max-height: 1em;
+    max-width: 1em;
+    overflow: hidden;
+    border: 1px solid $borderColor;
+}

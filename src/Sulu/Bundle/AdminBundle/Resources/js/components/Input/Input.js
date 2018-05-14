@@ -20,6 +20,8 @@ type Props = {|
     onBlur?: () => void,
     onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
     onIconClick?: () => void,
+    iconStyle?: Object,
+    iconClassName?: string,
 |};
 
 export default class Input extends React.PureComponent<Props> {
@@ -60,6 +62,8 @@ export default class Input extends React.PureComponent<Props> {
             onIconClick,
             type,
             value,
+            iconStyle,
+            iconClassName,
         } = this.props;
 
         const labelClass = classNames(
@@ -71,6 +75,7 @@ export default class Input extends React.PureComponent<Props> {
 
         const iconClass = classNames(
             inputStyles.icon,
+            iconClassName,
             {
                 [inputStyles.iconClickable]: (!!icon && !!onIconClick),
             }
@@ -89,7 +94,7 @@ export default class Input extends React.PureComponent<Props> {
             >
                 {!loading && icon &&
                     <div className={inputStyles.prependedContainer}>
-                        <Icon {...onIconClickProperties} className={iconClass} name={icon} />
+                        <Icon {...onIconClickProperties} className={iconClass} name={icon} style={iconStyle} />
                     </div>
                 }
                 {loading &&

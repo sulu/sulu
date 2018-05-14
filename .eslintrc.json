@@ -99,6 +99,7 @@
         "import/no-absolute-path": "error",
         "import/named": "error",
         "import/default": "error",
+        "react/no-deprecated": "warn",
         "react/jsx-curly-spacing": [
             "error",
             "never"

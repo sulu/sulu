@@ -22,6 +22,7 @@
         "path-to-regexp": "^1.7.0",
         "react": "^16.2.0",
         "react-circular-progressbar": "^0.5.0",
+        "react-color": "^2.14.1",
         "react-datetime": "^2.11.0",
         "react-dom": "^16.2.0",
         "react-portal": "^4.1.0",
@@ -31,8 +32,8 @@
     },
     "devDependencies": {
         "enzyme": "^3.3.0",
-        "pretty": "^2.0.0",
-        "moment-timezone": "^0.5.14"
+        "moment-timezone": "^0.5.14",
+        "pretty": "^2.0.0"
     },
     "peerDependencies": {
         "mobx": "^4.0.0"
