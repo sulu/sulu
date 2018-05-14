@@ -4,10 +4,10 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Icon from '../../components/Icon';
 import {translate} from '../../utils';
+import Loader from '../Loader/Loader';
 import LoginForm from './LoginForm';
 import ResetForm from './ResetForm';
 import loginStyles from './login.scss';
-import logo from './logo.svg';
 
 const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
@@ -16,6 +16,7 @@ type Props = {
     loginError: boolean,
     resetSuccess: boolean,
     loading: boolean,
+    initialized: boolean,
     onLogin: (user: string, password: string) => void,
     onResetPassword: (user: string) => void,
     onClearError: () => void,
@@ -27,6 +28,7 @@ export default class Login extends React.Component<Props> {
         backLink: '/',
         loading: false,
         loginError: false,
+        initialized: false,
         resetSuccess: false,
     };
 
@@ -85,6 +87,14 @@ export default class Login extends React.Component<Props> {
     };
 
     renderForm() {
+        if (!this.props.initialized) {
+            return (
+                <div className={loginStyles.loaderContainer}>
+                    <Loader size={20} />
+                </div>
+            );
+        }
+
         if (this.loginFormVisible) {
             return (
                 <LoginForm
@@ -114,23 +124,33 @@ export default class Login extends React.Component<Props> {
         }
     }
 
-    render() {
-        const {
-            backLink,
-        } = this.props;
+    renderBackLink() {
+        const {backLink, initialized} = this.props;
 
+        if (!initialized) {
+            return null;
+        }
+
+        return (
+            <a className={loginStyles.backLink} href={backLink}>
+                <Icon name={BACK_LINK_ARROW_LEFT_ICON} className={loginStyles.backLinkIcon} />
+                {translate('sulu_admin.back_to_website')}
+            </a>
+        );
+    }
+
+    render() {
         return (
             <div className={loginStyles.login}>
                 <div className={loginStyles.loginContainer}>
                     <div className={loginStyles.formContainer}>
-                        <img className={loginStyles.logo} src={logo} />
+                        <div className={loginStyles.logoContainer}>
+                            <Icon name="su-sulu" />
+                        </div>
                         {this.renderForm()}
                     </div>
                     <div className={loginStyles.backLinkContainer}>
-                        <a className={loginStyles.backLink} href={backLink}>
-                            <Icon name={BACK_LINK_ARROW_LEFT_ICON} className={loginStyles.backLinkIcon} />
-                            {translate('sulu_admin.back_to_website')}
-                        </a>
+                        {this.renderBackLink()}
                     </div>
                 </div>
             </div>

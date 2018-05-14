@@ -22,14 +22,23 @@ $formContainerBoxShadow: 0 2px 18px 0 rgba($black, .22);
     min-height: 615px;
 }
 
-.logo {
-    display: block;
-    margin: 0 auto 20px;
+.logo-container {
+    font-size: 70px;
+    text-align: center;
+}
+
+.loader-container {
+    flex-grow: 1;
+    display: flex;
+    height: 100%;
+    width: 100%;
 }
 
 .form-container {
+    display: flex;
+    flex-direction: column;
     min-height: 550px;
-    padding: 80px 60px 60px 60px;
+    padding: 70px 60px 60px;
 }
 
 .back-link-container {

@@ -2,7 +2,6 @@
 import React, {Fragment} from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
-import classNames from 'classnames';
 import {translate} from '../../utils';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -46,15 +45,10 @@ export default class ResetForm extends React.Component<Props> {
     }
 
     render() {
-        const resetFormClass = classNames(
-            formStyles.form,
-            formStyles.resetForm
-        );
-
         return (
             <Fragment>
                 {this.renderHeader()}
-                <form className={resetFormClass} onSubmit={this.props.onSubmit}>
+                <form className={formStyles.form} onSubmit={this.props.onSubmit}>
                     <fieldset>
                         <label className={formStyles.inputField}>
                             <div className={formStyles.labelText}>

@@ -36,6 +36,7 @@ import resourceMetadataStore from '../../stores/ResourceMetadataStore';
 import {routeRegistry} from '../Router';
 import {setTranslations} from '../../utils/Translator';
 import Requester from '../Requester';
+import {bundlesReadyPromise} from '../../services/Bundles';
 
 function registerDatagridAdapters() {
     datagridAdapterRegistry.add('column_list', ColumnListAdapter);
@@ -109,21 +110,23 @@ class Initializer {
     }
 
     initialize() {
-        const translationsPromise = Requester.get('/admin/v2/translations?locale=en').then((translations) => {
-            setTranslations(translations);
-            this.setTranslationInitialized(true);
+        return bundlesReadyPromise.then(() => {
+            const translationsPromise = Requester.get('/admin/v2/translations?locale=en').then((translations) => {
+                setTranslations(translations);
+                this.setTranslationInitialized(true);
+            });
+
+            const configPromise = Requester.get('/admin/v2/config').then((config) => {
+                if (!config.hasOwnProperty('sulu_admin')) {
+                    return;
+                }
+
+                initializeConfig(config, this.initialized);
+                this.setInitialized(true);
+            }).catch(() => {});
+
+            return Promise.all([translationsPromise, configPromise]);
         });
-
-        const configPromise = Requester.get('/admin/v2/config').then((config) => {
-            if (!config.hasOwnProperty('sulu_admin')) {
-                return;
-            }
-
-            initializeConfig(config, this.initialized);
-            this.setInitialized(true);
-        }).catch(() => {});
-
-        return Promise.all([translationsPromise, configPromise]);
     }
 }
 

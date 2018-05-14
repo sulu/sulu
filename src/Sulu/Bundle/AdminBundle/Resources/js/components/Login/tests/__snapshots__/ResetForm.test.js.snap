@@ -5,7 +5,7 @@ Array [
   <div
     class="header"
   >
-    sulu_admin.welcome
+    sulu_admin.reset_password
   </div>,
   <form
     class="form"
@@ -36,31 +36,6 @@ Array [
           />
         </label>
       </label>
-      <label
-        class="inputField"
-      >
-        <div
-          class="labelText"
-        >
-          sulu_admin.password
-        </div>
-        <label
-          class="input"
-        >
-          <div
-            class="prependedContainer"
-          >
-            <span
-              aria-label="su-lock"
-              class="icon su-lock"
-            />
-          </div>
-          <input
-            type="password"
-            value=""
-          />
-        </label>
-      </label>
       <div
         class="buttons"
       >
@@ -71,7 +46,7 @@ Array [
           <span
             class="text"
           >
-            sulu_admin.forgot_password
+            sulu_admin.to_login
           </span>
         </button>
         <button
@@ -82,7 +57,7 @@ Array [
           <span
             class="text"
           >
-            sulu_admin.login
+            sulu_admin.reset
           </span>
         </button>
       </div>
@@ -94,16 +69,16 @@ Array [
 exports[`Should render the component loading 1`] = `
 Array [
   <div
-    class="header small"
+    class="header"
   >
-    sulu_admin.login_error
+    sulu_admin.reset_password
   </div>,
   <form
     class="form"
   >
     <fieldset>
       <label
-        class="inputField error"
+        class="inputField"
       >
         <div
           class="labelText"
@@ -111,7 +86,7 @@ Array [
           sulu_admin.username_or_email
         </div>
         <label
-          class="input error"
+          class="input"
         >
           <div
             class="prependedContainer"
@@ -127,31 +102,6 @@ Array [
           />
         </label>
       </label>
-      <label
-        class="inputField error"
-      >
-        <div
-          class="labelText"
-        >
-          sulu_admin.password
-        </div>
-        <label
-          class="input error"
-        >
-          <div
-            class="prependedContainer"
-          >
-            <span
-              aria-label="su-lock"
-              class="icon su-lock"
-            />
-          </div>
-          <input
-            type="password"
-            value="test"
-          />
-        </label>
-      </label>
       <div
         class="buttons"
       >
@@ -162,18 +112,17 @@ Array [
           <span
             class="text"
           >
-            sulu_admin.forgot_password
+            sulu_admin.to_login
           </span>
         </button>
         <button
           class="button primary"
-          disabled=""
           type="submit"
         >
           <span
             class="text"
           >
-            sulu_admin.login
+            sulu_admin.reset
           </span>
         </button>
       </div>
@@ -187,7 +136,7 @@ Array [
   <div
     class="header"
   >
-    sulu_admin.welcome
+    sulu_admin.reset_password
   </div>,
   <form
     class="form"
@@ -218,31 +167,6 @@ Array [
           />
         </label>
       </label>
-      <label
-        class="inputField"
-      >
-        <div
-          class="labelText"
-        >
-          sulu_admin.password
-        </div>
-        <label
-          class="input"
-        >
-          <div
-            class="prependedContainer"
-          >
-            <span
-              aria-label="su-lock"
-              class="icon su-lock"
-            />
-          </div>
-          <input
-            type="password"
-            value="test"
-          />
-        </label>
-      </label>
       <div
         class="buttons"
       >
@@ -253,7 +177,7 @@ Array [
           <span
             class="text"
           >
-            sulu_admin.forgot_password
+            sulu_admin.to_login
           </span>
         </button>
         <button
@@ -263,7 +187,7 @@ Array [
           <span
             class="text"
           >
-            sulu_admin.login
+            sulu_admin.reset
           </span>
         </button>
       </div>
@@ -272,19 +196,19 @@ Array [
 ]
 `;
 
-exports[`Should render the component with error 1`] = `
+exports[`Should render the component with success 1`] = `
 Array [
   <div
     class="header small"
   >
-    sulu_admin.login_error
+    sulu_admin.reset_password_success
   </div>,
   <form
     class="form"
   >
     <fieldset>
       <label
-        class="inputField error"
+        class="inputField"
       >
         <div
           class="labelText"
@@ -292,7 +216,7 @@ Array [
           sulu_admin.username_or_email
         </div>
         <label
-          class="input error"
+          class="input"
         >
           <div
             class="prependedContainer"
@@ -308,31 +232,6 @@ Array [
           />
         </label>
       </label>
-      <label
-        class="inputField error"
-      >
-        <div
-          class="labelText"
-        >
-          sulu_admin.password
-        </div>
-        <label
-          class="input error"
-        >
-          <div
-            class="prependedContainer"
-          >
-            <span
-              aria-label="su-lock"
-              class="icon su-lock"
-            />
-          </div>
-          <input
-            type="password"
-            value="test"
-          />
-        </label>
-      </label>
       <div
         class="buttons"
       >
@@ -343,18 +242,17 @@ Array [
           <span
             class="text"
           >
-            sulu_admin.forgot_password
+            sulu_admin.to_login
           </span>
         </button>
         <button
           class="button primary"
-          disabled=""
           type="submit"
         >
           <span
             class="text"
           >
-            sulu_admin.login
+            sulu_admin.reset_resend
           </span>
         </button>
       </div>

@@ -56,6 +56,27 @@ export default class Application extends React.Component<Props> {
         userStore.resetPassword(user);
     };
 
+    renderLogin() {
+        if (userStore.loggedIn) {
+            return null;
+        }
+
+        return (
+            <div className={applicationStyles.login}>
+                <Login
+                    onClearError={this.handleClearError}
+                    onLogin={this.handleLogin}
+                    onResetPassword={this.handleResetPassword}
+                    loginError={userStore.loginError}
+                    resetSuccess={userStore.resetSuccess}
+                    loading={userStore.loading}
+                    initialized={initializer.translationInitialized}
+                    backLink="/" // TODO: Get the correct link here from the backend
+                />
+            </div>
+        );
+    }
+
     render() {
         const {router} = this.props;
 
@@ -82,18 +103,7 @@ export default class Application extends React.Component<Props> {
 
         return (
             <Fragment>
-                {initializer.translationInitialized && !userStore.loggedIn &&
-                    <div className={applicationStyles.login}>
-                        <Login
-                            onClearError={this.handleClearError}
-                            onLogin={this.handleLogin}
-                            onResetPassword={this.handleResetPassword}
-                            loginError={userStore.loginError}
-                            resetSuccess={userStore.resetSuccess}
-                            loading={userStore.loading}
-                        />
-                    </div>
-                }
+                {this.renderLogin()}
                 {initializer.initialized &&
                     <div className={rootClass}>
                         <nav className={applicationStyles.navigation}>
