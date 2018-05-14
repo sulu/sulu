@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
-import LoginForm from '../LoginForm';
+import ResetForm from '../ResetForm';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn(function(key) {
@@ -11,11 +11,9 @@ jest.mock('../../../utils/Translator', () => ({
 
 test('Should render the component', () => {
     expect(render(
-        <LoginForm
+        <ResetForm
             user={undefined}
-            password={undefined}
             onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
         />)
@@ -24,7 +22,7 @@ test('Should render the component', () => {
 
 test('Should render the component with data', () => {
     expect(render(
-        <LoginForm
+        <ResetForm
             user="test"
             password="test"
             onChangeForm={jest.fn()}
@@ -37,26 +35,22 @@ test('Should render the component with data', () => {
 
 test('Should render the component loading', () => {
     expect(render(
-        <LoginForm
+        <ResetForm
             error={true}
             user="test"
-            password="test"
             onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
         />)
     ).toMatchSnapshot();
 });
 
-test('Should render the component with error', () => {
+test('Should render the component with success', () => {
     expect(render(
-        <LoginForm
-            error={true}
+        <ResetForm
+            success={true}
             user="test"
-            password="test"
             onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
         />)
@@ -65,71 +59,47 @@ test('Should render the component with error', () => {
 
 test('Should trigger onUserChange correctly', () => {
     const onUserChange = jest.fn();
-    const loginForm = shallow(
-        <LoginForm
+    const resetForm = shallow(
+        <ResetForm
             user="test"
-            password="test"
             onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={onUserChange}
         />
     );
 
-    loginForm.find('Input').at(0).simulate('change', 'test-user-123');
+    resetForm.find('Input').at(0).simulate('change', 'test-user-123');
 
     expect(onUserChange).toBeCalledWith('test-user-123');
 });
 
-test('Should trigger onPasswordChange correctly', () => {
-    const onPasswordChange = jest.fn();
-    const loginForm = shallow(
-        <LoginForm
-            user="test"
-            password="test"
-            onChangeForm={jest.fn()}
-            onPasswordChange={onPasswordChange}
-            onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-        />
-    );
-
-    loginForm.find('Input').at(1).simulate('change', '123');
-
-    expect(onPasswordChange).toBeCalledWith('123');
-});
-
 test('Should trigger onChangeForm correctly', () => {
     const onChangeForm = jest.fn();
-    const loginForm = shallow(
-        <LoginForm
+    const resetForm = shallow(
+        <ResetForm
             user="test"
-            password="test"
             onChangeForm={onChangeForm}
-            onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
         />
     );
 
-    loginForm.find('Button').at(0).simulate('click');
+    resetForm.find('Button').at(0).simulate('click');
 
     expect(onChangeForm).toBeCalled();
 });
 
 test('Should trigger onSubmit correctly', () => {
     const onSubmit = jest.fn();
-    const loginForm = shallow(
-        <LoginForm
+    const resetForm = shallow(
+        <ResetForm
             user="test"
-            password="test"
             onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
             onSubmit={onSubmit}
             onUserChange={jest.fn()}
         />
     );
-    loginForm.find('form').simulate('submit');
+    resetForm.find('form').simulate('submit');
 
     expect(onSubmit).toBeCalled();
 });

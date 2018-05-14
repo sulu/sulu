@@ -6,6 +6,38 @@ import Router from '../../../services/Router';
 
 jest.mock('../../../services/Router', () => function() {});
 
+const mockInitializerInitialized = jest.fn().mockReturnValue(true);
+const mockInitializerTranslationInitialized = jest.fn().mockReturnValue(true);
+
+jest.mock('../../../services/Initializer', () => {
+    return new class {
+        get initialized() {
+            return mockInitializerInitialized();
+        }
+
+        get translationInitialized() {
+            return mockInitializerTranslationInitialized();
+        }
+    };
+});
+
+const mockUserStoreLoggedIn = jest.fn().mockReturnValue(true);
+const mockUserStoreContact = jest.fn().mockReturnValue({
+    fullName: 'Hikaru Sulu',
+});
+
+jest.mock('../../../stores/UserStore', () => {
+    return new class {
+        get loggedIn() {
+            return mockUserStoreLoggedIn();
+        }
+
+        get contact() {
+            return mockUserStoreContact();
+        }
+    };
+});
+
 jest.mock('../../ViewRenderer', () => function Test(props) {
     return (
         <div>
@@ -13,6 +45,23 @@ jest.mock('../../ViewRenderer', () => function Test(props) {
             <h2>{props.router.route.view}</h2>
         </div>
     );
+});
+
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn(function(key) {
+        return key;
+    }),
+}));
+
+test('Application should render login when user is not logged in', () => {
+    mockInitializerInitialized.mockReturnValueOnce(false);
+    mockUserStoreLoggedIn.mockReturnValueOnce(false);
+    mockInitializerTranslationInitialized.mockReturnValueOnce(true);
+
+    const router = new Router({});
+    const application = mount(<Application router={router} />);
+
+    expect(application.render()).toMatchSnapshot();
 });
 
 test('Application should not fail if current route does not exist', () => {

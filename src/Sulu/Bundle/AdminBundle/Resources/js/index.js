@@ -11,7 +11,7 @@ import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRen
 import Form from './views/Form';
 import ResourceTabs from './views/ResourceTabs';
 import Datagrid from './views/Datagrid';
-import {bundleReady, bundlesReadyPromise} from './services/Bundles';
+import {bundleReady} from './services/Bundles';
 import initializer from './services/Initializer';
 import type {FieldTypeProps} from './types';
 import userStore from './stores/UserStore';
@@ -46,10 +46,9 @@ function startApplication() {
     render(<Application router={router} />, applicationElement);
 }
 
-initializer.registerDatagrid();
+startApplication();
 
-Promise.all([bundlesReadyPromise, initializer.initialize()]).then(() => {
-    startApplication();
-});
+initializer.registerDatagrid();
+initializer.initialize();
 
 bundleReady();

@@ -55,8 +55,9 @@ class UserStore {
 
         return Requester.post('/admin/v2/login', {username: user, password: password})
             .then(() => {
-                // when the user was logged in already and comes again with the same user we don't need to initialize
                 if (this.user) {
+                    // when the user was logged in already and comes again with the same user
+                    // we don't need to initialize again
                     if (user === this.user.username) {
                         this.setLoggedIn(true);
                         this.setLoading(false);
@@ -64,6 +65,8 @@ class UserStore {
                         return;
                     }
 
+                    // the user has now logged in with a different user
+                    // we need to clear the data from the old user
                     this.clear(true);
                 }
 

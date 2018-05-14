@@ -48,11 +48,6 @@ export default class LoginForm extends React.Component<Props> {
     }
 
     render() {
-        const loginFormClass = classNames(
-            formStyles.form,
-            formStyles.loginForm
-        );
-
         const inputFieldClass = classNames(
             formStyles.inputField,
             {
@@ -63,7 +58,7 @@ export default class LoginForm extends React.Component<Props> {
         return (
             <Fragment>
                 {this.renderHeader()}
-                <form className={loginFormClass} onSubmit={this.props.onSubmit}>
+                <form className={formStyles.form} onSubmit={this.props.onSubmit}>
                     <fieldset>
                         <label className={inputFieldClass}>
                             <div className={formStyles.labelText}>
