@@ -24,6 +24,15 @@ export type Error = BlockError | PropertyError;
 
 export type ErrorCollection = {[key: string]: Error};
 
+export type SchemaOption = {
+    name?: string,
+    infoText?: string,
+    title?: string,
+    value?: string | Array<SchemaOption>,
+};
+
+export type SchemaOptions = {[key: string]: SchemaOption};
+
 export type FieldTypeProps<T> = {|
     error?: Error | ErrorCollection,
     fieldTypeOptions?: Object,
@@ -32,7 +41,7 @@ export type FieldTypeProps<T> = {|
     minOccurs?: number,
     onChange: (value: T) => void,
     onFinish?: () => void,
-    schemaOptions?: Object,
+    schemaOptions?: SchemaOptions,
     showAllErrors?: boolean,
     types?: Types,
     value: ?T,

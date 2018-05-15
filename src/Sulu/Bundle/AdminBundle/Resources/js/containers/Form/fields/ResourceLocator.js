@@ -15,8 +15,20 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
     }
 
     render() {
-        const {onChange, value, schemaOptions, onFinish} = this.props;
-        const mode = schemaOptions && schemaOptions.mode ? schemaOptions.mode : 'leaf';
+        const {
+            onChange,
+            value,
+            schemaOptions: {
+                mode: {
+                    value: mode,
+                } = {value: 'leaf'},
+            } = {},
+            onFinish,
+        } = this.props;
+
+        if (mode !== 'leaf' && mode !== 'full') {
+            throw new Error('The "mode" schema option must be either "leaf" or "full"!');
+        }
 
         if (!value) {
             return null;

@@ -6,7 +6,9 @@ import ResourceLocatorComponent from '../../../../components/ResourceLocator';
 
 test('Pass props correctly to ResourceLocator', () => {
     const schemaOptions = {
-        mode: 'full',
+        mode: {
+            value: 'full',
+        },
     };
 
     const resourceLocator = shallow(
@@ -19,7 +21,19 @@ test('Pass props correctly to ResourceLocator', () => {
     );
 
     expect(resourceLocator.find(ResourceLocatorComponent).prop('value')).toBe('/');
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe(schemaOptions.mode);
+    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('full');
+});
+
+test('Throw an exception if a non-valid mode is passed', () => {
+    const schemaOptions = {
+        mode: {
+            value: 'test',
+        },
+    };
+
+    expect(
+        () => shallow(<ResourceLocator onChange={jest.fn()} schemaOptions={schemaOptions} value="/" />)
+    ).toThrow(/"leaf" or "full"/);
 });
 
 test('Set default value correctly with undefined value', () => {

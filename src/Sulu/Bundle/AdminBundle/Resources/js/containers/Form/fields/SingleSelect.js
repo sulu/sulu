@@ -15,10 +15,22 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
             return;
         }
 
-        const {default_value: defaultValue} = schemaOptions;
+        const {
+            default_value: {
+                value: defaultValue,
+            } = {},
+        } = schemaOptions;
+
+        if (!defaultValue) {
+            return;
+        }
+
+        if (typeof defaultValue !== 'number' && typeof defaultValue !== 'string') {
+            throw new Error('The "default_value" schema option must be a string or a number!');
+        }
 
         if (value === undefined) {
-            onChange(defaultValue.value);
+            onChange(defaultValue);
         }
     }
 
@@ -40,17 +52,23 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
 
         const {values} = schemaOptions;
 
-        if (!values) {
+        if (!Array.isArray(values.value)) {
             throw new Error(MISSING_VALUES_OPTIONS);
         }
 
         return (
             <SingleSelectComponent onChange={this.handleChange} value={value}>
-                {values.value.map((value) => (
-                    <SingleSelectComponent.Option key={value.value} value={value.value}>
-                        {value.title}
-                    </SingleSelectComponent.Option>
-                ))}
+                {values.value.map(({value, title}) => {
+                    if (typeof value !== 'string' && typeof value !== 'number') {
+                        throw new Error('The children of "values" must only contain values of type string or number!');
+                    }
+
+                    return (
+                        <SingleSelectComponent.Option key={value} value={value}>
+                            {title}
+                        </SingleSelectComponent.Option>
+                    );
+                })}
             </SingleSelectComponent>
         );
     }
