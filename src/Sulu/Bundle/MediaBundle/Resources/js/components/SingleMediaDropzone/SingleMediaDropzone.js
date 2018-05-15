@@ -77,6 +77,12 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                 disableClick={uploading}
                 className={mediaContainerClass}
             >
+                {image
+                    ? <img className={singleMediaDropzoneStyles.thumbnail} src={image} />
+                    : <div className={singleMediaDropzoneStyles.mimeTypeIndicator}>
+                        <MimeTypeIndicator mimeType={mimeType} iconSize={100} />
+                    </div>
+                }
                 {!uploading
                     ? <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
                         <div className={singleMediaDropzoneStyles.uploadIndicator}>
@@ -94,10 +100,6 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                             percentage={progress}
                         />
                     </div>
-                }
-                {image
-                    ? <img className={singleMediaDropzoneStyles.thumbnail} src={image} />
-                    : <MimeTypeIndicator mimeType={mimeType} iconSize={100} />
                 }
             </Dropzone>
         );

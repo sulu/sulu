@@ -5,6 +5,10 @@ exports[`Render a SingleMediaDropzone 1`] = `
   aria-disabled="false"
   class="mediaContainer default"
 >
+  <img
+    class="thumbnail"
+    src="http://lorempixel.com/400/400"
+  />
   <div
     class="uploadIndicatorContainer"
   >
@@ -19,10 +23,6 @@ exports[`Render a SingleMediaDropzone 1`] = `
       </div>
     </div>
   </div>
-  <img
-    class="thumbnail"
-    src="http://lorempixel.com/400/400"
-  />
   <input
     autocomplete="off"
     style="display:none"
@@ -36,6 +36,10 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
   aria-disabled="false"
   class="mediaContainer default"
 >
+  <img
+    class="thumbnail"
+    src="http://lorempixel.com/400/400"
+  />
   <div
     class="progressbar"
   >
@@ -82,10 +86,6 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
       </svg>
     </div>
   </div>
-  <img
-    class="thumbnail"
-    src="http://lorempixel.com/400/400"
-  />
   <input
     autocomplete="off"
     style="display:none"
@@ -99,6 +99,10 @@ exports[`Render a SingleMediaDropzone with the round skin 1`] = `
   aria-disabled="false"
   class="mediaContainer round"
 >
+  <img
+    class="thumbnail"
+    src="http://lorempixel.com/400/400"
+  />
   <div
     class="uploadIndicatorContainer"
   >
@@ -113,10 +117,6 @@ exports[`Render a SingleMediaDropzone with the round skin 1`] = `
       </div>
     </div>
   </div>
-  <img
-    class="thumbnail"
-    src="http://lorempixel.com/400/400"
-  />
   <input
     autocomplete="off"
     style="display:none"

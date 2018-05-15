@@ -6,6 +6,19 @@ exports[`Render a SingleMediaUpload 1`] = `
   class="mediaContainer default"
 >
   <div
+    class="mimeTypeIndicator"
+  >
+    <div
+      class="mimeTypeIndicator"
+      style="color:#fff;font-size:100px;background-color:#585858"
+    >
+      <span
+        aria-label="fa-file-o"
+        class="fa fa-file-o"
+      />
+    </div>
+  </div>
+  <div
     class="uploadIndicatorContainer"
   >
     <div
@@ -23,15 +36,6 @@ exports[`Render a SingleMediaUpload 1`] = `
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class="mimeTypeIndicator"
-    style="color:#fff;font-size:100px;background-color:#585858"
-  >
-    <span
-      aria-label="fa-file-o"
-      class="fa fa-file-o"
-    />
   </div>
   <input
     autocomplete="off"
@@ -47,6 +51,19 @@ exports[`Render a SingleMediaUpload with the round skin 1`] = `
   class="mediaContainer round"
 >
   <div
+    class="mimeTypeIndicator"
+  >
+    <div
+      class="mimeTypeIndicator"
+      style="color:#fff;font-size:100px;background-color:#585858"
+    >
+      <span
+        aria-label="fa-file-o"
+        class="fa fa-file-o"
+      />
+    </div>
+  </div>
+  <div
     class="uploadIndicatorContainer"
   >
     <div
@@ -64,15 +81,6 @@ exports[`Render a SingleMediaUpload with the round skin 1`] = `
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class="mimeTypeIndicator"
-    style="color:#fff;font-size:100px;background-color:#585858"
-  >
-    <span
-      aria-label="fa-file-o"
-      class="fa fa-file-o"
-    />
   </div>
   <input
     autocomplete="off"

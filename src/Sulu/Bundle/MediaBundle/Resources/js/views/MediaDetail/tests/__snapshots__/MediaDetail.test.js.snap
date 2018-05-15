@@ -12,6 +12,19 @@ exports[`Render a loading MediaDetail view 1`] = `
       class="mediaContainer default"
     >
       <div
+        class="mimeTypeIndicator"
+      >
+        <div
+          class="mimeTypeIndicator"
+          style="color: rgb(255, 255, 255); font-size: 100px; background-color: rgb(88, 88, 88);"
+        >
+          <span
+            aria-label="fa-file-o"
+            class="fa fa-file-o"
+          />
+        </div>
+      </div>
+      <div
         class="uploadIndicatorContainer"
       >
         <div
@@ -29,15 +42,6 @@ exports[`Render a loading MediaDetail view 1`] = `
             </div>
           </div>
         </div>
-      </div>
-      <div
-        class="mimeTypeIndicator"
-        style="color: rgb(255, 255, 255); font-size: 100px; background-color: rgb(88, 88, 88);"
-      >
-        <span
-          aria-label="fa-file-o"
-          class="fa fa-file-o"
-        />
       </div>
       <input
         autocomplete="off"

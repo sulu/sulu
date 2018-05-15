@@ -17,6 +17,7 @@ $imageBorderColor: $alto;
     background-image: url('./checkerBackground.gif');
     background-size: 10px;
     cursor: pointer;
+    overflow: hidden;
 
     &:hover,
     &.show-upload-indicator {
@@ -63,6 +64,14 @@ $imageBorderColor: $alto;
     transition: all .25s cubic-bezier(.68, -.55, .265, 1.55);
 }
 
+.mime-type-indicator {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 .upload-icon {
     font-size: 45px;
     color: $uploadIconColor;
@@ -80,8 +89,7 @@ $imageBorderColor: $alto;
 }
 
 .round {
-    &.media-container,
-    .thumbnail {
+    &.media-container {
         border-radius: 50%;
     }
 
