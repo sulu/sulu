@@ -94,6 +94,76 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
 </div>
 `;
 
+exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
+<div
+  aria-disabled="false"
+  class="mediaContainer default"
+>
+  <div
+    class="emptyIndicator"
+  >
+    <span
+      aria-label="su-image"
+      class="su-image"
+    />
+  </div>
+  <div
+    class="uploadIndicatorContainer"
+  >
+    <div
+      class="uploadIndicator"
+    >
+      <div>
+        <span
+          aria-label="fa-cloud-upload"
+          class="uploadIcon fa fa-cloud-upload"
+        />
+      </div>
+    </div>
+  </div>
+  <input
+    autocomplete="off"
+    style="display:none"
+    type="file"
+  />
+</div>
+`;
+
+exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
+<div
+  aria-disabled="false"
+  class="mediaContainer default"
+>
+  <div
+    class="emptyIndicator"
+  >
+    <span
+      aria-label="su-user"
+      class="su-user"
+    />
+  </div>
+  <div
+    class="uploadIndicatorContainer"
+  >
+    <div
+      class="uploadIndicator"
+    >
+      <div>
+        <span
+          aria-label="fa-cloud-upload"
+          class="uploadIcon fa fa-cloud-upload"
+        />
+      </div>
+    </div>
+  </div>
+  <input
+    autocomplete="off"
+    style="display:none"
+    type="file"
+  />
+</div>
+`;
+
 exports[`Render a SingleMediaDropzone with the round skin 1`] = `
 <div
   aria-disabled="false"

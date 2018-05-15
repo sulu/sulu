@@ -13,6 +13,7 @@
                         </meta>
                     </param>
                     <param name="skin" value="round"/>
+                    <param name="empty_icon" value="su-user"/>
                 </params>
             </property>
         </properties>

@@ -6,6 +6,7 @@ import MediaUploadStore from '../../stores/MediaUploadStore';
 
 type Props = {|
     collectionId?: number,
+    emptyIcon?: string,
     imageSize: string,
     mediaUploadStore: MediaUploadStore,
     onUploadComplete?: (media: Object) => void,
@@ -58,6 +59,7 @@ export default class SingleMediaUpload extends React.Component<Props> {
 
     render() {
         const {
+            emptyIcon,
             mediaUploadStore,
             imageSize,
             skin,
@@ -72,6 +74,7 @@ export default class SingleMediaUpload extends React.Component<Props> {
 
         return (
             <SingleMediaDropzone
+                emptyIcon={emptyIcon}
                 image={mediaUploadStore.getThumbnail(imageSize)}
                 mimeType={mimeType}
                 onDrop={this.handleMediaDrop}

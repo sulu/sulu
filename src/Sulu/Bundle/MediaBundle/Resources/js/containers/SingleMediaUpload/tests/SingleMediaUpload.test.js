@@ -26,6 +26,15 @@ test('Render a SingleMediaUpload', () => {
     ).toMatchSnapshot();
 });
 
+test('Render a SingleMediaUpload with an empty icon if no image is passed', () => {
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media'));
+    mediaUploadStore.getThumbnail.mockReturnValue(undefined);
+
+    expect(
+        render(<SingleMediaUpload collectionId={5} mediaUploadStore={mediaUploadStore} uploadText="Upload media" />)
+    ).toMatchSnapshot();
+});
+
 test('Render a SingleMediaUpload with the round skin', () => {
     const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
 

@@ -5,6 +5,8 @@ $uploadInfoTextColor: $scorpion;
 $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
 $mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because calc doesn't work for media-queries */
 $imageBorderColor: $silver;
+$emptyBackgroundColor: $white;
+$emptyColor: $alto;
 
 .media-container {
     position: relative;
@@ -64,12 +66,22 @@ $imageBorderColor: $silver;
     transition: all .25s cubic-bezier(.68, -.55, .265, 1.55);
 }
 
-.mime-type-indicator {
+.mime-type-indicator,
+.empty-indicator {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+.empty-indicator {
+    background-color: $emptyBackgroundColor;
+    color: $emptyColor;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 120px;
 }
 
 .upload-icon {

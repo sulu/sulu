@@ -7,6 +7,9 @@ import MediaUploadStore from '../../../../stores/MediaUploadStore';
 
 test('Pass correct props', () => {
     const schemaOptions = {
+        empty_icon: {
+            value: 'su-icon',
+        },
         upload_text: {
             infotext: 'Drag and drop',
         },
@@ -16,6 +19,7 @@ test('Pass correct props', () => {
         <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />
     );
 
+    expect(singleMediaUpload.prop('emptyIcon')).toEqual('su-icon');
     expect(singleMediaUpload.prop('uploadText')).toEqual('Drag and drop');
 });
 

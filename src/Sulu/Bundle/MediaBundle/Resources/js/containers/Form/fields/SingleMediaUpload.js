@@ -31,6 +31,7 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Ob
     render() {
         const {
             schemaOptions: {
+                empty_icon: emptyIcon = {},
                 skin = {value: 'default'},
                 upload_text: uploadText,
             } = {},
@@ -40,6 +41,7 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Ob
         return (
             <SingleMediaUploadComponent
                 collectionId={1}
+                emptyIcon={emptyIcon.value}
                 mediaUploadStore={this.mediaUploadStore}
                 onUploadComplete={this.handleUploadComplete}
                 skin={skin.value}
