@@ -79,22 +79,23 @@ function registerFieldTypes(fieldTypesConfig) {
     }
 }
 
-function initializeConfig(config: Object, initialized: boolean) {
-    if (!initialized) {
-        registerFieldTypes(config['sulu_admin']['field_type_options']);
-        routeRegistry.addCollection(config['sulu_admin'].routes);
-        navigationRegistry.set(config['sulu_admin'].navigation);
-        resourceMetadataStore.setEndpoints(config['sulu_admin'].endpoints);
-    }
-
-    userStore.setUser(config['sulu_admin'].user);
-    userStore.setContact(config['sulu_admin'].contact);
-    userStore.setLoggedIn(true);
+function initializeConfig(config: Object) {
+    registerFieldTypes(config['sulu_admin']['field_type_options']);
+    routeRegistry.addCollection(config['sulu_admin'].routes);
+    navigationRegistry.set(config['sulu_admin'].navigation);
+    resourceMetadataStore.setEndpoints(config['sulu_admin'].endpoints);
 }
 
 class Initializer {
     @observable initialized: boolean = false;
     @observable translationInitialized: boolean = false;
+    @observable loading: boolean = false;
+
+    clear() {
+        this.setInitialized(false);
+        this.setTranslationInitialized(false);
+        this.setLoading(false);
+    }
 
     @action setInitialized(initialized: boolean) {
         this.initialized = initialized;
@@ -104,6 +105,10 @@ class Initializer {
         this.translationInitialized = initialized;
     }
 
+    @action setLoading(loading: boolean) {
+        this.loading = loading;
+    }
+
     registerDatagrid() {
         registerDatagridAdapters();
         registerDatagridFieldTypes();
@@ -111,6 +116,8 @@ class Initializer {
 
     initialize() {
         return bundlesReadyPromise.then(() => {
+            this.setLoading(true);
+            // TODO: Use correct locale here
             const translationsPromise = Requester.get('/admin/v2/translations?locale=en').then((translations) => {
                 setTranslations(translations);
                 this.setTranslationInitialized(true);
@@ -121,11 +128,23 @@ class Initializer {
                     return;
                 }
 
-                initializeConfig(config, this.initialized);
+                if (!this.initialized) {
+                    initializeConfig(config);
+                }
+
+                userStore.setUser(config['sulu_admin'].user);
+                userStore.setContact(config['sulu_admin'].contact);
+                userStore.setLoggedIn(true);
+
                 this.setInitialized(true);
             }).catch(() => {});
 
-            return Promise.all([translationsPromise, configPromise]);
+            return Promise.all([translationsPromise, configPromise])
+                // Bug in flow: https://github.com/facebook/flow/issues/5810
+                // $FlowFixMe:
+                .finally(() => {
+                    this.setLoading(false);
+                });
         });
     }
 }

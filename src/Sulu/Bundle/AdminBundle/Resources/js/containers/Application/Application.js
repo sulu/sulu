@@ -70,7 +70,7 @@ export default class Application extends React.Component<Props> {
                     loginError={userStore.loginError}
                     resetSuccess={userStore.resetSuccess}
                     loading={userStore.loading}
-                    initialized={initializer.translationInitialized}
+                    initialized={!initializer.loading && initializer.translationInitialized}
                     backLink="/" // TODO: Get the correct link here from the backend
                 />
             </div>

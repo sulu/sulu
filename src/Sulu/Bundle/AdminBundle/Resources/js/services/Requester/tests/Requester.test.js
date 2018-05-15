@@ -24,7 +24,7 @@ test('Should execute GET request and return JSON', () => {
     return requestPromise;
 });
 
-test('Should execute GET request and throw error if response contains error', () => {
+test('Should execute GET request and reject with response when the response contains error', () => {
     const response = {
         ok: false,
         statusText: 'An error occured!',
@@ -34,7 +34,7 @@ test('Should execute GET request and throw error if response contains error', ()
     window.fetch = jest.fn();
     window.fetch.mockReturnValue(promise);
 
-    expect(Requester.get('/some-url')).rejects.toEqual(new Error('An error occured!'));
+    expect(Requester.get('/some-url')).rejects.toEqual(response);
 
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
