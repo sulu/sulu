@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * unreleased
-    * HOTFIX      #XXXX [ContentBundle]         Don't reload data when changing template in add form
+    * HOTFIX      #3963 [ContentBundle]         Don't reload data when changing template in add form
     * HOTFIX      #3953 [RouteBundle]           Fix route options with dash
 
 * 1.5.14 (2018-05-03)
