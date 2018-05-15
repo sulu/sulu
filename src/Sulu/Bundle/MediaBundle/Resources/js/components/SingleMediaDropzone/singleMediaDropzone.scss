@@ -5,7 +5,7 @@ $uploadIconColor: $scorpion;
 $uploadInfoTextColor: $scorpion;
 $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
 $mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because calc doesn't work for media-queries */
-$imageBorderColor: $alto;
+$imageBorderColor: $silver;
 
 .media-container {
     position: relative;
@@ -18,6 +18,7 @@ $imageBorderColor: $alto;
     background-size: 10px;
     cursor: pointer;
     overflow: hidden;
+    border: 1px solid $imageBorderColor;
 
     &:hover,
     &.show-upload-indicator {
@@ -91,9 +92,5 @@ $imageBorderColor: $alto;
 .round {
     &.media-container {
         border-radius: 50%;
-    }
-
-    .thumbnail {
-        border: 1px solid $imageBorderColor;
     }
 }
