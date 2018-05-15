@@ -50,6 +50,11 @@ class UserStore {
         this.contact = contact;
     }
 
+    @action clearError = () => {
+        this.loginError = false;
+        this.resetSuccess = false;
+    };
+
     login = (user: string, password: string) => {
         this.setLoading(true);
 
@@ -84,16 +89,11 @@ class UserStore {
             });
     };
 
-    @action clearError = () => {
-        this.loginError = false;
-        this.resetSuccess = false;
-    };
-
     resetPassword(user: string) {
         this.setLoading(true);
 
         if (this.resetSuccess) {
-            // if email was already sent use differnt api
+            // if email was already sent use different api
             return Requester.post('/admin/security/reset/email/resend', {user: user})
                 .catch(() => {})
                 // Bug in flow: https://github.com/facebook/flow/issues/5810
