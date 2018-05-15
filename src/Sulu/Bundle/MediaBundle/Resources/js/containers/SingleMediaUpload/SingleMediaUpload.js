@@ -11,7 +11,7 @@ type Props = {|
     mediaUploadStore: MediaUploadStore,
     onUploadComplete?: (media: Object) => void,
     skin: 'default' | 'round',
-    uploadText: string,
+    uploadText: ?string,
 |};
 
 @observer

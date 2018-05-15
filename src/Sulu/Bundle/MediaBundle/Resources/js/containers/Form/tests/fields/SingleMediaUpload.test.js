@@ -11,7 +11,7 @@ test('Pass correct props', () => {
             value: 'su-icon',
         },
         upload_text: {
-            infotext: 'Drag and drop',
+            infoText: 'Drag and drop',
         },
     };
 
@@ -35,6 +35,30 @@ test('Pass correct skin to props', () => {
     );
 
     expect(singleMediaUpload.prop('skin')).toEqual('round');
+});
+
+test('Throw if emptyIcon is set but not a valid value', () => {
+    const schemaOptions = {
+        empty_icon: {
+            value: [],
+        },
+    };
+
+    expect(
+        () => shallow(<SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />)
+    ).toThrow('"empty_icon"');
+});
+
+test('Throw if skin is set but not a valid value', () => {
+    const schemaOptions = {
+        skin: {
+            value: 'test',
+        },
+    };
+
+    expect(
+        () => shallow(<SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />)
+    ).toThrow('"default" or "round"');
 });
 
 test('Call onChange and onFinish when upload has completed', () => {

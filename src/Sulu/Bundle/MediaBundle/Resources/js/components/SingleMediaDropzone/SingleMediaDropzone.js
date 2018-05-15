@@ -18,7 +18,7 @@ type Props = {|
     progress: number,
     onDrop: (data: File) => void,
     skin: 'default' | 'round',
-    uploadText?: string,
+    uploadText?: ?string,
 |};
 
 @observer
