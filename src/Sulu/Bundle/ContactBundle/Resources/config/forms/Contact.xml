@@ -12,6 +12,7 @@
                             <info_text lang="de">Bild ablegen oder klicken um das Avatar zu ändern</info_text>
                         </meta>
                     </param>
+                    <param name="skin" value="round"/>
                 </params>
             </property>
         </properties>

@@ -26,6 +26,19 @@ test('Render a SingleMediaUpload', () => {
     ).toMatchSnapshot();
 });
 
+test('Render a SingleMediaUpload with the round skin', () => {
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
+
+    expect(render(
+        <SingleMediaUpload
+            collectionId={5}
+            mediaUploadStore={mediaUploadStore}
+            skin="round"
+            uploadText="Upload media"
+        />
+    )).toMatchSnapshot();
+});
+
 test('Call update on MediaUploadStore if id is given and drop event occurs', () => {
     const uploadCompleteSpy = jest.fn();
     const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));

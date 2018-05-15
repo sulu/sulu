@@ -5,6 +5,7 @@ $uploadIconColor: $scorpion;
 $uploadInfoTextColor: $scorpion;
 $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
 $mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because calc doesn't work for media-queries */
+$imageBorderColor: $alto;
 
 .media-container {
     position: relative;
@@ -76,4 +77,15 @@ $mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because ca
 
 .thumbnail {
     max-width: 100%;
+}
+
+.round {
+    &.media-container,
+    .thumbnail {
+        border-radius: 50%;
+    }
+
+    .thumbnail {
+        border: 1px solid $imageBorderColor;
+    }
 }

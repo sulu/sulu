@@ -10,19 +10,21 @@ import singleMediaDropzoneStyles from './singleMediaDropzone.scss';
 
 const UPLOAD_ICON = 'fa-cloud-upload';
 
-type Props = {
+type Props = {|
     image: ?string,
     mimeType: string,
     uploading: boolean,
     progress: number,
     onDrop: (data: File) => void,
+    skin: 'default' | 'round',
     uploadText?: string,
-};
+|};
 
 @observer
 export default class SingleMediaDropzone extends React.Component<Props> {
     static defaultProps = {
         progress: 0,
+        skin: 'default',
         uploading: false,
         mimeType: '',
     };
@@ -53,11 +55,14 @@ export default class SingleMediaDropzone extends React.Component<Props> {
             image,
             mimeType,
             progress,
+            skin,
             uploading,
             uploadText,
         } = this.props;
+
         const mediaContainerClass = classNames(
             singleMediaDropzoneStyles.mediaContainer,
+            singleMediaDropzoneStyles[skin],
             {
                 [singleMediaDropzoneStyles.showUploadIndicator]: this.uploadIndicatorVisibility,
             }
@@ -72,8 +77,8 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                 disableClick={uploading}
                 className={mediaContainerClass}
             >
-                {!uploading &&
-                    <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
+                {!uploading
+                    ? <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
                         <div className={singleMediaDropzoneStyles.uploadIndicator}>
                             <div>
                                 <Icon name={UPLOAD_ICON} className={singleMediaDropzoneStyles.uploadIcon} />
@@ -83,9 +88,7 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                             </div>
                         </div>
                     </div>
-                }
-                {uploading &&
-                    <div className={singleMediaDropzoneStyles.progressbar}>
+                    : <div className={singleMediaDropzoneStyles.progressbar}>
                         <CircularProgressbar
                             size={200}
                             percentage={progress}

@@ -19,6 +19,20 @@ test('Pass correct props', () => {
     expect(singleMediaUpload.prop('uploadText')).toEqual('Drag and drop');
 });
 
+test('Pass correct skin to props', () => {
+    const schemaOptions = {
+        skin: {
+            value: 'round',
+        },
+    };
+
+    const singleMediaUpload = shallow(
+        <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />
+    );
+
+    expect(singleMediaUpload.prop('skin')).toEqual('round');
+});
+
 test('Call onChange and onFinish when upload has completed', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();

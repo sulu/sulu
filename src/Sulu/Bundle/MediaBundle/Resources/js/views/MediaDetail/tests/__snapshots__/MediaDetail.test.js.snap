@@ -9,7 +9,7 @@ exports[`Render a loading MediaDetail view 1`] = `
   >
     <div
       aria-disabled="false"
-      class="mediaContainer"
+      class="mediaContainer default"
     >
       <div
         class="uploadIndicatorContainer"
