@@ -8,6 +8,7 @@ import CroppedText from './CroppedText';
 import DatePicker from './DatePicker';
 import Dialog from './Dialog';
 import Divider from './Divider';
+import Grid from './Grid';
 import Icon from './Icon';
 import InfiniteScroller from './InfiniteScroller';
 import Loader from './Loader';
@@ -31,6 +32,7 @@ export {
     DatePicker,
     Dialog,
     Divider,
+    Grid,
     Icon,
     InfiniteScroller,
     Loader,

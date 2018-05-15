@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {translate} from 'sulu-admin-bundle/utils';
+import {Grid} from 'sulu-admin-bundle/components';
 import {Form, FormStore, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {translate} from 'sulu-admin-bundle/utils';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import SingleMediaUpload from '../../containers/SingleMediaUpload';
 import mediaDetailStyles from './mediaDetail.scss';
@@ -54,21 +55,25 @@ class MediaDetail extends React.Component<Props> {
 
     render() {
         return (
-            <div className={mediaDetailStyles.mediaDetail}>
-                <section className={mediaDetailStyles.previewContainer}>
-                    <SingleMediaUpload
-                        mediaUploadStore={this.mediaUploadStore}
-                        uploadText={translate('sulu_media.upload_or_replace')}
-                    />
-                </section>
-                <section className={mediaDetailStyles.formContainer}>
-                    <Form
-                        ref={this.setFormRef}
-                        store={this.formStore}
-                        onSubmit={this.handleSubmit}
-                    />
-                </section>
-            </div>
+            <Grid className={mediaDetailStyles.mediaDetail}>
+                <Grid.Section size={4}>
+                    <Grid.Item>
+                        <SingleMediaUpload
+                            mediaUploadStore={this.mediaUploadStore}
+                            uploadText={translate('sulu_media.upload_or_replace')}
+                        />
+                    </Grid.Item>
+                </Grid.Section>
+                <Grid.Section size={8}>
+                    <Grid.Item>
+                        <Form
+                            ref={this.setFormRef}
+                            store={this.formStore}
+                            onSubmit={this.handleSubmit}
+                        />
+                    </Grid.Item>
+                </Grid.Section>
+            </Grid>
         );
     }
 }

@@ -2,68 +2,80 @@
 
 exports[`Render a loading MediaDetail view 1`] = `
 <div
-  class="mediaDetail"
+  class="grid mediaDetail"
 >
-  <section
-    class="previewContainer"
+  <div
+    class="section"
+    style="width: 33.333333333333336%; margin-left: 0%; margin-right: 0%;"
   >
     <div
-      aria-disabled="false"
-      class="mediaContainer default"
+      class="item"
+      style="width: 100%; margin-left: 0%; margin-right: 0%;"
     >
       <div
-        class="mimeTypeIndicator"
+        aria-disabled="false"
+        class="mediaContainer default"
       >
         <div
           class="mimeTypeIndicator"
-          style="color: rgb(255, 255, 255); font-size: 100px; background-color: rgb(88, 88, 88);"
         >
-          <span
-            aria-label="fa-file-o"
-            class="fa fa-file-o"
-          />
-        </div>
-      </div>
-      <div
-        class="uploadIndicatorContainer"
-      >
-        <div
-          class="uploadIndicator"
-        >
-          <div>
+          <div
+            class="mimeTypeIndicator"
+            style="color: rgb(255, 255, 255); font-size: 100px; background-color: rgb(88, 88, 88);"
+          >
             <span
-              aria-label="fa-cloud-upload"
-              class="uploadIcon fa fa-cloud-upload"
+              aria-label="fa-file-o"
+              class="fa fa-file-o"
             />
-            <div
-              class="uploadInfoText"
-            >
-              Upload or replace
+          </div>
+        </div>
+        <div
+          class="uploadIndicatorContainer"
+        >
+          <div
+            class="uploadIndicator"
+          >
+            <div>
+              <span
+                aria-label="fa-cloud-upload"
+                class="uploadIcon fa fa-cloud-upload"
+              />
+              <div
+                class="uploadInfoText"
+              >
+                Upload or replace
+              </div>
             </div>
           </div>
         </div>
+        <input
+          autocomplete="off"
+          style="display: none;"
+          type="file"
+        />
       </div>
-      <input
-        autocomplete="off"
-        style="display: none;"
-        type="file"
-      />
     </div>
-  </section>
-  <section
-    class="formContainer"
+  </div>
+  <div
+    class="section"
+    style="width: 66.66666666666667%; margin-left: 0%; margin-right: 0%;"
   >
     <div
-      class="spinner"
-      style="width: 40px; height: 40px;"
+      class="item"
+      style="width: 100%; margin-left: 0%; margin-right: 0%;"
     >
       <div
-        class="doubleBounce1"
-      />
-      <div
-        class="doubleBounce2"
-      />
+        class="spinner"
+        style="width: 40px; height: 40px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
+        />
+      </div>
     </div>
-  </section>
+  </div>
 </div>
 `;

@@ -1,6 +1,5 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
-$dropzoneSize: 400px;
 $uploadIconColor: $scorpion;
 $uploadInfoTextColor: $scorpion;
 $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
@@ -12,7 +11,7 @@ $imageBorderColor: $silver;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: $dropzoneSize;
+    width: 100%;
     height: auto;
     background-image: url('./checkerBackground.gif');
     background-size: 10px;
