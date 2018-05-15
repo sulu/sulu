@@ -151,7 +151,7 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             if (this.template !== '' && !this.saved) {
                 this.showRenderTemplateDialog(item);
             } else {
-                if (reloadData) {
+                if (this.options.id && reloadData) {
                     this.reloadData(item.template);
                 } else {
                     this.loadFormTemplate(item);
