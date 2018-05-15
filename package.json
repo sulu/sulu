@@ -69,9 +69,6 @@
         "moduleNameMapper": {
             "\\.(scss|css)$": "identity-obj-proxy"
         },
-        "setupFiles": [
-            "jest-canvas-mock"
-        ],
         "setupTestFrameworkScriptFile": "./testSetup.config.js",
         "snapshotSerializers": [
             "enzyme-to-json/serializer"
