@@ -13,13 +13,11 @@ export default function withToolbar(
     const WithToolbarComponent = class extends Component {
         toolbarDisposer: Function;
 
-        componentWillMount() {
+        constructor(props: *) {
+            super(props);
+
             if (super.hasOwnProperty('toolbarDisposer')) {
                 throw new Error('Component passed to withToolbar cannot declare a property called "toolbarDisposer".');
-            }
-
-            if (super.componentWillMount) {
-                super.componentWillMount();
             }
 
             this.toolbarDisposer = autorun(() => {

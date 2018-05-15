@@ -36,7 +36,9 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     @observable collectionStore: CollectionStore;
     overlayDisposer: () => void;
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         const {open} = this.props;
 
         if (open) {

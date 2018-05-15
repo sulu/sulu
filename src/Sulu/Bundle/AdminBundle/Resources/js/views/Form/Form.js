@@ -30,7 +30,9 @@ class Form extends React.PureComponent<Props> {
         return resourceKey && resourceStore.resourceKey !== resourceKey;
     }
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         const {resourceStore, router} = this.props;
         const {
             attributes: {

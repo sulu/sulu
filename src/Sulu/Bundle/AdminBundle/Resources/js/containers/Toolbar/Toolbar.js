@@ -43,7 +43,9 @@ export default class Toolbar extends React.Component<*> {
 
     toolbarStore: ToolbarStore;
 
-    componentWillMount() {
+    constructor(props: *) {
+        super(props);
+
         this.setStore(this.props.storeKey);
     }
 

@@ -12,7 +12,9 @@ class MockedImageSelection extends ImageRectangleSelection {
         Promise.resolve().then(this.props.mountSpy);
     }
 
-    componentWillMount() {
+    constructor(props) {
+        super(props);
+
         this.image = {naturalWidth: 1920, naturalHeight: 1080};
         this.imageLoaded = true;
     }

@@ -23,7 +23,9 @@ class MediaDetail extends React.Component<Props> {
     form: ?Form;
     formStore: FormStore;
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         const {
             router,
             resourceStore,

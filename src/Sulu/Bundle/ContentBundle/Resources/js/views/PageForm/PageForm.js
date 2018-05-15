@@ -20,7 +20,9 @@ class PageForm extends React.Component<Props> {
     form: ?Form;
     @observable webspace: Webspace;
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         const {resourceStore, router} = this.props;
         this.formStore = new FormStore(resourceStore);
 

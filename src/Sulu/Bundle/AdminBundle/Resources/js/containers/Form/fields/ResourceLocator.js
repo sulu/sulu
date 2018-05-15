@@ -4,7 +4,9 @@ import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import type {FieldTypeProps} from '../../../types';
 
 export default class ResourceLocator extends React.Component<FieldTypeProps<string>> {
-    componentWillMount() {
+    constructor(props: FieldTypeProps<string>) {
+        super(props);
+
         const {onChange, value} = this.props;
 
         if (value === undefined || value === '') {

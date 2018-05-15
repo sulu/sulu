@@ -18,7 +18,9 @@ export default class ResourceLocator extends React.PureComponent<Props> {
     fixed: string = '';
     changeable: string = '';
 
-    componentWillMount = () => {
+    constructor(props: Props) {
+        super(props);
+
         const {value, mode} = this.props;
 
         switch (mode) {
@@ -34,7 +36,7 @@ export default class ResourceLocator extends React.PureComponent<Props> {
             default:
                 throw new Error('Unknown mode given: "' + mode + '"');
         }
-    };
+    }
 
     componentWillReceiveProps = (nextProps: Props) => {
         this.changeable = nextProps.value.substring(this.fixed.length);

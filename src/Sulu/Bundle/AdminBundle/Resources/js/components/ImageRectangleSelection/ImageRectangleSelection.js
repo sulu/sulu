@@ -48,7 +48,9 @@ export class ImageRectangleSelection extends React.Component<Props> {
         };
     }
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         this.image = new Image();
         this.image.onload = action(() => this.imageLoaded = true);
         this.image.onerror = () => log.error('Failed to preload image "' + this.props.src + '"');

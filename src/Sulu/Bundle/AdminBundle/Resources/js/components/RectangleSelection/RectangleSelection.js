@@ -69,7 +69,9 @@ export class RectangleSelection extends React.Component<Props> {
         return normalizers;
     }
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         this.normalizers = RectangleSelection.createNormalizers(this.props);
     }
 

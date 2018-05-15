@@ -15,7 +15,9 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
     mediaSelectionStore: MediaSelectionStore;
     @observable overlayOpen: boolean = false;
 
-    componentWillMount() {
+    constructor(props: FieldTypeProps<Value>) {
+        super(props);
+
         const {
             formInspector,
             value,

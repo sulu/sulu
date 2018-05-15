@@ -53,7 +53,9 @@ export default class DatePicker extends React.Component<Props> {
         this.inputRef = ref;
     };
 
-    componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         this.setValue(this.props.value);
     }
 

@@ -47,7 +47,9 @@ class Datagrid extends React.Component<ViewProps> {
         };
     }
 
-    @action componentWillMount() {
+    constructor(props: ViewProps) {
+        super(props);
+
         const router = this.props.router;
         const {
             route: {

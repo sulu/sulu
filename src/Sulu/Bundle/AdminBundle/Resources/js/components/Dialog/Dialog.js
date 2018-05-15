@@ -31,7 +31,9 @@ export default class Dialog extends React.Component<Props> {
     @observable visible: boolean = false;
     @observable openHasChanged: boolean = false;
 
-    @action componentWillMount() {
+    constructor(props: Props) {
+        super(props);
+
         this.openHasChanged = this.props.open;
     }
 
