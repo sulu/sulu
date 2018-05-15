@@ -42,14 +42,16 @@ export default class Renderer extends React.Component<Props> {
     };
 
     renderGridSection(schemaField: SchemaEntry, schemaKey: string) {
-        const {items} = schemaField;
+        const {items, size} = schemaField;
         return (
-            <Grid.Section key={schemaKey} className={rendererStyles.gridSection}>
-                <Grid.Item size={12}>
-                    <Divider>
-                        {schemaField.label}
-                    </Divider>
-                </Grid.Item>
+            <Grid.Section key={schemaKey} className={rendererStyles.gridSection} size={size}>
+                {schemaField.label &&
+                    <Grid.Item size={12}>
+                        <Divider>
+                            {schemaField.label}
+                        </Divider>
+                    </Grid.Item>
+                }
                 {items &&
                     Object.keys(items).map((key) => this.renderItem(items[key], key))
                 }

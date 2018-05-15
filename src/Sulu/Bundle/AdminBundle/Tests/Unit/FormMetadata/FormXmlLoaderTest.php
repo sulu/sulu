@@ -51,6 +51,24 @@ class FormXmlLoaderTest extends TestCase
         $this->assertEquals('salutation', $formMetadata->getProperties()['salutation']->getName());
     }
 
+    public function testLoadFormWithSizedSections()
+    {
+        /** @var FormMetadata $formMetadata */
+        $formMetadata = $this->loader->load(
+            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_sections.xml'
+        );
+
+        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
+
+        $this->assertCount(2, $formMetadata->getChildren());
+        $this->assertEquals('logo', $formMetadata->getChildren()['logo']->getName());
+        $this->assertEquals(4, $formMetadata->getChildren()['logo']->getSize());
+        $this->assertCount(1, $formMetadata->getChildren()['logo']->getChildren());
+        $this->assertEquals('name', $formMetadata->getChildren()['name']->getName());
+        $this->assertEquals(8, $formMetadata->getChildren()['name']->getSize());
+        $this->assertCount(1, $formMetadata->getChildren()['name']->getChildren());
+    }
+
     public function testLoadFormInvalid()
     {
         $this->expectException(\InvalidArgumentException::class);

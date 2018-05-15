@@ -96,7 +96,11 @@ class ResourceMetadataMapper
     {
         $section = new Section($property->getName());
 
-        $section->setLabel($property->getTitle($locale));
+        $title = $property->getTitle($locale);
+        if ($title) {
+            $section->setLabel($title);
+        }
+
         $section->setSize($property->getSize());
 
         foreach ($property->getChildren() as $component) {

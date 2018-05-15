@@ -409,6 +409,7 @@ class PropertiesXmlParser
     {
         $section = new SectionMetadata();
         $section->setName($propertyName);
+        $section->setSize($data['colspan']);
         if (isset($data['meta']['title'])) {
             $section->setTitles($data['meta']['title']);
         }

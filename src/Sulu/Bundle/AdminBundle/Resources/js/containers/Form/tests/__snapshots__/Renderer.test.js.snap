@@ -144,3 +144,147 @@ exports[`Should render nested sections 1`] = `
   </div>
 </div>
 `;
+
+exports[`Should render sections with size 1`] = `
+<div
+  class="grid"
+>
+  <div
+    class="section gridSection"
+    style="width:66.66666666666667%;margin-left:0%;margin-right:0%"
+  >
+    <div
+      class="item"
+      style="width:100%;margin-left:0%;margin-right:0%"
+    >
+      <div
+        class="divider"
+      >
+        Section 1
+      </div>
+    </div>
+    <div
+      class="item gridItem"
+      style="width:100%;margin-left:0%;margin-right:0%"
+    >
+      <div
+        class="field"
+      >
+        <label
+          class="label"
+        >
+          Item 1.1
+        </label>
+        <input
+          type="text"
+        />
+        <label
+          class="errorLabel"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="section gridSection"
+    style="width:33.333333333333336%;margin-left:0%;margin-right:0%"
+  >
+    <div
+      class="item"
+      style="width:100%;margin-left:0%;margin-right:0%"
+    >
+      <div
+        class="divider"
+      >
+        Section 2
+      </div>
+    </div>
+    <div
+      class="item gridItem"
+      style="width:100%;margin-left:0%;margin-right:0%"
+    >
+      <div
+        class="field"
+      >
+        <label
+          class="label"
+        >
+          Item 2.1
+        </label>
+        <input
+          type="text"
+        />
+        <label
+          class="errorLabel"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Should render sections without label 1`] = `
+<div
+  class="grid"
+>
+  <div
+    class="section gridSection"
+    style="width:66.66666666666667%;margin-left:0%;margin-right:0%"
+  >
+    <div
+      class="item gridItem"
+      style="width:100%;margin-left:0%;margin-right:0%"
+    >
+      <div
+        class="field"
+      >
+        <label
+          class="label"
+        >
+          Item 1.1
+        </label>
+        <input
+          type="text"
+        />
+        <label
+          class="errorLabel"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="section gridSection"
+    style="width:33.333333333333336%;margin-left:0%;margin-right:0%"
+  >
+    <div
+      class="item"
+      style="width:100%;margin-left:0%;margin-right:0%"
+    >
+      <div
+        class="divider"
+      >
+        Section 2
+      </div>
+    </div>
+    <div
+      class="item gridItem"
+      style="width:100%;margin-left:0%;margin-right:0%"
+    >
+      <div
+        class="field"
+      >
+        <label
+          class="label"
+        >
+          Item 2.1
+        </label>
+        <input
+          type="text"
+        />
+        <label
+          class="errorLabel"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
