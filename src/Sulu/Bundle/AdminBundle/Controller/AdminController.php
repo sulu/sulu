@@ -297,9 +297,8 @@ class AdminController
 
     public function translationsAction(Request $request): Response
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if (!$user) {
+        $token = $this->tokenStorage->getToken();
+        if (!$token || !$token->getUser()) {
             // TODO: Check if user has access for system sulu
             // TODO: Deliver here only public translations
         }
