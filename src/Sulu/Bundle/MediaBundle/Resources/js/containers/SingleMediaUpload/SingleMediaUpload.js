@@ -4,10 +4,9 @@ import {observer} from 'mobx-react';
 import SingleMediaDropzone from '../../components/SingleMediaDropzone';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 
-const THUMBNAIL_SIZE = 'sulu-400x400';
-
 type Props = {|
     collectionId?: number,
+    imageSize: string,
     mediaUploadStore: MediaUploadStore,
     onUploadComplete?: (media: Object) => void,
     skin: 'default' | 'round',
@@ -17,6 +16,7 @@ type Props = {|
 @observer
 export default class SingleMediaUpload extends React.Component<Props> {
     static defaultProps = {
+        imageSize: 'sulu-400x400',
         skin: 'default',
     };
 
@@ -59,6 +59,7 @@ export default class SingleMediaUpload extends React.Component<Props> {
     render() {
         const {
             mediaUploadStore,
+            imageSize,
             skin,
             uploadText,
         } = this.props;
@@ -71,7 +72,7 @@ export default class SingleMediaUpload extends React.Component<Props> {
 
         return (
             <SingleMediaDropzone
-                image={mediaUploadStore.getThumbnail(THUMBNAIL_SIZE)}
+                image={mediaUploadStore.getThumbnail(imageSize)}
                 mimeType={mimeType}
                 onDrop={this.handleMediaDrop}
                 progress={progress}

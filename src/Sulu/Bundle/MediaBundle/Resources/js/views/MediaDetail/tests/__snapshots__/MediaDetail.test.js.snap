@@ -16,19 +16,10 @@ exports[`Render a loading MediaDetail view 1`] = `
         aria-disabled="false"
         class="mediaContainer default"
       >
-        <div
-          class="mimeTypeIndicator"
-        >
-          <div
-            class="mimeTypeIndicator"
-            style="color: rgb(255, 255, 255); font-size: 100px; background-color: rgb(88, 88, 88);"
-          >
-            <span
-              aria-label="fa-file-o"
-              class="fa fa-file-o"
-            />
-          </div>
-        </div>
+        <img
+          class="thumbnail"
+          src="sulu-400x400-inset"
+        />
         <div
           class="uploadIndicatorContainer"
         >

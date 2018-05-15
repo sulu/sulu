@@ -9,7 +9,7 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function(resourceSto
     this.id = resourceStore.id;
     this.create = jest.fn();
     this.update = jest.fn();
-    this.getThumbnail = jest.fn();
+    this.getThumbnail = jest.fn((size) => size);
 }));
 
 jest.mock('sulu-admin-bundle/stores', () => ({
@@ -34,6 +34,17 @@ test('Render a SingleMediaUpload with the round skin', () => {
             collectionId={5}
             mediaUploadStore={mediaUploadStore}
             skin="round"
+            uploadText="Upload media"
+        />
+    )).toMatchSnapshot();
+});
+
+test('Render a SingleMediaUpload with a different image size', () => {
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
+
+    expect(render(
+        <SingleMediaUpload
+            mediaUploadStore={mediaUploadStore}
             uploadText="Upload media"
         />
     )).toMatchSnapshot();

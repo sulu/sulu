@@ -5,19 +5,46 @@ exports[`Render a SingleMediaUpload 1`] = `
   aria-disabled="false"
   class="mediaContainer default"
 >
+  <img
+    class="thumbnail"
+    src="sulu-400x400"
+  />
   <div
-    class="mimeTypeIndicator"
+    class="uploadIndicatorContainer"
   >
     <div
-      class="mimeTypeIndicator"
-      style="color:#fff;font-size:100px;background-color:#585858"
+      class="uploadIndicator"
     >
-      <span
-        aria-label="fa-file-o"
-        class="fa fa-file-o"
-      />
+      <div>
+        <span
+          aria-label="fa-cloud-upload"
+          class="uploadIcon fa fa-cloud-upload"
+        />
+        <div
+          class="uploadInfoText"
+        >
+          Upload media
+        </div>
+      </div>
     </div>
   </div>
+  <input
+    autocomplete="off"
+    style="display:none"
+    type="file"
+  />
+</div>
+`;
+
+exports[`Render a SingleMediaUpload with a different image size 1`] = `
+<div
+  aria-disabled="false"
+  class="mediaContainer default"
+>
+  <img
+    class="thumbnail"
+    src="sulu-400x400"
+  />
   <div
     class="uploadIndicatorContainer"
   >
@@ -50,19 +77,10 @@ exports[`Render a SingleMediaUpload with the round skin 1`] = `
   aria-disabled="false"
   class="mediaContainer round"
 >
-  <div
-    class="mimeTypeIndicator"
-  >
-    <div
-      class="mimeTypeIndicator"
-      style="color:#fff;font-size:100px;background-color:#585858"
-    >
-      <span
-        aria-label="fa-file-o"
-        class="fa fa-file-o"
-      />
-    </div>
-  </div>
+  <img
+    class="thumbnail"
+    src="sulu-400x400"
+  />
   <div
     class="uploadIndicatorContainer"
   >

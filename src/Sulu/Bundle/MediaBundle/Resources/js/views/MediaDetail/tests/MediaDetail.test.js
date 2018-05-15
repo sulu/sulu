@@ -45,7 +45,7 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
     this.id = 1;
     this.update = jest.fn();
     this.upload = jest.fn();
-    this.getThumbnail = jest.fn();
+    this.getThumbnail = jest.fn((size) => size);
 }));
 
 beforeEach(() => {
