@@ -1,4 +1,5 @@
 // @flow
+import 'core-js/library/fn/promise';
 import {action, observable} from 'mobx';
 import moment from 'moment';
 import Requester from '../../services/Requester';
