@@ -26,6 +26,7 @@ use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -128,6 +129,11 @@ class AdminControllerTest extends TestCase
     private $fieldTypeOptionRegistry;
 
     /**
+     * @var ContactManagerInterface
+     */
+    private $contactManager;
+
+    /**
      * @var string
      */
     private $environment = 'prod';
@@ -188,6 +194,7 @@ class AdminControllerTest extends TestCase
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
         $this->router = $this->prophesize(RouterInterface::class);
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
+        $this->contactManager = $this->prophesize(ContactManagerInterface::class);
 
         $this->adminController = new AdminController(
             $this->authorizationChecker->reveal(),
@@ -205,6 +212,7 @@ class AdminControllerTest extends TestCase
             $this->navigationRegistry->reveal(),
             $this->router->reveal(),
             $this->fieldTypeOptionRegistry->reveal(),
+            $this->contactManager->reveal(),
             $this->environment,
             $this->adminName,
             $this->locales,
