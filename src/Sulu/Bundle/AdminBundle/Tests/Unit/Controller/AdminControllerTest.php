@@ -27,6 +27,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -181,7 +182,7 @@ class AdminControllerTest extends TestCase
         $this->urlGenerator = $this->prophesize(UrlGeneratorInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->token = $this->prophesize(TokenInterface::class);
-        $this->user = $this->prophesize(UserInterface::class);
+        $this->user = $this->prophesize(User::class);
         $this->adminPool = $this->prophesize(AdminPool::class);
         $this->jsConfigPool = $this->prophesize(JsConfigPool::class);
         $this->serializer = $this->prophesize(SerializerInterface::class);
