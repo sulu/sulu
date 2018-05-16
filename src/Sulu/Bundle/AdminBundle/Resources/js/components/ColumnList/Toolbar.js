@@ -30,7 +30,7 @@ export default class Toolbar extends React.Component<Props> {
         }
     };
 
-    renderToolbarItems = (toolbarItems: Array<ToolbarItemConfig>) => {
+    renderToolbarItems = (toolbarItems: Array<ToolbarItemConfig>): Array<*> => {
         return toolbarItems.map((toolbarItemConfig: ToolbarItemConfig, index: number) => {
             switch (toolbarItemConfig.type) {
                 case 'dropdown':

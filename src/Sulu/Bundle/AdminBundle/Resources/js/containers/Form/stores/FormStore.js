@@ -94,8 +94,7 @@ export default class FormStore {
         this.schema = schema;
         const schemaFields = Object.keys(schema)
             .reduce((data, key) => addSchemaProperties(data, key, schema), {});
-        const newData = {...schemaFields, ...this.resourceStore.data};
-        this.resourceStore.data = this.hasType ? {[TYPE]: this.defaultType, ...newData} : newData;
+        this.resourceStore.data = {...schemaFields, ...this.resourceStore.data};
         this.schemaLoading = false;
     };
 

@@ -1,6 +1,7 @@
 // @flow
 import {computed} from 'mobx';
 import React from 'react';
+import type {Element} from 'react';
 import Table from '../../../components/Table';
 import datagridFieldTransformerRegistry from '../registries/DatagridFieldTransformerRegistry';
 import type {Schema} from '../types';
@@ -27,7 +28,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
         return newSchema;
     }
 
-    renderCells(item: Object) {
+    renderCells(item: Object): Array<*> {
         const schemaKeys = Object.keys(this.schema);
 
         return schemaKeys.map((schemaKey) => {
@@ -40,7 +41,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
         });
     }
 
-    renderHeaderCells(sortingEnabled: boolean) {
+    renderHeaderCells(sortingEnabled: boolean): Array<*> {
         const {sortColumn, sortOrder} = this.props;
         const schemaKeys = Object.keys(this.schema);
 

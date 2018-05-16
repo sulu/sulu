@@ -57,7 +57,7 @@ export default class TreeListAdapter extends AbstractTableAdapter {
         });
     }
 
-    renderRows() {
+    renderRows(): Array<*> {
         return this.data.map((item) => {
             const {
                 selections,
