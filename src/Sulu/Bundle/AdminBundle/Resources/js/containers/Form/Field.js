@@ -90,7 +90,7 @@ export default class Field extends React.Component<Props> {
 
         return (
             <div className={fieldClass}>
-                <label className={fieldStyles.label}>{label}{required && ' *'}</label>
+                {label && <label className={fieldStyles.label}>{label}{required && ' *'}</label>}
                 <FieldType
                     error={error}
                     fieldTypeOptions={fieldTypeOptions}

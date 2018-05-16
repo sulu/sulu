@@ -130,7 +130,7 @@ class PropertiesXmlParser
         $result = $this->loadValues(
             $xpath,
             $node,
-            ['name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass', 'size', 'spaceAfter']
+            ['name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass', 'size', 'spaceAfter', 'label']
         );
 
         if (in_array($result['name'], $this->reservedPropertyNames, false)) {
@@ -475,6 +475,7 @@ class PropertiesXmlParser
         $property->setTags($data['tags']);
         $property->setMinOccurs(null !== $data['minOccurs'] ? intval($data['minOccurs']) : null);
         $property->setMaxOccurs(null !== $data['maxOccurs'] ? intval($data['maxOccurs']) : null);
+        $property->setLabel(array_key_exists('label', $data) ? $data['label'] : null);
         $property->setParameters($data['params']);
         $property->setOnInvalid(array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
         $this->mapMeta($property, $data['meta']);
