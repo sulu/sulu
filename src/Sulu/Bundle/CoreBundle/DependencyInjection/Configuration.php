@@ -75,9 +75,10 @@ class Configuration implements ConfigurationInterface
     private function getWebspaceConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('webspace')
+            ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('config_dir')
-                    ->defaultValue('%kernel.root_dir%/Resources/webspaces')
+                    ->defaultValue('%kernel.project_dir%/config/sulu/webspaces')
                 ->end()
             ->end()
         ->end();
@@ -179,7 +180,7 @@ class Configuration implements ConfigurationInterface
                             ->prototype('array')
                                 ->children()
                                     ->scalarNode('path')
-                                        ->example('%kernel.root_dir%/Resources/templates')
+                                        ->example('%kernel.root_dir%/config/templates')
                                     ->end()
                                     ->scalarNode('type')
                                         ->defaultValue('page')
