@@ -219,3 +219,44 @@ Array [
   </div>,
 ]
 `;
+
+exports[`Render a SingleMediaUpload without delete and download button 1`] = `
+Array [
+  <div
+    aria-disabled="false"
+    class="mediaContainer default"
+  >
+    <img
+      class="thumbnail"
+      src="sulu-400x400"
+    />
+    <div
+      class="uploadIndicatorContainer"
+    >
+      <div
+        class="uploadIndicator"
+      >
+        <div>
+          <span
+            aria-label="fa-cloud-upload"
+            class="uploadIcon fa fa-cloud-upload"
+          />
+          <div
+            class="uploadInfoText"
+          >
+            Test
+          </div>
+        </div>
+      </div>
+    </div>
+    <input
+      autocomplete="off"
+      style="display:none"
+      type="file"
+    />
+  </div>,
+  <div
+    class="buttons"
+  />,
+]
+`;

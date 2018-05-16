@@ -20,7 +20,7 @@ export default class MediaUploadStore {
     @computed get id(): ?number | string {
         const {resourceStore} = this;
 
-        return resourceStore.data.id;
+        return resourceStore.data.id || resourceStore.id;
     }
 
     @computed get locale(): string {

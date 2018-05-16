@@ -9,6 +9,8 @@ import Button from './Button';
 
 type Props = {|
     collectionId?: number,
+    deletable: boolean,
+    downloadable: boolean,
     emptyIcon?: string,
     imageSize: string,
     mediaUploadStore: MediaUploadStore,
@@ -20,6 +22,8 @@ type Props = {|
 @observer
 export default class SingleMediaUpload extends React.Component<Props> {
     static defaultProps = {
+        deletable: true,
+        downloadable: true,
         imageSize: 'sulu-400x400',
         skin: 'default',
     };
@@ -66,6 +70,8 @@ export default class SingleMediaUpload extends React.Component<Props> {
 
     render() {
         const {
+            downloadable,
+            deletable,
             emptyIcon,
             mediaUploadStore,
             imageSize,
@@ -94,18 +100,22 @@ export default class SingleMediaUpload extends React.Component<Props> {
                 />
                 {mediaUploadStore.id &&
                     <div className={singleMediaUploadStyles.buttons}>
-                        <Button
-                            downloadUrl={downloadUrl}
-                            icon="su-download"
-                        >
-                            {translate('sulu_media.download_media')}
-                        </Button>
-                        <Button
-                            onClick={this.handleDeleteMediaClick}
-                            icon="su-trash-alt"
-                        >
-                            {translate('sulu_media.delete_media')}
-                        </Button>
+                        {downloadable &&
+                            <Button
+                                downloadUrl={downloadUrl}
+                                icon="su-download"
+                            >
+                                {translate('sulu_media.download_media')}
+                            </Button>
+                        }
+                        {deletable &&
+                            <Button
+                                onClick={this.handleDeleteMediaClick}
+                                icon="su-trash-alt"
+                            >
+                                {translate('sulu_media.delete_media')}
+                            </Button>
+                        }
                     </div>
                 }
             </Fragment>

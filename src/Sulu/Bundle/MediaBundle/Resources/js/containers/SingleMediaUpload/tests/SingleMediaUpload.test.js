@@ -64,6 +64,19 @@ test('Render a SingleMediaUpload with a different image size', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a SingleMediaUpload without delete and download button', () => {
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
+
+    expect(render(
+        <SingleMediaUpload
+            deletable={false}
+            downloadable={false}
+            mediaUploadStore={mediaUploadStore}
+            uploadText="Test"
+        />
+    )).toMatchSnapshot();
+});
+
 test('Call update on MediaUploadStore if id is given and drop event occurs', () => {
     const uploadCompleteSpy = jest.fn();
     const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));

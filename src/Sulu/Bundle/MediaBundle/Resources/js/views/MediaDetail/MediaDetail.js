@@ -59,6 +59,8 @@ class MediaDetail extends React.Component<Props> {
                 <Grid.Section size={4}>
                     <Grid.Item>
                         <SingleMediaUpload
+                            deletable={false}
+                            downloadable={false}
                             imageSize="sulu-400x400-inset"
                             mediaUploadStore={this.mediaUploadStore}
                             uploadText={translate('sulu_media.upload_or_replace')}
