@@ -4,7 +4,7 @@
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
     <section name="avatar" colspan="4">
         <properties>
-            <property name="avatar" type="single_media_upload">
+            <property name="avatar" type="single_media_upload" label="false">
                 <params>
                     <param name="upload_text">
                         <meta>
