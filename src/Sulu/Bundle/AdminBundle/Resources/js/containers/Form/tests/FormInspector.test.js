@@ -7,6 +7,9 @@ import FormStore from '../stores/FormStore';
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, options) {
     this.resourceKey = resourceKey;
     this.id = id;
+    this.data = {
+        test: 'value',
+    };
 
     if (options) {
         this.locale = options.locale;
@@ -42,4 +45,18 @@ test('Should return the id from the FormStore', () => {
     const formInspector = new FormInspector(formStore);
 
     expect(formInspector.id).toEqual(3);
+});
+
+test('Should return value for property name', () => {
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.getValueByName('test')).toEqual('value');
+});
+
+test('Should throw error for non existing property', () => {
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    const formInspector = new FormInspector(formStore);
+
+    expect(() => formInspector.getValueByName('test')).toThrow(/test/);
 });

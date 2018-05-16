@@ -20,4 +20,12 @@ export default class FormInspector {
     get id(): ?string | number {
         return this.formStore.id;
     }
+
+    getValueByName(name: string): mixed {
+        if (!this.formStore.data[name]) {
+            throw new Error('Property with name "' + name + '" not found');
+        }
+
+        return this.formStore.data[name];
+    }
 }
