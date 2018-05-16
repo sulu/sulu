@@ -196,7 +196,7 @@ test('Saving flag should be set to true when deleting', () => {
     expect(resourceStore.saving).toBe(true);
 });
 
-test('Saving flag should be set to false when deleting has finished', () => {
+test('Saving flag and id should be reset to false when deleting has finished', () => {
     const promise = Promise.resolve();
     ResourceRequester.delete.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
@@ -207,6 +207,7 @@ test('Saving flag should be set to false when deleting has finished', () => {
     resourceStore.delete();
     return promise.then(() => {
         expect(resourceStore.saving).toBe(false);
+        expect(resourceStore.id).toBe(undefined);
     });
 });
 

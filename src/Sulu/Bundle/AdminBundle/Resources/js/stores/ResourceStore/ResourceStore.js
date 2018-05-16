@@ -159,6 +159,7 @@ export default class ResourceStore {
 
         return ResourceRequester.delete(this.resourceKey, this.data.id)
             .then(action((response) => {
+                this.id = undefined;
                 this.data = response;
                 this.saving = false;
                 this.dirty = false;
