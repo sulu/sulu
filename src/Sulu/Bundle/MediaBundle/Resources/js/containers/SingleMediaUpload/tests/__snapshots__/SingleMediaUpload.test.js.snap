@@ -39,15 +39,23 @@ Array [
     class="buttons"
   >
     <a
-      download=""
+      class="button"
     >
+      <span
+        aria-label="su-download"
+        class="icon su-download"
+      />
       sulu_media.download_media
     </a>
-    <button
-      type="button"
+    <a
+      class="button"
     >
+      <span
+        aria-label="su-trash-alt"
+        class="icon su-trash-alt"
+      />
       sulu_media.delete_media
-    </button>
+    </a>
   </div>,
 ]
 `;
@@ -91,15 +99,23 @@ Array [
     class="buttons"
   >
     <a
-      download=""
+      class="button"
     >
+      <span
+        aria-label="su-download"
+        class="icon su-download"
+      />
       sulu_media.download_media
     </a>
-    <button
-      type="button"
+    <a
+      class="button"
     >
+      <span
+        aria-label="su-trash-alt"
+        class="icon su-trash-alt"
+      />
       sulu_media.delete_media
-    </button>
+    </a>
   </div>,
 ]
 `;
@@ -183,15 +199,23 @@ Array [
     class="buttons"
   >
     <a
-      download=""
+      class="button"
     >
+      <span
+        aria-label="su-download"
+        class="icon su-download"
+      />
       sulu_media.download_media
     </a>
-    <button
-      type="button"
+    <a
+      class="button"
     >
+      <span
+        aria-label="su-trash-alt"
+        class="icon su-trash-alt"
+      />
       sulu_media.delete_media
-    </button>
+    </a>
   </div>,
 ]
 `;

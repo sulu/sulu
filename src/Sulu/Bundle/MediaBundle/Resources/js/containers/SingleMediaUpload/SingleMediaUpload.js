@@ -5,6 +5,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import SingleMediaDropzone from '../../components/SingleMediaDropzone';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import singleMediaUploadStyles from './singleMediaUpload.scss';
+import Button from './Button';
 
 type Props = {|
     collectionId?: number,
@@ -93,10 +94,18 @@ export default class SingleMediaUpload extends React.Component<Props> {
                 />
                 {mediaUploadStore.id &&
                     <div className={singleMediaUploadStyles.buttons}>
-                        <a href={downloadUrl} download>{translate('sulu_media.download_media')}</a>
-                        <button type="button" onClick={this.handleDeleteMediaClick}>
+                        <Button
+                            downloadUrl={downloadUrl}
+                            icon="su-download"
+                        >
+                            {translate('sulu_media.download_media')}
+                        </Button>
+                        <Button
+                            onClick={this.handleDeleteMediaClick}
+                            icon="su-trash-alt"
+                        >
                             {translate('sulu_media.delete_media')}
-                        </button>
+                        </Button>
                     </div>
                 }
             </Fragment>

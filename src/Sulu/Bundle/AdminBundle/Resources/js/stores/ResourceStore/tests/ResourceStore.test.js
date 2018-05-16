@@ -188,6 +188,7 @@ test('Save the store without an id should send a POST request without a locale',
 test('Saving flag should be set to true when deleting', () => {
     ResourceRequester.delete.mockReturnValue(Promise.resolve());
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    resourceStore.data = {id: 1};
     resourceStore.saving = false;
     resourceStore.setLocale('en');
 
@@ -199,6 +200,7 @@ test('Saving flag should be set to false when deleting has finished', () => {
     const promise = Promise.resolve();
     ResourceRequester.delete.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    resourceStore.data = {id: 1};
     resourceStore.setLocale('en');
     resourceStore.saving = true;
 
@@ -211,11 +213,11 @@ test('Saving flag should be set to false when deleting has finished', () => {
 test('Calling the delete method should send a DELETE request', () => {
     ResourceRequester.delete.mockReturnValue(Promise.resolve());
     const resourceStore = new ResourceStore('snippets', '3', {});
-    resourceStore.data = {title: 'Title'};
+    resourceStore.data = {id: 3, title: 'Title'};
     resourceStore.dirty = false;
 
     resourceStore.delete();
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', '3');
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', 3);
 });
 
 test('Saving flag should be set to true when saving', () => {

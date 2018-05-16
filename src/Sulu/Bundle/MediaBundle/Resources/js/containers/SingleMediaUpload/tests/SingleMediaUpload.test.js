@@ -131,7 +131,7 @@ test('Delete the image when the delete button is clicked', () => {
         />
     );
 
-    singleMediaUpload.find('button').simulate('click');
+    singleMediaUpload.find('Button[icon="su-trash-alt"]').simulate('click');
 
     expect(mediaUploadStore.delete).toBeCalled();
 

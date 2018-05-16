@@ -49,11 +49,21 @@ exports[`Render a loading MediaDetail view 1`] = `
         class="buttons"
       >
         <a
-          download=""
-        />
-        <button
-          type="button"
-        />
+          class="button"
+        >
+          <span
+            aria-label="su-download"
+            class="icon su-download"
+          />
+        </a>
+        <a
+          class="button"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="icon su-trash-alt"
+          />
+        </a>
       </div>
     </div>
   </div>
