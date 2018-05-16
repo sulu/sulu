@@ -13,7 +13,7 @@ const UPLOAD_ICON = 'fa-cloud-upload';
 type Props = {|
     emptyIcon: string,
     image: ?string,
-    mimeType: string,
+    mimeType: ?string,
     uploading: boolean,
     progress: number,
     onDrop: (data: File) => void,

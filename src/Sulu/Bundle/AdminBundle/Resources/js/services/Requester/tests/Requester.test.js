@@ -123,3 +123,17 @@ test('Should execute DELETE request and return JSON', () => {
 
     return requestPromise;
 });
+
+test('Should execute DELETE request and return empty object if status code was 204', () => {
+    const promise = Promise.resolve({
+        ok: true,
+        status: 204,
+    });
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    return Requester.delete('/some-url').then((data) => {
+        expect(data).toEqual({});
+    });
+});

@@ -18,6 +18,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
         this.id = id;
         this.locale = observableOptions ? observableOptions.locale : undefined;
         this.setMultiple = jest.fn();
+        this.delete = jest.fn();
     }),
 }));
 
@@ -57,6 +58,15 @@ test('Calling the "create" method should make a "POST" request to the media upda
 
     mediaUploadStore.create(1, fileData);
     expect(openSpy).toBeCalledWith('POST', '/media?locale=en&collection=1');
+});
+
+test('Calling "delete" method should call the "delete" method of the ResourceStore', () => {
+    const resourceStore = new ResourceStore('media', 2);
+    const mediaUploadStore = new MediaUploadStore(resourceStore);
+
+    mediaUploadStore.delete();
+
+    expect(resourceStore.delete).toBeCalled();
 });
 
 test('After the request was successful the progress will be reset', (done) => {
@@ -103,8 +113,6 @@ test('Should return thumbnail path if available', () => {
 
 test('Should return undefined if thumbnail is not available yet', () => {
     const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
-    resourceStore.data = {};
-
     const mediaUploadStore = new MediaUploadStore(resourceStore);
 
     expect(mediaUploadStore.getThumbnail('100x100')).toEqual(undefined);
@@ -119,6 +127,31 @@ test('Should return the mime type of the media if available', () => {
     const mediaUploadStore = new MediaUploadStore(resourceStore);
 
     expect(mediaUploadStore.mimeType).toEqual(mimeType);
+});
+
+test('Should return undefined if the mime type is not available yet', () => {
+    const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
+    const mediaUploadStore = new MediaUploadStore(resourceStore);
+
+    expect(mediaUploadStore.mimeType).toEqual(undefined);
+});
+
+test('Should return downloadUrl if available', () => {
+    const url = 'test.jpg';
+    const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
+    resourceStore.data = {
+        url,
+    };
+    const mediaUploadStore = new MediaUploadStore(resourceStore);
+
+    expect(mediaUploadStore.downloadUrl).toEqual(url);
+});
+
+test('Should return undefined if downloadUrl is not available', () => {
+    const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
+    const mediaUploadStore = new MediaUploadStore(resourceStore);
+
+    expect(mediaUploadStore.downloadUrl).toEqual(undefined);
 });
 
 test('Should throw an error if locale not available', () => {

@@ -14,5 +14,7 @@
     "sulu_media.add_collection": "Add collection",
     "sulu_media.remove_collection": "Delete collection",
     "sulu_media.remove_collection_warning": "This operation deletes data and cannot be undone. Do you really wish to proceed?",
-    "sulu_media.edit_collection": "Edit collection"
+    "sulu_media.edit_collection": "Edit collection",
+    "sulu_media.download_media": "Download media",
+    "sulu_media.delete_media": "Delete media"
 }

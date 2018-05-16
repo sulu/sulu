@@ -45,6 +45,16 @@ exports[`Render a loading MediaDetail view 1`] = `
           type="file"
         />
       </div>
+      <div
+        class="buttons"
+      >
+        <a
+          download=""
+        />
+        <button
+          type="button"
+        />
+      </div>
     </div>
   </div>
   <div

@@ -20,7 +20,7 @@ export default class MediaUploadStore {
     @computed get id(): ?number | string {
         const {resourceStore} = this;
 
-        return resourceStore.id;
+        return resourceStore.data.id;
     }
 
     @computed get locale(): string {
@@ -33,8 +33,23 @@ export default class MediaUploadStore {
         return resourceStore.locale.get();
     }
 
+    @computed get downloadUrl(): ?string {
+        const {resourceStore} = this;
+
+        if (!resourceStore.data) {
+            return;
+        }
+
+        return resourceStore.data.url;
+    }
+
     getThumbnail(size: string): ?string {
         const {resourceStore} = this;
+
+        if (!resourceStore.data) {
+            return;
+        }
+
         const {
             data: {
                 thumbnails,
@@ -48,8 +63,12 @@ export default class MediaUploadStore {
         return thumbnails[size];
     }
 
-    @computed get mimeType(): string {
+    @computed get mimeType(): ?string {
         const {resourceStore} = this;
+
+        if (!resourceStore.data) {
+            return;
+        }
 
         return resourceStore.data.mimeType;
     }
@@ -60,6 +79,10 @@ export default class MediaUploadStore {
 
     @action setProgress(progress: number) {
         this.progress = Math.ceil(progress);
+    }
+
+    @action delete() {
+        return this.resourceStore.delete();
     }
 
     update(file: File): Promise<*> {

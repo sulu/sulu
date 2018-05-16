@@ -9,6 +9,7 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function(resourceSto
     this.id = resourceStore.id;
     this.create = jest.fn();
     this.update = jest.fn();
+    this.delete = jest.fn();
     this.getThumbnail = jest.fn((size) => size);
 }));
 
@@ -16,6 +17,10 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(function(resourceKey, id) {
         this.id = id;
     }),
+}));
+
+jest.mock('sulu-admin-bundle/utils', () => ({
+    translate: jest.fn((key) => key),
 }));
 
 test('Render a SingleMediaUpload', () => {
@@ -108,6 +113,30 @@ test('Call create with passed collectionId if id is not given and drop event occ
 
     return promise.then(() => {
         expect(uploadCompleteSpy).toBeCalledWith({});
+    });
+});
+
+test('Delete the image when the delete button is clicked', () => {
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
+    const deletePromise = Promise.resolve();
+    mediaUploadStore.delete.mockReturnValue(deletePromise);
+
+    const uploadCompleteSpy = jest.fn();
+
+    const singleMediaUpload = shallow(
+        <SingleMediaUpload
+            mediaUploadStore={mediaUploadStore}
+            onUploadComplete={uploadCompleteSpy}
+            uploadText="Upload media"
+        />
+    );
+
+    singleMediaUpload.find('button').simulate('click');
+
+    expect(mediaUploadStore.delete).toBeCalled();
+
+    return deletePromise.then(() => {
+        expect(uploadCompleteSpy).toBeCalled();
     });
 });
 

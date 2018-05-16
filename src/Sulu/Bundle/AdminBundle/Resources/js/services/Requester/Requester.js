@@ -10,6 +10,12 @@ function handleResponse(response) {
     if (!response.ok) {
         throw new Error(response.statusText);
     }
+
+    if (response.status === 204) {
+        // Return nothing if status code says that there is no content
+        return {};
+    }
+
     return response.json();
 }
 
