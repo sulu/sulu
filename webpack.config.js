@@ -26,7 +26,7 @@ const basePath = 'admin/build';
 module.exports = (env, argv) => ({ // eslint-disable-line no-undef
     entry: entries,
     output: {
-        path: path.resolve('web'),
+        path: path.resolve('public'),
         filename: basePath + '/[name].[chunkhash].js',
     },
     devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
