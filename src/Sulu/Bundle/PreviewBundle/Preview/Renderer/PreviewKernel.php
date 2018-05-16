@@ -11,14 +11,17 @@
 
 namespace Sulu\Bundle\PreviewBundle\Preview\Renderer;
 
+use App\WebsiteKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * Extends website-kernel from sulu-installation and override configuration.
  */
-class PreviewKernel extends \WebsiteKernel
+class PreviewKernel extends WebsiteKernel
 {
     const CONTEXT_PREVIEW = 'preview';
+
+    private $projectDir;
 
     /**
      * @var string
@@ -47,7 +50,7 @@ class PreviewKernel extends \WebsiteKernel
     public function getRootDir()
     {
         if (null === $this->rootDir) {
-            $reflectionClass = new \ReflectionClass(\WebsiteKernel::class);
+            $reflectionClass = new \ReflectionClass(WebsiteKernel::class);
             $this->rootDir = dirname($reflectionClass->getFileName());
         }
 
