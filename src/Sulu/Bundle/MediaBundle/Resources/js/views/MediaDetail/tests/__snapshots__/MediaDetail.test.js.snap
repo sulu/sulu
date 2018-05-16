@@ -48,6 +48,7 @@ exports[`Render a loading MediaDetail view 1`] = `
       <div
         class="buttons"
       />
+      <div />
     </div>
   </div>
   <div

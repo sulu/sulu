@@ -1,6 +1,8 @@
 // @flow
 import React, {Fragment} from 'react';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import {Dialog} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import SingleMediaDropzone from '../../components/SingleMediaDropzone';
 import MediaUploadStore from '../../stores/MediaUploadStore';
@@ -27,6 +29,9 @@ export default class SingleMediaUpload extends React.Component<Props> {
         imageSize: 'sulu-400x400',
         skin: 'default',
     };
+
+    @observable showDeleteDialog: boolean = false;
+    @observable deleting: boolean = false;
 
     constructor(props: Props) {
         super(props);
@@ -56,8 +61,22 @@ export default class SingleMediaUpload extends React.Component<Props> {
         }
     };
 
-    handleDeleteMediaClick = () => {
-        this.props.mediaUploadStore.delete().then(this.callUploadComplete);
+    @action handleDeleteMediaClick = () => {
+        this.showDeleteDialog = true;
+    };
+
+    @action handleDeleteDialogCancelClick = () => {
+        this.showDeleteDialog = false;
+    };
+
+    @action handleDeleteDialogConfirmClick = () => {
+        this.deleting = true;
+        this.props.mediaUploadStore.delete()
+            .then(action((media) => {
+                this.callUploadComplete(media);
+                this.deleting = false;
+                this.showDeleteDialog = false;
+            }));
     };
 
     callUploadComplete = (media: Object) => {
@@ -118,6 +137,17 @@ export default class SingleMediaUpload extends React.Component<Props> {
                         }
                     </div>
                 }
+                <Dialog
+                    confirmLoading={this.deleting}
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleDeleteDialogCancelClick}
+                    onConfirm={this.handleDeleteDialogConfirmClick}
+                    open={this.showDeleteDialog}
+                    title={translate('sulu_media.delete_media_warning_title')}
+                >
+                    {translate('sulu_media.delete_media_warning_text')}
+                </Dialog>
             </Fragment>
         );
     }

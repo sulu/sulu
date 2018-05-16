@@ -129,7 +129,7 @@ test('Call create with passed collectionId if id is not given and drop event occ
     });
 });
 
-test('Delete the image when the delete button is clicked', () => {
+test('Delete the image when the delete button is clicked and the overlay is confirmed', () => {
     const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
     const deletePromise = Promise.resolve();
     mediaUploadStore.delete.mockReturnValue(deletePromise);
@@ -145,11 +145,20 @@ test('Delete the image when the delete button is clicked', () => {
     );
 
     singleMediaUpload.find('Button[icon="su-trash-alt"]').simulate('click');
+    expect(singleMediaUpload.find('Dialog').prop('open')).toEqual(true);
+    expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(false);
+
+    singleMediaUpload.find('Dialog').prop('onConfirm')();
 
     expect(mediaUploadStore.delete).toBeCalled();
+    singleMediaUpload.update();
+    expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(true);
 
     return deletePromise.then(() => {
         expect(uploadCompleteSpy).toBeCalled();
+        singleMediaUpload.update();
+        expect(singleMediaUpload.find('Dialog').prop('open')).toEqual(false);
+        expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(false);
     });
 });
 
