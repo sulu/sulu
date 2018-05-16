@@ -1,5 +1,6 @@
 // @flow
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import pointer from 'jsonpointer';
 import FormStore from './stores/FormStore';
 
 export default class FormInspector {
@@ -21,11 +22,7 @@ export default class FormInspector {
         return this.formStore.id;
     }
 
-    getValueByName(name: string): mixed {
-        if (!this.formStore.data[name]) {
-            throw new Error('Property with name "' + name + '" not found');
-        }
-
-        return this.formStore.data[name];
+    getValueByPath(path: string): mixed {
+        return pointer.get(this.formStore.data, path);
     }
 }
