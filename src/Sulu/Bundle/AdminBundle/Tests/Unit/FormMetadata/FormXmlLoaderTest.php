@@ -46,9 +46,24 @@ class FormXmlLoaderTest extends TestCase
 
         $this->assertCount(4, $formMetadata->getProperties());
         $this->assertEquals('formOfAddress', $formMetadata->getProperties()['formOfAddress']->getName());
+        $this->assertTrue($formMetadata->getProperties()['formOfAddress']->getLabel());
         $this->assertEquals('firstName', $formMetadata->getProperties()['firstName']->getName());
+        $this->assertTrue($formMetadata->getProperties()['firstName']->getLabel());
         $this->assertEquals('lastName', $formMetadata->getProperties()['lastName']->getName());
+        $this->assertTrue($formMetadata->getProperties()['lastName']->getLabel());
         $this->assertEquals('salutation', $formMetadata->getProperties()['salutation']->getName());
+        $this->assertTrue($formMetadata->getProperties()['salutation']->getLabel());
+    }
+
+    public function testLoadFormWithoutLabel()
+    {
+        /** @var FormMetadata $formMetadata */
+        $formMetadata = $this->loader->load(
+            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_without_label.xml'
+        );
+
+        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
+        $this->assertFalse($formMetadata->getProperties()['name']->getLabel());
     }
 
     public function testLoadFormWithSizedSections()

@@ -67,6 +67,20 @@ test('Render a required field with correct field type', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a field without a label', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    expect(render(
+        <Field
+            formInspector={formInspector}
+            name="test"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schema={{type: 'text'}}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render a field with an error', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
