@@ -8,6 +8,7 @@ import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
 import AdapterSwitch from './AdapterSwitch';
+import Search from './Search';
 import datagridStyles from './datagrid.scss';
 
 type Props = {|
@@ -16,6 +17,7 @@ type Props = {|
     onItemClick?: (itemId: string | number) => void,
     onAddClick?: (id: string | number) => void,
     selectable: boolean,
+    searchable: boolean,
     store: DatagridStore,
 |};
 
@@ -24,6 +26,7 @@ export default class Datagrid extends React.Component<Props> {
     static defaultProps = {
         disabledIds: [],
         selectable: true,
+        searchable: true,
     };
 
     @observable currentAdapterKey: string;
@@ -84,6 +87,10 @@ export default class Datagrid extends React.Component<Props> {
         this.props.store.sort(column, order);
     };
 
+    handleSearch = (search: ?string) => {
+        this.props.store.search(search);
+    };
+
     handleItemSelectionChange = (id: string | number, selected?: boolean) => {
         const {store} = this.props;
         const row = store.findById(id);
@@ -115,6 +122,7 @@ export default class Datagrid extends React.Component<Props> {
             disabledIds,
             onItemClick,
             onAddClick,
+            searchable,
             selectable,
             store,
         } = this.props;
@@ -123,6 +131,9 @@ export default class Datagrid extends React.Component<Props> {
         return (
             <Fragment>
                 <div className={datagridStyles.toolbar}>
+                    {searchable &&
+                        <Search onSearch={this.handleSearch} />
+                    }
                     <AdapterSwitch
                         adapters={adapters}
                         currentAdapter={this.currentAdapterKey}

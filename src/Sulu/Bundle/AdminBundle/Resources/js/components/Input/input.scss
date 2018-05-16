@@ -12,6 +12,12 @@ $iconBorderPadding: 5px;
 $placeholderColor: $dustyGray;
 $backgroundColor: $white;
 
+$darkInputBorderRadius: 4px;
+$darkInputBorderColor: $doveGray;
+$darkBackgroundColor: $wildSand;
+$darkInputColor: $doveGray;
+$darkIconColor: $doveGray;
+
 .input {
     border: $inputBorderWidth solid $inputBorderColor;
     border-radius: $inputBorderRadius;
@@ -41,6 +47,17 @@ $backgroundColor: $white;
     &.error {
         border-color: $inputErrorBorderColor;
     }
+
+    &.dark {
+        background-color: $darkBackgroundColor;
+        border-radius: $darkInputBorderRadius;
+        border-color: $darkInputBorderColor;
+
+        input {
+            background-color: $darkBackgroundColor;
+            color: $darkInputColor;
+        }
+    }
 }
 
 .prepended-container {
@@ -51,6 +68,10 @@ $backgroundColor: $white;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &.dark {
+        box-shadow: $inputBorderWidth 0 0 $darkInputBorderColor;
+    }
 }
 
 .icon {
@@ -60,6 +81,10 @@ $backgroundColor: $white;
     color: $iconColor;
     margin: 0 10px;
     line-height: calc($inputHeight - 2 * $iconBorderPadding);
+
+    &.dark {
+        color: $darkIconColor;
+    }
 }
 
 .icon-clickable {

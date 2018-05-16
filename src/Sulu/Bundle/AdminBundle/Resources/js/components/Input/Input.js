@@ -9,6 +9,7 @@ import inputStyles from './input.scss';
 const LOADER_SIZE = 20;
 
 type Props = {|
+    expanded: boolean,
     name?: string,
     icon?: string,
     type: string,
@@ -20,14 +21,18 @@ type Props = {|
     value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
+    onKeyPress?: (event: SyntheticEvent<HTMLInputElement>) => void,
     onIconClick?: () => void,
     iconStyle?: Object,
     iconClassName?: string,
+    skin: 'default' | 'dark',
 |};
 
 export default class Input extends React.PureComponent<Props> {
     static defaultProps = {
+        expanded: true,
         type: 'text',
+        skin: 'default',
         valid: true,
     };
 
@@ -68,6 +73,7 @@ export default class Input extends React.PureComponent<Props> {
             valid,
             icon,
             loading,
+            expanded,
             name,
             placeholder,
             onIconClick,
@@ -77,10 +83,13 @@ export default class Input extends React.PureComponent<Props> {
             iconClassName,
             inputRef,
             labelRef,
+            skin,
+            onKeyPress,
         } = this.props;
 
         const labelClass = classNames(
             inputStyles.input,
+            inputStyles[skin],
             {
                 [inputStyles.error]: !valid,
             }
@@ -88,17 +97,17 @@ export default class Input extends React.PureComponent<Props> {
 
         const iconClass = classNames(
             inputStyles.icon,
+            inputStyles[skin],
             iconClassName,
             {
                 [inputStyles.iconClickable]: (!!icon && !!onIconClick),
             }
         );
 
-        const onIconClickProperties = onIconClick
-            ? {
-                onClick: onIconClick,
-            }
-            : {};
+        const prependContainerClass = classNames(
+            inputStyles.prependedContainer,
+            inputStyles[skin]
+        );
 
         return (
             <label
@@ -106,24 +115,33 @@ export default class Input extends React.PureComponent<Props> {
                 ref={labelRef ? this.setLabelRef : undefined}
             >
                 {!loading && icon &&
-                    <div className={inputStyles.prependedContainer}>
-                        <Icon {...onIconClickProperties} className={iconClass} name={icon} style={iconStyle} />
+                    <div className={prependContainerClass}>
+                        <Icon
+                            onClick={onIconClick ? onIconClick : undefined}
+                            className={iconClass}
+                            name={icon}
+                            style={iconStyle}
+                        />
                     </div>
                 }
                 {loading &&
-                    <div className={inputStyles.prependedContainer}>
+                    <div className={prependContainerClass}>
                         <Loader size={LOADER_SIZE} />
                     </div>
                 }
-                <input
-                    ref={inputRef ? this.setInputRef : undefined}
-                    name={name}
-                    type={type}
-                    value={value || ''}
-                    placeholder={placeholder}
-                    onBlur={this.handleBlur}
-                    onChange={this.handleChange}
-                />
+
+                {expanded &&
+                    <input
+                        ref={inputRef ? this.setInputRef : undefined}
+                        name={name}
+                        type={type}
+                        value={value || ''}
+                        placeholder={placeholder}
+                        onBlur={this.handleBlur}
+                        onChange={this.handleChange}
+                        onKeyPress={onKeyPress}
+                    />
+                }
             </label>
         );
     }
