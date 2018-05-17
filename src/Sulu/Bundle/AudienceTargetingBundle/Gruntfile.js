@@ -12,7 +12,11 @@ module.exports = function (grunt) {
     });
 
     // load all grunt tasks
-    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+    require('matchdep').filterDev('grunt-*').forEach(function(name) {
+        if ('grunt-cli' !== name) {
+                grunt.loadNpmTasks(name);
+        }
+    });
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -72,6 +76,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'uglify',
         'compass:dev',
-        'cssmin'
+        'cssmin',
+        'replace:build'
     ]);
 };
