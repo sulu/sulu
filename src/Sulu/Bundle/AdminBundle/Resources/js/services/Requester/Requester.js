@@ -1,4 +1,6 @@
 // @flow
+import type {HandleResponseHook} from './types';
+
 const defaultOptions = {
     credentials: 'same-origin',
     headers: {
@@ -20,7 +22,7 @@ function handleResponse(response: Object) {
 }
 
 export default class Requester {
-    static handleResponseHooks: Array<(response: Object) => void> = [];
+    static handleResponseHooks: Array<HandleResponseHook> = [];
 
     static get(url: string): Promise<Object> {
         return fetch(url, defaultOptions)

@@ -48,10 +48,19 @@ jest.mock('../../ViewRenderer', () => function Test(props) {
 });
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn(function(key) {
-        return key;
-    }),
+    translate: (key) => key,
 }));
+
+test('Application should render login with loader when user is not logged in and translations not initialized', () => {
+    mockInitializerInitialized.mockReturnValueOnce(false);
+    mockUserStoreLoggedIn.mockReturnValueOnce(false);
+    mockInitializerTranslationInitialized.mockReturnValueOnce(true);
+
+    const router = new Router({});
+    const application = mount(<Application router={router} />);
+
+    expect(application.render()).toMatchSnapshot();
+});
 
 test('Application should render login when user is not logged in', () => {
     mockInitializerInitialized.mockReturnValueOnce(false);

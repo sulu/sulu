@@ -46,7 +46,7 @@ interface AccessControlManagerInterface
      *
      * @return array
      */
-    public function getUserPermissions(SecurityCondition $securityCondition, $user);
+    public function getUserPermissions(SecurityCondition $securityCondition, UserInterface $user = null);
 
     /**
      * Returns the permissions regarding an array of role permissions and its security context for a given user.

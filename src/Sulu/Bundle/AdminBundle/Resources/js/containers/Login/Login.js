@@ -2,9 +2,10 @@
 import React from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import Icon from '../../components/Icon';
-import {translate} from '../../utils';
-import Loader from '../Loader/Loader';
+import Icon from '../../components/Icon/index';
+import {translate} from '../../utils/index';
+import Loader from '../../components/Loader/Loader';
+import userStore from '../../stores/UserStore';
 import LoginForm from './LoginForm';
 import ResetForm from './ResetForm';
 import loginStyles from './login.scss';
@@ -13,29 +14,19 @@ const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
 type Props = {
     backLink: string,
-    loginError: boolean,
-    resetSuccess: boolean,
-    loading: boolean,
+    onLoginSuccess: () => void,
     initialized: boolean,
-    onLogin: (user: string, password: string) => void,
-    onResetPassword: (user: string) => void,
-    onClearError: () => void,
 };
 
 @observer
 export default class Login extends React.Component<Props> {
     static defaultProps = {
         backLink: '/',
-        loading: false,
-        loginError: false,
         initialized: false,
-        resetSuccess: false,
     };
 
     @observable visibleForm: 'login' | 'reset' = 'login';
-
     @observable user: ?string;
-
     @observable password: ?string;
 
     @computed get loginFormVisible(): boolean {
@@ -46,23 +37,29 @@ export default class Login extends React.Component<Props> {
         return this.visibleForm === 'reset';
     }
 
+    @action clearState = () => {
+        if (this.loginFormVisible) {
+            userStore.setLoginError(false);
+        } else if (this.resetFormVisible) {
+            userStore.setResetSuccess(false);
+        }
+    };
+
     @action handleChangeToLoginForm = () => {
-        this.props.onClearError();
         this.visibleForm = 'login';
     };
 
     @action handleChangeToResetForm = () => {
-        this.props.onClearError();
         this.visibleForm = 'reset';
     };
 
     @action handleUserChange = (user: ?string) => {
-        this.props.onClearError();
+        this.clearState();
         this.user = user;
     };
 
     @action handlePasswordChange = (password: ?string) => {
-        this.props.onClearError();
+        this.clearState();
         this.password = password;
     };
 
@@ -73,7 +70,9 @@ export default class Login extends React.Component<Props> {
             return;
         }
 
-        this.props.onLogin(this.user, this.password);
+        userStore.login(this.user, this.password).then(() => {
+            this.props.onLoginSuccess();
+        });
     };
 
     handleResetFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
@@ -83,7 +82,7 @@ export default class Login extends React.Component<Props> {
             return;
         }
 
-        this.props.onResetPassword(this.user);
+        userStore.resetPassword(this.user);
     };
 
     renderForm() {
@@ -98,14 +97,14 @@ export default class Login extends React.Component<Props> {
         if (this.loginFormVisible) {
             return (
                 <LoginForm
-                    loading={this.props.loading}
+                    loading={userStore.loading}
                     user={this.user}
                     password={this.password}
                     onSubmit={this.handleLoginFormSubmit}
                     onUserChange={this.handleUserChange}
                     onPasswordChange={this.handlePasswordChange}
                     onChangeForm={this.handleChangeToResetForm}
-                    error={this.props.loginError}
+                    error={userStore.loginError}
                 />
             );
         }
@@ -113,12 +112,12 @@ export default class Login extends React.Component<Props> {
         if (this.resetFormVisible) {
             return (
                 <ResetForm
-                    loading={this.props.loading}
+                    loading={userStore.loading}
                     user={this.user}
                     onSubmit={this.handleResetFormSubmit}
                     onUserChange={this.handleUserChange}
                     onChangeForm={this.handleChangeToLoginForm}
-                    success={this.props.resetSuccess}
+                    success={userStore.resetSuccess}
                 />
             );
         }

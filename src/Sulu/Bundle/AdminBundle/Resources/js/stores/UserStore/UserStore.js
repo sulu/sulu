@@ -9,17 +9,18 @@ import type {Contact, User} from './types';
 class UserStore {
     persistentSettings: {[string]: *} = {};
 
-    @observable loggedIn: boolean = false;
-    @observable loading: boolean = false;
     @observable user: ?User = undefined;
     @observable contact: ?Contact = undefined;
+
+    @observable loggedIn: boolean = false;
+    @observable loading: boolean = false;
     @observable loginError: boolean = false;
     @observable resetSuccess: boolean = false;
 
-    @action clear(stillLoading: boolean = false) {
+    @action clear() {
         this.persistentSettings = {};
         this.loggedIn = false;
-        this.loading = stillLoading;
+        this.loading = false;
         this.user = undefined;
         this.contact = undefined;
         this.loginError = false;
@@ -51,14 +52,10 @@ class UserStore {
         this.contact = contact;
     }
 
-    @action clearError = () => {
-        this.loginError = false;
-        this.resetSuccess = false;
-    };
-
     login = (user: string, password: string) => {
         this.setLoading(true);
 
+        // TODO: Get this url from backend
         return Requester.post('/admin/v2/login', {username: user, password: password})
             .then(() => {
                 if (this.user) {
@@ -71,11 +68,10 @@ class UserStore {
                         return;
                     }
 
-                    // the user has now logged in with a different user
-                    // we need to clear the data from the old user
-                    this.clear(true);
+                    this.clear();
                 }
 
+                this.setLoading(true);
                 return initializer.initialize().then(() => {
                     this.setLoading(false);
                 });
@@ -95,6 +91,7 @@ class UserStore {
 
         if (this.resetSuccess) {
             // if email was already sent use different api
+            // TODO: Get this url from backend
             return Requester.post('/admin/security/reset/email/resend', {user: user})
                 .catch(() => {})
                 // Bug in flow: https://github.com/facebook/flow/issues/5810
@@ -104,6 +101,7 @@ class UserStore {
                 });
         }
 
+        // TODO: Get this url from backend
         return Requester.post('/admin/security/reset/email', {user: user})
             .catch(() => {})
             // Bug in flow: https://github.com/facebook/flow/issues/5810
@@ -115,6 +113,7 @@ class UserStore {
     }
 
     logout() {
+        // TODO: Get this url from backend
         return Requester.get('/admin/logout').then(() => {
             this.setLoggedIn(false);
         });

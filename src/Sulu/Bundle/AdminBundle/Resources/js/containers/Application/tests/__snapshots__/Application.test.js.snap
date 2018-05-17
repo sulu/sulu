@@ -240,123 +240,242 @@ exports[`Application should render login when user is not logged in 1`] = `
   class="login"
 >
   <div
-    class="login"
+    class="loginContainer"
   >
     <div
-      class="loginContainer"
+      class="formContainer"
     >
       <div
-        class="formContainer"
+        class="logoContainer"
       >
-        <div
-          class="logoContainer"
-        >
-          <span
-            aria-label="su-sulu"
-            class="su-sulu"
-          />
-        </div>
-        <div
-          class="header"
-        >
-          sulu_admin.welcome
-        </div>
-        <form
-          class="form"
-        >
-          <fieldset>
-            <label
-              class="inputField"
-            >
-              <div
-                class="labelText"
-              >
-                sulu_admin.username_or_email
-              </div>
-              <label
-                class="input"
-              >
-                <div
-                  class="prependedContainer"
-                >
-                  <span
-                    aria-label="su-user"
-                    class="icon su-user"
-                  />
-                </div>
-                <input
-                  type="text"
-                  value=""
-                />
-              </label>
-            </label>
-            <label
-              class="inputField"
-            >
-              <div
-                class="labelText"
-              >
-                sulu_admin.password
-              </div>
-              <label
-                class="input"
-              >
-                <div
-                  class="prependedContainer"
-                >
-                  <span
-                    aria-label="su-lock"
-                    class="icon su-lock"
-                  />
-                </div>
-                <input
-                  type="password"
-                  value=""
-                />
-              </label>
-            </label>
-            <div
-              class="buttons"
-            >
-              <button
-                class="button link"
-                type="button"
-              >
-                <span
-                  class="text"
-                >
-                  sulu_admin.forgot_password
-                </span>
-              </button>
-              <button
-                class="button primary"
-                disabled=""
-                type="submit"
-              >
-                <span
-                  class="text"
-                >
-                  sulu_admin.login
-                </span>
-              </button>
-            </div>
-          </fieldset>
-        </form>
+        <span
+          aria-label="su-sulu"
+          class="su-sulu"
+        />
       </div>
       <div
-        class="backLinkContainer"
+        class="header"
       >
-        <a
-          class="backLink"
-          href="/"
-        >
-          <span
-            aria-label="su-angle-left"
-            class="backLinkIcon su-angle-left"
-          />
-          sulu_admin.back_to_website
-        </a>
+        sulu_admin.welcome
       </div>
+      <form
+        class="form"
+      >
+        <fieldset>
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            >
+              sulu_admin.username_or_email
+            </div>
+            <label
+              class="input"
+            >
+              <div
+                class="prependedContainer"
+              >
+                <span
+                  aria-label="su-user"
+                  class="icon su-user"
+                />
+              </div>
+              <input
+                type="text"
+                value=""
+              />
+            </label>
+          </label>
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            >
+              sulu_admin.password
+            </div>
+            <label
+              class="input"
+            >
+              <div
+                class="prependedContainer"
+              >
+                <span
+                  aria-label="su-lock"
+                  class="icon su-lock"
+                />
+              </div>
+              <input
+                type="password"
+                value=""
+              />
+            </label>
+          </label>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button link"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                sulu_admin.forgot_password
+              </span>
+            </button>
+            <button
+              class="button primary"
+              disabled=""
+              type="submit"
+            >
+              <span
+                class="text"
+              >
+                sulu_admin.login
+              </span>
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <div
+      class="backLinkContainer"
+    >
+      <a
+        class="backLink"
+        href="/"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="backLinkIcon su-angle-left"
+        />
+        sulu_admin.back_to_website
+      </a>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Application should render login with loader when user is not logged in and translations not initialized 1`] = `
+<div
+  class="login"
+>
+  <div
+    class="loginContainer"
+  >
+    <div
+      class="formContainer"
+    >
+      <div
+        class="logoContainer"
+      >
+        <span
+          aria-label="su-sulu"
+          class="su-sulu"
+        />
+      </div>
+      <div
+        class="header"
+      >
+        sulu_admin.welcome
+      </div>
+      <form
+        class="form"
+      >
+        <fieldset>
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            >
+              sulu_admin.username_or_email
+            </div>
+            <label
+              class="input"
+            >
+              <div
+                class="prependedContainer"
+              >
+                <span
+                  aria-label="su-user"
+                  class="icon su-user"
+                />
+              </div>
+              <input
+                type="text"
+                value=""
+              />
+            </label>
+          </label>
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            >
+              sulu_admin.password
+            </div>
+            <label
+              class="input"
+            >
+              <div
+                class="prependedContainer"
+              >
+                <span
+                  aria-label="su-lock"
+                  class="icon su-lock"
+                />
+              </div>
+              <input
+                type="password"
+                value=""
+              />
+            </label>
+          </label>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button link"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                sulu_admin.forgot_password
+              </span>
+            </button>
+            <button
+              class="button primary"
+              disabled=""
+              type="submit"
+            >
+              <span
+                class="text"
+              >
+                sulu_admin.login
+              </span>
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <div
+      class="backLinkContainer"
+    >
+      <a
+        class="backLink"
+        href="/"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="backLinkIcon su-angle-left"
+        />
+        sulu_admin.back_to_website
+      </a>
     </div>
   </div>
 </div>

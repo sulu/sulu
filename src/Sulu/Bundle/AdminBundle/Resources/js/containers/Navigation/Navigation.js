@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+import {observer} from 'mobx-react';
+import {computed} from 'mobx';
 import {Navigation as NavigationComponent} from '../../components';
 import Router from '../../services/Router';
 import userStore from '../../stores/UserStore';
@@ -14,7 +16,24 @@ type Props = {
 
 const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
 
+@observer
 export default class Navigation extends React.Component<Props> {
+    @computed get username(): string {
+        if (!userStore.loggedIn || !userStore.contact) {
+            return '';
+        }
+
+        return userStore.contact.fullName;
+    }
+
+    @computed get userImage(): ?string {
+        if (!userStore.loggedIn || !userStore.contact || !userStore.contact.avatar) {
+            return undefined;
+        }
+
+        return userStore.contact.avatar.thumbnails['sulu-50x50'];
+    }
+
     handleNavigationItemClick = (value: string) => {
         const navigationItem = navigationRegistry.get(value);
 
@@ -37,30 +56,14 @@ export default class Navigation extends React.Component<Props> {
             (navigationItem.childRoutes && navigationItem.childRoutes.includes(router.route.name));
     };
 
-    getUsername() {
-        if (!userStore.loggedIn || !userStore.contact) {
-            return '';
-        }
-
-        return userStore.contact.fullName;
-    }
-
-    getUserImage() {
-        if (!userStore.loggedIn || !userStore.contact || !userStore.contact.avatar) {
-            return undefined;
-        }
-
-        return userStore.contact.avatar.thumbnails['sulu-50x50'];
-    }
-
     render() {
         const navigationItems = navigationRegistry.getAll();
 
         return (
             <NavigationComponent
                 title="Sulu" // TODO: Get this dynamically from server
-                username={this.getUsername()}
-                userImage={this.getUserImage()}
+                username={this.username}
+                userImage={this.userImage}
                 suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
                 suluVersionLink={SULU_CHANGELOG_URL}
                 onLogoutClick={this.props.onLogout}

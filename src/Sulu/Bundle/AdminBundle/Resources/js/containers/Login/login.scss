@@ -1,12 +1,14 @@
-@import '../../containers/Application/colors.scss';
+@import '../Application/colors.scss';
 
 $loginTextColor: $black;
 $borderColor: $mercury;
 $formContainerBackgroundColor: $white;
-$formContainerBoxShadow: 0 2px 18px 0 rgba($black, .22);
+$formContainerBoxShadowColor: $black;
+$formContainerBoxShadow: 0 2px 18px 0 rgba($formContainerBoxShadowColor, .22);
 
 .login {
     height: 100vh;
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -37,6 +37,16 @@ import {routeRegistry} from '../Router';
 import {setTranslations} from '../../utils/Translator';
 import Requester from '../Requester';
 import {bundlesReadyPromise} from '../../services/Bundles';
+import {viewRegistry} from '../../containers/ViewRenderer';
+import Form from '../../views/Form';
+import ResourceTabs from '../../views/ResourceTabs';
+import Datagrid from '../../views/Datagrid';
+
+function registerViews() {
+    viewRegistry.add('sulu_admin.form', Form);
+    viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
+    viewRegistry.add('sulu_admin.datagrid', Datagrid);
+}
 
 function registerDatagridAdapters() {
     datagridAdapterRegistry.add('column_list', ColumnListAdapter);
@@ -45,7 +55,7 @@ function registerDatagridAdapters() {
     datagridAdapterRegistry.add('tree_list', TreeListAdapter);
 }
 
-function registerDatagridFieldTypes() {
+function registerDatagridFieldTransformers() {
     datagridFieldTransformerRegistry.add('bytes', new BytesFieldTransformer());
     datagridFieldTransformerRegistry.add('date', new DateFieldTransformer());
     datagridFieldTransformerRegistry.add('datetime', new DateTimeFieldTransformer());
@@ -57,7 +67,7 @@ function registerDatagridFieldTypes() {
     datagridFieldTransformerRegistry.add('title', new StringFieldTransformer());
 }
 
-function registerFieldTypes(fieldTypesConfig) {
+function registerFieldTypes() {
     fieldRegistry.add('block', FieldBlocks);
     fieldRegistry.add('checkbox', Checkbox);
     fieldRegistry.add('color', ColorPicker);
@@ -70,7 +80,9 @@ function registerFieldTypes(fieldTypesConfig) {
     fieldRegistry.add('text_line', Input);
     fieldRegistry.add('text_area', TextArea);
     fieldRegistry.add('time', Time);
+}
 
+function registerAssignmentFieldTypes(fieldTypesConfig) {
     const assignmentConfigs = fieldTypesConfig['assignment'];
     if (assignmentConfigs) {
         for (const assignmentKey in assignmentConfigs) {
@@ -79,8 +91,11 @@ function registerFieldTypes(fieldTypesConfig) {
     }
 }
 
-function initializeConfig(config: Object) {
-    registerFieldTypes(config['sulu_admin']['field_type_options']);
+function processConfig(config: Object) {
+    routeRegistry.clear();
+    navigationRegistry.clear();
+    resourceMetadataStore.clear();
+
     routeRegistry.addCollection(config['sulu_admin'].routes);
     navigationRegistry.set(config['sulu_admin'].navigation);
     resourceMetadataStore.setEndpoints(config['sulu_admin'].endpoints);
@@ -91,14 +106,14 @@ class Initializer {
     @observable translationInitialized: boolean = false;
     @observable loading: boolean = false;
 
-    clear() {
-        this.setInitialized(false);
-        this.setTranslationInitialized(false);
-        this.setLoading(false);
+    @action clear() {
+        this.initialized = false;
+        this.translationInitialized = false;
+        this.loading = false;
     }
 
-    @action setInitialized(initialized: boolean) {
-        this.initialized = initialized;
+    @action setInitialized() {
+        this.initialized = true;
     }
 
     @action setTranslationInitialized(initialized: boolean) {
@@ -109,34 +124,37 @@ class Initializer {
         this.loading = loading;
     }
 
-    registerDatagrid() {
-        registerDatagridAdapters();
-        registerDatagridFieldTypes();
-    }
-
     initialize() {
+        this.setLoading(true);
         return bundlesReadyPromise.then(() => {
-            this.setLoading(true);
             // TODO: Use correct locale here
+            // TODO: Get this url from backend
             const translationsPromise = Requester.get('/admin/v2/translations?locale=en').then((translations) => {
                 setTranslations(translations);
                 this.setTranslationInitialized(true);
             });
 
+            // TODO: Get this url from backend
             const configPromise = Requester.get('/admin/v2/config').then((config) => {
                 if (!config.hasOwnProperty('sulu_admin')) {
                     return;
                 }
 
                 if (!this.initialized) {
-                    initializeConfig(config);
+                    registerViews();
+                    registerDatagridAdapters();
+                    registerDatagridFieldTransformers();
+                    registerFieldTypes();
+                    registerAssignmentFieldTypes(config['sulu_admin']['field_type_options']);
+
+                    this.setInitialized();
                 }
+
+                processConfig(config);
 
                 userStore.setUser(config['sulu_admin'].user);
                 userStore.setContact(config['sulu_admin'].contact);
                 userStore.setLoggedIn(true);
-
-                this.setInitialized(true);
             }).catch(() => {});
 
             return Promise.all([translationsPromise, configPromise])
