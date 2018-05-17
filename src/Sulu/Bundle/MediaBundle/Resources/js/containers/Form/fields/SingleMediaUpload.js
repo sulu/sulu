@@ -31,28 +31,39 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Ob
     render() {
         const {
             schemaOptions: {
-                empty_icon: emptyIcon = {},
-                skin = {value: 'default'},
+                collection_id: {
+                    value: collectionId,
+                } = {},
+                empty_icon: {
+                    value: emptyIcon,
+                } = {},
+                skin: {
+                    value: skin,
+                } = {value: 'default'},
                 upload_text: uploadText,
             } = {},
         } = this.props;
 
-        if (emptyIcon.value && typeof emptyIcon.value !== 'string') {
+        if (typeof collectionId !== 'number') {
+            throw new Error('The "collection_id" schema option is mandatory and must a number!');
+        }
+
+        if (typeof emptyIcon !== 'undefined' && typeof emptyIcon !== 'string') {
             throw new Error('The "empty_icon" schema option must be a string!');
         }
 
-        if (skin.value !== 'default' && skin.value !== 'round') {
+        if (skin !== 'default' && skin !== 'round') {
             throw new Error('The "skin" schema option must either be "default" or "round"!');
         }
 
         // TODO add correct collectionId
         return (
             <SingleMediaUploadComponent
-                collectionId={1}
-                emptyIcon={emptyIcon.value}
+                collectionId={collectionId}
+                emptyIcon={emptyIcon}
                 mediaUploadStore={this.mediaUploadStore}
                 onUploadComplete={this.handleUploadComplete}
-                skin={skin.value}
+                skin={skin}
                 uploadText={uploadText && uploadText.infoText}
             />
         );
