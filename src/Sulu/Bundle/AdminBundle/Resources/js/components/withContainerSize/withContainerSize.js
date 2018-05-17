@@ -1,16 +1,17 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {ComponentType, Element, ElementRef} from 'react';
+import type {ComponentType, ElementRef} from 'react';
 import React from 'react';
 import {observer} from 'mobx-react';
 import {buildHocDisplayName} from '../../services/react';
 import {afterElementsRendered} from '../../services/DOM';
 import styles from './withContainerSize.scss';
+import type {WithContainerSizeElement} from './types';
 
 export default function withContainerSize(Component: ComponentType<*>, containerClass: string = styles.container) {
     @observer
     class WithContainerSizeComponent extends React.Component<*> {
-        component: Element<*>;
+        component: WithContainerSizeElement;
 
         container: ElementRef<'div'>;
 
@@ -42,7 +43,7 @@ export default function withContainerSize(Component: ComponentType<*>, container
             }));
         };
 
-        setComponent = (component: Element<*>) => {
+        setComponent = (component: WithContainerSizeElement) => {
             this.component = component;
         };
 
