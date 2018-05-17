@@ -51,10 +51,10 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('Application should render login with loader when user is not logged in and translations not initialized', () => {
+test('Application should render login with loader', () => {
     mockInitializerInitialized.mockReturnValueOnce(false);
     mockUserStoreLoggedIn.mockReturnValueOnce(false);
-    mockInitializerTranslationInitialized.mockReturnValueOnce(true);
+    mockInitializerTranslationInitialized.mockReturnValueOnce(false);
 
     const router = new Router({});
     const application = mount(<Application router={router} />);
