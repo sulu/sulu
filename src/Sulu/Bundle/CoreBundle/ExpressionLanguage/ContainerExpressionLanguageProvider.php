@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\ExpressionLanguage;
+namespace Sulu\Bundle\CoreBundle\ExpressionLanguage;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;

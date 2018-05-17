@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\ExpressionLanguage;
+namespace Sulu\Bundle\CoreBundle\Tests\ExpressionLanguage;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider;
+use Sulu\Bundle\CoreBundle\ExpressionLanguage\ContainerExpressionLanguageProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 

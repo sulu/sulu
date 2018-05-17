@@ -19,7 +19,7 @@
         <service id="sulu_content.structure.properties_xml_parser"
                  class="Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser"
                  public="false">
-            <argument type="service" id="sulu_admin.expression_language" />
+            <argument type="service" id="sulu_core.expression_language" />
         </service>
 
         <service id="sulu_content.structure.factory" class="%sulu_content.structure.factory.class%">
