@@ -17,6 +17,7 @@ use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class XmlLoaderTest extends TestCase
 {
@@ -24,6 +25,11 @@ class XmlLoaderTest extends TestCase
      * @var StructureXmlLoader
      */
     private $loader;
+
+    /**
+     * @var ExpressionLanguage
+     */
+    private $expressionLanguage;
 
     /**
      * @var ContentTypeManagerInterface
@@ -37,10 +43,11 @@ class XmlLoaderTest extends TestCase
 
     public function setUp()
     {
+        $this->expressionLanguage = $this->prophesize(ExpressionLanguage::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolverInterface::class);
 
-        $propertiesXmlParser = new PropertiesXmlParser();
+        $propertiesXmlParser = new PropertiesXmlParser($this->expressionLanguage->reveal());
 
         $this->loader = new StructureXmlLoader(
             $this->cacheLifetimeResolver->reveal(),

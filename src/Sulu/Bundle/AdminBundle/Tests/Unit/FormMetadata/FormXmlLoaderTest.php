@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class FormXmlLoaderTest extends TestCase
 {
@@ -24,14 +25,14 @@ class FormXmlLoaderTest extends TestCase
     private $loader;
 
     /**
-     * @var ContentTypeManagerInterface
+     * @var ExpressionLanguage
      */
-    private $contentTypeManager;
+    private $expressionLanguage;
 
     public function setUp()
     {
-        $propertiesXmlParser = new PropertiesXmlParser();
-
+        $this->expressionLanguage = $this->prophesize(ExpressionLanguage::class);
+        $propertiesXmlParser = new PropertiesXmlParser($this->expressionLanguage->reveal());
         $this->loader = new FormXmlLoader($propertiesXmlParser);
     }
 
@@ -64,6 +65,17 @@ class FormXmlLoaderTest extends TestCase
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
         $this->assertFalse($formMetadata->getProperties()['name']->getLabel());
+    }
+
+    public function testLoadFormWithExpressionParam()
+    {
+        $this->expressionLanguage->evaluate('service(\'test\').getId()')->willReturn(5);
+        /** @var FormMetadata $formMetadata */
+        $formMetadata = $this->loader->load(
+            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_expression_param.xml'
+        );
+
+        $this->assertEquals(5, $formMetadata->getProperties()['name']->getParameters()[0]['value']);
     }
 
     public function testLoadFormWithSizedSections()
