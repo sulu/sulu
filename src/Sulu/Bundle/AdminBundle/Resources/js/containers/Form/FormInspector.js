@@ -1,5 +1,6 @@
 // @flow
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import pointer from 'jsonpointer';
 import FormStore from './stores/FormStore';
 
 export default class FormInspector {
@@ -19,5 +20,9 @@ export default class FormInspector {
 
     get id(): ?string | number {
         return this.formStore.id;
+    }
+
+    getValueByPath(path: string): mixed {
+        return pointer.get(this.formStore.data, path);
     }
 }

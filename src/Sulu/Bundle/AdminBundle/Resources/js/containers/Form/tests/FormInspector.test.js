@@ -17,6 +17,7 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.resourceKey = resourceStore.resourceKey;
     this.id = resourceStore.id;
     this.locale = resourceStore.locale;
+    this.data = resourceStore.data;
 }));
 
 test('Should return the resourceKey from the FormStore', () => {
@@ -42,4 +43,14 @@ test('Should return the id from the FormStore', () => {
     const formInspector = new FormInspector(formStore);
 
     expect(formInspector.id).toEqual(3);
+});
+
+test('Should return value for property path', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {test: 'value'};
+
+    const formStore = new FormStore(resourceStore);
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.getValueByPath('/test')).toEqual('value');
 });
