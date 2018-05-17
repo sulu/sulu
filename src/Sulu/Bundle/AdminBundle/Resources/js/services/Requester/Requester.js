@@ -9,7 +9,7 @@ const defaultOptions = {
     },
 };
 
-function handleResponse(response: Object) {
+function handleResponse(response: Response) {
     for (const handleResponseHook of Requester.handleResponseHooks) {
         handleResponseHook(response);
     }

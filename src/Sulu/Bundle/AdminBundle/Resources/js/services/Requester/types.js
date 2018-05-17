@@ -1,3 +1,3 @@
 // @flow
 
-export type HandleResponseHook = (response: Object) => void;
+export type HandleResponseHook = (response: Response) => void;
