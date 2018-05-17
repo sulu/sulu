@@ -2,22 +2,24 @@
 import React from 'react';
 import type {Node} from 'react';
 import classNames from 'classnames';
+import Icon from '../Icon';
 import Loader from '../Loader';
 import buttonStyles from './button.scss';
 
 const LOADER_SIZE = 25;
 
-type Props = {
+type Props = {|
     active: boolean,
     children: Node,
     className?: string,
     disabled: boolean,
+    icon?: string,
     loading: boolean,
     onClick: (value: *) => void,
     size: 'small' | 'large',
     skin: 'primary' | 'secondary' | 'link' | 'icon',
     value?: *,
-};
+|};
 
 export default class Button extends React.PureComponent<Props> {
     static defaultProps = {
@@ -39,6 +41,7 @@ export default class Button extends React.PureComponent<Props> {
             children,
             className,
             disabled,
+            icon,
             loading,
             skin,
         } = this.props;
@@ -54,6 +57,7 @@ export default class Button extends React.PureComponent<Props> {
 
         return (
             <button className={buttonClass} onClick={this.handleClick} disabled={loading || disabled} type="button">
+                {icon && <Icon name={icon} className={buttonStyles.buttonIcon} />}
                 <span className={buttonStyles.text}>{children}</span>
                 {loading &&
                     <div className={buttonStyles.loader}>
