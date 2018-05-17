@@ -263,6 +263,16 @@ This makes it easier to override only this part of the Admin.
 The `sulu.rlp` tag, which can be added in the template XMLs, is not used anymore by the new UI. Instead the result of
 the URL generation will be simply put into the `resource_locator` field type.
 
+### Default folder changed
+
+The following default configurations where changed to use the symfony 4 folder structure.
+
+| Configuration                     | Before                                  | After
+|-----------------------------------|-----------------------------------------|-----------------------------------------------
+| sulu_core.webspaces.config_dir    | %kernel.root_dir%/Resources/webspaces   | %kernel.project_dir%/config/sulu/webspaces
+| sulu_media.storage.local.path     | %kernel.root_dir%/../uploads/media      | %kernel.var_dir%/uploads/media
+| sulu_media.format_cache..path     | %kernel.root_dir%/../web/uploads/media  | %kernel.root_dir%/../public/uploads/media
+
 ### Test Setup changed
 
 If you use the SuluTestBundle to test your custom sulu bundles you maybe need to change in your test config.yml
