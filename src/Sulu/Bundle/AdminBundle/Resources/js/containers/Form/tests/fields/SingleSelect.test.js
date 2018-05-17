@@ -38,6 +38,61 @@ test('Pass props correctly to SingleSelect', () => {
     }));
 });
 
+test('Should throw an exception if defaultValue is of wrong type', () => {
+    const schemaOptions = {
+        default_value: {
+            value: [],
+        },
+        values: {
+            value: [
+                {
+                    value: 'mr',
+                    title: 'Mister',
+                },
+                {
+                    value: 'ms',
+                    title: 'Miss',
+                },
+            ],
+        },
+    };
+
+    expect(() => shallow(
+        <SingleSelect
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            value="test"
+        />
+    )).toThrow(/"default_value"/);
+});
+
+test('Should throw an exception if value is of wrong type', () => {
+    const schemaOptions = {
+        values: {
+            value: [
+                {
+                    value: [],
+                    title: 'Mister',
+                },
+                {
+                    value: 'ms',
+                    title: 'Miss',
+                },
+            ],
+        },
+    };
+
+    expect(() => shallow(
+        <SingleSelect
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            value="test"
+        />
+    )).toThrow(/"values"/);
+});
+
 test('Should call onFinish callback on every onChange', () => {
     const finishSpy = jest.fn();
     const schemaOptions = {

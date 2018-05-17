@@ -36,7 +36,7 @@ class Option
     /**
      * @var ?string
      */
-    protected $infotext;
+    protected $infoText;
 
     public function getName(): ?string
     {
@@ -95,11 +95,11 @@ class Option
 
     public function getInfotext(): ?string
     {
-        return $this->infotext;
+        return $this->infoText;
     }
 
-    public function setInfotext(string $infotext = null): void
+    public function setInfotext(string $infoText = null): void
     {
-        $this->infotext = $infotext;
+        $this->infoText = $infoText;
     }
 }
