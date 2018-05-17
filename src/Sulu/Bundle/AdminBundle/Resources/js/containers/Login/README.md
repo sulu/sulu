@@ -24,9 +24,8 @@ const handleLogin = (user, password) => {
     });
 };
 
-const handleResetPassword = (user) => {
-    const resetError = (user === 'test') ? undefined : 'Uncool error, username or password is wrong!';
-    const resetSuccess = resetError ? undefined : 'test@test.com';
+const handleResetPassword = () => {
+    const resetSuccess = true;
     setState({
         resetError,
         resetSuccess,

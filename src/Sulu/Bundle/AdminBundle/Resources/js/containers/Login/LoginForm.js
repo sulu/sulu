@@ -2,67 +2,90 @@
 import React, {Fragment} from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
-import {translate} from '../../utils';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Header from './Header';
+import classNames from 'classnames';
+import {translate} from '../../utils/index';
+import Button from '../../components/Button/index';
+import Input from '../../components/Input/index';
 import formStyles from './form.scss';
+import Header from './Header';
 
 type Props = {
     loading: boolean,
     user: ?string,
+    password: ?string,
     onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void,
     onChangeForm: () => void,
     onUserChange: (user: ?string) => void,
-    success: boolean,
+    onPasswordChange: (user: ?string) => void,
+    error: boolean,
 };
 
 @observer
-export default class ResetForm extends React.Component<Props> {
+export default class LoginForm extends React.Component<Props> {
     static defaultProps = {
         loading: false,
-        success: false,
+        error: false,
     };
 
     @computed get submitButtonDisabled(): boolean {
-        return !(this.props.user);
+        return this.props.error || !(this.props.user && this.props.password);
     }
 
     renderHeader() {
-        if (this.props.success) {
+        if (this.props.error) {
             return (
                 <Header small={true}>
-                    {translate('sulu_admin.reset_password_success')}
+                    {translate('sulu_admin.login_error')}
                 </Header>
             );
         }
 
         return (
             <Header>
-                {translate('sulu_admin.reset_password')}
+                {translate('sulu_admin.welcome')}
             </Header>
         );
     }
 
     render() {
+        const inputFieldClass = classNames(
+            formStyles.inputField,
+            {
+                [formStyles.error]: this.props.error,
+            }
+        );
+
         return (
             <Fragment>
                 {this.renderHeader()}
                 <form className={formStyles.form} onSubmit={this.props.onSubmit}>
                     <fieldset>
-                        <label className={formStyles.inputField}>
+                        <label className={inputFieldClass}>
                             <div className={formStyles.labelText}>
                                 {translate('sulu_admin.username_or_email')}
                             </div>
                             <Input
+                                valid={!this.props.error}
                                 icon="su-user"
                                 value={this.props.user}
                                 onChange={this.props.onUserChange}
                             />
                         </label>
+                        <label className={inputFieldClass}>
+                            <div className={formStyles.labelText}>
+                                {translate('sulu_admin.password')}
+                            </div>
+                            <Input
+                                valid={!this.props.error}
+                                icon="su-lock"
+                                type="password"
+                                value={this.props.password}
+                                onChange={this.props.onPasswordChange}
+                            />
+                        </label>
                         <div className={formStyles.buttons}>
                             <Button skin="link" onClick={this.props.onChangeForm}>
-                                {translate('sulu_admin.to_login')}
+                                {translate('sulu_admin.forgot_password')}
                             </Button>
                             <Button
                                 disabled={this.submitButtonDisabled}
@@ -70,9 +93,7 @@ export default class ResetForm extends React.Component<Props> {
                                 skin="primary"
                                 loading={this.props.loading}
                             >
-                                {this.props.success
-                                    ? translate('sulu_admin.reset_resend') : translate('sulu_admin.reset')
-                                }
+                                {translate('sulu_admin.login')}
                             </Button>
                         </div>
                     </fieldset>

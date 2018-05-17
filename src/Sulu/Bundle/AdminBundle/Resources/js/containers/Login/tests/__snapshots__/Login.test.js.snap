@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should render the Login component 1`] = `
+exports[`Should render the Login component when initialized is true 1`] = `
 <div
   class="login"
 >
@@ -388,16 +388,16 @@ exports[`Should render the LoginForm component with error 1`] = `
         />
       </div>
       <div
-        class="header small"
+        class="header"
       >
-        sulu_admin.login_error
+        sulu_admin.welcome
       </div>
       <form
         class="form"
       >
         <fieldset>
           <label
-            class="inputField error"
+            class="inputField"
           >
             <div
               class="labelText"
@@ -405,7 +405,7 @@ exports[`Should render the LoginForm component with error 1`] = `
               sulu_admin.username_or_email
             </div>
             <label
-              class="input error"
+              class="input"
             >
               <div
                 class="prependedContainer"
@@ -422,7 +422,7 @@ exports[`Should render the LoginForm component with error 1`] = `
             </label>
           </label>
           <label
-            class="inputField error"
+            class="inputField"
           >
             <div
               class="labelText"
@@ -430,7 +430,7 @@ exports[`Should render the LoginForm component with error 1`] = `
               sulu_admin.password
             </div>
             <label
-              class="input error"
+              class="input"
             >
               <div
                 class="prependedContainer"
@@ -460,7 +460,7 @@ exports[`Should render the LoginForm component with error 1`] = `
               </span>
             </button>
             <button
-              class="button primary"
+              class="button primary loading"
               disabled=""
               type="submit"
             >
@@ -469,6 +469,21 @@ exports[`Should render the LoginForm component with error 1`] = `
               >
                 sulu_admin.login
               </span>
+              <div
+                class="loader"
+              >
+                <div
+                  class="spinner"
+                  style="width:25px;height:25px"
+                >
+                  <div
+                    class="doubleBounce1"
+                  />
+                  <div
+                    class="doubleBounce2"
+                  />
+                </div>
+              </div>
             </button>
           </div>
         </fieldset>

@@ -12,7 +12,7 @@ import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
 import userStore from '../../stores/UserStore';
 import {Backdrop} from '../../components';
-import Login from '../../components/Login/Login';
+import Login from '../Login';
 import applicationStyles from './application.scss';
 
 type Props = {
@@ -35,11 +35,8 @@ export default class Application extends React.Component<Props> {
         this.toggleNavigation();
     };
 
-    handleLogin = (user: string, password: string) => {
-        const {router} = this.props;
-        userStore.login(user, password).then(() => {
-            router.reload();
-        });
+    handleLoginSuccess = () => {
+        this.props.router.reload();
     };
 
     handleLogout = () => {
@@ -47,35 +44,6 @@ export default class Application extends React.Component<Props> {
             this.toggleNavigation();
         });
     };
-
-    handleClearError = () => {
-        userStore.clearError();
-    };
-
-    handleResetPassword = (user: string) => {
-        userStore.resetPassword(user);
-    };
-
-    renderLogin() {
-        if (userStore.loggedIn) {
-            return null;
-        }
-
-        return (
-            <div className={applicationStyles.login}>
-                <Login
-                    onClearError={this.handleClearError}
-                    onLogin={this.handleLogin}
-                    onResetPassword={this.handleResetPassword}
-                    loginError={userStore.loginError}
-                    resetSuccess={userStore.resetSuccess}
-                    loading={userStore.loading}
-                    initialized={!initializer.loading && initializer.translationInitialized}
-                    backLink="/" // TODO: Get the correct link here from the backend
-                />
-            </div>
-        );
-    }
 
     render() {
         const {router} = this.props;
@@ -103,7 +71,13 @@ export default class Application extends React.Component<Props> {
 
         return (
             <Fragment>
-                {this.renderLogin()}
+                {!userStore.loggedIn &&
+                    <Login
+                        onLoginSuccess={this.handleLoginSuccess}
+                        initialized={!initializer.loading && initializer.translationInitialized}
+                        backLink="/" // TODO: Get the correct link here from the backend
+                    />
+                }
                 {initializer.initialized &&
                     <div className={rootClass}>
                         <nav className={applicationStyles.navigation}>

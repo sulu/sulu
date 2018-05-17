@@ -42,16 +42,6 @@ test('Should clear the user store', () => {
     expect(Object.keys(userStore.persistentSettings)).toHaveLength(0);
 });
 
-test('Should clear error correctly', () => {
-    userStore.setLoginError(true);
-    userStore.setResetSuccess(true);
-
-    userStore.clearError();
-
-    expect(userStore.loginError).toBe(false);
-    expect(userStore.resetSuccess).toBe(false);
-});
-
 test('Should set persistent setting', () => {
     userStore.setPersistentSetting('categories.sortColumn', 'name');
     expect(userStore.getPersistentSetting('categories.sortColumn')).toEqual('name');

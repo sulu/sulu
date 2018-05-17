@@ -15,15 +15,17 @@ export default class Header extends React.Component<Props> {
     };
 
     render() {
+        const {children, small} = this.props;
+
         const className = classNames(
             headerStyles.header,
             {
-                [headerStyles.small]: this.props.small,
+                [headerStyles.small]: small,
             }
         );
 
         return (
-            <div className={className}>{this.props.children}</div>
+            <div className={className}>{children}</div>
         );
     }
 }

@@ -7,10 +7,7 @@ import {configure} from 'mobx';
 import Requester from './services/Requester';
 import Router from './services/Router';
 import Application from './containers/Application';
-import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
-import Form from './views/Form';
-import ResourceTabs from './views/ResourceTabs';
-import Datagrid from './views/Datagrid';
+import {updateRouterAttributesFromView} from './containers/ViewRenderer';
 import {bundleReady} from './services/Bundles';
 import initializer from './services/Initializer';
 import type {FieldTypeProps} from './types';
@@ -29,10 +26,6 @@ Requester.handleResponseHooks.push((response: Object) => {
     }
 });
 
-viewRegistry.add('sulu_admin.form', Form);
-viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
-viewRegistry.add('sulu_admin.datagrid', Datagrid);
-
 function startApplication() {
     const router = new Router(createHistory());
     router.addUpdateAttributesHook(updateRouterAttributesFromView);
@@ -48,7 +41,6 @@ function startApplication() {
 
 startApplication();
 
-initializer.registerDatagrid();
 initializer.initialize();
 
 bundleReady();

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
@@ -135,6 +136,8 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
 
     /**
      * Get username.
+     * @SerializedName("username")
+     * @Groups({"frontend", "fullUser"})
      *
      * @return string
      */

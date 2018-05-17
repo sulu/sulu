@@ -1,11 +1,6 @@
 @import './variables.scss';
 @import '../../components/Toolbar/variables.scss';
 
-.login {
-    width: 100vw;
-    height: 100vh;
-}
-
 .root {
     width: calc(100vw + 260px);
     display: inline-flex;
