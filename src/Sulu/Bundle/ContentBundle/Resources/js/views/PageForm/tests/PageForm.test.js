@@ -2,8 +2,11 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
+import {findWithToolbarFunction} from 'sulu-admin-bundle/utils/TestHelper';
 
-jest.mock('sulu-admin-bundle/containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
+jest.mock('sulu-admin-bundle/containers/Toolbar/withToolbar', () => jest.fn((Component) => {
+    return Component;
+}));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: function(key) {
@@ -87,7 +90,7 @@ test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, PageForm);
     const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
 
     const router = {
@@ -122,7 +125,7 @@ test('Should change locale in form store via locale chooser', () => {
     const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, PageForm);
     const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
 
     const router = {
@@ -170,7 +173,7 @@ test('Should show loading templates chooser in toolbar while types are loading',
     const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, PageForm);
     const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
 
     const router = {
@@ -213,7 +216,7 @@ test('Should show templates chooser in toolbar if types are available', () => {
     resourceStore.locale.set('de');
     resourceStore.data.template = 'homepage';
 
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, PageForm);
 
     const router = {
         restore: jest.fn(),
@@ -329,7 +332,7 @@ test('Should change template on click in template chooser', () => {
             pageForm.update();
             expect(pageForm.find('Item')).toHaveLength(2);
 
-            const toolbarOptions = withToolbar.mock.calls[0][1].call(pageForm.instance());
+            const toolbarOptions = findWithToolbarFunction(withToolbar, PageForm).call(pageForm.instance());
             toolbarOptions.items[1].onChange('default');
             const schemaPromise = Promise.resolve(defaultTemplateMetadata);
             metadataStore.getSchema.mockReturnValue(schemaPromise);
@@ -360,7 +363,7 @@ test('Should render save buttons disabled only if form is not dirty', () => {
     const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, PageForm);
     const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
 
     const router = {

@@ -82,7 +82,7 @@ class AccessControlManager implements AccessControlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getUserPermissions(SecurityCondition $securityCondition, UserInterface $user = null)
+    public function getUserPermissions(SecurityCondition $securityCondition, $user)
     {
         if (!$user instanceof UserInterface) {
             return;

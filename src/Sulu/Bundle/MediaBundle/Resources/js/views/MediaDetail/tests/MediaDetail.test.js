@@ -3,6 +3,7 @@ import 'url-search-params-polyfill';
 import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
+import {findWithToolbarFunction} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
@@ -76,7 +77,7 @@ test('Should change locale via locale chooser', () => {
     const MediaDetail = require('../MediaDetail').default;
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, MediaDetail);
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
 
     const router = {
@@ -101,7 +102,7 @@ test('Should navigate to defined route on back button click', () => {
     const MediaDetail = require('../MediaDetail').default;
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, MediaDetail);
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
 
     const router = {
@@ -126,7 +127,7 @@ test('Should show locales from router options in toolbar', () => {
     const MediaDetail = require('../MediaDetail').default;
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, MediaDetail);
     const resourceStore = new ResourceStore('media', 1, {locale: observable.box()});
 
     const router = {
@@ -220,7 +221,7 @@ test('Should render save button disabled only if form is not dirty', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, MediaDetail);
     const resourceStore = new ResourceStore('snippets', 12, {locale: observable.box()});
 
     const router = {
