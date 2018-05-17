@@ -13,6 +13,7 @@
                         </meta>
                     </param>
                     <param name="empty_icon" value="su-house"/>
+                    <param name="collection_id" expression="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.account')"/>
                 </params>
             </property>
         </properties>
