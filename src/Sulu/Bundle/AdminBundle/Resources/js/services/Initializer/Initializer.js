@@ -155,7 +155,11 @@ class Initializer {
                 userStore.setUser(config['sulu_admin'].user);
                 userStore.setContact(config['sulu_admin'].contact);
                 userStore.setLoggedIn(true);
-            }).catch(() => {});
+            }).catch((error) => {
+                if (error.status !== 401) {
+                    return Promise.reject(error);
+                }
+            });
 
             return Promise.all([translationsPromise, configPromise])
                 // Bug in flow: https://github.com/facebook/flow/issues/5810

@@ -93,7 +93,11 @@ class UserStore {
             // if email was already sent use different api
             // TODO: Get this url from backend
             return Requester.post('/admin/security/reset/email/resend', {user: user})
-                .catch(() => {})
+                .catch((error) => {
+                    if (error.status !== 400) {
+                        return Promise.reject(error);
+                    }
+                })
                 // Bug in flow: https://github.com/facebook/flow/issues/5810
                 // $FlowFixMe:
                 .finally(() => {
@@ -103,7 +107,11 @@ class UserStore {
 
         // TODO: Get this url from backend
         return Requester.post('/admin/security/reset/email', {user: user})
-            .catch(() => {})
+            .catch((error) => {
+                if (error.status !== 400) {
+                    return Promise.reject(error);
+                }
+            })
             // Bug in flow: https://github.com/facebook/flow/issues/5810
             // $FlowFixMe:
             .finally(() => {

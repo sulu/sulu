@@ -202,13 +202,13 @@ test('Should not reinitialize everything when it was already initialized', () =>
         });
 });
 
-test('Should not crash when the config request throws error', () => {
+test('Should not crash when the config request throws an 401 error', () => {
     const translationData = {
         'sulu_admin.test1': 'Test1',
     };
 
     const translationPromise = Promise.resolve(translationData);
-    const configPromise = Promise.reject('Heavy Error! For example 401');
+    const configPromise = Promise.reject({status: 401});
 
     Requester.get.mockImplementation((key) => {
         switch (key) {
