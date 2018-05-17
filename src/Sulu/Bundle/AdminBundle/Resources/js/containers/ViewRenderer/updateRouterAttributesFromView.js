@@ -5,6 +5,7 @@ import viewRegistry from './registries/ViewRegistry';
 const updateRouterAttributesFromView: UpdateAttributesHook = function (route) {
     const View = viewRegistry.get(route.view);
 
+    // $FlowFixMe
     if (typeof View.getDerivedRouteAttributes === 'function') {
         const attributes = View.getDerivedRouteAttributes(route);
 

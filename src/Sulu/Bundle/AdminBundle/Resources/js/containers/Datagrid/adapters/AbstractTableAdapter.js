@@ -1,7 +1,6 @@
 // @flow
 import {computed} from 'mobx';
 import React from 'react';
-import type {Element} from 'react';
 import Table from '../../../components/Table';
 import datagridFieldTransformerRegistry from '../registries/DatagridFieldTransformerRegistry';
 import type {Schema} from '../types';
