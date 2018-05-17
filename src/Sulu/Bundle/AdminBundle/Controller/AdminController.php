@@ -297,12 +297,6 @@ class AdminController
 
     public function translationsAction(Request $request): Response
     {
-        $token = $this->tokenStorage->getToken();
-        if (!$token || !$token->getUser()) {
-            // TODO: Check if user has access for system sulu
-            // TODO: Deliver here only public translations
-        }
-
         $catalogue = $this->translatorBag->getCatalogue($request->query->get('locale'));
         $fallbackCatalogue = $catalogue->getFallbackCatalogue();
 
