@@ -17,12 +17,18 @@ use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoun
 use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Parse properties structure from an XML file.
  */
 class PropertiesXmlParser
 {
+    /**
+     * @var ExpressionLanguage
+     */
+    private $expressionLanguage;
+
     /**
      * tags that are required in template
      * TODO should be possible to inject from config.
@@ -55,6 +61,11 @@ class PropertiesXmlParser
         'author',
         'authored',
     ];
+
+    public function __construct(ExpressionLanguage $expressionLanguage)
+    {
+        $this->expressionLanguage = $expressionLanguage;
+    }
 
     public function loadAndCreateProperties(
         $templateKey,
@@ -320,25 +331,29 @@ class PropertiesXmlParser
      */
     private function loadParam(\DOMXPath $xpath, \DOMNode $node)
     {
-        $name = $this->getValueFromXPath('@name', $xpath, $node, 'string');
-        $type = $this->getValueFromXPath('@type', $xpath, $node, 'string');
-        $meta = $this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result = [
+            'name' => $this->getValueFromXPath('@name', $xpath, $node),
+            'type' => $this->getValueFromXPath('@type', $xpath, $node, 'string'),
+            'meta' => $this->loadMeta('x:meta/x:*', $xpath, $node),
+        ];
 
-        switch ($type) {
+        $expression = $this->getValueFromXPath('@expression', $xpath, $node);
+        if ($expression) {
+            $result['value'] = $this->expressionLanguage->evaluate($expression);
+
+            return $result;
+        }
+
+        switch ($result['type']) {
             case 'collection':
-                $value = $this->loadParams('x:param', $xpath, $node);
+                $result['value'] = $this->loadParams('x:param', $xpath, $node);
                 break;
             default:
-                $value = $this->getValueFromXPath('@value', $xpath, $node, 'string');
+                $result['value'] = $this->getValueFromXPath('@value', $xpath, $node, 'string');
                 break;
         }
 
-        return [
-            'name' => $name,
-            'value' => $value,
-            'type' => $type,
-            'meta' => $meta,
-        ];
+        return $result;
     }
 
     /**
