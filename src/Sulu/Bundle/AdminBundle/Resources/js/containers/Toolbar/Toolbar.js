@@ -91,9 +91,9 @@ export default class Toolbar extends React.Component<*> {
                 <ToolbarComponent.Controls>
                     {!!onNavigationButtonClick &&
                     <ToolbarComponent.Button
+                        icon={navigationOpen ? 'su-times' : 'su-bars'}
                         onClick={this.handleNavigationButtonClick}
                         primary={true}
-                        icon={navigationOpen ? 'su-times' : 'su-bars'}
                     />
                     }
                     {this.toolbarStore.hasBackButtonConfig() &&
@@ -121,8 +121,8 @@ export default class Toolbar extends React.Component<*> {
                     }
                     {this.toolbarStore.hasLocaleConfig() &&
                     <ToolbarComponent.Select
-                        size={LOCALE_SELECT_SIZE}
                         className={toolbarStyles.locale}
+                        size={LOCALE_SELECT_SIZE}
                         {...this.toolbarStore.getLocaleConfig()}
                     />
                     }

@@ -37,10 +37,10 @@ export default class AdapterSwitch extends React.PureComponent<Props> {
 
                     return (
                         <Button
-                            value={adapter}
-                            key={index}
                             active={adapter === currentAdapter}
+                            key={index}
                             onClick={this.handleAdapterChange}
+                            value={adapter}
                         >
                             <Icon name={Adapter.icon} />
                         </Button>

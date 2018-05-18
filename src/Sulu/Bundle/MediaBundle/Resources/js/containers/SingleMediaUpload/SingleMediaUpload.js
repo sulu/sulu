@@ -142,8 +142,8 @@ export default class SingleMediaUpload extends React.Component<Props> {
                     </div>
                 }
                 <Dialog
-                    confirmLoading={this.deleting}
                     cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={this.deleting}
                     confirmText={translate('sulu_admin.ok')}
                     onCancel={this.handleDeleteDialogCancelClick}
                     onConfirm={this.handleDeleteDialogConfirmClick}

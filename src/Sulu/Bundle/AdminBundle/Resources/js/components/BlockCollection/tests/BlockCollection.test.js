@@ -244,7 +244,7 @@ test('Should not render the remove icon if less or the exact amount of items are
     const value = [{content: 'Value 1'}, {content: 'Value 2'}];
 
     const blockCollection = mount(
-        <BlockCollection onChange={jest.fn()} minOccurs={2} renderBlockContent={jest.fn()} value={value} />
+        <BlockCollection minOccurs={2} onChange={jest.fn()} renderBlockContent={jest.fn()} value={value} />
     );
 
     blockCollection.find('Block').at(0).simulate('click');

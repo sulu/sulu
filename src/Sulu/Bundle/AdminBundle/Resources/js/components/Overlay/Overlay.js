@@ -114,7 +114,7 @@ export default class Overlay extends React.Component<Props> {
 
         return (
             <div>
-                <Backdrop open={showPortal} onClick={onClose} />
+                <Backdrop onClick={onClose} open={showPortal} />
                 {showPortal &&
                     <Portal>
                         <div
@@ -126,15 +126,15 @@ export default class Overlay extends React.Component<Props> {
                                     <header>
                                         {title}
                                         <Icon
-                                            name={CLOSE_ICON}
                                             className={overlayStyles.icon}
+                                            name={CLOSE_ICON}
                                             onClick={this.handleIconClick}
                                         />
                                     </header>
                                     <article>{children}</article>
                                     <footer>
                                         <Actions actions={actions} />
-                                        <Button skin="primary" onClick={onConfirm} loading={confirmLoading}>
+                                        <Button loading={confirmLoading} onClick={onConfirm} skin="primary">
                                             {confirmText}
                                         </Button>
                                     </footer>

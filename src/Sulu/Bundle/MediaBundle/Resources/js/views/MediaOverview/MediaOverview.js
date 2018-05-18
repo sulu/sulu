@@ -126,11 +126,11 @@ class MediaOverview extends React.Component<ViewProps> {
         return (
             <div className={mediaOverviewStyles.mediaOverview}>
                 <MediaCollection
-                    locale={this.locale}
+                    collectionDatagridStore={this.collectionDatagridStore}
                     collectionStore={this.collectionStore}
+                    locale={this.locale}
                     mediaDatagridAdapters={['media_card_overview', 'table']}
                     mediaDatagridStore={this.mediaDatagridStore}
-                    collectionDatagridStore={this.collectionDatagridStore}
                     onCollectionNavigate={this.handleCollectionNavigate}
                     onMediaNavigate={this.handleMediaNavigate}
                 />

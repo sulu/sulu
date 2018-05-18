@@ -66,12 +66,12 @@ export default class TreeListAdapter extends AbstractTableAdapter {
 
             return (
                 <Table.Row
-                    key={data.id}
-                    id={data.id}
                     depth={item.depth}
-                    isLoading={this.props.active === data.id && this.props.loading}
-                    hasChildren={data.hasChildren}
                     expanded={item.expanded}
+                    hasChildren={data.hasChildren}
+                    id={data.id}
+                    isLoading={this.props.active === data.id && this.props.loading}
+                    key={data.id}
                     selected={selections.includes(data.id)}
                 >
                     {this.renderCells(data)}
@@ -112,12 +112,12 @@ export default class TreeListAdapter extends AbstractTableAdapter {
         return (
             <Table
                 buttons={buttons}
-                selectInFirstCell={true}
-                selectMode="multiple"
+                onAllSelectionChange={onAllSelectionChange}
                 onRowCollapse={this.handleRowCollapse}
                 onRowExpand={this.handleRowExpand}
                 onRowSelectionChange={onItemSelectionChange}
-                onAllSelectionChange={onAllSelectionChange}
+                selectInFirstCell={true}
+                selectMode="multiple"
             >
                 <Table.Header>
                     {this.renderHeaderCells(false)}

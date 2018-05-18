@@ -110,9 +110,9 @@ class Form extends React.PureComponent<Props> {
         return (
             <div className={formStyles.form}>
                 <FormContainer
+                    onSubmit={this.handleSubmit}
                     ref={this.setFormRef}
                     store={this.formStore}
-                    onSubmit={this.handleSubmit}
                 />
             </div>
         );

@@ -9,10 +9,10 @@ test('Render ItemSection', () => {
 
     expect(render(
         <SingleItemSection
-            title="Select your house"
-            value={undefined}
             icon="fa-home"
             onChange={handleChange}
+            title="Select your house"
+            value={undefined}
         >
             <Item value="villa">Villa</Item>
             <Item value="white_house">White House</Item>
@@ -26,10 +26,10 @@ test('Render ItemSection with value', () => {
 
     expect(render(
         <SingleItemSection
-            title="Select your house"
-            value="flat"
             icon="fa-home"
             onChange={handleChange}
+            title="Select your house"
+            value="flat"
         >
             <Item value="villa">Villa</Item>
             <Item value="white_house">White House</Item>
@@ -43,10 +43,10 @@ test('Handle Item click', () => {
 
     const itemSection = mount(
         <SingleItemSection
-            title="Select your house"
-            value={undefined}
             icon="fa-home"
             onChange={handleChange}
+            title="Select your house"
+            value={undefined}
         >
             <Item value="villa">Villa</Item>
             <Item value="white_house">White House</Item>

@@ -24,7 +24,7 @@ export default class ToolbarDropdownList extends React.Component<Props> {
             const {onClick, label} = dropdownOptionConfig;
 
             return (
-                <ToolbarDropdownListOption key={key} onClick={onClick} columnIndex={this.props.columnIndex}>
+                <ToolbarDropdownListOption columnIndex={this.props.columnIndex} key={key} onClick={onClick}>
                     {label}
                 </ToolbarDropdownListOption>
             );

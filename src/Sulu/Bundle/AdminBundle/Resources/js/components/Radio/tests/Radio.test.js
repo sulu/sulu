@@ -16,9 +16,9 @@ test('The component should render in dark skin', () => {
 test('The component pass the props correctly to the generic checkbox', () => {
     const checkbox = shallow(
         <Radio
-            value="my-value"
-            name="my-name"
             checked={true}
+            name="my-name"
+            value="my-value"
         >
             My label
         </Radio>

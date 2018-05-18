@@ -59,15 +59,15 @@ export default class Application extends React.Component<Props> {
         return (
             <div className={rootClass}>
                 <nav className={applicationStyles.navigation}>
-                    <Navigation router={router} onNavigate={this.handleNavigate} />
+                    <Navigation onNavigate={this.handleNavigate} router={router} />
                 </nav>
                 <div className={contentClass}>
                     <Backdrop
+                        fixed={false}
+                        local={true}
+                        onClick={this.handleNavigationButtonClick}
                         open={this.navigationVisible}
                         visible={false}
-                        onClick={this.handleNavigationButtonClick}
-                        local={true}
-                        fixed={false}
                     />
                     <main className={applicationStyles.main}>
                         <header className={applicationStyles.header}>

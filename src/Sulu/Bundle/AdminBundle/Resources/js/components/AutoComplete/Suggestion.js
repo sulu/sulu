@@ -64,8 +64,8 @@ export default class Suggestion extends React.PureComponent<Props> {
             >
                 {icon &&
                     <Icon
-                        name={icon}
                         className={suggestionStyles.icon}
+                        name={icon}
                     />
                 }
                 {typeof children === 'string' &&

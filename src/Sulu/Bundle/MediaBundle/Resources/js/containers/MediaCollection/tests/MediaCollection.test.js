@@ -231,11 +231,11 @@ test('Render the MediaCollection', () => {
 
     const mediaCollection = render(
         <MediaCollection
+            collectionDatagridStore={collectionDatagridStore}
+            collectionStore={collectionStore}
             locale={locale}
             mediaDatagridAdapters={['media_card_overview']}
             mediaDatagridStore={mediaDatagridStore}
-            collectionDatagridStore={collectionDatagridStore}
-            collectionStore={collectionStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
@@ -269,11 +269,11 @@ test('Should send a request to add a new collection via the overlay', () => {
 
     const mediaCollection = mount(
         <MediaCollection
+            collectionDatagridStore={collectionDatagridStore}
+            collectionStore={collectionStore}
             locale={locale}
             mediaDatagridAdapters={['media_card_overview']}
             mediaDatagridStore={mediaDatagridStore}
-            collectionDatagridStore={collectionDatagridStore}
-            collectionStore={collectionStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
@@ -325,11 +325,11 @@ test('Should send a request to update the collection via the overlay', () => {
 
     const mediaCollection = mount(
         <MediaCollection
+            collectionDatagridStore={collectionDatagridStore}
+            collectionStore={collectionStore}
             locale={locale}
             mediaDatagridAdapters={['media_card_overview']}
             mediaDatagridStore={mediaDatagridStore}
-            collectionDatagridStore={collectionDatagridStore}
-            collectionStore={collectionStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
@@ -376,11 +376,11 @@ test('Confirming the delete dialog should delete the item', () => {
 
     const mediaCollection = mount(
         <MediaCollection
+            collectionDatagridStore={collectionDatagridStore}
+            collectionStore={collectionStore}
             locale={locale}
             mediaDatagridAdapters={['media_card_overview']}
             mediaDatagridStore={mediaDatagridStore}
-            collectionDatagridStore={collectionDatagridStore}
-            collectionStore={collectionStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
@@ -430,11 +430,11 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
 
     const mediaCollection = mount(
         <MediaCollection
+            collectionDatagridStore={collectionDatagridStore}
+            collectionStore={collectionStore}
             locale={locale}
             mediaDatagridAdapters={['media_card_overview']}
             mediaDatagridStore={mediaDatagridStore}
-            collectionDatagridStore={collectionDatagridStore}
-            collectionStore={collectionStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );

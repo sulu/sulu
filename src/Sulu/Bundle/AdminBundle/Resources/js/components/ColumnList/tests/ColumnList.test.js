@@ -70,12 +70,12 @@ test('The ColumnList component should render in a non-scrolling container', () =
         >
             <Column>
                 <Item id="1" selected={true}>Item 1</Item>
-                <Item id="2" hasChildren={true}>Item 1</Item>
+                <Item hasChildren={true} id="2">Item 1</Item>
                 <Item id="3">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1">Item 1</Item>
-                <Item id="1-2" hasChildren={true}>Item 1</Item>
+                <Item hasChildren={true} id="1-2">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1-1">Item 1</Item>
@@ -105,12 +105,12 @@ test('The ColumnList component should render in a scrolling container', () => {
         >
             <Column>
                 <Item id="1" selected={true}>Item 1</Item>
-                <Item id="2" hasChildren={true}>Item 1</Item>
+                <Item hasChildren={true} id="2">Item 1</Item>
                 <Item id="3">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1">Item 1</Item>
-                <Item id="1-2" hasChildren={true}>Item 1</Item>
+                <Item hasChildren={true} id="1-2">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1-1">Item 1</Item>
@@ -140,12 +140,12 @@ test('The ColumnList component should trigger the item callback', () => {
         >
             <Column>
                 <Item id="1" selected={true}>Item 1</Item>
-                <Item id="2" hasChildren={true}>Item 1</Item>
+                <Item hasChildren={true} id="2">Item 1</Item>
                 <Item id="3">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1">Item 1</Item>
-                <Item id="1-2" hasChildren={true}>Item 1</Item>
+                <Item hasChildren={true} id="1-2">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1-1">Item 1</Item>
@@ -179,17 +179,17 @@ test('The ColumnList component should handle which toolbar is active on mouse en
 
     const columnList = mount(
         <ColumnList
-            toolbarItems={toolbarItems}
             onItemClick={jest.fn()}
+            toolbarItems={toolbarItems}
         >
             <Column>
                 <Item id="1" selected={true}>Item 1</Item>
-                <Item id="2" hasChildren={true}>Item 1</Item>
+                <Item hasChildren={true} id="2">Item 1</Item>
                 <Item id="3">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1">Item 1</Item>
-                <Item id="1-2" hasChildren={true}>Item 1</Item>
+                <Item hasChildren={true} id="1-2">Item 1</Item>
             </Column>
             <Column>
                 <Item id="1-1-1">Item 1</Item>

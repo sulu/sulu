@@ -28,13 +28,13 @@ test('Should render with skin icon', () => {
 });
 
 test('Should render with skin icon and active', () => {
-    expect(render(<Button skin="icon" active={true} />)).toMatchSnapshot();
+    expect(render(<Button active={true} skin="icon" />)).toMatchSnapshot();
 });
 
 test('Should call the callback on click', () => {
     const preventDefaultSpy = jest.fn();
     const onClick = jest.fn();
-    const button = shallow(<Button skin="primary" onClick={onClick} />);
+    const button = shallow(<Button onClick={onClick} skin="primary" />);
     button.find('button').simulate('click', {preventDefault: preventDefaultSpy});
     expect(preventDefaultSpy).toBeCalled();
     expect(onClick).toBeCalled();

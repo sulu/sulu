@@ -43,7 +43,7 @@ export default class Item extends React.Component<Props> {
             const key = `button-${index}`;
 
             return (
-                <ItemButton id={id} key={key} config={button} />
+                <ItemButton config={button} id={id} key={key} />
             );
         });
     };
@@ -61,7 +61,7 @@ export default class Item extends React.Component<Props> {
         );
 
         return (
-            <div onClick={this.handleClick} className={itemClass}>
+            <div className={itemClass} onClick={this.handleClick}>
                 <span className={itemStyles.buttons}>
                     {this.renderButtons()}
                 </span>

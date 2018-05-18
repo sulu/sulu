@@ -157,9 +157,9 @@ export default class MediaCard extends React.Component<Props> {
                         <div className={mediaCardStyles.title}>
                             {onSelectionChange
                                 ? <Checkbox
-                                    value={id}
                                     checked={!!selected}
                                     className={mediaCardStyles.checkbox}
+                                    value={id}
                                 >
                                     {mediaTitle}
                                 </Checkbox>
@@ -175,21 +175,21 @@ export default class MediaCard extends React.Component<Props> {
                     {(!!imageSizes.length && !!downloadUrl && !!downloadText) &&
                         <div>
                             <button
-                                ref={this.setDownloadButtonRef}
-                                onClick={this.handleDownloadButtonClick}
                                 className={downloadButtonClass}
+                                onClick={this.handleDownloadButtonClick}
+                                ref={this.setDownloadButtonRef}
                             >
                                 <Icon name={DOWNLOAD_ICON} />
                             </button>
                             <DownloadList
-                                open={this.downloadListOpen}
-                                onClose={this.handleDownloadListClose}
-                                copyText={downloadCopyText}
                                 buttonRef={this.downloadButtonRef}
-                                imageSizes={imageSizes}
-                                downloadUrl={downloadUrl}
+                                copyText={downloadCopyText}
                                 downloadText={downloadText}
+                                downloadUrl={downloadUrl}
+                                imageSizes={imageSizes}
+                                onClose={this.handleDownloadListClose}
                                 onDownload={this.handleDownload}
+                                open={this.downloadListOpen}
                             />
                         </div>
                     }
@@ -200,11 +200,11 @@ export default class MediaCard extends React.Component<Props> {
                 >
                     {image
                         ? <img alt={title} src={image} />
-                        : <MimeTypeIndicator mimeType={mimeType} height={200} />
+                        : <MimeTypeIndicator height={200} mimeType={mimeType} />
                     }
                     <div className={mediaCardStyles.cover}>
                         {!!icon &&
-                            <Icon name={icon} className={mediaCardStyles.mediaIcon} />
+                            <Icon className={mediaCardStyles.mediaIcon} name={icon} />
                         }
                     </div>
                 </div>

@@ -16,10 +16,10 @@ test('AutoComplete should render', () => {
     const searchSpy = jest.fn();
     expect(render(
         <AutoComplete
-            value="Test"
             onChange={changeSpy}
             onFinish={jest.fn()}
             onSearch={searchSpy}
+            value="Test"
         >
             <Suggestion
                 icon="fa-ticket"
@@ -48,10 +48,10 @@ test('Render the AutoComplete with open suggestions list', () => {
     const changeSpy = jest.fn();
     const autoComplete = mount(
         <AutoComplete
-            value="Test"
             onChange={changeSpy}
             onFinish={jest.fn()}
             onSearch={searchSpy}
+            value="Test"
         >
             <Suggestion
                 icon="fa-ticket"
@@ -84,10 +84,10 @@ test('Clicking on a suggestion should call the onChange handler with the value o
     const testValue = 'suggestion-1';
     mount(
         <AutoComplete
-            value="Test"
             onChange={changeSpy}
             onFinish={jest.fn()}
             onSearch={searchSpy}
+            value="Test"
         >
             <Suggestion
                 icon="fa-ticket"
@@ -123,10 +123,10 @@ test('Should call the onFinish callback when the Input lost focus', () => {
     const finishSpy = jest.fn();
     const autoComplete = shallow(
         <AutoComplete
-            value="Test"
             onChange={jest.fn()}
             onFinish={finishSpy}
             onSearch={jest.fn()}
+            value="Test"
         >
             <Suggestion value="suggestion-1">
                 Suggestion 1

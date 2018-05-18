@@ -99,14 +99,14 @@ export default class Email extends React.Component<Props> {
         return (
             <Input
                 icon="su-envelope"
+                name={name}
+                onBlur={this.handleBlur}
                 onChange={this.handleChange}
-                value={this.value}
+                onIconClick={(value && value.length > 1) ? this.handleIconClick : undefined}
+                placeholder={placeholder}
                 type="email"
                 valid={valid && !this.showError}
-                name={name}
-                placeholder={placeholder}
-                onBlur={this.handleBlur}
-                onIconClick={(value && value.length > 1) ? this.handleIconClick : undefined}
+                value={this.value}
             />
         );
     }

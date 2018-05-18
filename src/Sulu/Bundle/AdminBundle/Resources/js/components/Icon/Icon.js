@@ -70,7 +70,7 @@ export default class Icon extends React.PureComponent<Props> {
             : {};
 
         return (
-            <span style={style} className={iconClass} aria-label={name} {...onClickProperties} />
+            <span aria-label={name} className={iconClass} style={style} {...onClickProperties} />
         );
     }
 }

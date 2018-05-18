@@ -21,9 +21,9 @@ export default class MediaItem extends React.Component<Props> {
                 {store.uploading &&
                     <div className={mediaItemStyles.progressbarContainer}>
                         <CircularProgressbar
-                            size={50}
-                            percentage={store.progress}
                             hidePercentageText={true}
+                            percentage={store.progress}
+                            size={50}
                         />
                     </div>
                 }

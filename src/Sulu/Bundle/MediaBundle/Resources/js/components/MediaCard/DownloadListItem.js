@@ -70,8 +70,8 @@ export default class DownloadListItem extends React.Component<Props> {
             >
                 {(copyUrlOnClick)
                     ? <ClipboardButton
-                        onSuccess={this.handleCopySuccess}
                         data-clipboard-text={url}
+                        onSuccess={this.handleCopySuccess}
                     >
                         {content}
                     </ClipboardButton>

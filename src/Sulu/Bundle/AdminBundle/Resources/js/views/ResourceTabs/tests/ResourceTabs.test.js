@@ -47,7 +47,7 @@ test('Should render the child components after the tabs', () => {
 
     const Child = () => (<h1>Child</h1>);
 
-    expect(render(<ResourceTabs router={router} route={route}>{() => (<Child />)}</ResourceTabs>)).toMatchSnapshot();
+    expect(render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>)).toMatchSnapshot();
 });
 
 test('Should mark the currently active child route as selected tab', () => {
@@ -83,7 +83,7 @@ test('Should mark the currently active child route as selected tab', () => {
 
     const Child = () => (<h1>Child</h1>);
 
-    expect(render(<ResourceTabs router={router} route={route}>{() => (<Child route={childRoute2} />)}</ResourceTabs>))
+    expect(render(<ResourceTabs route={route} router={router}>{() => (<Child route={childRoute2} />)}</ResourceTabs>))
         .toMatchSnapshot();
 });
 
@@ -117,7 +117,7 @@ test('Should navigate to child route if tab is clicked', () => {
     };
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs router={router} route={route}>{() => (<Child />)}</ResourceTabs>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
     resourceTabs.find('Tab button').at(1).simulate('click');
 
@@ -138,7 +138,7 @@ test('Should create a ResourceStore on mount and destroy it on unmount', () => {
         },
     };
 
-    const resourceTabs = mount(<ResourceTabs router={router} route={route}>{() => null}</ResourceTabs>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
     expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
     expect(resourceStoreConstructorCall[0][1]).toEqual(5);
@@ -163,7 +163,7 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
         },
     };
 
-    const resourceTabs = mount(<ResourceTabs router={router} route={route}>{() => null}</ResourceTabs>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
     expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
     expect(resourceStoreConstructorCall[0][1]).toEqual(5);
@@ -188,7 +188,7 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
         },
     };
 
-    const resourceTabs = mount(<ResourceTabs router={router} route={route}>{() => null}</ResourceTabs>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
     expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
     expect(resourceStoreConstructorCall[0][1]).toEqual(5);
@@ -214,7 +214,7 @@ test('Should pass the ResourceStore to child components', () => {
 
     const ChildComponent = jest.fn(() => null);
     const resourceTabs = mount(
-        <ResourceTabs router={router} route={route}>{(props) => (<ChildComponent {...props} />)}</ResourceTabs>
+        <ResourceTabs route={route} router={router}>{(props) => (<ChildComponent {...props} />)}</ResourceTabs>
     ).instance();
 
     expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);

@@ -47,9 +47,9 @@ export default class Item extends React.PureComponent<Props> {
                 </div>
                 {onRemove &&
                     <button
-                        type="button"
                         className={itemStyles.removeButton}
                         onClick={this.handleRemove}
+                        type="button"
                     >
                         <Icon name={REMOVE_ICON} />
                     </button>

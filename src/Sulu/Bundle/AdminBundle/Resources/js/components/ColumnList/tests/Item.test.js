@@ -12,5 +12,5 @@ test('Should render item as selected', () => {
 });
 
 test('Should render item as disabled', () => {
-    expect(render(<Item id={1} disabled={true}>Test</Item>)).toMatchSnapshot();
+    expect(render(<Item disabled={true} id={1}>Test</Item>)).toMatchSnapshot();
 });

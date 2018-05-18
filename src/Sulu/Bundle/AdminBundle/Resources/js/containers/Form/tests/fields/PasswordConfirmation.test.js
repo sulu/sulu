@@ -7,7 +7,7 @@ import PasswordConfirmationComponent from '../../../../components/PasswordConfir
 test('Pass error correctly to PasswordConfirmation component', () => {
     const error = {keyword: 'required', parameters: {}};
 
-    const passwordConfirmation = shallow(<PasswordConfirmation onChange={jest.fn()} error={error} value={undefined} />);
+    const passwordConfirmation = shallow(<PasswordConfirmation error={error} onChange={jest.fn()} value={undefined} />);
 
     expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('valid')).toBe(false);
 });

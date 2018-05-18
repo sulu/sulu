@@ -70,12 +70,12 @@ export default class WebspaceSelect extends React.Component<Props> {
         } = this.props;
 
         return (
-            <ArrowMenu onClose={this.handleMenuClose} open={this.open} anchorElement={this.renderButton()}>
+            <ArrowMenu anchorElement={this.renderButton()} onClose={this.handleMenuClose} open={this.open}>
                 <ArrowMenu.SingleItemSection
                     icon="su-webspace"
+                    onChange={this.handleChange}
                     title="Webspaces"
                     value={value}
-                    onChange={this.handleChange}
                 >
                     {children}
                 </ArrowMenu.SingleItemSection>

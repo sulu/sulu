@@ -62,7 +62,7 @@ test('Should reuse the passed resourceStore if the passed resourceKey is the sam
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     expect(resourceStore).toBe(form.instance().resourceStore);
 });
@@ -81,7 +81,7 @@ test('Should create a new resourceStore if the passed resourceKey differs', () =
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const formResourceStore = form.instance().resourceStore;
 
     expect(resourceStore).not.toBe(formResourceStore);
@@ -106,7 +106,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with l
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const formResourceStore = form.instance().resourceStore;
 
     expect(resourceStore).not.toBe(formResourceStore);
@@ -130,7 +130,7 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const formResourceStore = form.instance().resourceStore;
 
     expect(formResourceStore.idQueryParameter).toEqual('contactId');
@@ -155,7 +155,7 @@ test('Should navigate to defined route on back button click', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
@@ -181,7 +181,7 @@ test('Should navigate to defined route on back button click without locale', () 
         route,
         attributes: {},
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
@@ -204,7 +204,7 @@ test('Should not render back button when no editLink is configured', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.backButton).toBe(undefined);
@@ -229,7 +229,7 @@ test('Should change locale in form store via locale chooser', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     resourceStore.locale.set('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
@@ -255,7 +255,7 @@ test('Should show locales from router options in toolbar', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.locale.options).toEqual([
@@ -281,7 +281,7 @@ test('Should show loading templates chooser in toolbar while types are loading',
         attributes: {},
     };
 
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig).toMatchSnapshot();
@@ -343,7 +343,7 @@ test('Should change template on click in template chooser', (done) => {
     });
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     Promise.all([typesPromise, sidebarPromise, footerPromise, jsonSchemaPromise]).then(() => {
         const toolbarOptions = withToolbar.mock.calls[0][1].call(form.instance());
@@ -385,7 +385,7 @@ test('Should show templates chooser in toolbar if types are available', () => {
     });
     metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
 
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     return typesPromise.then(() => {
         const toolbarConfig = toolbarFunction.call(form.instance());
@@ -414,7 +414,7 @@ test('Should not show templates chooser in toolbar if types are not available', 
     const typesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
 
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     return typesPromise.then(() => {
         const toolbarConfig = toolbarFunction.call(form.instance());
@@ -438,7 +438,7 @@ test('Should not show a locale chooser if no locales are passed in router option
         route,
         attributes: {},
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.locale).toBe(undefined);
@@ -471,7 +471,7 @@ test('Should initialize the ResourceStore with a schema', () => {
     });
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     return Promise.all([schemaTypesPromise, schemaPromise]).then(() => {
         expect(resourceStore.resourceKey).toBe('snippets');
@@ -503,7 +503,7 @@ test('Should render save button disabled only if form is not dirty', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     expect(getSaveItem().disabled).toBe(true);
 
@@ -544,7 +544,7 @@ test('Should save form when submitted', (done) => {
             id: 8,
         },
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
@@ -595,7 +595,7 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
         navigate: jest.fn(),
         route,
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
@@ -630,7 +630,7 @@ test('Should pass store and schema handler to FormContainer', () => {
         attributes: {},
     };
 
-    const form = shallow(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = shallow(<Form resourceStore={resourceStore} route={route} router={router} />);
     const formContainer = form.find('Form');
 
     expect(formContainer.prop('store').resourceStore).toEqual(resourceStore);
@@ -657,7 +657,7 @@ test('Should render save button loading only if form is saving', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     expect(getSaveItem().loading).toBe(false);
 
@@ -682,7 +682,7 @@ test('Should destroy the store on unmount', () => {
         attributes: {},
     };
 
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const locale = form.find('Form').at(1).prop('store').locale;
 
     expect(router.bind).toBeCalledWith('locale', locale);
@@ -710,7 +710,7 @@ test('Should destroy the own resourceStore if existing on unmount', () => {
         attributes: {},
         route,
     };
-    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const formResourceStore = form.instance().resourceStore;
     formResourceStore.destroy = jest.fn();
 
@@ -735,7 +735,7 @@ test('Should not bind the locale if no locales have been passed via options', ()
         attributes: {},
     };
 
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     expect(router.bind).not.toBeCalled();
 

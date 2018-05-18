@@ -38,7 +38,7 @@ beforeEach(() => {
 });
 
 test('Show with default plus icon', () => {
-    expect(render(<Assignment adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />))
+    expect(render(<Assignment adapter="table" onChange={jest.fn()} overlayTitle="Assignment" resourceKey="snippets" />))
         .toMatchSnapshot();
 });
 
@@ -46,10 +46,10 @@ test('Show with passed label', () => {
     expect(render(
         <Assignment
             adapter="column_list"
-            onChange={jest.fn()}
             label="Select Snippets"
-            resourceKey="snippets"
+            onChange={jest.fn()}
             overlayTitle="Assignment"
+            resourceKey="snippets"
         />
     )).toMatchSnapshot();
 });
@@ -58,10 +58,10 @@ test('Show with passed icon', () => {
     expect(render(
         <Assignment
             adapter="table"
-            onChange={jest.fn()}
             icon="su-document"
-            resourceKey="snippets"
+            onChange={jest.fn()}
             overlayTitle="Assignment"
+            resourceKey="snippets"
         />
     )).toMatchSnapshot();
 });
@@ -71,10 +71,10 @@ test('Pass locale to DatagridOverlay', () => {
     const assignment = mount(
         <Assignment
             adapter="table"
-            onChange={jest.fn()}
             locale={locale}
-            resourceKey="snippets"
+            onChange={jest.fn()}
             overlayTitle="Assignment"
+            resourceKey="snippets"
         />
     );
 
@@ -109,10 +109,10 @@ test('Show with passed values as items in right locale', () => {
         <Assignment
             adapter="table"
             displayProperties={['id', 'title']}
-            onChange={jest.fn()}
             locale={locale}
-            resourceKey="snippets"
+            onChange={jest.fn()}
             overlayTitle="Assignment"
+            resourceKey="snippets"
             value={[1, 2, 5]}
         />
     )).toMatchSnapshot();
@@ -122,7 +122,7 @@ test('Show with passed values as items in right locale', () => {
 
 test('Should open an overlay', () => {
     const assignment = mount(
-        <Assignment adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />
+        <Assignment adapter="table" onChange={jest.fn()} overlayTitle="Assignment" resourceKey="snippets" />
     );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
@@ -136,8 +136,8 @@ test('Should close an overlay using the close button', () => {
         <Assignment
             adapter="table"
             onChange={jest.fn()}
-            resourceKey="snippets"
             overlayTitle="Assignment"
+            resourceKey="snippets"
         />
     );
 
@@ -154,7 +154,7 @@ test('Should close an overlay using the close button', () => {
 
 test('Should close an overlay using the confirm button', () => {
     const assignment = mount(
-        <Assignment adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />
+        <Assignment adapter="table" onChange={jest.fn()} overlayTitle="Assignment" resourceKey="snippets" />
     );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
@@ -171,7 +171,7 @@ test('Should close an overlay using the confirm button', () => {
 test('Should call the onChange callback when clicking the confirm button', () => {
     const changeSpy = jest.fn();
     const assignment = mount(
-        <Assignment adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Assignment" />
+        <Assignment adapter="table" onChange={changeSpy} overlayTitle="Assignment" resourceKey="snippets" />
     );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
@@ -188,7 +188,7 @@ test('Should call the onChange callback when clicking the confirm button', () =>
 
 test('Should instantiate the DatagridStore with the correct resourceKey and destroy it on unmount', () => {
     const assignment = mount(
-        <Assignment adapter="table" onChange={jest.fn()} resourceKey="pages" overlayTitle="Assignment" />
+        <Assignment adapter="table" onChange={jest.fn()} overlayTitle="Assignment" resourceKey="pages" />
     );
 
     assignment.find('Button[icon="su-plus"]').simulate('click');
@@ -210,9 +210,9 @@ test('Should instantiate the DatagridStore with the preselected ids', () => {
         <Assignment
             adapter="table"
             onChange={jest.fn()}
-            value={[1, 5, 8]}
-            resourceKey="pages"
             overlayTitle="Assignment"
+            resourceKey="pages"
+            value={[1, 5, 8]}
         />
     );
 
@@ -236,11 +236,11 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     const assignment = mount(
         <Assignment
             adapter="table"
-            onChange={jest.fn()}
             locale={locale}
-            value={[1, 5, 8]}
-            resourceKey="pages"
+            onChange={jest.fn()}
             overlayTitle="Assignment"
+            resourceKey="pages"
+            value={[1, 5, 8]}
         />
     );
 
@@ -269,11 +269,11 @@ test('Should not reload items if all new ids have already been loaded', () => {
     const assignment = mount(
         <Assignment
             adapter="table"
-            onChange={jest.fn()}
             locale={locale}
-            value={[1, 5, 8]}
-            resourceKey="pages"
+            onChange={jest.fn()}
             overlayTitle="Assignment"
+            resourceKey="pages"
+            value={[1, 5, 8]}
         />
     );
 
@@ -301,11 +301,11 @@ test('Should not reinstantiate the DatagridStore with the preselected ids when n
     const assignment = mount(
         <Assignment
             adapter="table"
-            onChange={jest.fn()}
             locale={locale}
-            value={[1, 5, 8]}
-            resourceKey="pages"
+            onChange={jest.fn()}
             overlayTitle="Assignment"
+            resourceKey="pages"
+            value={[1, 5, 8]}
         />
     );
 
@@ -324,9 +324,9 @@ test('Should remove an item when the remove button is clicked', () => {
         <Assignment
             adapter="table"
             onChange={changeSpy}
+            overlayTitle="Assignment"
             resourceKey="snippets"
             value={[3, 7, 9]}
-            overlayTitle="Assignment"
         />
     );
 
@@ -340,9 +340,9 @@ test('Should reorder the items on drag and drop', () => {
         <Assignment
             adapter="table"
             onChange={changeSpy}
+            overlayTitle="Assignment"
             resourceKey="snippets"
             value={[3, 7, 9]}
-            overlayTitle="Assignment"
         />
     );
 

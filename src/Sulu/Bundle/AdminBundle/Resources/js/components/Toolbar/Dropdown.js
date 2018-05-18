@@ -64,22 +64,22 @@ export default class Dropdown extends React.Component<DropdownProps> {
         return (
             <div className={dropdownClass}>
                 <Button
+                    active={this.open}
+                    disabled={disabled || allChildrenDisabled}
+                    hasOptions={true}
                     icon={icon}
+                    loading={loading}
+                    onClick={this.handleButtonClick}
                     size={size}
                     skin={skin}
-                    disabled={disabled || allChildrenDisabled}
                     value={label}
-                    onClick={this.handleButtonClick}
-                    active={this.open}
-                    hasOptions={true}
-                    loading={loading}
                 />
                 {this.open &&
                     <OptionList
-                        skin={skin}
-                        options={options}
-                        onOptionClick={this.handleOptionListClick}
                         onClose={this.handleOptionListClose}
+                        onOptionClick={this.handleOptionListClick}
+                        options={options}
+                        skin={skin}
                     />
                 }
             </div>

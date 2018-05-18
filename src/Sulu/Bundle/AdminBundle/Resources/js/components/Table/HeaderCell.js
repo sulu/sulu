@@ -25,9 +25,9 @@ export default class HeaderCell extends React.PureComponent<Props> {
 
         switch (sortOrder) {
             case 'asc':
-                return (<Icon name={ASCENDING_ICON} className={tableStyles.headerCellSortIcon} />);
+                return (<Icon className={tableStyles.headerCellSortIcon} name={ASCENDING_ICON} />);
             case 'desc':
-                return (<Icon name={DESCENDING_ICON} className={tableStyles.headerCellSortIcon} />);
+                return (<Icon className={tableStyles.headerCellSortIcon} name={DESCENDING_ICON} />);
             default:
                 return null;
         }

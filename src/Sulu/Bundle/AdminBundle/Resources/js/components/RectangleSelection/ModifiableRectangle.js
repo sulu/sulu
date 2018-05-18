@@ -99,8 +99,8 @@ export default class ModifiableRectangle extends React.Component<Props> {
         return (
             <div
                 className={modifiableRectangleStyles.rectangle}
-                onMouseDown={this.handleMoveMouseDown}
                 onDoubleClick={this.handleDoubleClick}
+                onMouseDown={this.handleMoveMouseDown}
                 style={style}
             >
                 <div

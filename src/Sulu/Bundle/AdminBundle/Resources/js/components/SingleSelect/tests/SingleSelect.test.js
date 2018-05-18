@@ -93,7 +93,7 @@ test('The component should also select the option with the value 0', () => {
 test('The component should trigger the change callback on select', () => {
     const onChangeSpy = jest.fn();
     const select = shallow(
-        <SingleSelect value="option-2" onChange={onChangeSpy}>
+        <SingleSelect onChange={onChangeSpy} value="option-2">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />

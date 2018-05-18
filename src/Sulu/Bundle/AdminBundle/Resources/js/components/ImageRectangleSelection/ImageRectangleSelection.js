@@ -98,15 +98,15 @@ export class ImageRectangleSelection extends React.Component<Props> {
         return (
             <RectangleSelection
                 initialSelection={initialSelection}
-                minWidth={minWidth}
                 minHeight={minHeight}
+                minWidth={minWidth}
                 onChange={this.handleRectangleSelectionChange}
                 round={false}
             >
                 <img
-                    width={this.imageResizedWidth}
                     height={this.imageResizedHeight}
                     src={this.props.src}
+                    width={this.imageResizedWidth}
                 />
             </RectangleSelection>
         );

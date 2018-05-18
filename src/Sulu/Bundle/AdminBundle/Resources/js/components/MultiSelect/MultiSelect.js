@@ -71,12 +71,12 @@ export default class MultiSelect extends React.PureComponent<Props> {
 
         return (
             <Select
-                icon={icon}
-                onSelect={this.handleSelect}
                 closeOnSelect={false}
                 displayValue={this.displayValue}
-                selectedVisualization="checkbox"
+                icon={icon}
                 isOptionSelected={this.isOptionSelected}
+                onSelect={this.handleSelect}
+                selectedVisualization="checkbox"
             >
                 {children}
             </Select>

@@ -34,9 +34,9 @@ export default class Toolbar extends React.Component<Props> {
         return toolbarItems.map((toolbarItemConfig: ToolbarItemConfig, index: number) => {
             switch (toolbarItemConfig.type) {
                 case 'dropdown':
-                    return <ToolbarDropdown key={index} columnIndex={this.props.columnIndex} {...toolbarItemConfig} />;
+                    return <ToolbarDropdown columnIndex={this.props.columnIndex} key={index} {...toolbarItemConfig} />;
                 case 'button':
-                    return <ToolbarButton key={index} columnIndex={this.props.columnIndex} {...toolbarItemConfig} />;
+                    return <ToolbarButton columnIndex={this.props.columnIndex} key={index} {...toolbarItemConfig} />;
                 default:
                     throw new Error('Unknown toolbar item type given: "' + toolbarItemConfig.type + '"');
             }
@@ -48,8 +48,8 @@ export default class Toolbar extends React.Component<Props> {
 
         return (
             <div
-                ref={this.setToolbarRef}
                 className={toolbarStyles.toolbar}
+                ref={this.setToolbarRef}
             >
                 {this.renderToolbarItems(toolbarItems)}
             </div>

@@ -78,11 +78,11 @@ export default class Navigation extends React.Component<Props> {
         const {userImage, username, onProfileClick} = this.props;
 
         if (userImage) {
-            return (<img onClick={onProfileClick} title={username} src={userImage} />);
+            return (<img onClick={onProfileClick} src={userImage} title={username} />);
         }
 
         return (
-            <div onClick={onProfileClick} className={navigationStyles.noUserImage}>
+            <div className={navigationStyles.noUserImage} onClick={onProfileClick}>
                 <Icon name="fa-user" />
             </div>
         );

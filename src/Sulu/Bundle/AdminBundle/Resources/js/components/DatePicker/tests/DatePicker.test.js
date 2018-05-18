@@ -13,23 +13,23 @@ beforeEach(() => {
 
 test('DatePicker should render', () => {
     const onChange = jest.fn();
-    expect(mount(<DatePicker value={null} onChange={onChange} />)).toMatchSnapshot();
+    expect(mount(<DatePicker onChange={onChange} value={null} />)).toMatchSnapshot();
 });
 
 test('DatePicker should render with placeholder', () => {
     const onChange = jest.fn();
-    expect(render(<DatePicker value={null} placeholder="My placeholder" onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<DatePicker onChange={onChange} placeholder="My placeholder" value={null} />)).toMatchSnapshot();
 });
 
 test('DatePicker should render with value', () => {
     const onChange = jest.fn();
     const value = new Date('2017-05-23');
-    expect(render(<DatePicker value={value} onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<DatePicker onChange={onChange} value={value} />)).toMatchSnapshot();
 });
 
 test('DatePicker should render null value as empty string', () => {
     const onChange = jest.fn();
-    expect(render(<DatePicker value={null} onChange={onChange} />)).toMatchSnapshot();
+    expect(render(<DatePicker onChange={onChange} value={null} />)).toMatchSnapshot();
 });
 
 test('DatePicker should render date format only with month', () => {
@@ -37,7 +37,7 @@ test('DatePicker should render date format only with month', () => {
     const options = {
         dateFormat: 'MMMM',
     };
-    expect(render(<DatePicker value={null} onChange={onChange} options={options} />)).toMatchSnapshot();
+    expect(render(<DatePicker onChange={onChange} options={options} value={null} />)).toMatchSnapshot();
 });
 
 test('DatePicker should render date format only with year', () => {
@@ -45,7 +45,7 @@ test('DatePicker should render date format only with year', () => {
     const options = {
         dateFormat: 'YYYY',
     };
-    expect(render(<DatePicker value={null} onChange={onChange} options={options} />)).toMatchSnapshot();
+    expect(render(<DatePicker onChange={onChange} options={options} value={null} />)).toMatchSnapshot();
 });
 
 test('DatePicker should render date picker with time picker', () => {
@@ -53,12 +53,12 @@ test('DatePicker should render date picker with time picker', () => {
     const options = {
         timeFormat: true,
     };
-    expect(render(<DatePicker value={null} onChange={onChange} options={options} />)).toMatchSnapshot();
+    expect(render(<DatePicker onChange={onChange} options={options} value={null} />)).toMatchSnapshot();
 });
 
 test('DatePicker should render error', () => {
     const onChange = jest.fn();
-    expect(render(<DatePicker value={null} onChange={onChange} valid={false} />)).toMatchSnapshot();
+    expect(render(<DatePicker onChange={onChange} valid={false} value={null} />)).toMatchSnapshot();
 });
 
 test('DatePicker should render error when invalid value is set', () => {
@@ -66,7 +66,7 @@ test('DatePicker should render error when invalid value is set', () => {
     const options = {
         dateFormat: 'YYYY',
     };
-    const datePicker = mount(<DatePicker value={null} onChange={onChange} options={options} />);
+    const datePicker = mount(<DatePicker onChange={onChange} options={options} value={null} />);
 
     // check if showError is set correctly
     datePicker.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
@@ -86,7 +86,7 @@ test('DatePicker should render error when invalid value is set', () => {
 
 test('DatePicker should set class correctly when overlay was opened/closed', () => {
     const onChange = jest.fn();
-    const input = mount(<DatePicker value={null} onChange={onChange} />);
+    const input = mount(<DatePicker onChange={onChange} value={null} />);
 
     // overlay should be closed
     expect(input.find('.rdt').hasClass('rdtOpen')).toBe(false);

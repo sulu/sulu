@@ -94,18 +94,18 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
         return (
             <div>
                 <Header
-                    label={label}
-                    loading={loading}
                     emptyList={emptyList}
+                    label={label}
                     leftButton={leftButton}
+                    loading={loading}
                     rightButton={rightButton}
                 />
                 <SortableList
                     axis="y"
-                    lockAxis="y"
-                    useDragHandle={true}
-                    onSortEnd={this.handleItemsSorted}
                     helperClass={multiItemSelectionStyles.dragging}
+                    lockAxis="y"
+                    onSortEnd={this.handleItemsSorted}
+                    useDragHandle={true}
                 >
                     {children}
                 </SortableList>

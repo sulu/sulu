@@ -29,8 +29,8 @@ export default class BaseItem extends React.PureComponent<Props> {
 
         return (
             <div
-                style={sizeStyle}
                 className={className}
+                style={sizeStyle}
             >
                 {children}
             </div>

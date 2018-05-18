@@ -96,9 +96,9 @@ export default class Header extends React.PureComponent<Props> {
             <Fragment>
                 <span className={tableStyles.cellSelect}>
                     <Checkbox
-                        skin="light"
                         checked={allSelected}
                         onChange={this.handleAllSelectionChange}
+                        skin="light"
                     />
                 </span>
                 {children}
@@ -118,8 +118,8 @@ export default class Header extends React.PureComponent<Props> {
 
             return (
                 <HeaderCell
-                    key={key}
                     className={tableStyles.headerButtonCell}
+                    key={key}
                 >
                     <Icon name={button.icon} />
                 </HeaderCell>
@@ -133,9 +133,9 @@ export default class Header extends React.PureComponent<Props> {
         return (
             <HeaderCell key={key}>
                 <Checkbox
-                    skin="light"
                     checked={this.props.allSelected}
                     onChange={this.handleAllSelectionChange}
+                    skin="light"
                 />
             </HeaderCell>
         );

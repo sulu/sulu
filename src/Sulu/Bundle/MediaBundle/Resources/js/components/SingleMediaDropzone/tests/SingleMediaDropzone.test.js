@@ -7,9 +7,9 @@ test('Render a SingleMediaDropzone', () => {
     expect(render(
         <SingleMediaDropzone
             image="http://lorempixel.com/400/400"
-            uploading={false}
-            progress={0}
             onDrop={jest.fn()}
+            progress={0}
+            uploading={false}
         />
     )).toMatchSnapshot();
 });
@@ -38,9 +38,9 @@ test('Render a SingleMediaDropzone while uploading', () => {
     expect(render(
         <SingleMediaDropzone
             image="http://lorempixel.com/400/400"
-            uploading={true}
-            progress={50}
             onDrop={jest.fn()}
+            progress={50}
+            uploading={true}
         />
     )).toMatchSnapshot();
 });
@@ -49,9 +49,9 @@ test('Dragging a file over the area will show the upload indicator', () => {
     const singleMediaDropzone = shallow(
         <SingleMediaDropzone
             image="http://lorempixel.com/400/400"
-            uploading={false}
-            progress={0}
             onDrop={jest.fn()}
+            progress={0}
+            uploading={false}
         />
     );
 
@@ -63,9 +63,9 @@ test('Dragging a file outside of the area will hide the upload indicator', () =>
     const singleMediaDropzone = shallow(
         <SingleMediaDropzone
             image="http://lorempixel.com/400/400"
-            uploading={false}
-            progress={0}
             onDrop={jest.fn()}
+            progress={0}
+            uploading={false}
         />
     );
 
@@ -79,9 +79,9 @@ test('Dropping a file on the area will hide the upload indicator and call the "o
     const singleMediaDropzone = shallow(
         <SingleMediaDropzone
             image="http://lorempixel.com/400/400"
-            uploading={false}
-            progress={0}
             onDrop={dropSpy}
+            progress={0}
+            uploading={false}
         />
     );
 

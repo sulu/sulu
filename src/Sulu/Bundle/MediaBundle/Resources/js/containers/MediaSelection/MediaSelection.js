@@ -105,12 +105,12 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
             <Fragment>
                 <MultiItemSelection
                     label={label}
-                    loading={loading}
-                    onItemRemove={this.handleRemove}
                     leftButton={{
                         icon: 'su-image',
                         onClick: this.handleOverlayOpen,
                     }}
+                    loading={loading}
+                    onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
                 >
                     {selectedMedia.map((selectedMedia, index) => {
@@ -123,11 +123,11 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
 
                         return (
                             <MultiItemSelection.Item
-                                key={id}
                                 id={id}
                                 index={index + 1}
+                                key={id}
                             >
-                                <MediaSelectionItem thumbnail={thumbnail} mimeType={mimeType}>
+                                <MediaSelectionItem mimeType={mimeType} thumbnail={thumbnail}>
                                     {title}
                                 </MediaSelectionItem>
                             </MultiItemSelection.Item>
@@ -135,11 +135,11 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
                     })}
                 </MultiItemSelection>
                 <MediaSelectionOverlay
-                    open={this.overlayOpen}
-                    locale={locale}
                     excludedIds={selectedMediaIds}
+                    locale={locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
+                    open={this.overlayOpen}
                 />
             </Fragment>
         );

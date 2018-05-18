@@ -116,6 +116,12 @@
                 "ignoreCase": true
             }
         ],
+        "react/jsx-sort-props": [
+            "error",
+            {
+                "ignoreCase": true
+            }
+        ],
         "react/jsx-tag-spacing": [
             "error",
             {

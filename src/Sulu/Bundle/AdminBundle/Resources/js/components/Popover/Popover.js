@@ -159,7 +159,7 @@ export default class Popover extends React.Component<Props> {
             // TODO: Use short syntax when eslint bug is fixed: https://github.com/babel/babel-eslint/issues/554
             <Fragment>
                 {backdrop &&
-                    <Backdrop visible={false} open={true} onClick={this.handleBackdropClick} />
+                    <Backdrop onClick={this.handleBackdropClick} open={true} visible={false} />
                 }
                 <Portal>
                     <div className={popoverStyles.container}>

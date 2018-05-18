@@ -104,11 +104,11 @@ export default class Input extends React.PureComponent<Props> {
                 }
                 <input
                     name={name}
-                    type={type}
-                    value={value || ''}
-                    placeholder={placeholder}
                     onBlur={this.handleBlur}
                     onChange={this.handleChange}
+                    placeholder={placeholder}
+                    type={type}
+                    value={value || ''}
                 />
             </label>
         );

@@ -73,19 +73,19 @@ export default class SingleMediaDropzone extends React.Component<Props> {
 
         return (
             <Dropzone
-                onDrop={this.handleDrop}
+                className={mediaContainerClass}
+                disableClick={uploading}
+                multiple={false}
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
-                multiple={false}
-                disableClick={uploading}
-                className={mediaContainerClass}
+                onDrop={this.handleDrop}
             >
                 {image &&
                     <img className={singleMediaDropzoneStyles.thumbnail} src={image} />
                 }
                 {!image && mimeType &&
                     <div className={singleMediaDropzoneStyles.mimeTypeIndicator}>
-                        <MimeTypeIndicator mimeType={mimeType} iconSize={100} />
+                        <MimeTypeIndicator iconSize={100} mimeType={mimeType} />
                     </div>
                 }
                 {!image && !mimeType &&
@@ -98,7 +98,7 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                     ? <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
                         <div className={singleMediaDropzoneStyles.uploadIndicator}>
                             <div>
-                                <Icon name={UPLOAD_ICON} className={singleMediaDropzoneStyles.uploadIcon} />
+                                <Icon className={singleMediaDropzoneStyles.uploadIcon} name={UPLOAD_ICON} />
                                 {uploadText &&
                                     <div className={singleMediaDropzoneStyles.uploadInfoText}>{uploadText}</div>
                                 }
@@ -107,8 +107,8 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                     </div>
                     : <div className={singleMediaDropzoneStyles.progressbar}>
                         <CircularProgressbar
-                            size={200}
                             percentage={progress}
+                            size={200}
                         />
                     </div>
                 }

@@ -58,9 +58,9 @@ export default class Item extends React.PureComponent<Props> {
                 }
                 {children &&
                     <Icon
-                        onClick={this.handleClick}
                         className={itemStyles.childrenIndicator}
                         name={expanded ? 'su-angle-down' : 'su-angle-right'}
+                        onClick={this.handleClick}
                     />
                 }
             </div>
