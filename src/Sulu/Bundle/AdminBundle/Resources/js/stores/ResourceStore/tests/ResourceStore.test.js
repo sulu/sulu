@@ -308,3 +308,19 @@ test('Calling the clone method should return a new instance of the ResourceStore
     expect(toJS(clonedResourceStore)).not.toBe(resourceStore);
     expect(ResourceRequester.get).toHaveBeenCalledTimes(1);
 });
+
+test('Should set the internal id if id is set using set', () => {
+    const resourceStore = new ResourceStore('media');
+    expect(resourceStore.id).toBe(undefined);
+    resourceStore.set('id', 4);
+    expect(resourceStore.id).toBe(4);
+});
+
+test('Should set the internal id if id is set using setMultiple', () => {
+    const resourceStore = new ResourceStore('media');
+    expect(resourceStore.id).toBe(undefined);
+    resourceStore.setMultiple({
+        id: 7,
+    });
+    expect(resourceStore.id).toBe(7);
+});

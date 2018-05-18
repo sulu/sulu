@@ -172,10 +172,18 @@ export default class ResourceStore {
     }
 
     @action set(name: string, value: mixed) {
+        if (name === 'id' && (typeof value === 'string' || typeof value === 'number')) {
+            this.id = value;
+        }
+
         this.data[name] = value;
     }
 
     @action setMultiple(data: Object) {
+        if (data.id) {
+            this.id = data.id;
+        }
+
         this.data = {...this.data, ...data};
     }
 
