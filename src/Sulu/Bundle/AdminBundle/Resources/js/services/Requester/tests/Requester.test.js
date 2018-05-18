@@ -18,13 +18,13 @@ test('Should execute GET request and return JSON', () => {
 
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
 
     return requestPromise;
 });
 
-test('Should execute GET request and throw error if response contains error', () => {
+test('Should execute GET request and reject with response when the response contains error', () => {
     const response = {
         ok: false,
         statusText: 'An error occured!',
@@ -34,11 +34,11 @@ test('Should execute GET request and throw error if response contains error', ()
     window.fetch = jest.fn();
     window.fetch.mockReturnValue(promise);
 
-    expect(Requester.get('/some-url')).rejects.toEqual(new Error('An error occured!'));
+    expect(Requester.get('/some-url')).rejects.toEqual(response);
 
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
 });
 
@@ -65,7 +65,7 @@ test('Should execute POST request and return JSON', () => {
         method: 'POST',
         body: JSON.stringify(data),
         credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
 
     return requestPromise;
@@ -94,7 +94,7 @@ test('Should execute PUT request and return JSON', () => {
         method: 'PUT',
         body: JSON.stringify(data),
         credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
 
     return requestPromise;
@@ -118,7 +118,7 @@ test('Should execute DELETE request and return JSON', () => {
     expect(window.fetch).toBeCalledWith('/some-url', {
         method: 'DELETE',
         credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
 
     return requestPromise;

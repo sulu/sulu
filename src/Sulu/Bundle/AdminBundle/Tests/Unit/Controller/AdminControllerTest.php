@@ -26,8 +26,10 @@ use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,7 +65,7 @@ class AdminControllerTest extends TestCase
     private $token;
 
     /**
-     * @var UserInterface
+     * @var User
      */
     private $user;
 
@@ -128,6 +130,11 @@ class AdminControllerTest extends TestCase
     private $fieldTypeOptionRegistry;
 
     /**
+     * @var ContactManagerInterface
+     */
+    private $contactManager;
+
+    /**
      * @var string
      */
     private $environment = 'prod';
@@ -175,7 +182,7 @@ class AdminControllerTest extends TestCase
         $this->urlGenerator = $this->prophesize(UrlGeneratorInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->token = $this->prophesize(TokenInterface::class);
-        $this->user = $this->prophesize(UserInterface::class);
+        $this->user = $this->prophesize(User::class);
         $this->adminPool = $this->prophesize(AdminPool::class);
         $this->jsConfigPool = $this->prophesize(JsConfigPool::class);
         $this->serializer = $this->prophesize(SerializerInterface::class);
@@ -188,6 +195,7 @@ class AdminControllerTest extends TestCase
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
         $this->router = $this->prophesize(RouterInterface::class);
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
+        $this->contactManager = $this->prophesize(ContactManagerInterface::class);
 
         $this->adminController = new AdminController(
             $this->authorizationChecker->reveal(),
@@ -205,6 +213,7 @@ class AdminControllerTest extends TestCase
             $this->navigationRegistry->reveal(),
             $this->router->reveal(),
             $this->fieldTypeOptionRegistry->reveal(),
+            $this->contactManager->reveal(),
             $this->environment,
             $this->adminName,
             $this->locales,
@@ -241,8 +250,12 @@ class AdminControllerTest extends TestCase
             [$resourceMetadata1->reveal(), $resourceMetadata2->reveal()]
         );
 
+        $contact = $this->prophesize(ContactInterface::class);
+        $contact->getId()->willReturn(5);
+
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
+        $this->user->getContact()->willReturn($contact->reveal());
         $this->user->getLocale()->willReturn('en');
 
         $fieldTypeOptions = ['assignment' => []];
@@ -285,6 +298,14 @@ class AdminControllerTest extends TestCase
     {
         $request = new Request(['locale' => $locale]);
 
+        $contact = $this->prophesize(ContactInterface::class);
+        $contact->getId()->willReturn(5);
+
+        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
+        $this->token->getUser()->willReturn($this->user->reveal());
+        $this->user->getContact()->willReturn($contact->reveal());
+        $this->user->getLocale()->willReturn('en');
+
         $catalogue = $this->prophesize(MessageCatalogueInterface::class);
         $catalogue->all('admin')->willReturn($translations);
         $fallbackCatalogue = $this->prophesize(MessageCatalogueInterface::class);
@@ -299,6 +320,14 @@ class AdminControllerTest extends TestCase
     public function testTranslationActionWithoutFallback()
     {
         $request = new Request(['locale' => 'en']);
+
+        $contact = $this->prophesize(ContactInterface::class);
+        $contact->getId()->willReturn(5);
+
+        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
+        $this->token->getUser()->willReturn($this->user->reveal());
+        $this->user->getContact()->willReturn($contact->reveal());
+        $this->user->getLocale()->willReturn('en');
 
         $catalogue = $this->prophesize(MessageCatalogueInterface::class);
         $catalogue->all('admin')->willReturn(['save' => 'Save']);

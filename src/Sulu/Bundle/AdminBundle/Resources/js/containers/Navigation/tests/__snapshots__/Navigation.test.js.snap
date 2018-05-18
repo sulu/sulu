@@ -38,9 +38,7 @@ exports[`Should render navigation 1`] = `
       <div
         class="userProfile"
       >
-        <span>
-          Hikaru Sulu
-        </span>
+        <span />
         <button>
           <span
             aria-label="su-exit"

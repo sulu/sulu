@@ -1,0 +1,15 @@
+.header {
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 32px;
+    margin: 10px 0 80px;
+    text-align: center;
+    width: 100%;
+    min-height: 50px;
+
+    &.small {
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: normal;
+    }
+}

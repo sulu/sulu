@@ -2,6 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import {findWithToolbarFunction} from '../../../utils/TestHelper';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
@@ -140,7 +141,7 @@ test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const route = {
@@ -167,7 +168,7 @@ test('Should navigate to defined route on back button click without locale', () 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
     const route = {
@@ -192,7 +193,7 @@ test('Should not render back button when no editLink is configured', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
     const route = {
@@ -214,7 +215,7 @@ test('Should change locale in form store via locale chooser', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const route = {
@@ -241,7 +242,7 @@ test('Should show locales from router options in toolbar', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const route = {
@@ -268,7 +269,7 @@ test('Should show loading templates chooser in toolbar while types are loading',
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
     const route = {
@@ -346,7 +347,7 @@ test('Should change template on click in template chooser', (done) => {
     const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
 
     Promise.all([typesPromise, sidebarPromise, footerPromise, jsonSchemaPromise]).then(() => {
-        const toolbarOptions = withToolbar.mock.calls[0][1].call(form.instance());
+        const toolbarOptions = findWithToolbarFunction(withToolbar, Form).call(form.instance());
         toolbarOptions.items[1].onChange('footer');
         const schemaPromise = Promise.resolve(footerMetadata);
         metadataStore.getSchema.mockReturnValue(schemaPromise);
@@ -365,7 +366,7 @@ test('Should show templates chooser in toolbar if types are available', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
     const metadataStore = require('../../../containers/Form/stores/MetadataStore');
 
@@ -397,7 +398,7 @@ test('Should not show templates chooser in toolbar if types are not available', 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
     const metadataStore = require('../../../containers/Form/stores/MetadataStore');
 
@@ -426,7 +427,7 @@ test('Should not show a locale chooser if no locales are passed in router option
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
     const route = {
@@ -491,7 +492,7 @@ test('Should render save button disabled only if form is not dirty', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippets', 12);
 
     const route = {
@@ -644,7 +645,7 @@ test('Should render save button loading only if form is saving', () => {
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12);
 

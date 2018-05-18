@@ -62,6 +62,10 @@ class ContentAdmin extends Admin
         $this->securityChecker = $securityChecker;
         $this->sessionManager = $sessionManager;
 
+        if (!$this->securityChecker) {
+            return;
+        }
+
         $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('navigation.webspaces');
