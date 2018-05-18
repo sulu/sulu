@@ -22,8 +22,8 @@ type Props = {
 
 export default class Body extends React.PureComponent<Props> {
     static defaultProps = {
-        selectMode: 'none',
         selectInFirstCell: false,
+        selectMode: 'none',
     };
 
     cloneRows = (originalRows: ?ChildrenArray<Element<typeof Row>>) => {

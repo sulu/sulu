@@ -36,13 +36,13 @@ type Props = {
 
 export default class Row extends React.PureComponent<Props> {
     static defaultProps = {
-        selected: false,
-        selectInFirstCell: false,
-        hasChildren: false,
+        depth: 0,
         expanded: false,
+        hasChildren: false,
         isLoading: false,
         rowIndex: 0,
-        depth: 0,
+        selected: false,
+        selectInFirstCell: false,
     };
 
     getIdentifier = (): (string | number) => {

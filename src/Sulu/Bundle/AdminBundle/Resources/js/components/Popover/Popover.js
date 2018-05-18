@@ -29,10 +29,10 @@ type Props = {
 @observer
 export default class Popover extends React.Component<Props> {
     static defaultProps = {
-        open: false,
-        horizontalOffset: 0,
-        verticalOffset: 0,
         backdrop: true,
+        horizontalOffset: 0,
+        open: false,
+        verticalOffset: 0,
     };
 
     @observable popoverChildRef: ElementRef<'div'>;

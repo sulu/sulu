@@ -16,8 +16,8 @@ const CHECKED_ICON = 'su-check';
 
 export default class Checkbox extends React.PureComponent<Props> {
     static defaultProps = {
-        skin: 'dark',
         active: true,
+        skin: 'dark',
     };
 
     render() {

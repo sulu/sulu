@@ -11,9 +11,9 @@ type Props = {
 
 export default class CircularProgressbar extends React.PureComponent<Props> {
     static defaultProps = {
-        size: 100,
-        percentage: 0,
         hidePercentageText: false,
+        percentage: 0,
+        size: 100,
     };
 
     handlePercentageText = (percentage: number) => {

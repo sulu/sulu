@@ -11,9 +11,9 @@ const ICON_ANGLE_DOWN = 'su-angle-down';
 
 export default class Button extends React.PureComponent<ButtonProps> {
     static defaultProps = {
+        active: false,
         disabled: false,
         hasOptions: false,
-        active: false,
         primary: false,
     };
 

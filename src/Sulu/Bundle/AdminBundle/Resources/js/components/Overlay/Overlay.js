@@ -31,9 +31,9 @@ const CLOSE_ICON = 'su-times';
 @observer
 export default class Overlay extends React.Component<Props> {
     static defaultProps = {
-        open: false,
         actions: [],
         confirmLoading: false,
+        open: false,
     };
 
     @observable visible: boolean = false;
