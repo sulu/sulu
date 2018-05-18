@@ -1,6 +1,6 @@
 @import '../../containers/Application/colors.scss';
 
-$lineHeight: 24px;
+$lineHeight: 28px;
 $fontSize: 12px;
 $color: $blueZodiac;
 $backgroundColor: $white;
@@ -13,7 +13,7 @@ $hoverColor: $shakespeare;
     display: block;
     position: relative;
     width: 100%;
-    padding: 5px 30px 5px 10px;
+    padding: 7px 30px 7px 10px;
     border: $borderSize solid $borderColor;
     border-radius: 3px;
     text-align: left;
