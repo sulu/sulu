@@ -12,11 +12,11 @@ import CollectionSection from './CollectionSection';
 import MediaSection from './MediaSection';
 
 type Props = {
+    collectionDatagridStore: DatagridStore,
+    collectionStore: CollectionStore,
     locale: IObservableValue<string>,
     mediaDatagridAdapters: Array<string>,
     mediaDatagridStore: DatagridStore,
-    collectionDatagridStore: DatagridStore,
-    collectionStore: CollectionStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
     overlayType: OverlayType,

@@ -8,8 +8,8 @@ import FormStore from './stores/FormStore';
 import FormInspector from './FormInspector';
 
 type Props = {
-    store: FormStore,
     onSubmit: (action: ?string) => void,
+    store: FormStore,
 };
 
 @observer

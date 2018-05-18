@@ -11,9 +11,9 @@ const UPLOAD_ICON = 'fa-cloud-upload';
 
 type Props = {
     children?: ChildrenArray<Element<typeof MediaItem>>,
-    open: boolean,
-    onClose: () => void,
     onClick: () => void,
+    onClose: () => void,
+    open: boolean,
 };
 
 @observer

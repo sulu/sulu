@@ -14,15 +14,15 @@ import rectangleSelectionStyles from './rectangleSelection.scss';
 
 type Props = {
     /** Determines the position at which the selection box is rendered at the beginning */
-    initialSelection?: SelectionData,
-    minWidth?: number,
-    minHeight?: number,
-    /** Determines whether or not the data gets rounded */
-    round: boolean,
-    onChange?: (s: SelectionData) => void,
     children?: Node,
     containerHeight: number,
     containerWidth: number,
+    /** Determines whether or not the data gets rounded */
+    initialSelection?: SelectionData,
+    minHeight?: number,
+    minWidth?: number,
+    onChange?: (s: SelectionData) => void,
+    round: boolean,
 };
 
 @observer

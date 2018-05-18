@@ -7,10 +7,10 @@ import Icon from '../Icon';
 import displayValueStyles from './displayValue.scss';
 
 type Props = {
-    onClick: () => void,
     children: string,
-    icon?: string,
     displayValueRef?: (button: ElementRef<'button'>) => void,
+    icon?: string,
+    onClick: () => void,
 };
 
 const TOGGLE_ICON = 'su-angle-down';

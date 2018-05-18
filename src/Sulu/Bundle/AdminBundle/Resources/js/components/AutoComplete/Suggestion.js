@@ -5,11 +5,11 @@ import Icon from '../Icon';
 import suggestionStyles from './suggestion.scss';
 
 type Props = {
-    value: string | number,
-    query: ?string,
-    icon?: string,
     children: string | (highlight: (text: string) => Node) => Node,
+    icon?: string,
     onSelection?: (value: string | number) => void,
+    query: ?string,
+    value: string | number,
 };
 
 export default class Suggestion extends React.PureComponent<Props> {

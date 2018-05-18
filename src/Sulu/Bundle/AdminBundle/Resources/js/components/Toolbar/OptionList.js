@@ -7,12 +7,12 @@ import type {Skin} from './types';
 import optionListStyles from './optionList.scss';
 
 type Props = {
+    onClose?: () => void,
     onOptionClick: (option: Object) => void,
-    value?: string | number,
+    options: Array<Object>,
     size?: string,
     skin?: Skin,
-    onClose?: () => void,
-    options: Array<Object>,
+    value?: string | number,
 };
 
 export default class OptionList extends React.PureComponent<Props> {

@@ -6,8 +6,8 @@ import buttonStyles from './button.scss';
 
 type Props = {
     icon: string,
-    onClick: () => void,
     location: 'left' | 'right',
+    onClick: () => void,
 };
 
 export default class Button extends React.PureComponent<Props> {

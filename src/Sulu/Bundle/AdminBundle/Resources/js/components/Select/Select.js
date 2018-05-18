@@ -15,10 +15,10 @@ const HORIZONTAL_OFFSET = -20;
 const VERTICAL_OFFSET = 2;
 
 type Props = SelectProps & {
-    onSelect: (values: string | number) => void,
-    displayValue: string,
     closeOnSelect: boolean,
+    displayValue: string,
     isOptionSelected: (option: Element<typeof Option>) => boolean,
+    onSelect: (values: string | number) => void,
     selectedVisualization?: OptionSelectedVisualization,
 };
 

@@ -5,8 +5,8 @@ import type {ItemButtonConfig} from './types';
 import itemStyles from './item.scss';
 
 type Props = {|
-    id: string | number,
     config: ItemButtonConfig,
+    id: string | number,
 |};
 
 export default class ItemButton extends React.Component<Props> {

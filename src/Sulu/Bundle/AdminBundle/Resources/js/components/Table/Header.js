@@ -8,20 +8,20 @@ import type {ButtonConfig, SelectMode} from './types';
 import tableStyles from './table.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof HeaderCell>>,
+    allSelected: boolean,
     /**
      * @ignore
      * The header will just display the icons.
      */
     buttons?: Array<ButtonConfig>,
     /** @ignore */
-    selectMode?: SelectMode,
-    /** @ignore */
-    selectInFirstCell: boolean,
+    children: ChildrenArray<Element<typeof HeaderCell>>,
     /** @ignore */
     onAllSelectionChange?: (checked: boolean) => void,
+    /** @ignore */
+    selectInFirstCell: boolean,
     /** If true the "select all" checkbox is checked. */
-    allSelected: boolean,
+    selectMode?: SelectMode,
 };
 
 export default class Header extends React.PureComponent<Props> {

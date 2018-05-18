@@ -5,11 +5,11 @@ import Icon from '../Icon';
 import itemStyles from './item.scss';
 
 type Props = {
-    value: *,
-    children: string,
     active: boolean,
+    children: string,
     icon?: string,
     onClick?: (value: *) => void,
+    value: *,
 };
 
 export default class Item extends React.PureComponent<Props> {

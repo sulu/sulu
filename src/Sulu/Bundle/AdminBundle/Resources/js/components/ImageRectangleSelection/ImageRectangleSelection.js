@@ -10,13 +10,13 @@ import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
 
 type Props = {
     /** Determines the position at which the selection box is rendered at the beginning. */
+    containerHeight: number,
+    containerWidth: number,
     initialSelection?: SelectionData,
-    minWidth?: number,
     minHeight?: number,
+    minWidth?: number,
     onChange?: (s: SelectionData) => void,
     src: string,
-    containerWidth: number,
-    containerHeight: number,
 };
 
 @observer

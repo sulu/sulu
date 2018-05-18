@@ -1,7 +1,7 @@
 // @flow
 export type Action = {
-    title: string,
     onClick: () => void,
+    title: string,
 };
 
 export type Size = 'small' | 'large';

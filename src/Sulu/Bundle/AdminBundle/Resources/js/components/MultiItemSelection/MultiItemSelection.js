@@ -12,15 +12,15 @@ type Props = {
     /** The text inside the header bar of the `MultiItemSelection` */
     label?: string,
     /** Called when the remove button is clicked on an item */
-    onItemRemove?: (itemid: string | number) => void,
-    /** Called after a drag and drop action was executed */
-    onItemsSorted?: (oldIndex: number, newIndex: number) => void,
-    /** The config of the button placed left side of the header */
     leftButton?: Button,
-    /** The config of the button placed right side of the header */
-    rightButton?: Button,
-    /** Show loading indicator or not */
+    /** Called after a drag and drop action was executed */
     loading: boolean,
+    /** The config of the button placed left side of the header */
+    onItemRemove?: (itemid: string | number) => void,
+    /** The config of the button placed right side of the header */
+    onItemsSorted?: (oldIndex: number, newIndex: number) => void,
+    /** Show loading indicator or not */
+    rightButton?: Button,
 };
 
 export default class MultiItemSelection extends React.PureComponent<Props> {
@@ -72,7 +72,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
         }
     };
 
-    handleItemsSorted = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
+    handleItemsSorted = ({oldIndex, newIndex}: {newIndex: number, oldIndex: number}) => {
         const {onItemsSorted} = this.props;
 
         if (onItemsSorted) {

@@ -9,19 +9,19 @@ import inputStyles from './input.scss';
 const LOADER_SIZE = 20;
 
 type Props = {|
-    name?: string,
     icon?: string,
-    type: string,
-    loading?: boolean,
-    placeholder?: string,
+    iconClassName?: string,
+    iconStyle?: Object,
     inputRef?: (ref: ?ElementRef<'label'>) => void,
-    valid: boolean,
-    value: ?string,
+    loading?: boolean,
+    name?: string,
     onBlur?: () => void,
     onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
     onIconClick?: () => void,
-    iconStyle?: Object,
-    iconClassName?: string,
+    placeholder?: string,
+    type: string,
+    valid: boolean,
+    value: ?string,
 |};
 
 export default class Input extends React.PureComponent<Props> {

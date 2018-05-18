@@ -5,10 +5,10 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 
 type Props = SelectProps & {
-    values: Array<string | number>,
-    noneSelectedText: string,
     allSelectedText: string,
+    noneSelectedText: string,
     onChange: (values: Array<string | number>) => void,
+    values: Array<string | number>,
 };
 
 export default class MultiSelect extends React.PureComponent<Props> {

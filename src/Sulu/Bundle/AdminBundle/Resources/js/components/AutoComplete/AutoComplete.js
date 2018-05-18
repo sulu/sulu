@@ -18,15 +18,15 @@ const POPOVER_VERTICAL_OFFSET = -2;
 type Props = {
     children: ChildrenArray<Element<typeof Suggestion>>,
     /** The value of the selected "Suggestion" */
-    value: string,
-    placeholder?: string,
-    /** Shows the loading indicator when true */
     loading?: boolean,
-    /** Called when a suggestion is set */
     onChange: (value: string | number) => void,
+    /** Shows the loading indicator when true */
     onFinish: () => void,
-    /** Called with a debounce when text is entered inside the input */
+    /** Called when a suggestion is set */
     onSearch: (query: string) => void,
+    placeholder?: string,
+    /** Called with a debounce when text is entered inside the input */
+    value: string,
 };
 
 @observer

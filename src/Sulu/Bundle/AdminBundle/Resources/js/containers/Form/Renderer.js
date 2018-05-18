@@ -14,10 +14,10 @@ type Props = {|
     data: Object,
     errors?: ErrorCollection,
     formInspector: FormInspector,
-    schema: Schema,
-    showAllErrors: boolean,
     onChange: (string, *) => void,
     onFieldFinish: ?() => void,
+    schema: Schema,
+    showAllErrors: boolean,
 |};
 
 @observer

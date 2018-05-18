@@ -15,8 +15,8 @@ const RESOURCE_KEY = 'media';
 
 type Props = {
     children: any,
-    locale: IObservableValue<string>,
     collectionId: ?string | number,
+    locale: IObservableValue<string>,
     onUpload: (media: Array<Object>) => void,
 };
 

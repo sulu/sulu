@@ -12,13 +12,13 @@ type Props = {|
     adapter: string,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
-    onChange: (selectedIds: Array<string | number>) => void,
+    icon: string,
     label?: string,
     locale?: ?IObservableValue<string>,
-    icon: string,
+    onChange: (selectedIds: Array<string | number>) => void,
+    overlayTitle: string,
     resourceKey: string,
     value: Array<string | number>,
-    overlayTitle: string,
 |};
 
 @observer

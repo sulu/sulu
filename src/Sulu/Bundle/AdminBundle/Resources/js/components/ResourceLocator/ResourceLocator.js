@@ -4,10 +4,10 @@ import Input from '../Input';
 import resourceLocatorStyles from './resourceLocator.scss';
 
 type Props = {|
-    value: string,
-    onChange: (value: string) => void,
-    onBlur?: () => void,
     mode: 'full' | 'leaf',
+    onBlur?: () => void,
+    onChange: (value: string) => void,
+    value: string,
 |};
 
 export default class ResourceLocator extends React.PureComponent<Props> {

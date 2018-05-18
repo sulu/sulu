@@ -7,11 +7,11 @@ import Input from '../Input';
 
 type Props = {|
     name?: string,
+    onBlur?: () => void,
+    onChange: (value: ?string) => void,
     placeholder?: string,
     valid: boolean,
     value: ?string,
-    onBlur?: () => void,
-    onChange: (value: ?string) => void,
 |};
 
 @observer

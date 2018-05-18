@@ -6,14 +6,14 @@ import type {DownloadItemsList} from './types';
 import DownloadListItem from './DownloadListItem';
 
 type Props = {
-    open: boolean,
-    onClose: () => void,
-    copyText: string,
     buttonRef: ?ElementRef<'button'>,
-    imageSizes: Array<{url: string, label: string}>,
-    downloadUrl: string,
+    copyText: string,
     downloadText: string,
+    downloadUrl: string,
+    imageSizes: Array<{label: string, url: string}>,
+    onClose: () => void,
     onDownload: (url: string) => void,
+    open: boolean,
 };
 
 export default class DownloadList extends React.PureComponent<Props> {

@@ -10,11 +10,11 @@ import type {OverlayType, OperationType} from './types';
 import collectionFormOverlayStyles from './collectionFormOverlay.scss';
 
 type Props = {
-    operationType: OperationType,
-    resourceStore: ResourceStore,
-    onConfirm: (resourceStore: ResourceStore) => void,
     onClose: () => void,
+    onConfirm: (resourceStore: ResourceStore) => void,
+    operationType: OperationType,
     overlayType: OverlayType,
+    resourceStore: ResourceStore,
 };
 
 @observer

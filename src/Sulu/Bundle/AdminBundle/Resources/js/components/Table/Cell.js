@@ -8,9 +8,9 @@ type Props = {
     children?: Node,
     className?: string,
     /** If set to true, the cell will not stretch and stay at minimal width */
-    small: boolean,
     colspan?: number,
     depth?: number,
+    small: boolean,
 };
 
 const DEPTH_PADDING = 25;

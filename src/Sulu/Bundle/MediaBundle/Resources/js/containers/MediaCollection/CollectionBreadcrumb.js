@@ -8,8 +8,8 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import type {BreadcrumbItem, BreadcrumbItems} from './types';
 
 type Props = {
-    resourceStore: ResourceStore,
     onNavigate: (collectionId?: string | number) => void,
+    resourceStore: ResourceStore,
 };
 
 @observer

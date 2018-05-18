@@ -11,10 +11,10 @@ import type {ItemButtonConfig, ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Column>>,
     buttons?: Array<ItemButtonConfig>,
-    toolbarItems: Array<ToolbarItemConfig>,
+    children: ChildrenArray<Element<typeof Column>>,
     onItemClick: (id: string | number) => void,
+    toolbarItems: Array<ToolbarItemConfig>,
 };
 
 @observer

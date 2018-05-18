@@ -11,10 +11,10 @@ import Item from './Item';
 import arrowMenuStyles from './arrowMenu.scss';
 
 type Props = {
-    children: ChildrenArray<Element<*>>,
     anchorElement: Element<*>,
-    open: boolean,
+    children: ChildrenArray<Element<*>>,
     onClose?: () => void,
+    open: boolean,
 };
 
 const VERTICAL_OFFSET = 20;

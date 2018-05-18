@@ -6,11 +6,11 @@ import type {SwitchProps} from './types';
 import switchStyles from './switch.scss';
 
 type Props = SwitchProps & {
+    active: boolean,
     className?: string,
     icon?: string,
-    type: string,
-    active: boolean,
     onChange?: (checked: boolean, value?: string | number) => void,
+    type: string,
 };
 
 export default class Switch extends React.PureComponent<Props> {

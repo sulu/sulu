@@ -14,11 +14,11 @@ import './datePicker.scss';
 
 type Props = {
     /** Placeholder can be overwritten */
-    placeholder?: string,
-    /** Listen for changes of this component */
     onChange: (value: ?Date) => void,
-    /** Configure the datepicker to your needs, for more information have a look in the README.md */
+    /** Listen for changes of this component */
     options: Object,
+    /** Configure the datepicker to your needs, for more information have a look in the README.md */
+    placeholder?: string,
     valid: boolean,
     value: ?Date,
 };

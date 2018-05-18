@@ -12,36 +12,36 @@ import mediaCardStyles from './mediaCard.scss';
 const DOWNLOAD_ICON = 'fa-cloud-download';
 
 type Props = {
-    id: string | number,
-    selected: boolean,
+    downloadCopyText: string,
+    downloadText: string,
     /**
      * Called when the image at the bottom part of this element was clicked.
      * Gets the new selection state passed as second argument.
      */
-    onClick?: (id: string | number, selected: boolean) => void,
+    downloadUrl: string,
     /** Called when the header or the checkbox was clicked to select/deselect this item */
-    onSelectionChange?: (id: string | number, selected: boolean) => void,
-    /** The title which will be displayed in the header besides the checkbox */
-    title: string,
-    /** For setting meta information like the file size or extension  */
-    meta?: string,
-    /** The icon used inside the media overlay */
     icon?: string,
-    /** The URL of the presented image */
+    /** The title which will be displayed in the header besides the checkbox */
+    id: string | number,
+    /** For setting meta information like the file size or extension  */
     image: ?string,
+    /** The icon used inside the media overlay */
+    imageSizes: Array<{label: string, url: string}>,
+    /** The URL of the presented image */
+    meta?: string,
     /** Mime type to determine which icon to use if no thumbnail is present */
     mimeType: string,
     /** List of available image sizes */
-    imageSizes: Array<{url: string, label: string}>,
+    onClick?: (id: string | number, selected: boolean) => void,
     /** For the `Item` in the "DownloadList" which will open the defined url to download the image */
-    downloadUrl: string,
-    downloadText: string,
-    /** Called when the "Download"-item was clicked */
     onDownload?: (url: string) => void,
+    onSelectionChange?: (id: string | number, selected: boolean) => void,
+    /** Called when the "Download"-item was clicked */
+    selected: boolean,
     /** Info text which is shown, when a download link is hovered */
-    downloadCopyText: string,
-    /** When true the cover is permanently shown */
     showCover: boolean,
+    /** When true the cover is permanently shown */
+    title: string,
 };
 
 @observer

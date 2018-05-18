@@ -4,11 +4,11 @@ import Input from '../Input';
 
 type Props = {|
     name?: string,
+    onBlur?: () => void,
+    onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
     placeholder?: string,
     valid: boolean,
     value: ?string,
-    onBlur?: () => void,
-    onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
 |};
 
 export default class Phone extends React.PureComponent<Props> {

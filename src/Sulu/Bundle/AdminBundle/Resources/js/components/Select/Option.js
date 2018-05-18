@@ -10,14 +10,14 @@ import optionStyles from './option.scss';
 
 type Props = {
     anchorWidth: number,
-    selected: boolean,
+    children: string,
     disabled: boolean,
     focus: boolean,
-    value: string | number,
-    children: string,
     onClick?: (value: string | number) => void,
     optionRef?: (optionNode: ElementRef<'li'>, selected: boolean) => void,
+    selected: boolean,
     selectedVisualization: OptionSelectedVisualization,
+    value: string | number,
 };
 
 const ANCHOR_WIDTH_DIFFERENCE = 10;

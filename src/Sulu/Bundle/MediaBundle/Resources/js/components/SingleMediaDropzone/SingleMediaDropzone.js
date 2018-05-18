@@ -14,10 +14,10 @@ type Props = {|
     emptyIcon: string,
     image: ?string,
     mimeType: ?string,
-    uploading: boolean,
-    progress: number,
     onDrop: (data: File) => void,
+    progress: number,
     skin: 'default' | 'round',
+    uploading: boolean,
     uploadText?: ?string,
 |};
 

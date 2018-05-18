@@ -13,8 +13,8 @@ import datagridStyles from './datagrid.scss';
 type Props = {|
     adapters: Array<string>,
     disabledIds: Array<string | number>,
-    onItemClick?: (itemId: string | number) => void,
     onAddClick?: (id: string | number) => void,
+    onItemClick?: (itemId: string | number) => void,
     selectable: boolean,
     store: DatagridStore,
 |};

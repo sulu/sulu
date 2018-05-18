@@ -11,19 +11,19 @@ import PopoverPositioner from './PopoverPositioner';
 import popoverStyles from './popover.scss';
 
 type Props = {
-    open: boolean,
+    anchorElement: ElementRef<*>,
+    backdrop: boolean,
+    centerChildElement?: ElementRef<*>,
+    /** This element will be used to position the popover */
     children?: (
         setPopoverElementRef: (ref: ElementRef<*>) => void,
         style: Object,
         verticalPosition: string,
     ) => Node,
-    onClose?: () => void,
-    /** This element will be used to position the popover */
-    anchorElement: ElementRef<*>,
-    centerChildElement?: ElementRef<*>,
     horizontalOffset: number,
+    onClose?: () => void,
+    open: boolean,
     verticalOffset: number,
-    backdrop: boolean,
 };
 
 @observer

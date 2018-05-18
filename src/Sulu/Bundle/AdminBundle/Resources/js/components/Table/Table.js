@@ -14,31 +14,31 @@ import tableStyles from './table.scss';
 const PLACEHOLDER_ICON = 'su-battery-low';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Header | typeof Body>>,
-    /** List of buttons to apply action handlers to every row (e.g. edit row) */
     buttons?: Array<ButtonConfig>,
+    /** List of buttons to apply action handlers to every row (e.g. edit row) */
+    children: ChildrenArray<Element<typeof Header | typeof Body>>,
     /** Can be set to "single" or "multiple". Defaults is "none". */
-    selectMode?: SelectMode,
-    selectInFirstCell?: boolean,
+    onAllSelectionChange?: (checked: boolean) => void,
+    onRowCollapse?: (rowId: string | number) => void,
     /**
      * Callback function to notify about selection and deselection of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
-    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    onRowExpand?: (rowId: string | number) => void,
     /**
      * Callback function to notify about open of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
-    onRowExpand?: (rowId: string | number) => void,
+    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     /**
      * Callback function to notify about close of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
-    onRowCollapse?: (rowId: string | number) => void,
-    /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
-    onAllSelectionChange?: (checked: boolean) => void,
-    /** Text shown when the table has no entries */
     placeholderText?: string,
+    /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
+    selectInFirstCell?: boolean,
+    /** Text shown when the table has no entries */
+    selectMode?: SelectMode,
 };
 
 @observer

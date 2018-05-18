@@ -14,11 +14,11 @@ const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
-    open: boolean,
-    locale: IObservableValue<string>,
     excludedIds: Array<string | number>,
+    locale: IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
+    open: boolean,
 };
 
 @observer

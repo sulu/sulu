@@ -6,9 +6,9 @@ import tableStyles from './table.scss';
 
 type Props = {
     /** A ButtonCell is always associated with a row */
-    rowId: string | number,
     icon: string,
     onClick?: (rowId: string | number) => void,
+    rowId: string | number,
 };
 
 export default class ButtonCell extends React.PureComponent<Props> {

@@ -6,8 +6,8 @@ import navigationRegistry from './registries/NavigationRegistry';
 import type {NavigationItem} from './types';
 
 type Props = {
-    router: Router,
     onNavigate: (route: string) => void,
+    router: Router,
 };
 
 const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';

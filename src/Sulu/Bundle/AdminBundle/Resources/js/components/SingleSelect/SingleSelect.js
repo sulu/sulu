@@ -5,8 +5,8 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 
 type Props = SelectProps & {
-    value: ?string | number,
     onChange?: (value: string | number) => void,
+    value: ?string | number,
 };
 
 export default class SingleSelect extends React.PureComponent<Props> {
