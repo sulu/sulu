@@ -3,4 +3,9 @@
 .media-detail {
     padding: $viewPadding;
     max-width: $viewMaxWidth;
+    min-width: $viewMinWidth;
+}
+
+.image-section {
+    margin-bottom: 30px;
 }

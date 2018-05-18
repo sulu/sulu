@@ -22,6 +22,7 @@ $iconColorActive: $white;
 
 .button {
     position: relative;
+    white-space: nowrap;
 
     &:disabled {
         cursor: default;

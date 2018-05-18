@@ -56,7 +56,7 @@ class MediaDetail extends React.Component<Props> {
     render() {
         return (
             <Grid className={mediaDetailStyles.mediaDetail}>
-                <Grid.Section size={4}>
+                <Grid.Section size={4} className={mediaDetailStyles.imageSection}>
                     <Grid.Item>
                         <SingleMediaUpload
                             deletable={false}

@@ -5,7 +5,7 @@ exports[`Render a loading MediaDetail view 1`] = `
   class="grid mediaDetail"
 >
   <div
-    class="section size size-4 space-before-0 space-after-0"
+    class="section imageSection size size-4 space-before-0 space-after-0"
   >
     <div
       class="item size size-12 space-before-0 space-after-0"
