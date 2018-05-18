@@ -1,8 +1,10 @@
 @import './variables.scss';
 
-.grid-section {
-    margin-bottom: -$fieldMarginBottom;
+.grid {
+    margin-bottom: -$sectionMarginBottom;
+}
 
+.grid-section {
     & .grid-section:last-child {
         margin-bottom: 0;
     }

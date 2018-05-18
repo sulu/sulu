@@ -10,15 +10,15 @@ exports[`Render block with schema 1`] = `
           <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
-          <div class=\\"grid\\">
-            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+          <div class=\\"grid grid\\">
+            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
               <div class=\\"field\\">
                 <label class=\\"label\\">Text 1</label>
                 <input type=\\"text\\" value=\\"Test 1\\">
                 <label class=\\"errorLabel\\"></label>
               </div>
             </div>
-            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
               <div class=\\"field\\">
                 <label class=\\"label\\">Text 2</label>
                 <input type=\\"text\\" value=\\"Test 2\\">
@@ -36,15 +36,15 @@ exports[`Render block with schema 1`] = `
           <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
-          <div class=\\"grid\\">
-            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+          <div class=\\"grid grid\\">
+            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
               <div class=\\"field\\">
                 <label class=\\"label\\">Text 1</label>
                 <input type=\\"text\\" value=\\"Test 3\\">
                 <label class=\\"errorLabel\\"></label>
               </div>
             </div>
-            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
               <div class=\\"field\\">
                 <label class=\\"label\\">Text 2</label>
                 <input type=\\"text\\" value=\\"Test 4\\">
@@ -70,8 +70,8 @@ exports[`Render block with schema and error on fields already being modified 1`]
           <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
-          <div class=\\"grid\\">
-            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+          <div class=\\"grid grid\\">
+            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
               <div class=\\"field\\">
                 <label class=\\"label\\">Text</label>
                 <input type=\\"text\\" value=\\"Test1\\">
@@ -89,8 +89,8 @@ exports[`Render block with schema and error on fields already being modified 1`]
           <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
-          <div class=\\"grid\\">
-            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+          <div class=\\"grid grid\\">
+            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
               <div class=\\"field error\\">
                 <label class=\\"label\\">Text</label>
                 <input class=\\"minLength\\" type=\\"text\\" value=\\"T2\\">
@@ -108,8 +108,8 @@ exports[`Render block with schema and error on fields already being modified 1`]
           <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
-          <div class=\\"grid\\">
-            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+          <div class=\\"grid grid\\">
+            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
               <div class=\\"field\\">
                 <label class=\\"label\\">Text</label>
                 <input type=\\"text\\" value=\\"T3\\">
@@ -135,8 +135,8 @@ exports[`Render block with schema and error on fields already being modified 2`]
           <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
-          <div class=\\"grid\\">
-            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+          <div class=\\"grid grid\\">
+            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
               <div class=\\"field\\">
                 <label class=\\"label\\">Text</label>
                 <input type=\\"text\\" value=\\"Test1\\">
@@ -154,8 +154,8 @@ exports[`Render block with schema and error on fields already being modified 2`]
           <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
-          <div class=\\"grid\\">
-            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+          <div class=\\"grid grid\\">
+            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
               <div class=\\"field error\\">
                 <label class=\\"label\\">Text</label>
                 <input class=\\"minLength\\" type=\\"text\\" value=\\"T2\\">
@@ -173,8 +173,8 @@ exports[`Render block with schema and error on fields already being modified 2`]
           <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
-          <div class=\\"grid\\">
-            <div style=\\"width: 100%; margin-left: 0%; margin-right: 0%;\\" class=\\"item gridItem\\">
+          <div class=\\"grid grid\\">
+            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
               <div class=\\"field error\\">
                 <label class=\\"label\\">Text</label>
                 <input class=\\"minLength\\" type=\\"text\\" value=\\"T3\\">

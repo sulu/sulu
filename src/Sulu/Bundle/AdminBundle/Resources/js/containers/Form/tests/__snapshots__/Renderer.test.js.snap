@@ -2,17 +2,16 @@
 
 exports[`Should render a grid 1`] = `
 <div
-  class="grid"
+  class="grid grid"
 />
 `;
 
 exports[`Should render field types based on schema 1`] = `
 <div
-  class="grid"
+  class="grid grid"
 >
   <div
-    class="item gridItem"
-    style="width:100%;margin-left:0%;margin-right:0%"
+    class="item gridItem size size-12 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -31,8 +30,7 @@ exports[`Should render field types based on schema 1`] = `
     </div>
   </div>
   <div
-    class="item gridItem"
-    style="width:100%;margin-left:0%;margin-right:0%"
+    class="item gridItem size size-12 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -55,15 +53,13 @@ exports[`Should render field types based on schema 1`] = `
 
 exports[`Should render nested sections 1`] = `
 <div
-  class="grid"
+  class="grid grid"
 >
   <div
-    class="section gridSection"
-    style="width:100%;margin-left:0%;margin-right:0%"
+    class="section gridSection size size-12 space-before-0 space-after-0"
   >
     <div
-      class="item"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item size size-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -72,8 +68,7 @@ exports[`Should render nested sections 1`] = `
       </div>
     </div>
     <div
-      class="item gridItem"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item gridItem size size-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -92,12 +87,10 @@ exports[`Should render nested sections 1`] = `
       </div>
     </div>
     <div
-      class="section gridSection"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="section gridSection size size-12 space-before-0 space-after-0"
     >
       <div
-        class="item"
-        style="width:100%;margin-left:0%;margin-right:0%"
+        class="item size size-12 space-before-0 space-after-0"
       >
         <div
           class="divider"
@@ -108,12 +101,10 @@ exports[`Should render nested sections 1`] = `
     </div>
   </div>
   <div
-    class="section gridSection"
-    style="width:100%;margin-left:0%;margin-right:0%"
+    class="section gridSection size size-12 space-before-0 space-after-0"
   >
     <div
-      class="item"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item size size-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -122,8 +113,7 @@ exports[`Should render nested sections 1`] = `
       </div>
     </div>
     <div
-      class="item gridItem"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item gridItem size size-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -147,15 +137,13 @@ exports[`Should render nested sections 1`] = `
 
 exports[`Should render sections with size 1`] = `
 <div
-  class="grid"
+  class="grid grid"
 >
   <div
-    class="section gridSection"
-    style="width:66.66666666666667%;margin-left:0%;margin-right:0%"
+    class="section gridSection size size-8 space-before-0 space-after-0"
   >
     <div
-      class="item"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item size size-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -164,8 +152,7 @@ exports[`Should render sections with size 1`] = `
       </div>
     </div>
     <div
-      class="item gridItem"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item gridItem size size-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -185,12 +172,10 @@ exports[`Should render sections with size 1`] = `
     </div>
   </div>
   <div
-    class="section gridSection"
-    style="width:33.333333333333336%;margin-left:0%;margin-right:0%"
+    class="section gridSection size size-4 space-before-0 space-after-0"
   >
     <div
-      class="item"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item size size-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -199,8 +184,7 @@ exports[`Should render sections with size 1`] = `
       </div>
     </div>
     <div
-      class="item gridItem"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item gridItem size size-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -224,15 +208,13 @@ exports[`Should render sections with size 1`] = `
 
 exports[`Should render sections without label 1`] = `
 <div
-  class="grid"
+  class="grid grid"
 >
   <div
-    class="section gridSection"
-    style="width:66.66666666666667%;margin-left:0%;margin-right:0%"
+    class="section gridSection size size-8 space-before-0 space-after-0"
   >
     <div
-      class="item gridItem"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item gridItem size size-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -252,12 +234,10 @@ exports[`Should render sections without label 1`] = `
     </div>
   </div>
   <div
-    class="section gridSection"
-    style="width:33.333333333333336%;margin-left:0%;margin-right:0%"
+    class="section gridSection size size-4 space-before-0 space-after-0"
   >
     <div
-      class="item"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item size size-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -266,8 +246,7 @@ exports[`Should render sections without label 1`] = `
       </div>
     </div>
     <div
-      class="item gridItem"
-      style="width:100%;margin-left:0%;margin-right:0%"
+      class="item gridItem size size-12 space-before-0 space-after-0"
     >
       <div
         class="field"

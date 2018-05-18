@@ -5,12 +5,10 @@ exports[`Render a loading MediaDetail view 1`] = `
   class="grid mediaDetail"
 >
   <div
-    class="section"
-    style="width: 33.333333333333336%; margin-left: 0%; margin-right: 0%;"
+    class="section size size-4 space-before-0 space-after-0"
   >
     <div
-      class="item"
-      style="width: 100%; margin-left: 0%; margin-right: 0%;"
+      class="item size size-12 space-before-0 space-after-0"
     >
       <div
         aria-disabled="false"
@@ -52,12 +50,10 @@ exports[`Render a loading MediaDetail view 1`] = `
     </div>
   </div>
   <div
-    class="section"
-    style="width: 66.66666666666667%; margin-left: 0%; margin-right: 0%;"
+    class="section size size-8 space-before-0 space-after-0"
   >
     <div
-      class="item"
-      style="width: 100%; margin-left: 0%; margin-right: 0%;"
+      class="item size size-12 space-before-0 space-after-0"
     >
       <div
         class="spinner"
