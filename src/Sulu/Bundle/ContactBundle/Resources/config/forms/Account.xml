@@ -12,8 +12,9 @@
                             <info_text lang="de">Bild ablegen oder klicken um das Logo zu ändern</info_text>
                         </meta>
                     </param>
-                    <param name="empty_icon" value="su-house"/>
                     <param name="collection_id" expression="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.account')"/>
+                    <param name="empty_icon" value="su-house"/>
+                    <param name="image_size" value="sulu-400x400-inset" />
                 </params>
             </property>
         </properties>

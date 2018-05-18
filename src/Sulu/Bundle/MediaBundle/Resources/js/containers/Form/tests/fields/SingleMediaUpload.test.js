@@ -13,6 +13,9 @@ test('Pass correct props', () => {
         empty_icon: {
             value: 'su-icon',
         },
+        image_size: {
+            value: 'sulu-400x400-inset',
+        },
         upload_text: {
             infoText: 'Drag and drop',
         },
@@ -24,6 +27,7 @@ test('Pass correct props', () => {
 
     expect(singleMediaUpload.prop('collectionId')).toEqual(3);
     expect(singleMediaUpload.prop('emptyIcon')).toEqual('su-icon');
+    expect(singleMediaUpload.prop('imageSize')).toEqual('sulu-400x400-inset');
     expect(singleMediaUpload.prop('uploadText')).toEqual('Drag and drop');
 });
 
@@ -72,6 +76,21 @@ test('Throw if skin is set but not a valid value', () => {
     expect(
         () => shallow(<SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />)
     ).toThrow('"default" or "round"');
+});
+
+test('Throw if image_size is set but not a valid value', () => {
+    const schemaOptions = {
+        collection_id: {
+            value: 2,
+        },
+        image_size: {
+            value: 3,
+        },
+    };
+
+    expect(
+        () => shallow(<SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />)
+    ).toThrow('"image_size"');
 });
 
 test('Throw if collectionId is not set', () => {

@@ -37,6 +37,9 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Ob
                 empty_icon: {
                     value: emptyIcon,
                 } = {},
+                image_size: {
+                    value: imageSize,
+                } = {},
                 skin: {
                     value: skin,
                 } = {value: 'default'},
@@ -52,6 +55,10 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Ob
             throw new Error('The "empty_icon" schema option must be a string!');
         }
 
+        if (typeof imageSize !== 'undefined' && typeof imageSize !== 'string') {
+            throw new Error('The "image_size" schema option must be a string!');
+        }
+
         if (skin !== 'default' && skin !== 'round') {
             throw new Error('The "skin" schema option must either be "default" or "round"!');
         }
@@ -61,6 +68,7 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Ob
             <SingleMediaUploadComponent
                 collectionId={collectionId}
                 emptyIcon={emptyIcon}
+                imageSize={imageSize}
                 mediaUploadStore={this.mediaUploadStore}
                 onUploadComplete={this.handleUploadComplete}
                 skin={skin}
