@@ -2,12 +2,11 @@
 import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {Dialog} from 'sulu-admin-bundle/components';
+import {Button, Dialog} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import SingleMediaDropzone from '../../components/SingleMediaDropzone';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import singleMediaUploadStyles from './singleMediaUpload.scss';
-import Button from './Button';
 
 type Props = {|
     collectionId?: number,
@@ -61,6 +60,10 @@ export default class SingleMediaUpload extends React.Component<Props> {
         }
     };
 
+    @action handleDownloadMediaClick = () => {
+        window.location.assign(this.props.mediaUploadStore.downloadUrl);
+    };
+
     @action handleDeleteMediaClick = () => {
         this.showDeleteDialog = true;
     };
@@ -99,7 +102,6 @@ export default class SingleMediaUpload extends React.Component<Props> {
         } = this.props;
 
         const {
-            downloadUrl,
             mimeType,
             progress,
             uploading,
@@ -121,16 +123,18 @@ export default class SingleMediaUpload extends React.Component<Props> {
                     <div className={singleMediaUploadStyles.buttons}>
                         {downloadable &&
                             <Button
-                                downloadUrl={downloadUrl}
                                 icon="su-download"
+                                onClick={this.handleDownloadMediaClick}
+                                skin="link"
                             >
                                 {translate('sulu_media.download_media')}
                             </Button>
                         }
                         {deletable &&
                             <Button
-                                onClick={this.handleDeleteMediaClick}
                                 icon="su-trash-alt"
+                                onClick={this.handleDeleteMediaClick}
+                                skin="link"
                             >
                                 {translate('sulu_media.delete_media')}
                             </Button>

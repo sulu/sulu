@@ -11,11 +11,13 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function(resourceSto
     this.update = jest.fn();
     this.delete = jest.fn();
     this.getThumbnail = jest.fn((size) => size);
+    this.downloadUrl = resourceStore.data.url ? resourceStore.data.url : undefined;
 }));
 
 jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(function(resourceKey, id) {
         this.id = id;
+        this.data = {};
     }),
 }));
 
@@ -127,6 +129,27 @@ test('Call create with passed collectionId if id is not given and drop event occ
     return promise.then(() => {
         expect(uploadCompleteSpy).toBeCalledWith({});
     });
+});
+
+test('Download the image when the download button is clicked', () => {
+    window.location.assign = jest.fn();
+
+    const resourceStore = new ResourceStore('media', 1);
+    resourceStore.data = {
+        id: 1,
+        url: 'test.jpg',
+    };
+    const mediaUploadStore = new MediaUploadStore(resourceStore);
+
+    const singleMediaUpload = shallow(
+        <SingleMediaUpload
+            mediaUploadStore={mediaUploadStore}
+            uploadText="Upload media"
+        />
+    );
+
+    singleMediaUpload.find('Button[icon="su-download"]').simulate('click');
+    expect(window.location.assign).toBeCalledWith('test.jpg');
 });
 
 test('Delete the image when the delete button is clicked and the overlay is confirmed', () => {

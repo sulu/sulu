@@ -38,24 +38,34 @@ Array [
   <div
     class="buttons"
   >
-    <a
-      class="button"
+    <button
+      class="button link"
+      type="button"
     >
       <span
         aria-label="su-download"
-        class="icon su-download"
+        class="buttonIcon su-download"
       />
-      sulu_media.download_media
-    </a>
-    <a
-      class="button"
+      <span
+        class="text"
+      >
+        sulu_media.download_media
+      </span>
+    </button>
+    <button
+      class="button link"
+      type="button"
     >
       <span
         aria-label="su-trash-alt"
-        class="icon su-trash-alt"
+        class="buttonIcon su-trash-alt"
       />
-      sulu_media.delete_media
-    </a>
+      <span
+        class="text"
+      >
+        sulu_media.delete_media
+      </span>
+    </button>
   </div>,
   <div />,
 ]
@@ -99,24 +109,34 @@ Array [
   <div
     class="buttons"
   >
-    <a
-      class="button"
+    <button
+      class="button link"
+      type="button"
     >
       <span
         aria-label="su-download"
-        class="icon su-download"
+        class="buttonIcon su-download"
       />
-      sulu_media.download_media
-    </a>
-    <a
-      class="button"
+      <span
+        class="text"
+      >
+        sulu_media.download_media
+      </span>
+    </button>
+    <button
+      class="button link"
+      type="button"
     >
       <span
         aria-label="su-trash-alt"
-        class="icon su-trash-alt"
+        class="buttonIcon su-trash-alt"
       />
-      sulu_media.delete_media
-    </a>
+      <span
+        class="text"
+      >
+        sulu_media.delete_media
+      </span>
+    </button>
   </div>,
   <div />,
 ]
@@ -203,24 +223,34 @@ Array [
   <div
     class="buttons"
   >
-    <a
-      class="button"
+    <button
+      class="button link"
+      type="button"
     >
       <span
         aria-label="su-download"
-        class="icon su-download"
+        class="buttonIcon su-download"
       />
-      sulu_media.download_media
-    </a>
-    <a
-      class="button"
+      <span
+        class="text"
+      >
+        sulu_media.download_media
+      </span>
+    </button>
+    <button
+      class="button link"
+      type="button"
     >
       <span
         aria-label="su-trash-alt"
-        class="icon su-trash-alt"
+        class="buttonIcon su-trash-alt"
       />
-      sulu_media.delete_media
-    </a>
+      <span
+        class="text"
+      >
+        sulu_media.delete_media
+      </span>
+    </button>
   </div>,
   <div />,
 ]
