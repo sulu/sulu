@@ -106,6 +106,7 @@ $borderWidth: 1px;
     width: 1px;
     border-right: $borderWidth solid $headerButtonCellBorderColor;
     text-align: center;
+    font-size: 16px;
 }
 
 .row {
@@ -115,6 +116,7 @@ $borderWidth: 1px;
         }
 
         .button-cell {
+            font-size: 16px;
             button {
                 visibility: visible;
             }
