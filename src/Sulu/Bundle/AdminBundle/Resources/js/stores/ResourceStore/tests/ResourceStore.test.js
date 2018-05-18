@@ -188,6 +188,7 @@ test('Save the store without an id should send a POST request without a locale',
 test('Saving flag should be set to true when deleting', () => {
     ResourceRequester.delete.mockReturnValue(Promise.resolve());
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    resourceStore.data = {id: 1};
     resourceStore.saving = false;
     resourceStore.setLocale('en');
 
@@ -195,27 +196,29 @@ test('Saving flag should be set to true when deleting', () => {
     expect(resourceStore.saving).toBe(true);
 });
 
-test('Saving flag should be set to false when deleting has finished', () => {
+test('Saving flag and id should be reset to false when deleting has finished', () => {
     const promise = Promise.resolve();
     ResourceRequester.delete.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    resourceStore.data = {id: 1};
     resourceStore.setLocale('en');
     resourceStore.saving = true;
 
     resourceStore.delete();
     return promise.then(() => {
         expect(resourceStore.saving).toBe(false);
+        expect(resourceStore.id).toBe(undefined);
     });
 });
 
 test('Calling the delete method should send a DELETE request', () => {
     ResourceRequester.delete.mockReturnValue(Promise.resolve());
     const resourceStore = new ResourceStore('snippets', '3', {});
-    resourceStore.data = {title: 'Title'};
+    resourceStore.data = {id: 3, title: 'Title'};
     resourceStore.dirty = false;
 
     resourceStore.delete();
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', '3');
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', 3);
 });
 
 test('Saving flag should be set to true when saving', () => {
@@ -304,4 +307,20 @@ test('Calling the clone method should return a new instance of the ResourceStore
     expect(clonedResourceStore.data).not.toBe(resourceStore.data);
     expect(toJS(clonedResourceStore)).not.toBe(resourceStore);
     expect(ResourceRequester.get).toHaveBeenCalledTimes(1);
+});
+
+test('Should set the internal id if id is set using set', () => {
+    const resourceStore = new ResourceStore('media');
+    expect(resourceStore.id).toBe(undefined);
+    resourceStore.set('id', 4);
+    expect(resourceStore.id).toBe(4);
+});
+
+test('Should set the internal id if id is set using setMultiple', () => {
+    const resourceStore = new ResourceStore('media');
+    expect(resourceStore.id).toBe(undefined);
+    resourceStore.setMultiple({
+        id: 7,
+    });
+    expect(resourceStore.id).toBe(7);
 });

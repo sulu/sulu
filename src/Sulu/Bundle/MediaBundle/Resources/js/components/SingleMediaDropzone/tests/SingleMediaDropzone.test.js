@@ -14,6 +14,26 @@ test('Render a SingleMediaDropzone', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a SingleMediaDropzone with the default empty icon', () => {
+    expect(render(<SingleMediaDropzone image={undefined} onDrop={jest.fn()} />)).toMatchSnapshot();
+});
+
+test('Render a SingleMediaDropzone with the passed empty icon', () => {
+    expect(render(<SingleMediaDropzone emptyIcon="su-user" image={undefined} onDrop={jest.fn()} />)).toMatchSnapshot();
+});
+
+test('Render a SingleMediaDropzone with the round skin', () => {
+    expect(render(
+        <SingleMediaDropzone
+            image="http://lorempixel.com/400/400"
+            onDrop={jest.fn()}
+            progress={0}
+            skin="round"
+            uploading={false}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render a SingleMediaDropzone while uploading', () => {
     expect(render(
         <SingleMediaDropzone

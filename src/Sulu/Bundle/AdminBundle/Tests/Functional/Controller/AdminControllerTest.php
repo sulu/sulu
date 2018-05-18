@@ -160,10 +160,11 @@ class AdminControllerTest extends SuluTestCase
 
         // check for form
         $this->assertObjectHasAttribute('form', $resource);
-        $this->assertObjectHasAttribute('formOfAddress', $resource->form);
-        $this->assertObjectHasAttribute('firstName', $resource->form);
-        $this->assertObjectHasAttribute('lastName', $resource->form);
-        $this->assertObjectHasAttribute('salutation', $resource->form);
+        $contactForm = $resource->form->contact->items;
+        $this->assertObjectHasAttribute('formOfAddress', $contactForm);
+        $this->assertObjectHasAttribute('firstName', $contactForm);
+        $this->assertObjectHasAttribute('lastName', $contactForm);
+        $this->assertObjectHasAttribute('salutation', $contactForm);
 
         // check for schema
         $this->assertObjectHasAttribute('schema', $resource);
@@ -188,7 +189,8 @@ class AdminControllerTest extends SuluTestCase
 
         // check for form
         $this->assertObjectHasAttribute('form', $resource);
-        $this->assertObjectHasAttribute('name', $resource->form);
+        $accountForm = $resource->form->account->items;
+        $this->assertObjectHasAttribute('name', $accountForm);
 
         // check for schema
         $this->assertObjectHasAttribute('schema', $resource);

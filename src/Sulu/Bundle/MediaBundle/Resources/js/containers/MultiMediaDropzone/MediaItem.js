@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {computed} from 'mobx';
 import {CircularProgressbar} from 'sulu-admin-bundle/components';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import mediaItemStyles from './mediaItem.scss';
@@ -14,17 +13,6 @@ type Props = {
 
 @observer
 export default class MediaItem extends React.Component<Props> {
-    @computed get thumbnail(): ?string {
-        const {store} = this.props;
-        const {thumbnails} = store.data;
-
-        if (!thumbnails || !thumbnails[THUMBNAIL_SIZE]) {
-            return null;
-        }
-
-        return `${window.location.origin}${thumbnails[THUMBNAIL_SIZE]}`;
-    }
-
     render() {
         const {store} = this.props;
 
@@ -39,7 +27,7 @@ export default class MediaItem extends React.Component<Props> {
                         />
                     </div>
                 }
-                <img src={this.thumbnail} />
+                <img src={store.getThumbnail(THUMBNAIL_SIZE)} />
             </div>
         );
     }

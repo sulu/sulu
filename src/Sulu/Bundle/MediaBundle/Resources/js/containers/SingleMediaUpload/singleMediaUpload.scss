@@ -1,0 +1,15 @@
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+
+    > * {
+        flex: 1;
+        margin-top: 20px;
+    }
+}
+
+.icon {
+    font-size: 18px;
+    margin-right: 10px;
+    text-decoration: none;
+}

@@ -3,6 +3,7 @@ import {action, autorun, computed, observable, toJS, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Ajv from 'ajv';
 import jsonpointer from 'jsonpointer';
+import log from 'loglevel';
 import ResourceStore from '../../../stores/ResourceStore';
 import type {Schema, SchemaTypes} from '../types';
 import metadataStore from './MetadataStore';
@@ -147,6 +148,7 @@ export default class FormStore {
         }
 
         this.errors = errors;
+        log.info('Form validation detected the following errors: ', toJS(this.errors));
     }
 
     @action save(options: Object = {}): Promise<Object> {

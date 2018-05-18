@@ -13,6 +13,10 @@
     "sulu_media.click_here_to_upload": "oder klicken um hinzuzufügen",
     "sulu_media.add_collection": "Ordner hinzufügen",
     "sulu_media.remove_collection": "Ordner löschen",
-    "sulu_media.remove_collection_warning": "Diese Operation löscht Daten und kann nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?",
-    "sulu_media.edit_collection": "Ordner bearbeiten"
+    "sulu_media.remove_collection_warning": "Diese Operation löscht einen Ordner und kann nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?",
+    "sulu_media.edit_collection": "Ordner bearbeiten",
+    "sulu_media.download_media": "Medium downloaden",
+    "sulu_media.delete_media": "Medium löschen",
+    "sulu_media.delete_media_warning_title": "Medium löschen",
+    "sulu_media.delete_media_warning_text": "Diese Operation löscht ein Medium und kann nicht rückgängig gemacht werden. Wollen sie wirklich fortfahren?"
 }

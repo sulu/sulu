@@ -151,14 +151,15 @@ export default class ResourceStore {
     }
 
     @action delete(): Promise<*> {
-        if (!this.id) {
+        if (!this.data.id) {
             throw new Error('Can not delete resource with an undefined "id"');
         }
 
         this.saving = true;
 
-        return ResourceRequester.delete(this.resourceKey, this.id)
+        return ResourceRequester.delete(this.resourceKey, this.data.id)
             .then(action((response) => {
+                this.id = undefined;
                 this.data = response;
                 this.saving = false;
                 this.dirty = false;
@@ -171,10 +172,18 @@ export default class ResourceStore {
     }
 
     @action set(name: string, value: mixed) {
+        if (name === 'id' && (typeof value === 'string' || typeof value === 'number')) {
+            this.id = value;
+        }
+
         this.data[name] = value;
     }
 
     @action setMultiple(data: Object) {
+        if (data.id) {
+            this.id = data.id;
+        }
+
         this.data = {...this.data, ...data};
     }
 

@@ -1,21 +1,25 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
-$dropzoneSize: 400px;
 $uploadIconColor: $scorpion;
 $uploadInfoTextColor: $scorpion;
 $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
 $mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because calc doesn't work for media-queries */
+$imageBorderColor: $silver;
+$emptyBackgroundColor: $white;
+$emptyColor: $alto;
 
 .media-container {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: $dropzoneSize;
+    width: 100%;
     height: auto;
     background-image: url('./checkerBackground.gif');
     background-size: 10px;
     cursor: pointer;
+    overflow: hidden;
+    border: 1px solid $imageBorderColor;
 
     &:hover,
     &.show-upload-indicator {
@@ -62,6 +66,24 @@ $mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because ca
     transition: all .25s cubic-bezier(.68, -.55, .265, 1.55);
 }
 
+.mime-type-indicator,
+.empty-indicator {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.empty-indicator {
+    background-color: $emptyBackgroundColor;
+    color: $emptyColor;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 120px;
+}
+
 .upload-icon {
     font-size: 45px;
     color: $uploadIconColor;
@@ -76,4 +98,10 @@ $mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because ca
 
 .thumbnail {
     max-width: 100%;
+}
+
+.round {
+    &.media-container {
+        border-radius: 50%;
+    }
 }

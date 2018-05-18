@@ -2,12 +2,14 @@
 import {arrayMove} from 'react-sortable-hoc';
 import ArrowMenu from './ArrowMenu';
 import Breadcrumb from './Breadcrumb';
+import Button from './Button';
 import Checkbox from './Checkbox';
 import CircularProgressbar from './CircularProgressbar';
 import CroppedText from './CroppedText';
 import DatePicker from './DatePicker';
 import Dialog from './Dialog';
 import Divider from './Divider';
+import Grid from './Grid';
 import Icon from './Icon';
 import InfiniteScroller from './InfiniteScroller';
 import Loader from './Loader';
@@ -25,12 +27,14 @@ export {
     ArrowMenu,
     Backdrop,
     Breadcrumb,
+    Button,
     Checkbox,
     CircularProgressbar,
     CroppedText,
     DatePicker,
     Dialog,
     Divider,
+    Grid,
     Icon,
     InfiniteScroller,
     Loader,

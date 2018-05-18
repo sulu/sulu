@@ -10,19 +10,23 @@ import singleMediaDropzoneStyles from './singleMediaDropzone.scss';
 
 const UPLOAD_ICON = 'fa-cloud-upload';
 
-type Props = {
+type Props = {|
+    emptyIcon: string,
     image: ?string,
-    mimeType: string,
+    mimeType: ?string,
     uploading: boolean,
     progress: number,
     onDrop: (data: File) => void,
-    uploadText?: string,
-};
+    skin: 'default' | 'round',
+    uploadText?: ?string,
+|};
 
 @observer
 export default class SingleMediaDropzone extends React.Component<Props> {
     static defaultProps = {
+        emptyIcon: 'su-image',
         progress: 0,
+        skin: 'default',
         uploading: false,
         mimeType: '',
     };
@@ -50,14 +54,18 @@ export default class SingleMediaDropzone extends React.Component<Props> {
 
     render() {
         const {
+            emptyIcon,
             image,
             mimeType,
             progress,
+            skin,
             uploading,
             uploadText,
         } = this.props;
+
         const mediaContainerClass = classNames(
             singleMediaDropzoneStyles.mediaContainer,
+            singleMediaDropzoneStyles[skin],
             {
                 [singleMediaDropzoneStyles.showUploadIndicator]: this.uploadIndicatorVisibility,
             }
@@ -72,8 +80,22 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                 disableClick={uploading}
                 className={mediaContainerClass}
             >
-                {!uploading &&
-                    <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
+                {image &&
+                    <img className={singleMediaDropzoneStyles.thumbnail} src={image} />
+                }
+                {!image && mimeType &&
+                    <div className={singleMediaDropzoneStyles.mimeTypeIndicator}>
+                        <MimeTypeIndicator mimeType={mimeType} iconSize={100} />
+                    </div>
+                }
+                {!image && !mimeType &&
+                    <div className={singleMediaDropzoneStyles.emptyIndicator}>
+                        <Icon name={emptyIcon} />
+                    </div>
+                }
+
+                {!uploading
+                    ? <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
                         <div className={singleMediaDropzoneStyles.uploadIndicator}>
                             <div>
                                 <Icon name={UPLOAD_ICON} className={singleMediaDropzoneStyles.uploadIcon} />
@@ -83,18 +105,12 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                             </div>
                         </div>
                     </div>
-                }
-                {uploading &&
-                    <div className={singleMediaDropzoneStyles.progressbar}>
+                    : <div className={singleMediaDropzoneStyles.progressbar}>
                         <CircularProgressbar
                             size={200}
                             percentage={progress}
                         />
                     </div>
-                }
-                {image
-                    ? <img className={singleMediaDropzoneStyles.thumbnail} src={image} />
-                    : <MimeTypeIndicator mimeType={mimeType} iconSize={100} />
                 }
             </Dropzone>
         );

@@ -1,28 +1,5 @@
 @import 'sulu-admin-bundle/containers/Application/variables.scss';
 
-$breakpoint: 900px;
-
 .media-detail {
     padding: $viewPadding;
-    display: flex;
-
-    @media (max-width: $breakpoint) {
-        display: block;
-    }
-}
-
-.form-container {
-    flex: 1 1;
-}
-
-.preview-container {
-    margin-right: $viewPadding;
-    flex: 0 0 400px;
-    margin-bottom: 30px;
-
-    @media (max-width: $breakpoint) {
-        display: block;
-        margin-right: 0;
-        flex: 0 0 auto;
-    }
 }

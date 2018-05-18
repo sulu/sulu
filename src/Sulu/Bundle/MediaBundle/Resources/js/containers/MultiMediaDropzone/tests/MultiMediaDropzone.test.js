@@ -21,11 +21,12 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
         id: 123,
     }));
     this.progress = 45;
-    this.data = {
-        thumbnails: {
-            'sulu-400x-inset': 'http://lorempixel.com/400/250',
-        },
-    };
+    this.getThumbnail = jest.fn((size) => {
+        switch (size) {
+            case 'sulu-400x-inset':
+                return 'http://lorempixel.com/400/250';
+        }
+    });
 }));
 
 test('Render a MultiMediaDropzone', () => {
@@ -102,8 +103,6 @@ test('Should upload media when it is dropped on the dropzone', (done) => {
     multiMediaDropzoneInstance.openOverlay();
     multiMediaDropzoneInstance.handleDrop(files);
 
-    expect(MediaUploadStore.mock.calls[0][0]).toBe(locale);
-    expect(MediaUploadStore.mock.calls[1][0]).toBe(locale);
     expect(MediaUploadStore.mock.instances[0].create).toBeCalledWith(3, files[0]);
     expect(MediaUploadStore.mock.instances[1].create).toBeCalledWith(3, files[1]);
     expect(multiMediaDropzoneInstance.mediaUploadStores.length).toBe(2);
