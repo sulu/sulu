@@ -162,8 +162,6 @@ class Initializer {
             });
 
             return Promise.all([translationsPromise, configPromise])
-                // Bug in flow: https://github.com/facebook/flow/issues/5810
-                // $FlowFixMe:
                 .finally(() => {
                     this.setLoading(false);
                 });

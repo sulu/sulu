@@ -98,8 +98,6 @@ class UserStore {
                         return Promise.reject(error);
                     }
                 })
-                // Bug in flow: https://github.com/facebook/flow/issues/5810
-                // $FlowFixMe:
                 .finally(() => {
                     this.setLoading(false);
                 });
@@ -112,8 +110,6 @@ class UserStore {
                     return Promise.reject(error);
                 }
             })
-            // Bug in flow: https://github.com/facebook/flow/issues/5810
-            // $FlowFixMe:
             .finally(() => {
                 this.setLoading(false);
                 this.setResetSuccess(true);
