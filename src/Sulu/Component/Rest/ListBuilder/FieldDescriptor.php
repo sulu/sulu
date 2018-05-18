@@ -46,6 +46,14 @@ class FieldDescriptor implements FieldDescriptorInterface
     private $visibility;
 
     /**
+     * Defines the searchability of the field.
+     *
+     * @var string
+     * @Expose
+     */
+    private $searchability;
+
+    /**
      * Defines if this field is sortable.
      *
      * @var bool
@@ -103,6 +111,7 @@ class FieldDescriptor implements FieldDescriptorInterface
         string $name,
         string $translation = null,
         string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
+        string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
         string $width = '',
         string $minWidth = '',
@@ -112,6 +121,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     ) {
         $this->name = $name;
         $this->visibility = $visibility;
+        $this->searchability = $searchability;
         $this->sortable = $sortable;
         $this->type = $type;
         $this->width = $width;
@@ -164,6 +174,14 @@ class FieldDescriptor implements FieldDescriptorInterface
     public function getVisibility()
     {
         return $this->visibility;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSearchability()
+    {
+        return $this->searchability;
     }
 
     /**

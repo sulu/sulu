@@ -117,6 +117,14 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
                 FieldDescriptorInterface::VISIBILITY_NO
             )
         );
+        $propertyMetadata->setSearchability(
+            XmlUtil::getValueFromXPath(
+                '@searchability',
+                $xpath,
+                $propertyNode,
+                FieldDescriptorInterface::SEARCHABILITY_NEVER
+            )
+        );
         $propertyMetadata->setSortable(
             XmlUtil::getBooleanValueFromXPath('@list:sortable', $xpath, $propertyNode, true)
         );

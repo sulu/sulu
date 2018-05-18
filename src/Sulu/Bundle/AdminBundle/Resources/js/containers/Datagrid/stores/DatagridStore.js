@@ -136,7 +136,6 @@ export default class DatagridStore {
 
         if (this.searchValue.get()) {
             options.search = this.searchValue.get();
-            options.searchFields = 'id';
         }
 
         this.loadingStrategy.load(

@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
-use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 /**
@@ -44,6 +43,7 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
         string $translation = null,
         string $glue = ',',
         string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
+        string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
         string $width = '',
         string $minWidth = '',
@@ -56,6 +56,7 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
             $name,
             $translation,
             $visibility,
+            $searchability,
             $type,
             $width,
             $minWidth,

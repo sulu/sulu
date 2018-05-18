@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
-use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
@@ -52,6 +51,7 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
         string $translation = null,
         array $joins = [],
         string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
+        string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
         string $width = '',
         string $minWidth = '',
@@ -63,6 +63,7 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
             $name,
             $translation,
             $visibility,
+            $searchability,
             $type,
             $width,
             $minWidth,

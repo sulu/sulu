@@ -57,7 +57,6 @@ export default class Search extends React.Component<Props> {
                 onKeyPress={this.handleKeyPress}
                 skin="dark"
                 value={this.value}
-                valid={true}
             />
         );
     }

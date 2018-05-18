@@ -45,14 +45,22 @@
             <orm:field property-ref="lastName"/>
         </concatenation-property>
 
-        <property name="firstName" visibility="always" filter-type="string"
-                  list:translation="contact.contacts.firstName">
+        <property name="firstName"
+                  visibility="always"
+                  searchability="yes"
+                  filter-type="string"
+                  list:translation="contact.contacts.firstName"
+        >
             <orm:field-name>firstName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="lastName" visibility="always" filter-type="string"
-                  list:translation="contact.contacts.lastName">
+        <property name="lastName"
+                  visibility="always"
+                  searchability="yes"
+                  filter-type="string"
+                  list:translation="contact.contacts.lastName"
+        >
             <orm:field-name>lastName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>

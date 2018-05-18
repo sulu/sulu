@@ -32,6 +32,11 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @var string
      */
+    private $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER;
+
+    /**
+     * @var string
+     */
     private $type = 'string';
 
     /**
@@ -116,6 +121,22 @@ class PropertyMetadata extends BasePropertyMetadata
     public function setVisibility($visibility)
     {
         $this->visibility = $visibility;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchability()
+    {
+        return $this->searchability;
+    }
+
+    /**
+     * @param string $searchability
+     */
+    public function setSearchability($searchability)
+    {
+        $this->searchability = $searchability;
     }
 
     /**
@@ -261,6 +282,7 @@ class PropertyMetadata extends BasePropertyMetadata
                 $this->name,
                 $this->translation,
                 $this->visibility,
+                $this->searchability,
                 $this->type,
                 $this->width,
                 $this->minWidth,
@@ -283,6 +305,7 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->name,
             $this->translation,
             $this->visibility,
+            $this->searchability,
             $this->type,
             $this->width,
             $this->minWidth,
