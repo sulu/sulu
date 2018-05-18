@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * BUGFIX      #3967 [AudienceTargetingBundle] Fixed loading of minified js files for production
     * HOTFIX      #3950 [ContactBundle]           Fixed empty latitude and longitude
     * HOTFIX      #3949 [ContentBundle]           Fixed security check for deleting draft
 
