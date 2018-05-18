@@ -36,6 +36,13 @@ module.exports = function (grunt) {
                 tasks: ['publish']
             }
         },
+        copy: {
+            templates: {
+                files: [
+                    {expand: true, cwd: srcpath, src: ['**/*.html'], dest: destpath}
+                ]
+            }
+        },
         compass: {
             dev: {
                 options: {
@@ -77,6 +84,7 @@ module.exports = function (grunt) {
         'uglify',
         'compass:dev',
         'cssmin',
+        'copy:templates',
         'replace:build'
     ]);
 };
