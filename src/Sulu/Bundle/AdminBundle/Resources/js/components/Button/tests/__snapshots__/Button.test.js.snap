@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Should render the button with icon 1`] = `
+<button
+  class="button secondary"
+  type="button"
+>
+  <span
+    aria-label="su-plus"
+    class="buttonIcon su-plus"
+  />
+  <span
+    class="text"
+  >
+    Add something
+  </span>
+</button>
+`;
+
 exports[`Should render with skin icon 1`] = `
 <button
   class="button icon"

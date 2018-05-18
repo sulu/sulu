@@ -5,7 +5,6 @@ import {observer} from 'mobx-react';
 import {arrayMove} from 'react-sortable-hoc';
 import {translate} from '../../utils/Translator';
 import Button from '../Button';
-import Icon from '../Icon';
 import SortableBlocks from './SortableBlocks';
 import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
@@ -159,8 +158,12 @@ export default class BlockCollection extends React.Component<Props> {
                     useDragHandle={true}
                     value={identifiedValues}
                 />
-                <Button skin="secondary" onClick={this.handleAddBlock} disabled={this.hasMaximumReached()}>
-                    <Icon name="su-plus" className={blockCollectionStyles.addButtonIcon} />
+                <Button
+                    skin="secondary"
+                    icon="su-plus"
+                    onClick={this.handleAddBlock}
+                    disabled={this.hasMaximumReached()}
+                >
                     {translate('sulu_admin.add_block')}
                 </Button>
             </section>

@@ -3,6 +3,10 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import Button from '../Button';
 
+test('Should render the button with icon', () => {
+    expect(render(<Button icon="su-plus">Add something</Button>)).toMatchSnapshot();
+});
+
 test('Should render with skin primary', () => {
     expect(render(<Button skin="primary" />)).toMatchSnapshot();
 });

@@ -56,8 +56,7 @@ exports[`Render block with schema 1`] = `
       </div>
     </section>
   </div>
-  <button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\"><span class=\\"addButtonIcon su-plus\\" aria-label=\\"su-plus\\"></span>sulu_admin.add_block</span>
-  </button>
+  <button class=\\"button secondary\\" type=\\"button\\"><span class=\\"buttonIcon su-plus\\" aria-label=\\"su-plus\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
 </section>"
 `;
 
@@ -122,8 +121,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
       </div>
     </section>
   </div>
-  <button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\"><span class=\\"addButtonIcon su-plus\\" aria-label=\\"su-plus\\"></span>sulu_admin.add_block</span>
-  </button>
+  <button class=\\"button secondary\\" type=\\"button\\"><span class=\\"buttonIcon su-plus\\" aria-label=\\"su-plus\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
 </section>"
 `;
 
@@ -188,7 +186,6 @@ exports[`Render block with schema and error on fields already being modified 2`]
       </div>
     </section>
   </div>
-  <button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\"><span class=\\"addButtonIcon su-plus\\" aria-label=\\"su-plus\\"></span>sulu_admin.add_block</span>
-  </button>
+  <button class=\\"button secondary\\" type=\\"button\\"><span class=\\"buttonIcon su-plus\\" aria-label=\\"su-plus\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
 </section>"
 `;
