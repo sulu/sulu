@@ -49,8 +49,6 @@ import type {FieldTypeProps} from './types';
 
 export type {FieldTypeProps};
 
-// Bug in flow: https://github.com/facebook/flow/issues/6186
-// $FlowFixMe:
 configure({enforceActions: true});
 
 window.log = log;

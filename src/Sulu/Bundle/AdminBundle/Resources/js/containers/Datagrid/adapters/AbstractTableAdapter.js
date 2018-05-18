@@ -27,7 +27,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
         return newSchema;
     }
 
-    renderCells(item: Object) {
+    renderCells(item: Object): Array<*> {
         const schemaKeys = Object.keys(this.schema);
 
         return schemaKeys.map((schemaKey) => {
@@ -40,7 +40,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
         });
     }
 
-    renderHeaderCells(sortingEnabled: boolean) {
+    renderHeaderCells(sortingEnabled: boolean): Array<*> {
         const {sortColumn, sortOrder} = this.props;
         const schemaKeys = Object.keys(this.schema);
 

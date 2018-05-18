@@ -32,6 +32,7 @@ export default class ViewRenderer extends React.Component<Props> {
         route = route ? route : this.props.router.route;
         const View = this.getView(route);
 
+        // $FlowFixMe
         if (View.hasSidebar) {
             return true;
         }

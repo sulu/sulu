@@ -45,7 +45,7 @@ export default class MultiMediaDropzone extends React.Component<Props> {
         this.mediaUploadStores = [];
     }
 
-    createMediaItems() {
+    createMediaItems(): Array<*> {
         return this.mediaUploadStores.map((mediaUploadStore, index) => (
             <MediaItem key={index} store={mediaUploadStore} />
         ));

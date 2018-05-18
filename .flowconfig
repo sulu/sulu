@@ -3,8 +3,10 @@ esproposal.decorators=ignore
 module.name_mapper='.+\.s?css' -> 'empty/object'
 
 [ignore]
+.*/node_modules/bower-json/.*
 .*/node_modules/config-chain/.*
 .*/node_modules/findup/.*
 .*/node_modules/jss/.*
+.*/node_modules/npmconf/.*
 .*/node_modules/stylelint/.*
 .*/vendor/symfony/.*
