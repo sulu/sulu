@@ -15,6 +15,7 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Ob
         const {value} = this.props;
 
         this.mediaUploadStore = new MediaUploadStore(
+            // TODO remove 'en' and determine language to upload
             new ResourceStore('media', value ? value.id : undefined, {locale: observable.box('en')})
         );
     }
@@ -63,7 +64,6 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Ob
             throw new Error('The "skin" schema option must either be "default" or "round"!');
         }
 
-        // TODO add correct collectionId
         return (
             <SingleMediaUploadComponent
                 collectionId={collectionId}
