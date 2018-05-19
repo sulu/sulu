@@ -55,7 +55,7 @@
         "postcss-nested": "^2.1.0",
         "postcss-simple-vars": "^4.0.0",
         "pretty": "^2.0.0",
-        "react-styleguidist": "^6.2.2",
+        "react-styleguidist": "^7.0.0",
         "react-test-renderer": "^16.2.0",
         "rimraf": "^2.6.2",
         "stylelint": "^7.12.0",
