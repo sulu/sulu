@@ -20,6 +20,8 @@ monolog:
             type:  'null'
 
 sulu_core:
+    webspace:
+        config_dir: "%kernel.root_dir%/Resources/webspaces"
     cache_dir: '%kernel.root_dir%/cache/sulu'
     content:
         structure:
