@@ -11,11 +11,11 @@
 
 namespace Sulu\Component\Security\Tests\Unit\Authorization;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use \PHPUnit\Framework\TestCase;
 
 class SecurityCheckerTest extends TestCase
 {

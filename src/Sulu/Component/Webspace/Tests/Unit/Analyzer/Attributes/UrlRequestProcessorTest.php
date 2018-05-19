@@ -11,10 +11,10 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\UrlRequestProcessor;
 use Symfony\Component\HttpFoundation\Request;
-use \PHPUnit\Framework\TestCase;
 
 class UrlRequestProcessorTest extends TestCase
 {

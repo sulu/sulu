@@ -11,10 +11,10 @@
 
 namespace Sulu\Component\Symfony\Tests\Unit\CompilerPass;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use \PHPUnit\Framework\TestCase;
 
 class TaggedServiceCollectorCompilerPassTest extends TestCase
 {

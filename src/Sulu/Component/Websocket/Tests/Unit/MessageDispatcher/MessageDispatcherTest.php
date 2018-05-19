@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Websocket\Tests\Unit\MessageDispatcher;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
@@ -19,7 +20,6 @@ use Sulu\Component\Websocket\MessageDispatcher\MessageDispatcher;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerException;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;
-use \PHPUnit\Framework\TestCase;
 
 class MessageDispatcherTest extends TestCase
 {

@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Security\Tests\Unit\Authorization;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SecurityBundle\Entity\BaseRole;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
@@ -23,7 +24,6 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Authorization\SecurityContextVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use \PHPUnit\Framework\TestCase;
 
 class SecurityContextVoterTest extends TestCase
 {

@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
@@ -24,7 +25,6 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
-use \PHPUnit\Framework\TestCase;
 
 class WebsiteRequestProcessorTest extends TestCase
 {

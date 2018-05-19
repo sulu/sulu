@@ -11,13 +11,13 @@
 
 namespace Sulu\Component\Security\Tests\Unit\Authorization\AccessControl;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Security\Authorization\AccessControl\PhpcrAccessControlProvider;
-use \PHPUnit\Framework\TestCase;
 
 class PhpcrAccessControlProviderTest extends TestCase
 {

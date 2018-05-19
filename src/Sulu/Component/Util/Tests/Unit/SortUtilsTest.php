@@ -11,10 +11,10 @@
 
 namespace Sulu\Component\Util\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Util\SortUtils;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use \PHPUnit\Framework\TestCase;
 
 class SortUtilsTest extends TestCase
 {
@@ -147,11 +147,9 @@ class SortUtilsTest extends TestCase
         $this->assertEquals('value2', $res[0]->field2);
     }
 
-    /**
-     */
     public function testSortMissingField()
     {
-    $this->expectException(NoSuchPropertyException::class);
+        $this->expectException(NoSuchPropertyException::class);
         $collection = new \ArrayObject([
             (object) ['value2', 'value2'],
             (object) ['value1', 'value2'],

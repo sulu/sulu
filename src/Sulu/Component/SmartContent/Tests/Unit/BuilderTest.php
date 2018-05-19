@@ -11,9 +11,9 @@
 
 namespace Sulu\Component\SmartContent\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\Configuration\Builder;
-use \PHPUnit\Framework\TestCase;
 
 class BuilderTest extends TestCase
 {

@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Webspace\Tests\Functional\Analyzer;
 
-use PHPUnit\Framework\MockObject_MockObject;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
@@ -29,7 +29,6 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use \PHPUnit\Framework\TestCase;
 
 class RequestAnalyzerTest extends TestCase
 {
@@ -285,11 +284,9 @@ class RequestAnalyzerTest extends TestCase
         $this->assertEquals(['get' => 1], $this->requestAnalyzer->getGetParameters());
     }
 
-    /**
-     */
     public function testAnalyzeNotExisting()
     {
-    $this->expectException(UrlMatchNotFoundException::class);
+        $this->expectException(UrlMatchNotFoundException::class);
         $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())->willReturn([]);
         $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
 

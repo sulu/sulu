@@ -11,11 +11,11 @@
 
 namespace Sulu\Component\Rest\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\ParameterDataTypeException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
-use \PHPUnit\Framework\TestCase;
 
 class RequestParametersTraitTest extends TestCase
 {

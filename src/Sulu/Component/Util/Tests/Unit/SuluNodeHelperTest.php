@@ -16,9 +16,9 @@ use Jackalope\Property;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Util\SuluNodeHelper;
-use \PHPUnit\Framework\TestCase;
 
 class SuluNodeHelperTest extends TestCase
 {
