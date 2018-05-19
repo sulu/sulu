@@ -134,22 +134,11 @@ sulu_websocket:
         http_host: 'sulu.io'
         port: '9876'
 
-# SuluWebsite Configuration
-sulu_website:
-    sitemap:
-        dump_dir: '%kernel.var_dir%/sitemaps'
-
 # SuluHttpCache Configuration
 sulu_http_cache:
     proxy_client:
         symfony:
             enabled: true
-
-# SuluMedia Configuration
-sulu_media:
-    storage:
-        local:
-            path: '%kernel.var_dir%/uploads/media'
 
 # Just a dirty hack to get the jms serializer bundle correctly working
 # https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800

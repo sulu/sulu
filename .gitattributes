@@ -6,6 +6,7 @@
 .scrutinizer.yml export-ignore
 .styleci.yml export-ignore
 .travis.yml export-ignore
+/.circleci export-ignore
 appveyor.yml export-ignore
 bower.json export-ignore
 CHANGELOG.md export-ignore
@@ -17,3 +18,7 @@ UPGRADE.md export-ignore
 /src/Sulu/Bundle/*/Tests export-ignore
 /src/Sulu/Component/*/Tests export-ignore
 /tests export-ignore
+/app export-ignore
+/config export-ignore
+/bin export-ignore
+/web export-ignore

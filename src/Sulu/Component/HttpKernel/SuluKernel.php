@@ -78,7 +78,7 @@ abstract class SuluKernel extends Kernel
             parent::getKernelParameters(),
             [
                 'sulu.context' => $this->getContext(),
-                'kernel.var_dir' => dirname($this->rootDir) . DIRECTORY_SEPARATOR . 'var'
+                'kernel.var_dir' => dirname($this->rootDir) . DIRECTORY_SEPARATOR . 'var',
             ]
         );
     }
