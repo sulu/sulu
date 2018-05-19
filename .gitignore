@@ -29,9 +29,9 @@
 !/var/sitemaps/.gitkeep
 /var/bootstrap.php.cache
 /var/SymfonyRequirements.php
-/web/bundles
-/web/uploads
-/web/admin
+/public/bundles
+/public/uploads
+/public/admin
 
 /vendor
 

@@ -176,10 +176,11 @@
         "bin-dir": "bin"
     },
     "extra": {
+        "public-dir": "public",
         "symfony-app-dir": "app",
         "symfony-bin-dir": "bin",
         "symfony-var-dir": "var",
-        "symfony-web-dir": "web",
+        "symfony-web-dir": "public",
         "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
