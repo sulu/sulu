@@ -86,23 +86,6 @@ jms_serializer:
     metadata:
         debug: '%kernel.debug%'
 
-# SuluCore Configuration
-sulu_core:
-    content:
-        structure:
-            default_type:
-                snippet: 'default'
-            paths:
-                homepage:
-                    path: '%kernel.project_dir%/config/sulu/templates/pages'
-                    type: 'home'
-                page:
-                    path: '%kernel.project_dir%/config/sulu/templates/pages'
-                    type: 'page'
-                snippet:
-                    path: '%kernel.project_dir%/config/sulu/templates/snippets'
-                    type: 'snippet'
-
 # SuluAdmin Configuration
 sulu_admin:
     name: 'Sulu'
