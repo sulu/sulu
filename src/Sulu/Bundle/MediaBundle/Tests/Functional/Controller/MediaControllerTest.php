@@ -275,10 +275,13 @@ class MediaControllerTest extends SuluTestCase
         $fileVersion->setChanged(new \DateTime('1937-04-20'));
         $fileVersion->setCreated(new \DateTime('1937-04-20'));
         $fileVersion->setStorageOptions('{"segment":"1","fileName":"' . $name . '.' . $extension . '"}');
-        if (!file_exists(__DIR__ . '/../../uploads/media/1')) {
-            mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);
+
+        $storagePath = $this->getStoragePath();
+
+        if (!file_exists($storagePath . '/1')) {
+            mkdir($storagePath . '/1', 0777, true);
         }
-        copy($this->getImagePath(), __DIR__ . '/../../uploads/media/1/' . $name . '.' . $extension);
+        copy($this->getImagePath(), $storagePath . '/1/' . $name . '.' . $extension);
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();
@@ -358,9 +361,13 @@ class MediaControllerTest extends SuluTestCase
             'GET',
             '/uploads/media/sulu-50x50/01/' . $media->getId() . '-photo.jpeg'
         );
+
+        $response = $client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
         $this->assertEquals(
             $date->format('Y-m-d'),
-            $client->getResponse()->getExpires()->format('Y-m-d')
+            $response->getExpires()->format('Y-m-d')
         );
     }
 
@@ -1403,7 +1410,7 @@ class MediaControllerTest extends SuluTestCase
     public function testDeleteById()
     {
         $media = $this->createMedia('photo');
-        $this->assertFileExists(__DIR__ . '/../../uploads/media/1/photo.jpeg');
+        $this->assertFileExists($this->getStoragePath() . '/1/photo.jpeg');
 
         $client = $this->createAuthenticatedClient();
 
@@ -1423,7 +1430,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(5015, $response->code);
         $this->assertTrue(isset($response->message));
 
-        $this->assertFileNotExists(__DIR__ . '/../../uploads/media/1/photo.jpeg');
+        $this->assertFileNotExists($this->getStoragePath() . '/1/photo.jpeg');
     }
 
     /**
@@ -1600,6 +1607,11 @@ class MediaControllerTest extends SuluTestCase
         $client->request('POST', '/api/media/' . $media->getId() . '?action=test');
 
         $this->assertHttpStatusCode(400, $client->getResponse());
+    }
+
+    private function getStoragePath()
+    {
+        return realpath($this->getContainer()->getParameter('sulu_media.media.storage.local.path'));
     }
 
     /**

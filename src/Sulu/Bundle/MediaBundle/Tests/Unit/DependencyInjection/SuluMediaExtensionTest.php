@@ -37,13 +37,13 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
             'Cache-Control' => 'public',
         ]);
         $this->assertContainerBuilderHasParameter('sulu_media.search.default_image_format', 'sulu-170x170');
-        $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
+        $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.path', '%kernel.var_dir%/uploads/media');
         $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.segments', 10);
         $this->assertContainerBuilderHasParameter('sulu_media.collection.type.default', [
             'id' => 1,
         ]);
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.save_image', true);
-        $this->assertContainerBuilderHasParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
+        $this->assertContainerBuilderHasParameter('sulu_media.format_cache.path', '%kernel.project_dir%/public/uploads/media');
         $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', ['file/exe']);
         $this->assertContainerBuilderHasParameter('sulu_media.ghost_script.path', 'gs');
         $this->assertContainerBuilderHasParameter('sulu_media.format_manager.mime_types', [
