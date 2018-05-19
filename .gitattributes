@@ -21,4 +21,4 @@ UPGRADE.md export-ignore
 /app export-ignore
 /config export-ignore
 /bin export-ignore
-/web export-ignore
+/public export-ignore
