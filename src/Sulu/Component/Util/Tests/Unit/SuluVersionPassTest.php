@@ -21,7 +21,7 @@ class SuluVersionPassTest extends TestCase
     {
         $versionPass = new SuluVersionPass();
         $container = $this->prophesize(ContainerBuilder::class);
-        $container->getParameter('kernel.root_dir')->willReturn(dirname(__DIR__) . '/Resources/VersionPass/app');
+        $container->getParameter('kernel.project_dir')->willReturn(dirname(__DIR__) . '/Resources/VersionPass');
 
         $container->setParameter('sulu.version', '1.5.2')->shouldBeCalled();
         $container->setParameter('app.version', '1.2.3')->shouldBeCalled();

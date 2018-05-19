@@ -88,21 +88,19 @@ jms_serializer:
 
 # SuluCore Configuration
 sulu_core:
-    webspace:
-        config_dir: '%kernel.root_dir%/Resources/webspaces'
     content:
         structure:
             default_type:
                 snippet: 'default'
             paths:
                 homepage:
-                    path: '%kernel.root_dir%/Resources/templates/pages'
+                    path: '%kernel.project_dir%/config/sulu/templates/pages'
                     type: 'home'
                 page:
-                    path: '%kernel.root_dir%/Resources/templates/pages'
+                    path: '%kernel.project_dir%/config/sulu/templates/pages'
                     type: 'page'
                 snippet:
-                    path: '%kernel.root_dir%/Resources/templates/snippets'
+                    path: '%kernel.project_dir%/config/sulu/templates/snippets'
                     type: 'snippet'
 
 # SuluAdmin Configuration

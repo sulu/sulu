@@ -180,7 +180,7 @@ class Configuration implements ConfigurationInterface
                             ->prototype('array')
                                 ->children()
                                     ->scalarNode('path')
-                                        ->example('%kernel.root_dir%/config/templates')
+                                        ->example('%kernel.project_dir%/config/templates')
                                     ->end()
                                     ->scalarNode('type')
                                         ->defaultValue('page')
