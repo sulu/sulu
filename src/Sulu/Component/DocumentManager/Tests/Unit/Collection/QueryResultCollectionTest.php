@@ -14,12 +14,13 @@ namespace Sulu\Comonent\DocumentManager\tests\Unit\Collection;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\Query\RowInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class QueryResultCollectionTest extends \PHPUnit_Framework_TestCase
+class QueryResultCollectionTest extends TestCase
 {
     public function setUp()
     {

@@ -12,12 +12,13 @@
 namespace Sulu\Component\DocumentManager\tests\Unit\Metadata;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Document\UnknownDocument;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 
-class MetadataFactoryTest extends \PHPUnit_Framework_TestCase
+class MetadataFactoryTest extends TestCase
 {
     /**
      * @var MetadataFactoryInterface

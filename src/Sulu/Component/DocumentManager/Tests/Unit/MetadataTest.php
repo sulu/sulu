@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\DocumentManager\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Metadata;
 
-class MetadataTest extends \PHPUnit_Framework_TestCase
+class MetadataTest extends TestCase
 {
     /**
      * @var Metadata

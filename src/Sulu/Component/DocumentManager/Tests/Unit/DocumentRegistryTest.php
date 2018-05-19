@@ -12,9 +12,10 @@
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 
-class DocumentRegistryTest extends \PHPUnit_Framework_TestCase
+class DocumentRegistryTest extends TestCase
 {
     /**
      * @var DocumentRegistry

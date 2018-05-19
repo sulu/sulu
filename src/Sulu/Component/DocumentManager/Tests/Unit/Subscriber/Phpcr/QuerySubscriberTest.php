@@ -16,6 +16,7 @@ use PHPCR\Query\QueryManagerInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
 use Sulu\Component\DocumentManager\Event\QueryCreateEvent;
 use Sulu\Component\DocumentManager\Event\QueryExecuteEvent;
@@ -23,7 +24,7 @@ use Sulu\Component\DocumentManager\Query\Query;
 use Sulu\Component\DocumentManager\Subscriber\Phpcr\QuerySubscriber;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class QuerySubscriberTest extends \PHPUnit_Framework_TestCase
+class QuerySubscriberTest extends TestCase
 {
     /**
      * @var SessionInterface

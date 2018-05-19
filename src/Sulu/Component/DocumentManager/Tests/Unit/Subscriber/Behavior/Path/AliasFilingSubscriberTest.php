@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit\Pa
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Behavior\Path\AliasFilingBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -20,7 +21,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AliasFilingSubscriber;
 
-class AliasFilingSubscriberTest extends \PHPUnit_Framework_TestCase
+class AliasFilingSubscriberTest extends TestCase
 {
     /**
      * @var PersistEvent
@@ -113,7 +114,7 @@ class AliasFilingSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testPersistNotImplementing()
     {
-        $this->persistEvent->getDocument()->willReturn(new \stdClass());
+        $this->persistEvent->getDocument()->willReturn(new \stdClass())->shouldBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 

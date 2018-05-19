@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Core;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -22,7 +23,7 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\Subscriber\Core\MappingSubscriber;
 
-class MappingSubscriberTest extends \PHPUnit_Framework_TestCase
+class MappingSubscriberTest extends TestCase
 {
     /**
      * @var MetadataFactoryInterface

@@ -13,13 +13,14 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit\Pa
 
 use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\ExplicitSubscriber;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ExplicitSubscriberTest extends \PHPUnit_Framework_TestCase
+class ExplicitSubscriberTest extends TestCase
 {
     /**
      * @var PersistEvent
@@ -148,7 +149,7 @@ class ExplicitSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testNewNodeFromPathNoOverwrite()
     {
-        $this->setExpectedException(
+        $this->expectException(
             ItemExistsException::class,
             'The node \'/path/to\' already has a child named \'nodename\'.'
         );
@@ -260,8 +261,8 @@ class ExplicitSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $options = $this->resolveOptions([]);
 
-        $this->persistEvent->getOptions()->willReturn($options);
-        $this->persistEvent->getDocument()->willReturn($this->document);
+        $this->persistEvent->getOptions()->willReturn($options)->shouldBeCalled();
+        $this->persistEvent->getDocument()->willReturn($this->document)->shouldBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 

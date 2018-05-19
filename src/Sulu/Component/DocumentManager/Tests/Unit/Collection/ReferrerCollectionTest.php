@@ -13,12 +13,13 @@ namespace Sulu\Comonent\DocumentManager\tests\Unit\Collection;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Collection\ReferrerCollection;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class ReferrerCollectionTest extends \PHPUnit_Framework_TestCase
+class ReferrerCollectionTest extends TestCase
 {
     public function setUp()
     {

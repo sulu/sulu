@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit\Path;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -21,7 +22,7 @@ use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AliasFilingSubscriber;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\BasePathSubscriber;
 
-class BasePathSubscriberTest extends \PHPUnit_Framework_TestCase
+class BasePathSubscriberTest extends TestCase
 {
     /**
      * @var PersistEvent
@@ -96,7 +97,7 @@ class BasePathSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testPersistNotImplementing()
     {
-        $this->persistEvent->getDocument()->willReturn($this->notImplementing);
+        $this->persistEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 

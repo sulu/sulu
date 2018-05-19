@@ -12,13 +12,14 @@
 namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\MixinSubscriber;
 
-class MixinSubscriberTest extends \PHPUnit_Framework_TestCase
+class MixinSubscriberTest extends TestCase
 {
     /**
      * @var MetadataFactoryInterface

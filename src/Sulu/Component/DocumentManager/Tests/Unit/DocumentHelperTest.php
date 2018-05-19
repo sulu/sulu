@@ -11,10 +11,11 @@
 
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\DocumentHelper;
 
-class DocumentHelperTest extends \PHPUnit_Framework_TestCase
+class DocumentHelperTest extends TestCase
 {
     public function setUp()
     {

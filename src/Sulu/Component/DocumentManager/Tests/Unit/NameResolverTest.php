@@ -12,9 +12,10 @@
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\NameResolver;
 
-class NameResolverTest extends \PHPUnit_Framework_TestCase
+class NameResolverTest extends TestCase
 {
     /**
      * @var NodeInterface

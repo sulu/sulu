@@ -13,12 +13,13 @@ namespace Sulu\Comonent\DocumentManager\Tests\Unit\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\Subscriber\Phpcr\RemoveSubscriber;
 
-class RemoveSubscriberTest extends \PHPUnit_Framework_TestCase
+class RemoveSubscriberTest extends TestCase
 {
     public function setUp()
     {

@@ -11,10 +11,11 @@
 
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 
-class PathBuilderTest extends \PHPUnit_Framework_TestCase
+class PathBuilderTest extends TestCase
 {
     private $pathBuilder;
 

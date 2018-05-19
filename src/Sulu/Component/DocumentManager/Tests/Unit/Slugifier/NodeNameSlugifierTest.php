@@ -11,10 +11,11 @@
 
 namespace Sulu\Component\DocumentManager\tests\Unit\Slugifier;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Slugifier\NodeNameSlugifier;
 use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
-class NodeNameSlugifierTest extends \PHPUnit_Framework_TestCase
+class NodeNameSlugifierTest extends TestCase
 {
     /**
      * @var SlugifierInterface

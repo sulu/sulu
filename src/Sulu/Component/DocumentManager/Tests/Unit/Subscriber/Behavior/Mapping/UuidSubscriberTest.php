@@ -12,12 +12,13 @@
 namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\UuidSubscriber;
 
-class UuidSubscriberTest extends \PHPUnit_Framework_TestCase
+class UuidSubscriberTest extends TestCase
 {
     public function setUp()
     {
@@ -35,7 +36,7 @@ class UuidSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testHydrateNotImplementing()
     {
-        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
+        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->handleUuid($this->hydrateEvent->reveal());
     }
 

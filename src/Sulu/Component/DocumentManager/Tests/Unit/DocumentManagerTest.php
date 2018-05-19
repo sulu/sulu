@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\Tests\Unit;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\ClearEvent;
@@ -37,7 +38,7 @@ use Sulu\Component\DocumentManager\Query\Query;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class DocumentManagerTest extends \PHPUnit_Framework_TestCase
+class DocumentManagerTest extends TestCase
 {
     /**
      * @var EventDispatcher
@@ -225,7 +226,7 @@ class DocumentManagerTest extends \PHPUnit_Framework_TestCase
     public function testFindWithOptions()
     {
         $subscriber = $this->addSubscriber();
-        $this->documentManager->find('foo', 'bar', ['test.foo' => 'bar']);
+        $this->assertNotNull($this->documentManager->find('foo', 'bar', ['test.foo' => 'bar']));
     }
 
     /**

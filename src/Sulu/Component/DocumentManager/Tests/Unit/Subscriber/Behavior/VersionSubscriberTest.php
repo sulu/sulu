@@ -21,6 +21,7 @@ use PHPCR\Version\OnParentVersionAction;
 use PHPCR\Version\VersionHistoryInterface;
 use PHPCR\Version\VersionInterface;
 use PHPCR\Version\VersionManagerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\VersionBehavior;
@@ -33,7 +34,7 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\VersionSubscriber;
 use Sulu\Component\DocumentManager\Version;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
-class VersionSubscriberTest extends \PHPUnit_Framework_TestCase
+class VersionSubscriberTest extends TestCase
 {
     /**
      * @var SessionInterface
@@ -147,15 +148,15 @@ class VersionSubscriberTest extends \PHPUnit_Framework_TestCase
         $event = $this->prophesize(HydrateEvent::class);
 
         $document = $this->prophesize(VersionBehavior::class);
-        $event->getDocument()->willReturn($document->reveal());
+        $event->getDocument()->willReturn($document->reveal())->shouldBeCalled();
 
         $node = $this->prophesize(NodeInterface::class);
         $node->getPropertyValueWithDefault('sulu:versions', [])
             ->willReturn([
                 '{"version":"1.0","locale":"de","author":null,"authored":"2016-12-06T09:37:21+01:00"}',
                 '{"version":"1.1","locale":"en","author":1,"authored":"2016-12-05T19:47:22+01:00"}',
-            ]);
-        $event->getNode()->willReturn($node->reveal());
+            ])->shouldBeCalled();
+        $event->getNode()->willReturn($node->reveal())->shouldBeCalled();
 
         $document->setVersions(
             [
@@ -231,7 +232,7 @@ class VersionSubscriberTest extends \PHPUnit_Framework_TestCase
         $event = $this->prophesize(PublishEvent::class);
         $document = new \stdClass();
 
-        $event->getDocument()->willReturn($document);
+        $event->getDocument()->willReturn($document)->shouldBeCalled();
 
         $this->versionSubscriber->rememberCreateVersion($event->reveal());
     }
@@ -248,31 +249,31 @@ class VersionSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $node = $this->prophesize(NodeInterface::class);
         $node->getPath()->willReturn('/node1');
-        $this->session->getNodeByIdentifier('1-1-1-1')->willReturn($node->reveal());
+        $this->session->getNodeByIdentifier('1-1-1-1')->willReturn($node->reveal())->shouldBeCalled();
 
         $node = $this->prophesize(NodeInterface::class);
         $node->getPath()->willReturn('/node2');
-        $this->session->getNodeByIdentifier('2-2-2-2')->willReturn($node->reveal());
+        $this->session->getNodeByIdentifier('2-2-2-2')->willReturn($node->reveal())->shouldBeCalled();
 
         $node = $this->prophesize(NodeInterface::class);
         $node->getPath()->willReturn('/node3');
-        $this->session->getNodeByIdentifier('3-3-3-3')->willReturn($node->reveal());
+        $this->session->getNodeByIdentifier('3-3-3-3')->willReturn($node->reveal())->shouldBeCalled();
 
-        $this->versionManager->isCheckedOut('/node1')->willReturn(false);
-        $this->versionManager->isCheckedOut('/node2')->willReturn(true);
+        $this->versionManager->isCheckedOut('/node1')->willReturn(false)->shouldBeCalled();
+        $this->versionManager->isCheckedOut('/node2')->willReturn(true)->shouldBeCalled();
 
         $this->versionManager->checkout('/node1')->shouldBeCalled();
         $this->versionManager->checkout('/node2')->shouldNotBeCalled();
 
         $node = $this->prophesize(NodeInterface::class);
-        $this->session->getNode('/node3')->willReturn($node->reveal());
+        $this->session->getNode('/node3')->willReturn($node->reveal())->shouldBeCalled();
 
         $version = $this->prophesize(VersionInterface::class);
-        $version->getName()->willReturn('a');
+        $version->getName()->willReturn('a')->shouldBeCalled();
         $this->versionManager->checkpoint('/node3')->willReturn($version->reveal());
         $node->getPropertyValueWithDefault('sulu:versions', [])->willReturn([
             '{"locale":"en","version":"0","author":null,"authored":"2016-12-05T19:47:22+01:00"}',
-        ]);
+        ])->shouldBeCalled();
         $node->setProperty(
             'sulu:versions',
             [

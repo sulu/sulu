@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\tests\Unit\Subscriber\Core;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Event\CreateEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -19,7 +20,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\Subscriber\Core\InstantiatorSubscriber;
 
-class InstantiatorSubscriberTest extends \PHPUnit_Framework_TestCase
+class InstantiatorSubscriberTest extends TestCase
 {
     const ALIAS = 'alias';
 
@@ -59,7 +60,7 @@ class InstantiatorSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testHandleHydrateDocumentAlreadySet()
     {
-        $this->hydrateEvent->hasDocument()->willReturn(true);
+        $this->hydrateEvent->hasDocument()->willReturn(true)->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 

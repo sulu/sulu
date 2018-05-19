@@ -14,11 +14,12 @@ namespace Sulu\Component\DocumentManager\Tests\Unit;
 use Jackalope\Workspace;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\NodeHelper;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 
-class NodeHelperTest extends \PHPUnit_Framework_TestCase
+class NodeHelperTest extends TestCase
 {
     /**
      * @var NodeHelperInterface
@@ -86,7 +87,7 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->node->getPath()->willReturn('/path/to/node');
 
         $workspace->copy('/path/to/node', '/path/to/some/other/node/node');
-        $this->nodeHelper->copy($this->node->reveal(), 'uuid');
+        $this->assertEquals('uuid/node', $this->nodeHelper->copy($this->node->reveal(), 'uuid'));
     }
 
     public function testCopyWithDestinationName()
@@ -102,7 +103,7 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->node->getPath()->willReturn('/path/to/node');
 
         $workspace->copy('/path/to/node', '/path/to/some/other/node/new-node');
-        $this->nodeHelper->copy($this->node->reveal(), 'uuid', 'new-node');
+        $this->assertEquals('uuid/new-node', $this->nodeHelper->copy($this->node->reveal(), 'uuid', 'new-node'));
     }
 
     public function testReorderUuidTarget()
@@ -123,7 +124,7 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionTargetNotSibling()
     {
-        $this->setExpectedException(
+        $this->expectException(
             DocumentManagerException::class,
             'Cannot reorder documents which are not sibilings. Trying to reorder "/path/to/node" to "/path/to/deep/node".'
         );

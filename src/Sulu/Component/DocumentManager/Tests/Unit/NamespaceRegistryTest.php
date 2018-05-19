@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 
-class NamespaceRegistryTest extends \PHPUnit_Framework_TestCase
+class NamespaceRegistryTest extends TestCase
 {
     public function setUp()
     {

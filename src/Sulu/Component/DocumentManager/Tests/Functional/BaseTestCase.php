@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\DocumentManager\tests\Functional;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Tests\Bootstrap;
 
-abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
+abstract class BaseTestCase extends TestCase
 {
     const BASE_NAME = 'test';
 

@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Behavior\Audit\LocalizedTimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
@@ -23,7 +24,7 @@ use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Audit\TimestampSubscriber;
 
-class TimestampSubscriberTest extends \PHPUnit_Framework_TestCase
+class TimestampSubscriberTest extends TestCase
 {
     /**
      * @var PropertyEncoder
@@ -44,7 +45,7 @@ class TimestampSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testSetTimestampsOnNodeForPersistNotImplementing()
     {
         $event = $this->prophesize(PersistEvent::class);
-        $event->getDocument()->willReturn(new \stdClass());
+        $event->getDocument()->willReturn(new \stdClass())->shouldBeCalled();
         $this->subscriber->setTimestampsOnNodeForPersist($event->reveal());
     }
 
@@ -170,7 +171,7 @@ class TimestampSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testSetTimestampsOnNodeForPublishNotImplementing()
     {
         $event = $this->prophesize(PublishEvent::class);
-        $event->getDocument()->willReturn(new \stdClass());
+        $event->getDocument()->willReturn(new \stdClass())->shouldBeCalled();
         $this->subscriber->setTimestampsOnNodeForPublish($event->reveal());
     }
 

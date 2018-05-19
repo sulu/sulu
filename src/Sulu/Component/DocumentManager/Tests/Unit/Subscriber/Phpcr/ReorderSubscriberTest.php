@@ -12,11 +12,12 @@
 namespace Sulu\Comonent\DocumentManager\Tests\Unit\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 use Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber;
 
-class ReorderSubscriberTest extends \PHPUnit_Framework_TestCase
+class ReorderSubscriberTest extends TestCase
 {
     /**
      * @var NodeHelperInterface
@@ -41,8 +42,8 @@ class ReorderSubscriberTest extends \PHPUnit_Framework_TestCase
         $node = $this->prophesize(NodeInterface::class);
         $event = $this->prophesize(ReorderEvent::class);
 
-        $event->getNode()->willReturn($node->reveal());
-        $event->getDestId()->willReturn('uuid');
+        $event->getNode()->willReturn($node->reveal())->shouldBeCalled();
+        $event->getDestId()->willReturn('uuid')->shouldBeCalled();
 
         $this->nodeHelper->reorder($node->reveal(), 'uuid');
 

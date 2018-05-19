@@ -12,6 +12,7 @@
 namespace Sulu\Comonent\DocumentManager\tests\Unit\Subscriber\Phpcr;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\RefreshEvent;
@@ -20,7 +21,7 @@ use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Subscriber\Phpcr\RefreshSubscriber;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class RefreshSubscriberTest extends \PHPUnit_Framework_TestCase
+class RefreshSubscriberTest extends TestCase
 {
     /**
      * @var EventDispatcherInterface

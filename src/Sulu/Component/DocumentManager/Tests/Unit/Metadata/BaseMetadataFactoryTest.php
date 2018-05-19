@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\DocumentManager\tests\Unit\Metadata;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\DocumentStrategyInterface;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class BaseMetadataFactoryTest extends \PHPUnit_Framework_TestCase
+class BaseMetadataFactoryTest extends TestCase
 {
     public function setUp()
     {

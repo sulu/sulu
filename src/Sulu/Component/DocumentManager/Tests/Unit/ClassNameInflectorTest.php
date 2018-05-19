@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\ClassNameInflector;
 
-class ClassNameInflectorTest extends \PHPUnit_Framework_TestCase
+class ClassNameInflectorTest extends TestCase
 {
     public function testInflector()
     {

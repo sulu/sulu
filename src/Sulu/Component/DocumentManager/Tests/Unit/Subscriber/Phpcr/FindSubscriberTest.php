@@ -12,6 +12,7 @@
 namespace Sulu\Comonent\DocumentManager\tests\Unit\Subscriber\Phpcr;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Event\FindEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -23,7 +24,7 @@ use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\Subscriber\Phpcr\FindSubscriber;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class FindSubscriberTest extends \PHPUnit_Framework_TestCase
+class FindSubscriberTest extends TestCase
 {
     public function setUp()
     {
@@ -66,7 +67,7 @@ class FindSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         if ($shouldThrow) {
             $this->metadataFactory->getAliases()->willReturn(['test1', 'test2']);
-            $this->setExpectedException(DocumentManagerException::class);
+            $this->expectException(DocumentManagerException::class);
         }
         if ('alias' === $type) {
             $this->metadataFactory->hasAlias($typeOrClass)->willReturn(true);

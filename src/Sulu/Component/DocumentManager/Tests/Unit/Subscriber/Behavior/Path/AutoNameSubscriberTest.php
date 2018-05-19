@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit\Subscriber\Behavior\Path;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -25,7 +26,7 @@ use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AutoNameSubscriber;
 use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 
-class AutoNameSubscriberTest extends \PHPUnit_Framework_TestCase
+class AutoNameSubscriberTest extends TestCase
 {
     const DEFAULT_LOCALE = 'en';
 
@@ -144,9 +145,9 @@ class AutoNameSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testNotInstanceOfAutoName()
     {
         $document = new \stdClass();
-        $this->persistEvent->getOption('auto_name')->willReturn(true);
-        $this->persistEvent->hasNode()->willReturn(false);
-        $this->persistEvent->getDocument()->willReturn($document);
+        $this->persistEvent->getOption('auto_name')->willReturn(true)->shouldBeCalled();
+        $this->persistEvent->hasNode()->shouldNotBeCalled();
+        $this->persistEvent->getDocument()->willReturn($document)->shouldBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
@@ -155,7 +156,7 @@ class AutoNameSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testNoTitle()
     {
-        $this->setExpectedException(DocumentManagerException::class);
+        $this->expectException(DocumentManagerException::class);
 
         $this->persistEvent->hasNode()->willReturn(false);
         $this->document->getTitle()->willReturn(null);

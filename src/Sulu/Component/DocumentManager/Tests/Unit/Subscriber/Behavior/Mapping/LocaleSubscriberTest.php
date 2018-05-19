@@ -12,13 +12,14 @@
 namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\LocaleSubscriber;
 
-class LocaleSubscriberTest extends \PHPUnit_Framework_TestCase
+class LocaleSubscriberTest extends TestCase
 {
     public function setUp()
     {
@@ -39,7 +40,7 @@ class LocaleSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testHydrateNotImplementing()
     {
-        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
+        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->handleLocale($this->hydrateEvent->reveal());
     }
 

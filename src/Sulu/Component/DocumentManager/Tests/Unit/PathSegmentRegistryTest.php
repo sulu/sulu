@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 
-class PathSegmentRegistryTest extends \PHPUnit_Framework_TestCase
+class PathSegmentRegistryTest extends TestCase
 {
     /**
      * @var PathSegmentRegistry

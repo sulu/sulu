@@ -15,9 +15,10 @@ use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
 use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\NodeManager;
 
-class NodeManagerTest extends \PHPUnit_Framework_TestCase
+class NodeManagerTest extends TestCase
 {
     const UUID1 = '0dd2270d-c1e1-4d4e-9b7c-6da0efb6e91d';
 
@@ -155,9 +156,9 @@ class NodeManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPurgeWorkspace()
     {
-        $this->session->getRootNode()->willReturn($this->node1->reveal());
-        $this->node1->getProperties()->willReturn([]);
-        $this->node1->getNodes()->willReturn([]);
+        $this->session->getRootNode()->willReturn($this->node1->reveal())->shouldBeCalled();
+        $this->node1->getProperties()->willReturn([])->shouldBeCalled();
+        $this->node1->getNodes()->willReturn([])->shouldBeCalled();
 
         $this->manager->purgeWorkspace();
     }

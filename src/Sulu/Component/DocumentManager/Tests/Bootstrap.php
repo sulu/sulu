@@ -11,7 +11,9 @@
 
 namespace Sulu\Component\DocumentManager\tests;
 
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Jackalope\RepositoryFactoryDoctrineDBAL;
+use Jackalope\Transport\DoctrineDBAL\RepositorySchema;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use PHPCR\SessionInterface;
@@ -24,7 +26,7 @@ class Bootstrap
 {
     public static function createContainer()
     {
-        $logDir = __DIR__ . '/../data/logs';
+        $logDir = __DIR__ . '/../../../../../var/logs';
 
         if (!file_exists($logDir)) {
             mkdir($logDir);
@@ -32,6 +34,7 @@ class Bootstrap
 
         $container = new ContainerBuilder();
         $container->set('doctrine_phpcr.session', self::createSession());
+
         $logger = new Logger('test');
         $logger->pushHandler(new StreamHandler($logDir . '/test.log'));
 
@@ -105,8 +108,8 @@ class Bootstrap
         }
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../symfony-di'));
-        $loader->load('core.xml');
-        $loader->load('subscribers.xml');
+        $loader->load(__DIR__ . '/symfony-di/core.xml');
+        $loader->load(__DIR__ . '/symfony-di/subscribers.xml');
 
         foreach (array_keys($container->findTaggedServiceIds('sulu_document_manager.event_subscriber')) as $subscriberId) {
             $def = $container->get($subscriberId);
@@ -144,8 +147,23 @@ class Bootstrap
             'host' => 'localhost',
             'user' => 'admin',
             'password' => 'admin',
-            'path' => __DIR__ . '/../data/test.sqlite',
+            'path' => __DIR__ . '/../../../../../var/cache/test.sqlite',
         ]);
+
+        $schema = new RepositorySchema([], $connection);
+
+        // Drop Tables
+        foreach ($schema->toDropSql($connection->getDatabasePlatform()) as $sql) {
+            try {
+                $connection->exec($sql);
+            } catch (TableNotFoundException $e) {
+            }
+        }
+
+        // Create tables
+        foreach ($schema->toSql($connection->getDatabasePlatform()) as $sql) {
+            $connection->exec($sql);
+        }
 
         return $connection;
     }

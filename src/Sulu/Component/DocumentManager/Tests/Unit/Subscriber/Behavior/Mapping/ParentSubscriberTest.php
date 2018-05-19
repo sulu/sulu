@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -22,7 +23,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\ParentSubscriber;
 
-class ParentSubscriberTest extends \PHPUnit_Framework_TestCase
+class ParentSubscriberTest extends TestCase
 {
     /**
      * @var HydrateEvent
@@ -103,7 +104,7 @@ class ParentSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testHydrateNotImplementing()
     {
-        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
+        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
@@ -126,12 +127,12 @@ class ParentSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testHydrateParentNoUuid()
     {
-        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
-        $this->hydrateEvent->getOptions()->willReturn(['test' => true]);
+        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal())->shouldBeCalled();
+        $this->hydrateEvent->getOptions()->willReturn(['test' => true])->shouldBeCalled();
 
-        $this->node->getParent()->willReturn($this->parentNode->reveal());
-        $this->node->getDepth()->willReturn(2);
-        $this->parentNode->hasProperty('jcr:uuid')->willReturn(false);
+        $this->node->getParent()->willReturn($this->parentNode->reveal())->shouldBeCalled();
+        $this->node->getDepth()->willReturn(2)->shouldBeCalled();
+        $this->parentNode->hasProperty('jcr:uuid')->willReturn(false)->shouldBeCalled();
 
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }

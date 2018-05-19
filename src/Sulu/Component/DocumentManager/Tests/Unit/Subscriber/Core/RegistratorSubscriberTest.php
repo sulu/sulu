@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\tests\Unit\Subscriber\Core;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -19,7 +20,7 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Subscriber\Core\RegistratorSubscriber;
 
-class RegistratorSubscriberTest extends \PHPUnit_Framework_TestCase
+class RegistratorSubscriberTest extends TestCase
 {
     /**
      * @var DocumentRegistry
@@ -190,7 +191,7 @@ class RegistratorSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testDocumentFromRegistryAlreadySet()
     {
-        $this->hydrateEvent->hasDocument()->willReturn(true);
+        $this->hydrateEvent->hasDocument()->willReturn(true)->shouldBeCalled();
         $this->subscriber->handleDocumentFromRegistry($this->hydrateEvent->reveal());
     }
 
@@ -199,9 +200,7 @@ class RegistratorSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testDocumentFromRegistryNoNode()
     {
-        $this->hydrateEvent->hasDocument()->willReturn(true);
-        $this->hydrateEvent->getLocale()->willReturn('fr');
-        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
+        $this->hydrateEvent->hasDocument()->willReturn(true)->shouldBeCalled();
         $this->registry->hasNode($this->node->reveal(), 'fr')->willReturn(false);
         $this->subscriber->handleDocumentFromRegistry($this->hydrateEvent->reveal());
     }

@@ -12,12 +12,13 @@
 namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping\Mapping;
 
 use PHPCR\NodeInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\NodeNameSubscriber;
 
-class NodeNameSubscriberTest extends \PHPUnit_Framework_TestCase
+class NodeNameSubscriberTest extends TestCase
 {
     /**
      * @var HydrateEvent
@@ -65,7 +66,7 @@ class NodeNameSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testHydrateNotImplementing()
     {
-        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
+        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->setFinalNodeName($this->hydrateEvent->reveal());
     }
 

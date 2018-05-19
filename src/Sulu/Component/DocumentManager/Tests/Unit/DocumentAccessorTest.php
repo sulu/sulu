@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\DocumentManager\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 
-class DocumentAccessorTest extends \PHPUnit_Framework_TestCase
+class DocumentAccessorTest extends TestCase
 {
     public function setUp()
     {

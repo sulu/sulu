@@ -11,11 +11,12 @@
 
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
-class PropertyEncoderTest extends \PHPUnit_Framework_TestCase
+class PropertyEncoderTest extends TestCase
 {
     /**
      * @var PropertyEncoder
@@ -64,7 +65,7 @@ class PropertyEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testEncodeLocalizedSystemEmptyLocale()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->encoder->encode('system_localized', 'test', null);
     }
@@ -74,7 +75,7 @@ class PropertyEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testEncodeLocalizedContentEmptyLocale()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->encoder->encode('content_localized', 'test', null);
     }
@@ -84,7 +85,7 @@ class PropertyEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLocalizedContentEmptyLocale()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->encoder->encode('content_localized', 'test', null);
     }
@@ -94,7 +95,7 @@ class PropertyEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLocalizedSystemEmptyLocale()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->encoder->encode('system_localized', 'test', null);
     }
