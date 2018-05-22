@@ -11,17 +11,22 @@ type Props = {
     children: ChildrenArray<Element<typeof Item>>,
     title: string,
     username: string,
-    userImage?: string,
+    userImage: ?string,
     onLogoutClick: () => void,
     onProfileClick: () => void,
     suluVersion: string,
     suluVersionLink: string,
-    appVersion?: string,
+    appVersion: ?string,
     appVersionLink?: string,
 };
 
 @observer
 export default class Navigation extends React.Component<Props> {
+    static defaultProps = {
+        appVersion: undefined,
+        userImage: undefined,
+    };
+
     static Item = Item;
 
     @observable expandedChild: * = null;
@@ -115,7 +120,6 @@ export default class Navigation extends React.Component<Props> {
             suluVersion,
             suluVersionLink,
         } = this.props;
-        const userImage = this.renderUserImage();
 
         return (
             <div className={navigationStyles.navigation}>
@@ -127,7 +131,7 @@ export default class Navigation extends React.Component<Props> {
                 </div>
                 <div className={navigationStyles.user}>
                     <div className={navigationStyles.userContent}>
-                        {userImage}
+                        {this.renderUserImage()}
                         <div className={navigationStyles.userProfile}>
                             <span onClick={onProfileClick}>{username}</span>
                             <button onClick={onLogoutClick}><Icon name="su-exit" />Log out</button>

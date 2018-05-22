@@ -6,6 +6,7 @@ $fontSize: 12px;
 
 $primaryBackground: $shakespeare;
 $primaryColor: $white;
+$primaryDisabledColor: $silver;
 
 $secondaryBorder: $silver;
 $secondaryBackground: $wildSand;
@@ -53,6 +54,11 @@ $iconColorActive: $white;
     border-color: $primaryBackground;
     background: $primaryBackground;
     color: $primaryColor;
+
+    &:disabled {
+        border-color: $primaryDisabledColor;
+        background-color: $primaryDisabledColor;
+    }
 }
 
 .secondary {

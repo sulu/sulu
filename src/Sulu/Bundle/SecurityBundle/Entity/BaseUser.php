@@ -136,6 +136,9 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     /**
      * Get username.
      *
+     * @SerializedName("username")
+     * @Groups({"frontend", "fullUser"})
+     *
      * @return string
      */
     public function getUsername()

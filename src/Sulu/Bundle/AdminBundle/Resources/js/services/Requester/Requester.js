@@ -1,14 +1,21 @@
 // @flow
+import type {HandleResponseHook} from './types';
+
 const defaultOptions = {
     credentials: 'same-origin',
     headers: {
         'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
     },
 };
 
-function handleResponse(response) {
+function handleResponse(response: Response) {
+    for (const handleResponseHook of Requester.handleResponseHooks) {
+        handleResponseHook(response);
+    }
+
     if (!response.ok) {
-        throw new Error(response.statusText);
+        return Promise.reject(response);
     }
 
     if (response.status === 204) {
@@ -20,6 +27,8 @@ function handleResponse(response) {
 }
 
 export default class Requester {
+    static handleResponseHooks: Array<HandleResponseHook> = [];
+
     static get(url: string): Promise<Object> {
         return fetch(url, defaultOptions)
             .then(handleResponse);

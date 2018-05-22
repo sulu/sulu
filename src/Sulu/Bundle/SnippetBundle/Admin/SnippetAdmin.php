@@ -64,6 +64,10 @@ class SnippetAdmin extends Admin
         $this->webspaceManager = $webspaceManager;
         $this->defaultEnabled = $defaultEnabled;
 
+        if (!$this->securityChecker) {
+            return;
+        }
+
         $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('navigation.modules');

@@ -29,6 +29,10 @@ class TagAdmin extends Admin
     {
         $this->securityChecker = $securityChecker;
 
+        if (!$this->securityChecker) {
+            return;
+        }
+
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);

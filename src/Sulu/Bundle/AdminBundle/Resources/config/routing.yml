@@ -59,12 +59,15 @@ sulu_admin.login:
     path: /login
     defaults: { _controller: SuluAdminBundle:Security:login }
 
+sulu_admin.login_check_v2:
+    path: /v2/login
+
+sulu_admin.logout:
+    path: /logout
+
 sulu_admin.reset:
     path: /reset/{token}
     defaults: { _controller: SuluAdminBundle:Security:reset }
 
 sulu_admin.login_check:
     path: /login_check
-
-logout:
-    path: /logout

@@ -2,7 +2,7 @@
 
 exports[`Application should not fail if current route does not exist 1`] = `
 <div
-  class="root"
+  class="root visible"
 >
   <nav
     class="navigation"
@@ -115,7 +115,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
 
 exports[`Application should render based on current route 1`] = `
 <div
-  class="root"
+  class="root visible"
 >
   <nav
     class="navigation"
@@ -235,6 +235,170 @@ exports[`Application should render based on current route 1`] = `
 </div>
 `;
 
+exports[`Application should render login when user is not logged in 1`] = `
+<div
+  class="login"
+>
+  <div
+    class="loginContainer"
+  >
+    <div
+      class="formContainer"
+    >
+      <div
+        class="logoContainer"
+      >
+        <span
+          aria-label="su-sulu"
+          class="su-sulu"
+        />
+      </div>
+      <div
+        class="header"
+      >
+        sulu_admin.welcome
+      </div>
+      <form
+        class="form"
+      >
+        <fieldset>
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            >
+              sulu_admin.username_or_email
+            </div>
+            <label
+              class="input"
+            >
+              <div
+                class="prependedContainer"
+              >
+                <span
+                  aria-label="su-user"
+                  class="icon su-user"
+                />
+              </div>
+              <input
+                type="text"
+                value=""
+              />
+            </label>
+          </label>
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            >
+              sulu_admin.password
+            </div>
+            <label
+              class="input"
+            >
+              <div
+                class="prependedContainer"
+              >
+                <span
+                  aria-label="su-lock"
+                  class="icon su-lock"
+                />
+              </div>
+              <input
+                type="password"
+                value=""
+              />
+            </label>
+          </label>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button link"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                sulu_admin.forgot_password
+              </span>
+            </button>
+            <button
+              class="button primary"
+              disabled=""
+              type="submit"
+            >
+              <span
+                class="text"
+              >
+                sulu_admin.login
+              </span>
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <div
+      class="backLinkContainer"
+    >
+      <a
+        class="backLink"
+        href="/"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="backLinkIcon su-angle-left"
+        />
+        sulu_admin.back_to_website
+      </a>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Application should render login with loader 1`] = `
+<div
+  class="login"
+>
+  <div
+    class="loginContainer"
+  >
+    <div
+      class="formContainer"
+    >
+      <div
+        class="logoContainer"
+      >
+        <span
+          aria-label="su-sulu"
+          class="su-sulu"
+        />
+      </div>
+      <div
+        class="loaderContainer"
+      >
+        <div
+          class="spinner"
+          style="width: 20px; height: 20px;"
+        >
+          <div
+            class="doubleBounce1"
+          />
+          <div
+            class="doubleBounce2"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="backLinkContainer"
+    />
+  </div>
+</div>
+`;
+
 exports[`Application should render opened navigation 1`] = `
 <Application
   router={
@@ -253,12 +417,13 @@ exports[`Application should render opened navigation 1`] = `
   }
 >
   <div
-    className="root navigationVisible"
+    className="root visible navigationVisible"
   >
     <nav
       className="navigation"
     >
       <Navigation
+        onLogout={[Function]}
         onNavigate={[Function]}
         router={
           Object {

@@ -3,13 +3,16 @@ import './global.scss';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import classNames from 'classnames';
-import React from 'react';
+import React, {Fragment} from 'react';
 import Navigation from '../Navigation';
 import Router from '../../services/Router';
+import initializer from '../../services/Initializer';
 import Sidebar, {sidebarStore} from '../Sidebar';
 import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
+import userStore from '../../stores/UserStore';
 import {Backdrop} from '../../components';
+import Login from '../Login';
 import applicationStyles from './application.scss';
 
 type Props = {
@@ -32,12 +35,24 @@ export default class Application extends React.Component<Props> {
         this.toggleNavigation();
     };
 
+    handleLoginSuccess = () => {
+        this.props.router.reload();
+    };
+
+    handleLogout = () => {
+        userStore.logout().then(() => {
+            this.toggleNavigation();
+        });
+    };
+
     render() {
         const {router} = this.props;
+        const {loggedIn} = userStore;
 
         const rootClass = classNames(
             applicationStyles.root,
             {
+                [applicationStyles.visible]: loggedIn,
                 [applicationStyles.navigationVisible]: this.navigationVisible,
             }
         );
@@ -57,35 +72,45 @@ export default class Application extends React.Component<Props> {
         );
 
         return (
-            <div className={rootClass}>
-                <nav className={applicationStyles.navigation}>
-                    <Navigation router={router} onNavigate={this.handleNavigate} />
-                </nav>
-                <div className={contentClass}>
-                    <Backdrop
-                        open={this.navigationVisible}
-                        visible={false}
-                        onClick={this.handleNavigationButtonClick}
-                        local={true}
-                        fixed={false}
+            <Fragment>
+                {!loggedIn &&
+                    <Login
+                        onLoginSuccess={this.handleLoginSuccess}
+                        initialized={!initializer.loading && initializer.translationInitialized}
+                        backLink="/" // TODO: Get the correct link here from the backend
                     />
-                    <main className={applicationStyles.main}>
-                        <header className={applicationStyles.header}>
-                            <Toolbar
-                                navigationOpen={this.navigationVisible}
-                                onNavigationButtonClick={this.handleNavigationButtonClick}
+                }
+                {initializer.initialized &&
+                    <div className={rootClass}>
+                        <nav className={applicationStyles.navigation}>
+                            <Navigation router={router} onNavigate={this.handleNavigate} onLogout={this.handleLogout} />
+                        </nav>
+                        <div className={contentClass}>
+                            <Backdrop
+                                open={this.navigationVisible}
+                                visible={false}
+                                onClick={this.handleNavigationButtonClick}
+                                local={true}
+                                fixed={false}
                             />
-                        </header>
-
-                        <div className={applicationStyles.viewContainer}>
-                            {router.route &&
-                            <ViewRenderer router={router} />
-                            }
+                            <main className={applicationStyles.main}>
+                                <header className={applicationStyles.header}>
+                                    <Toolbar
+                                        navigationOpen={this.navigationVisible}
+                                        onNavigationButtonClick={this.handleNavigationButtonClick}
+                                    />
+                                </header>
+                                <div className={applicationStyles.viewContainer}>
+                                    {router.route &&
+                                    <ViewRenderer router={router} />
+                                    }
+                                </div>
+                            </main>
+                            <Sidebar className={sidebarClass} />
                         </div>
-                    </main>
-                    <Sidebar className={sidebarClass} />
-                </div>
-            </div>
+                    </div>
+                }
+            </Fragment>
         );
     }
 }

@@ -14,7 +14,8 @@ type Props = {|
     type: string,
     loading?: boolean,
     placeholder?: string,
-    inputRef?: (ref: ?ElementRef<'label'>) => void,
+    labelRef?: (ref: ?ElementRef<'label'>) => void,
+    inputRef?: (ref: ?ElementRef<'input'>) => void,
     valid: boolean,
     value: ?string,
     onBlur?: () => void,
@@ -30,7 +31,7 @@ export default class Input extends React.PureComponent<Props> {
         valid: true,
     };
 
-    setRef = (ref: ?ElementRef<'label'>) => {
+    setInputRef = (ref: ?ElementRef<'input'>) => {
         const {inputRef} = this.props;
 
         if (!inputRef) {
@@ -38,6 +39,16 @@ export default class Input extends React.PureComponent<Props> {
         }
 
         inputRef(ref);
+    };
+
+    setLabelRef = (ref: ?ElementRef<'label'>) => {
+        const {labelRef} = this.props;
+
+        if (!labelRef) {
+            return;
+        }
+
+        labelRef(ref);
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -64,6 +75,8 @@ export default class Input extends React.PureComponent<Props> {
             value,
             iconStyle,
             iconClassName,
+            inputRef,
+            labelRef,
         } = this.props;
 
         const labelClass = classNames(
@@ -90,7 +103,7 @@ export default class Input extends React.PureComponent<Props> {
         return (
             <label
                 className={labelClass}
-                ref={this.setRef}
+                ref={labelRef ? this.setLabelRef : undefined}
             >
                 {!loading && icon &&
                     <div className={inputStyles.prependedContainer}>
@@ -103,6 +116,7 @@ export default class Input extends React.PureComponent<Props> {
                     </div>
                 }
                 <input
+                    ref={inputRef ? this.setInputRef : undefined}
                     name={name}
                     type={type}
                     value={value || ''}

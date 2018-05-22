@@ -1,0 +1,262 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render the component 1`] = `
+Array [
+  <div
+    class="header"
+  >
+    sulu_admin.reset_password
+  </div>,
+  <form
+    class="form"
+  >
+    <fieldset>
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          sulu_admin.username_or_email
+        </div>
+        <label
+          class="input"
+        >
+          <div
+            class="prependedContainer"
+          >
+            <span
+              aria-label="su-user"
+              class="icon su-user"
+            />
+          </div>
+          <input
+            type="text"
+            value=""
+          />
+        </label>
+      </label>
+      <div
+        class="buttons"
+      >
+        <button
+          class="button link"
+          type="button"
+        >
+          <span
+            class="text"
+          >
+            sulu_admin.to_login
+          </span>
+        </button>
+        <button
+          class="button primary"
+          disabled=""
+          type="submit"
+        >
+          <span
+            class="text"
+          >
+            sulu_admin.reset
+          </span>
+        </button>
+      </div>
+    </fieldset>
+  </form>,
+]
+`;
+
+exports[`Should render the component loading 1`] = `
+Array [
+  <div
+    class="header"
+  >
+    sulu_admin.reset_password
+  </div>,
+  <form
+    class="form"
+  >
+    <fieldset>
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          sulu_admin.username_or_email
+        </div>
+        <label
+          class="input"
+        >
+          <div
+            class="prependedContainer"
+          >
+            <span
+              aria-label="su-user"
+              class="icon su-user"
+            />
+          </div>
+          <input
+            type="text"
+            value="test"
+          />
+        </label>
+      </label>
+      <div
+        class="buttons"
+      >
+        <button
+          class="button link"
+          type="button"
+        >
+          <span
+            class="text"
+          >
+            sulu_admin.to_login
+          </span>
+        </button>
+        <button
+          class="button primary"
+          type="submit"
+        >
+          <span
+            class="text"
+          >
+            sulu_admin.reset
+          </span>
+        </button>
+      </div>
+    </fieldset>
+  </form>,
+]
+`;
+
+exports[`Should render the component with data 1`] = `
+Array [
+  <div
+    class="header"
+  >
+    sulu_admin.reset_password
+  </div>,
+  <form
+    class="form"
+  >
+    <fieldset>
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          sulu_admin.username_or_email
+        </div>
+        <label
+          class="input"
+        >
+          <div
+            class="prependedContainer"
+          >
+            <span
+              aria-label="su-user"
+              class="icon su-user"
+            />
+          </div>
+          <input
+            type="text"
+            value="test"
+          />
+        </label>
+      </label>
+      <div
+        class="buttons"
+      >
+        <button
+          class="button link"
+          type="button"
+        >
+          <span
+            class="text"
+          >
+            sulu_admin.to_login
+          </span>
+        </button>
+        <button
+          class="button primary"
+          type="submit"
+        >
+          <span
+            class="text"
+          >
+            sulu_admin.reset
+          </span>
+        </button>
+      </div>
+    </fieldset>
+  </form>,
+]
+`;
+
+exports[`Should render the component with success 1`] = `
+Array [
+  <div
+    class="header small"
+  >
+    sulu_admin.reset_password_success
+  </div>,
+  <form
+    class="form"
+  >
+    <fieldset>
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          sulu_admin.username_or_email
+        </div>
+        <label
+          class="input"
+        >
+          <div
+            class="prependedContainer"
+          >
+            <span
+              aria-label="su-user"
+              class="icon su-user"
+            />
+          </div>
+          <input
+            type="text"
+            value="test"
+          />
+        </label>
+      </label>
+      <div
+        class="buttons"
+      >
+        <button
+          class="button link"
+          type="button"
+        >
+          <span
+            class="text"
+          >
+            sulu_admin.to_login
+          </span>
+        </button>
+        <button
+          class="button primary"
+          type="submit"
+        >
+          <span
+            class="text"
+          >
+            sulu_admin.reset_resend
+          </span>
+        </button>
+      </div>
+    </fieldset>
+  </form>,
+]
+`;

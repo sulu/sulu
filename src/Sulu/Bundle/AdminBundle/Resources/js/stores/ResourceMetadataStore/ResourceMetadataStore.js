@@ -6,6 +6,11 @@ class ResourceMetadataStore {
 
     configurationPromises: {[string]: Promise<Object>} = {};
 
+    clear() {
+        this.endpoints = {};
+        this.configurationPromises = {};
+    }
+
     setEndpoints(endpoints: {[string]: string}) {
         this.endpoints = endpoints;
     }

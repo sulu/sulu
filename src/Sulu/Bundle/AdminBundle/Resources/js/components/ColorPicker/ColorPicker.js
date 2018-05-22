@@ -128,7 +128,7 @@ export default class ColorPicker extends React.Component<Props> {
                     icon="su-square"
                     iconClassName={colorPickerStyles.icon}
                     iconStyle={iconStyle}
-                    inputRef={this.setRef}
+                    labelRef={this.setRef}
                     name={name}
                     placeholder={placeholder}
                     valid={valid && !this.showError}

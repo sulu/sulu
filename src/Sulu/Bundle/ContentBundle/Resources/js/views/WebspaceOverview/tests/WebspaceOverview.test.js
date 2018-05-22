@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
+import {findWithToolbarFunction} from 'sulu-admin-bundle/utils/TestHelper';
 import WebspaceStore from '../../../stores/WebspaceStore';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -86,7 +87,7 @@ test('Should change webspace when value of webspace select is changed', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const WebspaceOverview = require('../WebspaceOverview').default;
     // $FlowFixMe
-    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const toolbarFunction = findWithToolbarFunction(withToolbar, WebspaceOverview);
     // $FlowFixMe
     const webspaceStore: typeof WebspaceStore = require('../../../stores/WebspaceStore');
     const userStore = require('sulu-admin-bundle/stores').userStore;

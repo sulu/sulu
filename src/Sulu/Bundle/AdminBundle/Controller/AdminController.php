@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializationContext;
@@ -27,6 +28,7 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -120,6 +122,11 @@ class AdminController
     private $fieldTypeOptionRegistry;
 
     /**
+     * @var ContactManagerInterface
+     */
+    private $contactManager;
+
+    /**
      * @var string
      */
     private $environment;
@@ -170,6 +177,7 @@ class AdminController
         NavigationRegistry $navigationRegistry,
         RouterInterface $router,
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
+        ContactManagerInterface $contactManager,
         $environment,
         $adminName,
         array $locales,
@@ -193,6 +201,7 @@ class AdminController
         $this->navigationRegistry = $navigationRegistry;
         $this->router = $router;
         $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
+        $this->contactManager = $contactManager;
         $this->environment = $environment;
         $this->adminName = $adminName;
         $this->locales = $locales;
@@ -257,6 +266,7 @@ class AdminController
     public function configV2Action(): Response
     {
         $user = $this->tokenStorage->getToken()->getUser();
+        $contact = $this->contactManager->getById($user->getContact()->getId(), $user->getLocale());
 
         $endpoints = [];
         foreach ($this->resourceMetadataPool->getAllResourceMetadata($user->getLocale()) as $resourceMetadata) {
@@ -271,8 +281,15 @@ class AdminController
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
                 'endpoints' => $endpoints,
+                'user' => $user,
+                'contact' => $contact,
             ],
         ]);
+
+        $context = new Context();
+        $context->setGroups(['frontend', 'partialContact', 'fullRoute']);
+
+        $view->setContext($context);
         $view->setFormat('json');
 
         return $this->viewHandler->handle($view);

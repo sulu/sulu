@@ -13,7 +13,7 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         {% block stylesheets %}
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1526025403203.css">
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1526989154436.css">
         {% endblock stylesheets %}
     </head>
     <body>
@@ -31,7 +31,7 @@
                      data-aura-system-version="{{ suluVersion }}"
                      data-aura-user-locales='{{ translated_locales|keys|json_encode }}'
                      data-aura-user-locale="{{ user.locale }}"
-                     data-aura-logout-route="{{ path('logout') }}"
+                     data-aura-logout-route="{{ path('sulu_admin.logout') }}"
                      data-aura-resize-width="1470"
                      class="navigation-column">
                 </div>
@@ -72,7 +72,7 @@
         </script>
 
         {% block javascripts %}
-        <script data-main="/bundles/suluadmin/dist/app.min.1526025403203" src="/bundles/suluadmin/js/vendor/husky/husky.min.js?v=1526025403203"></script>
+        <script data-main="/bundles/suluadmin/dist/app.min.1526989154436" src="/bundles/suluadmin/js/vendor/husky/husky.min.js?v=1526989154436"></script>
         {% endblock javascripts %}
     </body>
 </html>
