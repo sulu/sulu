@@ -25,6 +25,11 @@ Requester.handleResponseHooks.push(logoutOnUnauthorizedResponse);
 function startApplication() {
     const router = new Router(createHistory());
     router.addUpdateAttributesHook(updateRouterAttributesFromView);
+
+    initializer.initialize().then(() => {
+        router.reload();
+    });
+
     const id = 'application';
     const applicationElement = document.getElementById(id);
 
@@ -36,7 +41,5 @@ function startApplication() {
 }
 
 startApplication();
-
-initializer.initialize();
 
 bundleReady();
