@@ -5,11 +5,14 @@
 }
 
 .grid-section {
+    margin-bottom: -$fieldMarginBottom;
+
     & .grid-section:last-child {
         margin-bottom: 0;
     }
 
-    & + .grid-item {
+    & + .grid-item,
+    & + .grid-section {
         margin-top: $fieldMarginBottom;
     }
 }
