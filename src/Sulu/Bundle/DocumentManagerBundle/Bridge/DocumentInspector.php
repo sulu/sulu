@@ -127,6 +127,26 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
+     * Return the structure for the given StructureBehavior implementing document.
+     *
+     * @param StructureBehavior $document
+     * @param string $structureType
+     *
+     * @return StructureMetadata
+     */
+    public function getStructureMetadataByStructureType(StructureBehavior $document, $structureType)
+    {
+        try {
+            return $this->structureFactory->getStructureMetadata(
+                $this->getMetadata($document)->getAlias(),
+                $structureType
+            );
+        } catch (StructureTypeNotFoundException $exception) {
+            return;
+        }
+    }
+
+    /**
      * Return the (DocumentManager) Metadata for the given document.
      *
      * @param object $document

@@ -18,6 +18,7 @@ use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
@@ -49,6 +50,11 @@ class ManagedStructure extends Structure
      * @var StructureMetadata
      */
     private $structureMetadata;
+
+    /**
+     * @var StructureMetadata
+     */
+    private $oldStructureMetadata;
 
     /**
      * @var NodeInterface
@@ -120,19 +126,46 @@ class ManagedStructure extends Structure
 
         $property->setStructure($bridge);
 
-        $contentType = $this->contentTypeManager->get($contentTypeName);
-        $contentType->read(
-            $this->node,
-            $property,
-            $bridge->getWebspaceKey(),
-            $bridge->getLanguageCode(),
-            null
-        );
+        $value = null;
+        if ($this->canReadValue($structureProperty)) {
+            $contentType = $this->contentTypeManager->get($contentTypeName);
+            $contentType->read(
+                $this->node,
+                $property,
+                $bridge->getWebspaceKey(),
+                $bridge->getLanguageCode(),
+                null
+            );
 
-        $valueProperty = new PropertyValue($name, $property->getValue());
+            $value = $property->getValue();
+        }
+
+        $valueProperty = new PropertyValue($name, $value);
         $this->properties[$name] = $valueProperty;
 
         return $valueProperty;
+    }
+
+    /**
+     * Check if we can read the value of the property.
+     *
+     * @param PropertyMetadata $structureProperty
+     *
+     * @return bool
+     */
+    private function canReadValue(PropertyMetadata $structureProperty)
+    {
+        if (!$this->oldStructureMetadata) {
+            return true;
+        }
+
+        if (!$this->oldStructureMetadata->hasProperty($structureProperty->getName())) {
+            return false;
+        }
+
+        $oldStructureProperty = $this->oldStructureMetadata->getProperty($structureProperty->getName());
+
+        return $oldStructureProperty->getType() === $structureProperty->getType();
     }
 
     /**
@@ -168,6 +201,16 @@ class ManagedStructure extends Structure
     public function setStructureMetadata(StructureMetadata $structure)
     {
         $this->structureMetadata = $structure;
+    }
+
+    /**
+     * Set old structure metadata for e.g. template switching.
+     *
+     * @param StructureMetadata $structure
+     */
+    public function setOldStructureMetadata(StructureMetadata $structure)
+    {
+        $this->oldStructureMetadata = $structure;
     }
 
     /**

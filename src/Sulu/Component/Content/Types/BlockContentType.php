@@ -103,6 +103,10 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                     $segmentKey
                 );
 
+                if (!$blockProperty->hasType($typeProperty->getValue())) {
+                    continue;
+                }
+
                 $blockPropertyType = $blockProperty->initProperties($i, $typeProperty->getValue());
 
                 /** @var PropertyInterface $subProperty */
