@@ -30,6 +30,7 @@ module.exports = { // eslint-disable-line no-undef
         path: path.resolve('web'),
         filename: basePath + '/[name].[chunkhash].js',
     },
+    devtool: 'source-map',
     plugins: [
         new webpack.DefinePlugin({
             BUNDLE_ENTRIES_COUNT: entriesCount,
