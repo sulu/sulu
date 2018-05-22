@@ -51,6 +51,7 @@ export default class Application extends React.Component<Props> {
         const rootClass = classNames(
             applicationStyles.root,
             {
+                [applicationStyles.visible]: userStore.loggedIn,
                 [applicationStyles.navigationVisible]: this.navigationVisible,
             }
         );

@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {computed} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate} from '../../utils/index';
 import Button from '../../components/Button/index';
@@ -24,8 +24,20 @@ export default class ResetForm extends React.Component<Props> {
         success: false,
     };
 
+    @observable inputRef: ?ElementRef<*>;
+
     @computed get submitButtonDisabled(): boolean {
         return !this.props.user;
+    }
+
+    @action setInputRef = (ref: ?ElementRef<*>) => {
+        this.inputRef = ref;
+    };
+
+    componentDidMount() {
+        if (this.inputRef) {
+            this.inputRef.focus();
+        }
     }
 
     renderHeader() {
@@ -55,6 +67,7 @@ export default class ResetForm extends React.Component<Props> {
                                 {translate('sulu_admin.username_or_email')}
                             </div>
                             <Input
+                                inputRef={this.setInputRef}
                                 icon="su-user"
                                 value={this.props.user}
                                 onChange={this.props.onUserChange}

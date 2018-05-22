@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {computed} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {translate} from '../../utils/index';
@@ -27,8 +27,20 @@ export default class LoginForm extends React.Component<Props> {
         error: false,
     };
 
+    @observable inputRef: ?ElementRef<*>;
+
     @computed get submitButtonDisabled(): boolean {
         return this.props.error || !(this.props.user && this.props.password);
+    }
+
+    @action setInputRef = (ref: ?ElementRef<*>) => {
+        this.inputRef = ref;
+    };
+
+    componentDidMount() {
+        if (this.inputRef) {
+            this.inputRef.focus();
+        }
     }
 
     renderHeader() {
@@ -65,6 +77,7 @@ export default class LoginForm extends React.Component<Props> {
                                 {translate('sulu_admin.username_or_email')}
                             </div>
                             <Input
+                                inputRef={this.setInputRef}
                                 valid={!this.props.error}
                                 icon="su-user"
                                 value={this.props.user}

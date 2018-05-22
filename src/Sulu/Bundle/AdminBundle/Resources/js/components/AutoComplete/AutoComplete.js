@@ -37,7 +37,7 @@ export default class AutoComplete extends React.Component<Props> {
 
     static Suggestion = Suggestion;
 
-    @observable inputRef: ElementRef<'label'>;
+    @observable labelRef: ElementRef<'label'>;
 
     @observable inputValue: ?string = this.props.value;
 
@@ -55,7 +55,7 @@ export default class AutoComplete extends React.Component<Props> {
     }
 
     @computed get suggestionStyle(): Object {
-        const suggestionListMinWidth = (this.inputRef) ? this.inputRef.scrollWidth - POPOVER_HORIZONTAL_OFFSET * 2 : 0;
+        const suggestionListMinWidth = (this.labelRef) ? this.labelRef.scrollWidth - POPOVER_HORIZONTAL_OFFSET * 2 : 0;
 
         return {
             minWidth: Math.max(suggestionListMinWidth, 0),
@@ -85,9 +85,9 @@ export default class AutoComplete extends React.Component<Props> {
         this.inputValue = value;
     }
 
-    setInputRef = (inputRef: ?ElementRef<'label'>) => {
-        if (inputRef) {
-            this.inputRef = inputRef;
+    setLabelRef = (labelRef: ?ElementRef<'label'>) => {
+        if (labelRef) {
+            this.labelRef = labelRef;
         }
     };
 
@@ -132,7 +132,7 @@ export default class AutoComplete extends React.Component<Props> {
                     icon={LENS_ICON}
                     value={inputValue}
                     loading={loading}
-                    inputRef={this.setInputRef}
+                    labelRef={this.setLabelRef}
                     onChange={this.handleInputChange}
                     onBlur={onFinish}
                     placeholder={placeholder}
@@ -140,7 +140,7 @@ export default class AutoComplete extends React.Component<Props> {
                 <Popover
                     open={showSuggestionList}
                     onClose={this.handlePopoverClose}
-                    anchorElement={this.inputRef}
+                    anchorElement={this.labelRef}
                     verticalOffset={POPOVER_VERTICAL_OFFSET}
                     horizontalOffset={POPOVER_HORIZONTAL_OFFSET}
                 >
