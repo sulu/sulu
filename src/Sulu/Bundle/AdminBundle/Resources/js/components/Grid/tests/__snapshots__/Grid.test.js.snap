@@ -5,10 +5,10 @@ exports[`Render a Grid with Items having spaces between them 1`] = `
   class="grid"
 >
   <div
-    class="item size-4 space-before-0 space-after-8"
+    class="item size size-4 space-before-0 space-after-8"
   />
   <div
-    class="item size-2 space-before-10 space-after-0"
+    class="item size size-2 space-before-10 space-after-0"
   />
 </div>
 `;
@@ -18,40 +18,40 @@ exports[`Render a Grid with Items in all sizes 1`] = `
   class="grid"
 >
   <div
-    class="item size-1 space-before-0 space-after-0"
+    class="item size size-1 space-before-0 space-after-0"
   />
   <div
-    class="item size-2 space-before-0 space-after-0"
+    class="item size size-2 space-before-0 space-after-0"
   />
   <div
-    class="item size-3 space-before-0 space-after-0"
+    class="item size size-3 space-before-0 space-after-0"
   />
   <div
-    class="item size-4 space-before-0 space-after-0"
+    class="item size size-4 space-before-0 space-after-0"
   />
   <div
-    class="item size-5 space-before-0 space-after-0"
+    class="item size size-5 space-before-0 space-after-0"
   />
   <div
-    class="item size-6 space-before-0 space-after-0"
+    class="item size size-6 space-before-0 space-after-0"
   />
   <div
-    class="item size-7 space-before-0 space-after-0"
+    class="item size size-7 space-before-0 space-after-0"
   />
   <div
-    class="item size-8 space-before-0 space-after-0"
+    class="item size size-8 space-before-0 space-after-0"
   />
   <div
-    class="item size-9 space-before-0 space-after-0"
+    class="item size size-9 space-before-0 space-after-0"
   />
   <div
-    class="item size-10 space-before-0 space-after-0"
+    class="item size size-10 space-before-0 space-after-0"
   />
   <div
-    class="item size-11 space-before-0 space-after-0"
+    class="item size size-11 space-before-0 space-after-0"
   />
   <div
-    class="item size-12 space-before-0 space-after-0"
+    class="item size size-12 space-before-0 space-after-0"
   />
 </div>
 `;
@@ -61,47 +61,47 @@ exports[`Render a Grid with Sections 1`] = `
   class="grid"
 >
   <div
-    class="section size-4 space-before-0 space-after-0"
+    class="section size size-4 space-before-0 space-after-0"
   >
     <div
-      class="item size-1 space-before-0 space-after-0"
+      class="item size size-1 space-before-0 space-after-0"
     />
     <div
-      class="item size-2 space-before-0 space-after-0"
+      class="item size size-2 space-before-0 space-after-0"
     />
     <div
-      class="item size-3 space-before-0 space-after-0"
+      class="item size size-3 space-before-0 space-after-0"
     />
     <div
-      class="item size-4 space-before-0 space-after-0"
+      class="item size size-4 space-before-0 space-after-0"
     />
     <div
-      class="item size-5 space-before-0 space-after-0"
+      class="item size size-5 space-before-0 space-after-0"
     />
     <div
-      class="item size-6 space-before-0 space-after-0"
+      class="item size size-6 space-before-0 space-after-0"
     />
   </div>
   <div
-    class="section size-8 space-before-0 space-after-0"
+    class="section size size-8 space-before-0 space-after-0"
   >
     <div
-      class="item size-7 space-before-0 space-after-0"
+      class="item size size-7 space-before-0 space-after-0"
     />
     <div
-      class="item size-8 space-before-0 space-after-0"
+      class="item size size-8 space-before-0 space-after-0"
     />
     <div
-      class="item size-9 space-before-0 space-after-0"
+      class="item size size-9 space-before-0 space-after-0"
     />
     <div
-      class="item size-10 space-before-0 space-after-0"
+      class="item size size-10 space-before-0 space-after-0"
     />
     <div
-      class="item size-11 space-before-0 space-after-0"
+      class="item size size-11 space-before-0 space-after-0"
     />
     <div
-      class="item size-12 space-before-0 space-after-0"
+      class="item size size-12 space-before-0 space-after-0"
     />
   </div>
 </div>
@@ -112,10 +112,10 @@ exports[`Render a Grid with class names attached 1`] = `
   class="grid test-grid"
 >
   <div
-    class="section test-section size-12 space-before-0 space-after-0"
+    class="section test-section size size-12 space-before-0 space-after-0"
   >
     <div
-      class="item test-item size-12 space-before-0 space-after-0"
+      class="item test-item size size-12 space-before-0 space-after-0"
     />
   </div>
 </div>

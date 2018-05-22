@@ -83,7 +83,7 @@ export default class PasswordConfirmation extends React.Component<Props> {
                         valid={this.valid}
                     />
                 </Grid.Item>
-                <Grid.Item size={6}>
+                <Grid.Item size={6} className={passwordConfirmationStyles.item}>
                     <Input
                         icon={LOCK_ICON}
                         onChange={this.handleSecondChange}

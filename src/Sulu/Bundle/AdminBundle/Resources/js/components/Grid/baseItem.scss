@@ -1,8 +1,10 @@
+@import './variables.scss';
+
 .size {
     width: 100%;
 }
 
-@media (min-width: 520px) {
+@media (min-width: $gridMinWidth) {
     .size-1 {
         width: calc(1 * 100% / 12);
     }
