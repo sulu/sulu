@@ -9,7 +9,7 @@ beforeEach(() => {
 test('Clear routes from RouteRegistry', () => {
     routeRegistry.addCollection([
         {
-            name:'route',
+            name: 'route',
             view: 'view',
             path: '/route',
             options: {},
