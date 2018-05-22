@@ -25,11 +25,19 @@ const mockUserStoreLoggedIn = jest.fn().mockReturnValue(true);
 const mockUserStoreContact = jest.fn().mockReturnValue({
     fullName: 'Hikaru Sulu',
 });
+const mockUserStoreUser = jest.fn().mockReturnValue({
+    id: 99,
+    username: 'test',
+});
 
 jest.mock('../../../stores/UserStore', () => {
     return new class {
         get loggedIn() {
             return mockUserStoreLoggedIn();
+        }
+
+        get user() {
+            return mockUserStoreUser();
         }
 
         get contact() {
@@ -58,7 +66,6 @@ test('Application should render login with loader', () => {
 
     const router = new Router({});
     const application = mount(<Application router={router} />);
-
     expect(application.render()).toMatchSnapshot();
 });
 

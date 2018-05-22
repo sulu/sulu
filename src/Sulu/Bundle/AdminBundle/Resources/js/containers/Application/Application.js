@@ -70,6 +70,8 @@ export default class Application extends React.Component<Props> {
             }
         );
 
+        console.log(userStore.loggedIn);
+
         return (
             <Fragment>
                 {!userStore.loggedIn &&

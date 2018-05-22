@@ -1,5 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
+import type {ElementRef} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
