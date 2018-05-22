@@ -85,7 +85,7 @@ class AccessControlManager implements AccessControlManagerInterface
     public function getUserPermissions(SecurityCondition $securityCondition, $user)
     {
         if (!$user instanceof UserInterface) {
-            return;
+            return [];
         }
 
         $objectPermissions = $this->getUserObjectPermission($securityCondition, $user);

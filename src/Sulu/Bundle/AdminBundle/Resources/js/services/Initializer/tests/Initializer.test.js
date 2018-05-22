@@ -171,8 +171,6 @@ test('Should not reinitialize everything when it was already initialized', () =>
     expect(initializer.loading).toBe(true);
 
     return initPromise
-    // Bug in flow: https://github.com/facebook/flow/issues/5810
-    // $FlowFixMe:
         .finally(() => {
             expect(setTranslations).toBeCalledWith(translationData);
             expect(initializer.translationInitialized).toBe(true);
@@ -226,8 +224,6 @@ test('Should not crash when the config request throws an 401 error', () => {
     });
 
     return initPromise
-        // Bug in flow: https://github.com/facebook/flow/issues/5810
-        // $FlowFixMe:
         .finally(() => {
             expect(setTranslations).toBeCalledWith(translationData);
             expect(initializer.translationInitialized).toBe(true);

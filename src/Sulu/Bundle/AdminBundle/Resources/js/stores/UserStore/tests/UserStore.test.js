@@ -121,9 +121,6 @@ test('Should show error when login is not working and error status is 401', () =
     expect(userStore.loading).toBe(true);
 
     return loginPromise
-        .catch(() => {})
-        // Bug in flow: https://github.com/facebook/flow/issues/5810
-        // $FlowFixMe:
         .finally(() => {
             expect(Requester.post).toBeCalledWith('/admin/v2/login', {username: 'test', password: 'password'});
             expect(initializer.initialize).not.toBeCalled();
