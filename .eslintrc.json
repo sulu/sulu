@@ -61,6 +61,7 @@
                 "functions": "never"
             }
         ],
+        "key-spacing": "error",
         "no-alert": "error",
         "padded-blocks": [
             "error",

@@ -66,7 +66,7 @@ module.exports = { // eslint-disable-line no-undef
                 }),
             },
             {
-                test:/\.(jpg|gif|png)(\?.*$|$)/,
+                test: /\.(jpg|gif|png)(\?.*$|$)/,
                 use: [
                     {
                         loader: 'file-loader',
@@ -77,7 +77,7 @@ module.exports = { // eslint-disable-line no-undef
                 ],
             },
             {
-                test:/\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
+                test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
                 use: [
                     {
                         loader: 'file-loader',
