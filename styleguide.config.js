@@ -129,7 +129,7 @@ module.exports = { // eslint-disable-line
         },
         devtool: 'source-map',
         module: {
-            loaders: [
+            rules: [
                 {
                     test: /\.js$/,
                     exclude: /node_modules/,
