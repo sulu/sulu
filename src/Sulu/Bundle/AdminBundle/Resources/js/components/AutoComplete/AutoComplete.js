@@ -43,10 +43,10 @@ export default class AutoComplete extends React.Component<Props> {
 
     overrideValue: boolean = false;
 
-    componentWillReceiveProps(nextProps: Props) {
+    componentDidUpdate() {
         if (this.overrideValue) {
             this.overrideValue = false;
-            this.setInputValue(nextProps.value);
+            this.setInputValue(this.props.value);
         }
     }
 
@@ -85,7 +85,7 @@ export default class AutoComplete extends React.Component<Props> {
         this.inputValue = value;
     }
 
-    setLabelRef = (labelRef: ?ElementRef<'label'>) => {
+    @action setLabelRef = (labelRef: ?ElementRef<'label'>) => {
         if (labelRef) {
             this.labelRef = labelRef;
         }
