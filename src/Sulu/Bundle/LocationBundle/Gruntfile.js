@@ -34,7 +34,7 @@ module.exports = function (grunt) {
                         src: [
                             'bower_components/leaflet/dist/leaflet.js',
                             'bower_components/leaflet/dist/leaflet.css',
-                        ], 
+                        ],
                         dest: 'Resources/public/js/vendor/leaflet'
                     },
                     {
@@ -53,6 +53,18 @@ module.exports = function (grunt) {
                         ], 
                         dest: 'Resources/public/js/vendor/requirejs-plugins'
                     }
+                ]
+            },
+            vendor: {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            'Resources/public/js/vendor/leaflet/images/*',
+                        ],
+                        dest: 'Resources/public/dist/vendor/leaflet/images'
+                    },
                 ]
             }
         },
@@ -98,7 +110,8 @@ module.exports = function (grunt) {
         cssmin: {
             compress: {
                 files: {
-                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css'],
+                    'Resources/public/dist/vendor/leaflet/leaflet.css': ['Resources/public/js/vendor/leaflet/*.css'],
                 }
             }
         },
@@ -114,6 +127,7 @@ module.exports = function (grunt) {
         'compass:dev',
         'cssmin',
         'copy:bower',
+        'copy:vendor',
         'copy:templates',
         'replace:build'
     ]);
