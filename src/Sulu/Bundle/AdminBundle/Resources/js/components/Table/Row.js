@@ -11,38 +11,38 @@ import Cell from './Cell';
 import tableStyles from './table.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Cell>>,
-    /** The index of the row inside the body */
-    rowIndex: number,
-    /** The id will be used to mark the selected row inside the onRowSelection callback. */
-    id?: string | number,
-    /** @ignore */
     buttons?: Array<ButtonConfig>,
-    /** @ignore */
-    selectMode?: SelectMode,
-    selectInFirstCell: boolean,
-    selected: boolean,
-    hasChildren: boolean,
-    expanded: boolean,
-    isLoading: boolean,
+    /** The index of the row inside the body */
+    children: ChildrenArray<Element<typeof Cell>>,
+    /** The id will be used to mark the selected row inside the onRowSelection callback. */
     depth?: number,
     /** @ignore */
-    onExpand?: (rowId: string | number) => void,
+    expanded: boolean,
     /** @ignore */
+    hasChildren: boolean,
+    id?: string | number,
+    isLoading: boolean,
     onCollapse?: (rowId: string | number) => void,
-    /** @ignore */
+    onExpand?: (rowId: string | number) => void,
     onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
+    rowIndex: number,
+    /** @ignore */
+    selected: boolean,
+    /** @ignore */
+    selectInFirstCell: boolean,
+    /** @ignore */
+    selectMode?: SelectMode,
 };
 
 export default class Row extends React.PureComponent<Props> {
     static defaultProps = {
-        selected: false,
-        selectInFirstCell: false,
-        hasChildren: false,
+        depth: 0,
         expanded: false,
+        hasChildren: false,
         isLoading: false,
         rowIndex: 0,
-        depth: 0,
+        selected: false,
+        selectInFirstCell: false,
     };
 
     getIdentifier = (): (string | number) => {
@@ -148,8 +148,8 @@ export default class Row extends React.PureComponent<Props> {
 
         return (
             <span
-                onClick={expanded === false ? this.handleExpand : this.handleCollapse}
                 className={tableStyles.toggleIcon}
+                onClick={expanded === false ? this.handleExpand : this.handleCollapse}
             >
                 {isLoading
                     ? <Loader size={10} />
@@ -164,10 +164,10 @@ export default class Row extends React.PureComponent<Props> {
 
         return (
             <Radio
-                skin="dark"
-                value={this.getIdentifier()}
                 checked={selected}
                 onChange={this.handleSingleSelectionChange}
+                skin="dark"
+                value={this.getIdentifier()}
             />
         );
     };
@@ -177,10 +177,10 @@ export default class Row extends React.PureComponent<Props> {
 
         return (
             <Checkbox
-                skin="dark"
-                value={this.getIdentifier()}
                 checked={selected}
                 onChange={this.handleMultipleSelectionChange}
+                skin="dark"
+                value={this.getIdentifier()}
             />
         );
     };
@@ -198,10 +198,10 @@ export default class Row extends React.PureComponent<Props> {
 
             return (
                 <ButtonCell
-                    key={key}
                     icon={button.icon}
-                    rowId={this.getIdentifier()}
+                    key={key}
                     onClick={handleClick}
+                    rowId={this.getIdentifier()}
                 />
             );
         });

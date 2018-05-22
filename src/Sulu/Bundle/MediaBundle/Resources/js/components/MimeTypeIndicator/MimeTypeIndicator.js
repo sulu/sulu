@@ -5,10 +5,10 @@ import MimeTypeMapper from './MimeTypeMapper';
 import mimeTypeIndicatorStyles from './mimeTypeIndicator.scss';
 
 type Props = {
-    width?: number,
     height?: number,
     iconSize?: number,
     mimeType: string,
+    width?: number,
 };
 
 export default class MimeTypeIndicator extends React.PureComponent<Props> {
@@ -42,7 +42,7 @@ export default class MimeTypeIndicator extends React.PureComponent<Props> {
         }
 
         return (
-            <div style={mimeTypeStyles} className={mimeTypeIndicatorStyles.mimeTypeIndicator}>
+            <div className={mimeTypeIndicatorStyles.mimeTypeIndicator} style={mimeTypeStyles}>
                 <Icon name={icon} />
             </div>
         );

@@ -52,8 +52,8 @@ test('Should pass props correctly to component', () => {
 
     const assignment = shallow(
         <Assignment
-            formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
             onChange={changeSpy}
             value={value}
         />
@@ -81,8 +81,8 @@ test('Should pass id of form as disabledId to avoid assigning something to itsel
 
     const assignment = shallow(
         <Assignment
-            formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
             onChange={jest.fn()}
             value={undefined}
         />
@@ -101,8 +101,8 @@ test('Should pass empty array if value is not given', () => {
 
     const assignment = shallow(
         <Assignment
-            formInspector={formInspector}
             fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
             onChange={changeSpy}
             value={undefined}
         />
@@ -127,8 +127,8 @@ test('Should throw an error if no resourceKey is passed in fieldOptions', () => 
 
     expect(() => shallow(
         <Assignment
-            formInspector={formInspector}
             fieldTypeOptions={{}}
+            formInspector={formInspector}
             onChange={jest.fn()}
             value={undefined}
         />
@@ -140,9 +140,9 @@ test('Should throw an error if no adapter is passed in fieldTypeOptions', () => 
 
     expect(() => shallow(
         <Assignment
+            fieldTypeOptions={{resourceKey: 'test'}}
             formInspector={formInspector}
             onChange={jest.fn()}
-            fieldTypeOptions={{resourceKey: 'test'}}
             value={undefined}
         />
     )).toThrowError(/"adapter"/);

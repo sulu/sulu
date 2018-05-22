@@ -24,10 +24,10 @@ export type DatagridAdapterProps = {
     data: Array<*>,
     disabledIds: Array<string | number>,
     loading: boolean,
-    onAllSelectionChange?: (selected?: boolean) => void,
-    onItemClick?: (itemId: string | number) => void,
-    onItemActivation?: (itemId: string | number) => void,
     onAddClick?: (id: string | number) => void,
+    onAllSelectionChange?: (selected?: boolean) => void,
+    onItemActivation?: (itemId: string | number) => void,
+    onItemClick?: (itemId: string | number) => void,
     onItemSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     onPageChange: (page: number) => void,
     onSort: (column: string, order: SortOrder) => void,
@@ -40,8 +40,8 @@ export type DatagridAdapterProps = {
 };
 
 export type ObservableOptions = {
-    page: IObservableValue<number>,
     locale?: IObservableValue<string>,
+    page: IObservableValue<number>,
 };
 
 export type LoadOptions = {
@@ -55,24 +55,24 @@ export type ItemEnhancer = (item: Object) => Object;
 
 export interface LoadingStrategyInterface {
     constructor(): void,
-    initialize(datagridStore: DatagridStore): void,
-    reset(datagridStore: DatagridStore): void,
     destroy(): void,
+    initialize(datagridStore: DatagridStore): void,
     load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer): Promise<Object>,
+    reset(datagridStore: DatagridStore): void,
 }
 
 export interface StructureStrategyInterface {
+    clear(): void,
     constructor(): void,
     data: Array<*>,
-    getData(parent: ?string | number): ?Array<*>,
     enhanceItem(item: Object): Object,
     findById(identifier: string | number): ?Object,
-    clear(): void,
+    getData(parent: ?string | number): ?Array<*>,
 }
 
 export type TreeItem = {
-    data: DataItem,
     children: Array<TreeItem>,
+    data: DataItem,
 };
 
 export interface FieldTransformer {

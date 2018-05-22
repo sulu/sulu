@@ -15,52 +15,52 @@ export type Group = Element<typeof ItemsComponent> | Element<typeof IconsCompone
 export type Skin = 'light' | 'dark';
 
 export type Button = {
-    children?: Node,
-    onClick: () => ?Promise<*>,
-    value?: string | number,
-    icon?: string,
-    size?: string,
-    disabled?: boolean,
     active?: boolean,
+    children?: Node,
+    disabled?: boolean,
     hasOptions?: boolean,
+    icon?: string,
     loading?: boolean,
+    onClick: () => ?Promise<*>,
     primary?: boolean,
+    size?: string,
     skin?: Skin,
+    value?: string | number,
 };
 
 export type DropdownOption = {
+    disabled?: boolean,
     label: string | number,
     onClick?: () => void,
-    disabled?: boolean,
     skin?: Skin,
 };
 
 export type SelectOption = {
-    label: string | number,
-    value: string | number,
     disabled?: boolean,
+    label: string | number,
     skin?: Skin,
+    value: string | number,
 };
 
 export type Dropdown = {
-    options: Array<DropdownOption>,
-    label?: string | number,
-    icon?: string,
-    size?: string,
     disabled?: boolean,
+    icon?: string,
+    label?: string | number,
     loading?: boolean,
+    options: Array<DropdownOption>,
+    size?: string,
     skin?: Skin,
 };
 
 export type Select = {
-    value: string | number,
-    options: Array<SelectOption>,
-    onChange: (optionValue: string | number) => void,
-    label?: string | number,
-    icon?: string,
-    size?: string,
     className?: string,
     disabled?: boolean,
+    icon?: string,
+    label?: string | number,
     loading?: boolean,
+    onChange: (optionValue: string | number) => void,
+    options: Array<SelectOption>,
+    size?: string,
     skin?: Skin,
+    value: string | number,
 };

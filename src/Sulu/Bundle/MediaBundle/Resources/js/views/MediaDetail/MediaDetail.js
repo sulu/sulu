@@ -70,9 +70,9 @@ class MediaDetail extends React.Component<Props> {
                 <Grid.Section size={8}>
                     <Grid.Item>
                         <Form
+                            onSubmit={this.handleSubmit}
                             ref={this.setFormRef}
                             store={this.formStore}
-                            onSubmit={this.handleSubmit}
                         />
                     </Grid.Item>
                 </Grid.Section>

@@ -5,11 +5,11 @@ import Icon from '../Icon';
 import itemStyles from './item.scss';
 
 type Props = {
-    value: *,
-    children: string,
     active: boolean,
+    children: string,
     icon?: string,
     onClick?: (value: *) => void,
+    value: *,
 };
 
 export default class Item extends React.PureComponent<Props> {
@@ -42,7 +42,7 @@ export default class Item extends React.PureComponent<Props> {
         );
 
         return (
-            <div onClick={this.handleButtonClick} className={itemClass}>
+            <div className={itemClass} onClick={this.handleButtonClick}>
                 <span className={itemStyles.icon}>
                     {icon && active && <Icon className={itemStyles.icon} name={icon} />}
                 </span>

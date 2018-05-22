@@ -7,9 +7,9 @@ import MediaCard from '../MediaCard';
 test('Render a MediaCard component', () => {
     expect(render(
         <MediaCard
-            title="Test"
-            meta="Test/Test"
             image="http://lorempixel.com/300/200"
+            meta="Test/Test"
+            title="Test"
         />
     )).toMatchSnapshot();
 });
@@ -43,13 +43,13 @@ test('Render a MediaCard with download list', () => {
 
     const masonry = mount(
         <MediaCard
-            title="Test"
-            meta="Test/Test"
-            imageSizes={imageSizes}
             downloadCopyText="Copy URL"
-            downloadUrl="http://lorempixel.com/300/200"
             downloadText="Direct download"
+            downloadUrl="http://lorempixel.com/300/200"
             image="http://lorempixel.com/300/200"
+            imageSizes={imageSizes}
+            meta="Test/Test"
+            title="Test"
         />
     );
 
@@ -65,11 +65,11 @@ test('Clicking on an item should call the responsible handler on the MediaCard c
     const mediaCard = mount(
         <MediaCard
             id={itemId}
-            title="Test"
+            image="http://lorempixel.com/300/200"
             meta="Test/Test"
             onClick={clickSpy}
             onSelectionChange={selectionSpy}
-            image="http://lorempixel.com/300/200"
+            title="Test"
         />
     );
 

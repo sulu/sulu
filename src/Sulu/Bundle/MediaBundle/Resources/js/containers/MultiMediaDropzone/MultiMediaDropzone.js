@@ -15,8 +15,8 @@ const RESOURCE_KEY = 'media';
 
 type Props = {
     children: any,
-    locale: IObservableValue<string>,
     collectionId: ?string | number,
+    locale: IObservableValue<string>,
     onUpload: (media: Array<Object>) => void,
 };
 
@@ -108,18 +108,18 @@ export default class MultiMediaDropzone extends React.Component<Props> {
 
         return (
             <Dropzone
-                ref={this.setDropzoneRef}
-                style={{}} // to disable default style
-                disableClick={true}
+                className={dropzoneStyles.dropzone}
+                disableClick={true} // to disable default style
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
-                className={dropzoneStyles.dropzone}
+                ref={this.setDropzoneRef}
+                style={{}}
             >
                 <DropzoneOverlay
-                    open={this.overlayOpen}
-                    onClose={this.handleOverlayClose}
                     onClick={this.handleOverlayClick}
+                    onClose={this.handleOverlayClose}
+                    open={this.overlayOpen}
                 >
                     {this.createMediaItems()}
                 </DropzoneOverlay>

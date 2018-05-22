@@ -29,14 +29,14 @@ export default class Assignment extends React.Component<FieldTypeProps<Array<str
         return (
             <AssignmentComponent
                 adapter={adapter}
-                displayProperties={displayProperties}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
+                displayProperties={displayProperties}
                 icon={icon}
                 label={translate(label)}
                 locale={formInspector.locale}
                 onChange={onChange}
-                resourceKey={resourceKey}
                 overlayTitle={translate(overlayTitle)}
+                resourceKey={resourceKey}
                 value={value || []}
             />
         );

@@ -11,21 +11,21 @@ import Button from '../Button';
 import dialogStyles from './dialog.scss';
 
 type Props = {
+    cancelText: string,
+    children: Node,
+    confirmLoading: boolean,
+    confirmText: string,
+    onCancel: () => void,
+    onConfirm: () => void,
     open: boolean,
     title: string,
-    children: Node,
-    cancelText: string,
-    confirmText: string,
-    confirmLoading: boolean,
-    onConfirm: () => void,
-    onCancel: () => void,
 };
 
 @observer
 export default class Dialog extends React.Component<Props> {
     static defaultProps = {
-        open: false,
         confirmLoading: false,
+        open: false,
     };
 
     @observable visible: boolean = false;
@@ -105,10 +105,10 @@ export default class Dialog extends React.Component<Props> {
                                         {children}
                                     </article>
                                     <footer>
-                                        <Button skin="secondary" onClick={onCancel}>
+                                        <Button onClick={onCancel} skin="secondary">
                                             {cancelText}
                                         </Button>
-                                        <Button skin="primary" onClick={onConfirm} loading={confirmLoading}>
+                                        <Button loading={confirmLoading} onClick={onConfirm} skin="primary">
                                             {confirmText}
                                         </Button>
                                     </footer>

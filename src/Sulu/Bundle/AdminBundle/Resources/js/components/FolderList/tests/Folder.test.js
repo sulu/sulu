@@ -20,8 +20,8 @@ test('Call clickhandler when clicking on the folder', () => {
         <Folder
             id={folderId}
             info="3 Objects"
-            title="This is a folder"
             onClick={clickSpy}
+            title="This is a folder"
         />
     );
 

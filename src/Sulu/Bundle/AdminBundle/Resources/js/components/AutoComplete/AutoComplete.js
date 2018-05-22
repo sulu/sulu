@@ -18,15 +18,15 @@ const POPOVER_VERTICAL_OFFSET = -2;
 type Props = {
     children: ChildrenArray<Element<typeof Suggestion>>,
     /** The value of the selected "Suggestion" */
-    value: string,
-    placeholder?: string,
-    /** Shows the loading indicator when true */
     loading?: boolean,
-    /** Called when a suggestion is set */
     onChange: (value: string | number) => void,
+    /** Shows the loading indicator when true */
     onFinish: () => void,
-    /** Called with a debounce when text is entered inside the input */
+    /** Called when a suggestion is set */
     onSearch: (query: string) => void,
+    placeholder?: string,
+    /** Called with a debounce when text is entered inside the input */
+    value: string,
 };
 
 @observer
@@ -66,8 +66,8 @@ export default class AutoComplete extends React.Component<Props> {
         return React.Children.map(children, (child, index: number) => {
             return (
                 <li
-                    style={this.suggestionStyle}
                     className={autoCompleteStyles.suggestionItem}
+                    style={this.suggestionStyle}
                 >
                     {
                         React.cloneElement(child, {
@@ -130,25 +130,25 @@ export default class AutoComplete extends React.Component<Props> {
             <div className={autoCompleteStyles.autoComplete}>
                 <Input
                     icon={LENS_ICON}
-                    value={inputValue}
-                    loading={loading}
                     inputRef={this.setInputRef}
-                    onChange={this.handleInputChange}
+                    loading={loading}
                     onBlur={onFinish}
+                    onChange={this.handleInputChange}
                     placeholder={placeholder}
+                    value={inputValue}
                 />
                 <Popover
-                    open={showSuggestionList}
-                    onClose={this.handlePopoverClose}
                     anchorElement={this.inputRef}
-                    verticalOffset={POPOVER_VERTICAL_OFFSET}
                     horizontalOffset={POPOVER_HORIZONTAL_OFFSET}
+                    onClose={this.handlePopoverClose}
+                    open={showSuggestionList}
+                    verticalOffset={POPOVER_VERTICAL_OFFSET}
                 >
                     {
                         (setPopoverElementRef, popoverStyle) => (
                             <Menu
-                                style={popoverStyle}
                                 menuRef={setPopoverElementRef}
+                                style={popoverStyle}
                             >
                                 {suggestions}
                             </Menu>

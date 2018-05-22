@@ -1,20 +1,20 @@
 // @flow
 
 export type PopoverDimensions = {
-    top: number,
-    left: number,
     height: number,
+    left: number,
     scrollTop: number,
+    top: number,
 }
 
 export type PopoverStyle = {
-    top: string,
     left: string,
     maxHeight: ?string,
+    top: string,
 };
 
 export type VerticalCrop = {
     dimensions: PopoverDimensions,
-    touchesTopBorder: boolean,
     touchesBottomBorder: boolean,
+    touchesTopBorder: boolean,
 };

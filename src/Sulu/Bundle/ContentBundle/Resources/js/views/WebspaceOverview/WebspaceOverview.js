@@ -138,7 +138,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
                 {this.webspaces
                     ? <Fragment>
                         <div className={webspaceOverviewStyles.webspaceSelect}>
-                            <WebspaceSelect value={this.webspace.get()} onChange={this.handleWebspaceChange}>
+                            <WebspaceSelect onChange={this.handleWebspaceChange} value={this.webspace.get()}>
                                 {this.webspaces.map((webspace) => (
                                     <WebspaceSelect.Item key={webspace.key} value={webspace.key}>
                                         {webspace.name}

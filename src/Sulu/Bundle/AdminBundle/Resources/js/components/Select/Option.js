@@ -10,14 +10,14 @@ import optionStyles from './option.scss';
 
 type Props = {
     anchorWidth: number,
-    selected: boolean,
+    children: string,
     disabled: boolean,
     focus: boolean,
-    value: string | number,
-    children: string,
     onClick?: (value: string | number) => void,
     optionRef?: (optionNode: ElementRef<'li'>, selected: boolean) => void,
+    selected: boolean,
     selectedVisualization: OptionSelectedVisualization,
+    value: string | number,
 };
 
 const ANCHOR_WIDTH_DIFFERENCE = 10;
@@ -26,8 +26,8 @@ export default class Option extends React.PureComponent<Props> {
     static defaultProps = {
         anchorWidth: 0,
         disabled: false,
-        selected: false,
         focus: false,
+        selected: false,
         selectedVisualization: 'icon',
         value: '',
     };
@@ -70,9 +70,9 @@ export default class Option extends React.PureComponent<Props> {
 
         return (
             <Checkbox
-                onChange={this.handleButtonClick}
-                className={optionStyles.input}
                 checked={this.props.selected}
+                className={optionStyles.input}
+                onChange={this.handleButtonClick}
             />
         );
     }
@@ -97,10 +97,10 @@ export default class Option extends React.PureComponent<Props> {
             <li ref={this.setItemRef}>
                 <button
                     className={optionClass}
-                    style={{minWidth: anchorWidth + ANCHOR_WIDTH_DIFFERENCE}}
-                    ref={this.setButtonRef}
-                    onClick={this.handleButtonClick}
                     disabled={disabled}
+                    onClick={this.handleButtonClick}
+                    ref={this.setButtonRef}
+                    style={{minWidth: anchorWidth + ANCHOR_WIDTH_DIFFERENCE}}
                 >
                     {this.renderSelectedVisualization()}
                     {children}

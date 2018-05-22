@@ -11,10 +11,10 @@ import Item from './Item';
 import arrowMenuStyles from './arrowMenu.scss';
 
 type Props = {
-    children: ChildrenArray<Element<*>>,
     anchorElement: Element<*>,
-    open: boolean,
+    children: ChildrenArray<Element<*>>,
     onClose?: () => void,
+    open: boolean,
 };
 
 const VERTICAL_OFFSET = 20;
@@ -53,9 +53,9 @@ export default class ArrowMenu extends React.Component<Props> {
             <Fragment>
                 {clonedAnchorElement}
                 <Popover
-                    open={open}
                     anchorElement={this.displayValueRef}
                     onClose={onClose}
+                    open={open}
                     verticalOffset={VERTICAL_OFFSET}
                 >
                     {
@@ -91,7 +91,7 @@ export default class ArrowMenu extends React.Component<Props> {
         );
 
         return (
-            <div ref={setPopoverElementRef} style={popoverStyle} className={arrowMenuStyles.arrowMenuContainer}>
+            <div className={arrowMenuStyles.arrowMenuContainer} ref={setPopoverElementRef} style={popoverStyle}>
                 <div className={arrowClass} />
                 <div className={arrowMenuStyles.arrowMenu}>
                     {children}

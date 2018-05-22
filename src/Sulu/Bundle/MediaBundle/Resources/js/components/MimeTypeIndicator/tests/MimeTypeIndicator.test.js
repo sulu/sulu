@@ -10,10 +10,10 @@ test('Should render a MimeTypeIndicator', () => {
 test('Should render a MimeTypeIndicator with different dimensions', () => {
     expect(render(
         <MimeTypeIndicator
-            mimeType="application/vnd.ms-excel"
-            width={200}
             height={200}
             iconSize={32}
+            mimeType="application/vnd.ms-excel"
+            width={200}
         />
     )).toMatchSnapshot();
 });

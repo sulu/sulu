@@ -3,9 +3,9 @@ import React from 'react';
 import actionStyles from './action.scss';
 
 type Props = {
+    afterAction?: () => void,
     children: string,
     onClick: () => void,
-    afterAction?: () => void,
 };
 
 export default class Action extends React.PureComponent<Props> {

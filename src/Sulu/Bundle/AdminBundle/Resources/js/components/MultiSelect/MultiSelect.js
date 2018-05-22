@@ -5,10 +5,10 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 
 type Props = SelectProps & {
-    values: Array<string | number>,
-    noneSelectedText: string,
     allSelectedText: string,
+    noneSelectedText: string,
     onChange: (values: Array<string | number>) => void,
+    values: Array<string | number>,
 };
 
 export default class MultiSelect extends React.PureComponent<Props> {
@@ -71,12 +71,12 @@ export default class MultiSelect extends React.PureComponent<Props> {
 
         return (
             <Select
-                icon={icon}
-                onSelect={this.handleSelect}
                 closeOnSelect={false}
                 displayValue={this.displayValue}
-                selectedVisualization="checkbox"
+                icon={icon}
                 isOptionSelected={this.isOptionSelected}
+                onSelect={this.handleSelect}
+                selectedVisualization="checkbox"
             >
                 {children}
             </Select>

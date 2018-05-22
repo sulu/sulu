@@ -7,10 +7,10 @@ import Icon from '../Icon';
 import displayValueStyles from './displayValue.scss';
 
 type Props = {
-    onClick: () => void,
     children: string,
-    icon?: string,
     displayValueRef?: (button: ElementRef<'button'>) => void,
+    icon?: string,
+    onClick: () => void,
 };
 
 const TOGGLE_ICON = 'su-angle-down';
@@ -43,9 +43,9 @@ export default class DisplayValue extends React.PureComponent<Props> {
 
         return (
             <button
-                ref={this.setButtonRef}
-                onClick={this.handleClick}
                 className={displayValueClass}
+                onClick={this.handleClick}
+                ref={this.setButtonRef}
                 type="button"
             >
                 {!!icon &&

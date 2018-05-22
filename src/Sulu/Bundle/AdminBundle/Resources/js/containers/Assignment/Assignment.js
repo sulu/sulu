@@ -12,13 +12,13 @@ type Props = {|
     adapter: string,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
-    onChange: (selectedIds: Array<string | number>) => void,
+    icon: string,
     label?: string,
     locale?: ?IObservableValue<string>,
-    icon: string,
+    onChange: (selectedIds: Array<string | number>) => void,
+    overlayTitle: string,
     resourceKey: string,
     value: Array<string | number>,
-    overlayTitle: string,
 |};
 
 @observer
@@ -115,7 +115,7 @@ export default class Assignment extends React.Component<Props> {
                     onItemsSorted={this.handleSorted}
                 >
                     {items.map((item, index) => (
-                        <MultiItemSelection.Item key={item.id} id={item.id} index={index + 1}>
+                        <MultiItemSelection.Item id={item.id} index={index + 1} key={item.id}>
                             <div>
                                 {displayProperties.map((displayProperty) => (
                                     <span
@@ -137,8 +137,8 @@ export default class Assignment extends React.Component<Props> {
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
-                    resourceKey={resourceKey}
                     preSelectedItems={items}
+                    resourceKey={resourceKey}
                     title={overlayTitle}
                 />
             </Fragment>

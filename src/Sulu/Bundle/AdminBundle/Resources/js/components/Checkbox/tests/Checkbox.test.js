@@ -22,10 +22,10 @@ test('The component pass the props correctly to the generic checkbox', () => {
     const onChange = jest.fn().mockReturnValue('my-on-change');
     const checkbox = shallow(
         <Checkbox
+            checked={true}
+            name="my-name"
             onChange={onChange}
             value="my-value"
-            name="my-name"
-            checked={true}
         >
             My label
         </Checkbox>

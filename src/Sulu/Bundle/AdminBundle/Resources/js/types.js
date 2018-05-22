@@ -25,8 +25,8 @@ export type Error = BlockError | PropertyError;
 export type ErrorCollection = {[key: string]: Error};
 
 export type SchemaOption = {
-    name?: string,
     infoText?: string,
+    name?: string,
     title?: string,
     value?: string | number | Array<SchemaOption>,
 };

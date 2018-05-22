@@ -4,8 +4,8 @@ import MimeTypeIndicator from '../../components/MimeTypeIndicator';
 import mediaSelectionItemStyle from './mediaSelectionItem.scss';
 
 type Props = {
-    mimeType: string,
     children: string,
+    mimeType: string,
     thumbnail: ?string,
 };
 

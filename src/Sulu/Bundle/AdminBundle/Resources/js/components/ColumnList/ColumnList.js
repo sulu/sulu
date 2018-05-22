@@ -11,10 +11,10 @@ import type {ItemButtonConfig, ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Column>>,
     buttons?: Array<ItemButtonConfig>,
-    toolbarItems: Array<ToolbarItemConfig>,
+    children: ChildrenArray<Element<typeof Column>>,
     onItemClick: (id: string | number) => void,
+    toolbarItems: Array<ToolbarItemConfig>,
 };
 
 @observer
@@ -146,7 +146,7 @@ export default class ColumnList extends React.Component<Props> {
                         />
                     </div>
                 }
-                <div ref={this.setContainerRef} className={columnListContainerClass}>
+                <div className={columnListContainerClass} ref={this.setContainerRef}>
                     <div className={columnListStyles.columnList}>
                         {this.cloneColumns(children)}
                     </div>

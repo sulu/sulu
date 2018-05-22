@@ -73,7 +73,7 @@ test('Should load the correct webspace', () => {
             webspace: 'sulu',
         },
     };
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm resourceStore={resourceStore} router={router} />);
     expect(pageForm.instance().webspace).toEqual(undefined);
 
     return promise.then(() => {
@@ -102,7 +102,7 @@ test('Should navigate to defined route on back button click', () => {
             webspace: 'sulu',
         },
     };
-    const form = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const form = mount(<PageForm resourceStore={resourceStore} router={router} />);
     resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
@@ -139,7 +139,7 @@ test('Should change locale in form store via locale chooser', () => {
         },
     };
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm resourceStore={resourceStore} router={router} />);
     pageForm.instance().formStore.locale.set('en');
 
     return promise.then(() => {
@@ -187,7 +187,7 @@ test('Should show loading templates chooser in toolbar while types are loading',
         },
     };
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm resourceStore={resourceStore} router={router} />);
 
     const toolbarConfig = toolbarFunction.call(pageForm.instance());
     expect(toolbarConfig).toMatchSnapshot();
@@ -235,7 +235,7 @@ test('Should show templates chooser in toolbar if types are available', () => {
     });
     metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm resourceStore={resourceStore} router={router} />);
 
     return typesPromise.then(() => {
         const toolbarConfig = toolbarFunction.call(pageForm.instance());
@@ -314,7 +314,7 @@ test('Should change template on click in template chooser', () => {
     });
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm resourceStore={resourceStore} router={router} />);
 
     jsonSchemaResolve({});
 
@@ -377,7 +377,7 @@ test('Should render save buttons disabled only if form is not dirty', () => {
         },
     };
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm resourceStore={resourceStore} router={router} />);
     pageForm.instance().formStore.locale.set('en');
 
     return promise.then(() => {
@@ -432,7 +432,7 @@ test('Should save form when submitted and redirect to editRoute when creating a 
         },
     };
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm resourceStore={resourceStore} router={router} />);
     pageForm.instance().formStore.save = jest.fn();
     const savePromise = Promise.resolve({id: 'newId'});
     pageForm.instance().formStore.save.mockImplementation(() => {

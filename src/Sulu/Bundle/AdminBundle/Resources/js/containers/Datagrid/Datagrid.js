@@ -13,8 +13,8 @@ import datagridStyles from './datagrid.scss';
 type Props = {|
     adapters: Array<string>,
     disabledIds: Array<string | number>,
-    onItemClick?: (itemId: string | number) => void,
     onAddClick?: (id: string | number) => void,
+    onItemClick?: (itemId: string | number) => void,
     selectable: boolean,
     store: DatagridStore,
 |};
@@ -145,9 +145,9 @@ export default class Datagrid extends React.Component<Props> {
                         page={store.getPage()}
                         pageCount={store.pageCount}
                         schema={store.schema}
+                        selections={store.selectionIds}
                         sortColumn={store.sortColumn.get()}
                         sortOrder={store.sortOrder.get()}
-                        selections={store.selectionIds}
                     />
                 </div>
             </Fragment>

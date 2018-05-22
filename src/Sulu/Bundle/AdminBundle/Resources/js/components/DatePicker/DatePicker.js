@@ -14,11 +14,11 @@ import './datePicker.scss';
 
 type Props = {
     /** Placeholder can be overwritten */
-    placeholder?: string,
-    /** Listen for changes of this component */
     onChange: (value: ?Date) => void,
-    /** Configure the datepicker to your needs, for more information have a look in the README.md */
+    /** Listen for changes of this component */
     options: Object,
+    /** Configure the datepicker to your needs, for more information have a look in the README.md */
+    placeholder?: string,
     valid: boolean,
     value: ?Date,
 };
@@ -141,9 +141,9 @@ export default class DatePicker extends React.Component<Props> {
         return ReactDOM.createPortal(
             <Input
                 {...props}
-                onIconClick={this.handleOpenOverlay}
-                onChange={handleInputChange}
                 onBlur={this.handleInputBlur}
+                onChange={handleInputChange}
+                onIconClick={this.handleOpenOverlay}
             />,
             this.inputRef
         );
@@ -169,12 +169,12 @@ export default class DatePicker extends React.Component<Props> {
             <div>
                 <div ref={this.setInputRef} />
                 <Popover
-                    open={true}
                     anchorElement={this.inputRef}
                     backdrop={this.open}
-                    onClose={this.handleCloseOverlay}
-                    verticalOffset={-31}
                     horizontalOffset={34}
+                    onClose={this.handleCloseOverlay}
+                    open={true}
+                    verticalOffset={-31}
                 >
                     {
                         (setPopoverRef, styles) => (
@@ -182,11 +182,11 @@ export default class DatePicker extends React.Component<Props> {
                                 <ReactDatetime
                                     {...fieldOptions}
                                     inputProps={inputProps}
-                                    renderInput={this.renderInput}
-                                    open={this.open}
-                                    value={this.value}
-                                    onChange={this.handleDatepickerChange}
                                     onBlur={this.handleCloseOverlay}
+                                    onChange={this.handleDatepickerChange}
+                                    open={this.open}
+                                    renderInput={this.renderInput}
+                                    value={this.value}
                                 />
                             </div>
                         )

@@ -119,7 +119,7 @@ test('Render TableAdapter with correct values', () => {
     datagridStore.selectionIds.push(1, 3);
     const editClickSpy = jest.fn();
 
-    const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} onItemClick={editClickSpy} />);
+    const datagrid = shallow(<Datagrid adapters={['table']} onItemClick={editClickSpy} store={datagridStore} />);
     const tableAdapter = datagrid.find('TableAdapter');
 
     expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);

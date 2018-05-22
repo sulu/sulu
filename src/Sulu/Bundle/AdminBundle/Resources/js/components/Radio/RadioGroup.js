@@ -4,10 +4,10 @@ import type {ChildrenArray, Element} from 'react';
 import Radio from './Radio';
 
 type Props = {
-    value: string,
-    onChange?: () => void,
-    className?: string,
     children: ChildrenArray<Element<typeof Radio>>,
+    className?: string,
+    onChange?: () => void,
+    value: string,
 };
 
 export default class RadioGroup extends React.PureComponent<Props> {

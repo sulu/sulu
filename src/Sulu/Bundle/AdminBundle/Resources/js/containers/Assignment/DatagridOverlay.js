@@ -16,8 +16,8 @@ type Props = {|
     onClose: () => void,
     onConfirm: (selectedItems: Array<Object>) => void,
     open: boolean,
-    resourceKey: string,
     preSelectedItems: Array<Object>,
+    resourceKey: string,
     title: string,
 |};
 

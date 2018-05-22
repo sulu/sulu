@@ -94,7 +94,7 @@ export default class BlockCollection extends React.Component<Props> {
         }
     };
 
-    @action handleSortEnd = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
+    @action handleSortEnd = ({oldIndex, newIndex}: {newIndex: number, oldIndex: number}) => {
         const {onChange, onSortEnd, value} = this.props;
 
         this.expandedBlocks = arrayMove(this.expandedBlocks, oldIndex, newIndex);
@@ -148,8 +148,8 @@ export default class BlockCollection extends React.Component<Props> {
                 <SortableBlocks
                     expandedBlocks={this.expandedBlocks}
                     lockAxis="y"
-                    onExpand={this.handleExpand}
                     onCollapse={this.handleCollapse}
+                    onExpand={this.handleExpand}
                     onRemove={this.hasMinimumReached() ? undefined : this.handleRemoveBlock}
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}
@@ -159,10 +159,10 @@ export default class BlockCollection extends React.Component<Props> {
                     value={identifiedValues}
                 />
                 <Button
-                    skin="secondary"
+                    disabled={this.hasMaximumReached()}
                     icon="su-plus"
                     onClick={this.handleAddBlock}
-                    disabled={this.hasMaximumReached()}
+                    skin="secondary"
                 >
                     {translate('sulu_admin.add_block')}
                 </Button>

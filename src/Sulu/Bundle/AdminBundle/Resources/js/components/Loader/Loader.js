@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import loaderStyles from './loader.scss';
 
 type Props = {
-    size: number,
     className?: string,
+    size: number,
 };
 
 export default class Loader extends React.Component<Props> {
@@ -28,7 +28,7 @@ export default class Loader extends React.Component<Props> {
         );
 
         return (
-            <div style={dimensionStyle} className={loaderClass}>
+            <div className={loaderClass} style={dimensionStyle}>
                 <div className={loaderStyles.doubleBounce1} />
                 <div className={loaderStyles.doubleBounce2} />
             </div>

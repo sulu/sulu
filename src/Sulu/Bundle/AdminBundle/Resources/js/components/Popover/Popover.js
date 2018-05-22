@@ -11,28 +11,28 @@ import PopoverPositioner from './PopoverPositioner';
 import popoverStyles from './popover.scss';
 
 type Props = {
-    open: boolean,
+    anchorElement: ElementRef<*>,
+    backdrop: boolean,
+    centerChildElement?: ElementRef<*>,
+    /** This element will be used to position the popover */
     children?: (
         setPopoverElementRef: (ref: ElementRef<*>) => void,
         style: Object,
         verticalPosition: string,
     ) => Node,
-    onClose?: () => void,
-    /** This element will be used to position the popover */
-    anchorElement: ElementRef<*>,
-    centerChildElement?: ElementRef<*>,
     horizontalOffset: number,
+    onClose?: () => void,
+    open: boolean,
     verticalOffset: number,
-    backdrop: boolean,
 };
 
 @observer
 export default class Popover extends React.Component<Props> {
     static defaultProps = {
-        open: false,
-        horizontalOffset: 0,
-        verticalOffset: 0,
         backdrop: true,
+        horizontalOffset: 0,
+        open: false,
+        verticalOffset: 0,
     };
 
     @observable popoverChildRef: ElementRef<'div'>;
@@ -159,7 +159,7 @@ export default class Popover extends React.Component<Props> {
             // TODO: Use short syntax when eslint bug is fixed: https://github.com/babel/babel-eslint/issues/554
             <Fragment>
                 {backdrop &&
-                    <Backdrop visible={false} open={true} onClick={this.handleBackdropClick} />
+                    <Backdrop onClick={this.handleBackdropClick} open={true} visible={false} />
                 }
                 <Portal>
                     <div className={popoverStyles.container}>

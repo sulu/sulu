@@ -81,9 +81,9 @@ class PageForm extends React.Component<Props> {
         return (
             <div className={pageFormStyles.form}>
                 <Form
+                    onSubmit={this.handleSubmit}
                     ref={this.setFormRef}
                     store={this.formStore}
-                    onSubmit={this.handleSubmit}
                 />
             </div>
         );

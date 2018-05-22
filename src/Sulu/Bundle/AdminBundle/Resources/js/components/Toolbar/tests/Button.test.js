@@ -46,7 +46,7 @@ test('Render an active button', () => {
 
 test('Click on button does not fire onClick callback if button is disabled', () => {
     const clickSpy = jest.fn();
-    const button = mount(<Button onClick={clickSpy} disabled={true} />);
+    const button = mount(<Button disabled={true} onClick={clickSpy} />);
 
     button.simulate('click');
 

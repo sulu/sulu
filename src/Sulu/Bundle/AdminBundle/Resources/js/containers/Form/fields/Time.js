@@ -51,9 +51,9 @@ export default class Time extends React.Component<FieldTypeProps<?string>> {
         return (
             <DatePickerComponent
                 onChange={this.handleChange}
+                options={options}
                 valid={!error}
                 value={getValue(value)}
-                options={options}
             />
         );
     }

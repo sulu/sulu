@@ -6,8 +6,8 @@ import type {SwitchProps} from '../Switch';
 import radioStyles from './radio.scss';
 
 type Props = SwitchProps & {
-    skin: 'dark' | 'light',
     onChange?: (value?: string | number) => void,
+    skin: 'dark' | 'light',
 };
 
 export default class Radio extends React.PureComponent<Props> {
@@ -35,12 +35,12 @@ export default class Radio extends React.PureComponent<Props> {
 
         return (
             <Switch
-                type="radio"
-                name={name}
-                value={value}
                 checked={checked}
-                onChange={this.handleChange}
                 className={radioClass}
+                name={name}
+                onChange={this.handleChange}
+                type="radio"
+                value={value}
             >
                 {children}
             </Switch>

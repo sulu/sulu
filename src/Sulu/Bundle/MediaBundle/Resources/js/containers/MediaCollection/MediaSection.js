@@ -22,8 +22,8 @@ export default class MediaSection extends React.PureComponent<Props> {
         return (
             <Datagrid
                 adapters={adapters}
-                store={datagridStore}
                 onItemClick={this.handleMediaClick}
+                store={datagridStore}
             />
         );
     }

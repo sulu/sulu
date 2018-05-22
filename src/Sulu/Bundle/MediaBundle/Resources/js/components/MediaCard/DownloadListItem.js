@@ -7,11 +7,11 @@ import ClipboardButton from 'react-clipboard.js';
 import downloadListItemStyles from './downloadListItem.scss';
 
 type Props = {
-    url: string,
-    onClick: (url?: string) => void,
-    copyText?: string,
     children: string,
+    copyText?: string,
     copyUrlOnClick: boolean,
+    onClick: (url?: string) => void,
+    url: string,
 };
 
 @observer
@@ -70,8 +70,8 @@ export default class DownloadListItem extends React.Component<Props> {
             >
                 {(copyUrlOnClick)
                     ? <ClipboardButton
-                        onSuccess={this.handleCopySuccess}
                         data-clipboard-text={url}
+                        onSuccess={this.handleCopySuccess}
                     >
                         {content}
                     </ClipboardButton>

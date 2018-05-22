@@ -10,8 +10,8 @@ type Props = {
     id: string | number,
     /** The subtext underneath the title */
     info: string,
-    title: string,
     onClick?: (id: string | number) => void,
+    title: string,
 };
 
 export default class Folder extends React.PureComponent<Props> {

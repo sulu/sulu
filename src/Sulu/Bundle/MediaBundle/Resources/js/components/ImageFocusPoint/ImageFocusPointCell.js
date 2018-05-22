@@ -8,11 +8,11 @@ import imageFocusPointCellStyles from './imageFocusPointCell.scss';
 const ICON_UP = 'su-angle-up';
 
 type Props = {
+    active: boolean,
+    arrowDirection?: ArrowDirection,
+    onClick?: (value: Point) => void,
     size: number,
     value: Point,
-    active: boolean,
-    onClick?: (value: Point) => void,
-    arrowDirection?: ArrowDirection,
 };
 
 export default class ImageFocusPointCell extends React.PureComponent<Props> {
@@ -76,10 +76,10 @@ export default class ImageFocusPointCell extends React.PureComponent<Props> {
 
         return (
             <button
-                style={buttonStyle}
-                onClick={this.handleClick}
-                disabled={active}
                 className={focusPointClass}
+                disabled={active}
+                onClick={this.handleClick}
+                style={buttonStyle}
             >
                 {!!arrowDirection && !active &&
                     <div style={iconStyle}>

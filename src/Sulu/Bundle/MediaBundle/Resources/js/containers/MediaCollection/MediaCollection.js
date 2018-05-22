@@ -12,11 +12,11 @@ import CollectionSection from './CollectionSection';
 import MediaSection from './MediaSection';
 
 type Props = {
+    collectionDatagridStore: DatagridStore,
+    collectionStore: CollectionStore,
     locale: IObservableValue<string>,
     mediaDatagridAdapters: Array<string>,
     mediaDatagridStore: DatagridStore,
-    collectionDatagridStore: DatagridStore,
-    collectionStore: CollectionStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
     overlayType: OverlayType,
@@ -63,16 +63,16 @@ export default class MediaCollection extends React.Component<Props> {
 
         return (
             <MultiMediaDropzone
-                locale={locale}
                 collectionId={collectionStore.id}
+                locale={locale}
                 onUpload={this.handleUpload}
             >
                 <CollectionSection
+                    datagridStore={collectionDatagridStore}
                     locale={locale}
+                    onCollectionNavigate={this.handleCollectionNavigate}
                     overlayType={overlayType}
                     resourceStore={collectionStore.resourceStore}
-                    datagridStore={collectionDatagridStore}
-                    onCollectionNavigate={this.handleCollectionNavigate}
                 />
                 <Divider />
                 <div>

@@ -15,11 +15,11 @@ import collectionSectionStyles from './collectionSection.scss';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
-    locale: IObservableValue<string>,
-    overlayType: OverlayType,
     datagridStore: DatagridStore,
-    resourceStore: ResourceStore,
+    locale: IObservableValue<string>,
     onCollectionNavigate: (collectionId: ?string | number) => void,
+    overlayType: OverlayType,
+    resourceStore: ResourceStore,
 };
 
 @observer
@@ -144,8 +144,8 @@ export default class CollectionSection extends React.Component<Props> {
                 {!resourceStore.loading &&
                     <div className={collectionSectionStyles.collectionSection}>
                         <CollectionBreadcrumb
-                            resourceStore={resourceStore}
                             onNavigate={this.handleBreadcrumbNavigate}
+                            resourceStore={resourceStore}
                         />
                         <div>
                             <Icon name="su-plus" onClick={this.handleAddCollectionClick} />
@@ -160,24 +160,24 @@ export default class CollectionSection extends React.Component<Props> {
                 }
                 <Datagrid
                     adapters={['folder']}
-                    store={datagridStore}
                     onItemClick={this.handleCollectionClick}
+                    store={datagridStore}
                 />
                 <CollectionFormOverlay
+                    onClose={this.handleCollectionOverlayClose}
+                    onConfirm={this.handleCollectionOverlayConfirm}
                     operationType={operationType}
                     overlayType={overlayType}
                     resourceStore={this.resourceStoreByOperationType}
-                    onConfirm={this.handleCollectionOverlayConfirm}
-                    onClose={this.handleCollectionOverlayClose}
                 />
                 <Dialog
-                    title={translate('sulu_media.remove_collection')}
-                    open={operationType === 'remove'}
+                    cancelText={translate('sulu_admin.cancel')}
                     confirmLoading={resourceStore.saving}
                     confirmText={translate('sulu_admin.ok')}
-                    cancelText={translate('sulu_admin.cancel')}
-                    onConfirm={this.handleRemoveCollectionConfirm}
                     onCancel={this.handleRemoveCollectionCancel}
+                    onConfirm={this.handleRemoveCollectionConfirm}
+                    open={operationType === 'remove'}
+                    title={translate('sulu_media.remove_collection')}
                 >
                     {translate('sulu_media.remove_collection_warning')}
                 </Dialog>

@@ -9,10 +9,10 @@ test('Pass error correctly to component', () => {
 
     const datePicker = shallow(
         <DatePicker
+            error={error}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             value={'xyz'}
-            error={error}
         />
     );
 

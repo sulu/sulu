@@ -15,5 +15,5 @@ test('Should render column with toolbar', () => {
         },
     ];
 
-    expect(render(<Column index={0} buttons={buttonsConfig} />)).toMatchSnapshot();
+    expect(render(<Column buttons={buttonsConfig} index={0} />)).toMatchSnapshot();
 });

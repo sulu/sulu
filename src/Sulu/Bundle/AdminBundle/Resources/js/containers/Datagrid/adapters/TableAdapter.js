@@ -36,16 +36,16 @@ export default class TableAdapter extends AbstractTableAdapter {
 
         return (
             <Pagination
-                total={pageCount}
                 current={page}
                 loading={loading}
                 onChange={onPageChange}
+                total={pageCount}
             >
                 <Table
                     buttons={buttons}
-                    selectMode={onItemSelectionChange ? 'multiple' : undefined}
-                    onRowSelectionChange={onItemSelectionChange}
                     onAllSelectionChange={onAllSelectionChange}
+                    onRowSelectionChange={onItemSelectionChange}
+                    selectMode={onItemSelectionChange ? 'multiple' : undefined}
                 >
                     <Table.Header>
                         {this.renderHeaderCells(true)}

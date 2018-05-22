@@ -79,8 +79,8 @@ export default class PasswordConfirmation extends React.Component<Props> {
                         icon={LOCK_ICON}
                         onChange={this.handleFirstChange}
                         type={INPUT_TYPE}
-                        value={this.firstValue}
                         valid={this.valid}
+                        value={this.firstValue}
                     />
                 </Grid.Item>
                 <Grid.Item size={6}>
@@ -88,8 +88,8 @@ export default class PasswordConfirmation extends React.Component<Props> {
                         icon={LOCK_ICON}
                         onChange={this.handleSecondChange}
                         type={INPUT_TYPE}
-                        value={this.secondValue}
                         valid={this.valid}
+                        value={this.secondValue}
                     />
                 </Grid.Item>
             </Grid>

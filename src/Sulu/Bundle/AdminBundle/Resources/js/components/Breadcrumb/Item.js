@@ -3,8 +3,8 @@ import React from 'react';
 import itemStyles from './item.scss';
 
 type Props = {
-    onClick?: (value?: string | number) => void,
     children: string,
+    onClick?: (value?: string | number) => void,
     value?: string | number,
 };
 
@@ -28,9 +28,9 @@ export default class Item extends React.PureComponent<Props> {
 
         return (
             <button
-                onClick={this.handleClick}
-                disabled={!onClick}
                 className={itemStyles.item}
+                disabled={!onClick}
+                onClick={this.handleClick}
             >
                 {children}
             </button>

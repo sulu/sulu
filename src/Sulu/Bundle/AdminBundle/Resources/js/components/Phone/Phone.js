@@ -4,11 +4,11 @@ import Input from '../Input';
 
 type Props = {|
     name?: string,
+    onBlur?: () => void,
+    onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
     placeholder?: string,
     valid: boolean,
     value: ?string,
-    onBlur?: () => void,
-    onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
 |};
 
 export default class Phone extends React.PureComponent<Props> {
@@ -38,14 +38,14 @@ export default class Phone extends React.PureComponent<Props> {
         return (
             <Input
                 icon="su-phone"
+                name={name}
+                onBlur={onBlur}
                 onChange={onChange}
-                value={value}
+                onIconClick={(value && value.length > 1) ? this.handleIconClick : undefined}
+                placeholder={placeholder}
                 type="tel"
                 valid={valid}
-                name={name}
-                placeholder={placeholder}
-                onBlur={onBlur}
-                onIconClick={(value && value.length > 1) ? this.handleIconClick : undefined}
+                value={value}
             />
         );
     }

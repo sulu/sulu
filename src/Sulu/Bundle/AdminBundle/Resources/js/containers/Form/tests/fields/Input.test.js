@@ -9,10 +9,10 @@ test('Pass error correctly to Input component', () => {
 
     const inputInvalid = shallow(
         <Input
+            error={error}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             value={'xyz'}
-            error={error}
         />
     );
 

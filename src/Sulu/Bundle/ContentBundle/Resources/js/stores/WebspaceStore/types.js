@@ -1,32 +1,32 @@
 // @flow
 export type Webspace = {
-    name: string,
+    allLocalizations: Array<LocalizationItem>,
     key: string,
     localizations: Array<Localization>,
-    urls: Array<Url>,
-    allLocalizations: Array<LocalizationItem>,
+    name: string,
     portalInformation: Array<PortalInformation>,
+    urls: Array<Url>,
 };
 
 export type Localization = {
-    locale: string,
-    language: string,
-    country: string,
-    shadow: string,
-    default: boolean,
-    xDefault: boolean,
     children: Array<Localization>,
+    country: string,
+    default: boolean,
+    language: string,
+    locale: string,
+    shadow: string,
+    xDefault: boolean,
 };
 
 export type Url = {
-    url: string,
-    language: string,
-    country: string,
-    segment: string,
-    redirect: string,
-    main: boolean,
     analyticsKey: string,
+    country: string,
     environment: string,
+    language: string,
+    main: boolean,
+    redirect: string,
+    segment: string,
+    url: string,
 };
 
 export type LocalizationItem = {
@@ -35,9 +35,9 @@ export type LocalizationItem = {
 };
 
 export type PortalInformation = {
-    webspaceKey: string,
-    portalKey: string,
     locale: string,
-    url: string,
     main: boolean,
+    portalKey: string,
+    url: string,
+    webspaceKey: string,
 };

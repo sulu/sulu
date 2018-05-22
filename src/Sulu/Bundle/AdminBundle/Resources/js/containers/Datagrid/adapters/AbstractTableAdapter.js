@@ -50,8 +50,8 @@ export default class AbstractTableAdapter extends AbstractAdapter {
             return(
                 <Table.HeaderCell
                     key={schemaKey}
-                    onClick={sortingEnabled ? this.props.onSort : undefined}
                     name={schemaKey}
+                    onClick={sortingEnabled ? this.props.onSort : undefined}
                     sortOrder={sortColumn === schemaKey ? sortOrder : undefined}
                 >
                     {label}
@@ -65,7 +65,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
 
         return data.map((item) => {
             return (
-                <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
+                <Table.Row id={item.id} key={item.id} selected={selections.includes(item.id)}>
                     {this.renderCells(item)}
                 </Table.Row>
             );

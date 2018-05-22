@@ -58,7 +58,7 @@ export default function withContainerSize(Component: ComponentType<*>, container
             };
 
             return (
-                <div ref={this.readContainerDimensions} className={containerClass}>
+                <div className={containerClass} ref={this.readContainerDimensions}>
                     <Component {...props} />
                 </div>
             );

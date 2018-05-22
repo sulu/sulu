@@ -9,8 +9,8 @@ import type {BlockEntry, RenderBlockContentCallback} from './types';
 type Props = {
     blockTypes: Array<string>,
     expandedBlocks: Array<boolean>,
-    onExpand: (index: number) => void,
     onCollapse: (index: number) => void,
+    onExpand: (index: number) => void,
     onRemove: (index: number) => void,
     onTypeChange?: (type: string | number, index: number) => void,
     renderBlockContent: RenderBlockContentCallback,
@@ -54,8 +54,8 @@ class SortableBlocks extends React.Component<Props> {
                         expanded={expandedBlocks[index]}
                         index={index}
                         key={block.__id}
-                        onExpand={this.handleExpand}
                         onCollapse={this.handleCollapse}
+                        onExpand={this.handleExpand}
                         onRemove={onRemove ? this.handleRemove : undefined}
                         onTypeChange={this.handleTypeChange}
                         renderBlockContent={renderBlockContent}

@@ -14,10 +14,10 @@ type Props = {|
     data: Object,
     errors?: ErrorCollection,
     formInspector: FormInspector,
-    schema: Schema,
-    showAllErrors: boolean,
     onChange: (string, *) => void,
     onFieldFinish: ?() => void,
+    schema: Schema,
+    showAllErrors: boolean,
 |};
 
 @observer
@@ -44,7 +44,7 @@ export default class Renderer extends React.Component<Props> {
     renderGridSection(schemaField: SchemaEntry, schemaKey: string) {
         const {items, size} = schemaField;
         return (
-            <Grid.Section key={schemaKey} className={rendererStyles.gridSection} size={size}>
+            <Grid.Section className={rendererStyles.gridSection} key={schemaKey} size={size}>
                 {schemaField.label &&
                     <Grid.Item size={12}>
                         <Divider>
@@ -77,9 +77,9 @@ export default class Renderer extends React.Component<Props> {
                     error={error}
                     formInspector={formInspector}
                     name={schemaKey}
-                    schema={schemaField}
                     onChange={onChange}
                     onFinish={this.handleFieldFinish}
+                    schema={schemaField}
                     showAllErrors={showAllErrors}
                     value={data[schemaKey]}
                 />

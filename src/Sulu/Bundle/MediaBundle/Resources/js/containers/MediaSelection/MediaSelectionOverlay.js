@@ -14,18 +14,18 @@ const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
-    open: boolean,
-    locale: IObservableValue<string>,
     excludedIds: Array<string | number>,
+    locale: IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
+    open: boolean,
 };
 
 @observer
 export default class MediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
-        open: false,
         excludedIds: [],
+        open: false,
     };
 
     mediaPage: IObservableValue<number> = observable.box(1);
@@ -196,20 +196,20 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
         return (
             <Overlay
+                actions={actions}
+                confirmText={translate('sulu_admin.confirm')}
+                onClose={this.handleClose}
+                onConfirm={this.handleConfirm}
                 open={open}
                 title={translate('sulu_media.select_media')}
-                onClose={this.handleClose}
-                confirmText={translate('sulu_admin.confirm')}
-                onConfirm={this.handleConfirm}
-                actions={actions}
             >
                 <div className={mediaSelectionOverlayStyles.overlay}>
                     <MediaCollection
+                        collectionDatagridStore={this.collectionDatagridStore}
+                        collectionStore={this.collectionStore}
                         locale={locale}
                         mediaDatagridAdapters={['media_card_selection']}
                         mediaDatagridStore={this.mediaDatagridStore}
-                        collectionDatagridStore={this.collectionDatagridStore}
-                        collectionStore={this.collectionStore}
                         onCollectionNavigate={this.handleCollectionNavigate}
                         overlayType="dialog"
                     />

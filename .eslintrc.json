@@ -111,6 +111,18 @@
         ],
         "react/jsx-wrap-multilines": "error",
         "react/jsx-pascal-case": "error",
+        "react/jsx-sort-default-props": [
+            "error",
+            {
+                "ignoreCase": true
+            }
+        ],
+        "react/jsx-sort-props": [
+            "error",
+            {
+                "ignoreCase": true
+            }
+        ],
         "react/jsx-tag-spacing": [
             "error",
             {
@@ -133,6 +145,13 @@
             "always",
             {
                 "annotationStyle": "line"
+            }
+        ],
+        "flowtype/sort-keys": [
+            "error",
+            "asc",
+            {
+                "caseSensitive": false
             }
         ],
         "flowtype/space-after-type-colon": [

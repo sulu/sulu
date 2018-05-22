@@ -46,12 +46,12 @@ export default class TextArea extends React.PureComponent<Props> {
 
         return (
             <textarea
-                name={name}
                 className={textareaClass}
-                value={value || ''}
-                placeholder={placeholder}
+                name={name}
                 onBlur={this.handleBlur}
                 onChange={this.handleChange}
+                placeholder={placeholder}
+                value={value || ''}
             />
         );
     }

@@ -9,9 +9,9 @@ const DRAG_ICON = 'su-more';
 const REMOVE_ICON = 'su-trash-alt';
 
 type Props = {
+    children: Node,
     id: string | number,
     index: number,
-    children: Node,
     onRemove?: (id: string | number) => void,
 };
 
@@ -47,9 +47,9 @@ export default class Item extends React.PureComponent<Props> {
                 </div>
                 {onRemove &&
                     <button
-                        type="button"
                         className={itemStyles.removeButton}
                         onClick={this.handleRemove}
+                        type="button"
                     >
                         <Icon name={REMOVE_ICON} />
                     </button>

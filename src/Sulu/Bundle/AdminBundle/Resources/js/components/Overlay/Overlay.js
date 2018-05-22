@@ -15,15 +15,15 @@ import Actions from './Actions';
 import overlayStyles from './overlay.scss';
 
 type Props = {
-    title: string,
-    children: Node,
     actions: Array<Action>,
-    confirmText: string,
+    children: Node,
     confirmLoading: boolean,
+    confirmText: string,
+    onClose: () => void,
     onConfirm: () => void,
     open: boolean,
     size?: Size,
-    onClose: () => void,
+    title: string,
 };
 
 const CLOSE_ICON = 'su-times';
@@ -31,9 +31,9 @@ const CLOSE_ICON = 'su-times';
 @observer
 export default class Overlay extends React.Component<Props> {
     static defaultProps = {
-        open: false,
         actions: [],
         confirmLoading: false,
+        open: false,
     };
 
     @observable visible: boolean = false;
@@ -114,7 +114,7 @@ export default class Overlay extends React.Component<Props> {
 
         return (
             <div>
-                <Backdrop open={showPortal} onClick={onClose} />
+                <Backdrop onClick={onClose} open={showPortal} />
                 {showPortal &&
                     <Portal>
                         <div
@@ -126,15 +126,15 @@ export default class Overlay extends React.Component<Props> {
                                     <header>
                                         {title}
                                         <Icon
-                                            name={CLOSE_ICON}
                                             className={overlayStyles.icon}
+                                            name={CLOSE_ICON}
                                             onClick={this.handleIconClick}
                                         />
                                     </header>
                                     <article>{children}</article>
                                     <footer>
                                         <Actions actions={actions} />
-                                        <Button skin="primary" onClick={onConfirm} loading={confirmLoading}>
+                                        <Button loading={confirmLoading} onClick={onConfirm} skin="primary">
                                             {confirmText}
                                         </Button>
                                     </footer>

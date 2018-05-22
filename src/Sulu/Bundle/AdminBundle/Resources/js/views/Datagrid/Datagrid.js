@@ -124,9 +124,9 @@ class Datagrid extends React.Component<ViewProps> {
             <div className={datagridStyles.datagrid}>
                 {title && <h1>{translate(title)}</h1>}
                 <DatagridContainer
-                    store={this.datagridStore}
                     adapters={adapters}
                     onItemClick={editRoute && this.handleEditClick}
+                    store={this.datagridStore}
                 />
             </div>
         );

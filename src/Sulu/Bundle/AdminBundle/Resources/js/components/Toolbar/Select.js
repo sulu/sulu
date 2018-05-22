@@ -71,24 +71,24 @@ export default class Select extends React.Component<SelectProps> {
         return (
             <div className={selectClass}>
                 <Button
-                    icon={icon}
-                    skin={skin}
-                    size={size}
-                    disabled={disabled}
-                    value={buttonValue}
-                    onClick={this.handleButtonClick}
                     active={this.open}
+                    disabled={disabled}
                     hasOptions={true}
+                    icon={icon}
                     loading={loading}
+                    onClick={this.handleButtonClick}
+                    size={size}
+                    skin={skin}
+                    value={buttonValue}
                 />
                 {this.open &&
                     <OptionList
-                        skin={skin}
-                        size={size}
-                        value={value}
-                        options={options}
-                        onOptionClick={this.handleOptionClick}
                         onClose={this.handleOptionListClose}
+                        onOptionClick={this.handleOptionClick}
+                        options={options}
+                        size={size}
+                        skin={skin}
+                        value={value}
                     />
                 }
             </div>

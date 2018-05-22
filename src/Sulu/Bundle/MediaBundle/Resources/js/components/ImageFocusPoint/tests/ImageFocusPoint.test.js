@@ -8,8 +8,8 @@ test('Should render ImageFocusPoint with focusing the top-left point', () => {
     expect(render(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={jest.fn()}
+            value={value}
         />
     )).toMatchSnapshot();
 });
@@ -19,8 +19,8 @@ test('Should render ImageFocusPoint with focusing the top-center point', () => {
     expect(render(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={jest.fn()}
+            value={value}
         />
     )).toMatchSnapshot();
 });
@@ -30,8 +30,8 @@ test('Should render ImageFocusPoint with focusing the top-right point', () => {
     expect(render(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={jest.fn()}
+            value={value}
         />
     )).toMatchSnapshot();
 });
@@ -41,8 +41,8 @@ test('Should render ImageFocusPoint with focusing the center-left point', () => 
     expect(render(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={jest.fn()}
+            value={value}
         />
     )).toMatchSnapshot();
 });
@@ -52,8 +52,8 @@ test('Should render ImageFocusPoint with focusing the center-center point', () =
     expect(render(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={jest.fn()}
+            value={value}
         />
     )).toMatchSnapshot();
 });
@@ -63,8 +63,8 @@ test('Should render ImageFocusPoint with focusing the center-right point', () =>
     expect(render(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={jest.fn()}
+            value={value}
         />
     )).toMatchSnapshot();
 });
@@ -74,8 +74,8 @@ test('Should render ImageFocusPoint with focusing the bottom-left point', () => 
     expect(render(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={jest.fn()}
+            value={value}
         />
     )).toMatchSnapshot();
 });
@@ -85,8 +85,8 @@ test('Should render ImageFocusPoint with focusing the bottom-center point', () =
     expect(render(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={jest.fn()}
+            value={value}
         />
     )).toMatchSnapshot();
 });
@@ -96,8 +96,8 @@ test('Should render ImageFocusPoint with focusing the bottom-right point', () =>
     expect(render(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={jest.fn()}
+            value={value}
         />
     )).toMatchSnapshot();
 });
@@ -108,8 +108,8 @@ test('Should call the onClick handler when a focus point was clicked', () => {
     const imageFocusPoint = mount(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={changeSpy}
+            value={value}
         />
     );
 
@@ -128,8 +128,8 @@ test('Should disable the selected focus point button', () => {
     const imageFocusPoint = mount(
         <ImageFocusPoint
             image="http://lorempixel.com/300/300"
-            value={value}
             onChange={jest.fn()}
+            value={value}
         />
     );
 

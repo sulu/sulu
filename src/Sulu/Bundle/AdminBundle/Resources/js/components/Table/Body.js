@@ -5,25 +5,25 @@ import type {ButtonConfig, SelectMode} from './types';
 import Row from './Row';
 
 type Props = {
-    children?: ChildrenArray<Element<typeof Row>>,
-    /** @ignore */
     buttons?: Array<ButtonConfig>,
     /** @ignore */
-    selectMode?: SelectMode,
+    children?: ChildrenArray<Element<typeof Row>>,
     /** @ignore */
-    selectInFirstCell: boolean,
-    /** @ignore */
-    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    onRowCollapse?: (rowId: string | number) => void,
     /** @ignore */
     onRowExpand?: (rowId: string | number) => void,
     /** @ignore */
-    onRowCollapse?: (rowId: string | number) => void,
+    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    /** @ignore */
+    selectInFirstCell: boolean,
+    /** @ignore */
+    selectMode?: SelectMode,
 };
 
 export default class Body extends React.PureComponent<Props> {
     static defaultProps = {
-        selectMode: 'none',
         selectInFirstCell: false,
+        selectMode: 'none',
     };
 
     cloneRows = (originalRows: ?ChildrenArray<Element<typeof Row>>) => {

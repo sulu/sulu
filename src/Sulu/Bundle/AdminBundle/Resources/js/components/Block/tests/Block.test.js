@@ -43,7 +43,7 @@ test('Render a collapsed block', () => {
 
 test('Render the dragHandle prop if passed', () => {
     expect(render(
-        <Block onCollapse={jest.fn()} onExpand={jest.fn()} dragHandle={<span>Test</span>}>
+        <Block dragHandle={<span>Test</span>} onCollapse={jest.fn()} onExpand={jest.fn()}>
             Block Content with custom drag handle
         </Block>
     )).toMatchSnapshot();

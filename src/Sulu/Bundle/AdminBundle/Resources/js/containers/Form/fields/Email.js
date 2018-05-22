@@ -9,8 +9,8 @@ export default class Email extends React.Component<FieldTypeProps<?string>> {
 
         return (
             <EmailComponent
-                onChange={onChange}
                 onBlur={onFinish}
+                onChange={onChange}
                 valid={!error}
                 value={value}
             />

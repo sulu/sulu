@@ -8,16 +8,16 @@ import Item from './Item';
 import navigationStyles from './navigation.scss';
 
 type Props = {
+    appVersion?: string,
+    appVersionLink?: string,
     children: ChildrenArray<Element<typeof Item>>,
-    title: string,
-    username: string,
-    userImage?: string,
     onLogoutClick: () => void,
     onProfileClick: () => void,
     suluVersion: string,
     suluVersionLink: string,
-    appVersion?: string,
-    appVersionLink?: string,
+    title: string,
+    userImage?: string,
+    username: string,
 };
 
 @observer
@@ -78,11 +78,11 @@ export default class Navigation extends React.Component<Props> {
         const {userImage, username, onProfileClick} = this.props;
 
         if (userImage) {
-            return (<img onClick={onProfileClick} title={username} src={userImage} />);
+            return (<img onClick={onProfileClick} src={userImage} title={username} />);
         }
 
         return (
-            <div onClick={onProfileClick} className={navigationStyles.noUserImage}>
+            <div className={navigationStyles.noUserImage} onClick={onProfileClick}>
                 <Icon name="fa-user" />
             </div>
         );

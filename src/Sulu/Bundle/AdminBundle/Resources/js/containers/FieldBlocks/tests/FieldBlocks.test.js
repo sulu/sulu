@@ -16,7 +16,7 @@ jest.mock('../../Form/registries/FieldRegistry', () => ({
         switch (type) {
             case 'text_line':
                 return function TextLine({error, value}) {
-                    return <input className={error && error.keyword} type="text" defaultValue={value} />;
+                    return <input className={error && error.keyword} defaultValue={value} type="text" />;
                 };
         }
     }),

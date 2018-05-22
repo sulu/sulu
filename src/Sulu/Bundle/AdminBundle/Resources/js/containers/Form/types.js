@@ -9,8 +9,8 @@ export type SchemaType = {
 export type SchemaTypes = {[key: string]: SchemaType};
 
 export type Type = {
-    title: string,
     form: Schema,
+    title: string,
 };
 export type Types = {[key: string]: Type};
 

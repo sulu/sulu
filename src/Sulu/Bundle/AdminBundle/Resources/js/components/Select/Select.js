@@ -15,10 +15,10 @@ const HORIZONTAL_OFFSET = -20;
 const VERTICAL_OFFSET = 2;
 
 type Props = SelectProps & {
-    onSelect: (values: string | number) => void,
-    displayValue: string,
     closeOnSelect: boolean,
+    displayValue: string,
     isOptionSelected: (option: Element<typeof Option>) => boolean,
+    onSelect: (values: string | number) => void,
     selectedVisualization?: OptionSelectedVisualization,
 };
 
@@ -115,25 +115,25 @@ export default class Select extends React.Component<Props> {
         return (
             <div className={selectStyles.select}>
                 <DisplayValue
+                    displayValueRef={this.setDisplayValueRef}
                     icon={icon}
                     onClick={this.handleDisplayValueClick}
-                    displayValueRef={this.setDisplayValueRef}
                 >
                     {displayValue}
                 </DisplayValue>
                 <Popover
-                    open={this.open}
-                    onClose={this.handleOptionListClose}
                     anchorElement={this.displayValueRef}
-                    verticalOffset={VERTICAL_OFFSET}
-                    horizontalOffset={HORIZONTAL_OFFSET}
                     centerChildElement={this.selectedOptionRef}
+                    horizontalOffset={HORIZONTAL_OFFSET}
+                    onClose={this.handleOptionListClose}
+                    open={this.open}
+                    verticalOffset={VERTICAL_OFFSET}
                 >
                     {
                         (setPopoverElementRef, popoverStyle) => (
                             <Menu
-                                style={popoverStyle}
                                 menuRef={setPopoverElementRef}
+                                style={popoverStyle}
                             >
                                 {clonedChildren}
                             </Menu>

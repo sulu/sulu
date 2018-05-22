@@ -6,14 +6,14 @@ import ResourceLocator from '../ResourceLocator';
 test('ResourceLocator should render with type full', () => {
     const onChange = jest.fn();
     const value = '/parent';
-    expect(render(<ResourceLocator value={value} mode="full" onChange={onChange} onBlur={jest.fn()} />))
+    expect(render(<ResourceLocator mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />))
         .toMatchSnapshot();
 });
 
 test('ResourceLocator should render with type leaf', () => {
     const onChange = jest.fn();
     const value = '/parent/child';
-    expect(render(<ResourceLocator value={value} mode="leaf" onChange={onChange} onBlur={jest.fn()} />))
+    expect(render(<ResourceLocator mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />))
         .toMatchSnapshot();
 });
 
@@ -21,7 +21,7 @@ test('ResourceLocator should call the onChange callback when the input changes w
     const onChange = jest.fn();
     const value = '/parent';
     const resourceLocator = mount(
-        <ResourceLocator value={value} mode="full" onChange={onChange} onBlur={jest.fn()} />
+        <ResourceLocator mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('parent-new');
     expect(onChange).toHaveBeenCalledWith('/parent-new');
@@ -31,7 +31,7 @@ test('ResourceLocator should call the onChange callback when the input changes w
     const onChange = jest.fn();
     const value = '/parent/child';
     const resourceLocator = mount(
-        <ResourceLocator value={value} mode="leaf" onChange={onChange} onBlur={jest.fn()} />
+        <ResourceLocator mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('child-new');
     expect(onChange).toHaveBeenCalledWith('/parent/child-new');
@@ -41,7 +41,7 @@ test('ResourceLocator should call the onBlur callback when the Input finishes ed
     const finishSpy = jest.fn();
 
     const resourceLocator = shallow(
-        <ResourceLocator value="/some/url" mode="leaf" onChange={jest.fn()} onBlur={finishSpy} />
+        <ResourceLocator mode="leaf" onBlur={finishSpy} onChange={jest.fn()} value="/some/url" />
     );
 
     resourceLocator.find('Input').simulate('blur');

@@ -35,7 +35,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
         }
 
         return (
-            <ResourceLocatorComponent value={value} onChange={onChange} mode={mode} onBlur={onFinish} />
+            <ResourceLocatorComponent mode={mode} onBlur={onFinish} onChange={onChange} value={value} />
         );
     }
 }

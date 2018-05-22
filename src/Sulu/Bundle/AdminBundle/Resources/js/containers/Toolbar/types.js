@@ -12,15 +12,15 @@ export type SelectItem = Select & { type: 'select' };
 export type ToolbarItem = ButtonItem | DropdownItem | SelectItem;
 
 export type ToolbarProps = {
-    storeKey?: string,
-    onNavigationButtonClick?: () => void,
     navigationOpen?: boolean,
+    onNavigationButtonClick?: () => void,
+    storeKey?: string,
 };
 
 export type ToolbarConfig = {
+    backButton?: Button,
+    disableAll?: boolean,
     icons?: Array<string>,
     items?: Array<ToolbarItem>,
     locale?: Select,
-    backButton?: Button,
-    disableAll?: boolean,
 };

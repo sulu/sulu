@@ -6,10 +6,10 @@ import Section from './Section';
 
 type Props = {
     children: ChildrenArray<Element<typeof Item>>,
-    title: string,
-    onChange: (value: *) => void,
-    value: ?*,
     icon?: string,
+    onChange: (value: *) => void,
+    title: string,
+    value: ?*,
 };
 
 export default class SingleItemSection extends React.PureComponent<Props> {

@@ -8,27 +8,27 @@ import type {ButtonConfig, SelectMode} from './types';
 import tableStyles from './table.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof HeaderCell>>,
+    allSelected: boolean,
     /**
      * @ignore
      * The header will just display the icons.
      */
     buttons?: Array<ButtonConfig>,
     /** @ignore */
-    selectMode?: SelectMode,
-    /** @ignore */
-    selectInFirstCell: boolean,
+    children: ChildrenArray<Element<typeof HeaderCell>>,
     /** @ignore */
     onAllSelectionChange?: (checked: boolean) => void,
+    /** @ignore */
+    selectInFirstCell: boolean,
     /** If true the "select all" checkbox is checked. */
-    allSelected: boolean,
+    selectMode?: SelectMode,
 };
 
 export default class Header extends React.PureComponent<Props> {
     static defaultProps = {
-        selectMode: 'none',
         allSelected: false,
         selectInFirstCell: false,
+        selectMode: 'none',
     };
 
     isMultipleSelect = () => {
@@ -96,9 +96,9 @@ export default class Header extends React.PureComponent<Props> {
             <Fragment>
                 <span className={tableStyles.cellSelect}>
                     <Checkbox
-                        skin="light"
                         checked={allSelected}
                         onChange={this.handleAllSelectionChange}
+                        skin="light"
                     />
                 </span>
                 {children}
@@ -118,8 +118,8 @@ export default class Header extends React.PureComponent<Props> {
 
             return (
                 <HeaderCell
-                    key={key}
                     className={tableStyles.headerButtonCell}
+                    key={key}
                 >
                     <Icon name={button.icon} />
                 </HeaderCell>
@@ -133,9 +133,9 @@ export default class Header extends React.PureComponent<Props> {
         return (
             <HeaderCell key={key}>
                 <Checkbox
-                    skin="light"
                     checked={this.props.allSelected}
                     onChange={this.handleAllSelectionChange}
+                    skin="light"
                 />
             </HeaderCell>
         );

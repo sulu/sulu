@@ -10,15 +10,15 @@ test('The component should render and handle clicks correctly', () => {
 
     const navigation = mount(
         <Navigation
-            title="sulu.io"
-            username="John Terence Maximilian Travolta"
             onLogoutClick={handleLogoutClick}
             onProfileClick={handleProfileClick}
             suluVersion="2.0.0-RC1"
             suluVersionLink="http://link.com"
+            title="sulu.io"
+            username="John Terence Maximilian Travolta"
         >
-            <Navigation.Item value="search" title="Search" icon="su-search" onClick={handleNavigationClick} />
-            <Navigation.Item value="webspaces" title="Webspaces" icon="fa-bullseye" onClick={handleNavigationClick} />
+            <Navigation.Item icon="su-search" onClick={handleNavigationClick} title="Search" value="search" />
+            <Navigation.Item icon="fa-bullseye" onClick={handleNavigationClick} title="Webspaces" value="webspaces" />
         </Navigation>
     );
     expect(navigation.render()).toMatchSnapshot();
@@ -38,35 +38,35 @@ test('The component should render with all available props and handle clicks cor
 
     const navigation = mount(
         <Navigation
-            title="sulu.io"
-            username="John Travolta"
-            userImage={'http://lorempixel.com/200/200'}
+            appVersion="1.0.0"
+            appVersionLink="http://link.com"
             onLogoutClick={handleLogoutClick}
             onProfileClick={handleProfileClick}
             suluVersion="2.0.0-RC1"
             suluVersionLink="http://link.com"
-            appVersion="1.0.0"
-            appVersionLink="http://link.com"
+            title="sulu.io"
+            userImage={'http://lorempixel.com/200/200'}
+            username="John Travolta"
         >
-            <Navigation.Item value="search" title="Search" icon="su-search" onClick={handleNavigationClick} />
-            <Navigation.Item value="webspaces" title="Webspaces" icon="su-webspace" onClick={handleNavigationClick} />
-            <Navigation.Item value="media" title="Media" icon="fa-image" onClick={handleNavigationClick} />
-            <Navigation.Item value="articles" title="Article" icon="fa-newspaper-o" onClick={handleNavigationClick} />
+            <Navigation.Item icon="su-search" onClick={handleNavigationClick} title="Search" value="search" />
+            <Navigation.Item icon="su-webspace" onClick={handleNavigationClick} title="Webspaces" value="webspaces" />
+            <Navigation.Item icon="fa-image" onClick={handleNavigationClick} title="Media" value="media" />
+            <Navigation.Item icon="fa-newspaper-o" onClick={handleNavigationClick} title="Article" value="articles" />
             <Navigation.Item
-                value="snippets"
-                title="Snippets"
                 icon="fa-sticky-note-o"
                 onClick={handleNavigationClick}
+                title="Snippets"
+                value="snippets"
             />
-            <Navigation.Item value="contact" title="Contact" icon="su-user-1">
-                <Navigation.Item value="contact_1" onClick={handleNavigationClick} title="Contact 1" />
-                <Navigation.Item value="contact_2" onClick={handleNavigationClick} title="Contact 2" active={true} />
-                <Navigation.Item value="contact_3" onClick={handleNavigationClick} title="Contact 3" />
+            <Navigation.Item icon="su-user-1" title="Contact" value="contact">
+                <Navigation.Item onClick={handleNavigationClick} title="Contact 1" value="contact_1" />
+                <Navigation.Item active={true} onClick={handleNavigationClick} title="Contact 2" value="contact_2" />
+                <Navigation.Item onClick={handleNavigationClick} title="Contact 3" value="contact_3" />
             </Navigation.Item>
-            <Navigation.Item value="settings" title="Settings" icon="fa-gear">
-                <Navigation.Item value="setting_1" onClick={handleNavigationClick} title="Setting 1" />
-                <Navigation.Item value="setting_2" onClick={handleNavigationClick} title="Setting 2" />
-                <Navigation.Item value="setting_3" onClick={handleNavigationClick} title="Setting 3" />
+            <Navigation.Item icon="fa-gear" title="Settings" value="settings">
+                <Navigation.Item onClick={handleNavigationClick} title="Setting 1" value="setting_1" />
+                <Navigation.Item onClick={handleNavigationClick} title="Setting 2" value="setting_2" />
+                <Navigation.Item onClick={handleNavigationClick} title="Setting 3" value="setting_3" />
             </Navigation.Item>
         </Navigation>
     );
@@ -87,35 +87,35 @@ test('The expanded prop should be set correct automatically', () => {
 
     const navigation = mount(
         <Navigation
-            title="sulu.io"
-            username="John Travolta"
-            userImage={'http://lorempixel.com/200/200'}
+            appVersion="1.0.0"
+            appVersionLink="http://link.com"
             onLogoutClick={handleLogoutClick}
             onProfileClick={handleProfileClick}
             suluVersion="2.0.0-RC1"
             suluVersionLink="http://link.com"
-            appVersion="1.0.0"
-            appVersionLink="http://link.com"
+            title="sulu.io"
+            userImage={'http://lorempixel.com/200/200'}
+            username="John Travolta"
         >
-            <Navigation.Item value="search" title="Search" icon="su-search" onClick={handleNavigationClick} />
-            <Navigation.Item value="webspaces" title="Webspaces" icon="su-webspace" onClick={handleNavigationClick} />
-            <Navigation.Item value="media" title="Media" icon="fa-image" onClick={handleNavigationClick} />
-            <Navigation.Item value="articles" title="Article" icon="fa-newspaper-o" onClick={handleNavigationClick} />
+            <Navigation.Item icon="su-search" onClick={handleNavigationClick} title="Search" value="search" />
+            <Navigation.Item icon="su-webspace" onClick={handleNavigationClick} title="Webspaces" value="webspaces" />
+            <Navigation.Item icon="fa-image" onClick={handleNavigationClick} title="Media" value="media" />
+            <Navigation.Item icon="fa-newspaper-o" onClick={handleNavigationClick} title="Article" value="articles" />
             <Navigation.Item
-                value="snippets"
-                title="Snippets"
                 icon="fa-sticky-note-o"
                 onClick={handleNavigationClick}
+                title="Snippets"
+                value="snippets"
             />
-            <Navigation.Item value="contact" title="Contact" icon="su-user-1">
-                <Navigation.Item value="contact_1" onClick={handleNavigationClick} title="Contact 1" />
-                <Navigation.Item value="contact_2" onClick={handleNavigationClick} title="Contact 2" active={true} />
-                <Navigation.Item value="contact_3" onClick={handleNavigationClick} title="Contact 3" />
+            <Navigation.Item icon="su-user-1" title="Contact" value="contact">
+                <Navigation.Item onClick={handleNavigationClick} title="Contact 1" value="contact_1" />
+                <Navigation.Item active={true} onClick={handleNavigationClick} title="Contact 2" value="contact_2" />
+                <Navigation.Item onClick={handleNavigationClick} title="Contact 3" value="contact_3" />
             </Navigation.Item>
-            <Navigation.Item value="settings" title="Settings" icon="fa-gear">
-                <Navigation.Item value="setting_1" onClick={handleNavigationClick} title="Setting 1" />
-                <Navigation.Item value="setting_2" onClick={handleNavigationClick} title="Setting 2" />
-                <Navigation.Item value="setting_3" onClick={handleNavigationClick} title="Setting 3" />
+            <Navigation.Item icon="fa-gear" title="Settings" value="settings">
+                <Navigation.Item onClick={handleNavigationClick} title="Setting 1" value="setting_1" />
+                <Navigation.Item onClick={handleNavigationClick} title="Setting 2" value="setting_2" />
+                <Navigation.Item onClick={handleNavigationClick} title="Setting 3" value="setting_3" />
             </Navigation.Item>
         </Navigation>
     );
