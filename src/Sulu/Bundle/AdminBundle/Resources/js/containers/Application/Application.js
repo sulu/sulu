@@ -47,11 +47,12 @@ export default class Application extends React.Component<Props> {
 
     render() {
         const {router} = this.props;
+        const {loggedIn} = userStore;
 
         const rootClass = classNames(
             applicationStyles.root,
             {
-                [applicationStyles.visible]: userStore.loggedIn,
+                [applicationStyles.visible]: loggedIn,
                 [applicationStyles.navigationVisible]: this.navigationVisible,
             }
         );
@@ -70,11 +71,9 @@ export default class Application extends React.Component<Props> {
             }
         );
 
-        console.log(userStore.loggedIn);
-
         return (
             <Fragment>
-                {!userStore.loggedIn &&
+                {!loggedIn &&
                     <Login
                         onLoginSuccess={this.handleLoginSuccess}
                         initialized={!initializer.loading && initializer.translationInitialized}
