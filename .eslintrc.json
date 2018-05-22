@@ -109,6 +109,13 @@
             "error",
             "line-aligned"
         ],
+        "react/jsx-max-props-per-line": [
+            "error",
+            {
+                "maximum": 1,
+                "when": "multiline"
+            }
+        ],
         "react/jsx-wrap-multilines": "error",
         "react/jsx-pascal-case": "error",
         "react/jsx-tag-spacing": [
