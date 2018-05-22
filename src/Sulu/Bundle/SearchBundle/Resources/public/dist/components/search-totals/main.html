@@ -1,0 +1,19 @@
+<div class="search-totals-wrapper">
+    <h2><%= translate('search-overlay.documents-found') %></h2>
+
+    <table>
+        <tr>
+            <% var i=0; %>
+            <% _.each(data, function(total, key) { if (total > 0) { i++; %>
+            <td>
+                <span class="name"><%= translate(indexes[key].name) %>:</span>
+                <a href="#" class="category-link <% if (activeIndex === key) { %>active<% } %>" data-category="<%= key %>"><%= total %></a>
+            </td>
+            <% if(i % 3 === 0) { %>
+        </tr>
+        <tr>
+            <% } %>
+            <% }}); %>
+        </tr>
+    </table>
+</div>
