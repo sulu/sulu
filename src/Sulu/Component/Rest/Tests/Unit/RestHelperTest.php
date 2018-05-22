@@ -11,9 +11,9 @@
 
 namespace Sulu\Component\Rest\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\RestHelper;
-use \PHPUnit\Framework\TestCase;
 
 class RestHelperTest extends TestCase
 {

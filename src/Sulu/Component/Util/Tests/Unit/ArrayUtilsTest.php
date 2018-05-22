@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Util\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Util\ArrayUtils;
-use \PHPUnit\Framework\TestCase;
 
 class ArrayUtilsTest extends TestCase
 {

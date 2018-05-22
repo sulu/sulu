@@ -13,6 +13,7 @@ namespace Sulu\Component\Security\Tests\Unit\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\GenericSerializationVisitor;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
@@ -21,7 +22,6 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Serializer\Subscriber\SecuredEntitySubscriber;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use \PHPUnit\Framework\TestCase;
 
 class SecuredEntitySubscriberTest extends TestCase
 {

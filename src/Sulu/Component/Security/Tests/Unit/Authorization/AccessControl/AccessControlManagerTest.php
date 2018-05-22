@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Security\Tests\Unit\Authorization\AccessControl;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -22,7 +23,6 @@ use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use \PHPUnit\Framework\TestCase;
 
 class AccessControlManagerTest extends TestCase
 {

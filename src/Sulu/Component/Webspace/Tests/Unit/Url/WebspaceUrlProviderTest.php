@@ -11,11 +11,11 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Url;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
-use \PHPUnit\Framework\TestCase;
 
 class WebspaceUrlProviderTest extends TestCase
 {

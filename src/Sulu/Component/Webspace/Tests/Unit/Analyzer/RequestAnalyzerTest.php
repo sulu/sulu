@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Analyzer;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestProcessorInterface;
@@ -19,7 +20,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use \PHPUnit\Framework\TestCase;
 
 class RequestAnalyzerTest extends TestCase
 {
@@ -39,11 +39,9 @@ class RequestAnalyzerTest extends TestCase
         $requestAnalyzer->validate($request);
     }
 
-    /**
-     */
     public function testAnalyzeAndValidateWithError()
     {
-    $this->expectException(UrlMatchNotFoundException::class);
+        $this->expectException(UrlMatchNotFoundException::class);
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = new Request();
 

@@ -12,12 +12,12 @@
 namespace Sulu\Component\Webspace\Tests\Unit\StructureProvider;
 
 use Doctrine\Common\Cache\ArrayCache;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider;
 use Sulu\Component\Webspace\Webspace;
-use \PHPUnit\Framework\TestCase;
 
 class WebspaceStructureProviderTest extends TestCase
 {

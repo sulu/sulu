@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
-use \PHPUnit\Framework\TestCase;
 
 class RequestAttributesTest extends TestCase
 {

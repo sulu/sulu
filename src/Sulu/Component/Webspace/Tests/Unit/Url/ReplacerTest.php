@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Url;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Webspace\Url\Replacer;
-use \PHPUnit\Framework\TestCase;
 
 class ReplacerTest extends TestCase
 {

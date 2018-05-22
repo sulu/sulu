@@ -12,6 +12,7 @@
 namespace Sulu\Component\Security\Tests\Unit\Authorization\AccessControl;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\BaseRole;
@@ -21,7 +22,6 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryI
 use Sulu\Component\Security\Authorization\AccessControl\DoctrineAccessControlProvider;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
-use \PHPUnit\Framework\TestCase;
 
 class DoctrineAccessControlProviderTest extends TestCase
 {

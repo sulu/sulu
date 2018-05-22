@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Websocket\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Websocket\RatchetAppManager;
-use \PHPUnit\Framework\TestCase;
 
 class RatchetAppManagerTest extends TestCase
 {

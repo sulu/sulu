@@ -10,7 +10,8 @@
  */
 
 namespace Sulu\Component\Webspace\Tests\Unit;
-use \PHPUnit\Framework\TestCase;
+
+use PHPUnit\Framework\TestCase;
 
 class WebspaceTestCase extends TestCase
 {

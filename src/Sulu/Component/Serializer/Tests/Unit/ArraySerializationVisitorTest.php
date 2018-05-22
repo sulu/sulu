@@ -12,8 +12,8 @@
 namespace Sulu\Component\Serializer\Tests\Unit;
 
 use JMS\Serializer\Naming\PropertyNamingStrategyInterface;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Serializer\ArraySerializationVisitor;
-use \PHPUnit\Framework\TestCase;
 
 class ArraySerializationVisitorTest extends TestCase
 {

@@ -11,9 +11,9 @@
 
 namespace Sulu\Component\Util\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Util\SuluVersionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use \PHPUnit\Framework\TestCase;
 
 class SuluVersionPassTest extends TestCase
 {

@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\PortalInformationRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -19,7 +20,6 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
-use \PHPUnit\Framework\TestCase;
 
 class PortalInformationRequestProcessorTest extends TestCase
 {

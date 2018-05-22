@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
@@ -22,7 +23,6 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
-use \PHPUnit\Framework\TestCase;
 
 class WebspaceCollectionTest extends TestCase
 {
@@ -209,12 +209,10 @@ class WebspaceCollectionTest extends TestCase
         $this->assertEquals('portal1.lo', $portalInformation['url']);
     }
 
-    /**
-     */
     public function testGetPortalInformationsUnknown()
     {
         $this->expectExceptionMessage('Unknown portal environment "unknown"');
-    $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->webspaceCollection->getPortalInformations('unknown');
     }
 }

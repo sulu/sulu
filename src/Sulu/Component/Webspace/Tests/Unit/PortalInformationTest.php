@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Webspace\PortalInformation;
-use \PHPUnit\Framework\TestCase;
 
 class PortalInformationTest extends TestCase
 {

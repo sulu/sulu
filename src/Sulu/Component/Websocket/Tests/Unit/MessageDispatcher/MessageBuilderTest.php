@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Websocket\Tests\Unit\MessageDispatcher;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Websocket\MessageDispatcher\MessageBuilder;
-use \PHPUnit\Framework\TestCase;
 
 class MessageBuilderTest extends TestCase
 {

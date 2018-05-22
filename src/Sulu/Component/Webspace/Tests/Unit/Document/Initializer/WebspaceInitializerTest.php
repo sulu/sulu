@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Document\Initializer;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
@@ -24,7 +25,6 @@ use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Output\Output;
-use \PHPUnit\Framework\TestCase;
 
 class WebspaceInitializerTest extends TestCase
 {
