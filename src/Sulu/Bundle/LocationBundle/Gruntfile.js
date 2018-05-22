@@ -21,6 +21,11 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
+            templates: {
+                files: [
+                    {expand: true, cwd: srcpath, src: ['**/*.html'], dest: destpath}
+                ]
+            },
             bower: {
                 files: [
                     {
@@ -109,6 +114,7 @@ module.exports = function (grunt) {
         'compass:dev',
         'cssmin',
         'copy:bower',
+        'copy:templates',
         'replace:build'
     ]);
 };
