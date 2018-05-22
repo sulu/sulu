@@ -48,7 +48,7 @@ interface BlockPropertyInterface extends PropertyInterface
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function hasType($name);
 

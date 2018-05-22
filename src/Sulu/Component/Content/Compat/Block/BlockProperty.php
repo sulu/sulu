@@ -82,7 +82,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getType($name)
     {
@@ -100,7 +100,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hasType($name)
     {
