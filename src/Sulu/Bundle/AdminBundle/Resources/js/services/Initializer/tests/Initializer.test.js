@@ -106,8 +106,6 @@ test('Should initialize when everything works', () => {
     expect(initializer.loading).toBe(true);
 
     return initPromise
-        // Bug in flow: https://github.com/facebook/flow/issues/5810
-        // $FlowFixMe:
         .finally(() => {
             expect(setTranslations).toBeCalledWith(translationData);
             expect(initializer.translationInitialized).toBe(true);
