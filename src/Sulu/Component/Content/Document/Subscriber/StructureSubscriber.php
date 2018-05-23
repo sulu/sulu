@@ -179,17 +179,7 @@ class StructureSubscriber implements EventSubscriberInterface
         }
 
         $rehydrate = $event->getOption('rehydrate');
-
-        $structureTypeFromDocument = $this->getStructureType($event, $document, $rehydrate);
-        $structureTypeOverride = $event->getOption('structure_type');
-
-        $oldStructureType = null;
-        if ($structureTypeOverride && $structureTypeFromDocument !== $structureTypeOverride) {
-            $structureType = $structureTypeOverride;
-            $oldStructureType = $structureTypeFromDocument;
-        } else {
-            $structureType = $structureTypeFromDocument;
-        }
+        $structureType = $this->getStructureType($event, $document, $rehydrate);
 
         $document->setStructureType($structureType);
 
@@ -199,12 +189,12 @@ class StructureSubscriber implements EventSubscriberInterface
             }
         }
 
-        $container = $this->getStructure($document, $structureType, $oldStructureType, $rehydrate);
+        $structure = $this->getStructure($document, $structureType, $rehydrate);
 
         // Set the property container
         $event->getAccessor()->set(
             'structure',
-            $container
+            $structure
         );
     }
 
@@ -249,6 +239,11 @@ class StructureSubscriber implements EventSubscriberInterface
      */
     private function getStructureType(AbstractMappingEvent $event, StructureBehavior $document, $rehydrate)
     {
+        $structureType = $event->getOption('structure_type');
+        if ($structureType) {
+            return $structureType;
+        }
+
         $node = $event->getNode();
         $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
         $structureType = $node->getPropertyValueWithDefault($propertyName, null);
@@ -312,25 +307,17 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * @param mixed $document
-     * @param string $oldStructureType
      *
      * @return ManagedStructure
      */
-    private function createStructure($document, $oldStructureType)
+    private function createStructure($document)
     {
-        $managedStructure = new ManagedStructure(
+        return new ManagedStructure(
             $this->contentTypeManager,
             $this->legacyPropertyFactory,
             $this->inspector,
             $document
         );
-
-        if ($oldStructureType) {
-            $oldStructureMetadata = $this->inspector->getStructureMetadataByStructureType($document, $oldStructureType);
-            $managedStructure->setOldStructureMetadata($oldStructureMetadata);
-        }
-
-        return $managedStructure;
     }
 
     /**
@@ -408,15 +395,14 @@ class StructureSubscriber implements EventSubscriberInterface
      *
      * @param object $document
      * @param string $structureType
-     * @param string $oldStructureType
      * @param bool $rehydrate
      *
      * @return StructureInterface
      */
-    private function getStructure($document, $structureType, $oldStructureType, $rehydrate)
+    private function getStructure($document, $structureType, $rehydrate)
     {
         if ($structureType) {
-            return $this->createStructure($document, $oldStructureType);
+            return $this->createStructure($document);
         }
 
         if (!$rehydrate && $document->getStructure()) {

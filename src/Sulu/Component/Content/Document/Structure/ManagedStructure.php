@@ -52,11 +52,6 @@ class ManagedStructure extends Structure
     private $structureMetadata;
 
     /**
-     * @var StructureMetadata
-     */
-    private $oldStructureMetadata;
-
-    /**
      * @var NodeInterface
      */
     private $node;
@@ -126,46 +121,18 @@ class ManagedStructure extends Structure
 
         $property->setStructure($bridge);
 
-        $value = null;
-        if ($this->canReadValue($structureProperty)) {
-            $contentType = $this->contentTypeManager->get($contentTypeName);
-            $contentType->read(
-                $this->node,
-                $property,
-                $bridge->getWebspaceKey(),
-                $bridge->getLanguageCode(),
-                null
-            );
-
-            $value = $property->getValue();
-        }
-
-        $valueProperty = new PropertyValue($name, $value);
+        $contentType = $this->contentTypeManager->get($contentTypeName);
+        $contentType->read(
+            $this->node,
+            $property,
+            $bridge->getWebspaceKey(),
+            $bridge->getLanguageCode(),
+            null
+        );
+        $valueProperty = new PropertyValue($name, $property->getValue());
         $this->properties[$name] = $valueProperty;
 
         return $valueProperty;
-    }
-
-    /**
-     * Check if we can read the value of the property.
-     *
-     * @param PropertyMetadata $structureProperty
-     *
-     * @return bool
-     */
-    private function canReadValue(PropertyMetadata $structureProperty)
-    {
-        if (!$this->oldStructureMetadata) {
-            return true;
-        }
-
-        if (!$this->oldStructureMetadata->hasProperty($structureProperty->getName())) {
-            return false;
-        }
-
-        $oldStructureProperty = $this->oldStructureMetadata->getProperty($structureProperty->getName());
-
-        return $oldStructureProperty->getType() === $structureProperty->getType();
     }
 
     /**
