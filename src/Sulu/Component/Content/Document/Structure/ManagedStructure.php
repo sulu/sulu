@@ -171,16 +171,6 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * Set old structure metadata for e.g. template switching.
-     *
-     * @param StructureMetadata $structure
-     */
-    public function setOldStructureMetadata(StructureMetadata $structure)
-    {
-        $this->oldStructureMetadata = $structure;
-    }
-
-    /**
      * Return an array copy of the property data.
      *
      * @return array
