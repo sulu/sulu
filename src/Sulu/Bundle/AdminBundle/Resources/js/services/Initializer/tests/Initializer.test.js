@@ -2,8 +2,8 @@
 import 'core-js/library/fn/promise';
 import initializer from '../Initializer';
 import Requester from '../../Requester';
+import {Assignment, fieldRegistry, SingleSelection} from '../../../containers/Form';
 import {setTranslations} from '../../../utils/Translator';
-import fieldRegistry from '../../../containers/Form/registries/FieldRegistry';
 import routeRegistry from '../../Router/registries/RouteRegistry';
 import navigationRegistry from '../../../containers/Navigation/registries/NavigationRegistry';
 import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
@@ -25,6 +25,14 @@ jest.mock('../../../utils/Translator', () => ({
     setTranslations: jest.fn(),
 }));
 
+jest.mock('../../../containers/Form', () => ({
+    Assignment: jest.fn(),
+    fieldRegistry: {
+        add: jest.fn(),
+    },
+    SingleSelection: jest.fn(),
+}));
+
 jest.mock('../../../containers/ViewRenderer/registries/ViewRegistry', () => ({
     add: jest.fn(),
 }));
@@ -34,10 +42,6 @@ jest.mock('../../../containers/Datagrid/registries/DatagridAdapterRegistry', () 
 }));
 
 jest.mock('../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry', () => ({
-    add: jest.fn(),
-}));
-
-jest.mock('../../../containers/Form/registries/FieldRegistry', () => ({
     add: jest.fn(),
 }));
 
@@ -76,8 +80,19 @@ beforeEach(() => {
 
 test('Should initialize when everything works', () => {
     const configData = {
-        'sulu_admin': {
-            field_type_options: '123',
+        sulu_admin: {
+            field_type_options: {
+                assignment: {
+                    contact_selection: {
+                        resourceKey: 'contacts',
+                    },
+                },
+                single_selection: {
+                    single_account_selection: {
+                        resourceKey: 'accounts',
+                    },
+                },
+            },
             routes: 'crazy_routes',
             navigation: 'nice_navigation',
             endpoints: 'top_endpoints',
@@ -117,6 +132,11 @@ test('Should initialize when everything works', () => {
             expect(fieldRegistry.add).toBeCalled();
 
             // dynamic things
+            expect(fieldRegistry.add)
+                .toBeCalledWith('contact_selection', Assignment, {resourceKey: 'contacts'});
+            expect(fieldRegistry.add)
+                .toBeCalledWith('single_account_selection', SingleSelection, {resourceKey: 'accounts'});
+
             expect(routeRegistry.clear).toBeCalled();
             expect(navigationRegistry.clear).toBeCalled();
             expect(resourceMetadataStore.clear).toBeCalled();
@@ -138,7 +158,6 @@ test('Should initialize when everything works', () => {
 test('Should not reinitialize everything when it was already initialized', () => {
     const configData = {
         'sulu_admin': {
-            field_type_options: '123',
             routes: 'crazy_routes',
             navigation: 'nice_navigation',
             endpoints: 'top_endpoints',

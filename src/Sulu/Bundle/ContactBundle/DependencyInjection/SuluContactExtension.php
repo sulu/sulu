@@ -88,8 +88,16 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                             'endpoint' => 'get_accounts',
                         ],
                     ],
+                    'field_type_options' => [
+                        'single_selection' => [
+                            'single_account_selection' => [
+                                'resourceKey' => 'accounts',
+                            ],
+                        ],
+                    ],
                 ]
             );
+
         }
     }
 
