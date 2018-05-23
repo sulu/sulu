@@ -18,7 +18,6 @@ use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
@@ -129,6 +128,7 @@ class ManagedStructure extends Structure
             $bridge->getLanguageCode(),
             null
         );
+
         $valueProperty = new PropertyValue($name, $property->getValue());
         $this->properties[$name] = $valueProperty;
 
