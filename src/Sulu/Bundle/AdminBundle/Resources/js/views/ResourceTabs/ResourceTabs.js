@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {isObservableArray, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Tabs from '../../components/Tabs';
@@ -63,7 +63,7 @@ export default class ResourceTabs extends React.Component<ViewProps> {
             : undefined;
 
         return (
-            <div>
+            <Fragment>
                 <Tabs selectedIndex={selectedRouteIndex} onSelect={this.handleSelect}>
                     {route.children.map((childRoute) => {
                         const tabTitle = childRoute.options.tabTitle;
@@ -78,7 +78,7 @@ export default class ResourceTabs extends React.Component<ViewProps> {
                     ? loader
                     : ChildComponent
                 }
-            </div>
+            </Fragment>
         );
     }
 }

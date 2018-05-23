@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
 import type {Element} from 'react';
-import type {BaseItemProps, Size} from './types';
+import classNames from 'classnames';
+import type {BaseItemProps} from './types';
+import baseItemStyles from './baseItem.scss';
 
 type Props = BaseItemProps & {
     className: string,
@@ -9,10 +11,6 @@ type Props = BaseItemProps & {
 };
 
 export default class BaseItem extends React.PureComponent<Props> {
-    static getWidthFromSize(size: Size) {
-        return size * 100 / 12;
-    }
-
     render() {
         const {
             size,
@@ -21,16 +19,18 @@ export default class BaseItem extends React.PureComponent<Props> {
             spaceAfter,
             spaceBefore,
         } = this.props;
-        const sizeStyle = {};
 
-        sizeStyle.width = `${BaseItem.getWidthFromSize(size)}%`;
-        sizeStyle.marginLeft = `${BaseItem.getWidthFromSize(spaceBefore)}%`;
-        sizeStyle.marginRight = `${BaseItem.getWidthFromSize(spaceAfter)}%`;
+        const baseItemClass = classNames(
+            className,
+            baseItemStyles.size,
+            baseItemStyles['size-' + size],
+            baseItemStyles['space-before-' + spaceBefore],
+            baseItemStyles['space-after-' + spaceAfter]
+        );
 
         return (
             <div
-                style={sizeStyle}
-                className={className}
+                className={baseItemClass}
             >
                 {children}
             </div>

@@ -44,11 +44,9 @@ export default class Tabs extends React.PureComponent<Props> {
         const tabsItems = this.createTabItems(children);
 
         return (
-            <div>
-                <ul className={tabsStyles.tabsMenu}>
-                    {tabsItems}
-                </ul>
-            </div>
+            <ul className={tabsStyles.tabs}>
+                {tabsItems}
+            </ul>
         );
     }
 }

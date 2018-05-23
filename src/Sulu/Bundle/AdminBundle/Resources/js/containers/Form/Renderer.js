@@ -102,7 +102,7 @@ export default class Renderer extends React.Component<Props> {
         const schemaKeys = Object.keys(schema);
 
         return (
-            <Grid>
+            <Grid className={rendererStyles.grid}>
                 {schemaKeys.map((schemaKey) => this.renderItem(schema[schemaKey], schemaKey))}
             </Grid>
         );

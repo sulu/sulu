@@ -1,5 +1,9 @@
 @import './variables.scss';
 
+.grid {
+    margin-bottom: -$sectionMarginBottom;
+}
+
 .grid-section {
     margin-bottom: -$fieldMarginBottom;
 
@@ -7,7 +11,8 @@
         margin-bottom: 0;
     }
 
-    & + .grid-item {
+    & + .grid-item,
+    & + .grid-section {
         margin-top: $fieldMarginBottom;
     }
 }

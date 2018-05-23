@@ -1,74 +1,70 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a Tabs component 1`] = `
-<div>
-  <ul
-    class="tabsMenu"
+<ul
+  class="tabs"
+>
+  <li
+    class="tab"
   >
-    <li
-      class="tab"
+    <button
+      title="Tab 1"
     >
-      <button
-        title="Tab 1"
-      >
-        Tab 1
-      </button>
-    </li>
-    <li
-      class="tab"
+      Tab 1
+    </button>
+  </li>
+  <li
+    class="tab"
+  >
+    <button
+      title="Tab 2"
     >
-      <button
-        title="Tab 2"
-      >
-        Tab 2
-      </button>
-    </li>
-    <li
-      class="tab"
+      Tab 2
+    </button>
+  </li>
+  <li
+    class="tab"
+  >
+    <button
+      title="Tab 3"
     >
-      <button
-        title="Tab 3"
-      >
-        Tab 3
-      </button>
-    </li>
-  </ul>
-</div>
+      Tab 3
+    </button>
+  </li>
+</ul>
 `;
 
 exports[`Render a Tabs component with a selected tab 1`] = `
-<div>
-  <ul
-    class="tabsMenu"
+<ul
+  class="tabs"
+>
+  <li
+    class="tab selected"
   >
-    <li
-      class="tab selected"
+    <button
+      disabled=""
+      title="Tab 1"
     >
-      <button
-        disabled=""
-        title="Tab 1"
-      >
-        Tab 1
-      </button>
-    </li>
-    <li
-      class="tab"
+      Tab 1
+    </button>
+  </li>
+  <li
+    class="tab"
+  >
+    <button
+      title="Tab 2"
     >
-      <button
-        title="Tab 2"
-      >
-        Tab 2
-      </button>
-    </li>
-    <li
-      class="tab"
+      Tab 2
+    </button>
+  </li>
+  <li
+    class="tab"
+  >
+    <button
+      title="Tab 3"
     >
-      <button
-        title="Tab 3"
-      >
-        Tab 3
-      </button>
-    </li>
-  </ul>
-</div>
+      Tab 3
+    </button>
+  </li>
+</ul>
 `;

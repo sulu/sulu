@@ -3,7 +3,7 @@
 exports[`Should render form using renderer 1`] = `
 <form>
   <div
-    class="grid"
+    class="grid grid"
   />
 </form>
 `;
