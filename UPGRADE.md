@@ -22,6 +22,7 @@ doctrine:
 ### Field Descriptor interface changed
 
 The field descriptor parameter `$default` and `$disabled` where combined into a new parameter `$visibility`:
+
 Use the following table for upgrading:
 
 | Disabled | Default  | Visiblity
@@ -30,6 +31,19 @@ Use the following table for upgrading:
 | false    | false    | FieldDescriptorInterface::VISIBILITY_NEVER (never)
 | true     | true     | FieldDescriptorInterface::VISIBILITY_YES (yes)
 | true     | false    | FieldDescriptorInterface::VISIBILITY_NO (no)
+
+We have also introduced a new parameter `$searchability` on the fourth position.
+
+The following table shows the values:
+
+| Value  | Description                 | Searchability
+|--------|-----------------------------|--------------
+| NEVER  | not searchable at all       | FieldDescriptorInterface::SEARCHABILITY_NEVER (never)
+| NO     | it's not used per default   | FieldDescriptorInterface::SEARCHABILITY_NO (no)
+| YES    | it's used per default       | FieldDescriptorInterface::SEARCHABILITY_YES (yes)
+
+This new property brings use the possibility to use our REST Api's without the parameter `searchFields`.
+Default behavior then is to use all fields with `searchability` set to `YES`.
 
 **Before**
 
@@ -50,6 +64,7 @@ new FieldDescriptor(
    'name',
    'translation',
    FieldDescriptorInterface::VISIBILITY_YES, // Visibility
+   FieldDescriptorInterface::SEARCHABILITY_NEVER, // Searchability
    // ...
 );
 ```
@@ -81,22 +96,23 @@ new DoctrineFieldDescriptor(
     'translation',
     [],
     FieldDescriptorInterface::VISIBILITY_YES, // Visibility
+    FieldDescriptorInterface::SEARCHABILITY_NEVER, // Searchability
     // ...
 );
 ```
 
-In the xml definition of the list `display` was replaced with `visibility`:
+In the xml definition of the list `display` was replaced with `visibility` and `searchability` was added:
 
 **Before**
 
 ```xml
-<property display="yes">
+<property display="yes" />
 ```
 
 **After**
 
 ```xml
-<property visibility="yes">
+<property visibility="yes" searchability="yes" />
 ```
 
 ### Dependencies

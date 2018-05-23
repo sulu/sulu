@@ -444,8 +444,8 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->getAccountEntityName(),
             'contact.accounts.company',
             [],
-            true,
-            false
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO
         );
     }
 
@@ -970,6 +970,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'contact.contacts.main-contact',
             [],
             FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             '',
             '',
             '',
@@ -983,6 +984,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'contact.contacts.main-contact',
             [],
             FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             '',
             '',
             '',
@@ -1009,6 +1011,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'contact.contacts.firstname',
             $contactJoin,
             FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO,
             '',
             '',
             '',
@@ -1022,6 +1025,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'contact.contacts.lastName',
             $contactJoin,
             FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO,
             '',
             '',
             '',
@@ -1049,6 +1053,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'public.name',
             ' ',
             FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             '',
             '',
             '160px',
@@ -1067,6 +1072,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 ),
             ],
             FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             '',
             '',
             '',
@@ -1081,6 +1087,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'contact.contacts.main-contact',
             [],
             FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'radio',
             '',
             '',
@@ -1127,6 +1134,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'contact.contacts.address',
             $addressJoin,
             FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO,
             '',
             '',
             '',
@@ -1202,6 +1210,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'public.address',
             ', ',
             FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO,
             '',
             '',
             '300px'

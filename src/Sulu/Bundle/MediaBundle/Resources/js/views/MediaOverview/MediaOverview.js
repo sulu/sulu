@@ -39,6 +39,8 @@ class MediaOverview extends React.Component<ViewProps> {
         this.disposer = autorun(this.createCollectionStore);
         this.createCollectionDatagridStore();
         this.createMediaDatagridStore();
+
+        router.bind('search', this.mediaDatagridStore.search);
     }
 
     componentWillUnmount() {

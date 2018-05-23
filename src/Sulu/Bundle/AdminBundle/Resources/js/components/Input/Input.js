@@ -21,8 +21,9 @@ type Props = {|
     value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
-    onKeyPress?: (event: SyntheticEvent<HTMLInputElement>) => void,
+    onKeyPress?: (event: SyntheticKeyboardEvent<HTMLInputElement>) => void,
     onIconClick?: () => void,
+    onClearClick?: () => void,
     iconStyle?: Object,
     iconClassName?: string,
     skin: 'default' | 'dark',
@@ -77,6 +78,8 @@ export default class Input extends React.PureComponent<Props> {
             name,
             placeholder,
             onIconClick,
+            onClearClick,
+            onKeyPress,
             type,
             value,
             iconStyle,
@@ -84,7 +87,6 @@ export default class Input extends React.PureComponent<Props> {
             inputRef,
             labelRef,
             skin,
-            onKeyPress,
         } = this.props;
 
         const labelClass = classNames(
@@ -92,6 +94,8 @@ export default class Input extends React.PureComponent<Props> {
             inputStyles[skin],
             {
                 [inputStyles.error]: !valid,
+                [inputStyles.expanded]: expanded,
+                [inputStyles.hasAppendIcon]: onClearClick,
             }
         );
 
@@ -101,6 +105,7 @@ export default class Input extends React.PureComponent<Props> {
             iconClassName,
             {
                 [inputStyles.iconClickable]: (!!icon && !!onIconClick),
+                [inputStyles.expanded]: expanded,
             }
         );
 
@@ -124,6 +129,7 @@ export default class Input extends React.PureComponent<Props> {
                         />
                     </div>
                 }
+
                 {loading &&
                     <div className={prependContainerClass}>
                         <Loader size={LOADER_SIZE} />
@@ -141,6 +147,17 @@ export default class Input extends React.PureComponent<Props> {
                         onChange={this.handleChange}
                         onKeyPress={onKeyPress}
                     />
+                }
+
+                {expanded && value && onClearClick &&
+                    <div className={inputStyles.appendContainer}>
+                        <Icon
+                            onClick={onClearClick ? onClearClick : undefined}
+                            className={iconClass}
+                            name="su-times"
+                            style={iconStyle}
+                        />
+                    </div>
                 }
             </label>
         );

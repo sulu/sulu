@@ -1,10 +1,27 @@
 <class xmlns="http://schemas.sulu.io/class/general"
-    xmlns:orm="http://schema.sulu.io/class/doctrine"
-    xmlns:list="http://schema.sulu.io/class/list">
+       xmlns:list="http://schemas.sulu.io/class/list">
     <properties>
-        <property name="id" visibility="no" filter-type="string" list:translation="public.id"/>
-        <property name="name" visibility="yes" filter-type="string" list:translation="public.name"/>
-        <property name="system" visibility="yes" filter-type="string" list:translation="security.roles.system"/>
+        <property
+            name="id"
+            visibility="no"
+            searchability="yes"
+            filter-type="string"
+            list:translation="public.id"
+        />
+        <property
+            name="name"
+            visibility="yes"
+            searchability="yes"
+            filter-type="string"
+            list:translation="public.name"
+        />
+        <property
+            name="system"
+            visibility="yes"
+            searchability="yes"
+            filter-type="string"
+            list:translation="security.roles.system"
+        />
         <property name="created" visibility="no" filter-type="string" list:translation="public.created"/>
         <property name="changed" visibility="no" filter-type="string" list:translation="public.changed"/>
     </properties>

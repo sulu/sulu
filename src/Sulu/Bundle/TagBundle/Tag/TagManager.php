@@ -294,6 +294,7 @@ class TagManager implements TagManagerInterface
             'public.id',
             [],
             FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::SEARCHABILITY_NO,
             'integer',
             '50px'
         );
@@ -304,6 +305,7 @@ class TagManager implements TagManagerInterface
             'tags.name',
             [],
             FieldDescriptorInterface::VISIBILITY_YES,
+            FieldDescriptorInterface::SEARCHABILITY_YES,
             'string',
             '',
             '',
@@ -317,6 +319,7 @@ class TagManager implements TagManagerInterface
             'public.created',
             [],
             FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'date'
         );
         $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
@@ -326,6 +329,7 @@ class TagManager implements TagManagerInterface
             'public.changed',
             [],
             FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'date'
         );
         $this->fieldDescriptors['creator'] = new DoctrineFieldDescriptor(
@@ -344,6 +348,7 @@ class TagManager implements TagManagerInterface
                 ),
             ],
             FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'string'
         );
     }

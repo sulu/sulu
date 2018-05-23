@@ -20,6 +20,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -246,8 +247,8 @@ abstract class AbstractMediaController extends RestController
             $entityName,
             null,
             [],
-            true,
-            false
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO
         );
 
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
@@ -258,8 +259,8 @@ abstract class AbstractMediaController extends RestController
             [
                 $mediaEntityName => $entityJoin,
             ],
-            true,
-            false
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO
         );
 
         $this->fieldDescriptors['thumbnails'] = new DoctrineFieldDescriptor(
@@ -270,8 +271,8 @@ abstract class AbstractMediaController extends RestController
             [
                 $mediaEntityName => $entityJoin,
             ],
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_YES,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'thumbnails',
             '',
             '',
@@ -313,8 +314,8 @@ abstract class AbstractMediaController extends RestController
                     self::$fileVersionEntityName . '.version = ' . self::$fileEntityName . '.version'
                 ),
             ],
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'bytes'
         );
 
@@ -335,8 +336,8 @@ abstract class AbstractMediaController extends RestController
                     self::$fileVersionEntityName . '.version = ' . self::$fileEntityName . '.version'
                 ),
             ],
-            true,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'date'
         );
 
@@ -357,8 +358,8 @@ abstract class AbstractMediaController extends RestController
                     self::$fileVersionEntityName . '.version = ' . self::$fileEntityName . '.version'
                 ),
             ],
-            true,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'date'
         );
 
@@ -383,8 +384,8 @@ abstract class AbstractMediaController extends RestController
                     self::$fileVersionEntityName . '.meta'
                 ),
             ],
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_YES,
             'title'
         );
 
@@ -408,7 +409,9 @@ abstract class AbstractMediaController extends RestController
                     self::$fileVersionMetaEntityName,
                     self::$fileVersionEntityName . '.meta'
                 ),
-            ]
+            ],
+            FieldDescriptorInterface::VISIBILITY_YES,
+            FieldDescriptorInterface::SEARCHABILITY_YES
         );
     }
 

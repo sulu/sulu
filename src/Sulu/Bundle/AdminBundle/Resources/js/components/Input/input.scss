@@ -14,9 +14,12 @@ $backgroundColor: $white;
 
 $darkInputBorderRadius: 4px;
 $darkInputBorderColor: $doveGray;
+$darkInputColor: $black;
+$darkInputColorExpanded: $black;
 $darkBackgroundColor: $wildSand;
-$darkInputColor: $doveGray;
+$darkBackgroundColorExpanded: $white;
 $darkIconColor: $doveGray;
+$darkIconColorExpanded: $dustyGray;
 
 .input {
     border: $inputBorderWidth solid $inputBorderColor;
@@ -26,6 +29,7 @@ $darkIconColor: $doveGray;
     height: $inputHeight;
     width: 100%;
     background-color: $backgroundColor;
+    position: relative;
 
     input {
         width: 100%;
@@ -48,14 +52,20 @@ $darkIconColor: $doveGray;
         border-color: $inputErrorBorderColor;
     }
 
+    &.expanded {
+        &.has-append-icon {
+            padding-right: 34px;
+        }
+    }
+
     &.dark {
         background-color: $darkBackgroundColor;
         border-radius: $darkInputBorderRadius;
         border-color: $darkInputBorderColor;
 
-        input {
-            background-color: $darkBackgroundColor;
-            color: $darkInputColor;
+        &.expanded {
+            background-color: $darkBackgroundColorExpanded;
+            color: $darkInputColorExpanded;
         }
     }
 }
@@ -74,6 +84,12 @@ $darkIconColor: $doveGray;
     }
 }
 
+.append-container {
+    position: absolute;
+    height: calc($inputHeight - 2 * $iconBorderPadding);
+    right: 0;
+}
+
 .icon {
     display: block;
     font-size: 14px;
@@ -84,6 +100,10 @@ $darkIconColor: $doveGray;
 
     &.dark {
         color: $darkIconColor;
+
+        &.expanded {
+            color: $darkIconColorExpanded;
+        }
     }
 }
 

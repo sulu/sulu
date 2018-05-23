@@ -151,6 +151,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
                             onAddClick={this.handleAddClick}
                             onItemClick={this.handleEditClick}
                             selectable={false}
+                            searchable={false}
                             store={this.datagridStore}
                         />
                     </Fragment>

@@ -21,7 +21,7 @@ export default class DatagridStore {
     @observable options: Object;
     sortColumn: IObservableValue<string> = observable.box();
     sortOrder: IObservableValue<SortOrder> = observable.box();
-    searchValue: IObservableValue<?string> = observable.box();
+    search: IObservableValue<?string> = observable.box();
     resourceKey: string;
     schema: Schema = {};
     observableOptions: ObservableOptions;
@@ -93,13 +93,21 @@ export default class DatagridStore {
         this.structureStrategy = structureStrategy;
     };
 
-    @action reload() {
+    @action reset() {
         const page = this.getPage();
         this.structureStrategy.clear();
 
         if (page && page > 1) {
             this.setPage(1);
-        } else {
+        }
+    }
+
+    @action reload() {
+        const page = this.getPage();
+
+        this.reset();
+
+        if (!page || page === 1) {
             this.sendRequest();
         }
     }
@@ -134,8 +142,8 @@ export default class DatagridStore {
         options.sortBy = this.sortColumn.get();
         options.sortOrder = this.sortOrder.get();
 
-        if (this.searchValue.get()) {
-            options.search = this.searchValue.get();
+        if (this.search.get()) {
+            options.search = this.search.get();
         }
 
         this.loadingStrategy.load(
@@ -174,8 +182,13 @@ export default class DatagridStore {
         this.sortOrder.set(order);
     }
 
-    @action search(search: ?string) {
-        this.searchValue.set(search);
+    @action triggerSearch(search: ?string) {
+        if (search === this.search.get()) {
+            return;
+        }
+
+        this.reset();
+        this.search.set(search);
     }
 
     @action select(row: Object) {
