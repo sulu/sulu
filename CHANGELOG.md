@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* unreleased
+* 1.5.15 (2018-05-24)
     * HOTFIX      #3988 [ContentBundle]         Date content type: Reading: Check if value is instance of DateTime
     * HOTFIX      #3988 [BlockComponent]        Read: Ignore unknown types
     * BUGFIX      #3967 [All]                   Fixed loading of minified js files for production
