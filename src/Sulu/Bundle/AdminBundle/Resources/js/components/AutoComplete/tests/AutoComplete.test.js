@@ -119,6 +119,41 @@ test('Clicking on a suggestion should call the onChange handler with the value o
     expect(changeSpy).toHaveBeenCalledWith(testValue);
 });
 
+test('Should call onChange with undefined if all characters are removed from input', () => {
+    const changeSpy = jest.fn();
+    const autoComplete = shallow(
+        <AutoComplete
+            value="Test"
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            onSearch={jest.fn()}
+        >
+            <Suggestion
+                icon="fa-ticket"
+                value="suggestion-1"
+            >
+                Suggestion 1
+            </Suggestion>
+            <Suggestion
+                icon="fa-ticket"
+                value="suggestion-2"
+            >
+                Suggestion 2
+            </Suggestion>
+            <Suggestion
+                icon="fa-ticket"
+                value="suggestion-3"
+            >
+                Suggestion 3
+            </Suggestion>
+        </AutoComplete>
+    );
+
+    expect(autoComplete.find('Input').prop('value')).toEqual('Test');
+    autoComplete.find('Input').simulate('change', '');
+    expect(changeSpy).toBeCalledWith(undefined);
+});
+
 test('Should call the onFinish callback when the Input lost focus', () => {
     const finishSpy = jest.fn();
     const autoComplete = shallow(

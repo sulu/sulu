@@ -23,8 +23,8 @@ type Props = {
     /** Shows the loading indicator when true */
     loading?: boolean,
     /** Called when a suggestion is set */
-    onChange: (value: string | number) => void,
-    onFinish: () => void,
+    onChange: (value: ?string | number) => void,
+    onFinish?: () => void,
     /** Called with a debounce when text is entered inside the input */
     onSearch: (query: string) => void,
 };
@@ -101,6 +101,10 @@ export default class AutoComplete extends React.Component<Props> {
     };
 
     handleInputChange = (value: ?string) => {
+        if (!value) {
+            this.props.onChange(undefined);
+        }
+
         this.setInputValue(value);
         this.debouncedSearch(this.inputValue);
     };
