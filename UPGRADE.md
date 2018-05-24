@@ -1,5 +1,9 @@
 # Upgrade
 
+## 1.5.15
+
+Added method `hasType` to `Sulu\Component\Content\Compat\Block\BlockPropertyInterface`.
+
 ## 1.5.0-RC1
 
 ### Media formats uniqueness

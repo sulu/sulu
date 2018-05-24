@@ -33,15 +33,24 @@ interface BlockPropertyInterface extends PropertyInterface
     public function addType(BlockPropertyType $type);
 
     /**
-     * returns property with given name.
+     * Returns type with given name.
      *
      * @param string $name of property
      *
-     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @throws \InvalidArgumentException
      *
      * @return BlockPropertyType
      */
     public function getType($name);
+
+    /**
+     * Returns true if the type with given name is known.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasType($name);
 
     /**
      * returns properties for given index.

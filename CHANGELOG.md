@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * unreleased
+    * HOTFIX      #3988 [ContentBundle]         Date content type: Reading: Check if value is instance of DateTime
+    * HOTFIX      #3988 [BlockComponent]        Read: Ignore unknown types
     * BUGFIX      #3967 [All]                   Fixed loading of minified js files for production
     * HOTFIX      #3963 [ContentBundle]         Don't reload data when changing template in add form
     * HOTFIX      #3953 [RouteBundle]           Fix route options with dash
