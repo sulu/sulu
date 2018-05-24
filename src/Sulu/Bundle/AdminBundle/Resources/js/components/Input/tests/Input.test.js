@@ -70,3 +70,28 @@ test('Input should render with a loader', () => {
     const onChange = jest.fn();
     expect(render(<Input value={null} loading={true} onChange={onChange} onBlur={jest.fn()} />)).toMatchSnapshot();
 });
+
+test('Input should render collapsed', () => {
+    expect(render(<Input value={null} onChange={jest.fn()} collapsed={true} />)).toMatchSnapshot();
+});
+
+test('Input should render append container when onClearClick callback is provided', () => {
+    expect(render(<Input value={null} onChange={jest.fn()} onClearClick={jest.fn()} />)).toMatchSnapshot();
+});
+
+test('Input should render append container with icon when onClearClick callback is provided and value is set', () => {
+    expect(render(<Input value="test" onChange={jest.fn()} onClearClick={jest.fn()} />)).toMatchSnapshot();
+});
+
+test('Input should should call the callback when clear icon was clicked', () => {
+    const onClearClick = jest.fn();
+    const input = mount(<Input value="My value" onChange={jest.fn()} onClearClick={onClearClick} />);
+    input.find('Icon').simulate('click');
+    expect(onClearClick).toHaveBeenCalled();
+});
+
+test('Input should render with dark skin', () => {
+    expect(
+        render(<Input icon="su-pen" value={null} onChange={jest.fn()} onClearClick={jest.fn()} skin="dark" />)
+    ).toMatchSnapshot();
+});

@@ -9,7 +9,7 @@ import inputStyles from './input.scss';
 const LOADER_SIZE = 20;
 
 type Props = {|
-    expanded: boolean,
+    collapsed: boolean,
     name?: string,
     icon?: string,
     type: string,
@@ -31,7 +31,7 @@ type Props = {|
 
 export default class Input extends React.PureComponent<Props> {
     static defaultProps = {
-        expanded: true,
+        collapsed: false,
         type: 'text',
         skin: 'default',
         valid: true,
@@ -74,7 +74,7 @@ export default class Input extends React.PureComponent<Props> {
             valid,
             icon,
             loading,
-            expanded,
+            collapsed,
             name,
             placeholder,
             onIconClick,
@@ -94,7 +94,7 @@ export default class Input extends React.PureComponent<Props> {
             inputStyles[skin],
             {
                 [inputStyles.error]: !valid,
-                [inputStyles.expanded]: expanded,
+                [inputStyles.collapsed]: collapsed,
                 [inputStyles.hasAppendIcon]: onClearClick,
             }
         );
@@ -105,7 +105,7 @@ export default class Input extends React.PureComponent<Props> {
             iconClassName,
             {
                 [inputStyles.iconClickable]: (!!icon && !!onIconClick),
-                [inputStyles.expanded]: expanded,
+                [inputStyles.collapsed]: collapsed,
             }
         );
 
@@ -136,7 +136,7 @@ export default class Input extends React.PureComponent<Props> {
                     </div>
                 }
 
-                {expanded &&
+                {!collapsed &&
                     <input
                         ref={inputRef ? this.setInputRef : undefined}
                         name={name}
@@ -149,7 +149,7 @@ export default class Input extends React.PureComponent<Props> {
                     />
                 }
 
-                {expanded && value && onClearClick &&
+                {!collapsed && value && onClearClick &&
                     <div className={inputStyles.appendContainer}>
                         <Icon
                             onClick={onClearClick ? onClearClick : undefined}

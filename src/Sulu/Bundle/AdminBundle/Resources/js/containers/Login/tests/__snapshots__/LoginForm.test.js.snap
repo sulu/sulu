@@ -20,14 +20,14 @@ Array [
           sulu_admin.username_or_email
         </div>
         <label
-          class="input"
+          class="input default"
         >
           <div
-            class="prependedContainer"
+            class="prependedContainer default"
           >
             <span
               aria-label="su-user"
-              class="icon su-user"
+              class="icon default su-user"
             />
           </div>
           <input
@@ -45,14 +45,14 @@ Array [
           sulu_admin.password
         </div>
         <label
-          class="input"
+          class="input default"
         >
           <div
-            class="prependedContainer"
+            class="prependedContainer default"
           >
             <span
               aria-label="su-lock"
-              class="icon su-lock"
+              class="icon default su-lock"
             />
           </div>
           <input
@@ -111,14 +111,14 @@ Array [
           sulu_admin.username_or_email
         </div>
         <label
-          class="input error"
+          class="input default error"
         >
           <div
-            class="prependedContainer"
+            class="prependedContainer default"
           >
             <span
               aria-label="su-user"
-              class="icon su-user"
+              class="icon default su-user"
             />
           </div>
           <input
@@ -136,14 +136,14 @@ Array [
           sulu_admin.password
         </div>
         <label
-          class="input error"
+          class="input default error"
         >
           <div
-            class="prependedContainer"
+            class="prependedContainer default"
           >
             <span
               aria-label="su-lock"
-              class="icon su-lock"
+              class="icon default su-lock"
             />
           </div>
           <input
@@ -202,14 +202,14 @@ Array [
           sulu_admin.username_or_email
         </div>
         <label
-          class="input"
+          class="input default"
         >
           <div
-            class="prependedContainer"
+            class="prependedContainer default"
           >
             <span
               aria-label="su-user"
-              class="icon su-user"
+              class="icon default su-user"
             />
           </div>
           <input
@@ -227,14 +227,14 @@ Array [
           sulu_admin.password
         </div>
         <label
-          class="input"
+          class="input default"
         >
           <div
-            class="prependedContainer"
+            class="prependedContainer default"
           >
             <span
               aria-label="su-lock"
-              class="icon su-lock"
+              class="icon default su-lock"
             />
           </div>
           <input
@@ -292,14 +292,14 @@ Array [
           sulu_admin.username_or_email
         </div>
         <label
-          class="input error"
+          class="input default error"
         >
           <div
-            class="prependedContainer"
+            class="prependedContainer default"
           >
             <span
               aria-label="su-user"
-              class="icon su-user"
+              class="icon default su-user"
             />
           </div>
           <input
@@ -317,14 +317,14 @@ Array [
           sulu_admin.password
         </div>
         <label
-          class="input error"
+          class="input default error"
         >
           <div
-            class="prependedContainer"
+            class="prependedContainer default"
           >
             <span
               aria-label="su-lock"
-              class="icon su-lock"
+              class="icon default su-lock"
             />
           </div>
           <input

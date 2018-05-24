@@ -2,14 +2,14 @@
 
 exports[`Email should render 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-envelope"
-      class="icon su-envelope"
+      class="icon default su-envelope"
     />
   </div>
   <input
@@ -21,14 +21,14 @@ exports[`Email should render 1`] = `
 
 exports[`Email should render error 1`] = `
 <label
-  class="input error"
+  class="input default error"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-envelope"
-      class="icon su-envelope"
+      class="icon default su-envelope"
     />
   </div>
   <input
@@ -40,14 +40,14 @@ exports[`Email should render error 1`] = `
 
 exports[`Email should render error when invalid value is set 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-envelope"
-      class="icon su-envelope"
+      class="icon default su-envelope"
     />
   </div>
   <input
@@ -59,14 +59,14 @@ exports[`Email should render error when invalid value is set 1`] = `
 
 exports[`Email should render error when invalid value is set 2`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-envelope"
-      class="icon su-envelope"
+      class="icon default su-envelope"
     />
   </div>
   <input
@@ -78,14 +78,14 @@ exports[`Email should render error when invalid value is set 2`] = `
 
 exports[`Email should render null value as empty string 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-envelope"
-      class="icon su-envelope"
+      class="icon default su-envelope"
     />
   </div>
   <input
@@ -97,14 +97,14 @@ exports[`Email should render null value as empty string 1`] = `
 
 exports[`Email should render with placeholder 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-envelope"
-      class="icon su-envelope"
+      class="icon default su-envelope"
     />
   </div>
   <input
@@ -117,14 +117,14 @@ exports[`Email should render with placeholder 1`] = `
 
 exports[`Email should render with value 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-envelope"
-      class="icon iconClickable su-envelope clickable"
+      class="icon default iconClickable su-envelope clickable"
       role="button"
       tabindex="0"
     />

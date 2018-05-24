@@ -2,14 +2,14 @@
 
 exports[`Phone should render 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-phone"
-      class="icon su-phone"
+      class="icon default su-phone"
     />
   </div>
   <input
@@ -21,14 +21,14 @@ exports[`Phone should render 1`] = `
 
 exports[`Phone should render error 1`] = `
 <label
-  class="input error"
+  class="input default error"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-phone"
-      class="icon su-phone"
+      class="icon default su-phone"
     />
   </div>
   <input
@@ -40,14 +40,14 @@ exports[`Phone should render error 1`] = `
 
 exports[`Phone should render null value as empty string 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-phone"
-      class="icon su-phone"
+      class="icon default su-phone"
     />
   </div>
   <input
@@ -59,14 +59,14 @@ exports[`Phone should render null value as empty string 1`] = `
 
 exports[`Phone should render with placeholder 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-phone"
-      class="icon su-phone"
+      class="icon default su-phone"
     />
   </div>
   <input
@@ -79,14 +79,14 @@ exports[`Phone should render with placeholder 1`] = `
 
 exports[`Phone should render with value 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <span
       aria-label="su-phone"
-      class="icon iconClickable su-phone clickable"
+      class="icon default iconClickable su-phone clickable"
       role="button"
       tabindex="0"
     />

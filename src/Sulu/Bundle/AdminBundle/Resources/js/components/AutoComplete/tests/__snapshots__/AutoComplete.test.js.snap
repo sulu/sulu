@@ -5,14 +5,14 @@ exports[`AutoComplete should render 1`] = `
   class="autoComplete"
 >
   <label
-    class="input"
+    class="input default"
   >
     <div
-      class="prependedContainer"
+      class="prependedContainer default"
     >
       <span
         aria-label="su-search"
-        class="icon su-search"
+        class="icon default su-search"
       />
     </div>
     <input
@@ -28,14 +28,14 @@ exports[`Render the AutoComplete with open suggestions list 1`] = `
   class="autoComplete"
 >
   <label
-    class="input"
+    class="input default"
   >
     <div
-      class="prependedContainer"
+      class="prependedContainer default"
     >
       <span
         aria-label="su-search"
-        class="icon su-search"
+        class="icon default su-search"
       />
     </div>
     <input

@@ -9,7 +9,22 @@ exports[`Should render the datagrid with a title 1`] = `
   </h1>
   <div
     class="toolbar"
-  />
+  >
+    <label
+      class="input dark collapsed hasAppendIcon"
+    >
+      <div
+        class="prependedContainer dark"
+      >
+        <span
+          aria-label="su-search"
+          class="icon dark iconClickable collapsed su-search clickable"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </label>
+  </div>
   <div
     class="datagrid"
   >
@@ -162,7 +177,22 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
 >
   <div
     class="toolbar"
-  />
+  >
+    <label
+      class="input dark collapsed hasAppendIcon"
+    >
+      <div
+        class="prependedContainer dark"
+      >
+        <span
+          aria-label="su-search"
+          class="icon dark iconClickable collapsed su-search clickable"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </label>
+  </div>
   <div
     class="datagrid"
   >
@@ -315,7 +345,22 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
 >
   <div
     class="toolbar"
-  />
+  >
+    <label
+      class="input dark collapsed hasAppendIcon"
+    >
+      <div
+        class="prependedContainer dark"
+      >
+        <span
+          aria-label="su-search"
+          class="icon dark iconClickable collapsed su-search clickable"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </label>
+  </div>
   <div
     class="datagrid"
   >

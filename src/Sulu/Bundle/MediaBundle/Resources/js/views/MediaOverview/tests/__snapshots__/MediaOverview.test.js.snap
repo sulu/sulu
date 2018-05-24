@@ -165,6 +165,20 @@ exports[`Render a simple MediaOverview 1`] = `
       <div
         class="toolbar"
       >
+        <label
+          class="input dark collapsed hasAppendIcon"
+        >
+          <div
+            class="prependedContainer dark"
+          >
+            <span
+              aria-label="su-search"
+              class="icon dark iconClickable collapsed su-search clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+        </label>
         <div>
           <button
             class="button icon active button"

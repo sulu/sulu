@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should expand the input when clicking on icon 1`] = `
+<label
+  class="input dark hasAppendIcon"
+>
+  <div
+    class="prependedContainer dark"
+  >
+    <span
+      aria-label="su-search"
+      class="icon dark iconClickable su-search clickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+  <input
+    placeholder="sulu_admin.datagrid_search_placeholder"
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`The component should render collapsed 1`] = `
+<label
+  class="input dark collapsed hasAppendIcon"
+>
+  <div
+    class="prependedContainer dark"
+  >
+    <span
+      aria-label="su-search"
+      class="icon dark iconClickable collapsed su-search clickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+</label>
+`;

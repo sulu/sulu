@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, computed, observable} from 'mobx';
+import {action, observable} from 'mobx';
 import Input from '../../components/Input/Input';
 import {translate} from '../../utils/Translator';
 
@@ -11,23 +11,15 @@ type Props = {
 
 @observer
 export default class Search extends React.Component<Props> {
-    @observable expanded: boolean = false;
+    @observable collapsed: boolean = true;
     @observable value: ?string = undefined;
 
-    @action setExpanded(expanded: boolean) {
-        this.expanded = expanded;
+    @action setCollapsed(collapsed: boolean) {
+        this.collapsed = collapsed;
     }
 
     @action setValue(value: ?string) {
         this.value = value;
-    }
-
-    @computed get isExpanded(): boolean {
-        if (this.value && this.value.length > 0) {
-            return true;
-        }
-
-        return this.expanded;
     }
 
     handleChange = (value: ?string) => {
@@ -41,36 +33,37 @@ export default class Search extends React.Component<Props> {
     };
 
     handleSearch = () => {
+        if (!this.collapsed && !this.value) {
+            this.setCollapsed(true);
+        }
+
         this.props.onSearch(this.value);
     };
 
     handleBlur = () => {
-        if (this.expanded && !this.value) {
-            this.setExpanded(false);
+        this.handleSearch();
+    };
+
+    handleIconClick = () => {
+        if (this.collapsed) {
+            this.setCollapsed(false);
+
+            return;
         }
 
         this.handleSearch();
     };
 
-    handleIconClick = () => {
-        if (this.expanded) {
-            this.handleSearch();
-
-            return;
-        }
-
-        this.setExpanded(!this.expanded);
-    };
-
     handleClearClick = () => {
         this.setValue(undefined);
+        this.handleSearch();
     };
 
     render() {
         return (
             <Input
                 icon="su-search"
-                expanded={this.expanded}
+                collapsed={this.collapsed}
                 onBlur={this.handleBlur}
                 onChange={this.handleChange}
                 onIconClick={this.handleIconClick}

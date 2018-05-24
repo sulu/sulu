@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render the adapter in non-searchable mode 1`] = `
+Array [
+  <div
+    class="toolbar"
+  />,
+  <div
+    class="datagrid"
+  >
+    <div>
+      Test Adapter
+    </div>
+  </div>,
+]
+`;
