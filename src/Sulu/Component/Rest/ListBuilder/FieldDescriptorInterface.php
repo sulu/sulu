@@ -114,5 +114,5 @@ interface FieldDescriptorInterface
      *
      * @return bool
      */
-    public function compare(FieldDescriptorInterface $other);
+    public function compare(self $other);
 }

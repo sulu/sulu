@@ -17,7 +17,6 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 
 /**
  * Defines some common REST functionalities.
@@ -86,8 +85,8 @@ class RestHelper implements RestHelperInterface
     private function getDefaultSearchFields(array $fieldDescriptors): array
     {
         $defaultSearchFields = [];
-        foreach ($fieldDescriptors as $fieldDescriptor){
-            if ($fieldDescriptor->getSearchability() === FieldDescriptorInterface::SEARCHABILITY_YES) {
+        foreach ($fieldDescriptors as $fieldDescriptor) {
+            if (FieldDescriptorInterface::SEARCHABILITY_YES === $fieldDescriptor->getSearchability()) {
                 $defaultSearchFields[] = $fieldDescriptor->getName();
             }
         }
