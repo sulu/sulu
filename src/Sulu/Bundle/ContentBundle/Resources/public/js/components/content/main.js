@@ -197,17 +197,14 @@ define([
 
             // getter for content data
             this.sandbox.on('sulu.content.contents.get-data', function(callback, reloadData, template) {
-                if (reloadData === true && template) {
+                if (this.options.id && reloadData === true && template) {
                     this.loadData(template).then(function() {
-                        // deep copy of object
                         callback(this.sandbox.util.deepCopy(this.data), this.preview);
-
                     }.bind(this));
 
                     return;
                 }
 
-                // deep copy of object
                 callback(this.sandbox.util.deepCopy(this.data), this.preview);
             }.bind(this));
 
@@ -1148,7 +1145,7 @@ define([
 
                     this.sandbox.emit('husky.label.header.loading');
 
-                    ContentManager.removeDraft(this.data.id, this.options.language)
+                    ContentManager.removeDraft(this.data.id, this.options.language, this.options.webspace)
                         .then(function(response) {
                             this.sandbox.emit(
                                 'sulu.router.navigate',

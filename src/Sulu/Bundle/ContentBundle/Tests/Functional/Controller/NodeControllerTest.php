@@ -1616,7 +1616,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/nodes/' . $document->getUuid() . '?action=remove-draft&language=de'
+            '/api/nodes/' . $document->getUuid() . '?action=remove-draft&webspace=sulu_io&language=de'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -1630,6 +1630,35 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('published title', $defaultNode->getPropertyValue('i18n:de-title'));
         $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
         $this->assertEquals('published title', $liveNode->getPropertyValue('i18n:de-title'));
+    }
+
+    public function testRemoveDraftWithoutWebspace()
+    {
+        $document = $this->createPageDocument();
+        $document->setTitle('published title');
+        $document->setStructureType('default');
+        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'de');
+        $this->documentManager->flush();
+
+        $document = $this->documentManager->find($document->getUuid(), 'de');
+        $document->setTitle('draft title');
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
+
+        $defaultNode = $this->session->getNodeByIdentifier($document->getUuid());
+        $this->assertEquals('draft title', $defaultNode->getPropertyValue('i18n:de-title'));
+        $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
+        $this->assertEquals('published title', $liveNode->getPropertyValue('i18n:de-title'));
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $document->getUuid() . '?action=remove-draft&language=de'
+        );
+
+        $this->assertHttpStatusCode(400, $client->getResponse());
     }
 
     public function testOrder()

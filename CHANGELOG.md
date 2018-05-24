@@ -1,11 +1,17 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.19 (2018-05-24)
+    * HOTFIX      #3980 [PreviewBundle]           Fix kernel.project_dir parameter for PreviewKernel
+    * BUGFIX      #3967 [AudienceTargetingBundle] Fixed loading of minified js files for production
+    * HOTFIX      #3950 [ContactBundle]           Fixed empty latitude and longitude
+    * HOTFIX      #3949 [ContentBundle]           Fixed security check for deleting draft
+
 * 1.6.18 (2018-05-03)
     * ENHANCEMENT #3930 [PreviewBundle]           Fixed preview style-link
-    * HOTFIX      #3946 [ContentBundle]         Single internal link: Clear selection when target doesn't exists
-    * HOTFIX      #3941 [WebsiteBundle]         Fix hideInSitemap flag for sitemap twig extension
-    * BUGFIX      #3926 [WebsiteBundle]         Fix profiler for none sulu routes
+    * HOTFIX      #3946 [ContentBundle]           Single internal link: Clear selection when target doesn't exists
+    * HOTFIX      #3941 [WebsiteBundle]           Fix hideInSitemap flag for sitemap twig extension
+    * BUGFIX      #3926 [WebsiteBundle]           Fix profiler for none sulu routes
 
 * 1.6.17 (2018-04-23)
     * FEATURE     #3906 [MediaBundle]             Add file version delete to media overlay
@@ -220,6 +226,13 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.15 (2018-05-24)
+    * HOTFIX      #3988 [ContentBundle]         Date content type: Reading: Check if value is instance of DateTime
+    * HOTFIX      #3988 [BlockComponent]        Read: Ignore unknown types
+    * BUGFIX      #3967 [All]                   Fixed loading of minified js files for production
+    * HOTFIX      #3963 [ContentBundle]         Don't reload data when changing template in add form
+    * HOTFIX      #3953 [RouteBundle]           Fix route options with dash
 
 * 1.5.14 (2018-05-03)
     * HOTFIX      #3946 [ContentBundle]         Single internal link: Clear selection when target doesn't exists

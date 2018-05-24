@@ -717,6 +717,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $data = $this->getDocumentManager()->find($uuid, $language);
                     break;
                 case 'remove-draft':
+                    $webspace = $this->getWebspace($request);
                     $data = $this->getDocumentManager()->find($uuid, $language);
                     $this->getDocumentManager()->removeDraft($data, $language);
                     $this->getDocumentManager()->flush();

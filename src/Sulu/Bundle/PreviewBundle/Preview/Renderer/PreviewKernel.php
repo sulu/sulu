@@ -21,6 +21,11 @@ class PreviewKernel extends \WebsiteKernel
     const CONTEXT_PREVIEW = 'preview';
 
     /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
      * {@inheritdoc}
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -47,6 +52,26 @@ class PreviewKernel extends \WebsiteKernel
         }
 
         return $this->rootDir;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getProjectDir()
+    {
+        if (null === $this->projectDir) {
+            $reflectionClass = new \ReflectionClass(\WebsiteKernel::class);
+            $dir = $rootDir = dirname($reflectionClass->getFileName());
+            while (!file_exists($dir . '/composer.json')) {
+                if ($dir === dirname($dir)) {
+                    return $this->projectDir = $rootDir;
+                }
+                $dir = dirname($dir);
+            }
+            $this->projectDir = $dir;
+        }
+
+        return $this->projectDir;
     }
 
     /**

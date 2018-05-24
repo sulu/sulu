@@ -1,0 +1,38 @@
+<% if (!!sections && sections.length) { %>
+
+    <% _.each(sections, function(section) { %>
+    <div class="search-results-section is-<%= section.index %>">
+        <div class="search-results-section-header">
+            <%= translate(indexes[section.index].name) %> (<%= totals[section.index] %>)
+        </div>
+        <ul class="search-results-section-content">
+            <% _.each(section.results, function(result) { %>
+            <li <% if (result.deepUrl) { %>data-url="<%= result.deepUrl %>"<% } %>>
+                <div class="search-results-thumb">
+                    <% if (section.options.image && result.imageUrl) { %>
+                    <img class="search-results-thumb-image" src="<%= result.imageUrl %>" />
+                    <% } else { %>
+                    <div class="<%= indexIconMapping[section.index] || defaultIcon %>"></div>
+                    <% } %>
+                </div>
+                <div class="search-results-description">
+                    <div class="search-results-title">
+                        <%= result.title %><% if (!!result.locale) { %>
+                        <span class="info">(<%= result.locale %>)</span>
+                        <% } %>
+                    </div>
+                    <div class="search-results-details">
+                        <div><%= result.description %></div>
+                    </div>
+                </div>
+            </li>
+            <% }) %>
+        </ul>
+    </div>
+    <% }) %>
+
+<% } else if (!!sections && !sections.length) { %>
+    <div class="search-results-no-results">
+        <%= translate('search-overlay.no-results-text') %>
+    </div>
+<% } %>

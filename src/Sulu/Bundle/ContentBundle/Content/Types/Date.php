@@ -60,7 +60,10 @@ class Date extends SimpleContentType
         if ($node->hasProperty($property->getName())) {
             /** @var \DateTime $propertyValue */
             $propertyValue = $node->getPropertyValue($property->getName());
-            $value = $propertyValue->format('Y-m-d');
+
+            if ($propertyValue instanceof \DateTime) {
+                $value = $propertyValue->format('Y-m-d');
+            }
         }
 
         $property->setValue($value);
