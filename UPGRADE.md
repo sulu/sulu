@@ -28,9 +28,9 @@ Use the following table for upgrading:
 | Disabled | Default  | Visiblity
 |----------|----------|--------------
 | false    | true     | FieldDescriptorInterface::VISIBILITY_ALWAYS (always)
-| false    | false    | FieldDescriptorInterface::VISIBILITY_NEVER (never)
-| true     | true     | FieldDescriptorInterface::VISIBILITY_YES (yes)
+| false    | false    | FieldDescriptorInterface::VISIBILITY_YES (yes)
 | true     | false    | FieldDescriptorInterface::VISIBILITY_NO (no)
+| true     | true     | FieldDescriptorInterface::VISIBILITY_NEVER (never)
 
 We have also introduced a new parameter `$searchability` on the fourth position.
 

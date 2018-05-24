@@ -22,7 +22,6 @@ use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\Exception\UniqueConstraintViolationException as SuluUniqueConstraintViolationException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -56,11 +55,8 @@ class RoleController extends RestController implements ClassResourceInterface, S
 
     /**
      * @var array - Holds the field descriptors for the list response
-     * TODO: Create a Manager and move the field descriptors to the manager
      */
     protected $fieldDescriptors = [];
-
-    // TODO: move field descriptors to a manager
 
     protected function getFieldDescriptors()
     {
@@ -73,53 +69,9 @@ class RoleController extends RestController implements ClassResourceInterface, S
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = [];
-        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
-            'name',
-            'name',
-            $this->container->getParameter('sulu.model.role.class'),
-            'public.name',
-            [],
-            false,
-            false,
-            'string'
-        );
-        $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor(
-            'system',
-            'system',
-            $this->container->getParameter('sulu.model.role.class'),
-            'security.roles.system',
-            [],
-            false,
-            false,
-            'string'
-        );
-        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
-            'created',
-            'created',
-            $this->container->getParameter('sulu.model.role.class'),
-            'public.created',
-            [],
-            false, false, 'date'
-        );
-        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
-            'changed',
-            'changed',
-            $this->container->getParameter('sulu.model.role.class'),
-            'public.changed',
-            [],
-            true, false, 'date'
-        );
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
-            'id',
-            'id',
-            $this->container->getParameter('sulu.model.role.class'),
-            'public.id',
-            [],
-            true,
-            false,
-            'integer'
-        );
+        $this->fieldDescriptors = $this->get(
+            'sulu_core.list_builder.field_descriptor_factory'
+        )->getFieldDescriptorForClass($this->getParameter('sulu.model.role.class'));
     }
 
     /**

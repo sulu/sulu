@@ -1,17 +1,102 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-    xmlns:orm="http://schema.sulu.io/class/doctrine"
-    xmlns:list="http://schema.sulu.io/class/list">
+<class
+    xmlns="http://schemas.sulu.io/class/general"
+    xmlns:list="http://schemas.sulu.io/class/list"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+>
+    <orm:joins name="changer">
+        <orm:join>
+            <orm:entity-name>%sulu.model.user.class%</orm:entity-name>
+            <orm:field-name>%sulu.model.tag.class%.changer</orm:field-name>
+        </orm:join>
+        <orm:join>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+            <orm:field-name>%sulu.model.user.class%.contact</orm:field-name>
+        </orm:join>
+    </orm:joins>
+
+    <orm:joins name="creator">
+        <orm:join>
+            <orm:entity-name>%sulu.model.user.class%</orm:entity-name>
+            <orm:field-name>%sulu.model.tag.class%.creator</orm:field-name>
+        </orm:join>
+        <orm:join>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+            <orm:field-name>%sulu.model.user.class%.contact</orm:field-name>
+        </orm:join>
+    </orm:joins>
+
     <properties>
-        <property name="id" visibility="no" filter-type="string" list:translation="public.id"/>
+        <property
+            name="id"
+            visibility="no"
+            searchability="yes"
+            list:translation="public.id"
+        >
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.tag.class%</orm:entity-name>
+        </property>
+
+        <!-- TODO: Check if list:editable is needed in 2.0 -->
         <property
             name="name"
-            visibility="yes"
+            visibility="always"
             searchability="yes"
             filter-type="string"
+            list:editable="true"
             list:translation="tags.name"
-        />
-        <property name="created" visibility="no" filter-type="string" list:translation="public.created"/>
-        <property name="changed" visibility="no" filter-type="string" list:translation="public.changed"/>
-        <property name="creator" visibility="no" filter-type="string" list:translation="tags.author"/>
+        >
+            <orm:field-name>name</orm:field-name>
+            <orm:entity-name>%sulu.model.tag.class%</orm:entity-name>
+        </property>
+
+        <concatenation-property name="changer" list:translation="public.changer" visibility="no">
+            <orm:field>
+                <orm:field-name>firstName</orm:field-name>
+                <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+
+                <orm:joins ref="changer"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>lastName</orm:field-name>
+                <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+
+                <orm:joins ref="changer"/>
+            </orm:field>
+        </concatenation-property>
+
+        <property
+            name="changed"
+            visibility="no"
+            list:type="datetime"
+            list:translation="public.changed"
+        >
+            <orm:field-name>changed</orm:field-name>
+            <orm:entity-name>%sulu.model.tag.class%</orm:entity-name>
+        </property>
+
+        <concatenation-property name="creator" list:translation="public.creator" visibility="no">
+            <orm:field>
+                <orm:field-name>firstName</orm:field-name>
+                <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+
+                <orm:joins ref="creator"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>lastName</orm:field-name>
+                <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+
+                <orm:joins ref="creator"/>
+            </orm:field>
+        </concatenation-property>
+
+        <property
+            name="created"
+            visibility="yes"
+            list:translation="public.created"
+            list:type="datetime"
+        >
+            <orm:field-name>created</orm:field-name>
+            <orm:entity-name>%sulu.model.tag.class%</orm:entity-name>
+        </property>
     </properties>
 </class>

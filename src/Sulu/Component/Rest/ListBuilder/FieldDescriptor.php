@@ -110,8 +110,8 @@ class FieldDescriptor implements FieldDescriptorInterface
     public function __construct(
         string $name,
         string $translation = null,
-        string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
-        string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
+        string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
+        string $searchability = FieldDescriptorInterface::SEARCHABILITY_YES,
         string $type = '',
         string $width = '',
         string $minWidth = '',
@@ -148,7 +148,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     {
         return in_array(
             $this->visibility,
-            [FieldDescriptorInterface::VISIBILITY_YES, FieldDescriptorInterface::VISIBILITY_NO]
+            [FieldDescriptorInterface::VISIBILITY_NO, FieldDescriptorInterface::VISIBILITY_NEVER]
         );
     }
 
@@ -201,7 +201,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     {
         return in_array(
             $this->visibility,
-            [FieldDescriptorInterface::VISIBILITY_ALWAYS, FieldDescriptorInterface::VISIBILITY_YES]
+            [FieldDescriptorInterface::VISIBILITY_ALWAYS, FieldDescriptorInterface::VISIBILITY_NEVER]
         );
     }
 

@@ -25,8 +25,10 @@
         <service id="sulu_tag.tag_manager" class="%sulu_tag.tag_manager.class%">
             <argument type="service" id="sulu.repository.tag"/>
             <argument type="service" id="sulu.repository.user"/>
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument>%sulu.model.tag.class%</argument>
         </service>
         <service id="sulu_tag.content.type.tag_list" class="%sulu_tag.content.type.tag_list.class%">
             <tag name="sulu.content.type" alias="tag_list"/>

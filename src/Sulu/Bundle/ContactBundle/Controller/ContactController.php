@@ -126,7 +126,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'fullName',
             'public.name',
             ' ',
-            FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             'string',
             '',
@@ -148,7 +148,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     self::$accountContactEntityName . '.position'
                 ),
             ],
-            FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             'string',
             '',
@@ -168,7 +168,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
                 ),
             ],
-            FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             'radio',
             '',

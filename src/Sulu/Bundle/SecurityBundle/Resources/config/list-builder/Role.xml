@@ -1,28 +1,56 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:list="http://schemas.sulu.io/class/list">
+<class
+    xmlns="http://schemas.sulu.io/class/general"
+    xmlns:list="http://schemas.sulu.io/class/list"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+>
     <properties>
         <property
             name="id"
             visibility="no"
             searchability="yes"
-            filter-type="string"
             list:translation="public.id"
-        />
+        >
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.role.class%</orm:entity-name>
+        </property>
+
         <property
             name="name"
             visibility="yes"
             searchability="yes"
-            filter-type="string"
             list:translation="public.name"
-        />
+        >
+            <orm:field-name>name</orm:field-name>
+            <orm:entity-name>%sulu.model.role.class%</orm:entity-name>
+        </property>
+
         <property
             name="system"
             visibility="yes"
             searchability="yes"
-            filter-type="string"
             list:translation="security.roles.system"
-        />
-        <property name="created" visibility="no" filter-type="string" list:translation="public.created"/>
-        <property name="changed" visibility="no" filter-type="string" list:translation="public.changed"/>
+        >
+            <orm:field-name>system</orm:field-name>
+            <orm:entity-name>%sulu.model.role.class%</orm:entity-name>
+        </property>
+
+        <property
+            name="created"
+            visibility="yes"
+            list:translation="public.created"
+        >
+            <orm:field-name>created</orm:field-name>
+            <orm:entity-name>%sulu.model.role.class%</orm:entity-name>
+        </property>
+
+        <property
+            name="changed"
+            visibility="no"
+            list:type="datetime"
+            list:translation="public.changed"
+        >
+            <orm:field-name>changed</orm:field-name>
+            <orm:entity-name>%sulu.model.role.class%</orm:entity-name>
+        </property>
     </properties>
 </class>

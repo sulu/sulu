@@ -969,7 +969,7 @@ class AccountController extends RestController implements ClassResourceInterface
             self::$accountContactEntityName,
             'contact.contacts.main-contact',
             [],
-            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             '',
             '',
@@ -983,7 +983,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.main-contact',
             [],
-            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             '',
             '',
@@ -1010,7 +1010,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.firstname',
             $contactJoin,
-            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             '',
             '',
@@ -1024,7 +1024,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->container->getParameter('sulu.model.contact.class'),
             'contact.contacts.lastName',
             $contactJoin,
-            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             '',
             '',
@@ -1052,7 +1052,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'fullName',
             'public.name',
             ' ',
-            FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             '',
             '',
@@ -1071,7 +1071,7 @@ class AccountController extends RestController implements ClassResourceInterface
                     self::$accountContactEntityName . '.position'
                 ),
             ],
-            FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             '',
             '',
@@ -1086,7 +1086,7 @@ class AccountController extends RestController implements ClassResourceInterface
             self::$accountContactEntityName,
             'contact.contacts.main-contact',
             [],
-            FieldDescriptorInterface::VISIBILITY_NEVER,
+            FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'radio',
             '',
@@ -1133,7 +1133,7 @@ class AccountController extends RestController implements ClassResourceInterface
             self::$addressEntityName,
             'contact.contacts.address',
             $addressJoin,
-            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             '',
             '',
@@ -1209,7 +1209,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'address',
             'public.address',
             ', ',
-            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             '',
             '',
@@ -1224,7 +1224,7 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         $this->fieldDescriptors = $this->get(
             'sulu_core.list_builder.field_descriptor_factory'
-        )->getFieldDescriptorForClass(Account::class);
+        )->getFieldDescriptorForClass($this->getAccountEntityName());
     }
 
     /**
