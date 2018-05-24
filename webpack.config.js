@@ -24,13 +24,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const basePath = 'admin/build';
 
-module.exports = { // eslint-disable-line no-undef
+module.exports = (env, argv) => ({ // eslint-disable-line no-undef
     entry: entries,
     output: {
         path: path.resolve('web'),
         filename: basePath + '/[name].[chunkhash].js',
     },
-    devtool: 'source-map',
+    devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
     plugins: [
         new webpack.DefinePlugin({
             BUNDLE_ENTRIES_COUNT: entriesCount,
@@ -97,4 +97,4 @@ module.exports = { // eslint-disable-line no-undef
             },
         ],
     },
-};
+});
