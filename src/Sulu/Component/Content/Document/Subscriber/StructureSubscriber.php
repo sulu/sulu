@@ -180,6 +180,7 @@ class StructureSubscriber implements EventSubscriberInterface
 
         $rehydrate = $event->getOption('rehydrate');
         $structureType = $this->getStructureType($event, $document, $rehydrate);
+
         $document->setStructureType($structureType);
 
         if (false === $event->getOption('load_ghost_content', false)) {
@@ -188,12 +189,12 @@ class StructureSubscriber implements EventSubscriberInterface
             }
         }
 
-        $container = $this->getStructure($document, $structureType, $rehydrate);
+        $structure = $this->getStructure($document, $structureType, $rehydrate);
 
         // Set the property container
         $event->getAccessor()->set(
             'structure',
-            $container
+            $structure
         );
     }
 

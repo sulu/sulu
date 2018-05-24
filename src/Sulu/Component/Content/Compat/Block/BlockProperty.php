@@ -66,9 +66,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * returns a list of properties managed by this block.
-     *
-     * @return BlockPropertyType[]
+     * {@inheritdoc}
      */
     public function getTypes()
     {
@@ -76,9 +74,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * adds a type.
-     *
-     * @param BlockPropertyType $type
+     * {@inheritdoc}
      */
     public function addType(BlockPropertyType $type)
     {
@@ -86,17 +82,11 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * returns type with given name.
-     *
-     * @param string $name of property
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return BlockPropertyType
+     * {@inheritdoc}
      */
     public function getType($name)
     {
-        if (!isset($this->types[$name])) {
+        if (!$this->hasType($name)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'The block type "%s" has not been registered. Known block types are: [%s]',
@@ -110,9 +100,15 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * return default type name.
-     *
-     * @return string
+     * {@inheritdoc}
+     */
+    public function hasType($name)
+    {
+        return isset($this->types[$name]);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getDefaultTypeName()
     {
@@ -132,12 +128,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * initiate new child with given type name.
-     *
-     * @param int    $index
-     * @param string $typeName
-     *
-     * @return BlockPropertyType
+     * {@inheritdoc}
      */
     public function initProperties($index, $typeName)
     {
@@ -148,7 +139,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * clears all initialized properties.
+     * {@inheritdoc}
      */
     public function clearProperties()
     {
@@ -156,11 +147,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * returns properties for given index.
-     *
-     * @param int $index
-     *
-     * @return BlockPropertyType
+     * {@inheritdoc}
      */
     public function getProperties($index)
     {
@@ -175,9 +162,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * Returns sizeof block.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getLength()
     {
@@ -185,9 +170,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
-     * set value of child properties.
-     *
-     * @param mixed $value
+     * {@inheritdoc}
      */
     public function setValue($value)
     {

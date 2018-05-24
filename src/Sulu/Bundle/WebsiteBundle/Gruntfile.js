@@ -16,7 +16,11 @@ module.exports = function (grunt) {
     });
 
     // load all grunt tasks
-    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+    require('matchdep').filterDev('grunt-*').forEach(function(name) {
+        if ('grunt-cli' !== name) {
+            grunt.loadNpmTasks(name);
+        }
+    });
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -108,9 +112,9 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build:js', [
-        'replace:build',
+        'uglify',
         'copy:templates',
-        'uglify'
+        'replace:build'
     ]);
 
     grunt.registerTask('build', [

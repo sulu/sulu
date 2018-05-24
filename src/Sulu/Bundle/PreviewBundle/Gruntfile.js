@@ -20,7 +20,11 @@ module.exports = function(grunt) {
     });
 
     // load all grunt tasks
-    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+    require('matchdep').filterDev('grunt-*').forEach(function(name) {
+        if ('grunt-cli' !== name) {
+            grunt.loadNpmTasks(name);
+        }
+    });
 
     replaceVariables[SOURCE_PATH] = DIST_PATH;
 
@@ -79,9 +83,9 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('build:js', [
-        'replace:build',
+        'uglify',
         'copy:templates',
-        'uglify'
+        'replace:build'
     ]);
 
     grunt.registerTask('build', [

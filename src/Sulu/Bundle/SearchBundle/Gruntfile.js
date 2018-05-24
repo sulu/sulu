@@ -16,7 +16,11 @@ module.exports = function (grunt) {
     });
 
     // load all grunt tasks
-    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+    require('matchdep').filterDev('grunt-*').forEach(function(name) {
+        if ('grunt-cli' !== name) {
+            grunt.loadNpmTasks(name);
+        }
+    });
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -27,6 +31,28 @@ module.exports = function (grunt) {
                 files: {
                     'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
                 }
+            }
+        },
+
+        copy: {
+            templates: {
+                files: [
+                    {expand: true, cwd: srcpath, src: ['**/*.html'], dest: destpath}
+                ]
+            }
+        },
+
+        replace: {
+            build: {
+                options: {
+                    variables: {
+                        'sulusearch/js': 'sulusearch/dist'
+                    },
+                    prefix: ''
+                },
+                files: [
+                    {src: ['Resources/public/dist/main.js'], dest: 'Resources/public/dist/main.js'}
+                ]
             }
         },
         
@@ -47,6 +73,8 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'compass:dev',
         'cssmin',
-        'uglify'
+        'uglify',
+        'copy:templates',
+        'replace:build'
     ]);
 };
