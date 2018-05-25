@@ -82,7 +82,7 @@ export default class MultiMediaDropzone extends React.Component<Props> {
         }
 
         files.forEach((file) => {
-            const mediaUploadStore = new MediaUploadStore(new ResourceStore(RESOURCE_KEY, undefined, {locale}));
+            const mediaUploadStore = new MediaUploadStore(new ResourceStore(RESOURCE_KEY, undefined), locale);
             const uploadPromise = mediaUploadStore.create(collectionId, file);
 
             uploadPromises.push(uploadPromise);

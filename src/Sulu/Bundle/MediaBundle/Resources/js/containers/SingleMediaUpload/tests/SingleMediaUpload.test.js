@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {render, shallow} from 'enzyme';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import SingleMediaUpload from '../SingleMediaUpload';
@@ -26,7 +27,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 }));
 
 test('Render a SingleMediaUpload', () => {
-    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1), observable.box('en'));
 
     expect(
         render(<SingleMediaUpload collectionId={5} mediaUploadStore={mediaUploadStore} uploadText="Upload media" />)
@@ -34,7 +35,7 @@ test('Render a SingleMediaUpload', () => {
 });
 
 test('Render a SingleMediaUpload with an empty icon if no image is passed', () => {
-    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media'));
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media'), observable.box('en'));
     mediaUploadStore.getThumbnail.mockReturnValue(undefined);
 
     expect(
@@ -43,7 +44,7 @@ test('Render a SingleMediaUpload with an empty icon if no image is passed', () =
 });
 
 test('Render a SingleMediaUpload with the round skin', () => {
-    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1), observable.box('en'));
 
     expect(render(
         <SingleMediaUpload
@@ -56,7 +57,7 @@ test('Render a SingleMediaUpload with the round skin', () => {
 });
 
 test('Render a SingleMediaUpload with a different image size', () => {
-    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1), observable.box('en'));
 
     expect(render(
         <SingleMediaUpload
@@ -67,7 +68,7 @@ test('Render a SingleMediaUpload with a different image size', () => {
 });
 
 test('Render a SingleMediaUpload without delete and download button', () => {
-    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1), observable.box('en'));
 
     expect(render(
         <SingleMediaUpload
@@ -81,7 +82,7 @@ test('Render a SingleMediaUpload without delete and download button', () => {
 
 test('Call update on MediaUploadStore if id is given and drop event occurs', () => {
     const uploadCompleteSpy = jest.fn();
-    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1), observable.box('en'));
 
     const promise = Promise.resolve({});
     mediaUploadStore.update.mockReturnValue(promise);
@@ -107,7 +108,7 @@ test('Call update on MediaUploadStore if id is given and drop event occurs', () 
 
 test('Call create with passed collectionId if id is not given and drop event occurs', () => {
     const uploadCompleteSpy = jest.fn();
-    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media'));
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media'), observable.box('en'));
 
     const promise = Promise.resolve({});
     mediaUploadStore.create.mockReturnValue(promise);
@@ -139,7 +140,7 @@ test('Download the image when the download button is clicked', () => {
         id: 1,
         url: 'test.jpg',
     };
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+    const mediaUploadStore = new MediaUploadStore(resourceStore, observable.box('en'));
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
@@ -153,7 +154,7 @@ test('Download the image when the download button is clicked', () => {
 });
 
 test('Delete the image when the delete button is clicked and the overlay is confirmed', () => {
-    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1));
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1), observable.box('en'));
     const deletePromise = Promise.resolve();
     mediaUploadStore.delete.mockReturnValue(deletePromise);
 
@@ -186,7 +187,7 @@ test('Delete the image when the delete button is clicked and the overlay is conf
 });
 
 test('Throw exception if neither the collectionId nor the id from the image is given', () => {
-    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media'));
+    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media'), observable.box('en'));
     expect(() => shallow(
         <SingleMediaUpload mediaUploadStore={mediaUploadStore} uploadText="UploadMedia" />
     )).toThrow('"collectionId"');

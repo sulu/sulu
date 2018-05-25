@@ -38,7 +38,7 @@ class MediaDetail extends React.Component<Props> {
         }
 
         router.bind('locale', locale);
-        this.mediaUploadStore = new MediaUploadStore(resourceStore);
+        this.mediaUploadStore = new MediaUploadStore(resourceStore, locale);
     }
 
     componentWillUnmount() {

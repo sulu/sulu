@@ -16,7 +16,8 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Ob
 
         this.mediaUploadStore = new MediaUploadStore(
             // TODO remove 'en' and determine language to upload
-            new ResourceStore('media', value ? value.id : undefined, {locale: observable.box('en')})
+            new ResourceStore('media', value ? value.id : undefined, {locale: observable.box('en')}),
+            observable.box('en')
         );
     }
 
