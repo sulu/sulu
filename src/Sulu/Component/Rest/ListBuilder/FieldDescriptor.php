@@ -111,7 +111,7 @@ class FieldDescriptor implements FieldDescriptorInterface
         string $name,
         string $translation = null,
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
-        string $searchability = FieldDescriptorInterface::SEARCHABILITY_YES,
+        string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
         string $width = '',
         string $minWidth = '',

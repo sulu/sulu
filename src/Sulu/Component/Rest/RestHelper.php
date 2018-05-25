@@ -65,7 +65,13 @@ class RestHelper implements RestHelperInterface
             }
 
             foreach ($searchFields as $searchField) {
-                $listBuilder->addSearchField($fieldDescriptors[$searchField]);
+                $fieldDescriptor = $fieldDescriptors[$searchField];
+
+                if ($fieldDescriptor->getSearchability() === FieldDescriptorInterface::SEARCHABILITY_NEVER) {
+                    continue;
+                }
+
+                $listBuilder->addSearchField($fieldDescriptor);
             }
 
             $listBuilder->search($this->listRestHelper->getSearchPattern());

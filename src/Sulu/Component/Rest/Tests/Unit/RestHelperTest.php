@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\RestHelper;
 
 class RestHelperTest extends TestCase
@@ -122,6 +123,44 @@ class RestHelperTest extends TestCase
         $listBuilder->expects($this->once())->method('search')->with('searchValue');
 
         $this->restHelper->initializeListBuilder($listBuilder, ['name' => $field1, 'desc' => $field2]);
+    }
+
+    public function testInitializeListBuilderAddSearchWithoutSearchFields()
+    {
+        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
+            ->setMethods(['addSearchField', 'search'])
+            ->getMockForAbstractClass();
+
+        $field1 = $this->getMockBuilder(FieldDescriptor::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $field2 = $this->getMockBuilder(FieldDescriptor::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $field3 = $this->getMockBuilder(FieldDescriptor::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $field1->method('getSearchability')->willReturn(FieldDescriptorInterface::SEARCHABILITY_YES);
+        $field1->method('getName')->willReturn('name');
+
+        $field2->method('getSearchability')->willReturn(FieldDescriptorInterface::SEARCHABILITY_YES);
+        $field2->method('getName')->willReturn('desc');
+
+        $field2->method('getSearchability')->willReturn(FieldDescriptorInterface::SEARCHABILITY_NO);
+
+        $this->listRestHelper->expects($this->any())->method('getSearchFields')->willReturn([]);
+        $this->listRestHelper->expects($this->any())->method('getSearchPattern')->willReturn('searchValue');
+        $listBuilder->expects($this->at(0))->method('addSearchField')->with($field1);
+        $listBuilder->expects($this->at(1))->method('addSearchField')->with($field2);
+        $listBuilder->expects($this->once())->method('search')->with('searchValue');
+
+        $this->restHelper->initializeListBuilder(
+            $listBuilder,
+            ['name' => $field1, 'desc' => $field2, 'test' => $field3]
+        );
     }
 
     public function testInitializeListBuilderSort()

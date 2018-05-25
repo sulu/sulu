@@ -32,7 +32,7 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @var string
      */
-    private $searchability = FieldDescriptorInterface::SEARCHABILITY_YES;
+    private $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER;
 
     /**
      * @var string

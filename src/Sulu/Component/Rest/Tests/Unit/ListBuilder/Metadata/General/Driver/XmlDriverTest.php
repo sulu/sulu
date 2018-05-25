@@ -148,6 +148,7 @@ class XmlDriverTest extends TestCase
                 'name' => 'firstName',
                 'translation' => 'contact.contacts.firstName',
                 'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
+                'searchability' => FieldDescriptorInterface::SEARCHABILITY_YES,
             ],
             $result->propertyMetadata['firstName']
         );
@@ -156,6 +157,7 @@ class XmlDriverTest extends TestCase
                 'name' => 'lastName',
                 'translation' => 'contact.contacts.lastName',
                 'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
+                'searchability' => FieldDescriptorInterface::SEARCHABILITY_NO,
             ],
             $result->propertyMetadata['lastName']
         );
@@ -248,7 +250,8 @@ class XmlDriverTest extends TestCase
                 'instance' => PropertyMetadata::class,
                 'name' => null,
                 'translation' => null,
-                'visibility' => FieldDescriptorInterface::VISIBILITY_NO,
+                'visibility' => FieldDescriptorInterface::VISIBILITY_YES,
+                'searchability' => FieldDescriptorInterface::SEARCHABILITY_NEVER,
                 'type' => 'string',
                 'width' => '',
                 'minWidth' => '',
@@ -267,6 +270,7 @@ class XmlDriverTest extends TestCase
         $this->assertEquals($expected['filter-type'], $metadata->getFilterType());
         $this->assertEquals($expected['filter-type-parameters'], $metadata->getFilterTypeParameters());
         $this->assertEquals($expected['visibility'], $metadata->getVisibility());
+        $this->assertEquals($expected['searchability'], $metadata->getSearchability());
 
         $this->assertEquals($expected['type'], $metadata->getType());
         $this->assertEquals($expected['width'], $metadata->getWidth());
