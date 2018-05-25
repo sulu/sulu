@@ -82,7 +82,11 @@ export default class MediaUploadStore {
     }
 
     @action delete() {
-        return this.resourceStore.delete();
+        if (!this.id) {
+            throw new Error('The "id" property must be available for deleting a media');
+        }
+
+        return ResourceRequester.delete(RESOURCE_KEY, this.id);
     }
 
     update(file: File): Promise<*> {

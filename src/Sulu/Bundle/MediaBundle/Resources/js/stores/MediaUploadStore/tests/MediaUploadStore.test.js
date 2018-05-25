@@ -1,8 +1,17 @@
 // @flow
 import 'url-search-params-polyfill';
 import {observable, when} from 'mobx';
+import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import MediaUploadStore from '../MediaUploadStore';
+
+jest.mock('sulu-admin-bundle/services', () => ({
+    ResourceRequester: {
+        // $FlowFixMe
+        buildQueryString: require.requireActual('sulu-admin-bundle/services').ResourceRequester.buildQueryString,
+        delete: jest.fn(),
+    },
+}));
 
 jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceMetadataStore: {
@@ -16,6 +25,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(function(resourceKey, id, observableOptions) {
         this.resourceKey = resourceKey;
         this.id = id;
+        this.data = {id};
         this.locale = observableOptions ? observableOptions.locale : undefined;
         this.setMultiple = jest.fn();
         this.delete = jest.fn();
@@ -60,13 +70,13 @@ test('Calling the "create" method should make a "POST" request to the media upda
     expect(openSpy).toBeCalledWith('POST', '/media?locale=en&collection=1');
 });
 
-test('Calling "delete" method should call the "delete" method of the ResourceStore', () => {
+test('Calling "delete" method should call the "delete" method of the ResourceRequester', () => {
     const resourceStore = new ResourceStore('media', 2);
     const mediaUploadStore = new MediaUploadStore(resourceStore);
 
     mediaUploadStore.delete();
 
-    expect(resourceStore.delete).toBeCalled();
+    expect(ResourceRequester.delete).toBeCalledWith('media', 2);
 });
 
 test('After the request was successful the progress will be reset', (done) => {
