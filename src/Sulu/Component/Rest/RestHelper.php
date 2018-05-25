@@ -67,7 +67,7 @@ class RestHelper implements RestHelperInterface
             foreach ($searchFields as $searchField) {
                 $fieldDescriptor = $fieldDescriptors[$searchField];
 
-                if ($fieldDescriptor->getSearchability() === FieldDescriptorInterface::SEARCHABILITY_NEVER) {
+                if (FieldDescriptorInterface::SEARCHABILITY_NEVER === $fieldDescriptor->getSearchability()) {
                     continue;
                 }
 
