@@ -116,6 +116,7 @@ class SnippetRepository
      * @param string $search
      * @param string $sortBy
      * @param string $sortOrder
+     * @param bool $loadGhostContent
      *
      * @throws \InvalidArgumentException
      *
@@ -128,11 +129,12 @@ class SnippetRepository
         $max = null,
         $search = null,
         $sortBy = null,
-        $sortOrder = null
+        $sortOrder = null,
+        $loadGhostContent = true
     ) {
         $query = $this->getSnippetsQuery($locale, $type, $offset, $max, $search, $sortBy, $sortOrder);
         $documents = $this->documentManager->createQuery($query, $locale, [
-            'load_ghost_content' => true,
+            'load_ghost_content' => $loadGhostContent,
         ])->execute();
 
         return $documents;
