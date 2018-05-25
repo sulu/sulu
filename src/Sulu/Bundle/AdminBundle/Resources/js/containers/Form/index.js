@@ -4,6 +4,7 @@ import FormInspector from './FormInspector';
 import fieldRegistry from './registries/FieldRegistry';
 import FormStore from './stores/FormStore';
 import Assignment from './fields/Assignment';
+import SingleSelection from './fields/SingleSelection';
 import Checkbox from './fields/Checkbox';
 import ColorPicker from './fields/ColorPicker';
 import DatePicker from './fields/DatePicker';
@@ -33,6 +34,7 @@ export {
     Renderer,
     ResourceLocator,
     SingleSelect,
+    SingleSelection,
     TextArea,
     Time,
 };

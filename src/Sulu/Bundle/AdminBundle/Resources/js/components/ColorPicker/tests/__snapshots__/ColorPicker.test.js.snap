@@ -130,7 +130,7 @@ exports[`ColorPicker should render with open overlay 1`] = `
               <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;\\" class=\\"saturation-black\\"></div>
               <div style=\\"position: absolute; top: 70%; left: 66.66666666666667%; cursor: default;\\">
                 <div style=\\"width: 4px; height: 4px; box-shadow: 0 0 0 1.5px #fff, inset 0 0 1px 1px rgba(0,0,0,.3),
-            0 0 1px 2px rgba(0,0,0,.4); border-radius: 50%; cursor: hand;\\"></div>
+            0 0 1px 2px rgba(0,0,0,.4); border-radius: 50%; cursor: hand; transform: translate(-2px, -2px);\\"></div>
               </div>
             </div>
           </div>
@@ -152,7 +152,7 @@ exports[`ColorPicker should render with open overlay 1`] = `
                     }
                   </style>
                   <div style=\\"position: absolute; left: 69.44444444444443%;\\">
-                    <div style=\\"margin-top: 1px; width: 4px; border-radius: 1px; height: 8px; box-shadow: 0 0 2px rgba(0, 0, 0, .6); background: rgb(255, 255, 255);\\"></div>
+                    <div style=\\"margin-top: 1px; width: 4px; border-radius: 1px; height: 8px; box-shadow: 0 0 2px rgba(0, 0, 0, .6); background: rgb(255, 255, 255); transform: translateX(-2px);\\"></div>
                   </div>
                 </div>
               </div>
@@ -165,7 +165,7 @@ exports[`ColorPicker should render with open overlay 1`] = `
                 <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;\\"></div>
                 <div style=\\"position: relative; height: 100%; margin: 0px 3px;\\">
                   <div style=\\"position: absolute; left: 100%;\\">
-                    <div style=\\"width: 4px; border-radius: 1px; height: 8px; box-shadow: 0 0 2px rgba(0, 0, 0, .6); background: rgb(255, 255, 255); margin-top: 1px;\\"></div>
+                    <div style=\\"width: 4px; border-radius: 1px; height: 8px; box-shadow: 0 0 2px rgba(0, 0, 0, .6); background: rgb(255, 255, 255); margin-top: 1px; transform: translateX(-2px);\\"></div>
                   </div>
                 </div>
               </div>
@@ -198,7 +198,7 @@ exports[`ColorPicker should render with open overlay 1`] = `
               <input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"100\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">a</span></div>
           </div>
         </div>
-        <div style=\\"margin: 0px -10px; padding: 10px 0px 0px 10px; border-top: 1px solid #eee; display: none; position: relative;\\" class=\\"flexbox-fix\\"></div>
+        <div style=\\"margin: 0px -10px; padding: 10px 0px 0px 10px; border-top: 1px solid #eee; display: none; flex-wrap: wrap; position: relative;\\" class=\\"flexbox-fix\\"></div>
       </div>
     </div>
   </div>

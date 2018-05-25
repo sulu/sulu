@@ -1,3 +1,4 @@
+@import '../../components/Grid/variables.scss';
 @import './variables.scss';
 
 .grid {
@@ -11,12 +12,17 @@
         margin-bottom: 0;
     }
 
-    & + .grid-item,
-    & + .grid-section {
+    & + .grid-item {
         margin-top: $fieldMarginBottom;
     }
 }
 
 .grid-item + .grid-section {
     margin-top: -$fieldMarginBottom;
+}
+
+@media (max-width: $gridMinWidth) {
+    .grid-section + .grid-section {
+        margin-top: $fieldMarginBottom;
+    }
 }

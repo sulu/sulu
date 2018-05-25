@@ -156,7 +156,6 @@ export default class Popover extends React.Component<Props> {
         const verticalPosition = (dimensions.top > anchorElement.getBoundingClientRect().top) ? 'bottom' : 'top';
 
         return (
-            // TODO: Use short syntax when eslint bug is fixed: https://github.com/babel/babel-eslint/issues/554
             <Fragment>
                 {backdrop &&
                     <Backdrop visible={false} open={true} onClick={this.handleBackdropClick} />

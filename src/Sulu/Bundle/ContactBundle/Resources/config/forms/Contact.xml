@@ -59,6 +59,13 @@
                 </meta>
             </property>
 
+            <property name="account" type="single_account_selection" colspan="6">
+                <meta>
+                    <title lang="en">Organization</title>
+                    <title lang="de">Organisation</title>
+                </meta>
+            </property>
+
             <property name="salutation" type="text_line">
                 <meta>
                     <title lang="en">Salutation</title>

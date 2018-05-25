@@ -26,6 +26,7 @@ import {
     Phone,
     ResourceLocator,
     SingleSelect,
+    SingleSelection,
     TextArea,
     Time,
 } from '../../containers/Form';
@@ -67,7 +68,7 @@ function registerDatagridFieldTransformers() {
     datagridFieldTransformerRegistry.add('title', new StringFieldTransformer());
 }
 
-function registerFieldTypes() {
+function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('block', FieldBlocks);
     fieldRegistry.add('checkbox', Checkbox);
     fieldRegistry.add('color', ColorPicker);
@@ -80,13 +81,15 @@ function registerFieldTypes() {
     fieldRegistry.add('text_line', Input);
     fieldRegistry.add('text_area', TextArea);
     fieldRegistry.add('time', Time);
+
+    registerFieldTypesWithOptions(fieldTypeOptions['assignment'], Assignment);
+    registerFieldTypesWithOptions(fieldTypeOptions['single_selection'], SingleSelection);
 }
 
-function registerAssignmentFieldTypes(fieldTypesConfig) {
-    const assignmentConfigs = fieldTypesConfig['assignment'];
-    if (assignmentConfigs) {
-        for (const assignmentKey in assignmentConfigs) {
-            fieldRegistry.add(assignmentKey, Assignment, assignmentConfigs[assignmentKey]);
+function registerFieldTypesWithOptions(fieldTypeOptions, Component) {
+    if (fieldTypeOptions) {
+        for (const fieldTypeKey in fieldTypeOptions) {
+            fieldRegistry.add(fieldTypeKey, Component, fieldTypeOptions[fieldTypeKey]);
         }
     }
 }
@@ -144,8 +147,7 @@ class Initializer {
                     registerViews();
                     registerDatagridAdapters();
                     registerDatagridFieldTransformers();
-                    registerFieldTypes();
-                    registerAssignmentFieldTypes(config['sulu_admin']['field_type_options']);
+                    registerFieldTypes(config['sulu_admin']['field_type_options']);
 
                     this.setInitialized();
                 }
