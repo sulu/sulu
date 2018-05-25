@@ -23,6 +23,10 @@ exports[`Should render the datagrid with a title 1`] = `
           tabindex="0"
         />
       </div>
+      <input
+        type="text"
+        value=""
+      />
     </label>
   </div>
   <div
@@ -191,6 +195,10 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
           tabindex="0"
         />
       </div>
+      <input
+        type="text"
+        value=""
+      />
     </label>
   </div>
   <div
@@ -359,6 +367,10 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
           tabindex="0"
         />
       </div>
+      <input
+        type="text"
+        value=""
+      />
     </label>
   </div>
   <div

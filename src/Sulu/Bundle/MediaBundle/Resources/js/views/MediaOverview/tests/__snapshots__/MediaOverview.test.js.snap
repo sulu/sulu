@@ -178,6 +178,10 @@ exports[`Render a simple MediaOverview 1`] = `
               tabindex="0"
             />
           </div>
+          <input
+            type="text"
+            value=""
+          />
         </label>
         <div>
           <button

@@ -166,6 +166,10 @@ exports[`Render the MediaCollection 1`] = `
             tabindex="0"
           />
         </div>
+        <input
+          type="text"
+          value=""
+        />
       </label>
     </div>
     <div

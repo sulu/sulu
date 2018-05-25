@@ -21,7 +21,7 @@ type Props = {|
     value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
-    onKeyPress?: (event: SyntheticKeyboardEvent<HTMLInputElement>) => void,
+    onKeyPress?: (key: ?string, event: SyntheticKeyboardEvent<HTMLInputElement>) => void,
     onIconClick?: () => void,
     onClearClick?: () => void,
     iconStyle?: Object,
@@ -59,6 +59,14 @@ export default class Input extends React.PureComponent<Props> {
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
         this.props.onChange(event.currentTarget.value || undefined, event);
+    };
+
+    handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
+        const {onKeyPress} = this.props;
+
+        if (onKeyPress) {
+            onKeyPress(event.key || undefined, event);
+        }
     };
 
     handleBlur = () => {
@@ -136,18 +144,16 @@ export default class Input extends React.PureComponent<Props> {
                     </div>
                 }
 
-                {!collapsed &&
-                    <input
-                        ref={inputRef ? this.setInputRef : undefined}
-                        name={name}
-                        type={type}
-                        value={value || ''}
-                        placeholder={placeholder}
-                        onBlur={this.handleBlur}
-                        onChange={this.handleChange}
-                        onKeyPress={onKeyPress}
-                    />
-                }
+                <input
+                    ref={inputRef ? this.setInputRef : undefined}
+                    name={name}
+                    type={type}
+                    value={value || ''}
+                    placeholder={placeholder}
+                    onBlur={this.handleBlur}
+                    onChange={this.handleChange}
+                    onKeyPress={onKeyPress ? this.handleKeyPress : undefined}
+                />
 
                 {!collapsed && value && onClearClick &&
                     <div className={inputStyles.appendContainer}>

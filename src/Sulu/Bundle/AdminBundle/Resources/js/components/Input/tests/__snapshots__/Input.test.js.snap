@@ -46,7 +46,12 @@ exports[`Input should render append container with icon when onClearClick callba
 exports[`Input should render collapsed 1`] = `
 <label
   class="input default collapsed"
-/>
+>
+  <input
+    type="text"
+    value=""
+  />
+</label>
 `;
 
 exports[`Input should render null value as empty string 1`] = `

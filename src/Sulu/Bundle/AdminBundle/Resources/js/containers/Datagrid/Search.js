@@ -26,8 +26,8 @@ export default class Search extends React.Component<Props> {
         this.setValue(value);
     };
 
-    handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
+    handleKeyPress = (key: ?string) => {
+        if (key === 'Enter') {
             this.handleSearch();
         }
     };
@@ -47,11 +47,7 @@ export default class Search extends React.Component<Props> {
     handleIconClick = () => {
         if (this.collapsed) {
             this.setCollapsed(false);
-
-            return;
         }
-
-        this.handleSearch();
     };
 
     handleClearClick = () => {
