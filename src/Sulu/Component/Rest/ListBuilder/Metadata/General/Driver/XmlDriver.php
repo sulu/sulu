@@ -114,7 +114,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
                 '@visibility',
                 $xpath,
                 $propertyNode,
-                FieldDescriptorInterface::VISIBILITY_YES
+                FieldDescriptorInterface::VISIBILITY_NO
             )
         );
         $propertyMetadata->setSearchability(
