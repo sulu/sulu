@@ -82,11 +82,11 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('text_area', TextArea);
     fieldRegistry.add('time', Time);
 
-    registerFieldTypesFromConfiguration(fieldTypeOptions['assignment'], Assignment);
-    registerFieldTypesFromConfiguration(fieldTypeOptions['single_selection'], SingleSelection);
+    registerFieldTypesWithOptions(fieldTypeOptions['assignment'], Assignment);
+    registerFieldTypesWithOptions(fieldTypeOptions['single_selection'], SingleSelection);
 }
 
-function registerFieldTypesFromConfiguration(fieldTypeOptions, Component) {
+function registerFieldTypesWithOptions(fieldTypeOptions, Component) {
     if (fieldTypeOptions) {
         for (const fieldTypeKey in fieldTypeOptions) {
             fieldRegistry.add(fieldTypeKey, Component, fieldTypeOptions[fieldTypeKey]);
