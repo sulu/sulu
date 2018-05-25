@@ -40,7 +40,7 @@ $darkIconColor: $doveGray;
         padding-left: 10px;
         font-size: $inputFontSize;
         color: $inputColor;
-        transition: width 0.3s, padding-left 0.1s linear;
+        transition: width .3s, padding-left .1s linear;
 
         &::placeholder {
             color: $placeholderColor;
@@ -60,7 +60,7 @@ $darkIconColor: $doveGray;
     }
 
     &.has-append-icon {
-        transition: margin-right 0.1s;
+        transition: margin-right .1s;
         margin-right: 34px;
 
         &.collapsed {
@@ -69,7 +69,7 @@ $darkIconColor: $doveGray;
     }
 
     &.dark {
-        transition: background-color 0.3s;
+        transition: background-color .3s;
         background-color: $darkBackgroundColor;
         color: $darkInputColor;
         border-radius: $darkInputBorderRadius;
