@@ -91,9 +91,11 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                     'field_type_options' => [
                         'single_selection' => [
                             'single_account_selection' => [
-                                'displayProperty' => 'name',
-                                'searchProperties' => ['number', 'name'],
-                                'resourceKey' => 'accounts',
+                                'auto_complete' => [
+                                    'displayProperty' => 'name',
+                                    'searchProperties' => ['number', 'name'],
+                                    'resourceKey' => 'accounts',
+                                ],
                             ],
                         ],
                     ],

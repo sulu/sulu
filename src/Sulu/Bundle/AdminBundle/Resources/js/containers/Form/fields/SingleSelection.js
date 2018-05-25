@@ -17,13 +17,21 @@ export default class SingleSelection extends React.Component<FieldTypeProps<?Obj
 
     render() {
         const {
-            fieldTypeOptions: {
+            fieldTypeOptions,
+            value,
+        } = this.props;
+
+        if (!fieldTypeOptions || !fieldTypeOptions.auto_complete) {
+            throw new Error('The single_selection field needs an "auto_complete" option if rendered as AutoComplete');
+        }
+
+        const {
+            auto_complete: {
                 displayProperty,
                 searchProperties,
                 resourceKey,
-            } = {},
-            value,
-        } = this.props;
+            },
+        } = fieldTypeOptions;
 
         return (
             <AutoComplete

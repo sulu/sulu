@@ -9,9 +9,11 @@ test('Pass correct props to AutoComplete', () => {
     };
 
     const fieldTypeOptions = {
-        displayProperty: 'name',
-        resourceKey: 'accounts',
-        searchProperties: ['name', 'number'],
+        auto_complete: {
+            displayProperty: 'name',
+            resourceKey: 'accounts',
+            searchProperties: ['name', 'number'],
+        },
     };
 
     const singleSelection = shallow(
@@ -35,9 +37,11 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
     };
 
     const fieldTypeOptions = {
-        displayProperty: 'name',
-        resourceKey: 'accounts',
-        searchProperties: ['name', 'number'],
+        auto_complete: {
+            displayProperty: 'name',
+            resourceKey: 'accounts',
+            searchProperties: ['name', 'number'],
+        },
     };
 
     const singleSelection = shallow(
@@ -48,4 +52,12 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
 
     expect(changeSpy).toBeCalledWith(undefined);
     expect(finishSpy).toBeCalledWith();
+});
+
+test('Throw an error if the auto_complete configuration was omitted', () => {
+    const fieldTypeOptions = {};
+
+    expect(
+        () => shallow(<SingleSelection fieldTypeOptions={fieldTypeOptions} onChange={jest.fn()} value={undefined} />)
+    ).toThrow(/"auto_complete"/);
 });
