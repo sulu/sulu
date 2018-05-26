@@ -40,7 +40,7 @@ export default class SingleMediaUpload extends React.Component<Props> {
             mediaUploadStore,
         } = this.props;
 
-        if (!mediaUploadStore.id && !collectionId) {
+        if (!mediaUploadStore.media && !collectionId) {
             throw new Error('If a new item is supposed to be uploaded a "collectionId" is required!');
         }
     }
