@@ -116,7 +116,8 @@ class TagManagerTest extends TestCase
             $this->userRepository,
             $this->fieldDescriptorFactory,
             $this->em,
-            $this->eventDispatcher
+            $this->eventDispatcher,
+            Tag::class
         );
     }
 
