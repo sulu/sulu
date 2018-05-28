@@ -227,6 +227,9 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
+* dev-release/1.5
+    * BUGFiX      #3995 [TestBundle]            Fix tests for latest Symfony version
+
 * 1.5.15 (2018-05-24)
     * HOTFIX      #3988 [ContentBundle]         Date content type: Reading: Check if value is instance of DateTime
     * HOTFIX      #3988 [BlockComponent]        Read: Ignore unknown types
