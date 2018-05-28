@@ -250,7 +250,7 @@ class XmlDriverTest extends TestCase
                 'instance' => PropertyMetadata::class,
                 'name' => null,
                 'translation' => null,
-                'visibility' => FieldDescriptorInterface::VISIBILITY_YES,
+                'visibility' => FieldDescriptorInterface::VISIBILITY_NO,
                 'searchability' => FieldDescriptorInterface::SEARCHABILITY_NEVER,
                 'type' => 'string',
                 'width' => '',

@@ -1053,7 +1053,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'public.name',
             ' ',
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
-            FieldDescriptorInterface::SEARCHABILITY_NEVER,
+            FieldDescriptorInterface::SEARCHABILITY_YES,
             '',
             '',
             '160px',
