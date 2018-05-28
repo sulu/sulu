@@ -567,6 +567,7 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts',
             [
                 'name' => 'ExampleCompany',
+                'note' => 'A small notice',
                 'parent' => ['id' => $this->account->getId()],
                 'logo' => ['id' => $this->logo->getId()],
                 'urls' => [
@@ -663,6 +664,7 @@ class AccountControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals('A small notice', $response->note);
         $this->assertEquals(1, $response->depth);
         $this->assertEquals($this->account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
@@ -699,6 +701,7 @@ class AccountControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals('A small notice', $response->note);
         $this->assertEquals(1, $response->depth);
         $this->assertEquals($this->account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
@@ -1237,6 +1240,7 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId(),
             [
                 'name' => 'ExampleCompany',
+                'note' => 'A small notice',
                 'logo' => ['id' => $this->logo->getId()],
                 'urls' => [
                     [
@@ -1358,6 +1362,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals('A small notice', $response->note);
 
         $this->assertEquals(2, count($response->urls));
         $this->assertEquals('http://example.company.com', $response->urls[0]->url);
@@ -1462,6 +1467,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals('A small notice', $response->note);
 
         $this->assertEquals(2, count($response->urls));
         $this->assertEquals('http://example.company.com', $response->urls[0]->url);

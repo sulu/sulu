@@ -168,8 +168,14 @@ class Account implements AccountInterface
 
     /**
      * @var Collection
+     * @deprecated
      */
     protected $notes;
+
+    /**
+     * @var string
+     */
+    protected $note;
 
     /**
      * @var Collection
@@ -333,6 +339,18 @@ class Account implements AccountInterface
     public function getEmails(): Collection
     {
         return $this->emails;
+    }
+
+    public function setNote(?string $note): self
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    public function getNote(): ?string
+    {
+        return $this->note;
     }
 
     public function addNote(Note $note): AccountInterface

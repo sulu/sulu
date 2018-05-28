@@ -29,6 +29,8 @@
 
         <field name="corporation" type="string" column="corporation" length="255" nullable="true"/>
 
+        <field name="note" type="text" column="note" nullable="true"/>
+
         <!-- financial infos -->
         <field name="uid" type="string" column="uid" length="50" nullable="true" />
         <field name="registerNumber" type="string" column="registerNumber" nullable="true" />
