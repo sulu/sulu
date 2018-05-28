@@ -27,6 +27,12 @@
                     <title lang="de">Name</title>
                 </meta>
             </property>
+            <property name="corporation" type="text_line">
+                <meta>
+                    <title lang="en">Corporation</title>
+                    <title lang="de">Gesellschaft</title>
+                </meta>
+            </property>
         </properties>
     </section>
 </properties>
