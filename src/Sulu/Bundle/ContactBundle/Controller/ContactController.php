@@ -127,7 +127,7 @@ class ContactController extends RestController implements ClassResourceInterface
             'public.name',
             ' ',
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
-            FieldDescriptorInterface::SEARCHABILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_YES,
             'string',
             '',
             '',
