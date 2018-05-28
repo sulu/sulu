@@ -284,6 +284,9 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         if (!$patch || null !== $this->getProperty($data, 'avatar')) {
             $this->setAvatar($contact, $this->getProperty($data, 'avatar'));
         }
+        if (!$patch || null !== $this->getProperty($data, 'note')) {
+            $contact->setNote($this->getProperty($data, 'note'));
+        }
         if (!$patch || null !== $this->getProperty($data, 'medias')) {
             $this->setMedias($contact, $this->getProperty($data, 'medias', []));
         }

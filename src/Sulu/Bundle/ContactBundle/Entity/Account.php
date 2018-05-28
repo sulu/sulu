@@ -168,6 +168,7 @@ class Account implements AccountInterface
 
     /**
      * @var Collection
+     *
      * @deprecated
      */
     protected $notes;

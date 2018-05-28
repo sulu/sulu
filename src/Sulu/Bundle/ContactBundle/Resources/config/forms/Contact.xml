@@ -72,6 +72,13 @@
                     <title lang="de">Anrede</title>
                 </meta>
             </property>
+
+            <property name="note" type="text_area">
+                <meta>
+                    <title lang="en">Note</title>
+                    <title lang="de">Notiz</title>
+                </meta>
+            </property>
         </properties>
     </section>
 </properties>
