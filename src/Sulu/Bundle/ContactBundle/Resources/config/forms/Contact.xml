@@ -23,7 +23,7 @@
         <properties>
             <property name="formOfAddress" type="single_select" mandatory="true" colspan="3" spaceAfter="9">
                 <meta>
-                    <title lang="en">Salutation</title>
+                    <title lang="en">Form of Address</title>
                     <title lang="de">Anrede</title>
                 </meta>
                 <params>
@@ -69,7 +69,7 @@
             <property name="salutation" type="text_line">
                 <meta>
                     <title lang="en">Salutation</title>
-                    <title lang="de">Anrede</title>
+                    <title lang="de">Grußformel</title>
                 </meta>
             </property>
 

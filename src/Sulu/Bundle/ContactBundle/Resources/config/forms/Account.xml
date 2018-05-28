@@ -38,7 +38,7 @@
             <property name="parent" type="single_account_selection" colspan="6">
                 <meta>
                     <title lang="en">Parent company</title>
-                    <title lang="de">Mutterfirma</title>
+                    <title lang="de">Dachgesellschaft</title>
                 </meta>
             </property>
 
