@@ -24,6 +24,8 @@
         <field name="newsletter" type="boolean" column="newsletter" nullable="true"/>
         <field name="gender" type="string" column="gender" length="1" nullable="true"/>
 
+        <field name="note" type="text" column="note" nullable="true"/>
+
         <!-- relational data flattened -->
         <field name="mainEmail" type="string" column="mainEmail" nullable="true"/>
         <field name="mainPhone" type="string" column="mainPhone" nullable="true"/>

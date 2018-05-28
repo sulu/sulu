@@ -88,8 +88,15 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $creator;
 
     /**
+     * @var string
+     */
+    protected $note;
+
+    /**
      * @var Collection
      * @Groups({"fullContact"})
+     *
+     * @deprecated
      */
     protected $notes;
 
@@ -473,6 +480,18 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    public function setNote(?string $note): self
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    public function getNote(): ?string
+    {
+        return $this->note;
     }
 
     /**

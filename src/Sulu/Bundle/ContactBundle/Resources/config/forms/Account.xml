@@ -27,6 +27,34 @@
                     <title lang="de">Name</title>
                 </meta>
             </property>
+
+            <property name="corporation" type="text_line">
+                <meta>
+                    <title lang="en">Corporation</title>
+                    <title lang="de">Gesellschaft</title>
+                </meta>
+            </property>
+
+            <property name="parent" type="single_account_selection" colspan="6">
+                <meta>
+                    <title lang="en">Parent company</title>
+                    <title lang="de">Dachgesellschaft</title>
+                </meta>
+            </property>
+
+            <property name="uid" type="text_line" colspan="6">
+                <meta>
+                    <title lang="en">UID</title>
+                    <title lang="de">UID</title>
+                </meta>
+            </property>
+
+            <property name="note" type="text_area">
+                <meta>
+                    <title lang="en">Note</title>
+                    <title lang="de">Notiz</title>
+                </meta>
+            </property>
         </properties>
     </section>
 </properties>

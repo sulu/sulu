@@ -345,6 +345,21 @@ class Account extends ApiWrapper
         return $emails;
     }
 
+    public function setNote(?string $note)
+    {
+        return $this->entity->setNote($note);
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("note")
+     * @Groups({"fullAccount"})
+     */
+    public function getNote(): ?string
+    {
+        return $this->entity->getNote();
+    }
+
     /**
      * Add notes.
      *
