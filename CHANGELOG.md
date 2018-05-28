@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.5
+    * BUGFiX      #3995 [TestBundle]            Fix tests for latest Symfony version
+
 * 1.5.15 (2018-05-24)
     * HOTFIX      #3988 [ContentBundle]         Date content type: Reading: Check if value is instance of DateTime
     * HOTFIX      #3988 [BlockComponent]        Read: Ignore unknown types
