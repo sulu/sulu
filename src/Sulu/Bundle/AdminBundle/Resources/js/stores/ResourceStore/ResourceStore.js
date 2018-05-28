@@ -152,7 +152,7 @@ export default class ResourceStore {
 
     @action delete(): Promise<*> {
         if (!this.data.id) {
-            throw new Error('Can not delete resource with an undefined "id"');
+            throw new Error('Cannot delete resource with an undefined "id"');
         }
 
         this.saving = true;

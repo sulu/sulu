@@ -2,11 +2,11 @@
 import React from 'react';
 import {observable} from 'mobx';
 import type {FieldTypeProps} from 'sulu-admin-bundle';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
 import MediaUploadStore from '../../../stores/MediaUploadStore';
 import SingleMediaUploadComponent from '../../SingleMediaUpload';
+import type {Media} from '../../../types';
 
-export default class SingleMediaUpload extends React.Component<FieldTypeProps<Object>> {
+export default class SingleMediaUpload extends React.Component<FieldTypeProps<Media>> {
     mediaUploadStore: MediaUploadStore;
 
     constructor(props: FieldTypeProps<Object>) {
@@ -15,8 +15,9 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Ob
         const {value} = this.props;
 
         this.mediaUploadStore = new MediaUploadStore(
+            value,
             // TODO remove 'en' and determine language to upload
-            new ResourceStore('media', value ? value.id : undefined, {locale: observable.box('en')})
+            observable.box('en')
         );
     }
 

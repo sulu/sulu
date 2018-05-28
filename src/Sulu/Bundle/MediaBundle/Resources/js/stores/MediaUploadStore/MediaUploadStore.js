@@ -1,60 +1,53 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import {ResourceMetadataStore, ResourceStore} from 'sulu-admin-bundle/stores';
+import type {IObservableValue} from 'mobx';
+import {ResourceMetadataStore} from 'sulu-admin-bundle/stores';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
+import type {Media} from '../../types';
 
 const RESOURCE_KEY = 'media';
 
 export default class MediaUploadStore {
     @observable uploading: boolean;
     @observable progress: number;
-    resourceStore: ResourceStore;
+    @observable media: ?Media;
+    locale: IObservableValue<string>;
 
-    constructor(resourceStore: ResourceStore) {
-        if (resourceStore.resourceKey !== RESOURCE_KEY) {
-            throw new Error('The MediaUploadStore needs a "ResourceStore" with the "media" resourceKey!');
-        }
-        this.resourceStore = resourceStore;
+    constructor(media: ?Media, locale: IObservableValue<string>) {
+        this.media = media;
+        this.locale = locale;
     }
 
     @computed get id(): ?number | string {
-        const {resourceStore} = this;
+        const {media} = this;
 
-        return resourceStore.data.id || resourceStore.id;
-    }
-
-    @computed get locale(): string {
-        const {resourceStore} = this;
-
-        if (!resourceStore.locale) {
-            throw new Error('The MediaUploadStore needs a localized "ResourceStore"!');
-        }
-
-        return resourceStore.locale.get();
-    }
-
-    @computed get downloadUrl(): ?string {
-        const {resourceStore} = this;
-
-        if (!resourceStore.data) {
+        if (!media) {
             return;
         }
 
-        return resourceStore.data.url;
+        return media.id;
+    }
+
+    @computed get downloadUrl(): ?string {
+        const {media} = this;
+
+        if (!media) {
+            return;
+        }
+
+        return media.url;
     }
 
     getThumbnail(size: string): ?string {
-        const {resourceStore} = this;
+        const {media} = this;
 
-        if (!resourceStore.data) {
+        if (!media) {
             return;
         }
 
         const {
-            data: {
-                thumbnails,
-            },
-        } = resourceStore;
+            thumbnails,
+        } = media;
 
         if (!thumbnails || !thumbnails[size]) {
             return;
@@ -64,13 +57,13 @@ export default class MediaUploadStore {
     }
 
     @computed get mimeType(): ?string {
-        const {resourceStore} = this;
+        const {media} = this;
 
-        if (!resourceStore.data) {
+        if (!media) {
             return;
         }
 
-        return resourceStore.data.mimeType;
+        return media.mimeType;
     }
 
     @action setUploading(uploading: boolean) {
@@ -82,11 +75,18 @@ export default class MediaUploadStore {
     }
 
     @action delete() {
-        return this.resourceStore.delete();
+        if (!this.id) {
+            throw new Error('The "id" property must be available for deleting a media');
+        }
+
+        return ResourceRequester.delete(RESOURCE_KEY, this.id)
+            .then(action(() => {
+                this.media = undefined;
+            }));
     }
 
     update(file: File): Promise<*> {
-        const {id} = this.resourceStore;
+        const id = this.media ? this.media.id : undefined;
 
         if (!id) {
             throw new Error('The "id" property must be available for updating a media');
@@ -95,7 +95,7 @@ export default class MediaUploadStore {
         const endpoint = ResourceMetadataStore.getEndpoint(RESOURCE_KEY);
         const queryString = ResourceRequester.buildQueryString({
             action: 'new-version',
-            locale: this.locale,
+            locale: this.locale.get(),
         });
         const url = endpoint + '/' + id + queryString;
 
@@ -108,7 +108,7 @@ export default class MediaUploadStore {
     create(collectionId: string | number, file: File): Promise<*> {
         const endpoint = ResourceMetadataStore.getEndpoint(RESOURCE_KEY);
         const queryString = ResourceRequester.buildQueryString({
-            locale: this.locale,
+            locale: this.locale.get(),
             collection: collectionId,
         });
         const url = endpoint + queryString;
@@ -122,7 +122,7 @@ export default class MediaUploadStore {
     @action handleResponse = (media: Object) => {
         this.setUploading(false);
         this.setProgress(0);
-        this.resourceStore.setMultiple(media);
+        this.media = media;
 
         return media;
     };

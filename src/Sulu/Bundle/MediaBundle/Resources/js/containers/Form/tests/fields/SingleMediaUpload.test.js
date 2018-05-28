@@ -132,5 +132,25 @@ test('Create a MediaUploadStore when constructed', () => {
     );
 
     expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
-    expect(singleMediaUpload.instance().mediaUploadStore.resourceStore.resourceKey).toEqual('media');
+    expect(singleMediaUpload.instance().mediaUploadStore.media).toEqual(undefined);
+});
+
+test('Create a MediaUploadStore when constructed with data', () => {
+    const data = {
+        id: 1,
+        mimeType: 'image/jpeg',
+        thumbnails: {},
+        url: '',
+    };
+    const schemaOptions = {
+        collection_id: {
+            value: 2,
+        },
+    };
+    const singleMediaUpload = shallow(
+        <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={data} />
+    );
+
+    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
+    expect(singleMediaUpload.instance().mediaUploadStore.media).toEqual(data);
 });

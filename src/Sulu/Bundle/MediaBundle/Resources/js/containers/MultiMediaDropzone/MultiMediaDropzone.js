@@ -5,13 +5,10 @@ import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Dropzone from 'react-dropzone';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import MediaItem from './MediaItem';
 import DropzoneOverlay from './DropzoneOverlay';
 import dropzoneStyles from './dropzone.scss';
-
-const RESOURCE_KEY = 'media';
 
 type Props = {
     children: any,
@@ -82,7 +79,7 @@ export default class MultiMediaDropzone extends React.Component<Props> {
         }
 
         files.forEach((file) => {
-            const mediaUploadStore = new MediaUploadStore(new ResourceStore(RESOURCE_KEY, undefined, {locale}));
+            const mediaUploadStore = new MediaUploadStore(undefined, locale);
             const uploadPromise = mediaUploadStore.create(collectionId, file);
 
             uploadPromises.push(uploadPromise);

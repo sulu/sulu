@@ -1,8 +1,16 @@
 // @flow
 import 'url-search-params-polyfill';
 import {observable, when} from 'mobx';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {ResourceRequester} from 'sulu-admin-bundle/services';
 import MediaUploadStore from '../MediaUploadStore';
+
+jest.mock('sulu-admin-bundle/services', () => ({
+    ResourceRequester: {
+        // $FlowFixMe
+        buildQueryString: require.requireActual('sulu-admin-bundle/services').ResourceRequester.buildQueryString,
+        delete: jest.fn(),
+    },
+}));
 
 jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceMetadataStore: {
@@ -16,6 +24,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(function(resourceKey, id, observableOptions) {
         this.resourceKey = resourceKey;
         this.id = id;
+        this.data = {id};
         this.locale = observableOptions ? observableOptions.locale : undefined;
         this.setMultiple = jest.fn();
         this.delete = jest.fn();
@@ -33,7 +42,10 @@ test('Calling the "update" method should make a "POST" request to the media upda
         this.send = jest.fn();
     });
 
-    const mediaUploadStore = new MediaUploadStore(new ResourceStore('media', 1, {locale: observable.box('en')}));
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, mimeType: 'image/jpeg', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
     const fileData = new File([''], 'fileName');
 
     mediaUploadStore.update(fileData);
@@ -52,7 +64,8 @@ test('Calling the "create" method should make a "POST" request to the media upda
     });
 
     const mediaUploadStore = new MediaUploadStore(
-        new ResourceStore('media', undefined, {locale: observable.box('en')})
+        undefined,
+        observable.box('en')
     );
     const fileData = new File([''], 'fileName');
 
@@ -60,13 +73,20 @@ test('Calling the "create" method should make a "POST" request to the media upda
     expect(openSpy).toBeCalledWith('POST', '/media?locale=en&collection=1');
 });
 
-test('Calling "delete" method should call the "delete" method of the ResourceStore', () => {
-    const resourceStore = new ResourceStore('media', 2);
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+test('Calling "delete" method should call the "delete" method of the ResourceRequester', () => {
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 2, mimeType: 'image/jpeg', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
 
-    mediaUploadStore.delete();
+    ResourceRequester.delete.mockReturnValue(Promise.resolve());
 
-    expect(resourceStore.delete).toBeCalled();
+    const deletePromise = mediaUploadStore.delete();
+    expect(ResourceRequester.delete).toBeCalledWith('media', 2);
+
+    return deletePromise.then(() => {
+        expect(mediaUploadStore.media).toEqual(undefined);
+    });
 });
 
 test('After the request was successful the progress will be reset', (done) => {
@@ -77,8 +97,10 @@ test('After the request was successful the progress will be reset', (done) => {
         this.send = jest.fn();
     });
 
-    const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, mimeType: 'image/jpeg', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
     const fileData = new File([''], 'fileName');
 
     mediaUploadStore.update(fileData);
@@ -88,9 +110,9 @@ test('After the request was successful the progress will be reset', (done) => {
     when(
         () => !mediaUploadStore.uploading,
         (): void => {
-            expect(mediaUploadStore.uploading).toBe(false);
-            expect(mediaUploadStore.progress).toBe(0);
-            expect(resourceStore.setMultiple).toBeCalledWith({});
+            expect(mediaUploadStore.uploading).toEqual(false);
+            expect(mediaUploadStore.progress).toEqual(0);
+            expect(mediaUploadStore.media).toEqual({});
             done();
         }
     );
@@ -100,68 +122,64 @@ test('After the request was successful the progress will be reset', (done) => {
 
 test('Should return thumbnail path if available', () => {
     const thumbnailUrl = '/media/uploads/400x400/test.png';
-    const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
-    resourceStore.data = {
-        thumbnails: {
-            'sulu-400x400-inset': thumbnailUrl,
+    const mediaUploadStore = new MediaUploadStore(
+        {
+            id: 1,
+            mimeType: 'image/jpeg',
+            thumbnails: {
+                'sulu-400x400-inset': thumbnailUrl,
+            },
+            url: '',
         },
-    };
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+        observable.box('en')
+    );
 
     expect(mediaUploadStore.getThumbnail('sulu-400x400-inset')).toEqual(thumbnailUrl);
 });
 
 test('Should return undefined if thumbnail is not available yet', () => {
-    const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+    const mediaUploadStore = new MediaUploadStore(
+        undefined,
+        observable.box('en')
+    );
 
     expect(mediaUploadStore.getThumbnail('100x100')).toEqual(undefined);
 });
 
 test('Should return the mime type of the media if available', () => {
     const mimeType = 'image/jpg';
-    const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
-    resourceStore.data = {
-        mimeType,
-    };
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, mimeType, thumbnails: {}, url: ''},
+        observable.box('en')
+    );
 
     expect(mediaUploadStore.mimeType).toEqual(mimeType);
 });
 
 test('Should return undefined if the mime type is not available yet', () => {
-    const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+    const mediaUploadStore = new MediaUploadStore(
+        undefined,
+        observable.box('en')
+    );
 
     expect(mediaUploadStore.mimeType).toEqual(undefined);
 });
 
 test('Should return downloadUrl if available', () => {
     const url = 'test.jpg';
-    const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
-    resourceStore.data = {
-        url,
-    };
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, mimeType: 'image/jpeg', thumbnails: {}, url},
+        observable.box('en')
+    );
 
     expect(mediaUploadStore.downloadUrl).toEqual(url);
 });
 
 test('Should return undefined if downloadUrl is not available', () => {
-    const resourceStore = new ResourceStore('media', 1, {locale: observable.box('en')});
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
+    const mediaUploadStore = new MediaUploadStore(
+        undefined,
+        observable.box('en')
+    );
 
     expect(mediaUploadStore.downloadUrl).toEqual(undefined);
-});
-
-test('Should throw an error if locale not available', () => {
-    const resourceStore = new ResourceStore('media', 1);
-    resourceStore.data = {};
-    const mediaUploadStore = new MediaUploadStore(resourceStore);
-
-    expect(() => mediaUploadStore.locale).toThrow(/localized/);
-});
-
-test('Should throw an error if passed resourceStore does not load media', () => {
-    expect(() => new MediaUploadStore(new ResourceStore('account', 3))).toThrow('"media"');
 });
