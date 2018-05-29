@@ -10,7 +10,7 @@ export default class Number extends React.Component<FieldTypeProps<?number>> {
         step: undefined,
     };
 
-    constructor(props: FieldTypeProps<string>) {
+    constructor(props: FieldTypeProps<?number>) {
         super(props);
 
         const {schemaOptions} = this.props;

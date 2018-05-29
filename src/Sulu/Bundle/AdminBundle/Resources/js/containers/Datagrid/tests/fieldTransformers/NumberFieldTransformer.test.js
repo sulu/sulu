@@ -1,7 +1,6 @@
 // @flow
 import log from 'loglevel';
 import NumberFieldTransformer from '../../fieldTransformers/NumberFieldTransformer';
-import userStore from '../../../../stores/UserStore';
 
 const numberFieldTransformer = new NumberFieldTransformer();
 
@@ -44,4 +43,3 @@ test('Test valid example with locale "de"', () => {
     });
     expect(numberFieldTransformer.transform('20.3')).toBe('20,3');
 });
-

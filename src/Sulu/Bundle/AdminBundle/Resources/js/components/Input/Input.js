@@ -9,7 +9,7 @@ import type {InputProps} from './types';
 
 const LOADER_SIZE = 20;
 
-export default class Input<T: ?string | number> extends React.PureComponent<InputProps<T>> {
+export default class Input<T: ?string | ?number> extends React.PureComponent<InputProps<T>> {
     static defaultProps = {
         collapsed: false,
         type: 'text',
