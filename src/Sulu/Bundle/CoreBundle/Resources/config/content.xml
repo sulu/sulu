@@ -15,6 +15,7 @@
         <parameter key="sulu.content.webspace_structure_provider.class">Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider</parameter>
 
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
+        <parameter key="sulu.content.type.number.class">Sulu\Component\Content\Types\Number</parameter>
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
         <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
         <parameter key="sulu.content.type.text_editor.class">Sulu\Component\Content\Types\TextEditor</parameter>
@@ -126,6 +127,11 @@
         <service id="sulu.content.rlp.strategy.tree" alias="sulu.content.resource_locator.strategy.tree_leaf_edit"/>
 
         <!-- simple content types -->
+        <service id="sulu.content.type.number" class="%sulu.content.type.number.class%">
+            <argument>%sulu.content.type.text_line.template%</argument>
+            <tag name="sulu.content.type" alias="number"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
+        </service>
         <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%">
             <argument>%sulu.content.type.text_line.template%</argument>
             <tag name="sulu.content.type" alias="text_line"/>

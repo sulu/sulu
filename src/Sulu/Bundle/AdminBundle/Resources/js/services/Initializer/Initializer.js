@@ -23,6 +23,7 @@ import {
     Email,
     fieldRegistry,
     Input,
+    Number,
     PasswordConfirmation,
     Phone,
     ResourceLocator,
@@ -76,6 +77,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('color', ColorPicker);
     fieldRegistry.add('date', DatePicker);
     fieldRegistry.add('email', Email);
+    fieldRegistry.add('number', Number);
     fieldRegistry.add('password_confirmation', PasswordConfirmation);
     fieldRegistry.add('phone', Phone);
     fieldRegistry.add('resource_locator', ResourceLocator);

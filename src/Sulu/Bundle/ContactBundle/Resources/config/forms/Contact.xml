@@ -79,6 +79,8 @@
                     <title lang="de">Notiz</title>
                 </meta>
             </property>
+
+            <property name="test" type="number" />
         </properties>
     </section>
 </properties>

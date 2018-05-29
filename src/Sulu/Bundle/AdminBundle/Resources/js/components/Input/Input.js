@@ -5,31 +5,11 @@ import classNames from 'classnames';
 import Icon from '../Icon';
 import Loader from '../Loader';
 import inputStyles from './input.scss';
+import type {InputProps} from './types';
 
 const LOADER_SIZE = 20;
 
-type Props = {|
-    collapsed: boolean,
-    name?: string,
-    icon?: string,
-    type: string,
-    loading?: boolean,
-    placeholder?: string,
-    labelRef?: (ref: ?ElementRef<'label'>) => void,
-    inputRef?: (ref: ?ElementRef<'input'>) => void,
-    valid: boolean,
-    value: ?string,
-    onBlur?: () => void,
-    onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
-    onKeyPress?: (key: ?string, event: SyntheticKeyboardEvent<HTMLInputElement>) => void,
-    onIconClick?: () => void,
-    onClearClick?: () => void,
-    iconStyle?: Object,
-    iconClassName?: string,
-    skin: 'default' | 'dark',
-|};
-
-export default class Input extends React.PureComponent<Props> {
+export default class Input<T: ?string | number> extends React.PureComponent<InputProps<T>> {
     static defaultProps = {
         collapsed: false,
         type: 'text',
@@ -58,7 +38,7 @@ export default class Input extends React.PureComponent<Props> {
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        this.props.onChange(event.currentTarget.value || undefined, event);
+        this.props.onChange(event.currentTarget.value || null, event);
     };
 
     handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
@@ -66,14 +46,6 @@ export default class Input extends React.PureComponent<Props> {
 
         if (onKeyPress) {
             onKeyPress(event.key || undefined, event);
-        }
-    };
-
-    handleBlur = () => {
-        const {onBlur} = this.props;
-
-        if (onBlur) {
-            onBlur();
         }
     };
 
@@ -85,6 +57,7 @@ export default class Input extends React.PureComponent<Props> {
             collapsed,
             name,
             placeholder,
+            onBlur,
             onIconClick,
             onClearClick,
             onKeyPress,
@@ -153,7 +126,7 @@ export default class Input extends React.PureComponent<Props> {
                     type={type}
                     value={value || ''}
                     placeholder={placeholder}
-                    onBlur={this.handleBlur}
+                    onBlur={onBlur}
                     onChange={this.handleChange}
                     onKeyPress={onKeyPress ? this.handleKeyPress : undefined}
                 />
