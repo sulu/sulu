@@ -16,7 +16,6 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
  * Defines the operations of the CategoryManager.

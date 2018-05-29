@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
-import TreeListAdapter from '../../adapters/TreeListAdapter';
+import TreeTableAdapter from '../../adapters/TreeTableAdapter';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: function(key) {
@@ -103,7 +103,7 @@ test('Render data with schema', () => {
         },
     };
     const treeListAdapter = render(
-        <TreeListAdapter
+        <TreeTableAdapter
             data={data}
             disabledIds={[]}
             loading={false}
@@ -210,7 +210,7 @@ test('Render data with two columns', () => {
         },
     };
     const treeListAdapter = render(
-        <TreeListAdapter
+        <TreeTableAdapter
             data={data}
             disabledIds={[]}
             loading={false}
@@ -305,7 +305,7 @@ test('Render data with schema and selections', () => {
         },
     };
     const treeListAdapter = render(
-        <TreeListAdapter
+        <TreeTableAdapter
             data={data}
             disabledIds={[]}
             loading={false}
@@ -401,7 +401,7 @@ test('Execute onItemActivation callback when an item is expanded', () => {
     };
     const onItemActivationSpy = jest.fn();
     const treeListAdapter = mount(
-        <TreeListAdapter
+        <TreeTableAdapter
             data={data}
             disabledIds={[]}
             loading={false}
@@ -453,7 +453,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         },
     };
     const treeListAdapter = render(
-        <TreeListAdapter
+        <TreeTableAdapter
             data={data}
             disabledIds={[]}
             loading={false}
@@ -498,7 +498,7 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
         },
     };
     const treeListAdapter = render(
-        <TreeListAdapter
+        <TreeTableAdapter
             data={data}
             disabledIds={[]}
             loading={false}
@@ -543,7 +543,7 @@ test('Click on pencil should execute onItemClick callback', () => {
         },
     };
     const treeListAdapter = shallow(
-        <TreeListAdapter
+        <TreeTableAdapter
             data={data}
             disabledIds={[]}
             loading={false}
@@ -592,7 +592,7 @@ test('Click on add should execute onAddClick callback', () => {
     };
     const rowAddClickSpy = jest.fn();
     const treeListAdapter = shallow(
-        <TreeListAdapter
+        <TreeTableAdapter
             data={data}
             disabledIds={[]}
             loading={false}

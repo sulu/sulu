@@ -26,11 +26,7 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryNameMissingException;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
