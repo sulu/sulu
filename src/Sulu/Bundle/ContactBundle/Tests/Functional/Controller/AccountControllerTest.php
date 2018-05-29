@@ -662,6 +662,7 @@ class AccountControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals('A small notice', $response->note);
@@ -759,13 +760,6 @@ class AccountControllerTest extends SuluTestCase
                             'name' => 'Private',
                         ],
                     ],
-                    [
-                        'email' => 'erika.mustermann@muster.de',
-                        'emailType' => [
-                            'id' => $this->emailType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
                 ],
                 'phones' => [
                     [
@@ -775,24 +769,10 @@ class AccountControllerTest extends SuluTestCase
                             'name' => 'Private',
                         ],
                     ],
-                    [
-                        'phone' => '987654321',
-                        'phoneType' => [
-                            'id' => $this->phoneType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
                 ],
                 'faxes' => [
                     [
                         'fax' => '123456789-1',
-                        'faxType' => [
-                            'id' => $this->faxType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
-                    [
-                        'fax' => '987654321-1',
                         'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
@@ -826,37 +806,12 @@ class AccountControllerTest extends SuluTestCase
                 ],
                 'notes' => [
                     ['value' => 'Note 1'],
-                    ['value' => 'Note 2'],
                 ],
             ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals(1, $response->depth);
-        $this->assertEquals($this->account->getId(), $response->parent->id);
-        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
-        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
-        $this->assertEquals('123456789', $response->phones[0]->phone);
-        $this->assertEquals('987654321', $response->phones[1]->phone);
-        $this->assertEquals('123456789-1', $response->faxes[0]->fax);
-        $this->assertEquals('987654321-1', $response->faxes[1]->fax);
-        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
-        $this->assertEquals('note', $response->addresses[0]->note);
-        $this->assertEquals('1', $response->addresses[0]->number);
-        $this->assertEquals('0000', $response->addresses[0]->zip);
-        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
-        $this->assertEquals('Musterstate', $response->addresses[0]->state);
-        $this->assertEquals('Note 1', $response->notes[0]->value);
-        $this->assertEquals('Note 2', $response->notes[1]->value);
-
-        $this->assertEquals(true, $response->addresses[0]->billingAddress);
-        $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
-        $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
-        $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
-        $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $client->request('GET', '/api/accounts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -865,18 +820,14 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->depth);
         $this->assertEquals($this->account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
-        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
-        $this->assertEquals('987654321', $response->phones[1]->phone);
         $this->assertEquals('123456789-1', $response->faxes[0]->fax);
-        $this->assertEquals('987654321-1', $response->faxes[1]->fax);
         $this->assertEquals('Musterstraße', $response->addresses[0]->street);
         $this->assertEquals('1', $response->addresses[0]->number);
         $this->assertEquals('0000', $response->addresses[0]->zip);
         $this->assertEquals('Musterstadt', $response->addresses[0]->city);
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
-        $this->assertEquals('Note 2', $response->notes[1]->value);
 
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
@@ -1955,13 +1906,6 @@ class AccountControllerTest extends SuluTestCase
                             'name' => 'Private',
                         ],
                     ],
-                    [
-                        'email' => 'erika.mustermann@muster.de',
-                        'emailType' => [
-                            'id' => $this->emailType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
                 ],
                 'phones' => [
                     [
@@ -1971,24 +1915,10 @@ class AccountControllerTest extends SuluTestCase
                             'name' => 'Private',
                         ],
                     ],
-                    [
-                        'phone' => '987654321',
-                        'phoneType' => [
-                            'id' => $this->phoneType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
                 ],
                 'faxes' => [
                     [
                         'fax' => '123456789-1',
-                        'faxType' => [
-                            'id' => $this->faxType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
-                    [
-                        'fax' => '987654321-1',
                         'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
@@ -2021,7 +1951,6 @@ class AccountControllerTest extends SuluTestCase
                 ],
                 'notes' => [
                     ['value' => 'Note 1'],
-                    ['value' => 'Note 2'],
                 ],
             ]
         );
@@ -2032,18 +1961,14 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals($this->account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
-        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
-        $this->assertEquals('987654321', $response->phones[1]->phone);
         $this->assertEquals('123456789-1', $response->faxes[0]->fax);
-        $this->assertEquals('987654321-1', $response->faxes[1]->fax);
         $this->assertEquals('Musterstraße', $response->addresses[0]->street);
         $this->assertEquals('1', $response->addresses[0]->number);
         $this->assertEquals('0000', $response->addresses[0]->zip);
         $this->assertEquals('Musterstadt', $response->addresses[0]->city);
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
-        $this->assertEquals('Note 2', $response->notes[1]->value);
 
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
@@ -2079,14 +2004,6 @@ class AccountControllerTest extends SuluTestCase
                             'name' => 'Private',
                         ],
                     ],
-                    [
-                        'id' => $response->emails[1]->id,
-                        'email' => 'erika.mustermann@muster.de',
-                        'emailType' => [
-                            'id' => $this->emailType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
                 ],
                 'phones' => [
                     [
@@ -2097,27 +2014,11 @@ class AccountControllerTest extends SuluTestCase
                             'name' => 'Private',
                         ],
                     ],
-                    [
-                        'id' => $response->phones[1]->id,
-                        'phone' => '987654321',
-                        'phoneType' => [
-                            'id' => $this->phoneType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
                 ],
                 'faxes' => [
                     [
                         'id' => $response->faxes[0]->id,
                         'fax' => '123456789-1',
-                        'faxType' => [
-                            'id' => $this->faxType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
-                    [
-                        'id' => $response->faxes[1]->id,
-                        'fax' => '987654321-1',
                         'faxType' => [
                             'id' => $this->faxType->getId(),
                             'name' => 'Private',
@@ -2151,7 +2052,6 @@ class AccountControllerTest extends SuluTestCase
                 ],
                 'notes' => [
                     ['id' => $response->notes[0]->id, 'value' => 'Note 1'],
-                    ['id' => $response->notes[1]->id, 'value' => 'Note 2'],
                 ],
             ]
         );
@@ -2170,16 +2070,13 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('ExampleCompany 222', $response->name);
         $this->assertObjectNotHasAttribute('parent', $response);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
-        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
-        $this->assertEquals('987654321', $response->phones[1]->phone);
         $this->assertEquals('Musterstraße', $response->addresses[0]->street);
         $this->assertEquals('1', $response->addresses[0]->number);
         $this->assertEquals('0000', $response->addresses[0]->zip);
         $this->assertEquals('Musterstadt', $response->addresses[0]->city);
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
-        $this->assertEquals('Note 2', $response->notes[1]->value);
 
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
@@ -2211,13 +2108,6 @@ class AccountControllerTest extends SuluTestCase
                 'emails' => [
                     [
                         'email' => 'erika.mustermann@muster.at',
-                        'emailType' => [
-                            'id' => $this->emailType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
-                    [
-                        'email' => 'erika.mustermann@muster.de',
                         'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
@@ -2308,24 +2198,10 @@ class AccountControllerTest extends SuluTestCase
                             'name' => 'Private',
                         ],
                     ],
-                    [
-                        'url' => 'http://test.company.com',
-                        'urlType' => [
-                            'id' => $this->urlType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
                 ],
                 'emails' => [
                     [
                         'email' => 'office@company.com',
-                        'emailType' => [
-                            'id' => $this->emailType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
-                    [
-                        'email' => 'erika.mustermann@company.com',
                         'emailType' => [
                             'id' => $this->emailType->getId(),
                             'name' => 'Private',
