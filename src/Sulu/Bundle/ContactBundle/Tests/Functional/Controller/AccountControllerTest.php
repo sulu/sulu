@@ -811,10 +811,6 @@ class AccountControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $client->request('GET', '/api/accounts/' . $response->id);
-        $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals(1, $response->depth);
@@ -2054,14 +2050,6 @@ class AccountControllerTest extends SuluTestCase
                     ['id' => $response->notes[0]->id, 'value' => 'Note 1'],
                 ],
             ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $client->request(
-            'GET',
-            '/api/accounts/' . $account2Id
         );
 
         $response = json_decode($client->getResponse()->getContent());

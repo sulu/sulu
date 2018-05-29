@@ -749,9 +749,6 @@ class ContactControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $client->request('GET', '/api/contacts/' . $response->id);
-        $response = json_decode($client->getResponse()->getContent());
-
         $this->assertNotNull($response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
@@ -870,14 +867,6 @@ class ContactControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('Erika', $response->firstName);
-        $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
-
-        $client->request('GET', '/api/contacts/' . $response->id);
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertNotNull($response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title->title);
@@ -1302,9 +1291,6 @@ class ContactControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $client->request('GET', '/api/contacts/' . $response->id);
-        $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
@@ -2063,15 +2049,9 @@ class ContactControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertEquals($this->account1->getId(), $response->account->id);
-
-        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(true, $response->addresses[1]->primaryAddress);
-
-        $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($this->account1->getId(), $response['account']['id']);
 
         $addresses = $response['addresses'];
 
@@ -2211,14 +2191,6 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[1]->primaryAddress);
         $this->assertEquals(true, $response->addresses[2]->primaryAddress);
-
-        $client->request('GET', '/api/contacts/' . $response->id);
-        $response = json_decode($client->getResponse()->getContent());
-        usort($response->addresses, $this->sortAddressesPrimaryLast());
-
-        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
-        $this->assertEquals(true, $response->addresses[2]->primaryAddress);
     }
 
     public function testPostEmptyBirthday()
@@ -2237,10 +2209,6 @@ class ContactControllerTest extends SuluTestCase
         ];
 
         $client->request('PUT', '/api/contacts/' . $this->contact->getId(), $data);
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayNotHasKey('birthday', $response);
-
-        $client->request('GET', '/api/contacts/' . $this->contact->getId());
         $response = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayNotHasKey('birthday', $response);
     }
