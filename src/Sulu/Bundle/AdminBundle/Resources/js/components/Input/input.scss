@@ -68,6 +68,7 @@ $darkIconColor: $doveGray;
         &.collapsed {
             input {
                 margin-right: 0;
+                visibility: hidden;
             }
         }
     }
@@ -96,6 +97,10 @@ $darkIconColor: $doveGray;
 
     &.dark {
         box-shadow: $inputBorderWidth 0 0 $darkInputBorderColor;
+    }
+
+    &.collapsed {
+        box-shadow: none;
     }
 }
 

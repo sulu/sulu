@@ -119,7 +119,10 @@ export default class Input extends React.PureComponent<Props> {
 
         const prependContainerClass = classNames(
             inputStyles.prependedContainer,
-            inputStyles[skin]
+            inputStyles[skin],
+            {
+                [inputStyles.collapsed]: collapsed,
+            }
         );
 
         return (
