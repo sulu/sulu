@@ -16,7 +16,6 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
  * Defines the operations of the CategoryManager.
@@ -155,25 +154,6 @@ interface CategoryManagerInterface
      * @return CategoryInterface
      */
     public function getApiObjects($categories, $locale);
-
-    /**
-     * Returns the FieldDescriptors for the categories.
-     *
-     * @param string $locale
-     *
-     * @return DoctrineFieldDescriptor[]
-     */
-    public function getFieldDescriptors($locale);
-
-    /**
-     * Returns the FieldDescriptor for the given key.
-     *
-     * @param string $locale
-     * @param string $key The key of the FieldDescriptor to return
-     *
-     * @return DoctrineFieldDescriptor
-     */
-    public function getFieldDescriptor($locale, $key);
 
     /**
      * Move category to new parent.

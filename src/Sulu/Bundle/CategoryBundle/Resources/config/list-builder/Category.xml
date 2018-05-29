@@ -1,0 +1,112 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:list="http://schemas.sulu.io/class/list"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+    <orm:joins name="translation">
+        <orm:join>
+            <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+            <orm:field-name>%sulu.model.category.class%.translations</orm:field-name>
+            <orm:condition>%sulu.model.category_translation.class%.locale = ':locale'</orm:condition>
+        </orm:join>
+    </orm:joins>
+
+    <orm:joins name="defaultTranslation">
+        <orm:join>
+            <orm:entity-name>%sulu.model.category_translation.class%Default</orm:entity-name>
+            <orm:field-name>%sulu.model.category.class%.translations</orm:field-name>
+            <orm:condition>%sulu.model.category_translation.class%.locale = %sulu.model.category.class%.defaultLocale</orm:condition>
+        </orm:join>
+    </orm:joins>
+
+    <orm:joins name="parent">
+        <orm:join>
+            <orm:entity-name>%sulu.model.category.class%Parent</orm:entity-name>
+            <orm:field-name>%sulu.model.category.class%.parent</orm:field-name>
+        </orm:join>
+    </orm:joins>
+
+    <properties>
+        <property name="id" list:translation="public.id" visibility="no" list:type="integer">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
+        </property>
+
+        <property name="depth" list:translation="public.depth" visibility="no" list:type="integer">
+            <orm:field-name>depth</orm:field-name>
+            <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
+        </property>
+
+        <property name="lft" list:translation="public.lft" visibility="never" list:type="integer">
+            <orm:field-name>lft</orm:field-name>
+            <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
+        </property>
+
+        <property name="rgt" list:translation="public.rgt" visibility="never" list:type="integer">
+            <orm:field-name>rgt</orm:field-name>
+            <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
+        </property>
+
+        <property name="key" list:translation="public.key" visibility="no">
+            <orm:field-name>key</orm:field-name>
+            <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
+        </property>
+
+        <property name="defaultLocale" list:translation="public.default" visibility="no">
+            <orm:field-name>defaultLocale</orm:field-name>
+            <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
+        </property>
+
+        <case-property name="locale" list:translation="public.locale">
+            <orm:field>
+                <orm:field-name>locale</orm:field-name>
+                <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+
+                <orm:joins ref="translation"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>defaultLocale</orm:field-name>
+                <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
+            </orm:field>
+        </case-property>
+
+        <case-property name="name" list:translation="public.name" visibility="always">
+            <orm:field>
+                <orm:field-name>translation</orm:field-name>
+                <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+
+                <orm:joins ref="translation"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>translation</orm:field-name>
+                <orm:entity-name>%sulu.model.category_translation.class%Default</orm:entity-name>
+
+                <orm:joins ref="defaultTranslation"/>
+            </orm:field>
+        </case-property>
+
+        <identity-property name="parent" list:translation="public.parent" visibility="never">
+            <orm:field-name>parent</orm:field-name>
+            <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
+        </identity-property>
+
+        <property name="parentLft" list:translation="public.parent" visibility="never">
+            <orm:field-name>lft</orm:field-name>
+            <orm:entity-name>%sulu.model.category.class%Parent</orm:entity-name>
+
+            <orm:joins ref="parent"/>
+        </property>
+
+        <property name="changed" list:translation="public.changed" visibility="no" list:type="datetime">
+            <orm:field-name>created</orm:field-name>
+            <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+
+            <orm:joins ref="translation"/>
+        </property>
+
+        <property name="created" list:translation="public.created" visibility="no" list:type="datetime">
+            <orm:field-name>created</orm:field-name>
+            <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+
+            <orm:joins ref="translation"/>
+        </property>
+    </properties>
+</class>

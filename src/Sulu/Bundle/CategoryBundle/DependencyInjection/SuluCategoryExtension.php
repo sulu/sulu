@@ -92,5 +92,20 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                 ]
             );
         }
+
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'categories' => [
+                            'form' => ['@SuluCategoryBundle/Resources/config/forms/Category.xml'],
+                            'datagrid' => '%sulu.model.category.class%',
+                            'endpoint' => 'get_categories',
+                        ],
+                    ],
+                ]
+            );
+        }
     }
 }

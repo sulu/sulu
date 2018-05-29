@@ -6,7 +6,7 @@ import {
     datagridFieldTransformerRegistry,
     FolderAdapter,
     TableAdapter,
-    TreeListAdapter,
+    TreeTableAdapter,
     BytesFieldTransformer,
     DateFieldTransformer,
     DateTimeFieldTransformer,
@@ -53,7 +53,7 @@ function registerDatagridAdapters() {
     datagridAdapterRegistry.add('column_list', ColumnListAdapter);
     datagridAdapterRegistry.add('folder', FolderAdapter);
     datagridAdapterRegistry.add('table', TableAdapter);
-    datagridAdapterRegistry.add('tree_list', TreeListAdapter);
+    datagridAdapterRegistry.add('tree_table', TreeTableAdapter);
 }
 
 function registerDatagridFieldTransformers() {
