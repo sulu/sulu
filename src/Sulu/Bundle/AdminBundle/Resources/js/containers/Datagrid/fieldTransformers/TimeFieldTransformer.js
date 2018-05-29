@@ -4,18 +4,20 @@ import log from 'loglevel';
 import type {Node} from 'react';
 import type {FieldTransformer} from '../types';
 
-export default class DateFieldTransformer implements FieldTransformer {
+const format = 'HH:mm:ss';
+
+export default class TimeFieldTransformer implements FieldTransformer {
     transform(value: *): Node {
         if (!value) {
-            return;
+            return null;
         }
 
-        const momentObject = moment(value, moment.ISO_8601);
+        const momentObject = moment(value, format);
 
         if (!momentObject.isValid()) {
-            log.error('Invalid date given: "' + value + '". Format needs to be in "ISO 8601"');
+            log.error('Invalid time given: "' + value + '". Format needs to be "' + format + '"');
 
-            return;
+            return null;
         }
 
         return momentObject.format('LT');
