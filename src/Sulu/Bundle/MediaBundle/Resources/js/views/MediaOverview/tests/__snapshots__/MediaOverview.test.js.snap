@@ -169,7 +169,7 @@ exports[`Render a simple MediaOverview 1`] = `
           class="input dark collapsed hasAppendIcon"
         >
           <div
-            class="prependedContainer dark"
+            class="prependedContainer dark collapsed"
           >
             <span
               aria-label="su-search"

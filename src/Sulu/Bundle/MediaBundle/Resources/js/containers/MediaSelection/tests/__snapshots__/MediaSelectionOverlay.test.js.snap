@@ -59,7 +59,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
               <div>
                 <div class=\\"toolbar\\">
                   <label class=\\"input dark collapsed hasAppendIcon\\">
-                    <div class=\\"prependedContainer dark\\"><span class=\\"icon dark iconClickable collapsed su-search clickable\\" aria-label=\\"su-search\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+                    <div class=\\"prependedContainer dark collapsed\\"><span class=\\"icon dark iconClickable collapsed su-search clickable\\" aria-label=\\"su-search\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
                     <input type=\\"text\\" value=\\"\\">
                   </label>
                 </div>

@@ -40,6 +40,7 @@ $darkIconColor: $doveGray;
         padding-left: 10px;
         font-size: $inputFontSize;
         color: $inputColor;
+        will-change: width, padding-left;
         transition: width .3s, padding-left .1s linear;
 
         &::placeholder {
@@ -61,6 +62,7 @@ $darkIconColor: $doveGray;
 
     &.has-append-icon {
         input {
+            will-change: margin-right;
             transition: margin-right .1s;
             margin-right: 34px;
         }
@@ -74,7 +76,6 @@ $darkIconColor: $doveGray;
     }
 
     &.dark {
-        transition: background-color .3s;
         background-color: $darkBackgroundColor;
         color: $darkInputColor;
         border-radius: $darkInputBorderRadius;
