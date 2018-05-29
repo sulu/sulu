@@ -20,4 +20,7 @@ export type InputProps<T: ?string | ?number> = {|
     iconStyle?: Object,
     iconClassName?: string,
     skin: 'default' | 'dark',
+    min?: T,
+    max?: T,
+    step?: T,
 |};

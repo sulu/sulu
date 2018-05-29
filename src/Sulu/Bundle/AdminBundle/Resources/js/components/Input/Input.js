@@ -68,6 +68,9 @@ export default class Input<T: ?string | number> extends React.PureComponent<Inpu
             inputRef,
             labelRef,
             skin,
+            min,
+            max,
+            step,
         } = this.props;
 
         const labelClass = classNames(
@@ -129,6 +132,9 @@ export default class Input<T: ?string | number> extends React.PureComponent<Inpu
                     onBlur={onBlur}
                     onChange={this.handleChange}
                     onKeyPress={onKeyPress ? this.handleKeyPress : undefined}
+                    min={min}
+                    max={max}
+                    step={step}
                 />
 
                 {!collapsed && value && onClearClick &&

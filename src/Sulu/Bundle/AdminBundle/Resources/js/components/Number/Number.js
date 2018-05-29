@@ -18,6 +18,9 @@ type Props = {|
     onIconClick?: () => void,
     iconStyle?: Object,
     iconClassName?: string,
+    min?: number,
+    max?: number,
+    step?: number,
 |};
 
 export default class Number extends React.PureComponent<Props> {
@@ -26,13 +29,13 @@ export default class Number extends React.PureComponent<Props> {
     };
 
     handleChange = (value: ?string, event: SyntheticEvent<HTMLInputElement>) => {
-        let number = undefined;
+        let number = null;
 
         if (value) {
             number = parseFloat(value);
 
             if (isNaN(number)) {
-                number = undefined;
+                number = null;
             }
         }
 
@@ -54,6 +57,9 @@ export default class Number extends React.PureComponent<Props> {
             iconStyle: this.props.iconStyle,
             iconClassName: this.props.iconClassName,
             onChange: this.handleChange,
+            min: this.props.min,
+            max: this.props.max,
+            step: this.props.step,
             type: 'number',
         };
 

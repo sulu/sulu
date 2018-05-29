@@ -50,12 +50,12 @@ test('Input should call the callback when the input changes', () => {
     expect(onChange).toHaveBeenCalledWith('my-value', event);
 });
 
-test('Input should call the callback with undefined if the input is removed', () => {
+test('Input should call the callback with null if the input value is removed', () => {
     const onChange = jest.fn();
     const input = shallow(<Input value="My value" onChange={onChange} onBlur={jest.fn()} />);
     const event = {currentTarget: {value: ''}};
     input.find('input').simulate('change', event);
-    expect(onChange).toHaveBeenCalledWith(undefined, event);
+    expect(onChange).toHaveBeenCalledWith(null, event);
 });
 
 test('Input should call the callback when icon was clicked', () => {
@@ -93,5 +93,11 @@ test('Input should should call the callback when clear icon was clicked', () => 
 test('Input should render with dark skin', () => {
     expect(
         render(<Input icon="su-pen" value={null} onChange={jest.fn()} onClearClick={jest.fn()} skin="dark" />)
+    ).toMatchSnapshot();
+});
+
+test('Input should render with type number with attributes', () => {
+    expect(render(
+        <Input type="number" value={25} onChange={jest.fn()} onBlur={jest.fn()} min={10} max={50} step={5} />)
     ).toMatchSnapshot();
 });

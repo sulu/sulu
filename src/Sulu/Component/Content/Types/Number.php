@@ -37,8 +37,7 @@ class Number extends SimpleContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         $value = $property->getValue();
         if (null != $value) {
             $node->setProperty(
