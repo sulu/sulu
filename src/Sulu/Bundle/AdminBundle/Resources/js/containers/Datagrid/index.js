@@ -12,7 +12,7 @@ import DateTimeFieldTransformer from './fieldTransformers/DateTimeFieldTransform
 import NumberFieldTransformer from './fieldTransformers/NumberFieldTransformer';
 import TimeFieldTransformer from './fieldTransformers/TimeFieldTransformer';
 import ColumnListAdapter from './adapters/ColumnListAdapter';
-import TreeListAdapter from './adapters/TreeListAdapter';
+import TreeTableAdapter from './adapters/TreeTableAdapter';
 import TableAdapter from './adapters/TableAdapter';
 import FolderAdapter from './adapters/FolderAdapter';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -32,7 +32,7 @@ export {
     datagridAdapterRegistry,
     datagridFieldTransformerRegistry,
     ColumnListAdapter,
-    TreeListAdapter,
+    TreeTableAdapter,
     TableAdapter,
     FolderAdapter,
     FlatStructureStrategy,
