@@ -229,7 +229,7 @@ test('The loading strategy should be called with the defined search', () => {
     structureStrategy.clear = jest.fn();
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
-    datagridStore.triggerSearch('search-value');
+    datagridStore.search('search-value');
 
     expect(loadingStrategy.load).toBeCalledWith(
         data,

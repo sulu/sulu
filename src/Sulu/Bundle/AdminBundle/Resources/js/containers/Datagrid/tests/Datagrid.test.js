@@ -49,7 +49,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
         ],
     };
     this.data = this.structureStrategy.data;
-    this.triggerSearch = jest.fn();
+    this.search = jest.fn();
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
@@ -239,7 +239,7 @@ test('Clicking a header cell should sort the table', () => {
     expect(datagridStore.sort).toBeCalledWith('title', 'asc');
 });
 
-test('Trigger a search should call triggerSearch on the store', () => {
+test('Trigger a search should call search on the store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     datagridStore.structureStrategy.data = [
@@ -251,7 +251,7 @@ test('Trigger a search should call triggerSearch on the store', () => {
 
     const search = datagrid.find('Search');
     search.prop('onSearch')('search-value');
-    expect(datagridStore.triggerSearch).toBeCalledWith('search-value');
+    expect(datagridStore.search).toBeCalledWith('search-value');
 });
 
 test('Switching the adapter should render the correct adapter', () => {

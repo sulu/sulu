@@ -28,11 +28,11 @@ export default class Search extends React.Component<Props> {
 
     handleKeyPress = (key: ?string) => {
         if (key === 'Enter') {
-            this.handleSearch();
+            this.search();
         }
     };
 
-    handleSearch = () => {
+    search = () => {
         if (!this.collapsed && !this.value) {
             this.setCollapsed(true);
         }
@@ -41,7 +41,7 @@ export default class Search extends React.Component<Props> {
     };
 
     handleBlur = () => {
-        this.handleSearch();
+        this.search();
     };
 
     handleIconClick = () => {
@@ -52,7 +52,7 @@ export default class Search extends React.Component<Props> {
 
     handleClearClick = () => {
         this.setValue(undefined);
-        this.handleSearch();
+        this.search();
     };
 
     render() {

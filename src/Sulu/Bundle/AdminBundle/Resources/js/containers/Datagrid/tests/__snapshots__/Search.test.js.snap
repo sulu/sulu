@@ -1,19 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should expand the input when clicking on icon 1`] = `
-<Input
-  collapsed={false}
-  icon="su-search"
-  onBlur={[Function]}
-  onChange={[Function]}
-  onClearClick={[Function]}
-  onIconClick={[Function]}
-  onKeyPress={[Function]}
-  placeholder="sulu_admin.datagrid_search_placeholder"
-  skin="dark"
-  type="text"
-  valid={true}
-/>
+<label
+  class="input dark hasAppendIcon"
+>
+  <div
+    class="prependedContainer dark"
+  >
+    <span
+      aria-label="su-search"
+      class="icon dark iconClickable su-search clickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+  <input
+    placeholder="sulu_admin.datagrid_search_placeholder"
+    type="text"
+    value=""
+  />
+</label>
 `;
 
 exports[`The component should render collapsed 1`] = `

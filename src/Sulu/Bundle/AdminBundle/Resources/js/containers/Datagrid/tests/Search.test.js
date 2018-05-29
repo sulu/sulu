@@ -24,7 +24,7 @@ test('The component should expand the input when clicking on icon', () => {
 
     search.find('Input').simulate('iconClick');
 
-    expect(search).toMatchSnapshot();
+    expect(search.render()).toMatchSnapshot();
 });
 
 test('The component should trigger the onSearch callback correctly if Input calls onBlur', () => {

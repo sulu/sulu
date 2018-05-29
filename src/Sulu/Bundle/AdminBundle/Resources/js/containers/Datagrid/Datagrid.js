@@ -88,7 +88,7 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     handleSearch = (search: ?string) => {
-        this.props.store.triggerSearch(search);
+        this.props.store.search(search);
     };
 
     handleItemSelectionChange = (id: string | number, selected?: boolean) => {
