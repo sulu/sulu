@@ -84,7 +84,7 @@ class Datagrid extends React.Component<ViewProps> {
 
         router.bind('sortColumn', this.datagridStore.sortColumn);
         router.bind('sortOrder', this.datagridStore.sortOrder);
-        router.bind('search', this.datagridStore.search);
+        router.bind('search', this.datagridStore.searchTerm);
 
         const {
             sortColumn,

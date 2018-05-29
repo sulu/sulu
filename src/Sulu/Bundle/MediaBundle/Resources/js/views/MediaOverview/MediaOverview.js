@@ -40,7 +40,7 @@ class MediaOverview extends React.Component<ViewProps> {
         this.createCollectionDatagridStore();
         this.createMediaDatagridStore();
 
-        router.bind('search', this.mediaDatagridStore.search);
+        router.bind('search', this.mediaDatagridStore.searchTerm);
     }
 
     componentWillUnmount() {

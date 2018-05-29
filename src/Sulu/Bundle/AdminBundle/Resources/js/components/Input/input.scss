@@ -60,11 +60,15 @@ $darkIconColor: $doveGray;
     }
 
     &.has-append-icon {
-        transition: margin-right .1s;
-        margin-right: 34px;
+        input {
+            transition: margin-right .1s;
+            margin-right: 34px;
+        }
 
         &.collapsed {
-            margin-right: 0;
+            input {
+                margin-right: 0;
+            }
         }
     }
 
