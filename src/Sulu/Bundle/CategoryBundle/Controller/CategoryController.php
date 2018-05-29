@@ -16,7 +16,6 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -41,11 +40,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
     /**
      * {@inheritdoc}
      */
-    protected static $entityName = CategoryInterface::class;
-
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'categories';
 
     /**
@@ -60,14 +54,13 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function getFieldsAction(Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $fieldDescriptors = $this->getCategoryManager()->getFieldDescriptors($locale);
+        $fieldDescriptors = $this->getFieldDescriptors($locale);
 
         // unset list-irrelevant field descriptors
         unset($fieldDescriptors['lft']);
         unset($fieldDescriptors['rgt']);
         unset($fieldDescriptors['depth']);
         unset($fieldDescriptors['parent']);
-        unset($fieldDescriptors['hasChildren']);
         unset($fieldDescriptors['locale']);
         unset($fieldDescriptors['defaultLocale']);
 
@@ -334,7 +327,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $parentExpressions = [];
         foreach ($parentIdsToExpand as $parentId) {
             $parentExpressions[] = $listBuilder->createWhereExpression(
-                $this->getCategoryManager()->getFieldDescriptor($locale, 'parent'),
+                $listBuilder->getFieldDescriptor('parent'),
                 $parentId,
                 ListBuilderInterface::WHERE_COMPARATOR_EQUAL
             );
@@ -385,9 +378,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
         /** @var DoctrineListBuilderFactory $factory */
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-        $fieldDescriptors = $this->getCategoryManager()->getFieldDescriptors($locale);
+        $fieldDescriptors = $this->getFieldDescriptors($locale);
 
-        $listBuilder = $factory->create(self::$entityName);
+        $listBuilder = $factory->create($this->getParameter('sulu.model.category.class'));
         // sort by depth before initializing listbuilder with request parameter to avoid wrong sorting in frontend
         $listBuilder->sort($fieldDescriptors['depth']);
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
@@ -418,5 +411,14 @@ class CategoryController extends RestController implements ClassResourceInterfac
     private function getCategoryManager()
     {
         return $this->get('sulu_category.category_manager');
+    }
+
+    private function getFieldDescriptors($locale)
+    {
+        return $this->get('sulu_core.list_builder.field_descriptor_factory')
+            ->getFieldDescriptorForClass(
+                $this->getParameter('sulu.model.category.class'),
+                ['locale' => $locale]
+            );
     }
 }
