@@ -46,6 +46,14 @@ class FieldDescriptor implements FieldDescriptorInterface
     private $visibility;
 
     /**
+     * Defines the searchability of the field.
+     *
+     * @var string
+     * @Expose
+     */
+    private $searchability;
+
+    /**
      * Defines if this field is sortable.
      *
      * @var bool
@@ -102,7 +110,8 @@ class FieldDescriptor implements FieldDescriptorInterface
     public function __construct(
         string $name,
         string $translation = null,
-        string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER,
+        string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
+        string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
         string $width = '',
         string $minWidth = '',
@@ -112,6 +121,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     ) {
         $this->name = $name;
         $this->visibility = $visibility;
+        $this->searchability = $searchability;
         $this->sortable = $sortable;
         $this->type = $type;
         $this->width = $width;
@@ -138,7 +148,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     {
         return in_array(
             $this->visibility,
-            [FieldDescriptorInterface::VISIBILITY_YES, FieldDescriptorInterface::VISIBILITY_NO]
+            [FieldDescriptorInterface::VISIBILITY_NO, FieldDescriptorInterface::VISIBILITY_NEVER]
         );
     }
 
@@ -169,6 +179,14 @@ class FieldDescriptor implements FieldDescriptorInterface
     /**
      * {@inheritdoc}
      */
+    public function getSearchability()
+    {
+        return $this->searchability;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getWidth()
     {
         return $this->width;
@@ -183,7 +201,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     {
         return in_array(
             $this->visibility,
-            [FieldDescriptorInterface::VISIBILITY_ALWAYS, FieldDescriptorInterface::VISIBILITY_YES]
+            [FieldDescriptorInterface::VISIBILITY_ALWAYS, FieldDescriptorInterface::VISIBILITY_NEVER]
         );
     }
 

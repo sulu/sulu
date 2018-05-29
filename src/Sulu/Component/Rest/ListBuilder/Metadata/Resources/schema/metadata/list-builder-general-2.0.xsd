@@ -93,6 +93,15 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute type="xs:string" name="searchability">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="yes" />
+                    <xs:enumeration value="no" />
+                    <xs:enumeration value="never" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
 
         <xs:anyAttribute/>
     </xs:attributeGroup>

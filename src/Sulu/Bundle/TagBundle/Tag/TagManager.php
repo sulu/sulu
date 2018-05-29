@@ -20,8 +20,7 @@ use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -30,8 +29,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class TagManager implements TagManagerInterface
 {
-    protected static $tagEntityName = 'SuluTagBundle:Tag';
-
     protected static $userEntityName = 'Sulu\Component\Security\Authentication\UserInterface';
 
     protected static $contactEntityName = 'Sulu\Bundle\ContactBundle\Entity\ContactInterface';
@@ -44,6 +41,16 @@ class TagManager implements TagManagerInterface
     private $tagRepository;
 
     /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    /**
+     * @var FieldDescriptorFactoryInterface
+     */
+    private $fieldDescriptorFactory;
+
+    /**
      * @var ObjectManager
      */
     private $em;
@@ -54,9 +61,9 @@ class TagManager implements TagManagerInterface
     private $eventDispatcher;
 
     /**
-     * @var UserRepositoryInterface
+     * @var string
      */
-    private $userRepository;
+    private $tagEntityName;
 
     /**
      * Describes the fields, which are handled by this controller.
@@ -68,15 +75,19 @@ class TagManager implements TagManagerInterface
     public function __construct(
         TagRepositoryInterface $tagRepository,
         UserRepositoryInterface $userRepository,
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         ObjectManager $em,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        string $tagEntityName
     ) {
         $this->tagRepository = $tagRepository;
+        $this->userRepository = $userRepository;
+        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
-        $this->userRepository = $userRepository;
+        $this->tagEntityName = $tagEntityName;
 
-        $this->initializeFieldDescriptors();
+        $this->fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptorForClass($this->tagEntityName);
     }
 
     /**
@@ -283,68 +294,5 @@ class TagManager implements TagManagerInterface
         }
 
         return $resolvedTags;
-    }
-
-    private function initializeFieldDescriptors()
-    {
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
-            'id',
-            'id',
-            self::$tagEntityName,
-            'public.id',
-            [],
-            FieldDescriptorInterface::VISIBILITY_NEVER,
-            'integer',
-            '50px'
-        );
-        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
-            'name',
-            'name',
-            self::$tagEntityName,
-            'tags.name',
-            [],
-            FieldDescriptorInterface::VISIBILITY_YES,
-            'string',
-            '',
-            '',
-            true,
-            true
-        );
-        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
-            'created',
-            'created',
-            self::$tagEntityName,
-            'public.created',
-            [],
-            FieldDescriptorInterface::VISIBILITY_NEVER,
-            'date'
-        );
-        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
-            'changed',
-            'changed',
-            self::$tagEntityName,
-            'public.changed',
-            [],
-            FieldDescriptorInterface::VISIBILITY_NEVER,
-            'date'
-        );
-        $this->fieldDescriptors['creator'] = new DoctrineFieldDescriptor(
-            'lastName',
-            'creator',
-            self::$contactEntityName,
-            'tags.author',
-            [
-                self::$userEntityName => new DoctrineJoinDescriptor(
-                    self::$userEntityName,
-                    self::$tagEntityName . '.creator'
-                ),
-                self::$contactEntityName => new DoctrineJoinDescriptor(
-                    self::$contactEntityName,
-                    self::$userEntityName . '.contact'
-                ),
-            ],
-            FieldDescriptorInterface::VISIBILITY_NEVER,
-            'string'
-        );
     }
 }

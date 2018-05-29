@@ -64,9 +64,9 @@ class ResourceMetadataMapperTest extends TestCase
     public function testMapDatagrid()
     {
         $fieldDescriptors = [
-            new FieldDescriptor('test1', 'test_translation_key1', FieldDescriptorInterface::VISIBILITY_YES, 'string'),
-            new FieldDescriptor('test2', 'test_translation_key2', FieldDescriptorInterface::VISIBILITY_NO, 'int'),
-            new FieldDescriptor('test3', 'test_translation_key3', FieldDescriptorInterface::VISIBILITY_NEVER, 'string'),
+            new FieldDescriptor('test1', 'test_translation_key1', FieldDescriptorInterface::VISIBILITY_YES, FieldDescriptorInterface::SEARCHABILITY_NEVER, 'string'),
+            new FieldDescriptor('test2', 'test_translation_key2', FieldDescriptorInterface::VISIBILITY_NO, FieldDescriptorInterface::SEARCHABILITY_NEVER, 'int'),
+            new FieldDescriptor('test3', 'test_translation_key3', FieldDescriptorInterface::VISIBILITY_NEVER, FieldDescriptorInterface::SEARCHABILITY_NEVER, 'string'),
         ];
         $this->fieldDescriptorFactory->getFieldDescriptorForClass('TestClass')->willReturn($fieldDescriptors);
 

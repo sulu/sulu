@@ -1,5 +1,5 @@
 // @flow
-import {mount, shallow} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import {observable} from 'mobx';
 import Datagrid from '../Datagrid';
@@ -49,6 +49,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
         ],
     };
     this.data = this.structureStrategy.data;
+    this.search = jest.fn();
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
@@ -120,6 +121,9 @@ test('Render TableAdapter with correct values', () => {
     const editClickSpy = jest.fn();
 
     const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} onItemClick={editClickSpy} />);
+
+    expect(datagrid.find('Search')).not.toBeUndefined();
+
     const tableAdapter = datagrid.find('TableAdapter');
 
     expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
@@ -143,6 +147,13 @@ test('Render the adapter in non-selectable mode', () => {
 
     expect(datagrid.find('TestAdapter').prop('onItemSelectionChange')).toEqual(undefined);
     expect(datagrid.find('TestAdapter').prop('onAllSelectionChange')).toEqual(undefined);
+});
+
+test('Render the adapter in non-searchable mode', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    expect(
+        render(<Datagrid adapters={['test']} searchable={false} store={datagridStore} />)
+    ).toMatchSnapshot();
 });
 
 test('Pass the ids to be disabled to the adapter', () => {
@@ -226,6 +237,21 @@ test('Clicking a header cell should sort the table', () => {
     const headerCell = datagrid.find('th button').at(0);
     headerCell.simulate('click');
     expect(datagridStore.sort).toBeCalledWith('title', 'asc');
+});
+
+test('Trigger a search should call search on the store', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    datagridStore.structureStrategy.data = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
+
+    const search = datagrid.find('Search');
+    search.prop('onSearch')('search-value');
+    expect(datagridStore.search).toBeCalledWith('search-value');
 });
 
 test('Switching the adapter should render the correct adapter', () => {

@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -264,9 +265,9 @@ class CollectionManager implements CollectionManagerInterface
             self::$entityName,
             'id',
             [],
-            true,
-            false,
-            '',
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO,
+            'string',
             '50px'
         );
         $this->fieldDescriptors['type_name'] = new DoctrineFieldDescriptor(
@@ -280,8 +281,7 @@ class CollectionManager implements CollectionManagerInterface
                     self::$entityName . '.type'
                 ),
             ],
-            true,
-            false
+            FieldDescriptorInterface::VISIBILITY_NO
         );
         $this->fieldDescriptors['title'] = new DoctrineFieldDescriptor(
             'title',
@@ -294,8 +294,8 @@ class CollectionManager implements CollectionManagerInterface
                     self::$entityName . '.meta'
                 ),
             ],
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_YES,
             'title',
             '50px'
         );
@@ -310,8 +310,8 @@ class CollectionManager implements CollectionManagerInterface
                     self::$entityName . '.meta'
                 ),
             ],
-            true,
-            false,
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_YES,
             'description'
         );
         $this->fieldDescriptors['changer'] = new DoctrineFieldDescriptor(
@@ -329,8 +329,8 @@ class CollectionManager implements CollectionManagerInterface
                     self::$entityUser . '.contact'
                 ),
             ],
-            true,
-            false
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO
         );
         $this->fieldDescriptors['creator'] = new DoctrineFieldDescriptor(
             'firstname',
@@ -347,8 +347,8 @@ class CollectionManager implements CollectionManagerInterface
                     self::$entityUser . '.contact'
                 ),
             ],
-            true,
-            false
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO
         );
         $this->fieldDescriptors['thumbnails'] = new DoctrineFieldDescriptor(
             'thumbnails',
@@ -356,8 +356,8 @@ class CollectionManager implements CollectionManagerInterface
             self::$entityName,
             'thumbnails',
             [],
-            false,
-            true,
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NO,
             'thumbnails'
         );
 

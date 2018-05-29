@@ -6,15 +6,16 @@
 
 .toolbar {
     margin-bottom: 30px;
+    display: flex;
+    justify-content: flex-end;
 
     & > * {
-        float: right;
-        height: 32px;
-    }
+        height: 30px;
+        margin-right: 10px;
+        width: auto;
 
-    &::after {
-        content: '';
-        clear: both;
-        display: block;
+        &:last-child {
+            margin-right: 0;
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 exports[`Input should render 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <input
     type="text"
@@ -11,9 +11,52 @@ exports[`Input should render 1`] = `
 </label>
 `;
 
+exports[`Input should render append container when onClearClick callback is provided 1`] = `
+<label
+  class="input default hasAppendIcon"
+>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render append container with icon when onClearClick callback is provided and value is set 1`] = `
+<label
+  class="input default hasAppendIcon"
+>
+  <input
+    type="text"
+    value="test"
+  />
+  <div
+    class="appendContainer"
+  >
+    <span
+      aria-label="su-times"
+      class="icon default su-times clickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+</label>
+`;
+
+exports[`Input should render collapsed 1`] = `
+<label
+  class="input default collapsed"
+>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
 exports[`Input should render null value as empty string 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <input
     type="text"
@@ -24,10 +67,10 @@ exports[`Input should render null value as empty string 1`] = `
 
 exports[`Input should render with a loader 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer default"
   >
     <div
       class="spinner"
@@ -48,16 +91,35 @@ exports[`Input should render with a loader 1`] = `
 </label>
 `;
 
-exports[`Input should render with icon 1`] = `
+exports[`Input should render with dark skin 1`] = `
 <label
-  class="input"
+  class="input dark hasAppendIcon"
 >
   <div
-    class="prependedContainer"
+    class="prependedContainer dark"
   >
     <span
       aria-label="su-pen"
-      class="icon su-pen"
+      class="icon dark su-pen"
+    />
+  </div>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render with icon 1`] = `
+<label
+  class="input default"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-pen"
+      class="icon default su-pen"
     />
   </div>
   <input
@@ -69,7 +131,7 @@ exports[`Input should render with icon 1`] = `
 
 exports[`Input should render with invalid value 1`] = `
 <label
-  class="input error"
+  class="input default error"
 >
   <input
     type="text"
@@ -80,7 +142,7 @@ exports[`Input should render with invalid value 1`] = `
 
 exports[`Input should render with placeholder 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <input
     placeholder="My placeholder"
@@ -92,7 +154,7 @@ exports[`Input should render with placeholder 1`] = `
 
 exports[`Input should render with type 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <input
     type="password"
@@ -103,7 +165,7 @@ exports[`Input should render with type 1`] = `
 
 exports[`Input should render with value 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <input
     type="text"

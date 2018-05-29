@@ -36,14 +36,14 @@ exports[`Should render the Login component when initialized is true 1`] = `
               sulu_admin.username_or_email
             </div>
             <label
-              class="input"
+              class="input default"
             >
               <div
-                class="prependedContainer"
+                class="prependedContainer default"
               >
                 <span
                   aria-label="su-user"
-                  class="icon su-user"
+                  class="icon default su-user"
                 />
               </div>
               <input
@@ -61,14 +61,14 @@ exports[`Should render the Login component when initialized is true 1`] = `
               sulu_admin.password
             </div>
             <label
-              class="input"
+              class="input default"
             >
               <div
-                class="prependedContainer"
+                class="prependedContainer default"
               >
                 <span
                   aria-label="su-lock"
-                  class="icon su-lock"
+                  class="icon default su-lock"
                 />
               </div>
               <input
@@ -159,14 +159,14 @@ exports[`Should render the Login with reset password view 1`] = `
               sulu_admin.username_or_email
             </div>
             <label
-              class="input"
+              class="input default"
             >
               <div
-                class="prependedContainer"
+                class="prependedContainer default"
               >
                 <span
                   aria-label="su-user"
-                  class="icon su-user"
+                  class="icon default su-user"
                 />
               </div>
               <input
@@ -184,14 +184,14 @@ exports[`Should render the Login with reset password view 1`] = `
               sulu_admin.password
             </div>
             <label
-              class="input"
+              class="input default"
             >
               <div
-                class="prependedContainer"
+                class="prependedContainer default"
               >
                 <span
                   aria-label="su-lock"
-                  class="icon su-lock"
+                  class="icon default su-lock"
                 />
               </div>
               <input
@@ -282,14 +282,14 @@ exports[`Should render the Login with reset password with success 1`] = `
               sulu_admin.username_or_email
             </div>
             <label
-              class="input"
+              class="input default"
             >
               <div
-                class="prependedContainer"
+                class="prependedContainer default"
               >
                 <span
                   aria-label="su-user"
-                  class="icon su-user"
+                  class="icon default su-user"
                 />
               </div>
               <input
@@ -307,14 +307,14 @@ exports[`Should render the Login with reset password with success 1`] = `
               sulu_admin.password
             </div>
             <label
-              class="input"
+              class="input default"
             >
               <div
-                class="prependedContainer"
+                class="prependedContainer default"
               >
                 <span
                   aria-label="su-lock"
-                  class="icon su-lock"
+                  class="icon default su-lock"
                 />
               </div>
               <input
@@ -405,14 +405,14 @@ exports[`Should render the LoginForm component with error 1`] = `
               sulu_admin.username_or_email
             </div>
             <label
-              class="input"
+              class="input default"
             >
               <div
-                class="prependedContainer"
+                class="prependedContainer default"
               >
                 <span
                   aria-label="su-user"
-                  class="icon su-user"
+                  class="icon default su-user"
                 />
               </div>
               <input
@@ -430,14 +430,14 @@ exports[`Should render the LoginForm component with error 1`] = `
               sulu_admin.password
             </div>
             <label
-              class="input"
+              class="input default"
             >
               <div
-                class="prependedContainer"
+                class="prependedContainer default"
               >
                 <span
                   aria-label="su-lock"
-                  class="icon su-lock"
+                  class="icon default su-lock"
                 />
               </div>
               <input

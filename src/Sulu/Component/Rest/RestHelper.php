@@ -12,6 +12,8 @@
 namespace Sulu\Component\Rest;
 
 use Sulu\Component\Persistence\RelationTrait;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
@@ -54,10 +56,22 @@ class RestHelper implements RestHelperInterface
             $listBuilder->setSelectFields($fieldDescriptors);
         }
 
-        $searchFields = $this->listRestHelper->getSearchFields();
-        if (null != $searchFields) {
+        $search = $this->listRestHelper->getSearchPattern();
+        if ($search) {
+            $searchFields = $this->listRestHelper->getSearchFields();
+
+            if (!$searchFields) {
+                $searchFields = $this->getDefaultSearchFields($fieldDescriptors);
+            }
+
             foreach ($searchFields as $searchField) {
-                $listBuilder->addSearchField($fieldDescriptors[$searchField]);
+                $fieldDescriptor = $fieldDescriptors[$searchField];
+
+                if (FieldDescriptorInterface::SEARCHABILITY_NEVER === $fieldDescriptor->getSearchability()) {
+                    continue;
+                }
+
+                $listBuilder->addSearchField($fieldDescriptor);
             }
 
             $listBuilder->search($this->listRestHelper->getSearchPattern());
@@ -67,5 +81,22 @@ class RestHelper implements RestHelperInterface
         if (null != $sortBy) {
             $listBuilder->sort($fieldDescriptors[$sortBy], $this->listRestHelper->getSortOrder());
         }
+    }
+
+    /**
+     * @param FieldDescriptor[] $fieldDescriptors
+     *
+     * @return string[]
+     */
+    private function getDefaultSearchFields(array $fieldDescriptors): array
+    {
+        $defaultSearchFields = [];
+        foreach ($fieldDescriptors as $fieldDescriptor) {
+            if (FieldDescriptorInterface::SEARCHABILITY_YES === $fieldDescriptor->getSearchability()) {
+                $defaultSearchFields[] = $fieldDescriptor->getName();
+            }
+        }
+
+        return $defaultSearchFields;
     }
 }

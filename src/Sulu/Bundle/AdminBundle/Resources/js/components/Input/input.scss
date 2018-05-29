@@ -12,6 +12,14 @@ $iconBorderPadding: 5px;
 $placeholderColor: $dustyGray;
 $backgroundColor: $white;
 
+$darkInputBorderRadius: 4px;
+$darkInputBorderColor: $doveGray;
+$darkInputColorCollapsed: $black;
+$darkInputColor: $black;
+$darkBackgroundColorCollapsed: $wildSand;
+$darkBackgroundColor: $white;
+$darkIconColor: $doveGray;
+
 .input {
     border: $inputBorderWidth solid $inputBorderColor;
     border-radius: $inputBorderRadius;
@@ -20,6 +28,7 @@ $backgroundColor: $white;
     height: $inputHeight;
     width: 100%;
     background-color: $backgroundColor;
+    position: relative;
 
     input {
         width: 100%;
@@ -31,6 +40,8 @@ $backgroundColor: $white;
         padding-left: 10px;
         font-size: $inputFontSize;
         color: $inputColor;
+        will-change: width, padding-left;
+        transition: width .3s, padding-left .1s linear;
 
         &::placeholder {
             color: $placeholderColor;
@@ -38,8 +49,41 @@ $backgroundColor: $white;
         }
     }
 
+    &.collapsed {
+        input {
+            padding-left: 0;
+            width: 0;
+        }
+    }
+
     &.error {
         border-color: $inputErrorBorderColor;
+    }
+
+    &.has-append-icon {
+        input {
+            will-change: margin-right;
+            transition: margin-right .1s;
+            margin-right: 34px;
+        }
+
+        &.collapsed {
+            input {
+                margin-right: 0;
+                visibility: hidden;
+            }
+        }
+    }
+
+    &.dark {
+        background-color: $darkBackgroundColor;
+        color: $darkInputColor;
+        border-radius: $darkInputBorderRadius;
+        border-color: $darkInputBorderColor;
+
+        &.collapsed {
+            background-color: $darkBackgroundColorCollapsed;
+        }
     }
 }
 
@@ -51,6 +95,20 @@ $backgroundColor: $white;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &.dark {
+        box-shadow: $inputBorderWidth 0 0 $darkInputBorderColor;
+    }
+
+    &.collapsed {
+        box-shadow: none;
+    }
+}
+
+.append-container {
+    position: absolute;
+    height: calc($inputHeight - 2 * $iconBorderPadding);
+    right: 0;
 }
 
 .icon {
@@ -60,6 +118,10 @@ $backgroundColor: $white;
     color: $iconColor;
     margin: 0 10px;
     line-height: calc($inputHeight - 2 * $iconBorderPadding);
+
+    &.dark {
+        color: $darkIconColor;
+    }
 }
 
 .icon-clickable {

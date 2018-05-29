@@ -213,6 +213,39 @@ test('The loading strategy should be called with the defined sortings', () => {
     datagridStore.destroy();
 });
 
+test('The loading strategy should be called with the defined search', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(2);
+    const datagridStore = new DatagridStore(
+        'snippets',
+        {
+            page,
+        }
+    );
+
+    const data = [{id: 1}];
+    structureStrategy.getData.mockReturnValue(data);
+    structureStrategy.clear = jest.fn();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.search('search-value');
+
+    expect(loadingStrategy.load).toBeCalledWith(
+        data,
+        'snippets',
+        {
+            page: 1,
+            search: 'search-value',
+        },
+        structureStrategy.enhanceItem
+    );
+
+    expect(structureStrategy.clear).toBeCalled();
+
+    datagridStore.destroy();
+});
+
 test('The loading strategy should be called with the active item as parent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();

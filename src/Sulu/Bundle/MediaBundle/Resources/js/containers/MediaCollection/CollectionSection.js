@@ -160,6 +160,7 @@ export default class CollectionSection extends React.Component<Props> {
                 }
                 <Datagrid
                     adapters={['folder']}
+                    searchable={false}
                     store={datagridStore}
                     onItemClick={this.handleCollectionClick}
                 />

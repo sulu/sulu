@@ -16,7 +16,7 @@
     </orm:joins>
 
     <properties>
-        <property name="id" list:translation="public.id" list:type="integer">
+        <property name="id" list:translation="public.id" searchability="never" list:type="integer">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>

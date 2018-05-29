@@ -11,8 +11,7 @@
 
 namespace Sulu\Bundle\TagBundle\Tag;
 
-use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 /**
  * Defines the operations of the TagManager.
@@ -107,7 +106,7 @@ interface TagManagerInterface
     /**
      * Returns the FieldDescriptors for the products.
      *
-     * @return DoctrineFieldDescriptor[]
+     * @return FieldDescriptorInterface[]
      */
     public function getFieldDescriptors();
 
@@ -116,7 +115,7 @@ interface TagManagerInterface
      *
      * @param string $key The key of the FieldDescriptor to return
      *
-     * @return DoctrineFieldDescriptor
+     * @return FieldDescriptorInterface
      */
     public function getFieldDescriptor($key);
 }

@@ -17,7 +17,8 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManager;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
-use Sulu\Component\Security\UserRepositoryInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TagManagerTest extends TestCase
@@ -31,6 +32,11 @@ class TagManagerTest extends TestCase
      * @var UserRepositoryInterface
      */
     protected $userRepository;
+
+    /**
+     * @var FieldDescriptorFactoryInterface
+     */
+    protected $fieldDescriptorFactory;
 
     /**
      * @var ObjectManager
@@ -61,6 +67,13 @@ class TagManagerTest extends TestCase
 
         $this->userRepository = $this->getMockForAbstractClass(
             'Sulu\Component\Security\Authentication\UserRepositoryInterface',
+            [],
+            '',
+            false
+        );
+
+        $this->fieldDescriptorFactory = $this->getMockForAbstractClass(
+            'Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface',
             [],
             '',
             false
@@ -101,8 +114,10 @@ class TagManagerTest extends TestCase
         $this->tagManager = new TagManager(
             $this->tagRepository,
             $this->userRepository,
+            $this->fieldDescriptorFactory,
             $this->em,
-            $this->eventDispatcher
+            $this->eventDispatcher,
+            Tag::class
         );
     }
 

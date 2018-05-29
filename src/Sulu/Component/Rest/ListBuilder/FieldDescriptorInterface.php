@@ -26,6 +26,12 @@ interface FieldDescriptorInterface
 
     const VISIBILITY_NO = 'no';
 
+    const SEARCHABILITY_NEVER = 'never';
+
+    const SEARCHABILITY_YES = 'yes';
+
+    const SEARCHABILITY_NO = 'no';
+
     /**
      * Returns the name of the field.
      *
@@ -80,6 +86,11 @@ interface FieldDescriptorInterface
      * @return string
      */
     public function getVisibility();
+
+    /**
+     * @return string
+     */
+    public function getSearchability();
 
     /**
      * @return string

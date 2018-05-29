@@ -10,7 +10,7 @@ exports[`ResourceLocator should render with type full 1`] = `
     /
   </span>
   <label
-    class="input"
+    class="input default"
   >
     <input
       type="text"
@@ -30,7 +30,7 @@ exports[`ResourceLocator should render with type leaf 1`] = `
     /parent/
   </span>
   <label
-    class="input"
+    class="input default"
   >
     <input
       type="text"

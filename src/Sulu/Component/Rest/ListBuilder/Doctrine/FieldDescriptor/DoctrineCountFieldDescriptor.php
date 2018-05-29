@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
-use JMS\Serializer\Annotation\ExclusionPolicy;
-
 /**
  * This class defines the necessary information for a field to resolve it within a Doctrine Query for the ListBuilder.
  *

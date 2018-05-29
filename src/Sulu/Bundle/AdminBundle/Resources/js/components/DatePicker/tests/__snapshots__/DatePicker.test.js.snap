@@ -13,14 +13,14 @@ exports[`DatePicker should render 1`] = `
       anchorElement={
         <div>
           <label
-            class="input"
+            class="input default"
           >
             <div
-              class="prependedContainer"
+              class="prependedContainer default"
             >
               <span
                 aria-label="su-calendar"
-                class="icon iconClickable su-calendar clickable"
+                class="icon default iconClickable su-calendar clickable"
                 role="button"
                 tabindex="0"
               />
@@ -30,6 +30,7 @@ exports[`DatePicker should render 1`] = `
               type="text"
               value=""
             />
+            
           </label>
         </div>
       }
@@ -88,6 +89,7 @@ exports[`DatePicker should render 1`] = `
                 >
                   <Input
                     className="form-control"
+                    collapsed={false}
                     icon="su-calendar"
                     onBlur={[Function]}
                     onChange={[Function]}
@@ -96,24 +98,25 @@ exports[`DatePicker should render 1`] = `
                     onIconClick={[Function]}
                     onKeyDown={[Function]}
                     placeholder="MM/DD/YYYY"
+                    skin="default"
                     type="text"
                     valid={true}
                     value=""
                   >
                     <label
-                      className="input"
+                      className="input default"
                     >
                       <div
-                        className="prependedContainer"
+                        className="prependedContainer default"
                       >
                         <Icon
-                          className="icon iconClickable"
+                          className="icon default iconClickable"
                           name="su-calendar"
                           onClick={[Function]}
                         >
                           <span
                             aria-label="su-calendar"
-                            className="icon iconClickable su-calendar clickable"
+                            className="icon default iconClickable su-calendar clickable"
                             onClick={[Function]}
                             role="button"
                             tabIndex={0}
