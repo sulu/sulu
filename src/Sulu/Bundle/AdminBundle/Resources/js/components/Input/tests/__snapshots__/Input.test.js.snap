@@ -165,7 +165,7 @@ exports[`Input should render with type 1`] = `
 
 exports[`Input should render with type number with attributes 1`] = `
 <label
-  class="input"
+  class="input default"
 >
   <input
     max="50"

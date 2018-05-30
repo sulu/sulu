@@ -127,7 +127,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                     ref={inputRef ? this.setInputRef : undefined}
                     name={name}
                     type={type}
-                    value={value || ''}
+                    value={value == null ? '' : value}
                     placeholder={placeholder}
                     onBlur={onBlur}
                     onChange={this.handleChange}
@@ -137,7 +137,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                     step={step}
                 />
 
-                {!collapsed && value && onClearClick &&
+                {!collapsed && !!value && onClearClick &&
                     <div className={inputStyles.appendContainer}>
                         <Icon
                             onClick={onClearClick ? onClearClick : undefined}
