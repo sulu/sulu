@@ -95,6 +95,53 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $this->assertInternalType('int', $permission->getId());
     }
 
+    public function testSetUserBlame()
+    {
+        $tokenStorage = $this->getContainer()->get('security.token_storage');
+        $token = new UsernamePasswordToken('test', 'test', 'test_provider', []);
+        $user = new User();
+        $user->setUsername('dantleech');
+        $user->setPassword('foo');
+        $user->setLocale('fr');
+        $user->setSalt('saltz');
+        $contact = new Contact();
+        $contact->setFirstName('Daniel');
+        $contact->setLastName('Leech');
+        $user->setContact($contact);
+        $this->getEntityManager()->persist($contact);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+        $token->setUser($user);
+
+        $tokenStorage->setToken($token);
+
+        $otherUser = new User();
+        $otherUser->setUsername('johannes');
+        $otherUser->setPassword('foo');
+        $otherUser->setLocale('fr');
+        $otherUser->setSalt('saltz');
+        $contact = new Contact();
+        $contact->setFirstName('Daniel');
+        $contact->setLastName('Leech');
+        $otherUser->setContact($contact);
+        $this->getEntityManager()->persist($contact);
+        $this->getEntityManager()->persist($otherUser);
+        $this->getEntityManager()->flush();
+
+        $contact = new Contact();
+        $contact->setFirstName('Max');
+        $contact->setLastName('Mustermann');
+        $contact->setPosition('CEO');
+        $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
+        $contact->setCreator($otherUser);
+        $contact->setChanger($otherUser);
+        $this->getEntityManager()->persist($contact);
+        $this->getEntityManager()->flush();
+
+        $this->assertSame($contact->getCreator(), $otherUser);
+        $this->assertSame($contact->getChanger(), $otherUser);
+    }
+
     private function createExternalUser()
     {
         $tokenStorage = $this->getContainer()->get('security.token_storage');
