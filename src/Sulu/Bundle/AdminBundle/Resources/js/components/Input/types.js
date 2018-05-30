@@ -2,7 +2,7 @@
 import type {ElementRef} from 'react';
 
 export type InputProps<T: ?string | ?number> = {|
-    collapsed: boolean,
+    collapsed?: boolean,
     name?: string,
     icon?: string,
     type: string,
@@ -19,7 +19,7 @@ export type InputProps<T: ?string | ?number> = {|
     onKeyPress?: (key: ?string, event: SyntheticKeyboardEvent<HTMLInputElement>) => void,
     iconStyle?: Object,
     iconClassName?: string,
-    skin: 'default' | 'dark',
+    skin?: 'default' | 'dark',
     min?: T,
     max?: T,
     step?: T,

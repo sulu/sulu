@@ -5,6 +5,7 @@ import Input from '../Input';
 import type {InputProps} from '../Input';
 
 type Props = {|
+    collapsed?: boolean,
     name?: string,
     icon?: string,
     loading?: boolean,
@@ -20,6 +21,7 @@ type Props = {|
     iconClassName?: string,
     min?: number,
     max?: number,
+    skin?: 'default' | 'dark',
     step?: number,
 |};
 
@@ -44,6 +46,7 @@ export default class Number extends React.PureComponent<Props> {
 
     render() {
         const inputProps: InputProps<number> = {
+            collapsed: this.props.collapsed,
             name: this.props.name,
             icon: this.props.icon,
             loading: this.props.loading,
@@ -60,6 +63,7 @@ export default class Number extends React.PureComponent<Props> {
             min: this.props.min,
             max: this.props.max,
             step: this.props.step,
+            skin: this.props.skin,
             type: 'number',
         };
 
