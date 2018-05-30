@@ -69,7 +69,7 @@ test('Should call onFinish callback on every onChange with correctly converted v
         />
     );
 
-    time.find(DatePickerComponent).simulate('change', new Date(Date.UTC(2018, 3, 15, 6, 32, 20)));
+    time.find(DatePickerComponent).simulate('change', new Date(2018, 3, 15, 6, 32, 20));
 
     expect(finishSpy).toBeCalled();
     expect(changeSpy).toBeCalledWith('06:32:20');

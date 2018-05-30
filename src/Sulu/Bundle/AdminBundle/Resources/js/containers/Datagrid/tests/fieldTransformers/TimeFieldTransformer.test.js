@@ -14,15 +14,15 @@ jest.mock('loglevel', () => ({
 }));
 
 test('Test undefined', () => {
-    expect(timeFieldTransformer.transform(undefined)).toBe(undefined);
+    expect(timeFieldTransformer.transform(undefined)).toBe(null);
 });
 
 test('Test invalid format', () => {
-    expect(timeFieldTransformer.transform('xxx')).toBe(undefined);
-    expect(log.error).toBeCalledWith('Invalid date given: "xxx". Format needs to be in "ISO 8601"');
+    expect(timeFieldTransformer.transform('xxx')).toBe(null);
+    expect(log.error).toBeCalledWith('Invalid time given: "xxx". Format needs to be "HH:mm:ss"');
 });
 
 test('Test valid example', () => {
-    expect(timeFieldTransformer.transform('2018-03-10T14:09:04+01:00')).toBe('2:09 PM');
+    expect(timeFieldTransformer.transform('14:09')).toBe('2:09 PM');
 });
 
