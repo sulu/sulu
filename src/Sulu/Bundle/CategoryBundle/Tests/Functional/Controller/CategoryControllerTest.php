@@ -667,6 +667,31 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
+    public function testCGetFlatWithParent()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories?locale=en&flat=true&parent=' . $this->category1->getId()
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $categories = $response->_embedded->categories;
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals($this->category3->getId(), $categories[0]->id);
+        $this->assertTrue($categories[0]->hasChildren);
+    }
+
     public function testCGetFlatWithSorting()
     {
         $client = $this->createAuthenticatedClient();

@@ -98,6 +98,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * @param mixed $parentId
      *
      * @return Response
+     *
+     * @deprecated Will be removed in 2.0. Use the "parent" option on the cgetAction instead.
      */
     public function getChildrenAction($parentId, Request $request)
     {
@@ -130,11 +132,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $rootKey = $request->get('rootKey');
+        $parentId = $request->get('parent');
 
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey)->getId() : null;
             $expandIds = array_filter(explode(',', $request->get('expandIds')));
-            $list = $this->getListRepresentation($request, $locale, $rootId, $expandIds);
+            $list = $this->getListRepresentation($request, $locale, $parentId ?? $rootId, $expandIds);
         } else {
             $entities = $this->getCategoryManager()->findChildrenByParentKey($rootKey);
             $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
