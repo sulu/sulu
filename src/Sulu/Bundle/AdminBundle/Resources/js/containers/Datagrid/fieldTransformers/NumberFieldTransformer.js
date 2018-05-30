@@ -2,7 +2,6 @@
 import type {Node} from 'react';
 import log from 'loglevel';
 import type {FieldTransformer} from '../types';
-import userStore from '../../../stores/UserStore';
 
 export default class NumberFieldTransformer implements FieldTransformer {
     transform(value: *): Node {
@@ -10,14 +9,12 @@ export default class NumberFieldTransformer implements FieldTransformer {
             return null;
         }
 
-        const float = parseFloat(value);
-
-        if (isNaN(float)) {
+        if (isNaN(value)) {
             log.error('Invalid number given: "' + value + '"');
 
             return null;
         }
 
-        return float.toLocaleString(userStore.user ? userStore.user.locale : undefined);
+        return value.toLocaleString();
     }
 }

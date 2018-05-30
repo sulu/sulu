@@ -30,16 +30,6 @@ test('Test invalid format', () => {
     expect(log.error).toBeCalledWith('Invalid number given: "xxx"');
 });
 
-test('Test valid example with locale "en"', () => {
-    mockUserStoreUser.mockReturnValue({
-        locale: 'en',
-    });
-    expect(numberFieldTransformer.transform('20.3')).toBe('20.3');
-});
-
-test('Test valid example with locale "de"', () => {
-    mockUserStoreUser.mockReturnValue({
-        locale: 'de',
-    });
-    expect(numberFieldTransformer.transform('20.3')).toBe('20,3');
+test('Test valid example', () => {
+    expect(numberFieldTransformer.transform(20.3)).toBe('20.3');
 });
