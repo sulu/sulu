@@ -49,8 +49,12 @@ test('Pass props correctly to component inclusive schemaOptions', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             value={50.2}
+            schemaOptions={schemaOptions}
         />
     );
 
     expect(field.find(NumberComponent).prop('valid')).toBe(true);
+    expect(field.find(NumberComponent).prop('min')).toBe(50);
+    expect(field.find(NumberComponent).prop('max')).toBe(100);
+    expect(field.find(NumberComponent).prop('step')).toBe(10);
 });
