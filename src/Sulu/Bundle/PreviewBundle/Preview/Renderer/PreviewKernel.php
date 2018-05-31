@@ -21,8 +21,6 @@ class PreviewKernel extends WebsiteKernel
 {
     const CONTEXT_PREVIEW = 'preview';
 
-    private $projectDir;
-
     /**
      * @var string
      */
@@ -50,7 +48,7 @@ class PreviewKernel extends WebsiteKernel
     public function getRootDir()
     {
         if (null === $this->rootDir) {
-            $reflectionClass = new \ReflectionClass(WebsiteKernel::class);
+            $reflectionClass = new \ReflectionClass(\App\WebsiteKernel::class);
             $this->rootDir = dirname($reflectionClass->getFileName());
         }
 
@@ -63,7 +61,7 @@ class PreviewKernel extends WebsiteKernel
     public function getProjectDir()
     {
         if (null === $this->projectDir) {
-            $reflectionClass = new \ReflectionClass(\WebsiteKernel::class);
+            $reflectionClass = new \ReflectionClass(\App\WebsiteKernel::class);
             $dir = $rootDir = dirname($reflectionClass->getFileName());
             while (!file_exists($dir . '/composer.json')) {
                 if ($dir === dirname($dir)) {

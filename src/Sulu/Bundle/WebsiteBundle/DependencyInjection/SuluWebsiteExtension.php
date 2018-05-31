@@ -27,7 +27,7 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 {
     public function prepend(ContainerBuilder $container)
     {
-        if ($container->getParameter('sulu.context') !== SuluKernel::CONTEXT_WEBSITE) {
+        if (SuluKernel::CONTEXT_WEBSITE !== $container->getParameter('sulu.context')) {
             return;
         }
 

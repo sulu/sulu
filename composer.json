@@ -150,14 +150,11 @@
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
             "src/Sulu/Bundle/*/Tests/"
-        ],
-        "classmap": [
-            "app/AppKernel.php"
         ]
     },
     "autoload-dev": {
-        "psr-0": {
-            "Sulu\\": "tests/"
+        "psr-4": {
+            "App\\": "tests/src/"
         }
     },
     "scripts": {
@@ -176,15 +173,15 @@
         "bin-dir": "bin"
     },
     "extra": {
-        "public-dir": "public",
-        "symfony-app-dir": "app",
+        "public-dir": "tests/public",
+        "symfony-app-dir": "tests/config",
         "symfony-bin-dir": "bin",
-        "symfony-var-dir": "var",
-        "symfony-web-dir": "public",
+        "symfony-var-dir": "tests/var",
+        "symfony-web-dir": "tests/public",
         "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
+            "file": "tests/config/parameters.yml"
         },
         "branch-alias": {
             "dev-develop": "2.0-dev"

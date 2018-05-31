@@ -12,11 +12,11 @@
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 Debug::enable();
 
-$kernel = new AppKernel('dev', true);
+$kernel = new \App\AppKernel('test', true);
 
 $request = Request::createFromGlobals();
 

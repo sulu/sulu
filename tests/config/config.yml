@@ -13,7 +13,7 @@ framework:
     translator: { fallbacks: ['%locale%'] }
     secret: 'd884940103091c3ce4e952dfa68ef24278d9986c'
     router:
-        resource: '%kernel.project_dir%/app/config/routing.yml'
+        resource: '%kernel.root_dir%/config/routing.yml'
         strict_requirements: ~
     form: ~
     csrf_protection: ~
@@ -58,6 +58,13 @@ doctrine:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        mappings:
+            gedmo_tree:
+                type: xml
+                prefix: Gedmo\Tree\Entity
+                dir: "%kernel.root_dir%/../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                alias: GedmoTree
+                is_bundle: false
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -85,6 +92,25 @@ massive_search:
 jms_serializer:
     metadata:
         debug: '%kernel.debug%'
+
+# SuluCore Configuration
+sulu_core:
+    webspace:
+        config_dir: '%kernel.root_dir%/config/sulu/webspaces'
+    content:
+        structure:
+            default_type:
+                snippet: 'default'
+            paths:
+                homepage:
+                    path: '%kernel.root_dir%/Resources/templates/pages'
+                    type: 'home'
+                page:
+                    path: '%kernel.root_dir%/Resources/templates/pages'	
+                    type: 'page'
+                snippet:
+                    path: '%kernel.root_dir%/Resources/templates/snippets'	
+                    type: 'snippet'
 
 # SuluAdmin Configuration
 sulu_admin:

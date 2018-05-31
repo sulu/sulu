@@ -1,0 +1,4 @@
+{
+    "name": "Dummy composer.json for PreviewKernel getProjectDir() in tests",
+    "version": "test"
+}

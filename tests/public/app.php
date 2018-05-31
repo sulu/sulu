@@ -9,14 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
-Debug::enable();
-
-$kernel = new AppKernel('test', true);
+$kernel = new \App\AppKernel('prod', false);
 
 $request = Request::createFromGlobals();
 
