@@ -102,6 +102,18 @@ class SuluTestKernel extends SuluKernel
     /**
      * {@inheritdoc}
      */
+    public function getProjectDir()
+    {
+        if (null === $this->projectDir) {
+            $this->projectDir = $this->rootDir;
+        }
+
+        return $this->projectDir;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getCacheDir()
     {
         return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;

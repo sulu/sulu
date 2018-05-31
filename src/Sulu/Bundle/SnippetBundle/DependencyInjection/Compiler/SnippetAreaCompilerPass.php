@@ -68,6 +68,8 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
             $areas = $defaultAreas;
         }
 
+        ksort($areas);
+
         $container->setParameter('sulu_snippet.areas', $areas);
     }
 
