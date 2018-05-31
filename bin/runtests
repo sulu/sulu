@@ -508,6 +508,7 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
         true,
         false
     );
+
     if ($process->getExitCode() !== 0) {
         $failedTests[] = 'Components';
     }

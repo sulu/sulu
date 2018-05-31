@@ -123,7 +123,7 @@ class SuluTestKernel extends SuluKernel
      */
     public function getCacheDir()
     {
-        return $this->rootDir . '/var/cache/' . $this->getContext() . '/' . $this->environment;
+        return $this->getProjectDir() . '/var/cache/' . $this->getContext() . '/' . $this->environment;
     }
 
     /**
