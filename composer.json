@@ -157,7 +157,7 @@
             "App\\": "tests/src/"
         },
         "classmap": [
-            "tests/src/AppKernel.php"
+            "tests/AppKernel.php"
         ]
     },
     "scripts": {

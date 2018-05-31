@@ -58,6 +58,7 @@ class AppKernel extends SuluKernel
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
             new \Sulu\Bundle\HttpCacheBundle\SuluHttpCacheBundle(),
             new \Sulu\Bundle\WebsocketBundle\SuluWebsocketBundle(),
+            new \Sulu\Bundle\ResourceBundle\SuluResourceBundle(),
             new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
             new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
             new \Sulu\Bundle\HashBundle\SuluHashBundle(),
@@ -93,7 +94,7 @@ class AppKernel extends SuluKernel
 
     public function getProjectDir()
     {
-        return __DIR__ . '/..';
+        return __DIR__;
     }
 
     public function getCacheDir()
