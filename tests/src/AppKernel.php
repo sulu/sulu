@@ -9,8 +9,6 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App;
-
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

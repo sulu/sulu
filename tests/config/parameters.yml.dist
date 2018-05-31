@@ -23,7 +23,7 @@ parameters:
     env(SULU_DATABASE_PORT): ~
     env(SULU_DATABASE_PATH): ~
     env(SULU_DATABASE_USER): root
-    env(SULU_DATABASE_NAME): sulu_test
+    env(SULU_DATABASE_NAME): sulu_test_public
     env(SULU_DATABASE_PASSWORD): ~
     env(SULU_DATABASE_VERSION): 5.6
     env(SULU_DATABASE_CHARSET): utf8mb4

@@ -23,6 +23,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class SuluTestKernel extends SuluKernel
 {
     /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
      * {@inheritdoc}
      */
     public function registerBundles()
@@ -83,6 +88,20 @@ class SuluTestKernel extends SuluKernel
     }
 
     /**
+     * Gets the application root dir (path of the project's composer file).
+     *
+     * @return string The project root dir
+     */
+    public function getProjectDir()
+    {
+        if (null === $this->projectDir) {
+            $this->projectDir = $this->rootDir . '/..';
+        }
+
+        return $this->projectDir;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -104,7 +123,7 @@ class SuluTestKernel extends SuluKernel
      */
     public function getCacheDir()
     {
-        return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;
+        return $this->rootDir . '/var/cache/' . $this->getContext() . '/' . $this->environment;
     }
 
     /**

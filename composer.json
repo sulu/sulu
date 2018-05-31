@@ -155,7 +155,10 @@
     "autoload-dev": {
         "psr-4": {
             "App\\": "tests/src/"
-        }
+        },
+        "classmap": [
+            "tests/src/AppKernel.php"
+        ]
     },
     "scripts": {
         "sulu-scripts": [

@@ -1611,7 +1611,7 @@ class MediaControllerTest extends SuluTestCase
 
     private function getStoragePath()
     {
-        return realpath($this->getContainer()->getParameter('sulu_media.media.storage.local.path'));
+        return $this->getContainer()->getParameter('sulu_media.media.storage.local.path');
     }
 
     /**
