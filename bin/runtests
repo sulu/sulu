@@ -376,7 +376,7 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
 
     $flags = $input->getOption('flags');
     $process = exec_cmd(sprintf(
-        '.%sbin%sphpunit --configuration %s %s',
+        '.%sbin%sphpunit --testdox --configuration %s %s',
         DIRECTORY_SEPARATOR,
         DIRECTORY_SEPARATOR,
         $phpunitFile->getPathname(),
@@ -504,7 +504,7 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
     putenv('KERNEL_DIR=' . __DIR__ . '/../tests/app');
     exec_sf_cmd('sulu:document:initialize --purge --ansi --force', true);
     $process = exec_cmd(
-        '.' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit ' . $input->getOption('flags'),
+        '.' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit --testdox ' . $input->getOption('flags'),
         true,
         false
     );
