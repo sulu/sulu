@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -16,6 +16,7 @@ class Form extends React.PureComponent<Props> {
     resourceStore: ResourceStore;
     formStore: FormStore;
     form: ?FormContainer;
+    @observable errors = [];
 
     @computed get hasOwnResourceStore() {
         const {
@@ -91,14 +92,18 @@ class Form extends React.PureComponent<Props> {
             resourceStore.destroy();
         }
 
-        this.formStore.save()
-            .then(() => {
+        return this.formStore.save()
+            .then((response) => {
                 if (editRoute) {
                     router.navigate(editRoute, {id: resourceStore.id, locale: resourceStore.locale});
                 }
+
+                return response;
             })
-            .catch(() => {
-                // TODO show an error label
+            .catch((errorResponse) => {
+                return errorResponse.json().then(action((error) => {
+                    this.errors.push(error);
+                }));
             });
     };
 
@@ -123,7 +128,7 @@ export default withToolbar(Form, function() {
     const {router} = this.props;
     const {backRoute, locales} = router.route.options;
     const formTypes = this.formStore.types;
-    const {resourceStore} = this;
+    const {errors, resourceStore} = this;
 
     const backButton = backRoute
         ? {
@@ -180,6 +185,7 @@ export default withToolbar(Form, function() {
 
     return {
         backButton,
+        errors,
         locale,
         items,
     };

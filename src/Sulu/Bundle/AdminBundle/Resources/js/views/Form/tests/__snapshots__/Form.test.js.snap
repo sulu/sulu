@@ -3,6 +3,7 @@
 exports[`Should not show templates chooser in toolbar if types are not available 1`] = `
 Object {
   "backButton": undefined,
+  "errors": Array [],
   "items": Array [
     Object {
       "disabled": true,
@@ -20,6 +21,7 @@ Object {
 exports[`Should show loading templates chooser in toolbar while types are loading 1`] = `
 Object {
   "backButton": undefined,
+  "errors": Array [],
   "items": Array [
     Object {
       "disabled": true,
@@ -45,6 +47,7 @@ Object {
 exports[`Should show templates chooser in toolbar if types are available 1`] = `
 Object {
   "backButton": undefined,
+  "errors": Array [],
   "items": Array [
     Object {
       "disabled": true,

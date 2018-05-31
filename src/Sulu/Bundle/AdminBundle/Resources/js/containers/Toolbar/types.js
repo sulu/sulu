@@ -17,10 +17,16 @@ export type ToolbarProps = {
     navigationOpen?: boolean,
 };
 
+type Error = {
+    code: number,
+    message: string,
+};
+
 export type ToolbarConfig = {
+    backButton?: Button,
+    disableAll?: boolean,
+    errors?: Array<Error>,
     icons?: Array<string>,
     items?: Array<ToolbarItem>,
     locale?: Select,
-    backButton?: Button,
-    disableAll?: boolean,
 };

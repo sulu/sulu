@@ -185,6 +185,36 @@ test('Save the store without an id should send a POST request without a locale',
     expect(ResourceRequester.post).toBeCalledWith('snippets', {title: 'Title'}, {test: 10});
 });
 
+test('Saving and dirty flag should be set to false when creating has failed', (done) => {
+    const error = new Error('An error occured!');
+    const promise = Promise.reject(error);
+    ResourceRequester.post.mockReturnValue(promise);
+    const resourceStore = new ResourceStore('snippets', undefined, {locale: observable.box()});
+
+    if (!resourceStore.locale) {
+        throw new Error('The resourceStore should have a locale');
+    }
+
+    resourceStore.locale.set('en');
+    resourceStore.saving = true;
+    resourceStore.dirty = true;
+
+    const savePromise = resourceStore.save();
+
+    return savePromise.catch((promiseError) => {
+        expect(promiseError).toBe(error);
+        when(
+            () => !resourceStore.saving,
+            (): void => {
+                expect(resourceStore.saving).toBe(false);
+                expect(resourceStore.dirty).toBe(true);
+                expect(resourceStore.data).toEqual({});
+                done();
+            }
+        );
+    });
+});
+
 test('Saving flag should be set to true when deleting', () => {
     ResourceRequester.delete.mockReturnValue(Promise.resolve());
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
@@ -230,6 +260,30 @@ test('Saving flag should be set to true when saving', () => {
     expect(resourceStore.saving).toBe(true);
 });
 
+test('Response should be returned when updating', () => {
+    const data = {};
+    const promise = Promise.resolve(data);
+    ResourceRequester.put.mockReturnValue(promise);
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    resourceStore.saving = false;
+
+    return resourceStore.save().then((responseData) => {
+        expect(responseData).toBe(data);
+    });
+});
+
+test('Response should be returned when creating', () => {
+    const data = {};
+    const promise = Promise.resolve(data);
+    ResourceRequester.post.mockReturnValue(promise);
+    const resourceStore = new ResourceStore('snippets', undefined, {locale: observable.box()});
+    resourceStore.saving = false;
+
+    return resourceStore.save().then((responseData) => {
+        expect(responseData).toBe(data);
+    });
+});
+
 test('Saving and dirty flag should be set and data should be updated to false when saving has finished', () => {
     const data = {changed: 'later'};
     const promise = Promise.resolve(data);
@@ -247,8 +301,9 @@ test('Saving and dirty flag should be set and data should be updated to false wh
     });
 });
 
-test('Saving and dirty flag should be set to false when saving has failed', (done) => {
-    const promise = Promise.reject(new Error('An error occured!'));
+test('Saving and dirty flag should be set to false when updating has failed', (done) => {
+    const error = new Error('An error occured!');
+    const promise = Promise.reject(error);
     ResourceRequester.get.mockReturnValue(Promise.resolve({title: 'Title to stay!'}));
     ResourceRequester.put.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
@@ -261,9 +316,10 @@ test('Saving and dirty flag should be set to false when saving has failed', (don
     resourceStore.saving = true;
     resourceStore.dirty = true;
 
-    resourceStore.save();
+    const savePromise = resourceStore.save();
 
-    return promise.catch(() => {
+    return savePromise.catch((promiseError) => {
+        expect(promiseError).toBe(error);
         when(
             () => !resourceStore.saving,
             (): void => {

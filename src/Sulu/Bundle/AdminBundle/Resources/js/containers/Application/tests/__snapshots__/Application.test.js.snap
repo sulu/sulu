@@ -569,7 +569,7 @@ exports[`Application should render opened navigation 1`] = `
                 className="toolbar light"
               >
                 <Controls
-                  key=".0"
+                  key=".1"
                   skin="light"
                 >
                   <div
@@ -604,7 +604,7 @@ exports[`Application should render opened navigation 1`] = `
                   </div>
                 </Controls>
                 <Controls
-                  key=".1"
+                  key=".2"
                   skin="light"
                 >
                   <div

@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a snackbar 1`] = `
+<div
+  class="snackbar error"
+>
+  <span
+    aria-label="su-exclamation-triangle"
+    class="icon su-exclamation-triangle"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.error
+    </strong>
+    <button
+      class="closeButton"
+    >
+      sulu_admin.close
+      <span
+        aria-label="su-times"
+        class="closeButtonIcon su-times"
+      />
+    </button>
+  </div>
+</div>
+`;

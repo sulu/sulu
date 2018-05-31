@@ -282,3 +282,33 @@ const PageWithToolbar = withToolbar(Page, function() {
     <PageWithToolbar />
 </div>
 ```
+
+The `errors` property can be set to show an error instead of the toolbar.
+
+```
+const withToolbar = require('./withToolbar').default;
+const Toolbar = require('./Toolbar').default;
+
+initialState = {selectVal: 1}
+
+class Page extends React.PureComponent {
+    render() {
+        return (
+            <h1>Just an error...</h1>
+        );
+    }
+}
+
+const PageWithToolbar = withToolbar(Page, function() {
+    return {
+        errors: [
+            {code: 1000},
+        ],
+    };
+}, 'toolbar-demo-5');
+
+<div>
+    <Toolbar storeKey="toolbar-demo-5" />
+    <PageWithToolbar />
+</div>
+```

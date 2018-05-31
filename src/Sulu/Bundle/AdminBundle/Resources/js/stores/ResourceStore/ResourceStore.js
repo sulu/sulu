@@ -126,9 +126,12 @@ export default class ResourceStore {
                 this.data = response;
                 this.saving = false;
                 this.dirty = false;
+
+                return response;
             }))
-            .catch(action(() => {
+            .catch(action((error) => {
                 this.saving = false;
+                throw error;
             }));
     }
 
@@ -144,9 +147,12 @@ export default class ResourceStore {
                 this.data = response;
                 this.saving = false;
                 this.dirty = false;
+
+                return response;
             }))
-            .catch(action(() => {
+            .catch(action((error) => {
                 this.saving = false;
+                throw error;
             }));
     }
 

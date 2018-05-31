@@ -17,6 +17,14 @@ export default class ToolbarStore {
         return !!this.config.disableAll;
     }
 
+    @computed get errors(): Array<*> {
+        if (!this.config.errors) {
+            return [];
+        }
+
+        return this.config.errors;
+    }
+
     hasBackButtonConfig(): boolean {
         return !!this.config.backButton;
     }

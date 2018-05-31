@@ -5,6 +5,7 @@ Object {
   "backButton": Object {
     "onClick": [Function],
   },
+  "errors": Array [],
   "items": Array [
     Object {
       "icon": "su-save",
@@ -42,6 +43,7 @@ Object {
   "backButton": Object {
     "onClick": [Function],
   },
+  "errors": Array [],
   "items": Array [
     Object {
       "icon": "su-save",

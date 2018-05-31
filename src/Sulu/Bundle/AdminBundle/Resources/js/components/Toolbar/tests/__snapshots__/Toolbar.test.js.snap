@@ -65,3 +65,47 @@ exports[`Render dark theme 1`] = `
   </div>
 </nav>
 `;
+
+exports[`Render with Snackbar 1`] = `
+<nav
+  class="toolbar light"
+>
+  <div
+    class="snackbar error"
+  >
+    <span
+      aria-label="su-exclamation-triangle"
+      class="icon su-exclamation-triangle"
+    />
+    <div
+      class="text"
+    >
+      <strong>
+        sulu_admin.error
+      </strong>
+      <button
+        class="closeButton"
+      >
+        sulu_admin.close
+        <span
+          aria-label="su-times"
+          class="closeButtonIcon su-times"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="controls light"
+  >
+    <button
+      class="button light"
+    >
+      <span
+        class="label"
+      >
+        Test
+      </span>
+    </button>
+  </div>
+</nav>
+`;

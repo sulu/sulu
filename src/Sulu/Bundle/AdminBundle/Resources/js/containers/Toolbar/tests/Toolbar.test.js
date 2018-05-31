@@ -14,20 +14,14 @@ jest.mock('../stores/ToolbarStorePool', () => ({
 
 beforeEach(() => {
     toolbarStoreMock = {
+        errors: [],
         hasBackButtonConfig: jest.fn(),
-
         getBackButtonConfig: jest.fn(),
-
         hasItemsConfig: jest.fn(),
-
         getItemsConfig: jest.fn(),
-
         hasIconsConfig: jest.fn(),
-
         getIconsConfig: jest.fn(),
-
         hasLocaleConfig: jest.fn(),
-
         getLocaleConfig: jest.fn(),
     };
 });
@@ -72,8 +66,7 @@ test('Render the items from the ToolbarStore', () => {
         ]
     );
 
-    const view = render(<Toolbar storeKey={storeKey} />);
-    expect(view).toMatchSnapshot();
+    expect(render(<Toolbar storeKey={storeKey} />)).toMatchSnapshot();
     expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 });
 
@@ -112,4 +105,36 @@ test('Render the items as disabled if one is loading', () => {
     expect(buttons.at(0).prop('disabled')).toBe(true);
     expect(buttons.at(1).prop('disabled')).toBe(true);
     expect(buttons.at(2).prop('disabled')).toBe(true);
+});
+
+test('Remove last error if close button on snackbar is clicked', () => {
+    const storeKey = 'testStore';
+
+    toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
+
+    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
+    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
+    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
+    toolbarStoreMock.errors.push({code: 100, message: 'Something went wrong'});
+
+    toolbarStoreMock.getItemsConfig.mockReturnValue(
+        [
+            {
+                type: 'button',
+                label: 'Add',
+                icon: 'fa-add-o',
+                disabled: false,
+            },
+        ]
+    );
+
+    const view = shallow(<Toolbar storeKey={storeKey} />);
+
+    expect(view.find('Snackbar')).toHaveLength(1);
+
+    expect(toolbarStoreMock.errors).toHaveLength(1);
+    view.find('Snackbar').simulate('closeClick');
+    expect(toolbarStoreMock.errors).toHaveLength(0);
 });
