@@ -15,6 +15,10 @@ test('Render a success snackbar', () => {
     expect(render(<Snackbar type="success" />)).toMatchSnapshot();
 });
 
+test('Render a clickable success snackbar', () => {
+    expect(render(<Snackbar onClick={jest.fn()} type="success" />)).toMatchSnapshot();
+});
+
 test('Render an error snackbar', () => {
     expect(render(<Snackbar onCloseClick={jest.fn()} type="error" />)).toMatchSnapshot();
 });

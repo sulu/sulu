@@ -12,6 +12,10 @@ jest.mock('../stores/ToolbarStorePool', () => ({
     hasStore: jest.fn(),
 }));
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 beforeEach(() => {
     toolbarStoreMock = {
         errors: [],
@@ -123,8 +127,8 @@ test('Show success message for some time', () => {
 
     const view = shallow(<Toolbar storeKey={storeKey} />);
 
-    expect(view.find('Snackbar')).toHaveLength(1);
-    expect(view.find('Snackbar').prop('type')).toEqual('success');
+    expect(view.find('Snackbar[type="success"]')).toHaveLength(1);
+    expect(view.find('Snackbar[type="success"]').prop('type')).toEqual('success');
 });
 
 test('Click on the success message should open the navigation', () => {

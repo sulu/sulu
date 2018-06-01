@@ -29,6 +29,7 @@ export default class Snackbar extends React.Component<Props> {
             snackbarStyles.snackbar,
             snackbarStyles[type],
             {
+                [snackbarStyles.clickable]: onClick,
                 [snackbarStyles.visible]: visible,
             }
         );

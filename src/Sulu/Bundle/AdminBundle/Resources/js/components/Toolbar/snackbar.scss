@@ -43,6 +43,10 @@ $closeButtonBorderColor: $white;
     margin-left: 20px;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .error {
     right: 0;
     background-color: $snackbarErrorBackgroundColor;

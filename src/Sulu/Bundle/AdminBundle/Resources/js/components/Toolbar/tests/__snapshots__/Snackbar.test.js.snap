@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render a clickable success snackbar 1`] = `
+<div
+  class="snackbar success clickable visible"
+>
+  <span
+    aria-label="su-check"
+    class="icon su-check"
+  />
+</div>
+`;
+
 exports[`Render a success snackbar 1`] = `
 <div
   class="snackbar success visible"
