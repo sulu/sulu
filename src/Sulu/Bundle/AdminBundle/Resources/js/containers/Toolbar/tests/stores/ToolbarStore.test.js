@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {isObservable} from 'mobx';
+import {observable, isObservable, when} from 'mobx';
 import ToolbarStore from '../../stores/ToolbarStore';
 
 const toolbarStore = new ToolbarStore();
@@ -7,7 +7,7 @@ const toolbarStore = new ToolbarStore();
 jest.useFakeTimers();
 
 beforeEach(() => {
-    toolbarStore.clearConfig();
+    toolbarStore.destroy();
 });
 
 test('Set toolbar items and let mobx react', () => {
@@ -37,11 +37,15 @@ test('Get toolbar errors should return empty array if undefined', () => {
 
 test('Reset showSuccess after 1500ms', () => {
     toolbarStore.setConfig({
-        showSuccess: true,
+        showSuccess: observable.box(true),
     });
 
-    expect(toolbarStore.config.showSuccess).toEqual(true);
+    expect(toolbarStore.config.showSuccess.get()).toEqual(true);
 
-    jest.runAllTimers();
-    expect(toolbarStore.config.showSuccess).toEqual(false);
+    when(
+        () => toolbarStore.config.showSuccess.get() === false,
+        () => {
+            expect(toolbarStore.config.showSuccess.get()).toEqual(false);
+        }
+    );
 });

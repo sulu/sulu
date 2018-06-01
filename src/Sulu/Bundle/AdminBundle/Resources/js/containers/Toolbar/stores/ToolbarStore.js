@@ -1,20 +1,31 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, autorun, computed, observable} from 'mobx';
 import type {Button, Select, ToolbarConfig, ToolbarItem} from '../types';
 
 const SHOW_SUCCESS_DURATION = 1500;
 
 export default class ToolbarStore {
     @observable config: ToolbarConfig = {};
+    showSuccessDisposer: () => void;
+
+    constructor() {
+        this.showSuccessDisposer = autorun(() => {
+            const {showSuccess} = this.config;
+            if (showSuccess && showSuccess.get()) {
+                setTimeout(action(() => {
+                    showSuccess.set(false);
+                }), SHOW_SUCCESS_DURATION);
+            }
+        });
+    }
+
+    destroy() {
+        this.clearConfig();
+        this.showSuccessDisposer();
+    }
 
     @action setConfig(config: ToolbarConfig) {
         this.config = config;
-
-        if (this.config.showSuccess) {
-            setTimeout(action(() => {
-                this.config.showSuccess = false;
-            }), SHOW_SUCCESS_DURATION);
-        }
     }
 
     @action clearConfig() {
@@ -38,7 +49,7 @@ export default class ToolbarStore {
             return false;
         }
 
-        return this.config.showSuccess;
+        return this.config.showSuccess.get();
     }
 
     hasBackButtonConfig(): boolean {

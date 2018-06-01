@@ -17,7 +17,7 @@ class Form extends React.PureComponent<Props> {
     formStore: FormStore;
     form: ?FormContainer;
     @observable errors = [];
-    @observable showSuccess = false;
+    showSuccess = observable.box(false);
 
     @computed get hasOwnResourceStore() {
         const {
@@ -79,7 +79,7 @@ class Form extends React.PureComponent<Props> {
     }
 
     @action showSuccessSnackbar = () => {
-        this.showSuccess = true;
+        this.showSuccess.set(true);
     };
 
     handleSubmit = () => {

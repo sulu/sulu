@@ -604,7 +604,7 @@ test('Should set showSuccess flag after form submission', (done) => {
     form.find('Form').at(1).instance().submit().then(() => {
         expect(resourceStore.destroy).not.toBeCalled();
         expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
-        expect(form.instance().showSuccess).toEqual(true);
+        expect(form.instance().showSuccess.get()).toEqual(true);
         done();
     });
 });

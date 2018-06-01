@@ -20,7 +20,7 @@ class PageForm extends React.Component<Props> {
     form: ?Form;
     @observable webspace: Webspace;
     @observable errors = [];
-    @observable showSuccess = false;
+    showSuccess = observable.box(false);
 
     constructor(props: Props) {
         super(props);
@@ -43,7 +43,7 @@ class PageForm extends React.Component<Props> {
     }
 
     @action showSuccessSnackbar = () => {
-        this.showSuccess = true;
+        this.showSuccess.set(true);
     };
 
     handleSubmit = (actionParameter) => {

@@ -442,7 +442,7 @@ test('Should set showSuccess flag after form submission', (done) => {
     resourceStore.destroy = jest.fn();
 
     pageForm.find('Form').at(0).instance().submit().then(() => {
-        expect(pageForm.instance().showSuccess).toEqual(true);
+        expect(pageForm.instance().showSuccess.get()).toEqual(true);
         done();
     });
 });
