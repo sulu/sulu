@@ -81,7 +81,7 @@ export default class Application extends React.Component<Props> {
                     />
                 }
                 {initializer.initialized &&
-                    <div lang={userStore.user ? userStore.user.locale : undefined} className={rootClass}>
+                    <div className={rootClass}>
                         <nav className={applicationStyles.navigation}>
                             <Navigation router={router} onNavigate={this.handleNavigate} onLogout={this.handleLogout} />
                         </nav>
