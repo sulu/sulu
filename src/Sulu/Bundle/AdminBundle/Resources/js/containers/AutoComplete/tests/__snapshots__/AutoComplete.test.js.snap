@@ -5,10 +5,10 @@ exports[`Render in loading state 1`] = `
   class="autoComplete"
 >
   <label
-    class="input"
+    class="input default"
   >
     <div
-      class="prependedContainer"
+      class="prependedContainer default"
     >
       <div
         class="spinner"
@@ -35,10 +35,10 @@ exports[`Render with given value 1`] = `
   class="autoComplete"
 >
   <label
-    class="input"
+    class="input default"
   >
     <div
-      class="prependedContainer"
+      class="prependedContainer default"
     >
       <div
         class="spinner"

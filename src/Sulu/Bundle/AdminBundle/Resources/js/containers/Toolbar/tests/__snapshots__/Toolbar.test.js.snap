@@ -5,6 +5,38 @@ exports[`Render the items from the ToolbarStore 1`] = `
   class="toolbar light"
 >
   <div
+    class="snackbar error"
+  >
+    <span
+      aria-label="su-exclamation-triangle"
+      class="icon su-exclamation-triangle"
+    />
+    <div
+      class="text"
+    >
+      <strong>
+        sulu_admin.error
+      </strong>
+      <button
+        class="closeButton"
+      >
+        sulu_admin.close
+        <span
+          aria-label="su-times"
+          class="closeButtonIcon su-times"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="snackbar success"
+  >
+    <span
+      aria-label="su-check"
+      class="icon su-check"
+    />
+  </div>
+  <div
     class="controls light"
   >
     <ul

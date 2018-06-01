@@ -19,6 +19,8 @@ class PageForm extends React.Component<Props> {
     formStore: FormStore;
     form: ?Form;
     @observable webspace: Webspace;
+    @observable errors = [];
+    showSuccess = observable.box(false);
 
     constructor(props: Props) {
         super(props);
@@ -40,7 +42,11 @@ class PageForm extends React.Component<Props> {
         this.formStore.destroy();
     }
 
-    handleSubmit = (action) => {
+    @action showSuccessSnackbar = () => {
+        this.showSuccess.set(true);
+    };
+
+    handleSubmit = (actionParameter) => {
         const {resourceStore, router} = this.props;
 
         const {
@@ -53,7 +59,7 @@ class PageForm extends React.Component<Props> {
 
         const saveOptions = {
             webspace: router.attributes.webspace,
-            action,
+            action: actionParameter,
             parent: undefined,
         };
 
@@ -62,14 +68,22 @@ class PageForm extends React.Component<Props> {
             saveOptions.parent = router.attributes.parentId;
         }
 
-        this.formStore.save(saveOptions)
-            .then(() => {
+        return this.formStore.save(saveOptions)
+            .then((response) => {
+                this.showSuccessSnackbar();
                 if (editRoute) {
                     router.navigate(
                         editRoute,
                         {id: resourceStore.id, locale: resourceStore.locale, webspace: router.attributes.webspace}
                     );
                 }
+
+                return response;
+            })
+            .catch((errorResponse) => {
+                return errorResponse.json().then(action((error) => {
+                    this.errors.push(error);
+                }));
             });
     };
 
@@ -161,7 +175,9 @@ export default withToolbar(PageForm, function() {
 
     return {
         backButton,
-        locale,
+        errors: this.errors,
         items,
+        locale,
+        showSuccess: this.showSuccess,
     };
 });

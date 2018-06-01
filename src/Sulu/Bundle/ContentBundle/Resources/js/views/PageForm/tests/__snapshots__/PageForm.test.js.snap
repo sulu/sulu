@@ -5,6 +5,7 @@ Object {
   "backButton": Object {
     "onClick": [Function],
   },
+  "errors": Array [],
   "items": Array [
     Object {
       "icon": "su-save",
@@ -34,6 +35,7 @@ Object {
     },
   ],
   "locale": undefined,
+  "showSuccess": false,
 }
 `;
 
@@ -42,6 +44,7 @@ Object {
   "backButton": Object {
     "onClick": [Function],
   },
+  "errors": Array [],
   "items": Array [
     Object {
       "icon": "su-save",
@@ -93,5 +96,6 @@ Object {
     ],
     "value": "de",
   },
+  "showSuccess": false,
 }
 `;

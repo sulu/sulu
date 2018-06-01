@@ -1,6 +1,7 @@
 @import './variables.scss';
 
 .toolbar {
+    position: relative;
     display: flex;
     justify-content: space-between;
     height: $toolbarHeight;

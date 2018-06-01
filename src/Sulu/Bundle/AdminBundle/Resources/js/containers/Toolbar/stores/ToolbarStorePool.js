@@ -26,7 +26,7 @@ class ToolbarStorePool {
             );
         }
 
-        this.stores[key].clearConfig();
+        this.stores[key].destroy();
         this.stores[key] = null;
     };
 

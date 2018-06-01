@@ -89,6 +89,38 @@ exports[`Application should not fail if current route does not exist 1`] = `
           class="toolbar light"
         >
           <div
+            class="snackbar error"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="icon su-exclamation-triangle"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+              <button
+                class="closeButton"
+              >
+                sulu_admin.close
+                <span
+                  aria-label="su-times"
+                  class="closeButtonIcon su-times"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="snackbar success clickable"
+          >
+            <span
+              aria-label="su-check"
+              class="icon su-check"
+            />
+          </div>
+          <div
             class="controls light"
           >
             <button
@@ -201,6 +233,38 @@ exports[`Application should render based on current route 1`] = `
         <nav
           class="toolbar light"
         >
+          <div
+            class="snackbar error"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="icon su-exclamation-triangle"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+              <button
+                class="closeButton"
+              >
+                sulu_admin.close
+                <span
+                  aria-label="su-times"
+                  class="closeButtonIcon su-times"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="snackbar success clickable"
+          >
+            <span
+              aria-label="su-check"
+              class="icon su-check"
+            />
+          </div>
           <div
             class="controls light"
           >
@@ -568,8 +632,73 @@ exports[`Application should render opened navigation 1`] = `
               <nav
                 className="toolbar light"
               >
-                <Controls
+                <Snackbar
                   key=".0"
+                  onCloseClick={[Function]}
+                  skin="light"
+                  type="error"
+                  visible={false}
+                >
+                  <div
+                    className="snackbar error"
+                  >
+                    <Icon
+                      className="icon"
+                      name="su-exclamation-triangle"
+                    >
+                      <span
+                        aria-label="su-exclamation-triangle"
+                        className="icon su-exclamation-triangle"
+                      />
+                    </Icon>
+                    <div
+                      className="text"
+                    >
+                      <strong>
+                        sulu_admin.error
+                      </strong>
+                      <button
+                        className="closeButton"
+                        onClick={[Function]}
+                      >
+                        sulu_admin.close
+                        <Icon
+                          className="closeButtonIcon"
+                          name="su-times"
+                        >
+                          <span
+                            aria-label="su-times"
+                            className="closeButtonIcon su-times"
+                          />
+                        </Icon>
+                      </button>
+                    </div>
+                  </div>
+                </Snackbar>
+                <Snackbar
+                  key=".1"
+                  onClick={[Function]}
+                  skin="light"
+                  type="success"
+                  visible={false}
+                >
+                  <div
+                    className="snackbar success clickable"
+                    onClick={[Function]}
+                  >
+                    <Icon
+                      className="icon"
+                      name="su-check"
+                    >
+                      <span
+                        aria-label="su-check"
+                        className="icon su-check"
+                      />
+                    </Icon>
+                  </div>
+                </Snackbar>
+                <Controls
+                  key=".2"
                   skin="light"
                 >
                   <div
@@ -604,7 +733,7 @@ exports[`Application should render opened navigation 1`] = `
                   </div>
                 </Controls>
                 <Controls
-                  key=".1"
+                  key=".3"
                   skin="light"
                 >
                   <div

@@ -1,5 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
+import {action} from 'mobx';
 import React from 'react';
 import Icon from '../../components/Icon';
 import ToolbarComponent from '../../components/Toolbar';
@@ -49,7 +50,7 @@ export default class Toolbar extends React.Component<*> {
         this.setStore(this.props.storeKey);
     }
 
-    componentWillUpdate(nextProps: ToolbarProps) {
+    componentDidUpdate(nextProps: ToolbarProps) {
         if (nextProps.storeKey) {
             this.setStore(nextProps.storeKey);
         }
@@ -63,10 +64,8 @@ export default class Toolbar extends React.Component<*> {
         }
     };
 
-    handleNavigationButtonClick = () => {
-        if (this.props.onNavigationButtonClick) {
-            this.props.onNavigationButtonClick();
-        }
+    @action handleSnackbarCloseClick = () => {
+        this.toolbarStore.errors.pop();
     };
 
     render() {
@@ -88,10 +87,20 @@ export default class Toolbar extends React.Component<*> {
 
         return (
             <ToolbarComponent>
+                <ToolbarComponent.Snackbar
+                    onCloseClick={this.handleSnackbarCloseClick}
+                    type="error"
+                    visible={this.toolbarStore.errors.length > 0}
+                />
+                <ToolbarComponent.Snackbar
+                    onClick={onNavigationButtonClick}
+                    type="success"
+                    visible={this.toolbarStore.showSuccess}
+                />
                 <ToolbarComponent.Controls>
                     {!!onNavigationButtonClick &&
                     <ToolbarComponent.Button
-                        onClick={this.handleNavigationButtonClick}
+                        onClick={onNavigationButtonClick}
                         primary={true}
                         icon={navigationOpen ? 'su-times' : 'su-bars'}
                     />

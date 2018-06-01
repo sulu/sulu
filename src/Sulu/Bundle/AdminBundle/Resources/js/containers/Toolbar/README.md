@@ -9,7 +9,7 @@ offer.
 
 Here is a basic example of the `Toolbar` component:
 
-```
+```javascript
 const withToolbar = require('./withToolbar').default;
 const Toolbar = require('./Toolbar').default;
 
@@ -50,7 +50,7 @@ offers three kinds of items which can be used by defining them inside the items 
 
 Here a `Toolbar` example which is using all three of them:
 
-```
+```javascript
 const withToolbar = require('./withToolbar').default;
 const Toolbar = require('./Toolbar').default;
 
@@ -129,7 +129,7 @@ and the option to show icons in order to display notifications or other state in
 
 Example with special control elements:
 
-```
+```javascript
 const withToolbar = require('./withToolbar').default;
 const Toolbar = require('./Toolbar').default;
 
@@ -197,7 +197,7 @@ const PageWithToolbar = withToolbar(Page, function() {
 Each item has also the possibility to show a loader instead of its text by using the `loading` property. This is useful
 when an asynchronous action is sent:
 
-```
+```javascript
 const withToolbar = require('./withToolbar').default;
 const Toolbar = require('./Toolbar').default;
 const observable = require('mobx').observable;
@@ -279,6 +279,62 @@ const PageWithToolbar = withToolbar(Page, function() {
 
 <div>
     <Toolbar storeKey="toolbar-demo-4" />
+    <PageWithToolbar />
+</div>
+```
+
+The `errors` property can be set to show an error instead of the toolbar.
+
+```javascript
+const withToolbar = require('./withToolbar').default;
+const Toolbar = require('./Toolbar').default;
+
+class Page extends React.PureComponent {
+    render() {
+        return (
+            <h1>Just an error...</h1>
+        );
+    }
+}
+
+const PageWithToolbar = withToolbar(Page, function() {
+    return {
+        errors: [
+            {code: 1000},
+        ],
+    };
+}, 'toolbar-demo-5');
+
+<div>
+    <Toolbar storeKey="toolbar-demo-5" />
+    <PageWithToolbar />
+</div>
+```
+
+Corresponding to that the `showSuccess` property can be used to show a success icon for 1.5 seconds.
+
+```javascript
+const extendObservable = require('mobx').extendObservable;
+const observable = require('mobx').observable;
+const withToolbar = require('./withToolbar').default;
+const Toolbar = require('./Toolbar').default;
+
+class Page extends React.PureComponent {
+    render() {
+        return (
+            <h1>Just a success :-)</h1>
+        );
+    }
+}
+
+const PageWithToolbar = withToolbar(Page, function() {
+    return {
+        showSuccess: observable.box(true),
+    };
+}, 'toolbar-demo-6');
+
+<div>
+    <Toolbar storeKey="toolbar-demo-6" />
     <PageWithToolbar />
 </div>
 ```

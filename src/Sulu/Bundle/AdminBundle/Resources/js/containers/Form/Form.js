@@ -9,7 +9,7 @@ import FormInspector from './FormInspector';
 
 type Props = {
     store: FormStore,
-    onSubmit: (action: ?string) => void,
+    onSubmit: (action: ?string) => ?Promise<Object>,
 };
 
 @observer
@@ -23,7 +23,7 @@ export default class Form extends React.Component<Props> {
     /** @public */
     @action submit = (action: ?string) => {
         this.showAllErrors = true;
-        this.props.onSubmit(action);
+        return this.props.onSubmit(action);
     };
 
     handleChange = (name: string, value: mixed) => {
