@@ -46,6 +46,8 @@ import Form from '../../views/Form';
 import ResourceTabs from '../../views/ResourceTabs';
 import Datagrid from '../../views/Datagrid';
 
+declare var SULU: Object;
+
 function registerViews() {
     viewRegistry.add('sulu_admin.form', Form);
     viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
@@ -110,7 +112,22 @@ function processConfig(config: Object) {
     resourceMetadataStore.setEndpoints(config['sulu_admin'].endpoints);
 }
 
+function getDefaultLocale() {
+    // detect browser locale (ie, ff, chrome fallbacks)
+    let locale = window.navigator.languages ? window.navigator.languages[0] : null;
+    locale = locale || window.navigator.language || window.navigator.browserLanguage || window.navigator.userLanguage;
+
+    // select only language
+    locale = locale.slice(0, 2).toLowerCase();
+    if (SULU.translations.indexOf(locale) === -1) {
+        return SULU.fallbackLocale;
+    }
+
+    return locale;
+}
+
 class Initializer {
+    SULU = SULU;
     @observable initialized: boolean = false;
     @observable initializedTranslationsLocale: ?string;
     @observable loading: boolean = false;
@@ -123,7 +140,6 @@ class Initializer {
 
     @action setInitialized() {
         this.initialized = true;
-        console.log('INITIALIZED');
     }
 
     @action setInitializedTranslationsLocale(locale: string) {
@@ -135,14 +151,13 @@ class Initializer {
     }
 
     initializeTranslations() {
-        const locale = userStore.user ? userStore.user.locale : 'en';
+        const locale = userStore.user ? userStore.user.locale : getDefaultLocale();
 
         if (this.initializedTranslationsLocale === locale) {
             return Promise.resolve();
         }
 
-        // TODO: Get this url from backend
-        return Requester.get('/admin/v2/translations?locale=' + locale).then((translations) => {
+        return Requester.get(SULU.endpoints.translations + '?locale=' + locale).then((translations) => {
             setTranslations(translations);
             this.setInitializedTranslationsLocale(locale);
         });
@@ -151,8 +166,7 @@ class Initializer {
     initialize() {
         this.setLoading(true);
         return bundlesReadyPromise.then(() => {
-            // TODO: Get this url from backend
-            return Requester.get('/admin/v2/config').then((config) => {
+            return Requester.get(SULU.endpoints.config).then((config) => {
                 if (!this.initialized) {
                     registerViews();
                     registerDatagridAdapters();
