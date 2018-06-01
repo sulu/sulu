@@ -564,6 +564,51 @@ test('Should save form when submitted', (done) => {
     jsonSchemaResolve({});
 });
 
+test('Should set showSuccess flag after form submission', (done) => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const route = {
+        options: {
+            locales: [],
+        },
+    };
+    const router = {
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {
+            id: 8,
+        },
+    };
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    form.find('Form').at(1).instance().submit().then(() => {
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
+        expect(form.instance().showSuccess).toEqual(true);
+        done();
+    });
+});
+
 test('Should keep errors after form submission has failed', (done) => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     const error = {code: 100, message: 'Something went wrong'};

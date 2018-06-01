@@ -20,6 +20,7 @@ class PageForm extends React.Component<Props> {
     form: ?Form;
     @observable webspace: Webspace;
     @observable errors = [];
+    @observable showSuccess = false;
 
     constructor(props: Props) {
         super(props);
@@ -40,6 +41,10 @@ class PageForm extends React.Component<Props> {
     componentWillUnmount() {
         this.formStore.destroy();
     }
+
+    @action showSuccessSnackbar = () => {
+        this.showSuccess = true;
+    };
 
     handleSubmit = (actionParameter) => {
         const {resourceStore, router} = this.props;
@@ -65,6 +70,7 @@ class PageForm extends React.Component<Props> {
 
         return this.formStore.save(saveOptions)
             .then((response) => {
+                this.showSuccessSnackbar();
                 if (editRoute) {
                     router.navigate(
                         editRoute,
@@ -172,5 +178,6 @@ export default withToolbar(PageForm, function() {
         errors: this.errors,
         items,
         locale,
+        showSuccess: this.showSuccess,
     };
 });

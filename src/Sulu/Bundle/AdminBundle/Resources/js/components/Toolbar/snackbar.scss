@@ -3,6 +3,8 @@
 $snackbarErrorColor: $white;
 $snackbarErrorBackgroundColor: $roman;
 $snackbarIconErrorBackgroundColor: $persianRed;
+$snackbarSuccessColor: $white;
+$snackbarIconSuccessBackgroundColor: $mantis;
 $closeButtonBorderColor: $white;
 
 .snackbar {
@@ -10,14 +12,12 @@ $closeButtonBorderColor: $white;
     top: 0;
     bottom: 0;
     left: 0;
-    right: 0;
     z-index: 1;
     display: flex;
 }
 
 .icon {
     width: 60px;
-    background-color: $snackbarIconErrorBackgroundColor;
     font-size: 20px;
     display: flex;
     align-items: center;
@@ -44,13 +44,28 @@ $closeButtonBorderColor: $white;
 }
 
 .error {
+    right: 0;
     background-color: $snackbarErrorBackgroundColor;
     color: $snackbarErrorColor;
     display: flex;
     align-items: center;
 
+    .icon {
+        background-color: $snackbarIconErrorBackgroundColor;
+    }
+
     .close-button {
         background-color: $snackbarErrorBackgroundColor;
         color: $snackbarErrorColor;
+    }
+}
+
+.success {
+    color: $snackbarSuccessColor;
+    display: flex;
+    align-items: center;
+
+    .icon {
+        background-color: $snackbarIconSuccessBackgroundColor;
     }
 }

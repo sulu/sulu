@@ -2,11 +2,19 @@
 import {action, computed, observable} from 'mobx';
 import type {Button, Select, ToolbarConfig, ToolbarItem} from '../types';
 
+const SHOW_SUCCESS_DURATION = 1500;
+
 export default class ToolbarStore {
     @observable config: ToolbarConfig = {};
 
     @action setConfig(config: ToolbarConfig) {
         this.config = config;
+
+        if (this.config.showSuccess) {
+            setTimeout(action(() => {
+                this.config.showSuccess = false;
+            }), SHOW_SUCCESS_DURATION);
+        }
     }
 
     @action clearConfig() {
@@ -23,6 +31,14 @@ export default class ToolbarStore {
         }
 
         return this.config.errors;
+    }
+
+    @computed get showSuccess(): boolean {
+        if (!this.config.showSuccess) {
+            return false;
+        }
+
+        return this.config.showSuccess;
     }
 
     hasBackButtonConfig(): boolean {

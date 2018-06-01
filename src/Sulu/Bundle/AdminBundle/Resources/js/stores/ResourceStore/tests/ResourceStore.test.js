@@ -11,7 +11,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
 }));
 
 test('Should not be marked dirty when value is set', () => {
-    ResourceRequester.get.mockReturnValue(Promise.resolve());
+    ResourceRequester.get.mockReturnValue(Promise.resolve({}));
 
     const resourceStore = new ResourceStore('snippets', '1');
     expect(resourceStore.dirty).toBe(false);
@@ -22,7 +22,7 @@ test('Should not be marked dirty when value is set', () => {
 });
 
 test('Should be marked dirty when value is changed', () => {
-    ResourceRequester.get.mockReturnValue(Promise.resolve());
+    ResourceRequester.get.mockReturnValue(Promise.resolve({}));
 
     const resourceStore = new ResourceStore('snippets', '1');
     expect(resourceStore.dirty).toBe(false);
@@ -92,7 +92,7 @@ test('Loading flag should be set to true when loading', () => {
 });
 
 test('Loading flag should be set to false when loading has finished', () => {
-    const promise = Promise.resolve();
+    const promise = Promise.resolve({});
     ResourceRequester.get.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.setLocale('en');
@@ -105,7 +105,7 @@ test('Loading flag should be set to false when loading has finished', () => {
 });
 
 test('Saving flag should be set to true when saving', () => {
-    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.saving = false;
     resourceStore.setLocale('en');
@@ -115,7 +115,7 @@ test('Saving flag should be set to true when saving', () => {
 });
 
 test('Saving flag should be set to false when saving has finished', () => {
-    const promise = Promise.resolve();
+    const promise = Promise.resolve({});
     ResourceRequester.put.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.setLocale('en');
@@ -128,7 +128,7 @@ test('Saving flag should be set to false when saving has finished', () => {
 });
 
 test('Save the store should send a PUT request', () => {
-    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '3', {locale: observable.box()});
 
     if (!resourceStore.locale) {
@@ -144,7 +144,7 @@ test('Save the store should send a PUT request', () => {
 });
 
 test('Save the store should send a PUT request without a locale', () => {
-    ResourceRequester.post.mockReturnValue(Promise.resolve());
+    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', null, {locale: observable.box()});
 
     if (!resourceStore.locale) {
@@ -160,7 +160,7 @@ test('Save the store should send a PUT request without a locale', () => {
 });
 
 test('Save the store without an id should send a POST request', () => {
-    ResourceRequester.post.mockReturnValue(Promise.resolve());
+    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', null, {locale: observable.box()});
 
     if (!resourceStore.locale) {
@@ -176,7 +176,7 @@ test('Save the store without an id should send a POST request', () => {
 });
 
 test('Save the store without an id should send a POST request without a locale', () => {
-    ResourceRequester.post.mockReturnValue(Promise.resolve());
+    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', null, {});
     resourceStore.data = {title: 'Title'};
     resourceStore.dirty = false;
@@ -216,7 +216,7 @@ test('Saving and dirty flag should be set to false when creating has failed', (d
 });
 
 test('Saving flag should be set to true when deleting', () => {
-    ResourceRequester.delete.mockReturnValue(Promise.resolve());
+    ResourceRequester.delete.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.data = {id: 1};
     resourceStore.saving = false;
@@ -227,7 +227,7 @@ test('Saving flag should be set to true when deleting', () => {
 });
 
 test('Saving flag and id should be reset to false when deleting has finished', () => {
-    const promise = Promise.resolve();
+    const promise = Promise.resolve({});
     ResourceRequester.delete.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.data = {id: 1};
@@ -242,7 +242,7 @@ test('Saving flag and id should be reset to false when deleting has finished', (
 });
 
 test('Calling the delete method should send a DELETE request', () => {
-    ResourceRequester.delete.mockReturnValue(Promise.resolve());
+    ResourceRequester.delete.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '3', {});
     resourceStore.data = {id: 3, title: 'Title'};
     resourceStore.dirty = false;
@@ -252,7 +252,7 @@ test('Calling the delete method should send a DELETE request', () => {
 });
 
 test('Saving flag should be set to true when saving', () => {
-    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.saving = false;
 

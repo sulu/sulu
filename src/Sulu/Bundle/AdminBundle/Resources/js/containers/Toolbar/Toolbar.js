@@ -94,7 +94,10 @@ export default class Toolbar extends React.Component<*> {
         return (
             <ToolbarComponent>
                 {this.toolbarStore.errors.length > 0 &&
-                    <ToolbarComponent.Snackbar onCloseClick={this.handleSnackbarCloseClick} />
+                    <ToolbarComponent.Snackbar onCloseClick={this.handleSnackbarCloseClick} type="error" />
+                }
+                {this.toolbarStore.showSuccess &&
+                    <ToolbarComponent.Snackbar type="success" />
                 }
                 <ToolbarComponent.Controls>
                     {!!onNavigationButtonClick &&

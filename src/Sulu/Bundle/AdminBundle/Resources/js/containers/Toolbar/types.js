@@ -29,4 +29,5 @@ export type ToolbarConfig = {
     icons?: Array<string>,
     items?: Array<ToolbarItem>,
     locale?: Select,
+    showSuccess?: boolean,
 };

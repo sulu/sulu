@@ -1,6 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a snackbar 1`] = `
+exports[`Render a success snackbar 1`] = `
+<div
+  class="snackbar success"
+>
+  <span
+    aria-label="su-check"
+    class="icon su-check"
+  />
+</div>
+`;
+
+exports[`Render an error snackbar 1`] = `
 <div
   class="snackbar error"
 >
@@ -23,6 +34,24 @@ exports[`Render a snackbar 1`] = `
         class="closeButtonIcon su-times"
       />
     </button>
+  </div>
+</div>
+`;
+
+exports[`Render an error snackbar without close button 1`] = `
+<div
+  class="snackbar error"
+>
+  <span
+    aria-label="su-exclamation-triangle"
+    class="icon su-exclamation-triangle"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.error
+    </strong>
   </div>
 </div>
 `;

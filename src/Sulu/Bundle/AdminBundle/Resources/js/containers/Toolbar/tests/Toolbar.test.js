@@ -15,6 +15,7 @@ jest.mock('../stores/ToolbarStorePool', () => ({
 beforeEach(() => {
     toolbarStoreMock = {
         errors: [],
+        showSuccess: false,
         hasBackButtonConfig: jest.fn(),
         getBackButtonConfig: jest.fn(),
         hasItemsConfig: jest.fn(),
@@ -105,6 +106,25 @@ test('Render the items as disabled if one is loading', () => {
     expect(buttons.at(0).prop('disabled')).toBe(true);
     expect(buttons.at(1).prop('disabled')).toBe(true);
     expect(buttons.at(2).prop('disabled')).toBe(true);
+});
+
+test('Show success message for some time', () => {
+    const storeKey = 'testStore';
+
+    toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
+
+    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
+    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
+    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
+    toolbarStoreMock.getItemsConfig.mockReturnValue([]);
+    toolbarStoreMock.showSuccess = true;
+
+    const view = shallow(<Toolbar storeKey={storeKey} />);
+
+    expect(view.find('Snackbar')).toHaveLength(1);
+    expect(view.find('Snackbar').prop('type')).toEqual('success');
 });
 
 test('Remove last error if close button on snackbar is clicked', () => {

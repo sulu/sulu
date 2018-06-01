@@ -26,7 +26,7 @@ test('Render controls', () => {
 test('Render with Snackbar', () => {
     expect(render(
         <Toolbar>
-            <Snackbar onCloseClick={jest.fn()} />
+            <Snackbar onCloseClick={jest.fn()} type="error" />
             <Controls>
                 <Button onClick={jest.fn()}>Test</Button>
             </Controls>

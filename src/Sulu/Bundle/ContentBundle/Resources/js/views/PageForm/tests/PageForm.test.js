@@ -395,6 +395,58 @@ test('Should render save buttons disabled only if form is not dirty', () => {
     });
 });
 
+test('Should set showSuccess flag after form submission', (done) => {
+    const webspaceStore = require('../../../stores/WebspaceStore');
+    const webspace = {
+        key: 'sulu',
+        localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
+        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
+    };
+    const webspacePromise = Promise.resolve(webspace);
+    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
+    const PageForm = require('../PageForm').default;
+    const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
+    const locale = observable.box();
+    const resourceStore = new ResourceStore('pages', undefined, {locale: locale});
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const router = {
+        navigate: jest.fn(),
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: true,
+                editRoute: 'test_route',
+            },
+        },
+        attributes: {
+            webspace: 'sulu',
+            locale: 'de',
+            parentId: 'test-parent-id',
+        },
+    };
+
+    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    pageForm.instance().formStore.save = jest.fn().mockReturnValue(Promise.resolve({}));
+
+    resourceStore.locale.set('de');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    pageForm.find('Form').at(0).instance().submit().then(() => {
+        expect(pageForm.instance().showSuccess).toEqual(true);
+        done();
+    });
+});
+
 test('Should keep errors after form submission has failed', (done) => {
     const webspaceStore = require('../../../stores/WebspaceStore');
     const webspace = {

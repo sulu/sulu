@@ -35,6 +35,7 @@ Object {
     },
   ],
   "locale": undefined,
+  "showSuccess": false,
 }
 `;
 
@@ -95,5 +96,6 @@ Object {
     ],
     "value": "de",
   },
+  "showSuccess": false,
 }
 `;

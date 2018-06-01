@@ -17,6 +17,7 @@ class Form extends React.PureComponent<Props> {
     formStore: FormStore;
     form: ?FormContainer;
     @observable errors = [];
+    @observable showSuccess = false;
 
     @computed get hasOwnResourceStore() {
         const {
@@ -77,6 +78,10 @@ class Form extends React.PureComponent<Props> {
         }
     }
 
+    @action showSuccessSnackbar = () => {
+        this.showSuccess = true;
+    };
+
     handleSubmit = () => {
         const {resourceStore, router} = this.props;
 
@@ -94,6 +99,7 @@ class Form extends React.PureComponent<Props> {
 
         return this.formStore.save()
             .then((response) => {
+                this.showSuccessSnackbar();
                 if (editRoute) {
                     router.navigate(editRoute, {id: resourceStore.id, locale: resourceStore.locale});
                 }
@@ -128,7 +134,7 @@ export default withToolbar(Form, function() {
     const {router} = this.props;
     const {backRoute, locales} = router.route.options;
     const formTypes = this.formStore.types;
-    const {errors, resourceStore} = this;
+    const {errors, resourceStore, showSuccess} = this;
 
     const backButton = backRoute
         ? {
@@ -188,5 +194,6 @@ export default withToolbar(Form, function() {
         errors,
         locale,
         items,
+        showSuccess,
     };
 });

@@ -4,6 +4,8 @@ import ToolbarStore from '../../stores/ToolbarStore';
 
 const toolbarStore = new ToolbarStore();
 
+jest.useFakeTimers();
+
 beforeEach(() => {
     toolbarStore.clearConfig();
 });
@@ -31,4 +33,15 @@ test('Set toolbar items and let mobx react', () => {
 
 test('Get toolbar errors should return empty array if undefined', () => {
     expect(toolbarStore.errors).toEqual([]);
+});
+
+test('Reset showSuccess after 1500ms', () => {
+    toolbarStore.setConfig({
+        showSuccess: true,
+    });
+
+    expect(toolbarStore.config.showSuccess).toEqual(true);
+
+    jest.runAllTimers();
+    expect(toolbarStore.config.showSuccess).toEqual(false);
 });
