@@ -76,7 +76,7 @@ export default class Application extends React.Component<Props> {
                 {!loggedIn &&
                     <Login
                         onLoginSuccess={this.handleLoginSuccess}
-                        initialized={!initializer.loading && initializer.translationInitialized}
+                        initialized={!initializer.loading && initializer.initialized}
                         backLink="/" // TODO: Get the correct link here from the backend
                     />
                 }

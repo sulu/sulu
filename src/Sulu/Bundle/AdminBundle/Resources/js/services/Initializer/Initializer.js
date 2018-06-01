@@ -112,50 +112,52 @@ function processConfig(config: Object) {
 
 class Initializer {
     @observable initialized: boolean = false;
-    @observable translationInitialized: boolean = false;
+    @observable initializedTranslationsLocale: ?string;
     @observable loading: boolean = false;
 
     @action clear() {
         this.initialized = false;
-        this.translationInitialized = false;
+        this.initializedTranslationsLocale = undefined;
         this.loading = false;
     }
 
     @action setInitialized() {
         this.initialized = true;
+        console.log('INITIALIZED');
     }
 
-    @action setTranslationInitialized(initialized: boolean) {
-        this.translationInitialized = initialized;
+    @action setInitializedTranslationsLocale(locale: string) {
+        this.initializedTranslationsLocale = locale;
     }
 
     @action setLoading(loading: boolean) {
         this.loading = loading;
     }
 
+    initializeTranslations() {
+        const locale = userStore.user ? userStore.user.locale : 'en';
+
+        if (this.initializedTranslationsLocale === locale) {
+            return Promise.resolve();
+        }
+
+        // TODO: Get this url from backend
+        return Requester.get('/admin/v2/translations?locale=' + locale).then((translations) => {
+            setTranslations(translations);
+            this.setInitializedTranslationsLocale(locale);
+        });
+    }
+
     initialize() {
         this.setLoading(true);
         return bundlesReadyPromise.then(() => {
-            // TODO: Use correct locale here
             // TODO: Get this url from backend
-            const translationsPromise = Requester.get('/admin/v2/translations?locale=en').then((translations) => {
-                setTranslations(translations);
-                this.setTranslationInitialized(true);
-            });
-
-            // TODO: Get this url from backend
-            const configPromise = Requester.get('/admin/v2/config').then((config) => {
-                if (!config.hasOwnProperty('sulu_admin')) {
-                    return;
-                }
-
+            return Requester.get('/admin/v2/config').then((config) => {
                 if (!this.initialized) {
                     registerViews();
                     registerDatagridAdapters();
                     registerDatagridFieldTransformers();
                     registerFieldTypes(config['sulu_admin']['field_type_options']);
-
-                    this.setInitialized();
                 }
 
                 processConfig(config);
@@ -167,12 +169,12 @@ class Initializer {
                 if (error.status !== 401) {
                     return Promise.reject(error);
                 }
-            });
-
-            return Promise.all([translationsPromise, configPromise])
-                .finally(() => {
+            }).finally(() => {
+                return this.initializeTranslations().then(() => {
                     this.setLoading(false);
+                    this.setInitialized();
                 });
+            });
         });
     }
 }
