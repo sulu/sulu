@@ -5,6 +5,14 @@ exports[`Render the items from the ToolbarStore 1`] = `
   class="toolbar light"
 >
   <div
+    class="snackbar success"
+  >
+    <span
+      aria-label="su-check"
+      class="icon su-check"
+    />
+  </div>
+  <div
     class="controls light"
   >
     <ul

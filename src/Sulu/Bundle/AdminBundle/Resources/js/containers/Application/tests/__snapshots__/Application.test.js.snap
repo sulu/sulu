@@ -89,6 +89,14 @@ exports[`Application should not fail if current route does not exist 1`] = `
           class="toolbar light"
         >
           <div
+            class="snackbar success"
+          >
+            <span
+              aria-label="su-check"
+              class="icon su-check"
+            />
+          </div>
+          <div
             class="controls light"
           >
             <button
@@ -201,6 +209,14 @@ exports[`Application should render based on current route 1`] = `
         <nav
           class="toolbar light"
         >
+          <div
+            class="snackbar success"
+          >
+            <span
+              aria-label="su-check"
+              class="icon su-check"
+            />
+          </div>
           <div
             class="controls light"
           >
@@ -568,6 +584,28 @@ exports[`Application should render opened navigation 1`] = `
               <nav
                 className="toolbar light"
               >
+                <Snackbar
+                  key=".1"
+                  onClick={[Function]}
+                  skin="light"
+                  type="success"
+                  visible={false}
+                >
+                  <div
+                    className="snackbar success"
+                    onClick={[Function]}
+                  >
+                    <Icon
+                      className="icon"
+                      name="su-check"
+                    >
+                      <span
+                        aria-label="su-check"
+                        className="icon su-check"
+                      />
+                    </Icon>
+                  </div>
+                </Snackbar>
                 <Controls
                   key=".2"
                   skin="light"

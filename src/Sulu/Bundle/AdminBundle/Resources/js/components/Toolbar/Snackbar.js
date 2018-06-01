@@ -9,6 +9,7 @@ type Props = {|
     onCloseClick?: () => void,
     onClick?: () => void,
     type: 'error' | 'success',
+    visible: boolean,
 |};
 
 const ICONS = {
@@ -17,12 +18,19 @@ const ICONS = {
 };
 
 export default class Snackbar extends React.Component<Props> {
+    static defaultProps = {
+        visible: true,
+    };
+
     render() {
-        const {onCloseClick, onClick, type} = this.props;
+        const {onCloseClick, onClick, type, visible} = this.props;
 
         const snackbarClass = classNames(
             snackbarStyles.snackbar,
-            snackbarStyles[type]
+            snackbarStyles[type],
+            {
+                [snackbarStyles.visible]: visible,
+            }
         );
 
         return (

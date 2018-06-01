@@ -49,6 +49,13 @@ $closeButtonBorderColor: $white;
     color: $snackbarErrorColor;
     display: flex;
     align-items: center;
+    will-change: top, bottom;
+    transition: top .15s, bottom .15s;
+
+    &:not(.visible) {
+        top: -100%;
+        bottom: 100%;
+    }
 
     .icon {
         background-color: $snackbarIconErrorBackgroundColor;
@@ -64,6 +71,13 @@ $closeButtonBorderColor: $white;
     color: $snackbarSuccessColor;
     display: flex;
     align-items: center;
+    opacity: 0;
+    will-change: opacity;
+    transition: opacity .25s;
+
+    &.visible {
+        opacity: 1;
+    }
 
     .icon {
         background-color: $snackbarIconSuccessBackgroundColor;

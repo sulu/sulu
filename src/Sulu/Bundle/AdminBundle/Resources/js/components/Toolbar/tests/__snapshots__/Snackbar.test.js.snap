@@ -2,7 +2,7 @@
 
 exports[`Render a success snackbar 1`] = `
 <div
-  class="snackbar success"
+  class="snackbar success visible"
 >
   <span
     aria-label="su-check"
@@ -13,7 +13,7 @@ exports[`Render a success snackbar 1`] = `
 
 exports[`Render an error snackbar 1`] = `
 <div
-  class="snackbar error"
+  class="snackbar error visible"
 >
   <span
     aria-label="su-exclamation-triangle"
@@ -40,7 +40,7 @@ exports[`Render an error snackbar 1`] = `
 
 exports[`Render an error snackbar without close button 1`] = `
 <div
-  class="snackbar error"
+  class="snackbar error visible"
 >
   <span
     aria-label="su-exclamation-triangle"
@@ -53,5 +53,16 @@ exports[`Render an error snackbar without close button 1`] = `
       sulu_admin.error
     </strong>
   </div>
+</div>
+`;
+
+exports[`Render an invisible success snackbar 1`] = `
+<div
+  class="snackbar success"
+>
+  <span
+    aria-label="su-check"
+    class="icon su-check"
+  />
 </div>
 `;

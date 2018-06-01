@@ -7,8 +7,12 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+test('Render an invisible success snackbar', () => {
+    expect(render(<Snackbar type="success" visible={false} />)).toMatchSnapshot();
+});
+
 test('Render a success snackbar', () => {
-    expect(render(<Snackbar onCloseClick={jest.fn()} type="success" />)).toMatchSnapshot();
+    expect(render(<Snackbar type="success" />)).toMatchSnapshot();
 });
 
 test('Render an error snackbar', () => {

@@ -173,9 +173,9 @@ test('Remove last error if close button on snackbar is clicked', () => {
 
     const view = shallow(<Toolbar storeKey={storeKey} />);
 
-    expect(view.find('Snackbar')).toHaveLength(1);
+    expect(view.find('Snackbar[type="error"]')).toHaveLength(1);
 
     expect(toolbarStoreMock.errors).toHaveLength(1);
-    view.find('Snackbar').simulate('closeClick');
+    view.find('Snackbar[type="error"]').simulate('closeClick');
     expect(toolbarStoreMock.errors).toHaveLength(0);
 });
