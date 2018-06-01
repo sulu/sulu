@@ -315,6 +315,7 @@ Corresponding to that the `showSuccess` property can be used to show a success i
 
 ```javascript
 const extendObservable = require('mobx').extendObservable;
+const observable = require('mobx').observable;
 const withToolbar = require('./withToolbar').default;
 const Toolbar = require('./Toolbar').default;
 
@@ -328,7 +329,7 @@ class Page extends React.PureComponent {
 
 const PageWithToolbar = withToolbar(Page, function() {
     return {
-        showSuccess: true,
+        showSuccess: observable.box(true),
     };
 }, 'toolbar-demo-6');
 

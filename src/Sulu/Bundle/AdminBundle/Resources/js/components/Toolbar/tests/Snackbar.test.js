@@ -19,6 +19,15 @@ test('Render an error snackbar without close button', () => {
     expect(render(<Snackbar type="error" />)).toMatchSnapshot();
 });
 
+test('Click the snackbar should call the onClick callback', () => {
+    const clickSpy = jest.fn();
+    const snackbar = shallow(<Snackbar onClick={clickSpy} type="success" />);
+
+    snackbar.simulate('click');
+
+    expect(clickSpy).toBeCalledWith();
+});
+
 test('Call onCloseClick callback when close button is clicked', () => {
     const closeClickSpy = jest.fn();
     const snackbar = shallow(<Snackbar onCloseClick={closeClickSpy} type="error" />);

@@ -127,6 +127,27 @@ test('Show success message for some time', () => {
     expect(view.find('Snackbar').prop('type')).toEqual('success');
 });
 
+test('Click on the success message should open the navigation', () => {
+    const storeKey = 'testStore';
+    const navigationButtonClickSpy = jest.fn();
+
+    toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
+
+    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
+    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
+    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
+    toolbarStoreMock.getItemsConfig.mockReturnValue([]);
+    toolbarStoreMock.showSuccess = true;
+
+    const view = shallow(<Toolbar onNavigationButtonClick={navigationButtonClickSpy} storeKey={storeKey} />);
+
+    view.find('Snackbar[type="success"]').simulate('click');
+
+    expect(navigationButtonClickSpy).toBeCalledWith();
+});
+
 test('Remove last error if close button on snackbar is clicked', () => {
     const storeKey = 'testStore';
 

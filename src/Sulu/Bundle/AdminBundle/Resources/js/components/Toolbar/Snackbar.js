@@ -7,6 +7,7 @@ import snackbarStyles from './snackbar.scss';
 
 type Props = {|
     onCloseClick?: () => void,
+    onClick?: () => void,
     type: 'error' | 'success',
 |};
 
@@ -17,7 +18,7 @@ const ICONS = {
 
 export default class Snackbar extends React.Component<Props> {
     render() {
-        const {onCloseClick, type} = this.props;
+        const {onCloseClick, onClick, type} = this.props;
 
         const snackbarClass = classNames(
             snackbarStyles.snackbar,
@@ -25,7 +26,7 @@ export default class Snackbar extends React.Component<Props> {
         );
 
         return (
-            <div className={snackbarClass}>
+            <div className={snackbarClass} onClick={onClick}>
                 <Icon className={snackbarStyles.icon} name={ICONS[type]} />
                 {type !== 'success' &&
                     <div className={snackbarStyles.text}>

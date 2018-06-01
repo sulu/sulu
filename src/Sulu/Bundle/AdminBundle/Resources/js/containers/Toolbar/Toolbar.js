@@ -64,12 +64,6 @@ export default class Toolbar extends React.Component<*> {
         }
     };
 
-    handleNavigationButtonClick = () => {
-        if (this.props.onNavigationButtonClick) {
-            this.props.onNavigationButtonClick();
-        }
-    };
-
     @action handleSnackbarCloseClick = () => {
         this.toolbarStore.errors.pop();
     };
@@ -97,12 +91,12 @@ export default class Toolbar extends React.Component<*> {
                     <ToolbarComponent.Snackbar onCloseClick={this.handleSnackbarCloseClick} type="error" />
                 }
                 {this.toolbarStore.showSuccess &&
-                    <ToolbarComponent.Snackbar type="success" />
+                    <ToolbarComponent.Snackbar onClick={onNavigationButtonClick} type="success" />
                 }
                 <ToolbarComponent.Controls>
                     {!!onNavigationButtonClick &&
                     <ToolbarComponent.Button
-                        onClick={this.handleNavigationButtonClick}
+                        onClick={onNavigationButtonClick}
                         primary={true}
                         icon={navigationOpen ? 'su-times' : 'su-bars'}
                     />
