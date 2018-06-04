@@ -41,13 +41,13 @@ export default class Datagrid extends React.Component<Props> {
         this.validateAdapters();
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (!equal(this.props.adapters, nextProps.adapters)) {
+    componentDidUpdate(prevProps: Props) {
+        if (!equal(this.props.adapters, prevProps.adapters)) {
             this.validateAdapters();
         }
 
-        if (this.props.store !== nextProps.store) {
-            nextProps.store.updateStrategies(
+        if (this.props.store !== prevProps.store) {
+            this.props.store.updateStrategies(
                 new this.currentAdapter.LoadingStrategy(),
                 new this.currentAdapter.StructureStrategy()
             );
