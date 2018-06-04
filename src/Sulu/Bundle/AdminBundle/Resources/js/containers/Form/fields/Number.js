@@ -1,33 +1,32 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
+import {observer} from 'mobx-react';
 import NumberComponent from '../../../components/Number';
-import type {FieldTypeProps} from '../../../types';
+import type {FieldTypeProps, SchemaOptions} from '../../../types';
 
+@observer
 export default class Number extends React.Component<FieldTypeProps<?number>> {
-    options = {
-        min: undefined,
-        max: undefined,
-        step: undefined,
-    };
-
-    constructor(props: FieldTypeProps<?number>) {
-        super(props);
-
+    @computed get schemaOptions(): SchemaOptions {
         const {schemaOptions} = this.props;
 
         if (!schemaOptions) {
-            return;
+            return {};
         }
 
-        if (schemaOptions.min) {
-            this.options.min = parseFloat(schemaOptions.min.value);
-        }
-        if (schemaOptions.max) {
-            this.options.max = parseFloat(schemaOptions.max.value);
-        }
-        if (schemaOptions.step) {
-            this.options.step = parseFloat(schemaOptions.step.value);
-        }
+        return schemaOptions;
+    }
+
+    @computed get min(): ?number {
+        return this.schemaOptions.min ? parseFloat(this.schemaOptions.min.value) : undefined;
+    }
+
+    @computed get max(): ?number {
+        return this.schemaOptions.max ? parseFloat(this.schemaOptions.max.value) : undefined;
+    }
+
+    @computed get step(): ?number {
+        return this.schemaOptions.step ? parseFloat(this.schemaOptions.step.value) : undefined;
     }
 
     render() {
@@ -35,9 +34,9 @@ export default class Number extends React.Component<FieldTypeProps<?number>> {
 
         return (
             <NumberComponent
-                min={this.options.min}
-                max={this.options.max}
-                step={this.options.step}
+                min={this.min}
+                max={this.max}
+                step={this.step}
                 onChange={onChange}
                 onBlur={onFinish}
                 valid={!error}

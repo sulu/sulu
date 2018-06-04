@@ -3,10 +3,6 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import Number from '../Number';
 
-jest.mock('loglevel', () => ({
-    warn: jest.fn(),
-}));
-
 test('Number should render', () => {
     expect(render(<Number value={null} onChange={jest.fn()} />)).toMatchSnapshot();
 });

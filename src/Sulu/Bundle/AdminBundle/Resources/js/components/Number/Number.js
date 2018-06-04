@@ -19,10 +19,10 @@ type Props = {|
     onIconClick?: () => void,
     iconStyle?: Object,
     iconClassName?: string,
-    min?: number,
-    max?: number,
+    min?: ?number,
+    max?: ?number,
     skin?: 'default' | 'dark',
-    step?: number,
+    step?: ?number,
 |};
 
 export default class Number extends React.PureComponent<Props> {
