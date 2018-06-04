@@ -7,11 +7,21 @@ import Router from '../../../services/Router';
 jest.mock('../../../services/Router', () => function() {});
 
 const mockInitializerInitialized = jest.fn().mockReturnValue(true);
+const mockInitializerLoading = jest.fn().mockReturnValue(false);
+const mockInitializedTranslationsLocale = jest.fn().mockReturnValue('en');
 
 jest.mock('../../../services/Initializer', () => {
     return new class {
+        get loading() {
+            return mockInitializerLoading();
+        }
+
         get initialized() {
             return mockInitializerInitialized();
+        }
+
+        get initializedTranslationsLocale() {
+            return mockInitializedTranslationsLocale();
         }
     };
 });
@@ -56,6 +66,8 @@ jest.mock('../../../utils/Translator', () => ({
 
 test('Application should render login with loader', () => {
     mockInitializerInitialized.mockReturnValueOnce(false);
+    mockInitializerLoading.mockReturnValueOnce(true);
+    mockInitializedTranslationsLocale.mockReturnValueOnce(null);
     mockUserStoreLoggedIn.mockReturnValueOnce(false);
 
     const router = new Router({});
