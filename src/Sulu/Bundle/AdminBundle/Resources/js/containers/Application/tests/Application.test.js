@@ -3,8 +3,6 @@ import React from 'react';
 import {render, mount} from 'enzyme';
 import Application from '../Application';
 import Router from '../../../services/Router';
-import initializer from '../../../services/Initializer';
-import userStore from '../../../stores/UserStore';
 
 jest.mock('../../../services/Router', () => function() {});
 
