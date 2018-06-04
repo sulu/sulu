@@ -294,7 +294,7 @@ class AdminController
 
         $view = View::create([
             'sulu_admin' => [
-                'field_type_options' => $this->fieldTypeOptionRegistry->toArray(),
+                'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
                 'resourceMetadataEndpoints' => $resourceMetadataEndpoints,

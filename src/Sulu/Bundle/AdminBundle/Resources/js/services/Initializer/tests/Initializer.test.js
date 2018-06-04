@@ -85,7 +85,7 @@ beforeEach(() => {
 test('Should initialize when everything works', () => {
     const configData = {
         sulu_admin: {
-            field_type_options: {
+            fieldTypeOptions: {
                 assignment: {
                     contact_selection: {
                         resourceKey: 'contacts',

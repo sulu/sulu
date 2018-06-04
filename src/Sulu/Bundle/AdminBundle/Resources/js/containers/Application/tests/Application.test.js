@@ -3,6 +3,8 @@ import React from 'react';
 import {render, mount} from 'enzyme';
 import Application from '../Application';
 import Router from '../../../services/Router';
+import initializer from '../../../services/Initializer';
+import userStore from '../../../stores/UserStore';
 
 jest.mock('../../../services/Router', () => function() {});
 
@@ -65,10 +67,10 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('Application should render login with loader', () => {
-    mockInitializerInitialized.mockReturnValueOnce(false);
-    mockInitializerLoading.mockReturnValueOnce(true);
-    mockInitializedTranslationsLocale.mockReturnValueOnce(null);
-    mockUserStoreLoggedIn.mockReturnValueOnce(false);
+    mockInitializerInitialized.mockReturnValue(false);
+    mockInitializerLoading.mockReturnValue(true);
+    mockInitializedTranslationsLocale.mockReturnValue(null);
+    mockUserStoreLoggedIn.mockReturnValue(false);
 
     const router = new Router({});
     const application = mount(<Application router={router} />);
@@ -76,8 +78,10 @@ test('Application should render login with loader', () => {
 });
 
 test('Application should render login when user is not logged in', () => {
-    mockInitializerInitialized.mockReturnValueOnce(false);
-    mockUserStoreLoggedIn.mockReturnValueOnce(false);
+    mockInitializerInitialized.mockReturnValue(false);
+    mockInitializerLoading.mockReturnValue(false);
+    mockInitializedTranslationsLocale.mockReturnValue('en');
+    mockUserStoreLoggedIn.mockReturnValue(false);
 
     const router = new Router({});
     const application = mount(<Application router={router} />);

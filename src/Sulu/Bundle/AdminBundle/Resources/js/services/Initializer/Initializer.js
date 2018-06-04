@@ -179,7 +179,7 @@ class Initializer {
                     registerViews();
                     registerDatagridAdapters();
                     registerDatagridFieldTransformers();
-                    registerFieldTypes(config['sulu_admin']['field_type_options']);
+                    registerFieldTypes(config['sulu_admin'].fieldTypeOptions);
                     setMomentLocale();
                 }
 
