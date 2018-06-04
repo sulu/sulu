@@ -257,7 +257,24 @@ class AdminController
 
     public function indexV2Action()
     {
-        return $this->engine->renderResponse('SuluAdminBundle:Admin:main.html.twig');
+        $endpoints = [
+            'config' => $this->router->generate('sulu_admin_v2.config'),
+            'translations' => $this->router->generate('sulu_admin_v2.translation'),
+            'loginCheck' => $this->router->generate('sulu_admin.login_check_v2'),
+            'logout' => $this->router->generate('sulu_admin.logout'),
+            'reset' => $this->router->generate('sulu_security.reset_password.email'),
+            'resetResend' => $this->router->generate('sulu_security.reset_password.email.resend'),
+            'resources' => $this->router->generate('sulu_admin_v2.resources', ['resource' => ':resource']),
+        ];
+
+        return $this->engine->renderResponse(
+            'SuluAdminBundle:Admin:main.html.twig',
+            [
+                'translations' => $this->translations,
+                'fallback_locale' => $this->fallbackLocale,
+                'endpoints' => $endpoints,
+            ]
+        );
     }
 
     /**
@@ -268,19 +285,19 @@ class AdminController
         $user = $this->tokenStorage->getToken()->getUser();
         $contact = $this->contactManager->getById($user->getContact()->getId(), $user->getLocale());
 
-        $endpoints = [];
+        $resourceMetadataEndpoints = [];
         foreach ($this->resourceMetadataPool->getAllResourceMetadata($user->getLocale()) as $resourceMetadata) {
             if ($resourceMetadata instanceof EndpointInterface) {
-                $endpoints[$resourceMetadata->getKey()] = $this->router->generate($resourceMetadata->getEndpoint());
+                $resourceMetadataEndpoints[$resourceMetadata->getKey()] = $this->router->generate($resourceMetadata->getEndpoint());
             }
         }
 
         $view = View::create([
             'sulu_admin' => [
-                'field_type_options' => $this->fieldTypeOptionRegistry->toArray(),
+                'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
-                'endpoints' => $endpoints,
+                'resourceMetadataEndpoints' => $resourceMetadataEndpoints,
                 'user' => $user,
                 'contact' => $contact,
             ],

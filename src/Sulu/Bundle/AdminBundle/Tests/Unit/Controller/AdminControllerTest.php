@@ -265,10 +265,10 @@ class AdminControllerTest extends TestCase
             $data = $view->getData()['sulu_admin'];
 
             return 'json' === $view->getFormat()
-                && $data['field_type_options'] === $fieldTypeOptions
+                && $data['fieldTypeOptions'] === $fieldTypeOptions
                 && $data['routes'] === $routes
                 && $data['navigation'] === ['navigation_item1', 'navigation_item2']
-                && $data['endpoints'] === [
+                && $data['resourceMetadataEndpoints'] === [
                     'test1' => '/path1',
                     'test2' => '/path2',
                 ];

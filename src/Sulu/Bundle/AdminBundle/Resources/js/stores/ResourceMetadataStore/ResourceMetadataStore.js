@@ -1,5 +1,5 @@
 // @flow
-import Requester from '../../services/Requester';
+import {Config, Requester} from '../../services';
 
 class ResourceMetadataStore {
     endpoints: {[string]: string} = {};
@@ -24,7 +24,7 @@ class ResourceMetadataStore {
 
     loadConfiguration(key: string): Promise<Object> {
         if (!(key in this.configurationPromises)) {
-            this.configurationPromises[key] = Requester.get('/admin/resources/' + key);
+            this.configurationPromises[key] = Requester.get(Config.endpoints.resources.replace(':resource', key));
         }
 
         return this.configurationPromises[key];

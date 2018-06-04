@@ -6,29 +6,29 @@ import Router from '../../../services/Router';
 
 jest.mock('../../../services/Router', () => function() {});
 
-const mockInitializerInitialized = jest.fn().mockReturnValue(true);
-const mockInitializerTranslationInitialized = jest.fn().mockReturnValue(true);
+const mockInitializerInitialized = jest.fn();
+const mockInitializerLoading = jest.fn();
+const mockInitializedTranslationsLocale = jest.fn();
 
 jest.mock('../../../services/Initializer', () => {
     return new class {
+        get loading() {
+            return mockInitializerLoading();
+        }
+
         get initialized() {
             return mockInitializerInitialized();
         }
 
-        get translationInitialized() {
-            return mockInitializerTranslationInitialized();
+        get initializedTranslationsLocale() {
+            return mockInitializedTranslationsLocale();
         }
     };
 });
 
-const mockUserStoreLoggedIn = jest.fn().mockReturnValue(true);
-const mockUserStoreContact = jest.fn().mockReturnValue({
-    fullName: 'Hikaru Sulu',
-});
-const mockUserStoreUser = jest.fn().mockReturnValue({
-    id: 99,
-    username: 'test',
-});
+const mockUserStoreLoggedIn = jest.fn();
+const mockUserStoreContact = jest.fn();
+const mockUserStoreUser = jest.fn();
 
 jest.mock('../../../stores/UserStore', () => {
     return new class {
@@ -59,10 +59,26 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
+beforeEach(() => {
+    mockInitializerInitialized.mockReturnValue(true);
+    mockInitializerLoading.mockReturnValue(false);
+    mockInitializedTranslationsLocale.mockReturnValue('en');
+
+    mockUserStoreLoggedIn.mockReturnValue(true);
+    mockUserStoreContact.mockReturnValue({
+        fullName: 'Hikaru Sulu',
+    });
+    mockUserStoreUser.mockReturnValue({
+        id: 99,
+        username: 'test',
+    });
+});
+
 test('Application should render login with loader', () => {
-    mockInitializerInitialized.mockReturnValueOnce(false);
-    mockUserStoreLoggedIn.mockReturnValueOnce(false);
-    mockInitializerTranslationInitialized.mockReturnValueOnce(false);
+    mockInitializerInitialized.mockReturnValue(false);
+    mockInitializerLoading.mockReturnValue(true);
+    mockInitializedTranslationsLocale.mockReturnValue(null);
+    mockUserStoreLoggedIn.mockReturnValue(false);
 
     const router = new Router({});
     const application = mount(<Application router={router} />);
@@ -70,9 +86,10 @@ test('Application should render login with loader', () => {
 });
 
 test('Application should render login when user is not logged in', () => {
-    mockInitializerInitialized.mockReturnValueOnce(false);
-    mockUserStoreLoggedIn.mockReturnValueOnce(false);
-    mockInitializerTranslationInitialized.mockReturnValueOnce(true);
+    mockInitializerInitialized.mockReturnValue(false);
+    mockInitializerLoading.mockReturnValue(false);
+    mockInitializedTranslationsLocale.mockReturnValue('en');
+    mockUserStoreLoggedIn.mockReturnValue(false);
 
     const router = new Router({});
     const application = mount(<Application router={router} />);

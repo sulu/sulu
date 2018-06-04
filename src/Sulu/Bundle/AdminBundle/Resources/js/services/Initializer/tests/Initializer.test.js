@@ -1,5 +1,6 @@
 // @flow
 import 'core-js/library/fn/promise';
+import moment from 'moment';
 import initializer from '../Initializer';
 import Requester from '../../Requester';
 import {Assignment, fieldRegistry, SingleSelection} from '../../../containers/Form';
@@ -11,7 +12,10 @@ import userStore from '../../../stores/UserStore';
 import viewRegistry from '../../../containers/ViewRenderer/registries/ViewRegistry';
 import datagridAdapterRegistry from '../../../containers/Datagrid/registries/DatagridAdapterRegistry';
 import datagridFieldTransformerRegistry from '../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry';
-import {bundlesReadyPromise} from '../../Bundles';
+
+jest.mock('moment', () => ({
+    locale: jest.fn(),
+}));
 
 jest.mock('../../Requester', () => ({
     get: jest.fn(),
@@ -81,7 +85,7 @@ beforeEach(() => {
 test('Should initialize when everything works', () => {
     const configData = {
         sulu_admin: {
-            field_type_options: {
+            fieldTypeOptions: {
                 assignment: {
                     contact_selection: {
                         resourceKey: 'contacts',
@@ -95,7 +99,7 @@ test('Should initialize when everything works', () => {
             },
             routes: 'crazy_routes',
             navigation: 'nice_navigation',
-            endpoints: 'top_endpoints',
+            resourceMetadataEndpoints: 'top_endpoints',
             user: 'the_logged_in_user',
             contact: 'contact_of_the_user',
         },
@@ -110,9 +114,9 @@ test('Should initialize when everything works', () => {
 
     Requester.get.mockImplementation((key) => {
         switch (key) {
-            case '/admin/v2/translations?locale=en':
+            case 'translations_url?locale=en':
                 return translationPromise;
-            case '/admin/v2/config':
+            case 'config_url':
                 return configPromise;
         }
     });
@@ -123,7 +127,8 @@ test('Should initialize when everything works', () => {
     return initPromise
         .finally(() => {
             expect(setTranslations).toBeCalledWith(translationData);
-            expect(initializer.translationInitialized).toBe(true);
+            expect(initializer.initializedTranslationsLocale).toBe('en');
+            expect(moment.locale).toBeCalledWith('en-US');
 
             // static things
             expect(viewRegistry.add).toBeCalled();
@@ -160,7 +165,7 @@ test('Should not reinitialize everything when it was already initialized', () =>
         'sulu_admin': {
             routes: 'crazy_routes',
             navigation: 'nice_navigation',
-            endpoints: 'top_endpoints',
+            resourceMetadataEndpoints: 'top_endpoints',
             user: 'the_logged_in_user',
             contact: 'contact_of_the_user',
         },
@@ -175,22 +180,22 @@ test('Should not reinitialize everything when it was already initialized', () =>
 
     Requester.get.mockImplementation((key) => {
         switch (key) {
-            case '/admin/v2/translations?locale=en':
+            case 'translations_url?locale=en':
                 return translationPromise;
-            case '/admin/v2/config':
+            case 'config_url':
                 return configPromise;
         }
     });
 
     initializer.setInitialized();
+    initializer.setInitializedTranslationsLocale('en');
 
     const initPromise = initializer.initialize();
     expect(initializer.loading).toBe(true);
 
     return initPromise
         .finally(() => {
-            expect(setTranslations).toBeCalledWith(translationData);
-            expect(initializer.translationInitialized).toBe(true);
+            expect(setTranslations).not.toBeCalled();
 
             // static things
             expect(viewRegistry.add).not.toBeCalled();
@@ -227,23 +232,20 @@ test('Should not crash when the config request throws an 401 error', () => {
 
     Requester.get.mockImplementation((key) => {
         switch (key) {
-            case '/admin/v2/translations?locale=en':
+            case 'translations_url?locale=en':
                 return translationPromise;
-            case '/admin/v2/config':
+            case 'config_url':
                 return configPromise;
         }
     });
 
     const initPromise = initializer.initialize();
-
-    bundlesReadyPromise.then(() => {
-        expect(initializer.loading).toBe(true);
-    });
+    expect(initializer.loading).toBe(true);
 
     return initPromise
         .finally(() => {
             expect(setTranslations).toBeCalledWith(translationData);
-            expect(initializer.translationInitialized).toBe(true);
+            expect(initializer.initializedTranslationsLocale).toBe('en');
             expect(initializer.initialized).toBe(false);
             expect(initializer.loading).toBe(false);
         });
@@ -251,16 +253,16 @@ test('Should not crash when the config request throws an 401 error', () => {
 
 test('Should clear the initializer', () => {
     initializer.setLoading(true);
-    initializer.setTranslationInitialized(true);
+    initializer.setInitializedTranslationsLocale('en');
     initializer.setInitialized();
 
     expect(initializer.loading).toBe(true);
-    expect(initializer.translationInitialized).toBe(true);
+    expect(initializer.initializedTranslationsLocale).toBe('en');
     expect(initializer.initialized).toBe(true);
 
     initializer.clear();
 
     expect(initializer.loading).toBe(false);
-    expect(initializer.translationInitialized).toBe(false);
+    expect(initializer.initializedTranslationsLocale).toBeUndefined();
     expect(initializer.initialized).toBe(false);
 });

@@ -1,5 +1,6 @@
 // @flow
 import {action, observable} from 'mobx';
+import moment from 'moment';
 import {
     ColumnListAdapter,
     datagridAdapterRegistry,
@@ -38,6 +39,7 @@ import userStore from '../../stores/UserStore';
 import {navigationRegistry} from '../../containers/Navigation';
 import resourceMetadataStore from '../../stores/ResourceMetadataStore';
 import {routeRegistry} from '../Router';
+import Config from '../Config';
 import {setTranslations} from '../../utils/Translator';
 import Requester from '../Requester';
 import {bundlesReadyPromise} from '../../services/Bundles';
@@ -107,17 +109,40 @@ function processConfig(config: Object) {
 
     routeRegistry.addCollection(config['sulu_admin'].routes);
     navigationRegistry.set(config['sulu_admin'].navigation);
-    resourceMetadataStore.setEndpoints(config['sulu_admin'].endpoints);
+    resourceMetadataStore.setEndpoints(config['sulu_admin'].resourceMetadataEndpoints);
+}
+
+function getBrowserLanguage() {
+    // detect browser locale (ie, ff, chrome fallbacks)
+    const language = window.navigator.languages ? window.navigator.languages[0] : null;
+
+    return language || window.navigator.language || window.navigator.browserLanguage || window.navigator.userLanguage;
+}
+
+function getDefaultLocale() {
+    const browserLanguage = getBrowserLanguage();
+
+    // select only language
+    const locale = browserLanguage.slice(0, 2).toLowerCase();
+    if (Config.translations.indexOf(locale) === -1) {
+        return Config.fallbackLocale;
+    }
+
+    return locale;
+}
+
+function setMomentLocale() {
+    moment.locale(getBrowserLanguage());
 }
 
 class Initializer {
     @observable initialized: boolean = false;
-    @observable translationInitialized: boolean = false;
+    @observable initializedTranslationsLocale: ?string;
     @observable loading: boolean = false;
 
     @action clear() {
         this.initialized = false;
-        this.translationInitialized = false;
+        this.initializedTranslationsLocale = undefined;
         this.loading = false;
     }
 
@@ -125,37 +150,37 @@ class Initializer {
         this.initialized = true;
     }
 
-    @action setTranslationInitialized(initialized: boolean) {
-        this.translationInitialized = initialized;
+    @action setInitializedTranslationsLocale(locale: string) {
+        this.initializedTranslationsLocale = locale;
     }
 
     @action setLoading(loading: boolean) {
         this.loading = loading;
     }
 
+    initializeTranslations() {
+        const locale = userStore.user ? userStore.user.locale : getDefaultLocale();
+
+        if (this.initializedTranslationsLocale === locale) {
+            return Promise.resolve();
+        }
+
+        return Requester.get(Config.endpoints.translations + '?locale=' + locale).then((translations) => {
+            setTranslations(translations);
+            this.setInitializedTranslationsLocale(locale);
+        });
+    }
+
     initialize() {
         this.setLoading(true);
         return bundlesReadyPromise.then(() => {
-            // TODO: Use correct locale here
-            // TODO: Get this url from backend
-            const translationsPromise = Requester.get('/admin/v2/translations?locale=en').then((translations) => {
-                setTranslations(translations);
-                this.setTranslationInitialized(true);
-            });
-
-            // TODO: Get this url from backend
-            const configPromise = Requester.get('/admin/v2/config').then((config) => {
-                if (!config.hasOwnProperty('sulu_admin')) {
-                    return;
-                }
-
+            return Requester.get(Config.endpoints.config).then((config) => {
                 if (!this.initialized) {
                     registerViews();
                     registerDatagridAdapters();
                     registerDatagridFieldTransformers();
-                    registerFieldTypes(config['sulu_admin']['field_type_options']);
-
-                    this.setInitialized();
+                    registerFieldTypes(config['sulu_admin'].fieldTypeOptions);
+                    setMomentLocale();
                 }
 
                 processConfig(config);
@@ -163,16 +188,17 @@ class Initializer {
                 userStore.setUser(config['sulu_admin'].user);
                 userStore.setContact(config['sulu_admin'].contact);
                 userStore.setLoggedIn(true);
+
+                this.setInitialized();
             }).catch((error) => {
                 if (error.status !== 401) {
                     return Promise.reject(error);
                 }
-            });
-
-            return Promise.all([translationsPromise, configPromise])
-                .finally(() => {
+            }).finally(() => {
+                return this.initializeTranslations().then(() => {
                     this.setLoading(false);
                 });
+            });
         });
     }
 }

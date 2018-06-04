@@ -60,9 +60,9 @@ test('Load configuration for given key', () => {
 
     Requester.get.mockImplementation((key) => {
         switch (key) {
-            case '/admin/resources/snippets':
+            case 'resources_url/snippets':
                 return snippetPromise;
-            case '/admin/resources/tags':
+            case 'resources_url/tags':
                 return tagPromise;
         }
     });

@@ -1,12 +1,7 @@
 // @flow
-import moment from 'moment';
 import userStore from '../UserStore';
 import Requester from '../../../services/Requester';
 import initializer from '../../../services/Initializer';
-
-jest.mock('moment', () => ({
-    locale: jest.fn(),
-}));
 
 jest.mock('../../../services/Requester', () => ({
     get: jest.fn(),
@@ -35,7 +30,6 @@ test('Should clear the user store', () => {
     expect(userStore.user).toEqual(user);
     expect(userStore.contact).toEqual(contact);
     expect(Object.keys(userStore.persistentSettings)).toHaveLength(1);
-    expect(moment.locale).toBeCalledWith('cool_locale');
 
     userStore.clear();
 
@@ -58,7 +52,7 @@ test('Should login', () => {
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('/admin/v2/login', {username: 'test', password: 'password'});
+        expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
         expect(initializer.initialize).toBeCalled();
 
         return initializePromise.then(() => {
@@ -77,7 +71,7 @@ test('Should login without initializing when it`s the same user', () => {
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('/admin/v2/login', {username: 'test', password: 'password'});
+        expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
         expect(initializer.initialize).not.toBeCalled();
         expect(userStore.loading).toBe(false);
         expect(userStore.loggedIn).toBe(true);
@@ -97,7 +91,7 @@ test('Should login with initializing when it`s not the same user', () => {
 
     return loginPromise.then(() => {
         expect(Requester.post).toBeCalledWith(
-            '/admin/v2/login',
+            'login_check_url',
             {username: 'other-user-than-test', password: 'password'}
         );
         expect(initializer.initialize).toBeCalled();
@@ -122,7 +116,7 @@ test('Should show error when login is not working and error status is 401', () =
 
     return loginPromise
         .finally(() => {
-            expect(Requester.post).toBeCalledWith('/admin/v2/login', {username: 'test', password: 'password'});
+            expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
             expect(initializer.initialize).not.toBeCalled();
             expect(userStore.loginError).toBe(true);
             expect(userStore.loggedIn).toBe(false);
@@ -137,7 +131,7 @@ test('Should reset password', () => {
     expect(userStore.loading).toBe(true);
 
     return promise.then(() => {
-        expect(Requester.post).toBeCalledWith('/admin/security/reset/email', {user: 'test'});
+        expect(Requester.post).toBeCalledWith('reset_url', {user: 'test'});
         expect(userStore.resetSuccess).toBe(true);
         expect(userStore.loggedIn).toBe(false);
         expect(userStore.loading).toBe(false);
@@ -152,7 +146,7 @@ test('Should use different api to resend reset password', () => {
     expect(userStore.loading).toBe(true);
 
     return promise.then(() => {
-        expect(Requester.post).toBeCalledWith('/admin/security/reset/email/resend', {user: 'test'});
+        expect(Requester.post).toBeCalledWith('reset_resend_url', {user: 'test'});
         expect(userStore.loading).toBe(false);
     });
 });
@@ -164,7 +158,7 @@ test('Should logout', () => {
     const promise = userStore.logout();
 
     return promise.then(() => {
-        expect(Requester.get).toBeCalledWith('/admin/logout');
+        expect(Requester.get).toBeCalledWith('logout_url');
         expect(userStore.loggedIn).toBe(false);
     });
 });
