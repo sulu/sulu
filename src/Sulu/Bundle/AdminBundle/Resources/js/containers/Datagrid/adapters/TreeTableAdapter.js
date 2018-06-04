@@ -98,14 +98,14 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
         if (onItemClick) {
             buttons.push({
                 icon: 'su-pen',
-                onClick: (rowId) => onItemClick(rowId),
+                onClick: onItemClick,
             });
         }
 
         if (onAddClick) {
             buttons.push({
                 icon: 'su-plus',
-                onClick: (rowId) => onAddClick(rowId),
+                onClick: onAddClick,
             });
         }
 

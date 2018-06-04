@@ -96,7 +96,7 @@ class CategoryAdmin extends Admin
         );
 
         return [
-            (new Route('sulu_category.datagrid', '/categories', 'sulu_admin.datagrid'))
+            (new Route('sulu_category.datagrid', '/categories/:locale', 'sulu_admin.datagrid'))
                 ->addOption('locales', $locales)
                 ->addAttributeDefault('locale', $locales[0])
                 ->addOption('title', 'sulu_category.categories')

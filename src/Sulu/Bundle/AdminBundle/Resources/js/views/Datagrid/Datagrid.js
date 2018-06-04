@@ -105,6 +105,19 @@ class Datagrid extends React.Component<ViewProps> {
         this.sortOrderDisposer();
     }
 
+    handleAddClick = (rowId) => {
+        const {router} = this.props;
+        const {
+            route: {
+                options: {
+                    addRoute,
+                },
+            },
+        } = router;
+
+        router.navigate(addRoute, {locale: this.locale.get(), parentId: rowId});
+    };
+
     handleEditClick = (rowId) => {
         const {router} = this.props;
         router.navigate(router.route.options.editRoute, {id: rowId, locale: this.locale.get()});
@@ -115,8 +128,9 @@ class Datagrid extends React.Component<ViewProps> {
             route: {
                 options: {
                     adapters,
-                    title,
+                    addRoute,
                     editRoute,
+                    title,
                 },
             },
         } = this.props.router;
@@ -128,6 +142,7 @@ class Datagrid extends React.Component<ViewProps> {
                     store={this.datagridStore}
                     adapters={adapters}
                     onItemClick={editRoute && this.handleEditClick}
+                    onAddClick={addRoute && this.handleAddClick}
                 />
             </div>
         );
@@ -167,9 +182,7 @@ export default withToolbar(Datagrid, function() {
             type: 'button',
             value: translate('sulu_admin.add'),
             icon: 'su-plus-circle',
-            onClick: () => {
-                router.navigate(addRoute, {locale: this.locale.get()});
-            },
+            onClick: this.handleAddClick,
         });
     }
 

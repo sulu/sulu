@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 import datagridFieldTransformRegistry from '../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry';
 import StringFieldTransformer from '../../../containers/Datagrid/fieldTransformers/StringFieldTransformer';
@@ -145,7 +145,7 @@ test('Should render the datagrid with a title', () => {
     expect(datagrid).toMatchSnapshot();
 });
 
-test('Should render the datagrid with the pencil icon if a editRoute has been passed', () => {
+test('Should pass the onItemClick callback when an editRoute has been passed', () => {
     const Datagrid = require('../Datagrid').default;
     const router = {
         bind: jest.fn(),
@@ -158,8 +158,57 @@ test('Should render the datagrid with the pencil icon if a editRoute has been pa
         },
     };
 
-    const datagrid = render(<Datagrid router={router} />);
-    expect(datagrid).toMatchSnapshot();
+    const datagrid = shallow(<Datagrid router={router} />);
+    expect(datagrid.find('Datagrid').prop('onItemClick')).toBeInstanceOf(Function);
+});
+
+test('Should pass the onItemClick callback when an editRoute has been passed', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                adapters: ['table'],
+            },
+        },
+    };
+
+    const datagrid = shallow(<Datagrid router={router} />);
+    expect(datagrid.find('Datagrid').prop('onItemClick')).not.toBeInstanceOf(Function);
+});
+
+test('Should render the datagrid with the add icon if a addRoute has been passed', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                addRoute: 'addRoute',
+                adapters: ['tree_table'],
+            },
+        },
+    };
+
+    const datagrid = shallow(<Datagrid router={router} />);
+    expect(datagrid.find('Datagrid').prop('onAddClick')).toBeInstanceOf(Function);
+});
+
+test('Should render the datagrid without the add icon if a addRoute has been passed', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                adapters: ['tree_table'],
+            },
+        },
+    };
+
+    const datagrid = shallow(<Datagrid router={router} />);
+    expect(datagrid.find('Datagrid').prop('onAddClick')).not.toBeInstanceOf(Function);
 });
 
 test('Should throw an error when no resourceKey is defined in the route options', () => {
