@@ -10,6 +10,7 @@ import {
     BytesFieldTransformer,
     DateFieldTransformer,
     DateTimeFieldTransformer,
+    NumberFieldTransformer,
     TimeFieldTransformer,
     StringFieldTransformer,
     ThumbnailFieldTransformer,
@@ -23,6 +24,7 @@ import {
     Email,
     fieldRegistry,
     Input,
+    Number,
     PasswordConfirmation,
     Phone,
     ResourceLocator,
@@ -62,6 +64,7 @@ function registerDatagridFieldTransformers() {
     datagridFieldTransformerRegistry.add('date', new DateFieldTransformer());
     datagridFieldTransformerRegistry.add('time', new TimeFieldTransformer());
     datagridFieldTransformerRegistry.add('datetime', new DateTimeFieldTransformer());
+    datagridFieldTransformerRegistry.add('number', new NumberFieldTransformer());
     datagridFieldTransformerRegistry.add('string', new StringFieldTransformer());
     datagridFieldTransformerRegistry.add('thumbnails', new ThumbnailFieldTransformer());
     datagridFieldTransformerRegistry.add('bool', new BoolFieldTransformer());
@@ -76,6 +79,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('color', ColorPicker);
     fieldRegistry.add('date', DatePicker);
     fieldRegistry.add('email', Email);
+    fieldRegistry.add('number', Number);
     fieldRegistry.add('password_confirmation', PasswordConfirmation);
     fieldRegistry.add('phone', Phone);
     fieldRegistry.add('resource_locator', ResourceLocator);

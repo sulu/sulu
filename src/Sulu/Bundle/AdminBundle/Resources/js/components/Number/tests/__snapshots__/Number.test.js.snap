@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Number should render 1`] = `
+<label
+  class="input default"
+>
+  <input
+    type="number"
+    value=""
+  />
+</label>
+`;

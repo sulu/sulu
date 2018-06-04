@@ -30,7 +30,6 @@ exports[`DatePicker should render 1`] = `
               type="text"
               value=""
             />
-            
           </label>
         </div>
       }

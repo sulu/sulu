@@ -96,6 +96,8 @@ interface ContentTypeInterface
     );
 
     /**
+     * TODO: Remove this before 2.0 release.
+     *
      * Returns a template to render a form.
      *
      * @return string

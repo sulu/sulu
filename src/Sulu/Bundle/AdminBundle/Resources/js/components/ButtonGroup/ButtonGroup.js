@@ -6,7 +6,7 @@ import buttonGroupStyles from './buttonGroup.scss';
 
 type Props = {
     /** Array of Button components */
-    children: ChildrenArray<Element<typeof Button>>;
+    children: ChildrenArray<Element<typeof Button>>,
 };
 
 export default class ButtonGroup extends React.PureComponent<Props> {

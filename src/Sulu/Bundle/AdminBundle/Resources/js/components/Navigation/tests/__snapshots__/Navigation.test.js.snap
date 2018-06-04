@@ -88,6 +88,7 @@ exports[`The component should render and handle clicks correctly 1`] = `
       Sulu (
       <a
         href="http://link.com"
+        rel="noopener noreferrer"
         target="_blank"
       >
         2.0.0-RC1
@@ -288,6 +289,7 @@ exports[`The component should render with all available props and handle clicks 
       sulu.io (
       <a
         href="http://link.com"
+        rel="noopener noreferrer"
         target="_blank"
       >
         1.0.0
@@ -298,6 +300,7 @@ exports[`The component should render with all available props and handle clicks 
       Sulu (
       <a
         href="http://link.com"
+        rel="noopener noreferrer"
         target="_blank"
       >
         2.0.0-RC1

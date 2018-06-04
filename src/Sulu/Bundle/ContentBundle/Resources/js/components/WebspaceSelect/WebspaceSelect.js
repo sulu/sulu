@@ -9,7 +9,7 @@ import webspaceSelectStyles from './webspaceSelect.scss';
 type Props = {
     onChange: (value: string) => void,
     value: string,
-    children: ChildrenArray<Element<typeof ArrowMenu.Item>>;
+    children: ChildrenArray<Element<typeof ArrowMenu.Item>>,
 };
 
 @observer

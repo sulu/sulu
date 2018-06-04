@@ -163,6 +163,20 @@ exports[`Input should render with type 1`] = `
 </label>
 `;
 
+exports[`Input should render with type number with attributes 1`] = `
+<label
+  class="input default"
+>
+  <input
+    max="50"
+    min="10"
+    step="5"
+    type="number"
+    value="25"
+  />
+</label>
+`;
+
 exports[`Input should render with value 1`] = `
 <label
   class="input default"

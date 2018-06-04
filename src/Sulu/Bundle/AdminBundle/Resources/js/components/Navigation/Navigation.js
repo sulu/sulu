@@ -108,7 +108,7 @@ export default class Navigation extends React.Component<Props> {
             return <div>{title} ({appVersion})</div>;
         }
 
-        return <div>{title} (<a href={appVersionLink} target="_blank">{appVersion}</a>)</div>;
+        return <div>{title} (<a href={appVersionLink} rel="noopener noreferrer" target="_blank">{appVersion}</a>)</div>;
     }
 
     render() {
@@ -143,7 +143,9 @@ export default class Navigation extends React.Component<Props> {
                 </div>
                 <div className={navigationStyles.versions}>
                     {this.renderAppVersion()}
-                    <div>Sulu (<a href={suluVersionLink} target="_blank">{suluVersion}</a>)</div>
+                    <div>
+                        Sulu (<a href={suluVersionLink} rel="noopener noreferrer" target="_blank">{suluVersion}</a>)
+                    </div>
                 </div>
             </div>
         );

@@ -118,6 +118,7 @@ exports[`Should render navigation 1`] = `
       Sulu (
       <a
         href="https://github.com/sulu/sulu/releases"
+        rel="noopener noreferrer"
         target="_blank"
       >
         2.0.0-RC1

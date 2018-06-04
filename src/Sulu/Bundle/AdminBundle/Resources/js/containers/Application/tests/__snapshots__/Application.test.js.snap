@@ -67,6 +67,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
           Sulu (
           <a
             href="https://github.com/sulu/sulu/releases"
+            rel="noopener noreferrer"
             target="_blank"
           >
             2.0.0-RC1
@@ -212,6 +213,7 @@ exports[`Application should render based on current route 1`] = `
           Sulu (
           <a
             href="https://github.com/sulu/sulu/releases"
+            rel="noopener noreferrer"
             target="_blank"
           >
             2.0.0-RC1
@@ -590,6 +592,7 @@ exports[`Application should render opened navigation 1`] = `
                 Sulu (
                 <a
                   href="https://github.com/sulu/sulu/releases"
+                  rel="noopener noreferrer"
                   target="_blank"
                 >
                   2.0.0-RC1
