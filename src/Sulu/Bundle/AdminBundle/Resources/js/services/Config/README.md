@@ -1,0 +1,1 @@
+The `Config` service is used to get the global config `SULU_CONFIG` which is set in the html javascript part.
