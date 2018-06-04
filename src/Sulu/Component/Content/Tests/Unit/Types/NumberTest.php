@@ -11,11 +11,11 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Types;
 
-use Prophecy\Argument;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface as NodePropertyInterface;
 use PHPCR\PropertyType;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Types\Number;
 

@@ -47,6 +47,10 @@ $darkIconColor: $doveGray;
             color: $placeholderColor;
             font-size: $inputFontSize;
         }
+
+        &:invalid {
+            box-shadow: none;
+        }
     }
 
     &.collapsed {
