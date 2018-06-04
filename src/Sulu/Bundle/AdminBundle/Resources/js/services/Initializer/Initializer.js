@@ -1,5 +1,6 @@
 // @flow
 import {action, observable} from 'mobx';
+import moment from 'moment';
 import {
     ColumnListAdapter,
     datagridAdapterRegistry,
@@ -38,6 +39,7 @@ import userStore from '../../stores/UserStore';
 import {navigationRegistry} from '../../containers/Navigation';
 import resourceMetadataStore from '../../stores/ResourceMetadataStore';
 import {routeRegistry} from '../Router';
+import Config from '../Config';
 import {setTranslations} from '../../utils/Translator';
 import Requester from '../Requester';
 import {bundlesReadyPromise} from '../../services/Bundles';
@@ -45,8 +47,6 @@ import {viewRegistry} from '../../containers/ViewRenderer';
 import Form from '../../views/Form';
 import ResourceTabs from '../../views/ResourceTabs';
 import Datagrid from '../../views/Datagrid';
-
-declare var SULU: Object;
 
 function registerViews() {
     viewRegistry.add('sulu_admin.form', Form);
@@ -109,25 +109,33 @@ function processConfig(config: Object) {
 
     routeRegistry.addCollection(config['sulu_admin'].routes);
     navigationRegistry.set(config['sulu_admin'].navigation);
-    resourceMetadataStore.setEndpoints(config['sulu_admin'].endpoints);
+    resourceMetadataStore.setEndpoints(config['sulu_admin'].resourceMetadataEndpoints);
+}
+
+function getBrowserLanguage() {
+    // detect browser locale (ie, ff, chrome fallbacks)
+    const language = window.navigator.languages ? window.navigator.languages[0] : null;
+
+    return language || window.navigator.language || window.navigator.browserLanguage || window.navigator.userLanguage;
 }
 
 function getDefaultLocale() {
-    // detect browser locale (ie, ff, chrome fallbacks)
-    let locale = window.navigator.languages ? window.navigator.languages[0] : null;
-    locale = locale || window.navigator.language || window.navigator.browserLanguage || window.navigator.userLanguage;
+    const browserLanguage = getBrowserLanguage();
 
     // select only language
-    locale = locale.slice(0, 2).toLowerCase();
-    if (SULU.translations.indexOf(locale) === -1) {
-        return SULU.fallbackLocale;
+    const locale = browserLanguage.slice(0, 2).toLowerCase();
+    if (Config.translations.indexOf(locale) === -1) {
+        return Config.fallbackLocale;
     }
 
     return locale;
 }
 
+function setMomentLocale() {
+    moment.locale(getBrowserLanguage());
+}
+
 class Initializer {
-    SULU = SULU;
     @observable initialized: boolean = false;
     @observable initializedTranslationsLocale: ?string;
     @observable loading: boolean = false;
@@ -157,7 +165,7 @@ class Initializer {
             return Promise.resolve();
         }
 
-        return Requester.get(SULU.endpoints.translations + '?locale=' + locale).then((translations) => {
+        return Requester.get(Config.endpoints.translations + '?locale=' + locale).then((translations) => {
             setTranslations(translations);
             this.setInitializedTranslationsLocale(locale);
         });
@@ -166,12 +174,13 @@ class Initializer {
     initialize() {
         this.setLoading(true);
         return bundlesReadyPromise.then(() => {
-            return Requester.get(SULU.endpoints.config).then((config) => {
+            return Requester.get(Config.endpoints.config).then((config) => {
                 if (!this.initialized) {
                     registerViews();
                     registerDatagridAdapters();
                     registerDatagridFieldTransformers();
                     registerFieldTypes(config['sulu_admin']['field_type_options']);
+                    setMomentLocale();
                 }
 
                 processConfig(config);
@@ -179,6 +188,8 @@ class Initializer {
                 userStore.setUser(config['sulu_admin'].user);
                 userStore.setContact(config['sulu_admin'].contact);
                 userStore.setLoggedIn(true);
+
+                this.setInitialized();
             }).catch((error) => {
                 if (error.status !== 401) {
                     return Promise.reject(error);
@@ -186,7 +197,6 @@ class Initializer {
             }).finally(() => {
                 return this.initializeTranslations().then(() => {
                     this.setLoading(false);
-                    this.setInitialized();
                 });
             });
         });

@@ -1,8 +1,7 @@
 // @flow
 import 'core-js/library/fn/promise';
 import {action, observable} from 'mobx';
-import moment from 'moment';
-import Requester from '../../services/Requester';
+import {Config, Requester} from '../../services';
 import initializer from '../../services/Initializer';
 import type {Contact, User} from './types';
 
@@ -45,7 +44,6 @@ class UserStore {
 
     @action setUser(user: User) {
         this.user = user;
-        moment.locale(user.locale);
     }
 
     @action setContact(contact: Contact) {
@@ -55,7 +53,7 @@ class UserStore {
     login = (user: string, password: string) => {
         this.setLoading(true);
 
-        return Requester.post(initializer.SULU.endpoints.loginCheck, {username: user, password: password})
+        return Requester.post(Config.endpoints.loginCheck, {username: user, password: password})
             .then(() => {
                 if (this.user) {
                     // when the user was logged in already and comes again with the same user
@@ -90,7 +88,7 @@ class UserStore {
 
         if (this.resetSuccess) {
             // if email was already sent use different api
-            return Requester.post(initializer.SULU.endpoints.resetResend, {user: user})
+            return Requester.post(Config.endpoints.resetResend, {user: user})
                 .catch((error) => {
                     if (error.status !== 400) {
                         return Promise.reject(error);
@@ -101,7 +99,7 @@ class UserStore {
                 });
         }
 
-        return Requester.post(initializer.SULU.endpoints.reset, {user: user})
+        return Requester.post(Config.endpoints.reset, {user: user})
             .catch((error) => {
                 if (error.status !== 400) {
                     return Promise.reject(error);
@@ -114,7 +112,7 @@ class UserStore {
     }
 
     logout() {
-        return Requester.get(initializer.SULU.endpoints.logout).then(() => {
+        return Requester.get(Config.endpoints.logout).then(() => {
             this.setLoggedIn(false);
         });
     }

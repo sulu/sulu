@@ -285,10 +285,10 @@ class AdminController
         $user = $this->tokenStorage->getToken()->getUser();
         $contact = $this->contactManager->getById($user->getContact()->getId(), $user->getLocale());
 
-        $endpoints = [];
+        $resourceMetadataEndpoints = [];
         foreach ($this->resourceMetadataPool->getAllResourceMetadata($user->getLocale()) as $resourceMetadata) {
             if ($resourceMetadata instanceof EndpointInterface) {
-                $endpoints[$resourceMetadata->getKey()] = $this->router->generate($resourceMetadata->getEndpoint());
+                $resourceMetadataEndpoints[$resourceMetadata->getKey()] = $this->router->generate($resourceMetadata->getEndpoint());
             }
         }
 
@@ -297,7 +297,7 @@ class AdminController
                 'field_type_options' => $this->fieldTypeOptionRegistry->toArray(),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
-                'endpoints' => $endpoints,
+                'resourceMetadataEndpoints' => $resourceMetadataEndpoints,
                 'user' => $user,
                 'contact' => $contact,
             ],

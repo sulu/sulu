@@ -11,11 +11,11 @@
         </div>
         <script type="text/javascript">
             {% autoescape false %}
-            var SULU = {
+            const SULU_CONFIG = Object.freeze({
                 translations: {{ translations|json_encode }},
                 fallbackLocale: '{{ fallback_locale }}',
                 endpoints: {{ endpoints|json_encode }}
-            };
+            });
             {% endautoescape %}
         </script>
         <script src="{{ preload(asset('main.js', 'sulu_admin'), {as: 'script'})}}"></script>
