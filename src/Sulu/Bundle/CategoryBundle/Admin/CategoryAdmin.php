@@ -103,7 +103,8 @@ class CategoryAdmin extends Admin
                 ->addOption('resourceKey', 'categories')
                 ->addOption('adapters', ['tree_table'])
                 ->addOption('addRoute', 'sulu_category.add_form.detail')
-                ->addOption('editRoute', 'sulu_category.edit_form.detail'),
+                ->addOption('editRoute', 'sulu_category.edit_form.detail')
+                ->addOption('searchable', false),
             (new Route('sulu_category.add_form', '/categories/:locale/add', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'categories')
                 ->addOption('locales', $locales),

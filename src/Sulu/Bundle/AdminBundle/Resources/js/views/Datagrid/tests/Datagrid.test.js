@@ -211,6 +211,23 @@ test('Should render the datagrid without the add icon if a addRoute has been pas
     expect(datagrid.find('Datagrid').prop('onAddClick')).not.toBeInstanceOf(Function);
 });
 
+test('Should render the datagrid non-searchable if the searchable option has been passed as false', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                adapters: ['tree_table'],
+                searchable: false,
+            },
+        },
+    };
+
+    const datagrid = shallow(<Datagrid router={router} />);
+    expect(datagrid.find('Datagrid').prop('searchable')).toEqual(false);
+});
+
 test('Should throw an error when no resourceKey is defined in the route options', () => {
     const Datagrid = require('../Datagrid').default;
     const router = {
