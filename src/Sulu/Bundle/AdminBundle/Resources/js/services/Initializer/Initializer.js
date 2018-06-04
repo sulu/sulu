@@ -10,6 +10,7 @@ import {
     BytesFieldTransformer,
     DateFieldTransformer,
     DateTimeFieldTransformer,
+    NumberFieldTransformer,
     TimeFieldTransformer,
     StringFieldTransformer,
     ThumbnailFieldTransformer,
@@ -63,6 +64,7 @@ function registerDatagridFieldTransformers() {
     datagridFieldTransformerRegistry.add('date', new DateFieldTransformer());
     datagridFieldTransformerRegistry.add('time', new TimeFieldTransformer());
     datagridFieldTransformerRegistry.add('datetime', new DateTimeFieldTransformer());
+    datagridFieldTransformerRegistry.add('number', new NumberFieldTransformer());
     datagridFieldTransformerRegistry.add('string', new StringFieldTransformer());
     datagridFieldTransformerRegistry.add('thumbnails', new ThumbnailFieldTransformer());
     datagridFieldTransformerRegistry.add('bool', new BoolFieldTransformer());

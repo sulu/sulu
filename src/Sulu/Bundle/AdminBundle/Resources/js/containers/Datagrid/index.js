@@ -9,6 +9,7 @@ import BoolFieldTransformer from './fieldTransformers/BoolFieldTransformer';
 import BytesFieldTransformer from './fieldTransformers/BytesFieldTransformer';
 import DateFieldTransformer from './fieldTransformers/DateFieldTransformer';
 import DateTimeFieldTransformer from './fieldTransformers/DateTimeFieldTransformer';
+import NumberFieldTransformer from './fieldTransformers/NumberFieldTransformer';
 import TimeFieldTransformer from './fieldTransformers/TimeFieldTransformer';
 import ColumnListAdapter from './adapters/ColumnListAdapter';
 import TreeListAdapter from './adapters/TreeListAdapter';
@@ -40,8 +41,9 @@ export {
     BytesFieldTransformer,
     DateFieldTransformer,
     DateTimeFieldTransformer,
-    TimeFieldTransformer,
+    NumberFieldTransformer,
     StringFieldTransformer,
+    TimeFieldTransformer,
     ThumbnailFieldTransformer,
     BoolFieldTransformer,
 };
