@@ -6,9 +6,9 @@ import Router from '../../../services/Router';
 
 jest.mock('../../../services/Router', () => function() {});
 
-const mockInitializerInitialized = jest.fn().mockReturnValue(true);
-const mockInitializerLoading = jest.fn().mockReturnValue(false);
-const mockInitializedTranslationsLocale = jest.fn().mockReturnValue('en');
+const mockInitializerInitialized = jest.fn();
+const mockInitializerLoading = jest.fn();
+const mockInitializedTranslationsLocale = jest.fn();
 
 jest.mock('../../../services/Initializer', () => {
     return new class {
@@ -26,14 +26,9 @@ jest.mock('../../../services/Initializer', () => {
     };
 });
 
-const mockUserStoreLoggedIn = jest.fn().mockReturnValue(true);
-const mockUserStoreContact = jest.fn().mockReturnValue({
-    fullName: 'Hikaru Sulu',
-});
-const mockUserStoreUser = jest.fn().mockReturnValue({
-    id: 99,
-    username: 'test',
-});
+const mockUserStoreLoggedIn = jest.fn();
+const mockUserStoreContact = jest.fn();
+const mockUserStoreUser = jest.fn();
 
 jest.mock('../../../stores/UserStore', () => {
     return new class {
@@ -63,6 +58,21 @@ jest.mock('../../ViewRenderer', () => function Test(props) {
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
+
+beforeEach(() => {
+    mockInitializerInitialized.mockReturnValue(true);
+    mockInitializerLoading.mockReturnValue(false);
+    mockInitializedTranslationsLocale.mockReturnValue('en');
+
+    mockUserStoreLoggedIn.mockReturnValue(true);
+    mockUserStoreContact.mockReturnValue({
+        fullName: 'Hikaru Sulu',
+    });
+    mockUserStoreUser.mockReturnValue({
+        id: 99,
+        username: 'test',
+    });
+});
 
 test('Application should render login with loader', () => {
     mockInitializerInitialized.mockReturnValue(false);

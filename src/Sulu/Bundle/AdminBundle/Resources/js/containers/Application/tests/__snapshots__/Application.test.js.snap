@@ -2,246 +2,301 @@
 
 exports[`Application should not fail if current route does not exist 1`] = `
 <div
-  class="login"
+  class="root visible"
 >
-  <div
-    class="loginContainer"
+  <nav
+    class="navigation"
   >
     <div
-      class="formContainer"
+      class="navigation"
     >
-      <div
-        class="logoContainer"
-      >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
-      </div>
       <div
         class="header"
       >
-        sulu_admin.welcome
+        <div
+          class="headerContent"
+        >
+          <span
+            aria-label="su-sulu"
+            class="headerIcon su-sulu"
+          />
+          <span
+            class="headerTitle"
+          >
+            Sulu
+          </span>
+        </div>
       </div>
-      <form
-        class="form"
+      <div
+        class="user"
       >
-        <fieldset>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.username_or_email
-            </div>
-            <label
-              class="input default"
-            >
-              <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-user"
-                  class="icon default su-user"
-                />
-              </div>
-              <input
-                type="text"
-                value=""
-              />
-            </label>
-          </label>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.password
-            </div>
-            <label
-              class="input default"
-            >
-              <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-lock"
-                  class="icon default su-lock"
-                />
-              </div>
-              <input
-                type="password"
-                value=""
-              />
-            </label>
-          </label>
+        <div
+          class="userContent"
+        >
           <div
-            class="buttons"
+            class="noUserImage"
           >
-            <button
-              class="button link"
-              type="button"
-            >
+            <span
+              aria-label="fa-user"
+              class="fa fa-user"
+            />
+          </div>
+          <div
+            class="userProfile"
+          >
+            <span>
+              Hikaru Sulu
+            </span>
+            <button>
               <span
-                class="text"
-              >
-                sulu_admin.forgot_password
-              </span>
-            </button>
-            <button
-              class="button primary"
-              disabled=""
-              type="submit"
-            >
-              <span
-                class="text"
-              >
-                sulu_admin.login
-              </span>
+                aria-label="su-exit"
+                class="su-exit"
+              />
+              Log out
             </button>
           </div>
-        </fieldset>
-      </form>
-    </div>
-    <div
-      class="backLinkContainer"
-    >
-      <a
-        class="backLink"
-        href="/"
+        </div>
+      </div>
+      <div
+        class="items"
+      />
+      <div
+        class="versions"
       >
-        <span
-          aria-label="su-angle-left"
-          class="backLinkIcon su-angle-left"
-        />
-        sulu_admin.back_to_website
-      </a>
+        <div>
+          Sulu (
+          <a
+            href="https://github.com/sulu/sulu/releases"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            2.0.0-RC1
+          </a>
+          )
+        </div>
+      </div>
     </div>
+  </nav>
+  <div
+    class="content"
+  >
+    <main
+      class="main"
+    >
+      <header
+        class="header"
+      >
+        <nav
+          class="toolbar light"
+        >
+          <div
+            class="snackbar error"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="icon su-exclamation-triangle"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+              <button
+                class="closeButton"
+              >
+                sulu_admin.close
+                <span
+                  aria-label="su-times"
+                  class="closeButtonIcon su-times"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="snackbar success clickable"
+          >
+            <span
+              aria-label="su-check"
+              class="icon su-check"
+            />
+          </div>
+          <div
+            class="controls light"
+          >
+            <button
+              class="button light primary"
+            >
+              <span
+                aria-label="su-bars"
+                class="icon su-bars"
+              />
+            </button>
+          </div>
+          <div
+            class="controls light"
+          />
+        </nav>
+      </header>
+      <div
+        class="viewContainer"
+      />
+    </main>
   </div>
 </div>
 `;
 
 exports[`Application should render based on current route 1`] = `
 <div
-  class="login"
+  class="root visible"
 >
-  <div
-    class="loginContainer"
+  <nav
+    class="navigation"
   >
     <div
-      class="formContainer"
+      class="navigation"
     >
-      <div
-        class="logoContainer"
-      >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
-      </div>
       <div
         class="header"
       >
-        sulu_admin.welcome
+        <div
+          class="headerContent"
+        >
+          <span
+            aria-label="su-sulu"
+            class="headerIcon su-sulu"
+          />
+          <span
+            class="headerTitle"
+          >
+            Sulu
+          </span>
+        </div>
       </div>
-      <form
-        class="form"
+      <div
+        class="user"
       >
-        <fieldset>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.username_or_email
-            </div>
-            <label
-              class="input default"
-            >
-              <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-user"
-                  class="icon default su-user"
-                />
-              </div>
-              <input
-                type="text"
-                value=""
-              />
-            </label>
-          </label>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.password
-            </div>
-            <label
-              class="input default"
-            >
-              <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-lock"
-                  class="icon default su-lock"
-                />
-              </div>
-              <input
-                type="password"
-                value=""
-              />
-            </label>
-          </label>
+        <div
+          class="userContent"
+        >
           <div
-            class="buttons"
+            class="noUserImage"
           >
-            <button
-              class="button link"
-              type="button"
-            >
+            <span
+              aria-label="fa-user"
+              class="fa fa-user"
+            />
+          </div>
+          <div
+            class="userProfile"
+          >
+            <span>
+              Hikaru Sulu
+            </span>
+            <button>
               <span
-                class="text"
-              >
-                sulu_admin.forgot_password
-              </span>
-            </button>
-            <button
-              class="button primary"
-              disabled=""
-              type="submit"
-            >
-              <span
-                class="text"
-              >
-                sulu_admin.login
-              </span>
+                aria-label="su-exit"
+                class="su-exit"
+              />
+              Log out
             </button>
           </div>
-        </fieldset>
-      </form>
-    </div>
-    <div
-      class="backLinkContainer"
-    >
-      <a
-        class="backLink"
-        href="/"
+        </div>
+      </div>
+      <div
+        class="items"
+      />
+      <div
+        class="versions"
       >
-        <span
-          aria-label="su-angle-left"
-          class="backLinkIcon su-angle-left"
-        />
-        sulu_admin.back_to_website
-      </a>
+        <div>
+          Sulu (
+          <a
+            href="https://github.com/sulu/sulu/releases"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            2.0.0-RC1
+          </a>
+          )
+        </div>
+      </div>
     </div>
+  </nav>
+  <div
+    class="content"
+  >
+    <main
+      class="main"
+    >
+      <header
+        class="header"
+      >
+        <nav
+          class="toolbar light"
+        >
+          <div
+            class="snackbar error"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="icon su-exclamation-triangle"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+              <button
+                class="closeButton"
+              >
+                sulu_admin.close
+                <span
+                  aria-label="su-times"
+                  class="closeButtonIcon su-times"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="snackbar success clickable"
+          >
+            <span
+              aria-label="su-check"
+              class="icon su-check"
+            />
+          </div>
+          <div
+            class="controls light"
+          >
+            <button
+              class="button light primary"
+            >
+              <span
+                aria-label="su-bars"
+                class="icon su-bars"
+              />
+            </button>
+          </div>
+          <div
+            class="controls light"
+          />
+        </nav>
+      </header>
+      <div
+        class="viewContainer"
+      >
+        <div>
+          <h1>
+            Test
+          </h1>
+          <h2>
+            test
+          </h2>
+        </div>
+      </div>
+    </main>
   </div>
 </div>
 `;
