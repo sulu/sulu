@@ -7,7 +7,7 @@ import MediaUploadStore from '../MediaUploadStore';
 jest.mock('sulu-admin-bundle/services', () => ({
     ResourceRequester: {
         // $FlowFixMe
-        buildQueryString: require.requireActual('sulu-admin-bundle/services').ResourceRequester.buildQueryString,
+        buildQueryString: jest.fn(),
         delete: jest.fn(),
     },
 }));
@@ -32,6 +32,8 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 test('Calling the "update" method should make a "POST" request to the media update api', () => {
+    ResourceRequester.buildQueryString.mockReturnValueOnce('?action=new-version&locale=en');
+
     const openSpy = jest.fn();
 
     window.XMLHttpRequest = jest.fn(function() {
@@ -49,10 +51,13 @@ test('Calling the "update" method should make a "POST" request to the media upda
     const fileData = new File([''], 'fileName');
 
     mediaUploadStore.update(fileData);
+    expect(ResourceRequester.buildQueryString).toBeCalledWith({action: 'new-version', locale: 'en'});
     expect(openSpy).toBeCalledWith('POST', '/media/1?action=new-version&locale=en');
 });
 
 test('Calling the "create" method should make a "POST" request to the media update api', () => {
+    ResourceRequester.buildQueryString.mockReturnValueOnce('?locale=en&collection=1');
+
     const openSpy = jest.fn();
 
     window.XMLHttpRequest = jest.fn(function() {
@@ -70,6 +75,7 @@ test('Calling the "create" method should make a "POST" request to the media upda
     const fileData = new File([''], 'fileName');
 
     mediaUploadStore.create(1, fileData);
+    expect(ResourceRequester.buildQueryString).toBeCalledWith({collection: 1, locale: 'en'});
     expect(openSpy).toBeCalledWith('POST', '/media?locale=en&collection=1');
 });
 
