@@ -1,6 +1,7 @@
 // @flow
-import {action, autorun, observable, computed} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import {action, autorun, computed, intercept, observable} from 'mobx';
+import type {IObservableValue, IValueWillChange} from 'mobx';
+import log from 'loglevel';
 import type {
     LoadingStrategyInterface,
     ObservableOptions,
@@ -25,6 +26,8 @@ export default class DatagridStore {
     resourceKey: string;
     schema: Schema = {};
     observableOptions: ObservableOptions;
+    localeDisposer: ?() => void;
+    searchDisposer: () => void;
     sendRequestDisposer: () => void;
 
     constructor(
@@ -35,8 +38,24 @@ export default class DatagridStore {
         this.resourceKey = resourceKey;
         this.observableOptions = observableOptions;
         this.options = options;
-
         this.sendRequestDisposer = autorun(this.sendRequest);
+
+        const {locale} = this.observableOptions;
+        if (locale) {
+            this.localeDisposer = intercept(locale, '', (change: IValueWillChange<number>) => {
+                if (locale.get() !== change.newValue) {
+                    this.reset();
+                }
+                return change;
+            });
+        }
+
+        this.searchDisposer = intercept(this.searchTerm, '', (change: IValueWillChange<number>) => {
+            if (this.searchTerm.get() !== change.newValue) {
+                this.reset();
+            }
+            return change;
+        });
 
         metadataStore.getSchema(this.resourceKey)
             .then(action((schema) => {
@@ -61,26 +80,19 @@ export default class DatagridStore {
         loadingStrategy: LoadingStrategyInterface,
         structureStrategy: StructureStrategyInterface
     ) => {
+        this.reset();
         this.updateLoadingStrategy(loadingStrategy);
         this.updateStructureStrategy(structureStrategy);
     };
 
     @action updateLoadingStrategy = (loadingStrategy: LoadingStrategyInterface) => {
-        // do not update if the loading strategy was already defined and it tries to use the same one again
         if (this.loadingStrategy && this.loadingStrategy === loadingStrategy) {
             return;
-        }
-
-        if (this.loadingStrategy) {
-            this.loadingStrategy.destroy();
-            loadingStrategy.reset(this);
         }
 
         if (this.structureStrategy) {
             this.structureStrategy.clear();
         }
-
-        loadingStrategy.initialize(this);
 
         this.loadingStrategy = loadingStrategy;
     };
@@ -93,14 +105,20 @@ export default class DatagridStore {
         this.structureStrategy = structureStrategy;
     };
 
-    @action reset() {
+    @action reset = () => {
         const page = this.getPage();
-        this.structureStrategy.clear();
+
+        if (this.structureStrategy) {
+            this.structureStrategy.clear();
+        }
+
+        this.setActive(undefined);
+        this.pageCount = 0;
 
         if (page && page > 1) {
             this.setPage(1);
         }
-    }
+    };
 
     @action reload() {
         const page = this.getPage();
@@ -146,6 +164,8 @@ export default class DatagridStore {
             options.search = this.searchTerm.get();
         }
 
+        log.info('Datagrid loads "' + this.resourceKey + '" data with the following options:', options);
+
         this.loadingStrategy.load(
             data,
             this.resourceKey,
@@ -187,7 +207,6 @@ export default class DatagridStore {
             return;
         }
 
-        this.reset();
         this.searchTerm.set(searchTerm);
     }
 
@@ -237,5 +256,9 @@ export default class DatagridStore {
 
     destroy() {
         this.sendRequestDisposer();
+        if (this.localeDisposer) {
+            this.localeDisposer();
+        }
+        this.searchDisposer();
     }
 }

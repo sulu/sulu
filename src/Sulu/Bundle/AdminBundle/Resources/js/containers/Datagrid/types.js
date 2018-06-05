@@ -1,7 +1,6 @@
 // @flow
 import type {Node} from 'react';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
-import DatagridStore from './stores/DatagridStore';
 
 export type DataItem = {
     id: string | number,
@@ -55,9 +54,6 @@ export type ItemEnhancer = (item: Object) => Object;
 
 export interface LoadingStrategyInterface {
     constructor(): void,
-    initialize(datagridStore: DatagridStore): void,
-    reset(datagridStore: DatagridStore): void,
-    destroy(): void,
     load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer): Promise<Object>,
 }
 
