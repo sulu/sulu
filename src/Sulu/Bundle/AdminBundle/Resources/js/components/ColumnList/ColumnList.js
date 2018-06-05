@@ -57,9 +57,14 @@ export default class ColumnList extends React.Component<Props> {
         this.container.removeEventListener('scroll', this.handleScroll);
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (this.container && nextProps.children !== this.props.children) {
-            this.container.scrollLeft = this.columnWidth * (nextProps.children.length - 1);
+    @action componentDidUpdate(prevProps: Props) {
+        const {children} = this.props;
+        if (this.activeColumnIndex >= React.Children.count(children)) {
+            this.activeColumnIndex = 0;
+        }
+
+        if (this.container && this.props.children !== prevProps.children) {
+            this.container.scrollLeft = this.columnWidth * (React.Children.count(children) - 1);
         }
     }
 

@@ -210,6 +210,26 @@ test('The ColumnList component should handle which toolbar is active on mouse en
     expect(buttonClickSpy).toHaveBeenLastCalledWith(2);
 });
 
+test('Should move the toolbar container to the beginning if active column does not exist anymore', () => {
+    const toolbarItems = [
+        {
+            icon: 'fa-plus',
+            type: 'button',
+            onClick: jest.fn(),
+        },
+    ];
+
+    const columnList = mount(
+        <ColumnList onItemClick={jest.fn()} toolbarItems={toolbarItems}>
+            <Column />
+            <Column />
+        </ColumnList>
+    );
+
+    columnList.instance().activeColumnIndex = 2;
+    expect(columnList.instance().activeColumnIndex).toEqual(0);
+});
+
 test('Should move the toolbar container to the correct position', () => {
     const toolbarItems = [
         {
@@ -221,6 +241,8 @@ test('Should move the toolbar container to the correct position', () => {
 
     const columnList = mount(
         <ColumnList onItemClick={jest.fn()} toolbarItems={toolbarItems}>
+            <Column />
+            <Column />
             <Column />
         </ColumnList>
     );
