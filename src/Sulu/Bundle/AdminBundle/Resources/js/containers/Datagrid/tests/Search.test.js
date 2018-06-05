@@ -1,5 +1,5 @@
 // @flow
-import {mount, render, shallow} from 'enzyme';
+import {render, shallow} from 'enzyme';
 import React from 'react';
 import Search from '../Search';
 
