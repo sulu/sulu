@@ -43,3 +43,35 @@ exports[`The component should render collapsed 1`] = `
   />
 </label>
 `;
+
+exports[`The component should render not collapsed when value is given 1`] = `
+<label
+  class="input dark hasAppendIcon"
+>
+  <div
+    class="prependedContainer dark"
+  >
+    <span
+      aria-label="su-search"
+      class="icon dark iconClickable su-search clickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+  <input
+    placeholder="sulu_admin.datagrid_search_placeholder"
+    type="text"
+    value="search-string"
+  />
+  <div
+    class="appendContainer"
+  >
+    <span
+      aria-label="su-times"
+      class="icon dark iconClickable su-times clickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+</label>
+`;

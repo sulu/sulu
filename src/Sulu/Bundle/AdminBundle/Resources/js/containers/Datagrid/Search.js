@@ -7,12 +7,13 @@ import {translate} from '../../utils/Translator';
 
 type Props = {
     onSearch: (search: ?string) => void,
+    value: ?string,
 };
 
 @observer
 export default class Search extends React.Component<Props> {
     @observable collapsed: boolean = true;
-    @observable value: ?string = undefined;
+    @observable value: ?string;
 
     @action setCollapsed(collapsed: boolean) {
         this.collapsed = collapsed;
@@ -20,6 +21,24 @@ export default class Search extends React.Component<Props> {
 
     @action setValue(value: ?string) {
         this.value = value;
+    }
+
+    updateState(value: ?string) {
+        this.setValue(value);
+
+        if (value) {
+            this.setCollapsed(false);
+        }
+    }
+
+    componentDidMount() {
+        this.updateState(this.props.value);
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.value !== this.props.value) {
+            this.updateState(this.props.value);
+        }
     }
 
     handleChange = (value: ?string) => {
