@@ -61,6 +61,9 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.sortOrder = {
                 get: jest.fn(),
             };
+            this.searchTerm = {
+                get: jest.fn(),
+            };
             this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
                 ? collectionData
                 : mediaData;

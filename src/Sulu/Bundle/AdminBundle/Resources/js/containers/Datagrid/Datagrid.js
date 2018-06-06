@@ -132,7 +132,7 @@ export default class Datagrid extends React.Component<Props> {
             <Fragment>
                 <div className={datagridStyles.toolbar}>
                     {searchable &&
-                        <Search onSearch={this.handleSearch} />
+                        <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
                     }
                     <AdapterSwitch
                         adapters={adapters}

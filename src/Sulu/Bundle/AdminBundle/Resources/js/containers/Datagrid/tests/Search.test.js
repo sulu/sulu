@@ -11,15 +11,35 @@ jest.mock('../../../utils/Translator', () => ({
 
 test('The component should render collapsed', () => {
     const search = render(
-        <Search onSearch={jest.fn()} />
+        <Search onSearch={jest.fn()} value={null} />
     );
 
     expect(search).toMatchSnapshot();
 });
 
+test('The component should render not collapsed when value is given', () => {
+    const search = shallow(
+        <Search onSearch={jest.fn()} value="search-string" />
+    );
+
+    expect(search.render()).toMatchSnapshot();
+});
+
+test('The component should update the value if a new one is provided', () => {
+    const search = shallow(
+        <Search onSearch={jest.fn()} value="search-string" />
+    );
+
+    expect(search.find('Input').prop('value')).toBe('search-string');
+
+    search.setProps({value: 'new-search-string'});
+
+    expect(search.find('Input').prop('value')).toBe('new-search-string');
+});
+
 test('The component should expand the input when clicking on icon', () => {
     const search = shallow(
-        <Search onSearch={jest.fn()} />
+        <Search onSearch={jest.fn()} value={null} />
     );
 
     search.find('Input').simulate('iconClick');
@@ -30,7 +50,7 @@ test('The component should expand the input when clicking on icon', () => {
 test('The component should trigger the onSearch callback correctly if Input calls onBlur', () => {
     const onSearch = jest.fn();
     const search = shallow(
-        <Search onSearch={onSearch} />
+        <Search onSearch={onSearch} value={null} />
     );
 
     const input = search.find('Input');
@@ -47,7 +67,7 @@ test('The component should trigger the onSearch callback correctly if Input call
 test('The component should trigger the onSearch callback correctly if Input calls onKeyPress with enter', () => {
     const onSearch = jest.fn();
     const search = shallow(
-        <Search onSearch={onSearch} />
+        <Search onSearch={onSearch} value={null} />
     );
 
     const input = search.find('Input');
@@ -64,7 +84,7 @@ test('The component should trigger the onSearch callback correctly if Input call
 test('The component should clear the current value if Input calls onClearClick', () => {
     const onSearch = jest.fn();
     const search = shallow(
-        <Search onSearch={onSearch} />
+        <Search onSearch={onSearch} value={null} />
     );
 
     const input = search.find('Input');
