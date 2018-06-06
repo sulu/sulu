@@ -19,7 +19,7 @@ test('The component should render collapsed', () => {
 
 test('The component should render not collapsed when value is given', () => {
     const search = shallow(
-        <Search onSearch={jest.fn()} value={'search-string'} />
+        <Search onSearch={jest.fn()} value="search-string" />
     );
 
     expect(search.render()).toMatchSnapshot();
@@ -27,7 +27,7 @@ test('The component should render not collapsed when value is given', () => {
 
 test('The component should update the value if a new one is provided', () => {
     const search = shallow(
-        <Search onSearch={jest.fn()} value={'search-string'} />
+        <Search onSearch={jest.fn()} value="search-string" />
     );
 
     expect(search.find('Input').prop('value')).toBe('search-string');

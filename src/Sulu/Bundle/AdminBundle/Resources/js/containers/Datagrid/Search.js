@@ -23,7 +23,7 @@ export default class Search extends React.Component<Props> {
         this.value = value;
     }
 
-    updateState(value: ?string) {
+    updateValue(value: ?string) {
         this.setValue(value);
 
         if (value) {
@@ -32,12 +32,12 @@ export default class Search extends React.Component<Props> {
     }
 
     componentDidMount() {
-        this.updateState(this.props.value);
+        this.updateValue(this.props.value);
     }
 
     componentDidUpdate(prevProps: Props) {
         if (prevProps.value !== this.props.value) {
-            this.updateState(this.props.value);
+            this.updateValue(this.props.value);
         }
     }
 

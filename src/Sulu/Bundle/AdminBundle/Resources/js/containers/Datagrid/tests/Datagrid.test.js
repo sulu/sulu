@@ -21,6 +21,9 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.sortOrder = {
         get: jest.fn(),
     };
+    this.searchTerm = {
+        get: jest.fn(),
+    };
     this.updateStrategies = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;

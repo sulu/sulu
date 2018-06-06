@@ -31,6 +31,9 @@ jest.mock(
         this.sortOrder = {
             get: jest.fn(),
         };
+        this.searchTerm = {
+            get: jest.fn(),
+        };
         this.updateStrategies = jest.fn();
         this.data = [
             {
