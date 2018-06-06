@@ -53,11 +53,13 @@ jest.mock(
         this.schema = {
             title: {
                 type: 'string',
+                sortable: true,
                 visibility: 'no',
                 label: 'Title',
             },
             description: {
                 type: 'string',
+                sortable: true,
                 visibility: 'yes',
                 label: 'Description',
             },

@@ -66,7 +66,7 @@ class ResourceMetadataMapperTest extends TestCase
         $fieldDescriptors = [
             new FieldDescriptor('test1', 'test_translation_key1', FieldDescriptorInterface::VISIBILITY_YES, FieldDescriptorInterface::SEARCHABILITY_NEVER, 'string'),
             new FieldDescriptor('test2', 'test_translation_key2', FieldDescriptorInterface::VISIBILITY_NO, FieldDescriptorInterface::SEARCHABILITY_NEVER, 'int'),
-            new FieldDescriptor('test3', 'test_translation_key3', FieldDescriptorInterface::VISIBILITY_NEVER, FieldDescriptorInterface::SEARCHABILITY_NEVER, 'string'),
+            new FieldDescriptor('test3', 'test_translation_key3', FieldDescriptorInterface::VISIBILITY_NEVER, FieldDescriptorInterface::SEARCHABILITY_NEVER, 'string', '', '', false),
         ];
         $this->fieldDescriptorFactory->getFieldDescriptorForClass('TestClass')->willReturn($fieldDescriptors);
 
@@ -82,18 +82,21 @@ class ResourceMetadataMapperTest extends TestCase
         $this->assertSame($field1->getName(), 'test1');
         $this->assertSame($field1->getLabel(), 'Test 1');
         $this->assertSame($field1->getType(), 'string');
+        $this->assertSame($field1->isSortable(), true);
 
         /** @var DatagridField $field2 */
         $field2 = $datagrid->getFields()['test2'];
         $this->assertSame($field2->getName(), 'test2');
         $this->assertSame($field2->getLabel(), 'Test 2');
         $this->assertSame($field2->getType(), 'int');
+        $this->assertSame($field2->isSortable(), true);
 
         /** @var DatagridField $field3 */
         $field3 = $datagrid->getFields()['test3'];
         $this->assertSame($field3->getName(), 'test3');
         $this->assertSame($field3->getLabel(), 'Test 3');
         $this->assertSame($field3->getType(), 'string');
+        $this->assertSame($field3->isSortable(), false);
     }
 
     public function testMapSchema()

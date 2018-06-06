@@ -33,6 +33,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.schema = {
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
@@ -135,6 +136,7 @@ test('Render TableAdapter with correct values', () => {
     expect(tableAdapter.prop('schema')).toEqual({
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title',
         },

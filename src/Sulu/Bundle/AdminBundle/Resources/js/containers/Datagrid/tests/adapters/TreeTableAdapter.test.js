@@ -97,9 +97,10 @@ test('Render data with schema', () => {
     ];
     const schema = {
         title: {
+            label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
-            label: 'Title',
         },
     };
     const treeListAdapter = render(
@@ -119,6 +120,44 @@ test('Render data with schema', () => {
     );
 
     expect(treeListAdapter).toMatchSnapshot();
+});
+
+test('Attach onClick handler for sorting if schema says the header is sortable', () => {
+    const sortSpy = jest.fn();
+
+    const schema = {
+        title: {
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Title',
+        },
+        description: {
+            type: 'string',
+            sortable: false,
+            visibility: 'yes',
+            label: 'Description',
+        },
+    };
+
+    const treeTableAdapter = shallow(
+        <TreeTableAdapter
+            data={[]}
+            disabledIds={[]}
+            loading={false}
+            page={2}
+            pageCount={5}
+            onPageChange={jest.fn()}
+            onSort={sortSpy}
+            schema={schema}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    expect(treeTableAdapter.find('HeaderCell').at(0).prop('onClick')).toBe(sortSpy);
+    expect(treeTableAdapter.find('HeaderCell').at(1).prop('onClick')).toEqual(undefined);
 });
 
 test('Render data with two columns', () => {
@@ -200,11 +239,13 @@ test('Render data with two columns', () => {
     const schema = {
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
         title2: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title2',
         },
@@ -300,6 +341,7 @@ test('Render data with schema and selections', () => {
     const schema = {
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
@@ -395,6 +437,7 @@ test('Execute onItemActivation callback when an item is expanded', () => {
     const schema = {
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
@@ -443,11 +486,13 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
@@ -488,11 +533,13 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
@@ -533,11 +580,13 @@ test('Click on pencil should execute onItemClick callback', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
@@ -581,11 +630,13 @@ test('Click on add should execute onAddClick callback', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },

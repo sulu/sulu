@@ -9,6 +9,7 @@ export type DataItem = {
 export type SchemaEntry = {
     label: string,
     type: string,
+    sortable: boolean,
     visibility: 'always' | 'yes' | 'no' | 'never',
 };
 

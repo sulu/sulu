@@ -42,11 +42,13 @@ test('Render data with schema', () => {
     const schema = {
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'no',
             label: 'Title',
         },
         description: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Description',
         },
@@ -70,6 +72,44 @@ test('Render data with schema', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
+test('Attach onClick handler for sorting if schema says the header is sortable', () => {
+    const sortSpy = jest.fn();
+
+    const schema = {
+        title: {
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Title',
+        },
+        description: {
+            type: 'string',
+            sortable: false,
+            visibility: 'yes',
+            label: 'Description',
+        },
+    };
+
+    const tableAdapter = shallow(
+        <TableAdapter
+            data={[]}
+            disabledIds={[]}
+            loading={false}
+            page={2}
+            pageCount={5}
+            onPageChange={jest.fn()}
+            onSort={sortSpy}
+            schema={schema}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    expect(tableAdapter.find('HeaderCell').at(0).prop('onClick')).toBe(sortSpy);
+    expect(tableAdapter.find('HeaderCell').at(1).prop('onClick')).toEqual(undefined);
+});
+
 test('Render data with all different visibility types schema', () => {
     const data = [
         {
@@ -86,21 +126,25 @@ test('Render data with all different visibility types schema', () => {
     const schema = {
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'no',
             label: 'Title',
         },
         description: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Description',
         },
         test1: {
             type: 'string',
+            sortable: true,
             visibility: 'always',
             label: 'Test 1',
         },
         test2: {
             type: 'string',
+            sortable: true,
             visibility: 'never',
             label: 'Test 2',
         },
@@ -145,11 +189,13 @@ test('Render data with schema and selections', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
@@ -190,11 +236,13 @@ test('Render data with schema in different order', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
@@ -234,6 +282,7 @@ test('Render data with schema not containing all fields', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
@@ -274,11 +323,13 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
@@ -314,11 +365,13 @@ test('Render column with ascending sort icon', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
@@ -353,11 +406,13 @@ test('Render column with descending sort icon', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
@@ -398,11 +453,13 @@ test('Click on pencil should execute onItemClick callback', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
@@ -448,11 +505,13 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
@@ -483,6 +542,7 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },

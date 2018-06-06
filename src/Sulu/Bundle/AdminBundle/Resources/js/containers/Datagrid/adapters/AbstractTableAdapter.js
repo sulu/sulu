@@ -45,12 +45,13 @@ export default class AbstractTableAdapter extends AbstractAdapter {
         const schemaKeys = Object.keys(this.schema);
 
         return schemaKeys.map((schemaKey) => {
-            const label = this.schema[schemaKey].label ? this.schema[schemaKey].label : schemaKey;
+            const columnSchema = this.schema[schemaKey];
+            const label = columnSchema.label ? columnSchema.label : schemaKey;
 
             return(
                 <Table.HeaderCell
                     key={schemaKey}
-                    onClick={onSort}
+                    onClick={columnSchema.sortable ? onSort : undefined}
                     name={schemaKey}
                     sortOrder={sortColumn === schemaKey ? sortOrder : undefined}
                 >
