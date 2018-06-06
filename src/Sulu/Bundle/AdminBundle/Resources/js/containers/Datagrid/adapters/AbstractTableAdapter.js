@@ -40,8 +40,8 @@ export default class AbstractTableAdapter extends AbstractAdapter {
         });
     }
 
-    renderHeaderCells(sortingEnabled: boolean): Array<*> {
-        const {sortColumn, sortOrder} = this.props;
+    renderHeaderCells(): Array<*> {
+        const {onSort, sortColumn, sortOrder} = this.props;
         const schemaKeys = Object.keys(this.schema);
 
         return schemaKeys.map((schemaKey) => {
@@ -50,7 +50,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
             return(
                 <Table.HeaderCell
                     key={schemaKey}
-                    onClick={sortingEnabled ? this.props.onSort : undefined}
+                    onClick={onSort}
                     name={schemaKey}
                     sortOrder={sortColumn === schemaKey ? sortOrder : undefined}
                 >

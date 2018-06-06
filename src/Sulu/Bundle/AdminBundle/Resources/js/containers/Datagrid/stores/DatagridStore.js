@@ -28,6 +28,8 @@ export default class DatagridStore {
     observableOptions: ObservableOptions;
     localeDisposer: ?() => void;
     searchDisposer: () => void;
+    sortColumnDisposer: () => void;
+    sortOrderDisposer: () => void;
     sendRequestDisposer: () => void;
 
     constructor(
@@ -50,8 +52,22 @@ export default class DatagridStore {
             });
         }
 
-        this.searchDisposer = intercept(this.searchTerm, '', (change: IValueWillChange<number>) => {
+        this.searchDisposer = intercept(this.searchTerm, '', (change: IValueWillChange<string>) => {
             if (this.searchTerm.get() !== change.newValue) {
+                this.reset();
+            }
+            return change;
+        });
+
+        this.sortColumnDisposer = intercept(this.sortColumn, '', (change: IValueWillChange<string>) => {
+            if (this.sortColumn.get() !== change.newValue) {
+                this.reset();
+            }
+            return change;
+        });
+
+        this.sortOrderDisposer = intercept(this.sortOrder, '', (change: IValueWillChange<SortOrder>) => {
+            if (this.sortOrder.get() !== change.newValue) {
                 this.reset();
             }
             return change;
@@ -256,9 +272,12 @@ export default class DatagridStore {
 
     destroy() {
         this.sendRequestDisposer();
+        this.searchDisposer();
+        this.sortColumnDisposer();
+        this.sortOrderDisposer();
+
         if (this.localeDisposer) {
             this.localeDisposer();
         }
-        this.searchDisposer();
     }
 }

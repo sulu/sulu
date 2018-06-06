@@ -580,6 +580,84 @@ test('Should not reset page count to 0 and page to 1 when search stays the same'
     datagridStore.destroy();
 });
 
+test('Should reset page count to 0 and page to 1 when sort column is changed', () => {
+    const page = observable.box(3);
+    const locale = observable.box('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale});
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.setPage(2);
+    datagridStore.pageCount = 7;
+    datagridStore.sortColumn.set('test');
+
+    expect(structureStrategy.clear).toBeCalled();
+    expect(page.get()).toEqual(1);
+    expect(datagridStore.pageCount).toEqual(0);
+    datagridStore.destroy();
+});
+
+test('Should not reset page count to 0 and page to 1 when sort column stays the same', () => {
+    const page = observable.box(3);
+    const locale = observable.box('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.sortColumn.set('test');
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.setPage(2);
+    datagridStore.pageCount = 7;
+    datagridStore.sortColumn.set('test');
+
+    expect(structureStrategy.clear).not.toBeCalled();
+    expect(page.get()).toEqual(2);
+    expect(datagridStore.pageCount).toEqual(7);
+    datagridStore.destroy();
+});
+
+test('Should reset page count to 0 and page to 1 when sort order is changed', () => {
+    const page = observable.box(3);
+    const locale = observable.box('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale});
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.setPage(2);
+    datagridStore.pageCount = 7;
+    datagridStore.sortOrder.set('asc');
+
+    expect(structureStrategy.clear).toBeCalled();
+    expect(page.get()).toEqual(1);
+    expect(datagridStore.pageCount).toEqual(0);
+    datagridStore.destroy();
+});
+
+test('Should not reset page count to 0 and page to 1 when sort order stays the same', () => {
+    const page = observable.box(3);
+    const locale = observable.box('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.sortOrder.set('asc');
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.setPage(2);
+    datagridStore.pageCount = 7;
+    datagridStore.sortOrder.set('asc');
+
+    expect(structureStrategy.clear).not.toBeCalled();
+    expect(page.get()).toEqual(2);
+    expect(datagridStore.pageCount).toEqual(7);
+    datagridStore.destroy();
+});
+
 test('Should reset page count and page when strategy changes', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
@@ -602,10 +680,14 @@ test('Should call all disposers if destroy is called', () => {
     datagridStore.sendRequestDisposer = jest.fn();
     datagridStore.localeDisposer = jest.fn();
     datagridStore.searchDisposer = jest.fn();
+    datagridStore.sortColumnDisposer = jest.fn();
+    datagridStore.sortOrderDisposer = jest.fn();
 
     datagridStore.destroy();
 
     expect(datagridStore.sendRequestDisposer).toBeCalledWith();
     expect(datagridStore.localeDisposer).toBeCalledWith();
     expect(datagridStore.searchDisposer).toBeCalledWith();
+    expect(datagridStore.sortColumnDisposer).toBeCalledWith();
+    expect(datagridStore.sortOrderDisposer).toBeCalledWith();
 });

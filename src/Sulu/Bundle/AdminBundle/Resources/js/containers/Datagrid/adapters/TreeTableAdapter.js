@@ -120,7 +120,7 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
                 onAllSelectionChange={onAllSelectionChange}
             >
                 <Table.Header>
-                    {this.renderHeaderCells(false)}
+                    {this.renderHeaderCells()}
                 </Table.Header>
                 <Table.Body>
                     {this.renderRows()}
