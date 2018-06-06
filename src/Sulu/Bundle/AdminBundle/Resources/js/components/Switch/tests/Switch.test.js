@@ -55,3 +55,11 @@ test('A click on the checkbox should trigger the change callback with the value'
     component.find('input').simulate('change', {currentTarget: {checked: false}});
     expect(onChangeSpy).toHaveBeenCalledWith(false, 'my-value');
 });
+
+test('A click on the checkbox should stop the further propagation of the DOM event', () => {
+    const stopPropagationSpy = jest.fn();
+    const component = shallow(<Switch />);
+
+    component.find('input').simulate('click', {stopPropagation: stopPropagationSpy});
+    expect(stopPropagationSpy).toBeCalledWith();
+});

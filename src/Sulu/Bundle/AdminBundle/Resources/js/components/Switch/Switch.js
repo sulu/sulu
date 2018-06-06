@@ -25,6 +25,10 @@ export default class Switch extends React.PureComponent<Props> {
         }
     };
 
+    handleClick = (event: SyntheticEvent<HTMLInputElement>) => {
+        event.stopPropagation();
+    };
+
     render() {
         const {
             icon,
@@ -54,6 +58,7 @@ export default class Switch extends React.PureComponent<Props> {
                         checked={checked}
                         disabled={!active}
                         onChange={this.handleChange}
+                        onClick={this.handleClick}
                     />
                     <span>
                         {icon &&
