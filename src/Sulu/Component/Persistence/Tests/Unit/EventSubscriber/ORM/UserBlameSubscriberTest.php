@@ -124,39 +124,69 @@ class UserBlameSubscriberTest extends TestCase
     public function provideLifecycle()
     {
         return [
+            // new entity no user set
+            // RESULT: Set creator and changer
+            [
+                [
+                ],
+                [
+                    'changer',
+                    'creator',
+                ],
+                true,
+            ],
+            // new entity creator set
+            // RESULT: Set changer
+            [
+                [
+                    'creator' => [0 => null, 1 => 1],
+                ],
+                [
+                    'changer',
+                ],
+                true,
+            ],
+            // new entity changer set
+            // RESULT: Set changer
+            [
+                [
+                    'changer' => [0 => null, 1 => 1],
+                ],
+                [
+                    'creator',
+                ],
+                true,
+            ],
             // changer not overridden, creator is not null
             // RESULT: Only set changer
             [
                 [
-                    'changer' => [0 => 5, 1 => 5],
                     'creator' => [0 => 1, 1 => null],
                 ],
                 [
                     'changer',
                 ],
+                false,
             ],
-            // changer is null, creator is null
-            // RESULT: Set creator and changer
+            // changer is null, creator is null (should stay null)
+            // RESULT: Set changer
             [
                 [
-                    'changer' => [0 => null, 1 => null],
-                    'creator' => [0 => null, 1 => null],
                 ],
                 [
-                    'creator',
                     'changer',
                 ],
+                false,
             ],
-            // changer has been overridden, creator is null
-            // RESULT: Set creator and changer
+            // changer has been overridden, creator is null (should stay null)
+            // RESULT: Set nothing
             [
                 [
                     'changer' => [0 => null, 1 => 3],
-                    'creator' => [0 => null, 1 => null],
                 ],
                 [
-                    'creator',
                 ],
+                false,
             ],
             // changer is has been changed, creator has been changed
             // RESULT: Do not set anything
@@ -167,6 +197,7 @@ class UserBlameSubscriberTest extends TestCase
                 ],
                 [
                 ],
+                false,
             ],
         ];
     }
@@ -177,12 +208,15 @@ class UserBlameSubscriberTest extends TestCase
      *
      * @dataProvider provideLifecycle
      */
-    public function testOnFlush($changeset, $expectedFields)
+    public function testOnFlush($changeset, $expectedFields, $insert = true)
     {
         $entity = $this->userBlameObject->reveal();
 
-        $this->unitOfWork->method('getScheduledEntityInsertions')->willReturn([$entity]);
-        $this->unitOfWork->method('getScheduledEntityUpdates')->willReturn([]);
+        $insertions = $insert?[$entity]:[];
+        $updates = !$insert?[$entity]:[];
+
+        $this->unitOfWork->method('getScheduledEntityInsertions')->willReturn($insertions);
+        $this->unitOfWork->method('getScheduledEntityUpdates')->willReturn($updates);
         $this->unitOfWork->method('getEntityChangeSet')
             ->with($this->equalTo($this->userBlameObject->reveal()))
             ->willReturn($changeset);

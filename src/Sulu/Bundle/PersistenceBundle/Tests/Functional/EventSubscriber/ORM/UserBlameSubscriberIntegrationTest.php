@@ -58,11 +58,14 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $this->getEntityManager()->persist($contact);
         $this->getEntityManager()->flush();
 
-        $changer = $contact->getChanger();
-        $creator = $contact->getCreator();
+        $this->assertSame($user, $contact->getChanger());
+        $this->assertSame($user, $contact->getCreator());
 
-        $this->assertSame($changer, $user);
-        $this->assertSame($creator, $user);
+        $contact->setCreator(null);
+        $this->getEntityManager()->flush();
+
+        $this->assertSame($user, $contact->getChanger());
+        $this->assertNull($contact->getCreator());
     }
 
     public function testExternalUserBlame()

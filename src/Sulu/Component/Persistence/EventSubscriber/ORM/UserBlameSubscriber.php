@@ -151,12 +151,14 @@ class UserBlameSubscriber implements EventSubscriber
             $changeset = $unitOfWork->getEntityChangeSet($blameEntity);
             $recompute = false;
 
-            if ($insertions && !isset($changeset[self::CREATOR_FIELD])) {
+            if ($insertions
+                && (!isset($changeset[self::CREATOR_FIELD]) || $changeset[self::CREATOR_FIELD][1] === null)
+            ) {
                 $meta->setFieldValue($blameEntity, self::CREATOR_FIELD, $user);
                 $recompute = true;
             }
 
-            if (!isset($changeset[self::CHANGER_FIELD])) {
+            if (!isset($changeset[self::CHANGER_FIELD]) || $changeset[self::CHANGER_FIELD][1] === null) {
                 $meta->setFieldValue($blameEntity, self::CHANGER_FIELD, $user);
                 $recompute = true;
             }
