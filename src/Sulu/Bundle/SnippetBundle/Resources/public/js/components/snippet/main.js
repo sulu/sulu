@@ -186,7 +186,7 @@ define([
         getReferentialIntegrityDialogMessage: function (data, template) {
             var pageTitles = [];
 
-            if (!data.structures) {
+            if (data.structures) {
                 this.sandbox.util.foreach(data.structures, function (structure) {
                     pageTitles.push(structure.title);
                 });

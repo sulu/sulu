@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #4017 [SnippetBundle]           Fix snippet conflict overlay
+
 * 1.6.19 (2018-05-24)
     * HOTFIX      #3980 [PreviewBundle]           Fix kernel.project_dir parameter for PreviewKernel
     * BUGFIX      #3967 [AudienceTargetingBundle] Fixed loading of minified js files for production
