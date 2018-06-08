@@ -122,27 +122,28 @@ class UserBlameSubscriber implements EventSubscriber
             return;
         }
 
-        $user = null;
+        $user = $this->getUser($token);
+
+        // if no sulu user, do nothing
+        if (!$user instanceof UserInterface) {
+            return;
+        }
+
+        $this->handleUserBlame($event, $user, true);
+        $this->handleUserBlame($event, $user, false);
+    }
+
+    private function handleUserBlame(OnFlushEventArgs $event, UserInterface $user, bool $insertions)
+    {
         $manager = $event->getEntityManager();
         $unitOfWork = $manager->getUnitOfWork();
 
-        $entities = array_merge(
-            $unitOfWork->getScheduledEntityInsertions(),
-            $unitOfWork->getScheduledEntityUpdates()
-        );
+        $entities = $insertions ? $unitOfWork->getScheduledEntityInsertions() :
+            $unitOfWork->getScheduledEntityUpdates();
 
         foreach ($entities as $blameEntity) {
             if (!$blameEntity instanceof UserBlameInterface) {
                 continue;
-            }
-
-            if (null === $user) {
-                $user = $this->getUser($token);
-
-                if (!$user instanceof UserInterface) {
-                    // if no sulu user is available avoid looping through all entities
-                    return;
-                }
             }
 
             $meta = $manager->getClassMetadata(get_class($blameEntity));
@@ -150,28 +151,16 @@ class UserBlameSubscriber implements EventSubscriber
             $changeset = $unitOfWork->getEntityChangeSet($blameEntity);
             $recompute = false;
 
-            $creatorChangeset = isset($changeset[self::CREATOR_FIELD]) ? $changeset[self::CREATOR_FIELD] : null;
-            $changerChangeset = isset($changeset[self::CHANGER_FIELD]) ? $changeset[self::CHANGER_FIELD] : null;
-
-            if ($creatorChangeset) {
-                // if the creator is NULL and has not been set
-                if (null === $creatorChangeset[0] && null === $creatorChangeset[1]) {
-                    $meta->setFieldValue($blameEntity, self::CREATOR_FIELD, $user);
-                    $recompute = true;
-                }
+            if ($insertions
+                && (!isset($changeset[self::CREATOR_FIELD]) || $changeset[self::CREATOR_FIELD][1] === null)
+            ) {
+                $meta->setFieldValue($blameEntity, self::CREATOR_FIELD, $user);
+                $recompute = true;
             }
 
-            if ($changerChangeset) {
-                // if the changer is NULL and has not been set or if the changer
-                // has not been explicitly set (i.e. both before and after changes
-                // are the same).
-                if (
-                    (null === $changerChangeset[0] && null === $changerChangeset[1]) ||
-                    ($changerChangeset[0] === $changerChangeset[1])
-                ) {
-                    $meta->setFieldValue($blameEntity, self::CHANGER_FIELD, $user);
-                    $recompute = true;
-                }
+            if (!isset($changeset[self::CHANGER_FIELD]) || $changeset[self::CHANGER_FIELD][1] === null) {
+                $meta->setFieldValue($blameEntity, self::CHANGER_FIELD, $user);
+                $recompute = true;
             }
 
             if (true === $recompute) {
