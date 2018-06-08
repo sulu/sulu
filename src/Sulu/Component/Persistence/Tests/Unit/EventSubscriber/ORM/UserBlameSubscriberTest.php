@@ -212,8 +212,8 @@ class UserBlameSubscriberTest extends TestCase
     {
         $entity = $this->userBlameObject->reveal();
 
-        $insertions = $insert?[$entity]:[];
-        $updates = !$insert?[$entity]:[];
+        $insertions = $insert ? [$entity] : [];
+        $updates = !$insert ? [$entity] : [];
 
         $this->unitOfWork->method('getScheduledEntityInsertions')->willReturn($insertions);
         $this->unitOfWork->method('getScheduledEntityUpdates')->willReturn($updates);
