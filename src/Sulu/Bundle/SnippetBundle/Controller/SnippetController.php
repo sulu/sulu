@@ -201,7 +201,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     {
         $locale = $this->getLocale($request);
 
-        $snippet = $this->documentManager->find($uuid, $locale);
+        $snippet = $this->findDocument($uuid, $locale);
         $view = View::create($snippet);
 
         return $this->viewHandler->handle($view);
@@ -485,6 +485,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             $locale,
             [
                 'load_ghost_content' => false,
+                'load_shadow_content' => false,
             ]
         );
     }
