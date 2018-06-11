@@ -21,6 +21,7 @@ export type SortOrder = 'asc' | 'desc';
 
 export type DatagridAdapterProps = {
     active?: ?string | number,
+    activeItems: ?Array<string | number>,
     data: Array<*>,
     disabledIds: Array<string | number>,
     loading: boolean,
@@ -60,7 +61,8 @@ export interface LoadingStrategyInterface {
 
 export interface StructureStrategyInterface {
     constructor(): void,
-    data: Array<*>,
+    +data: Array<*>,
+    +activeItems?: Array<*>,
     getData(parent: ?string | number): ?Array<*>,
     enhanceItem(item: Object): Object,
     findById(identifier: string | number): ?Object,

@@ -46,7 +46,7 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
         }
     }
 
-    enhanceItem(item: Object): Object {
+    enhanceItem(item: Object): TreeItem {
         return {
             data: item,
             children: [],

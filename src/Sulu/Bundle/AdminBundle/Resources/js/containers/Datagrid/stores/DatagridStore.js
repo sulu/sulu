@@ -92,6 +92,10 @@ export default class DatagridStore {
         return this.structureStrategy.data;
     }
 
+    @computed get activeItems(): ?Array<*> {
+        return this.structureStrategy.activeItems;
+    }
+
     @action updateStrategies = (
         loadingStrategy: LoadingStrategyInterface,
         structureStrategy: StructureStrategyInterface

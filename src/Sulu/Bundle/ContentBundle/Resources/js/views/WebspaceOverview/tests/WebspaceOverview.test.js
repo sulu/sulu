@@ -8,6 +8,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
     Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
     DatagridStore: jest.fn(function() {
+        this.activeItems = [];
         this.sortColumn = {
             get: jest.fn(),
         };
@@ -68,13 +69,9 @@ test('Render WebspaceOverview', () => {
 
     const webspaceOverview = mount(<WebspaceOverview router={router} />);
     webspaceOverview.instance().datagridStore.data = [
-        {
-            data: {
-                id: 1,
-            },
-            children: [],
-            id: 1,
-        },
+        [
+            {id: 1},
+        ],
     ];
 
     return promise.then(() => {

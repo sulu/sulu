@@ -11,9 +11,12 @@ import TableAdapter from '../adapters/TableAdapter';
 import FolderAdapter from '../adapters/FolderAdapter';
 import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer';
 
+let mockStructureStrategyData;
+
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
     this.setActive = jest.fn();
+    this.activeItems = [];
     this.sort = jest.fn();
     this.sortColumn = {
         get: jest.fn(),
@@ -45,12 +48,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.deselectEntirePage = jest.fn();
     this.updateLoadingStrategy = jest.fn();
     this.structureStrategy = {
-        data: [
-            {
-                title: 'value',
-                id: 1,
-            },
-        ],
+        data: mockStructureStrategyData,
     };
     this.data = this.structureStrategy.data;
     this.search = jest.fn();
@@ -110,6 +108,7 @@ class TestAdapter extends AbstractAdapter {
 }
 
 beforeEach(() => {
+    mockStructureStrategyData = [];
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.get.mockReturnValue(TestAdapter);
 
@@ -118,6 +117,12 @@ beforeEach(() => {
 
 test('Render TableAdapter with correct values', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    mockStructureStrategyData = [
+        {
+            title: 'value',
+            id: 1,
+        },
+    ];
 
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     datagridStore.active = 3;
@@ -132,6 +137,7 @@ test('Render TableAdapter with correct values', () => {
 
     expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
     expect(tableAdapter.prop('active')).toEqual(3);
+    expect(tableAdapter.prop('activeItems')).toBe(datagridStore.activeItems);
     expect(tableAdapter.prop('selections')).toEqual([1, 3]);
     expect(tableAdapter.prop('schema')).toEqual({
         title: {
@@ -213,7 +219,7 @@ test('Selecting and deselecting items should update store', () => {
 test('Selecting and unselecting all items on current page should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
-    datagridStore.structureStrategy.data = [
+    mockStructureStrategyData = [
         {id: 1},
         {id: 2},
         {id: 3},
@@ -232,7 +238,7 @@ test('Selecting and unselecting all items on current page should update store', 
 test('Clicking a header cell should sort the table', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
-    datagridStore.structureStrategy.data = [
+    mockStructureStrategyData = [
         {id: 1},
         {id: 2},
         {id: 3},
@@ -247,7 +253,7 @@ test('Clicking a header cell should sort the table', () => {
 test('Trigger a search should call search on the store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
-    datagridStore.structureStrategy.data = [
+    mockStructureStrategyData = [
         {id: 1},
         {id: 2},
         {id: 3},

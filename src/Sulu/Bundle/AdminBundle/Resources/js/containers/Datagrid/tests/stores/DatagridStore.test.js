@@ -18,6 +18,7 @@ function LoadingStrategy() {
 class StructureStrategy {
     @observable data = [];
     clear = jest.fn();
+    activeItems = [];
     getData = jest.fn().mockReturnValue(this.data);
     enhanceItem = jest.fn((item) => item);
 }
@@ -304,6 +305,21 @@ test('The active item should not be passed as parent if undefined', () => {
     );
 
     datagridStore.destroy();
+});
+
+test('The activeItems from the StructureStrategy should be passed', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+
+    const datagridStore = new DatagridStore('snippets', {
+        page,
+    });
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    const activeItems = [1, 2, 3];
+    structureStrategy.activeItems = activeItems;
+    expect(datagridStore.activeItems).toBe(activeItems);
 });
 
 test('Set loading flag to true before schema is loaded', () => {

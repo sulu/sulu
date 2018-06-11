@@ -39,6 +39,7 @@ test('Render a basic Masonry view with MediaCards', () => {
     ];
     const mediaCardAdapter = render(
         <MediaCardAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             icon="su-pen"
@@ -84,6 +85,7 @@ test('MediaCard should call the the appropriate handler', () => {
     ];
     const mediaCardAdapter = shallow(
         <MediaCardAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             icon="su-pen"
@@ -109,6 +111,7 @@ test('InfiniteScroller should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const tableAdapter = shallow(
         <MediaCardAdapter
+            activeItems={[]}
             data={[]}
             disabledIds={[]}
             icon="su-pen"

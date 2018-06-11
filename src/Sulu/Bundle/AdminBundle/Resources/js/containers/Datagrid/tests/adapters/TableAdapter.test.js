@@ -55,6 +55,7 @@ test('Render data with schema', () => {
     };
     const tableAdapter = render(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -92,6 +93,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
 
     const tableAdapter = shallow(
         <TableAdapter
+            activeItems={[]}
             data={[]}
             disabledIds={[]}
             loading={false}
@@ -151,6 +153,7 @@ test('Render data with all different visibility types schema', () => {
     };
     const tableAdapter = render(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -202,6 +205,7 @@ test('Render data with schema and selections', () => {
     };
     const tableAdapter = render(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -249,6 +253,7 @@ test('Render data with schema in different order', () => {
     };
     const tableAdapter = render(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -289,6 +294,7 @@ test('Render data with schema not containing all fields', () => {
     };
     const tableAdapter = render(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -336,6 +342,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     };
     const tableAdapter = render(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -378,6 +385,7 @@ test('Render column with ascending sort icon', () => {
     };
     const tableAdapter = render(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -419,6 +427,7 @@ test('Render column with descending sort icon', () => {
     };
     const tableAdapter = render(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -466,6 +475,7 @@ test('Click on pencil should execute onItemClick callback', () => {
     };
     const tableAdapter = shallow(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -518,6 +528,7 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
     };
     const tableAdapter = shallow(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -549,6 +560,7 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
     };
     const tableAdapter = shallow(
         <TableAdapter
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -571,6 +583,7 @@ test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const tableAdapter = shallow(
         <TableAdapter
+            activeItems={[]}
             disabledIds={[]}
             loading={false}
             onPageChange={pageChangeSpy}
