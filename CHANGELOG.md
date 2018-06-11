@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-release/1.5
+    * BUGFIX      #4018 [SnippetBundle]         Fix conflict when saving snippet in new language
     * BUGFiX      #3995 [TestBundle]            Fix tests for latest Symfony version
 
 * 1.5.15 (2018-05-24)
