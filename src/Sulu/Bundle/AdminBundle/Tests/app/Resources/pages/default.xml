@@ -23,7 +23,7 @@
                 <title lang="en">Animals</title>
             </meta>
 
-            <tag name="sulu.rlp.part"/>
+            <tag name="sulu.rlp.part" priority="100"/>
         </property>
 
         <property name="url" type="resource_locator" mandatory="true">

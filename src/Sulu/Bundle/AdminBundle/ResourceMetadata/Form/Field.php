@@ -33,6 +33,11 @@ class Field extends Item
      */
     protected $spaceAfter;
 
+    /**
+     * @var Tag[]
+     */
+    protected $tags;
+
     public function setType(string $type): void
     {
         $this->type = $type;
@@ -79,5 +84,18 @@ class Field extends Item
     public function setSpaceAfter(int $spaceAfter = null): void
     {
         $this->spaceAfter = $spaceAfter;
+    }
+
+    /**
+     * @return Tag[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): void
+    {
+        $this->tags[] = $tag;
     }
 }
