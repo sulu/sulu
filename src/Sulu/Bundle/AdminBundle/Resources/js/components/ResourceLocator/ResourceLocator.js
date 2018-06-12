@@ -38,9 +38,9 @@ export default class ResourceLocator extends React.PureComponent<Props> {
         }
     }
 
-    componentWillReceiveProps = (nextProps: Props) => {
+    componentWillReceiveProps(nextProps: Props) {
         this.changeable = nextProps.value.substring(this.fixed.length);
-    };
+    }
 
     handleChange = (value: ?string) => {
         const {onChange} = this.props;
