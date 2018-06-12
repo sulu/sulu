@@ -113,7 +113,11 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     handleItemActivation = (id: string | number) => {
-        this.props.store.setActive(id);
+        this.props.store.activate(id);
+    };
+
+    handleItemDeactivation = (id: string | number) => {
+        this.props.store.deactivate(id);
     };
 
     render() {
@@ -150,6 +154,7 @@ export default class Datagrid extends React.Component<Props> {
                         onAddClick={onAddClick}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
                         onItemActivation={this.handleItemActivation}
+                        onItemDeactivation={this.handleItemDeactivation}
                         onItemClick={onItemClick}
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
                         onPageChange={this.handlePageChange}

@@ -21,6 +21,8 @@ class StructureStrategy {
     activeItems = [];
     getData = jest.fn().mockReturnValue(this.data);
     enhanceItem = jest.fn((item) => item);
+    activate = jest.fn();
+    deactivate = jest.fn();
 }
 
 test('The loading strategy should be called when a request is sent', () => {
@@ -689,6 +691,32 @@ test('Should reset page count and page when strategy changes', () => {
     expect(page.get()).toEqual(1);
     expect(datagridStore.pageCount).toEqual(0);
     datagridStore.destroy();
+});
+
+test('Should call the activate method of the structure strategy if an item gets activated', () => {
+    const page = observable.box();
+    const datagridStore = new DatagridStore('snippets', {page});
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.activate(3);
+
+    expect(structureStrategy.activate).toBeCalledWith(3);
+});
+
+test('Should call the deactivate method of the structure strategy if an item gets deactivated', () => {
+    const page = observable.box();
+    const datagridStore = new DatagridStore('snippets', {page});
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.deactivate(2);
+
+    expect(structureStrategy.deactivate).toBeCalledWith(2);
 });
 
 test('Should call all disposers if destroy is called', () => {

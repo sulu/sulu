@@ -15,6 +15,18 @@ export default class TableAdapter extends AbstractTableAdapter {
 
     static icon = 'su-align-justify';
 
+    renderRows() {
+        const {data, selections} = this.props;
+
+        return data.map((item) => {
+            return (
+                <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
+                    {this.renderCells(item)}
+                </Table.Row>
+            );
+        });
+    }
+
     render() {
         const {
             loading,

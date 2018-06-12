@@ -35,46 +35,11 @@ test('Render data with schema', () => {
         },
         children: [],
     };
-    const test21 = {
-        data: {
-            id: 4,
-            title: 'Test2.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test22 = {
-        data: {
-            id: 5,
-            title: 'Test2.2',
-            hasChildren: false,
-        },
-        children: [],
-    };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
             hasChildren: true,
-        },
-        children: [
-            test21,
-            test22,
-        ],
-    };
-    const test31 = {
-        data: {
-            id: 7,
-            title: 'Test3.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test32 = {
-        data: {
-            id: 8,
-            title: 'Test3.2',
-            hasChildren: false,
         },
         children: [],
     };
@@ -84,10 +49,7 @@ test('Render data with schema', () => {
             title: 'Test3',
             hasChildren: true,
         },
-        children: [
-            test31,
-            test32,
-        ],
+        children: [],
     };
 
     const data = [
@@ -172,51 +134,12 @@ test('Render data with two columns', () => {
         },
         children: [],
     };
-    const test21 = {
-        data: {
-            id: 4,
-            title: 'Test2.1',
-            title2: 'Title2 - Test2.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test22 = {
-        data: {
-            id: 5,
-            title: 'Test2.2',
-            title2: 'Title2 - Test2.2',
-            hasChildren: false,
-        },
-        children: [],
-    };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
             title2: 'Title2 - Test2',
             hasChildren: true,
-        },
-        children: [
-            test21,
-            test22,
-        ],
-    };
-    const test31 = {
-        data: {
-            id: 7,
-            title: 'Test3.1',
-            title2: 'Title2 - Test3.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test32 = {
-        data: {
-            id: 8,
-            title: 'Test3.2',
-            title2: 'Title2 - Test3.2',
-            hasChildren: false,
         },
         children: [],
     };
@@ -227,10 +150,7 @@ test('Render data with two columns', () => {
             title2: 'Title2 - Test3',
             hasChildren: true,
         },
-        children: [
-            test31,
-            test32,
-        ],
+        children: [],
     };
 
     const data = [
@@ -281,46 +201,11 @@ test('Render data with schema and selections', () => {
         },
         children: [],
     };
-    const test21 = {
-        data: {
-            id: 4,
-            title: 'Test2.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test22 = {
-        data: {
-            id: 5,
-            title: 'Test2.2',
-            hasChildren: false,
-        },
-        children: [],
-    };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
             hasChildren: true,
-        },
-        children: [
-            test21,
-            test22,
-        ],
-    };
-    const test31 = {
-        data: {
-            id: 7,
-            title: 'Test3.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test32 = {
-        data: {
-            id: 8,
-            title: 'Test3.2',
-            hasChildren: false,
         },
         children: [],
     };
@@ -330,10 +215,7 @@ test('Render data with schema and selections', () => {
             title: 'Test3',
             hasChildren: true,
         },
-        children: [
-            test31,
-            test32,
-        ],
+        children: [],
     };
 
     const data = [
@@ -369,7 +251,7 @@ test('Render data with schema and selections', () => {
     expect(treeListAdapter).toMatchSnapshot();
 });
 
-test('Execute onItemActivation callback when an item is expanded', () => {
+test('Execute onItemActivation respectively onItemDeactivation callback when an item is clicked', () => {
     const test1 = {
         data: {
             id: 2,
@@ -405,32 +287,13 @@ test('Execute onItemActivation callback when an item is expanded', () => {
             test22,
         ],
     };
-    const test31 = {
-        data: {
-            id: 7,
-            title: 'Test3.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test32 = {
-        data: {
-            id: 8,
-            title: 'Test3.2',
-            hasChildren: false,
-        },
-        children: [],
-    };
     const test3 = {
         data: {
             id: 6,
             title: 'Test3',
             hasChildren: true,
         },
-        children: [
-            test31,
-            test32,
-        ],
+        children: [],
     };
 
     const data = [
@@ -446,7 +309,10 @@ test('Execute onItemActivation callback when an item is expanded', () => {
             label: 'Title',
         },
     };
+
     const onItemActivationSpy = jest.fn();
+    const onItemDeactivationSpy = jest.fn();
+
     const treeListAdapter = mount(
         <TreeTableAdapter
             activeItems={[]}
@@ -459,6 +325,7 @@ test('Execute onItemActivation callback when an item is expanded', () => {
             page={1}
             pageCount={1}
             onItemActivation={onItemActivationSpy}
+            onItemDeactivation={onItemDeactivationSpy}
             onSort={jest.fn()}
             sortColumn={undefined}
             sortOrder={undefined}
@@ -466,13 +333,12 @@ test('Execute onItemActivation callback when an item is expanded', () => {
     );
 
     // expand the row
-    treeListAdapter.find('Row').at(2).find('span.toggleIcon').simulate('click');
+    treeListAdapter.find('Row[id=6]').find('span.toggleIcon').simulate('click');
     expect(onItemActivationSpy).toBeCalledWith(6);
-    expect(treeListAdapter.render()).toMatchSnapshot();
 
     // close the row
-    treeListAdapter.find('Row').at(2).find('span.toggleIcon').simulate('click');
-    expect(treeListAdapter.render()).toMatchSnapshot();
+    treeListAdapter.find('Row[id=3]').find('span.toggleIcon').simulate('click');
+    expect(onItemDeactivationSpy).toBeCalledWith(3);
 });
 
 test('Render data with pencil button when onItemEdit callback is passed', () => {

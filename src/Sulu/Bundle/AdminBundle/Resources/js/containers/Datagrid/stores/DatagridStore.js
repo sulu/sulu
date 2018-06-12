@@ -217,6 +217,20 @@ export default class DatagridStore {
         this.active = active;
     }
 
+    activate(id: ?string | number) {
+        this.setActive(id);
+
+        if (this.structureStrategy.activate) {
+            this.structureStrategy.activate(id);
+        }
+    }
+
+    deactivate(id: ?string | number) {
+        if (this.structureStrategy.deactivate) {
+            this.structureStrategy.deactivate(id);
+        }
+    }
+
     @action sort(column: string, order: SortOrder) {
         this.sortColumn.set(column);
         this.sortOrder.set(order);

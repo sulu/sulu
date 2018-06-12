@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
@@ -19,70 +19,52 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
     @observable expandedRows: Array<string | number> = [];
 
     @action handleRowCollapse = (rowId: string | number) => {
-        this.expandedRows.splice(this.expandedRows.indexOf(rowId), 1);
+        const {onItemDeactivation} = this.props;
+        if (onItemDeactivation) {
+            onItemDeactivation(rowId);
+        }
     };
 
     @action handleRowExpand = (rowId: string | number) => {
-        this.expandedRows.push(rowId);
-
         const {onItemActivation} = this.props;
         if (onItemActivation) {
             onItemActivation(rowId);
         }
     };
 
-    @computed get data(): Array<Object> {
-        const dataList = [];
-        const depth = 0;
+    renderRows(items: Array<*>, depth: number = 0) {
+        const rows = [];
+        const {
+            selections,
+        } = this.props;
 
-        this.flattenData(this.props.data, dataList, depth);
-
-        return dataList;
-    }
-
-    isExpanded(identifier: string | number) {
-        return this.expandedRows.includes(identifier);
-    }
-
-    flattenData(items: Array<Object>, dataList: Array<Object>, depth: number) {
-        items.forEach((item) => {
-            item.expanded = this.isExpanded(item.data.id);
-            item.depth = depth;
-
-            dataList.push(item);
-
-            if (item.expanded && item.children.length) {
-                this.flattenData(item.children, dataList, depth + 1);
-            }
-        });
-    }
-
-    renderRows(): Array<*> {
-        return this.data.map((item) => {
-            const {
-                selections,
-            } = this.props;
+        for (const item of items) {
             const {data} = item;
 
-            return (
+            rows.push(
                 <Table.Row
                     key={data.id}
                     id={data.id}
-                    depth={item.depth}
+                    depth={depth}
                     isLoading={this.props.active === data.id && this.props.loading}
                     hasChildren={data.hasChildren}
-                    expanded={item.expanded}
+                    expanded={item.children.length > 0}
                     selected={selections.includes(data.id)}
                 >
                     {this.renderCells(data)}
                 </Table.Row>
             );
-        });
+
+            rows.push(...this.renderRows(item.children, depth + 1));
+        }
+
+        return rows;
     }
 
     render() {
         const {
             active,
+            data,
             loading,
             onItemClick,
             onAddClick,
@@ -123,7 +105,7 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
                     {this.renderHeaderCells()}
                 </Table.Header>
                 <Table.Body>
-                    {this.renderRows()}
+                    {this.renderRows(data)}
                 </Table.Body>
             </Table>
         );

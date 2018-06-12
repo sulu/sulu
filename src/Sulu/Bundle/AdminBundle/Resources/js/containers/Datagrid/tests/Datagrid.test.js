@@ -17,6 +17,8 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
     this.setActive = jest.fn();
     this.activeItems = [];
+    this.activate = jest.fn();
+    this.deactivate = jest.fn();
     this.sort = jest.fn();
     this.sortColumn = {
         get: jest.fn(),
@@ -173,6 +175,24 @@ test('Pass the ids to be disabled to the adapter', () => {
     const datagrid = shallow(<Datagrid adapters={['test']} disabledIds={disabledIds} store={datagridStore} />);
 
     expect(datagrid.find('TestAdapter').prop('disabledIds')).toBe(disabledIds);
+});
+
+test('Call activate on store if item is activated', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
+
+    datagrid.find('TestAdapter').prop('onItemActivation')(5);
+
+    expect(datagridStore.activate).toBeCalledWith(5);
+});
+
+test('Call deactivate on store if item is deactivated', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
+
+    datagrid.find('TestAdapter').prop('onItemDeactivation')(5);
+
+    expect(datagridStore.deactivate).toBeCalledWith(5);
 });
 
 test('Pass sortColumn and sortOrder to adapter', () => {
