@@ -429,29 +429,29 @@ test('Select the entire page', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
-    datagridStore.structureStrategy.data = [{id: 1}, {id: 2}, {id: 3}];
+    datagridStore.structureStrategy.visibleData = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [
         {id: 1},
         {id: 7},
     ];
-    datagridStore.selectEntirePage();
+    datagridStore.selectVisibleItems();
     expect(toJS(datagridStore.selectionIds)).toEqual([1, 7, 2, 3]);
     datagridStore.destroy();
 });
 
-test('Deselect the entire page', () => {
+test('Deselect all visible items', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {
         page,
     });
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
-    datagridStore.structureStrategy.data = [{id: 1}, {id: 2}, {id: 3}];
+    datagridStore.structureStrategy.visibleData = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [
         {id: 1},
         {id: 2},
         {id: 7},
     ];
-    datagridStore.deselectEntirePage();
+    datagridStore.deselectVisibleItems();
     expect(toJS(datagridStore.selectionIds)).toEqual([7]);
     datagridStore.destroy();
 });

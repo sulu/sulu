@@ -46,8 +46,8 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.findById = jest.fn();
     this.select = jest.fn();
     this.deselect = jest.fn();
-    this.selectEntirePage = jest.fn();
-    this.deselectEntirePage = jest.fn();
+    this.selectVisibleItems = jest.fn();
+    this.deselectVisibleItems = jest.fn();
     this.updateLoadingStrategy = jest.fn();
     this.structureStrategy = {
         data: mockStructureStrategyData,
@@ -88,6 +88,7 @@ class LoadingStrategy {
 
 class StructureStrategy {
     data: Array<Object>;
+    visibleData: Array<Object>;
 
     clear = jest.fn();
     getData = jest.fn();
@@ -236,7 +237,7 @@ test('Selecting and deselecting items should update store', () => {
     expect(datagridStore.deselect).toBeCalledWith({id: 1});
 });
 
-test('Selecting and unselecting all items on current page should update store', () => {
+test('Selecting and unselecting all visible items should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     mockStructureStrategyData = [
@@ -250,9 +251,9 @@ test('Selecting and unselecting all items on current page should update store', 
     // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
     headerCheckbox.getDOMNode().checked = true;
     headerCheckbox.simulate('change', {currentTarget: {checked: true}});
-    expect(datagridStore.selectEntirePage).toBeCalledWith();
+    expect(datagridStore.selectVisibleItems).toBeCalledWith();
     headerCheckbox.simulate('change', {currentTarget: {checked: false}});
-    expect(datagridStore.deselectEntirePage).toBeCalledWith();
+    expect(datagridStore.deselectVisibleItems).toBeCalledWith();
 });
 
 test('Clicking a header cell should sort the table', () => {
@@ -335,6 +336,7 @@ test('DatagridStore should be updated with current active element', () => {
 
         static StructureStrategy = class {
             data = [];
+            visibleData = [];
             clear = jest.fn();
             getData = jest.fn();
             findById = jest.fn();
@@ -360,5 +362,5 @@ test('DatagridStore should be updated with current active element', () => {
     expect(datagridStore.active).toBe(undefined);
     mount(<Datagrid adapters={['test']} store={datagridStore} />);
 
-    expect(datagridStore.setActive).toBeCalledWith('some-uuid');
+    expect(datagridStore.activate).toBeCalledWith('some-uuid');
 });

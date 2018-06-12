@@ -104,7 +104,7 @@ export default class Datagrid extends React.Component<Props> {
 
     handleAllSelectionChange = (selected?: boolean) => {
         const {store} = this.props;
-        selected ? store.selectEntirePage() : store.deselectEntirePage();
+        selected ? store.selectVisibleItems() : store.deselectVisibleItems();
     };
 
     handleAdapterChange = (adapter: string) => {

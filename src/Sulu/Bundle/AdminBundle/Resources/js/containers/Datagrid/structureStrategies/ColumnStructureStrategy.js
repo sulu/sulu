@@ -5,6 +5,10 @@ import type {StructureStrategyInterface} from '../types';
 export default class ColumnStructureStrategy implements StructureStrategyInterface {
     @observable rawData: Map<?string | number, Array<Object>> = new Map();
 
+    @computed get visibleData(): Array<Object> {
+        return this.data.reduce((data, items) => data.concat(...items), []);
+    }
+
     @computed get activeItems(): Array<?string | number> {
         return Array.from(this.rawData.keys());
     }

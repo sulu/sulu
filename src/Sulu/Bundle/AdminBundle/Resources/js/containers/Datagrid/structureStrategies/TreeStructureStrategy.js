@@ -13,12 +13,26 @@ function mapVisibleData(item: TreeItem, expandedItems) {
     return clonedItem;
 }
 
+function flattenData(items: Array<TreeItem>, data: Array<Object> = []) {
+    data.push(...items.map((item) => item.data));
+
+    for (const item of items) {
+        flattenData(item.children, data);
+    }
+
+    return data;
+}
+
 export default class TreeStructureStrategy implements StructureStrategyInterface {
     @observable rawData: Array<TreeItem> = [];
     @observable expandedItems: Array<?string | number> = [];
 
     @computed get data(): Array<TreeItem> {
         return this.rawData.map((item) => mapVisibleData(item, this.expandedItems));
+    }
+
+    @computed get visibleData(): Array<Object> {
+        return flattenData(this.data);
     }
 
     findChildrenForParentId(tree: Array<TreeItem>, parent: ?string | number): ?Array<TreeItem> {

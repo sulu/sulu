@@ -1,9 +1,13 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import type {StructureStrategyInterface} from '../types';
 
 export default class FlatStructureStrategy implements StructureStrategyInterface {
     @observable data: Array<Object>;
+
+    @computed get visibleData() {
+        return this.data;
+    }
 
     constructor() {
         this.data = [];

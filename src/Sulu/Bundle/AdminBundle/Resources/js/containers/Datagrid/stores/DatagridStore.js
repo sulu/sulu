@@ -92,6 +92,10 @@ export default class DatagridStore {
         return this.structureStrategy.data;
     }
 
+    @computed get visibleData(): Array<*> {
+        return this.structureStrategy.visibleData;
+    }
+
     @computed get activeItems(): ?Array<*> {
         return this.structureStrategy.activeItems;
     }
@@ -253,8 +257,8 @@ export default class DatagridStore {
         this.selections.push(row);
     }
 
-    @action selectEntirePage() {
-        this.data.forEach((item) => {
+    @action selectVisibleItems() {
+        this.visibleData.forEach((item) => {
             this.select(item);
         });
     }
@@ -269,8 +273,8 @@ export default class DatagridStore {
         this.selections.splice(index, 1);
     }
 
-    @action deselectEntirePage() {
-        this.data.forEach((item) => {
+    @action deselectVisibleItems() {
+        this.visibleData.forEach((item) => {
             this.deselect(item);
         });
     }

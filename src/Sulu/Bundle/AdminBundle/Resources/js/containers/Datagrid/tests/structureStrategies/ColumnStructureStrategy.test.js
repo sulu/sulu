@@ -21,6 +21,19 @@ test('Should return the data in a column format', () => {
         [{id: 3}],
     ]);
 });
+test('Should return the visible data', () => {
+    const columnStructureStrategy = new ColumnStructureStrategy();
+    columnStructureStrategy.rawData.set(undefined, [{id: 1}]);
+    columnStructureStrategy.rawData.set(1, [{id: 2}, {id: 3}]);
+    columnStructureStrategy.rawData.set(2, [{id: 4}]);
+
+    expect(columnStructureStrategy.visibleData).toEqual([
+        {id: 1},
+        {id: 2},
+        {id: 3},
+        {id: 4},
+    ]);
+});
 
 test('Should return a new array for a given parent in getData and keep previous columns', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();

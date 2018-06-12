@@ -194,6 +194,99 @@ test('Should not add the same item twice as expanded', () => {
     expect(treeStructureStrategy.expandedItems).toEqual([1]);
 });
 
+test('Should return the visible data as flat list', () => {
+    const treeStructureStrategy = new TreeStructureStrategy();
+
+    const test1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+            hasChildren: false,
+        },
+        children: [],
+    };
+    const test21 = {
+        data: {
+            id: 4,
+            title: 'Test2.1',
+            hasChildren: false,
+        },
+        children: [],
+    };
+    const test22 = {
+        data: {
+            id: 5,
+            title: 'Test2.2',
+            hasChildren: false,
+        },
+        children: [],
+    };
+    const test2 = {
+        data: {
+            id: 3,
+            title: 'Test2',
+            hasChildren: true,
+        },
+        children: [
+            test21,
+            test22,
+        ],
+    };
+    const test31 = {
+        data: {
+            id: 7,
+            title: 'Test3.1',
+            hasChildren: false,
+        },
+        children: [],
+    };
+    const test32 = {
+        data: {
+            id: 8,
+            title: 'Test3.2',
+            hasChildren: false,
+        },
+        children: [],
+    };
+    const test3 = {
+        data: {
+            id: 6,
+            title: 'Test3',
+            hasChildren: true,
+        },
+        children: [
+            test31,
+            test32,
+        ],
+    };
+
+    const data = [
+        {
+            data: {
+                id: 1,
+                title: 'Homepage',
+                hasChildren: true,
+            },
+            children: [
+                test1,
+                test2,
+                test3,
+            ],
+        },
+    ];
+
+    treeStructureStrategy.rawData = data;
+    treeStructureStrategy.activate(1);
+    treeStructureStrategy.activate(3);
+    expect(treeStructureStrategy.visibleData).toHaveLength(6);
+    expect(treeStructureStrategy.visibleData[0].title).toEqual('Homepage');
+    expect(treeStructureStrategy.visibleData[1].title).toEqual('Test1');
+    expect(treeStructureStrategy.visibleData[2].title).toEqual('Test2');
+    expect(treeStructureStrategy.visibleData[3].title).toEqual('Test3');
+    expect(treeStructureStrategy.visibleData[4].title).toEqual('Test2.1');
+    expect(treeStructureStrategy.visibleData[5].title).toEqual('Test2.2');
+});
+
 test('Should return the correct child array on a getData call', () => {
     const treeStructureStrategy = new TreeStructureStrategy();
 
