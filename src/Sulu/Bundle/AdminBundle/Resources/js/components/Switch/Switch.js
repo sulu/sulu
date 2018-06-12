@@ -49,7 +49,7 @@ export default class Switch extends React.PureComponent<Props> {
         );
 
         return (
-            <label className={switchStyles.label}>
+            <label className={switchStyles.label} onClick={this.handleClick}>
                 <span className={switchClass}>
                     <input
                         type={type}
@@ -58,7 +58,6 @@ export default class Switch extends React.PureComponent<Props> {
                         checked={checked}
                         disabled={!active}
                         onChange={this.handleChange}
-                        onClick={this.handleClick}
                     />
                     <span>
                         {icon &&

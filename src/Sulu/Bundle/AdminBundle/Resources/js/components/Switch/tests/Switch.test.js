@@ -60,6 +60,6 @@ test('A click on the checkbox should stop the further propagation of the DOM eve
     const stopPropagationSpy = jest.fn();
     const component = shallow(<Switch />);
 
-    component.find('input').simulate('click', {stopPropagation: stopPropagationSpy});
+    component.find('label').simulate('click', {stopPropagation: stopPropagationSpy});
     expect(stopPropagationSpy).toBeCalledWith();
 });
