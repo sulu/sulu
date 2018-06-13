@@ -158,6 +158,9 @@ The `setCurrentPosition` function was removed from the contact entity as this po
 
 Follow upgrade path of following libraries:
 
+ - **Symfony 3.4**
+   - https://symfony.com/doc/3.4/setup/upgrade_major.html
+   - https://symfony.com/doc/current/setup/upgrade_minor.html
  - **FOSRestBundle**:
    - https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING-2.0.md
    - https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING-2.1.md
