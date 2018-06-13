@@ -10,24 +10,48 @@ import metadataStore from './MetadataStore';
 
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE = 'template';
+const SECTION_TYPE = 'section';
 
 const ajv = new Ajv({allErrors: true, jsonPointers: true});
 
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
 
-    if (type !== 'section') {
+    if (type !== SECTION_TYPE) {
         data[key] = undefined;
     }
 
     const items = schema[key].items;
 
-    if (type === 'section' && items) {
+    if (type === SECTION_TYPE && items) {
         Object.keys(items)
             .reduce((object, childKey) => addSchemaProperties(data, childKey, items), data);
     }
 
     return data;
+}
+
+function collectTagValues(
+    tagName: string,
+    data: Object,
+    schema: Schema
+) {
+    const values = [];
+    for (const key in schema) {
+        const {items, tags, type, types} = schema[key];
+
+        if (type === SECTION_TYPE && items) {
+            values.push(...collectTagValues(tagName, data, items));
+        } else if (types) {
+            for (const childData of data[key]) {
+                values.push(...collectTagValues(tagName, childData, types[childData.type].form));
+            }
+        } else if (tags && tags.some((tag) => tag.name === tagName)) {
+            values.push(data[key]);
+        }
+    }
+
+    return values;
 }
 
 export default class FormStore {
@@ -199,5 +223,15 @@ export default class FormStore {
                 'The resource "' + this.resourceStore.resourceKey + '" handled by this FormStore cannot handle types'
             );
         }
+    }
+
+    getValueByPath(path: string): mixed {
+        return jsonpointer.get(this.data, path);
+    }
+
+    getValuesByTag(tagName: string): Array<mixed> {
+        const {data, schema} = this;
+
+        return collectTagValues(tagName, data, schema);
     }
 }

@@ -1,6 +1,6 @@
 // @flow
+import {computed} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
-import pointer from 'jsonpointer';
 import FormStore from './stores/FormStore';
 
 export default class FormInspector {
@@ -10,19 +10,23 @@ export default class FormInspector {
         this.formStore = formStore;
     }
 
-    get resourceKey(): string {
+    @computed get resourceKey(): string {
         return this.formStore.resourceKey;
     }
 
-    get locale(): ?IObservableValue<string> {
+    @computed get locale(): ?IObservableValue<string> {
         return this.formStore.locale;
     }
 
-    get id(): ?string | number {
+    @computed get id(): ?string | number {
         return this.formStore.id;
     }
 
     getValueByPath(path: string): mixed {
-        return pointer.get(this.formStore.data, path);
+        return this.formStore.getValueByPath(path);
+    }
+
+    getValuesByTag(tagName: string): Array<mixed> {
+        return this.formStore.getValuesByTag(tagName);
     }
 }

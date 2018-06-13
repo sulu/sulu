@@ -482,3 +482,139 @@ test('Destroying the store should not fail if no disposers are available', () =>
 
     formStore.destroy();
 });
+
+test('Should return value for property path', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {test: 'value'};
+
+    const formStore = new FormStore(resourceStore);
+
+    expect(formStore.getValueByPath('/test')).toEqual('value');
+});
+
+test('Return all the values for a given tag', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {
+        title: 'Value 1',
+        description: 'Value 2',
+        flag: true,
+    };
+
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        title: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_line',
+        },
+        description: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_area',
+        },
+        flag: {
+            type: 'checkbox',
+        },
+    };
+
+    expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Value 2']);
+});
+
+test('Return all the values for a given tag within sections', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {
+        title: 'Value 1',
+        description: 'Value 2',
+        flag: true,
+        article: 'Value 3',
+    };
+
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        highlight: {
+            items: {
+                title: {
+                    tags: [
+                        {name: 'sulu.resource_locator_part'},
+                    ],
+                    type: 'text_line',
+                },
+                description: {
+                    tags: [
+                        {name: 'sulu.resource_locator_part'},
+                    ],
+                    type: 'text_area',
+                },
+                flag: {
+                    type: 'checkbox',
+                },
+            },
+            type: 'section',
+        },
+        article: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_area',
+        },
+    };
+
+    expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Value 2', 'Value 3']);
+});
+
+test('Return all the values for a given tag within blocks', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {
+        title: 'Value 1',
+        description: 'Value 2',
+        block: [
+            {type: 'default', text: 'Block 1', description: 'Block Description 1'},
+            {type: 'default', text: 'Block 2', description: 'Block Description 2'},
+            {type: 'other', text: 'Block 3', description: 'Block Description 2'},
+        ],
+    };
+
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        title: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_line',
+        },
+        description: {
+            type: 'text_area',
+        },
+        block: {
+            type: 'block',
+            types: {
+                default: {
+                    form: {
+                        text: {
+                            tags: [
+                                {name: 'sulu.resource_locator_part'},
+                            ],
+                            type: 'text_line',
+                        },
+                        description: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Default',
+                },
+                other: {
+                    form: {
+                        text: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Other',
+                },
+            },
+        },
+    };
+
+    expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Block 1', 'Block 2']);
+});
