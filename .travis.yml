@@ -7,6 +7,9 @@ cache:
     - $HOME/.composer/cache
     - downloads
 
+git:
+  depth: 1
+
 env:
   global:
     - JACKRABBIT_VERSION=2.12.0
