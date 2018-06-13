@@ -3,6 +3,9 @@ build: false
 platform:
   - x64
 
+clone_depth: 1
+shallow_clone: true
+
 environment:
   matrix:
     # see http://windows.php.net/downloads/releases/ for available versions
