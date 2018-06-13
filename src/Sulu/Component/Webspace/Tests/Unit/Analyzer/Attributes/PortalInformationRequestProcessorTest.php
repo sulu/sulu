@@ -176,6 +176,33 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/test', $attributes->getAttribute('resourceLocatorPrefix'));
     }
 
+    public function testProcessWithPhpFormat()
+    {
+        $portalInformation = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            null,
+            null,
+            null,
+            'sulu.lo:8000/test.php'
+        );
+
+        $request = new Request(
+            [],
+            [],
+            [],
+            [],
+            [],
+            ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => '/test.php']
+        );
+
+        $this->portalInformationRequestProcessor->process(
+            $request,
+            new RequestAttributes(['portalInformation' => $portalInformation])
+        );
+
+        $this->assertEquals('html', $request->getRequestFormat('default'));
+    }
+
     public function testValidate()
     {
         $this->assertTrue($this->portalInformationRequestProcessor->validate(new RequestAttributes()));

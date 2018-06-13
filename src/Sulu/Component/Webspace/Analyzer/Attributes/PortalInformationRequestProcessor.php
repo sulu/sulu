@@ -114,6 +114,10 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
             strlen($portalInformation->getUrl())
         );
 
+        if ('php' === $formatResult) {
+            $formatResult = 'html';
+        }
+
         return [$resourceLocator, $formatResult];
     }
 }
