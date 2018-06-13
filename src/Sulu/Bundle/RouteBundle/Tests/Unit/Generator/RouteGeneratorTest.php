@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\RouteBundle\Generator\RouteGenerator;
 use Sulu\Bundle\RouteBundle\Generator\TokenProviderInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
-use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
+use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
 class RouteGeneratorTest extends TestCase
 {

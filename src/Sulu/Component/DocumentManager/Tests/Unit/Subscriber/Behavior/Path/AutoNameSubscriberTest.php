@@ -24,7 +24,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\NameResolver;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AutoNameSubscriber;
-use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
+use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
 class AutoNameSubscriberTest extends TestCase
 {
