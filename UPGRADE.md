@@ -135,6 +135,11 @@ Removed following services:
 * `sulu_contact.account_repository` (use `sulu.repository.account`)
 * `sulu_contact.contact_repository` (use `sulu.repository.contact`)
 
+Removed following parameters:
+
+* `sulu_contact.contact.entity` (use `sulu.model.contact.class`)
+* `sulu_contact.account.entity` (use `sulu.model.account.class`)
+
 Renamed following Methods:
 
 * Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface::count => Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface::countCollections
