@@ -4,6 +4,7 @@ import {mount, render, shallow} from 'enzyme';
 import Form from '../Form';
 import ResourceStore from '../../../stores/ResourceStore';
 import FormStore from '../stores/FormStore';
+import handlerRegistry from '../registries/HandlerRegistry';
 import metadataStore from '../stores/MetadataStore';
 
 jest.mock('../registries/FieldRegistry', () => ({
@@ -14,6 +15,10 @@ jest.mock('../registries/FieldRegistry', () => ({
         }
     }),
     getOptions: jest.fn().mockReturnValue({}),
+}));
+
+jest.mock('../registries/HandlerRegistry', () => ({
+    getFinishFieldHandlers: jest.fn().mockReturnValue([]),
 }));
 
 jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
@@ -64,6 +69,20 @@ test('Should validate form when a field has finished being edited', () => {
     form.find('Renderer').prop('onFieldFinish')();
 
     expect(store.validate).toBeCalledWith();
+});
+
+test('Should call all finish handlers when a field has finished being edited', () => {
+    const handler1 = jest.fn();
+    const handler2 = jest.fn();
+    handlerRegistry.getFinishFieldHandlers.mockReturnValue([handler1, handler2]);
+
+    const store = new FormStore(new ResourceStore('snippet', '1'));
+    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
+
+    form.find('Renderer').prop('onFieldFinish')();
+
+    expect(handler1).toBeCalledWith(store);
+    expect(handler2).toBeCalledWith(store);
 });
 
 test('Should pass formInspector, schema, data and showAllErrors flag to Renderer', () => {

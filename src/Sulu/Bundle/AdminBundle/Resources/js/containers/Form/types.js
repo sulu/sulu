@@ -1,5 +1,6 @@
 // @flow
 import type {Size} from '../../components/Grid';
+import FormStore from './stores/FormStore';
 
 export type SchemaType = {
     key: string,
@@ -35,3 +36,5 @@ export type SchemaEntry = {
 export type Schema = {
     [string]: SchemaEntry,
 };
+
+export type FinishFieldHandler = (formStore: FormStore) => void;

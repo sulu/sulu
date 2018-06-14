@@ -2,6 +2,7 @@
 import Form from './Form';
 import FormInspector from './FormInspector';
 import fieldRegistry from './registries/FieldRegistry';
+import handlerRegistry from './registries/HandlerRegistry';
 import FormStore from './stores/FormStore';
 import Assignment from './fields/Assignment';
 import SingleSelection from './fields/SingleSelection';
@@ -22,6 +23,7 @@ import type {Schema, Types} from './types';
 
 export {
     fieldRegistry,
+    handlerRegistry,
     Assignment,
     Checkbox,
     ColorPicker,

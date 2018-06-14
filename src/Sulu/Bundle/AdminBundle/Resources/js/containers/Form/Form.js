@@ -5,6 +5,7 @@ import React from 'react';
 import Loader from '../../components/Loader';
 import Renderer from './Renderer';
 import FormStore from './stores/FormStore';
+import handlerRegistry from './registries/HandlerRegistry';
 import FormInspector from './FormInspector';
 
 type Props = {
@@ -31,7 +32,10 @@ export default class Form extends React.Component<Props> {
     };
 
     handleFieldFinish = () => {
-        this.props.store.validate();
+        const {store} = this.props;
+
+        handlerRegistry.getFinishFieldHandlers().forEach((finishFieldHandler) => finishFieldHandler(store));
+        store.validate();
     };
 
     render() {
