@@ -31,27 +31,36 @@ function addSchemaProperties(data: Object, key: string, schema: Schema) {
     return data;
 }
 
-function collectTagValues(
+function collectTagPaths(
     tagName: string,
     data: Object,
-    schema: Schema
+    schema: Schema,
+    parentPath: Array<string> = ['']
 ) {
-    const values = [];
+    const paths = [];
     for (const key in schema) {
         const {items, tags, type, types} = schema[key];
 
         if (type === SECTION_TYPE && items) {
-            values.push(...collectTagValues(tagName, data, items));
+            paths.push(...collectTagPaths(tagName, data, items, parentPath));
         } else if (types) {
-            for (const childData of data[key]) {
-                values.push(...collectTagValues(tagName, childData, types[childData.type].form));
+            for (const childKey in data[key]) {
+                const childData = data[key][childKey];
+                paths.push(
+                    ...collectTagPaths(
+                        tagName,
+                        childData,
+                        types[childData.type].form,
+                        parentPath.concat([key, childKey])
+                    )
+                );
             }
         } else if (tags && tags.some((tag) => tag.name === tagName)) {
-            values.push(data[key]);
+            paths.push(parentPath.concat([key]).join('/'));
         }
     }
 
-    return values;
+    return paths;
 }
 
 export default class FormStore {
@@ -225,13 +234,13 @@ export default class FormStore {
         }
     }
 
-    getValueByPath(path: string): mixed {
+    getValueByPath = (path: string): mixed => {
         return jsonpointer.get(this.data, path);
-    }
+    };
 
     getValuesByTag(tagName: string): Array<mixed> {
         const {data, schema} = this;
 
-        return collectTagValues(tagName, data, schema);
+        return collectTagPaths(tagName, data, schema).map(this.getValueByPath);
     }
 }

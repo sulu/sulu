@@ -51,6 +51,7 @@ test('Should return the id from the FormStore', () => {
 test('Should return the value for a path by using the FormStore', () => {
     const data = [];
     const formStore = new FormStore(new ResourceStore('test', 3));
+    // $FlowFixMe
     formStore.getValueByPath.mockReturnValue(data);
     const formInspector = new FormInspector(formStore);
 
