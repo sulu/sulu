@@ -564,9 +564,51 @@ test('Return all the values for a given tag within sections', () => {
     expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Value 2', 'Value 3']);
 });
 
+test('Return all the values for a given tag with empty blocks', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = observable({
+        title: 'Value 1',
+        description: 'Value 2',
+    });
+
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        title: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_line',
+        },
+        description: {
+            type: 'text_area',
+        },
+        block: {
+            type: 'block',
+            types: {
+                default: {
+                    form: {
+                        text: {
+                            tags: [
+                                {name: 'sulu.resource_locator_part'},
+                            ],
+                            type: 'text_line',
+                        },
+                        description: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Default',
+                },
+            },
+        },
+    };
+
+    expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1']);
+});
+
 test('Return all the values for a given tag within blocks', () => {
     const resourceStore = new ResourceStore('test', 3);
-    resourceStore.data = {
+    resourceStore.data = observable({
         title: 'Value 1',
         description: 'Value 2',
         block: [
@@ -574,7 +616,7 @@ test('Return all the values for a given tag within blocks', () => {
             {type: 'default', text: 'Block 2', description: 'Block Description 2'},
             {type: 'other', text: 'Block 3', description: 'Block Description 2'},
         ],
-    };
+    });
 
     const formStore = new FormStore(resourceStore);
     formStore.schema = {

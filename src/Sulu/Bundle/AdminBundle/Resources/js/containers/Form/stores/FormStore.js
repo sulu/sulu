@@ -43,8 +43,8 @@ function collectTagPaths(
 
         if (type === SECTION_TYPE && items) {
             paths.push(...collectTagPaths(tagName, data, items, parentPath));
-        } else if (types) {
-            for (const childKey in data[key]) {
+        } else if (types && data[key]) {
+            for (const childKey of data[key].keys()) {
                 const childData = data[key][childKey];
                 paths.push(
                     ...collectTagPaths(
