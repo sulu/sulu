@@ -375,7 +375,18 @@ test('Save the store should call the resourceStore save function', () => {
     const formStore = new FormStore(new ResourceStore('snippets', '3', {locale: observable.box()}));
 
     formStore.save();
-    expect(formStore.resourceStore.save).toBeCalled();
+    expect(formStore.resourceStore.save).toBeCalledWith({});
+    formStore.destroy();
+});
+
+test('Save the store should call the resourceStore save function with the passed options', () => {
+    const formStore = new FormStore(
+        new ResourceStore('snippets', '3', {locale: observable.box()}),
+        {option1: 'value1', option2: 'value2'}
+    );
+
+    formStore.save({option: 'value'});
+    expect(formStore.resourceStore.save).toBeCalledWith({option: 'value', option1: 'value1', option2: 'value2'});
     formStore.destroy();
 });
 

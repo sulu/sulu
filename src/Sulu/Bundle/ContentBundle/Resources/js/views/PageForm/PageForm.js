@@ -26,7 +26,13 @@ class PageForm extends React.Component<Props> {
         super(props);
 
         const {resourceStore, router} = this.props;
-        this.formStore = new FormStore(resourceStore);
+        this.formStore = new FormStore(
+            resourceStore,
+            {
+                webspace: router.attributes.webspace,
+                parent: router.attributes.parentId,
+            }
+        );
 
         if (resourceStore.locale) {
             router.bind('locale', resourceStore.locale);
@@ -58,14 +64,11 @@ class PageForm extends React.Component<Props> {
         } = router;
 
         const saveOptions = {
-            webspace: router.attributes.webspace,
             action: actionParameter,
-            parent: undefined,
         };
 
         if (editRoute) {
             resourceStore.destroy();
-            saveOptions.parent = router.attributes.parentId;
         }
 
         return this.formStore.save(saveOptions)

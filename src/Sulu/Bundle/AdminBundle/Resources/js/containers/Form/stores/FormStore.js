@@ -68,6 +68,7 @@ export default class FormStore {
     schema: Schema;
     validator: ?(data: Object) => boolean;
     @observable errors: Object;
+    options: Object;
     @observable type: string;
     @observable types: SchemaTypes = {};
     @observable schemaLoading: boolean = true;
@@ -75,8 +76,9 @@ export default class FormStore {
     schemaDisposer: ?() => void;
     typeDisposer: ?() => void;
 
-    constructor(resourceStore: ResourceStore) {
+    constructor(resourceStore: ResourceStore, options: Object = {}) {
         this.resourceStore = resourceStore;
+        this.options = options;
 
         metadataStore.getSchemaTypes(this.resourceStore.resourceKey)
             .then(this.handleSchemaTypeResponse);
@@ -191,7 +193,7 @@ export default class FormStore {
             return Promise.reject('Errors occured when trying to save the data from the FormStore');
         }
 
-        return this.resourceStore.save(options);
+        return this.resourceStore.save({...this.options, ...options});
     }
 
     set(name: string, value: mixed) {
