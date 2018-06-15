@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #4019 [Component]               Fix handling of authored date on safari
     * HOTFIX      #4017 [SnippetBundle]           Fix snippet conflict overlay
 
 * 1.6.19 (2018-05-24)
