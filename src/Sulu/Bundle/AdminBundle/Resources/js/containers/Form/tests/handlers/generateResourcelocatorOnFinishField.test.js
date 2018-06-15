@@ -74,3 +74,33 @@ test('Should request a new URL including the options from the FormStore if on an
         expect(formStore.setValueByTag).toBeCalledWith('sulu.rlp', '/test');
     });
 });
+
+test('Should not request a new URL if no parts are available', () => {
+    const formStore = new FormStore(new ResourceStore('pages', undefined, {locale: observable.box('en')}));
+    formStore.getValuesByTag.mockReturnValue([]);
+
+    const resourceLocatorPromise = Promise.resolve({
+        resourcelocator: '/test',
+    });
+    Requester.post.mockReturnValue(resourceLocatorPromise);
+
+    generateResourcelocatorOnFinishField(formStore);
+
+    expect(formStore.getValuesByTag).toBeCalledWith('sulu.rlp.part');
+    expect(Requester.post).not.toBeCalled();
+});
+
+test('Should not request a new URL if only empty parts are available', () => {
+    const formStore = new FormStore(new ResourceStore('pages', undefined, {locale: observable.box('en')}));
+    formStore.getValuesByTag.mockReturnValue([null, undefined]);
+
+    const resourceLocatorPromise = Promise.resolve({
+        resourcelocator: '/test',
+    });
+    Requester.post.mockReturnValue(resourceLocatorPromise);
+
+    generateResourcelocatorOnFinishField(formStore);
+
+    expect(formStore.getValuesByTag).toBeCalledWith('sulu.rlp.part');
+    expect(Requester.post).not.toBeCalled();
+});

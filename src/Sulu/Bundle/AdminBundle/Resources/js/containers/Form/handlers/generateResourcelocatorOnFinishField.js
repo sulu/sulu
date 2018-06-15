@@ -7,12 +7,18 @@ const generateResourcelocatorOnFinishField: FinishFieldHandler = function (formS
         return;
     }
 
+    const parts = formStore.getValuesByTag('sulu.rlp.part').filter((part) => part !== null && part !== undefined);
+
+    if (parts.length === 0) {
+        return;
+    }
+
     Requester.post(
         // TODO get URL from somewhere instead of hardcoding
         '/admin/api/resourcelocators?action=generate',
         {
+            parts,
             locale: formStore.locale,
-            parts: formStore.getValuesByTag('sulu.rlp.part'),
             ...formStore.options,
         }
     ).then((response) => {
