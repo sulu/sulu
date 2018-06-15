@@ -19,10 +19,12 @@ import ResourceLocator from './fields/ResourceLocator';
 import Renderer from './Renderer';
 import TextArea from './fields/TextArea';
 import Time from './fields/Time';
+import generateResourcelocatorOnFinishField from './handlers/generateResourcelocatorOnFinishField';
 import type {Schema, Types} from './types';
 
 export {
     fieldRegistry,
+    generateResourcelocatorOnFinishField,
     handlerRegistry,
     Assignment,
     Checkbox,

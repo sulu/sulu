@@ -671,3 +671,70 @@ test('Return all the values for a given tag within blocks', () => {
 
     expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Block 1', 'Block 2']);
 });
+
+test('Set value for fields with the given tag', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {
+        title: 'Value 1',
+        url1: 'Value 2',
+        block: [
+            {type: 'default', url: 'old'},
+            {type: 'default'},
+            {type: 'other', url: 'old'},
+        ],
+    };
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        title: {
+            type: 'text_line',
+        },
+        url1: {
+            type: 'resource_locator',
+            tags: [
+                {name: 'sulu.resource_locator'},
+            ],
+        },
+        url2: {
+            type: 'resource_locator',
+            tags: [
+                {name: 'sulu.resource_locator'},
+            ],
+        },
+        block: {
+            type: 'block',
+            types: {
+                default: {
+                    form: {
+                        url: {
+                            type: 'resource_locator',
+                            tags: [
+                                {name: 'sulu.resource_locator'},
+                            ],
+                        },
+                    },
+                    title: 'Default',
+                },
+                other: {
+                    form: {
+                        url: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Other',
+                },
+            },
+        },
+    };
+
+    formStore.setValueByTag('sulu.resource_locator', 'new');
+    expect(resourceStore.data).toEqual({
+        title: 'Value 1',
+        url1: 'new',
+        url2: 'new',
+        block: [
+            {type: 'default', url: 'new'},
+            {type: 'default', url: 'new'},
+            {type: 'other', url: 'old'},
+        ],
+    });
+});

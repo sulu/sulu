@@ -245,4 +245,12 @@ export default class FormStore {
 
         return collectTagPaths(tagName, data, schema).map(this.getValueByPath);
     }
+
+    @action setValueByTag(tagName: string, value: mixed) {
+        const {data, schema} = this;
+
+        collectTagPaths(tagName, data, schema).forEach((path) => {
+            jsonpointer.set(data, path, value);
+        });
+    }
 }
