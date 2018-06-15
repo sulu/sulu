@@ -32,6 +32,8 @@ class NodeResourcelocatorController extends RestController implements ClassResou
      *
      * @throws MissingArgumentException
      *
+     * @deprecated since 2.0, use ResourcelocatorController::postAction instead
+     *
      * @return Response
      */
     public function postGenerateAction(Request $request)

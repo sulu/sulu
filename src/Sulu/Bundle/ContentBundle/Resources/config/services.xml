@@ -85,6 +85,14 @@
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
         </service>
+        <service
+            id="sulu_content.resource_locator_controller"
+            class="Sulu\Bundle\ContentBundle\Controller\ResourcelocatorController"
+        >
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
+            <argument type="service" id="fos_rest.view_handler"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
 
         <!-- structure extension -->
         <service id="sulu_content.extension.seo" class="%sulu_content.extension.seo.class%">
