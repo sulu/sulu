@@ -84,8 +84,9 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
             this.bindCustomEvents();
 
             var authored = this.options.data.authored ? this.options.data.authored : null;
+
             var authoredTime = authored
-                ? Globalize.format(new Date(authored), Globalize.culture().calendar.patterns.t)
+                ? Globalize.format(app.sandbox.date.parse(authored), Globalize.culture().calendar.patterns.t)
                 : null;
 
             this.html($(this.templates.skeleton({
@@ -151,8 +152,12 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
         bindCustomEvents: function() {
             this.sandbox.once('sulu.content.contents.get-author', function() {
                 var data = this.form.mapper.getData();
+
                 this.data.authored = Globalize.format(
-                    new Date(data.authored + (data.authoredTime ? ' '+ data.authoredTime : '')),
+                    Globalize.parseDate(
+                        data.authored + ' ' + (data.authoredTime ? data.authoredTime : '00:00:00'),
+                        'yyyy-MM-dd HH:mm:ss'
+                    ),
                     "yyyy'-'MM'-'dd'T'HH':'mm':'sszz'00'"
                 );
                 this.sandbox.emit('husky.datagrid.' + constants.instanceName + '.items.get-selected', function(ids, items) {
