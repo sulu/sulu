@@ -17,12 +17,18 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
         return Array.from(this.rawData.values());
     }
 
-    @action getData(parent: ?string | number) {
-        const parents = this.activeItems;
-        const parentIndex = this.data.findIndex((column) => column.findIndex((item) => item.id === parent) !== -1);
-        parents.filter((parent, index) => index > parentIndex).forEach((parent) => this.rawData.delete(parent));
-        this.rawData.set(parent, []);
+    constructor() {
+        this.rawData.set(undefined, []);
+    }
 
+    activate(id: ?string | number) {
+        const parents = this.activeItems;
+        const parentIndex = this.data.findIndex((column) => column.findIndex((item) => item.id === id) !== -1);
+        parents.filter((parent, index) => index > parentIndex).forEach((parent) => this.rawData.delete(parent));
+        this.rawData.set(id, []);
+    }
+
+    @action getData(parent: ?string | number) {
         return this.rawData.get(parent);
     }
 
