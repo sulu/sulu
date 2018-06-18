@@ -19,17 +19,11 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
     @observable expandedRows: Array<string | number> = [];
 
     @action handleRowCollapse = (rowId: string | number) => {
-        const {onItemDeactivation} = this.props;
-        if (onItemDeactivation) {
-            onItemDeactivation(rowId);
-        }
+        this.props.onItemDeactivation(rowId);
     };
 
     @action handleRowExpand = (rowId: string | number) => {
-        const {onItemActivation} = this.props;
-        if (onItemActivation) {
-            onItemActivation(rowId);
-        }
+        this.props.onItemActivation(rowId);
     };
 
     renderRows(items: Array<*>, depth: number = 0) {
