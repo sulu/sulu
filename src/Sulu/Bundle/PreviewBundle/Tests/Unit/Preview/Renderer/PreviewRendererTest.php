@@ -481,4 +481,69 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
     }
+
+    public function testRenderRequestWithServerAttributes()
+    {
+        $object = $this->prophesize(\stdClass::class);
+
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $webspace = $this->prophesize(Webspace::class);
+        $localization = new Localization('de');
+        $webspace->getLocalization('de')->willReturn($localization);
+        $portalInformation->getWebspace()->willReturn($webspace->reveal());
+        $portalInformation->getPortal()->willReturn($this->prophesize(Portal::class)->reveal());
+        $portalInformation->getUrl()->willReturn('sulu.lo');
+        $portalInformation->getPrefix()->willReturn('/de');
+
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+            ->willReturn([$portalInformation->reveal()]);
+
+        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+
+        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+            ->shouldBeCalled();
+
+        $server = [
+            'SERVER_NAME' => 'sulu-preview-test.io',
+            'HOST_NAME' => 'sulu-preview-test.io',
+            'SERVER_PORT' => 8080,
+            'X-Forwarded-Host' => 'forwarded.sulu.io',
+            'X-Forwarded-Proto' => 'https',
+            'X-Forwarded-Port' => 8081,
+            'HTTP_USER_AGENT' => 'Sulu/Preview',
+            'HTTP_ACCEPT_LANGUAGE' => 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7',
+        ];
+
+        $this->httpKernel->handle(
+            Argument::that(
+                function (Request $request) use ($server) {
+                    foreach ($server as $key => $expectedValue) {
+                        $value = $request->server->get($key);
+                        $this->assertEquals(
+                            $expectedValue,
+                            $value,
+                            sprintf(
+                                'Expected for $_SERVER["%s"]: "%s" but "%s" was given',
+                                $key,
+                                $expectedValue,
+                                $value
+                            )
+                        );
+                    }
+
+                    // Assert equals will throw exception so also true can be returned.
+                    return true;
+                }
+            ),
+            HttpKernelInterface::MASTER_REQUEST,
+            false
+        )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
+
+        $request = new Request([], [], [], [], [], $server, []);
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
+    }
 }

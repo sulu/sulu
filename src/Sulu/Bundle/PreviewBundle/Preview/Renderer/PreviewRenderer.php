@@ -168,15 +168,12 @@ class PreviewRenderer implements PreviewRendererInterface
         // get server parameters
         $server = [
             'SERVER_NAME' => null,
+            'HTTP_HOST' => null,
             'SERVER_PORT' => null,
         ];
-        if ($currentRequest) {
-            $server['SERVER_NAME'] = $currentRequest->getHost();
-            $server['SERVER_PORT'] = $currentRequest->getPort();
 
-            if ('https' === $currentRequest->getScheme()) {
-                $server['HTTPS'] = 'on';
-            }
+        if ($currentRequest) {
+            $server = $currentRequest->server->all();
         }
 
         $request = new Request($query, $request, $defaults, [], [], $server);
