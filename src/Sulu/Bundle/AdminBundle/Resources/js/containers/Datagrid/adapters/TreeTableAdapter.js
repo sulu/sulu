@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
@@ -15,8 +15,6 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
     static StructureStrategy = TreeStructureStrategy;
 
     static icon = 'su-tree-list';
-
-    @observable expandedRows: Array<string | number> = [];
 
     @action handleRowCollapse = (rowId: string | number) => {
         this.props.onItemDeactivation(rowId);

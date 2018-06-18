@@ -1,17 +1,6 @@
 // @flow
-import {action, computed, observable, toJS} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import type {StructureStrategyInterface, TreeItem} from '../types';
-
-function mapVisibleData(item: TreeItem, expandedItems) {
-    const clonedItem = toJS(item);
-    if (expandedItems.includes(clonedItem.data.id)) {
-        clonedItem.children = clonedItem.children.map((childItem) => mapVisibleData(childItem, expandedItems));
-    } else {
-        clonedItem.children.splice(0, clonedItem.children.length);
-    }
-
-    return clonedItem;
-}
 
 function flattenData(items: Array<TreeItem>, data: Array<Object> = []) {
     data.push(...items.map((item) => item.data));
@@ -24,12 +13,7 @@ function flattenData(items: Array<TreeItem>, data: Array<Object> = []) {
 }
 
 export default class TreeStructureStrategy implements StructureStrategyInterface {
-    @observable rawData: Array<TreeItem> = [];
-    @observable expandedItems: Array<?string | number> = [];
-
-    @computed get data(): Array<TreeItem> {
-        return this.rawData.map((item) => mapVisibleData(item, this.expandedItems));
-    }
+    @observable data: Array<TreeItem> = [];
 
     @computed get visibleData(): Array<Object> {
         return flattenData(this.data);
@@ -52,14 +36,14 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
 
     @action getData(parent: ?string | number) {
         if (parent === undefined) {
-            return this.rawData;
+            return this.data;
         }
 
-        return this.findChildrenForParentId(this.rawData, parent);
+        return this.findChildrenForParentId(this.data, parent);
     }
 
     findById(id: string | number): ?Object {
-        return this.findRecursive(this.rawData, id);
+        return this.findRecursive(this.data, id);
     }
 
     findRecursive(items: Array<Object>, identifier: string | number): ?Object {
@@ -76,17 +60,11 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
         }
     }
 
-    activate(id: ?string | number) {
-        if (this.expandedItems.includes(id)) {
-            return;
-        }
-
-        this.expandedItems.push(id);
-    }
-
     deactivate(id: ?string | number) {
-        const {expandedItems} = this;
-        expandedItems.splice(expandedItems.findIndex((item) => item === id), 1);
+        const data = this.getData(id);
+        if (data) {
+            data.splice(0, data.length);
+        }
     }
 
     enhanceItem(item: Object): TreeItem {
@@ -97,6 +75,6 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
     }
 
     @action clear() {
-        this.rawData.splice(0, this.rawData.length);
+        this.data.splice(0, this.data.length);
     }
 }

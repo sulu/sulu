@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should delete children when an item gets deactivated 1`] = `
+Array [
+  Object {
+    "children": Array [
+      Object {
+        "children": Array [],
+        "data": Object {
+          "hasChildren": false,
+          "id": 2,
+          "title": "Test1",
+        },
+      },
+      Object {
+        "children": Array [
+          Object {
+            "children": Array [],
+            "data": Object {
+              "hasChildren": false,
+              "id": 4,
+              "title": "Test2.1",
+            },
+          },
+          Object {
+            "children": Array [],
+            "data": Object {
+              "hasChildren": false,
+              "id": 5,
+              "title": "Test2.2",
+            },
+          },
+        ],
+        "data": Object {
+          "hasChildren": true,
+          "id": 3,
+          "title": "Test2",
+        },
+      },
+      Object {
+        "children": Array [],
+        "data": Object {
+          "hasChildren": true,
+          "id": 6,
+          "title": "Test3",
+        },
+      },
+    ],
+    "data": Object {
+      "hasChildren": true,
+      "id": 1,
+      "title": "Homepage",
+    },
+  },
+]
+`;

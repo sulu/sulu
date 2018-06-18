@@ -221,7 +221,9 @@ export default class DatagridStore {
         this.active = active;
     }
 
-    activate(id: ?string | number) {
+    @action activate(id: ?string | number) {
+        // force reload by changing the active item to undefined before actually setting it
+        this.setActive(undefined);
         this.setActive(id);
 
         if (this.structureStrategy.activate) {
@@ -229,7 +231,7 @@ export default class DatagridStore {
         }
     }
 
-    deactivate(id: ?string | number) {
+    @action deactivate(id: ?string | number) {
         if (this.structureStrategy.deactivate) {
             this.structureStrategy.deactivate(id);
         }

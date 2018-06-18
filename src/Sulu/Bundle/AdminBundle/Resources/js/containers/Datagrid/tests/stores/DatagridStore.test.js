@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import 'url-search-params-polyfill';
-import {observable, toJS, when} from 'mobx';
+import {autorun, observable, toJS, when} from 'mobx';
 import DatagridStore from '../../stores/DatagridStore';
 import metadataStore from '../../stores/MetadataStore';
 
@@ -691,6 +691,25 @@ test('Should reset page count and page when strategy changes', () => {
     expect(page.get()).toEqual(1);
     expect(datagridStore.pageCount).toEqual(0);
     datagridStore.destroy();
+});
+
+test('Should trigger a mobx autorun if activate is called with the same id', () => {
+    const page = observable.box();
+    const datagridStore = new DatagridStore('snippets', {page});
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.activate(3);
+
+    let lastActive;
+    const autorunDisposer = autorun(() => {
+        lastActive = datagridStore.active;
+    });
+    lastActive = undefined;
+    datagridStore.activate(3);
+    expect(lastActive).toBe(3);
+
+    autorunDisposer();
 });
 
 test('Should call the activate method of the structure strategy if an item gets activated', () => {
