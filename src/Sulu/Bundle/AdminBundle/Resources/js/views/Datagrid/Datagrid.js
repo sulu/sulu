@@ -199,12 +199,18 @@ export default withToolbar(Datagrid, function() {
 
             const deletePromises = [];
             this.datagridStore.selectionIds.forEach((id) => {
-                deletePromises.push(ResourceRequester.delete(resourceKey, id));
+                deletePromises.push(
+                    ResourceRequester.delete(resourceKey, id).catch((error) => {
+                        if (error.status !== 404) {
+                            return Promise.reject(error);
+                        }
+                    })
+                );
             });
 
             return Promise.all(deletePromises).then(action(() => {
                 this.datagridStore.clearSelection();
-                this.datagridStore.sendRequest();
+                this.datagridStore.reload();
                 this.deleting = false;
             }));
         }),

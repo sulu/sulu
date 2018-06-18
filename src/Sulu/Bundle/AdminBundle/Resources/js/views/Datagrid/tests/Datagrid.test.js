@@ -65,7 +65,7 @@ jest.mock(
             },
         };
         this.destroy = jest.fn();
-        this.sendRequest = jest.fn();
+        this.reload = jest.fn();
         this.clearSelection = jest.fn();
     })
 );
@@ -601,7 +601,79 @@ test('Should delete selected items when click on delete button', () => {
         expect(ResourceRequester.delete).toBeCalledWith('test', 4);
         expect(ResourceRequester.delete).toBeCalledWith('test', 6);
         expect(datagridStore.clearSelection).toBeCalled();
-        expect(datagridStore.sendRequest).toBeCalled();
+        expect(datagridStore.reload).toBeCalled();
         expect(getDeleteItem().loading).toBe(false);
     });
+});
+
+test('Should delete selected items without crashing if a 404 is returned', () => {
+    function getDeleteItem() {
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Delete');
+    }
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Datagrid = require('../Datagrid').default;
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+                adapters: ['table'],
+            },
+        },
+    };
+
+    ResourceRequester.delete.mockReturnValue(Promise.reject({
+        status: 404,
+    }));
+
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
+    datagridStore.selectionIds.push(1, 4, 6);
+
+    expect(getDeleteItem().loading).toBe(false);
+    const clickPromise = getDeleteItem().onClick();
+    expect(getDeleteItem().loading).toBe(true);
+
+    return clickPromise.then(() => {
+        expect(ResourceRequester.delete).toBeCalledWith('test', 1);
+        expect(ResourceRequester.delete).toBeCalledWith('test', 4);
+        expect(ResourceRequester.delete).toBeCalledWith('test', 6);
+        expect(datagridStore.clearSelection).toBeCalled();
+        expect(datagridStore.reload).toBeCalled();
+        expect(getDeleteItem().loading).toBe(false);
+    });
+});
+
+test('Should crash when deleting selected items return a different error than 404', () => {
+    function getDeleteItem() {
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Delete');
+    }
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Datagrid = require('../Datagrid').default;
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+                adapters: ['table'],
+            },
+        },
+    };
+
+    ResourceRequester.delete.mockReturnValue(Promise.reject({
+        status: 403,
+    }));
+
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
+    datagridStore.selectionIds.push(1, 4, 6);
+
+    expect(getDeleteItem().loading).toBe(false);
+    expect(getDeleteItem().onClick()).rejects.toHaveProperty('status', 403);
 });
