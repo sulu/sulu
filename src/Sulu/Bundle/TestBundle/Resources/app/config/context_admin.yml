@@ -1,6 +1,10 @@
 imports:
     - { resource: sulu.yml }
 
+sulu_admin:
+    name: SULU 2.0
+    email: installation.email@sulu.test
+
 security:
     access_decision_manager:
         strategy: affirmative
