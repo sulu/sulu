@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, isObservableArray, observable} from 'mobx';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -44,6 +44,7 @@ class Form extends React.PureComponent<Props> {
                 options: {
                     idQueryParameter,
                     resourceKey,
+                    locales,
                 },
             },
         } = router;
@@ -56,9 +57,29 @@ class Form extends React.PureComponent<Props> {
         }
 
         if (this.hasOwnResourceStore) {
+            let locale = resourceStore.locale;
+            if ((typeof locales === 'boolean' && locales === true)) {
+                locale = observable.box();
+            }
+
+            if ((Array.isArray(locales) || isObservableArray(locales)) && locales.length > 0) {
+                const parentLocale = resourceStore.locale ? resourceStore.locale.get() : undefined;
+                if (locales.includes(parentLocale)) {
+                    locale = observable.box(parentLocale);
+                } else {
+                    locale = observable.box();
+                }
+            }
+
+            if ((typeof locales === 'boolean' && locales === true)
+                || ((Array.isArray(locales) || isObservableArray(locales)) && locales.length > 0)
+            ) {
+                locale = observable.box(resourceStore.locale ? resourceStore.locale.get() : undefined);
+            }
+
             this.resourceStore = idQueryParameter
-                ? new ResourceStore(resourceKey, id, {locale: resourceStore.locale}, {}, idQueryParameter)
-                : new ResourceStore(resourceKey, id, {locale: resourceStore.locale});
+                ? new ResourceStore(resourceKey, id, {locale: locale}, {}, idQueryParameter)
+                : new ResourceStore(resourceKey, id, {locale: locale});
         } else {
             this.resourceStore = resourceStore;
         }
