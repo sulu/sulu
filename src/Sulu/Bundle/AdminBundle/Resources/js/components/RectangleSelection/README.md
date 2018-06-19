@@ -21,13 +21,9 @@ For example when rendering images, they need to be preloaded before rendering th
 // preload image
 let image = new Image();
 image.src = 'https://unsplash.it/800/500';
-if (!image.complete) {
-    image.onload = () => setState({imageLoaded: true});
-}
 initialState = {imageLoaded: image.complete, selection: {}};
-
-if (state.imageLoaded) {
-    <div>
+state.imageLoaded
+    ? <div>
         <RectangleSelection
             minWidth={115}
             minHeight={100}
@@ -42,7 +38,5 @@ if (state.imageLoaded) {
             Left: {state.selection.left}
         </p>
     </div>
-} else {
-    null
-}
+    : null
 ```
