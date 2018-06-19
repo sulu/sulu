@@ -20,7 +20,7 @@ export type Schema = {
 export type SortOrder = 'asc' | 'desc';
 
 export type DatagridAdapterProps = {
-    active?: ?string | number,
+    active: ?string | number,
     activeItems: ?Array<string | number>,
     data: Array<*>,
     disabledIds: Array<string | number>,

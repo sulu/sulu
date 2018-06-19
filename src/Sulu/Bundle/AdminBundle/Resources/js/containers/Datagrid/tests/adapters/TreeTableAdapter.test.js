@@ -67,6 +67,7 @@ test('Render data with schema', () => {
     };
     const treeListAdapter = render(
         <TreeTableAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}
@@ -107,6 +108,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
 
     const treeTableAdapter = shallow(
         <TreeTableAdapter
+            active={undefined}
             activeItems={[]}
             data={[]}
             disabledIds={[]}
@@ -178,6 +180,7 @@ test('Render data with two columns', () => {
     };
     const treeListAdapter = render(
         <TreeTableAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}
@@ -239,6 +242,7 @@ test('Render data with schema and selections', () => {
     };
     const treeListAdapter = render(
         <TreeTableAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}
@@ -323,6 +327,7 @@ test('Execute onItemActivation respectively onItemDeactivation callback when an 
 
     const treeListAdapter = mount(
         <TreeTableAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}
@@ -378,6 +383,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     };
     const treeListAdapter = render(
         <TreeTableAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}
@@ -428,6 +434,7 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
     };
     const treeListAdapter = render(
         <TreeTableAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}
@@ -478,6 +485,7 @@ test('Click on pencil should execute onItemClick callback', () => {
     };
     const treeListAdapter = shallow(
         <TreeTableAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}
@@ -532,6 +540,7 @@ test('Click on add should execute onAddClick callback', () => {
     const rowAddClickSpy = jest.fn();
     const treeListAdapter = shallow(
         <TreeTableAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}

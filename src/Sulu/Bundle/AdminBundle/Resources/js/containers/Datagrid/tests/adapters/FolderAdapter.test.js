@@ -32,6 +32,7 @@ test('Render a basic Folder list with data', () => {
 
     const folderAdapter = render(
         <FolderAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}
@@ -76,6 +77,7 @@ test('Click on a Folder should call the onItemEdit callback', () => {
     ];
     const folderAdapter = shallow(
         <FolderAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}
@@ -100,6 +102,7 @@ test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const folderAdapter = shallow(
         <FolderAdapter
+            active={undefined}
             activeItems={[]}
             disabledIds={[]}
             loading={false}

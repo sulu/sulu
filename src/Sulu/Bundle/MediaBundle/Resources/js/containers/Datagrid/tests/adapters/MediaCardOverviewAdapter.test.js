@@ -39,6 +39,7 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
     ];
     const mediaCardAdapter = render(
         <MediaCardOverviewAdapter
+            active={undefined}
             activeItems={[]}
             data={data}
             disabledIds={[]}
