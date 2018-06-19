@@ -16,6 +16,7 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
         },
         defaults = {
         options: {
+            formId: 'authored-form',
             nullableAuthor: false,
             data: {
                 authored: null,
@@ -31,7 +32,6 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
             noAuthor: 'sulu.content.form.settings.no-author'
         },
         templates: {
-            formId: '#authored-form',
             skeleton: [
                 '   <div class="grid-row form-group">',
                 '       <label for="authored"><%= translations.authored %></label>',
@@ -58,7 +58,7 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
                 '<% if (nullableAuthor) { %>',
                 '           <label for="no-author" class="m-top-5">',
                 '               <div class="custom-radio">',
-                '                   <input id="no-author" type="radio" class="form-element">',
+                '                   <input id="no-author" type="radio" name="datagrid-author-selection" class="form-element">',
                 '                   <span class="icon"></span>',
                 '               </div>',
                 '               <%= translations.noAuthor %>',
@@ -83,22 +83,24 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
             this.data = this.options.data;
             this.bindCustomEvents();
 
+            var formSelector = '#' + this.options.formId;
             var authored = this.options.data.authored ? this.options.data.authored : null;
+
             var authoredTime = authored
-                ? Globalize.format(new Date(authored), Globalize.culture().calendar.patterns.t)
+                ? Globalize.format(app.sandbox.date.parse(authored), Globalize.culture().calendar.patterns.t)
                 : null;
 
             this.html($(this.templates.skeleton({
                 translations: this.translations,
                 nullableAuthor: this.options.nullableAuthor,
                 authoredTime: authoredTime,
-                formId: this.templates.formId
+                formId: this.options.formId
             })));
 
-            this.form = this.sandbox.form.create(this.templates.formId);
+            this.form = this.sandbox.form.create(formSelector);
 
             this.initialized.then(function() {
-                this.sandbox.form.setData(this.templates.formId, {
+                this.sandbox.form.setData(formSelector, {
                     authored: authored,
                     authoredTime: authoredTime
                 }).then(function() {
@@ -151,10 +153,15 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
         bindCustomEvents: function() {
             this.sandbox.once('sulu.content.contents.get-author', function() {
                 var data = this.form.mapper.getData();
+
                 this.data.authored = Globalize.format(
-                    new Date(data.authored + (data.authoredTime ? ' '+ data.authoredTime : '')),
+                    Globalize.parseDate(
+                        data.authored + ' ' + (data.authoredTime ? data.authoredTime : '00:00:00'),
+                        'yyyy-MM-dd HH:mm:ss'
+                    ),
                     "yyyy'-'MM'-'dd'T'HH':'mm':'sszz'00'"
                 );
+
                 this.sandbox.emit('husky.datagrid.' + constants.instanceName + '.items.get-selected', function(ids, items) {
                     if (items.length > 0) {
                         this.data.author = ids[0];
