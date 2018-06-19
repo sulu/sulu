@@ -30,7 +30,6 @@ class SuluTestKernel extends SuluKernel
         $bundles = [
             // Dependencies
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
             new \Symfony\Bundle\MonologBundle\MonologBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
@@ -59,26 +58,26 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\WebsocketBundle\SuluWebsocketBundle(),
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
             new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
-            new \Sulu\Bundle\ResourceBundle\SuluResourceBundle(),
             new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
             new \Sulu\Bundle\HashBundle\SuluHashBundle(),
             new \Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),
-            new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
             new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
-            new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
         ];
 
         if (self::CONTEXT_WEBSITE === $this->getContext()) {
-            // smyfony-cmf
             $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
         }
 
         if (self::CONTEXT_ADMIN === $this->getContext()) {
-            // rest
             $bundles[] = new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle();
             $bundles[] = new \FOS\RestBundle\FOSRestBundle();
+            $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
+            $bundles[] = new \Sulu\Bundle\ResourceBundle\SuluResourceBundle();
+            $bundles[] = new \Sulu\Bundle\AdminBundle\SuluAdminBundle();
+            $bundles[] = new \Sulu\Bundle\CollaborationBundle\SuluCollaborationBundle();
+            $bundles[] = new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle();
         }
 
         return $bundles;
