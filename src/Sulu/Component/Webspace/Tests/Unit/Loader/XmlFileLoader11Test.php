@@ -341,8 +341,6 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    /**
-     */
     public function testLoadInvalid()
     {
         $this->expectExceptionMessage('Could not parse webspace XML file');
