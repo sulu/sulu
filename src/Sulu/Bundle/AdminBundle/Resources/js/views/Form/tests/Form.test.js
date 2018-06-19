@@ -141,7 +141,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
     expect(formResourceStore.locale.get()).toEqual(undefined);
 });
 
-test('Should create a new resourceStore if the passed resourceKey differs with own boolean locales', () => {
+test('Should create a new resourceStore if the passed resourceKey differs with own locales including locale', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const locale = observable.box('en');
@@ -167,7 +167,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
     expect(formResourceStore.locale.get()).toEqual('en');
 });
 
-test('Should create a new resourceStore if the passed resourceKey differs with own locales including locale', () => {
+test('Should create a new resourceStore if the passed resourceKey differs with own boolean locales', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 10, {});

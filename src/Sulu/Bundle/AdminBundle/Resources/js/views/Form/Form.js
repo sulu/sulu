@@ -71,12 +71,6 @@ class Form extends React.PureComponent<Props> {
                 }
             }
 
-            if ((typeof locales === 'boolean' && locales === true)
-                || ((Array.isArray(locales) || isObservableArray(locales)) && locales.length > 0)
-            ) {
-                locale = observable.box(resourceStore.locale ? resourceStore.locale.get() : undefined);
-            }
-
             this.resourceStore = idQueryParameter
                 ? new ResourceStore(resourceKey, id, {locale: locale}, {}, idQueryParameter)
                 : new ResourceStore(resourceKey, id, {locale: locale});
