@@ -24,7 +24,7 @@ type Props = {
      * Callback function to notify about selection and deselection of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
-    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    onRowSelectionChange?: ?(rowId: string | number, selected?: boolean) => void,
     /**
      * Callback function to notify about open of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
@@ -36,7 +36,7 @@ type Props = {
      */
     onRowCollapse?: (rowId: string | number) => void,
     /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
-    onAllSelectionChange?: (checked: boolean) => void,
+    onAllSelectionChange?: ?(checked: boolean) => void,
     /** Text shown when the table has no entries */
     placeholderText?: string,
 };

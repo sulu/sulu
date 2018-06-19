@@ -1,9 +1,13 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import type {StructureStrategyInterface} from '../types';
 
 export default class FlatStructureStrategy implements StructureStrategyInterface {
     @observable data: Array<Object>;
+
+    @computed get visibleItems() {
+        return this.data;
+    }
 
     constructor() {
         this.data = [];
@@ -15,6 +19,10 @@ export default class FlatStructureStrategy implements StructureStrategyInterface
 
     @action clear() {
         this.data.splice(0, this.data.length);
+    }
+
+    remove(identifier: string | number) {
+        this.data.splice(this.data.findIndex((item) => item.id === identifier), 1);
     }
 
     findById(identifier: string | number): ?Object {

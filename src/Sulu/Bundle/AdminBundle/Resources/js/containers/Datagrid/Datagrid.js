@@ -41,13 +41,13 @@ export default class Datagrid extends React.Component<Props> {
         this.validateAdapters();
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (!equal(this.props.adapters, nextProps.adapters)) {
+    componentDidUpdate(prevProps: Props) {
+        if (!equal(this.props.adapters, prevProps.adapters)) {
             this.validateAdapters();
         }
 
-        if (this.props.store !== nextProps.store) {
-            nextProps.store.updateStrategies(
+        if (this.props.store !== prevProps.store) {
+            this.props.store.updateStrategies(
                 new this.currentAdapter.LoadingStrategy(),
                 new this.currentAdapter.StructureStrategy()
             );
@@ -104,7 +104,7 @@ export default class Datagrid extends React.Component<Props> {
 
     handleAllSelectionChange = (selected?: boolean) => {
         const {store} = this.props;
-        selected ? store.selectEntirePage() : store.deselectEntirePage();
+        selected ? store.selectVisibleItems() : store.deselectVisibleItems();
     };
 
     handleAdapterChange = (adapter: string) => {
@@ -113,7 +113,11 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     handleItemActivation = (id: string | number) => {
-        this.props.store.setActive(id);
+        this.props.store.activate(id);
+    };
+
+    handleItemDeactivation = (id: string | number) => {
+        this.props.store.deactivate(id);
     };
 
     render() {
@@ -143,12 +147,14 @@ export default class Datagrid extends React.Component<Props> {
                 <div className={datagridStyles.datagrid}>
                     <Adapter
                         active={store.active}
+                        activeItems={store.activeItems}
                         data={store.data}
                         disabledIds={disabledIds}
                         loading={store.loading}
                         onAddClick={onAddClick}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
                         onItemActivation={this.handleItemActivation}
+                        onItemDeactivation={this.handleItemDeactivation}
                         onItemClick={onItemClick}
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
                         onPageChange={this.handlePageChange}

@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
@@ -9,80 +9,54 @@ import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
-export default class TreeListAdapter extends AbstractTableAdapter {
+export default class TreeTableAdapter extends AbstractTableAdapter {
     static LoadingStrategy = FullLoadingStrategy;
 
     static StructureStrategy = TreeStructureStrategy;
 
     static icon = 'su-tree-list';
 
-    @observable expandedRows: Array<string | number> = [];
-
     @action handleRowCollapse = (rowId: string | number) => {
-        this.expandedRows.splice(this.expandedRows.indexOf(rowId), 1);
+        this.props.onItemDeactivation(rowId);
     };
 
     @action handleRowExpand = (rowId: string | number) => {
-        this.expandedRows.push(rowId);
-
-        const {onItemActivation} = this.props;
-        if (onItemActivation) {
-            onItemActivation(rowId);
-        }
+        this.props.onItemActivation(rowId);
     };
 
-    @computed get data(): Array<Object> {
-        const dataList = [];
-        const depth = 0;
+    renderRows(items: Array<*>, depth: number = 0) {
+        const rows = [];
+        const {
+            selections,
+        } = this.props;
 
-        this.flattenData(this.props.data, dataList, depth);
+        for (const item of items) {
+            const {data, hasChildren} = item;
 
-        return dataList;
-    }
-
-    isExpanded(identifier: string | number) {
-        return this.expandedRows.includes(identifier);
-    }
-
-    flattenData(items: Array<Object>, dataList: Array<Object>, depth: number) {
-        items.forEach((item) => {
-            item.expanded = this.isExpanded(item.data.id);
-            item.depth = depth;
-
-            dataList.push(item);
-
-            if (item.expanded && item.children.length) {
-                this.flattenData(item.children, dataList, depth + 1);
-            }
-        });
-    }
-
-    renderRows(): Array<*> {
-        return this.data.map((item) => {
-            const {
-                selections,
-            } = this.props;
-            const {data} = item;
-
-            return (
+            rows.push(
                 <Table.Row
                     key={data.id}
                     id={data.id}
-                    depth={item.depth}
+                    depth={depth}
                     isLoading={this.props.active === data.id && this.props.loading}
-                    hasChildren={data.hasChildren}
-                    expanded={item.expanded}
+                    hasChildren={hasChildren}
+                    expanded={item.children.length > 0}
                     selected={selections.includes(data.id)}
                 >
                     {this.renderCells(data)}
                 </Table.Row>
             );
-        });
+
+            rows.push(...this.renderRows(item.children, depth + 1));
+        }
+
+        return rows;
     }
 
     render() {
         const {
             active,
+            data,
             loading,
             onItemClick,
             onAddClick,
@@ -98,14 +72,14 @@ export default class TreeListAdapter extends AbstractTableAdapter {
         if (onItemClick) {
             buttons.push({
                 icon: 'su-pen',
-                onClick: (rowId) => onItemClick(rowId),
+                onClick: onItemClick,
             });
         }
 
         if (onAddClick) {
             buttons.push({
                 icon: 'su-plus',
-                onClick: (rowId) => onAddClick(rowId),
+                onClick: onAddClick,
             });
         }
 
@@ -120,10 +94,10 @@ export default class TreeListAdapter extends AbstractTableAdapter {
                 onAllSelectionChange={onAllSelectionChange}
             >
                 <Table.Header>
-                    {this.renderHeaderCells(false)}
+                    {this.renderHeaderCells()}
                 </Table.Header>
                 <Table.Body>
-                    {this.renderRows()}
+                    {this.renderRows(data)}
                 </Table.Body>
             </Table>
         );

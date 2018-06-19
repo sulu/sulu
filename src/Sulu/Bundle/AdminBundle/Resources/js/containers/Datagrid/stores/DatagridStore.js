@@ -1,6 +1,7 @@
 // @flow
-import {action, autorun, observable, computed} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import {action, autorun, computed, intercept, observable} from 'mobx';
+import type {IObservableValue, IValueWillChange} from 'mobx';
+import log from 'loglevel';
 import type {
     LoadingStrategyInterface,
     ObservableOptions,
@@ -25,6 +26,10 @@ export default class DatagridStore {
     resourceKey: string;
     schema: Schema = {};
     observableOptions: ObservableOptions;
+    localeDisposer: ?() => void;
+    searchDisposer: () => void;
+    sortColumnDisposer: () => void;
+    sortOrderDisposer: () => void;
     sendRequestDisposer: () => void;
 
     constructor(
@@ -35,8 +40,38 @@ export default class DatagridStore {
         this.resourceKey = resourceKey;
         this.observableOptions = observableOptions;
         this.options = options;
-
         this.sendRequestDisposer = autorun(this.sendRequest);
+
+        const {locale} = this.observableOptions;
+        if (locale) {
+            this.localeDisposer = intercept(locale, '', (change: IValueWillChange<number>) => {
+                if (locale.get() !== change.newValue) {
+                    this.reset();
+                }
+                return change;
+            });
+        }
+
+        this.searchDisposer = intercept(this.searchTerm, '', (change: IValueWillChange<string>) => {
+            if (this.searchTerm.get() !== change.newValue) {
+                this.reset();
+            }
+            return change;
+        });
+
+        this.sortColumnDisposer = intercept(this.sortColumn, '', (change: IValueWillChange<string>) => {
+            if (this.sortColumn.get() !== change.newValue) {
+                this.reset();
+            }
+            return change;
+        });
+
+        this.sortOrderDisposer = intercept(this.sortOrder, '', (change: IValueWillChange<SortOrder>) => {
+            if (this.sortOrder.get() !== change.newValue) {
+                this.reset();
+            }
+            return change;
+        });
 
         metadataStore.getSchema(this.resourceKey)
             .then(action((schema) => {
@@ -57,30 +92,31 @@ export default class DatagridStore {
         return this.structureStrategy.data;
     }
 
+    @computed get visibleItems(): Array<*> {
+        return this.structureStrategy.visibleItems;
+    }
+
+    @computed get activeItems(): ?Array<*> {
+        return this.structureStrategy.activeItems;
+    }
+
     @action updateStrategies = (
         loadingStrategy: LoadingStrategyInterface,
         structureStrategy: StructureStrategyInterface
     ) => {
+        this.reset();
         this.updateLoadingStrategy(loadingStrategy);
         this.updateStructureStrategy(structureStrategy);
     };
 
     @action updateLoadingStrategy = (loadingStrategy: LoadingStrategyInterface) => {
-        // do not update if the loading strategy was already defined and it tries to use the same one again
         if (this.loadingStrategy && this.loadingStrategy === loadingStrategy) {
             return;
-        }
-
-        if (this.loadingStrategy) {
-            this.loadingStrategy.destroy();
-            loadingStrategy.reset(this);
         }
 
         if (this.structureStrategy) {
             this.structureStrategy.clear();
         }
-
-        loadingStrategy.initialize(this);
 
         this.loadingStrategy = loadingStrategy;
     };
@@ -93,14 +129,20 @@ export default class DatagridStore {
         this.structureStrategy = structureStrategy;
     };
 
-    @action reset() {
+    @action reset = () => {
         const page = this.getPage();
-        this.structureStrategy.clear();
+
+        if (this.structureStrategy) {
+            this.structureStrategy.clear();
+        }
+
+        this.setActive(undefined);
+        this.pageCount = 0;
 
         if (page && page > 1) {
             this.setPage(1);
         }
-    }
+    };
 
     @action reload() {
         const page = this.getPage();
@@ -115,6 +157,10 @@ export default class DatagridStore {
     findById(identifier: string | number): ?Object {
         return this.structureStrategy.findById(identifier);
     }
+
+    remove = (identifier: string | number): void => {
+        this.structureStrategy.remove(identifier);
+    };
 
     sendRequest = () => {
         if (!this.initialized) {
@@ -145,6 +191,8 @@ export default class DatagridStore {
         if (this.searchTerm.get()) {
             options.search = this.searchTerm.get();
         }
+
+        log.info('Datagrid loads "' + this.resourceKey + '" data with the following options:', options);
 
         this.loadingStrategy.load(
             data,
@@ -177,6 +225,22 @@ export default class DatagridStore {
         this.active = active;
     }
 
+    @action activate(id: ?string | number) {
+        // force reload by changing the active item to undefined before actually setting it
+        this.setActive(undefined);
+        this.setActive(id);
+
+        if (this.structureStrategy.activate) {
+            this.structureStrategy.activate(id);
+        }
+    }
+
+    @action deactivate(id: ?string | number) {
+        if (this.structureStrategy.deactivate) {
+            this.structureStrategy.deactivate(id);
+        }
+    }
+
     @action sort(column: string, order: SortOrder) {
         this.sortColumn.set(column);
         this.sortOrder.set(order);
@@ -187,7 +251,6 @@ export default class DatagridStore {
             return;
         }
 
-        this.reset();
         this.searchTerm.set(searchTerm);
     }
 
@@ -200,8 +263,8 @@ export default class DatagridStore {
         this.selections.push(row);
     }
 
-    @action selectEntirePage() {
-        this.data.forEach((item) => {
+    @action selectVisibleItems() {
+        this.visibleItems.forEach((item) => {
             this.select(item);
         });
     }
@@ -216,8 +279,8 @@ export default class DatagridStore {
         this.selections.splice(index, 1);
     }
 
-    @action deselectEntirePage() {
-        this.data.forEach((item) => {
+    @action deselectVisibleItems() {
+        this.visibleItems.forEach((item) => {
             this.deselect(item);
         });
     }
@@ -237,5 +300,12 @@ export default class DatagridStore {
 
     destroy() {
         this.sendRequestDisposer();
+        this.searchDisposer();
+        this.sortColumnDisposer();
+        this.sortOrderDisposer();
+
+        if (this.localeDisposer) {
+            this.localeDisposer();
+        }
     }
 }

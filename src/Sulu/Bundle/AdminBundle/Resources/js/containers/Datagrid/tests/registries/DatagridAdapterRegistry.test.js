@@ -16,11 +16,13 @@ class LoadingStrategy {
 
 class StructureStrategy {
     data: Array<Object>;
+    visibleItems: Array<Object>;
 
     clear = jest.fn();
     getData = jest.fn();
     findById = jest.fn();
     enhanceItem = jest.fn();
+    remove = jest.fn();
 }
 
 class TestAdapter extends AbstractAdapter {

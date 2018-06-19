@@ -33,6 +33,11 @@ class Field
      */
     protected $visibility;
 
+    /**
+     * @var bool
+     */
+    protected $sortable;
+
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -71,5 +76,15 @@ class Field
     public function setVisibility(string $visibility): void
     {
         $this->visibility = $visibility;
+    }
+
+    public function isSortable(): bool
+    {
+        return $this->sortable;
+    }
+
+    public function setSortable(bool $sortable): void
+    {
+        $this->sortable = $sortable;
     }
 }

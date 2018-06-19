@@ -1,7 +1,5 @@
 // @flow
 import 'url-search-params-polyfill';
-import {observable} from 'mobx';
-import DatagridStore from '../../stores/DatagridStore';
 import PaginatedLoadingStrategy from '../../loadingStrategies/PaginatedLoadingStrategy';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
@@ -16,42 +14,6 @@ jest.mock('../../../../services/ResourceRequester', () => ({
 jest.mock('../../../Datagrid/stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve()),
 }));
-
-class StructureStrategy {
-    data = [];
-    getData = jest.fn().mockReturnValue(this.data);
-    clear = jest.fn();
-    findById = jest.fn();
-    enhanceItem = jest.fn();
-}
-
-class OtherLoadingStrategy {
-    paginationAdapter = undefined;
-    initialize = jest.fn();
-    reset = jest.fn();
-    load = jest.fn().mockReturnValue(Promise.resolve({
-        _embedded: {
-            snippets: [],
-        },
-    }));
-    destroy = jest.fn();
-}
-
-test('Should reset page count and page when strategy changes', () => {
-    const page = observable.box();
-    const datagridStore = new DatagridStore('snippets', {page});
-
-    const paginatedLoadingStrategy = new PaginatedLoadingStrategy();
-
-    const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(new OtherLoadingStrategy, structureStrategy);
-    datagridStore.setPage(5);
-    datagridStore.pageCount = 7;
-    datagridStore.updateLoadingStrategy(paginatedLoadingStrategy);
-
-    expect(page.get()).toEqual(1);
-    expect(datagridStore.pageCount).toEqual(0);
-});
 
 test('Should load items and add to empty array', () => {
     const paginatedLoadingStrategy = new PaginatedLoadingStrategy();

@@ -32,9 +32,17 @@ test('Render a basic Folder list with data', () => {
 
     const folderAdapter = render(
         <FolderAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
             page={1}
@@ -73,10 +81,17 @@ test('Click on a Folder should call the onItemEdit callback', () => {
     ];
     const folderAdapter = shallow(
         <FolderAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
             onItemClick={itemClickSpy}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
             page={1}
@@ -94,8 +109,16 @@ test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const folderAdapter = shallow(
         <FolderAdapter
+            active={undefined}
+            activeItems={[]}
             disabledIds={[]}
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={pageChangeSpy}
             onSort={jest.fn()}
             page={2}

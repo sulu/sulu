@@ -26,6 +26,37 @@ test('Should not enhance the items', () => {
     expect(flatStructureStrategy.enhanceItem({id: 1})).toEqual({id: 1});
 });
 
+test('Should return all current items as visible items', () => {
+    const flatStructureStrategy = new FlatStructureStrategy();
+
+    const item1 = {
+        id: 1,
+        title: 'Homepage',
+    };
+
+    const item2 = {
+        id: 2,
+        title: 'Item 2',
+    };
+
+    const item3 = {
+        id: 'string',
+        title: 'Item 3',
+    };
+
+    flatStructureStrategy.data = [
+        item1,
+        item2,
+        item3,
+    ];
+
+    expect(flatStructureStrategy.visibleItems).toEqual([
+        item1,
+        item2,
+        item3,
+    ]);
+});
+
 test('Should find items by id or return undefined', () => {
     const flatStructureStrategy = new FlatStructureStrategy();
 
@@ -54,4 +85,28 @@ test('Should find items by id or return undefined', () => {
     expect(flatStructureStrategy.findById(2)).toEqual(item2);
     expect(flatStructureStrategy.findById('string')).toEqual(item3);
     expect(flatStructureStrategy.findById(4)).toEqual(undefined);
+});
+
+test('Should remove an item by id', () => {
+    const flatStructureStrategy = new FlatStructureStrategy();
+
+    const item1 = {
+        id: 1,
+        title: 'Homepage',
+    };
+
+    const item2 = {
+        id: 2,
+        title: 'Item 2',
+    };
+
+    flatStructureStrategy.data = [
+        item1,
+        item2,
+    ];
+
+    flatStructureStrategy.remove(2);
+
+    expect(flatStructureStrategy.findById(1)).toEqual(item1);
+    expect(flatStructureStrategy.findById(2)).toEqual(undefined);
 });

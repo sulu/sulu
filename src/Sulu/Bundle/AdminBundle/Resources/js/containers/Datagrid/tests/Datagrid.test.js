@@ -11,9 +11,14 @@ import TableAdapter from '../adapters/TableAdapter';
 import FolderAdapter from '../adapters/FolderAdapter';
 import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer';
 
+let mockStructureStrategyData;
+
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
     this.setActive = jest.fn();
+    this.activeItems = [];
+    this.activate = jest.fn();
+    this.deactivate = jest.fn();
     this.sort = jest.fn();
     this.sortColumn = {
         get: jest.fn(),
@@ -33,6 +38,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.schema = {
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
@@ -40,16 +46,11 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.findById = jest.fn();
     this.select = jest.fn();
     this.deselect = jest.fn();
-    this.selectEntirePage = jest.fn();
-    this.deselectEntirePage = jest.fn();
+    this.selectVisibleItems = jest.fn();
+    this.deselectVisibleItems = jest.fn();
     this.updateLoadingStrategy = jest.fn();
     this.structureStrategy = {
-        data: [
-            {
-                title: 'value',
-                id: 1,
-            },
-        ],
+        data: mockStructureStrategyData,
     };
     this.data = this.structureStrategy.data;
     this.search = jest.fn();
@@ -87,11 +88,13 @@ class LoadingStrategy {
 
 class StructureStrategy {
     data: Array<Object>;
+    visibleItems: Array<Object>;
 
     clear = jest.fn();
     getData = jest.fn();
     findById = jest.fn();
     enhanceItem = jest.fn();
+    remove = jest.fn();
 }
 
 class TestAdapter extends AbstractAdapter {
@@ -109,6 +112,7 @@ class TestAdapter extends AbstractAdapter {
 }
 
 beforeEach(() => {
+    mockStructureStrategyData = [];
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.get.mockReturnValue(TestAdapter);
 
@@ -117,6 +121,12 @@ beforeEach(() => {
 
 test('Render TableAdapter with correct values', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    mockStructureStrategyData = [
+        {
+            title: 'value',
+            id: 1,
+        },
+    ];
 
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     datagridStore.active = 3;
@@ -131,10 +141,12 @@ test('Render TableAdapter with correct values', () => {
 
     expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
     expect(tableAdapter.prop('active')).toEqual(3);
+    expect(tableAdapter.prop('activeItems')).toBe(datagridStore.activeItems);
     expect(tableAdapter.prop('selections')).toEqual([1, 3]);
     expect(tableAdapter.prop('schema')).toEqual({
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
@@ -165,6 +177,24 @@ test('Pass the ids to be disabled to the adapter', () => {
     const datagrid = shallow(<Datagrid adapters={['test']} disabledIds={disabledIds} store={datagridStore} />);
 
     expect(datagrid.find('TestAdapter').prop('disabledIds')).toBe(disabledIds);
+});
+
+test('Call activate on store if item is activated', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
+
+    datagrid.find('TestAdapter').prop('onItemActivation')(5);
+
+    expect(datagridStore.activate).toBeCalledWith(5);
+});
+
+test('Call deactivate on store if item is deactivated', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
+
+    datagrid.find('TestAdapter').prop('onItemDeactivation')(5);
+
+    expect(datagridStore.deactivate).toBeCalledWith(5);
 });
 
 test('Pass sortColumn and sortOrder to adapter', () => {
@@ -208,10 +238,10 @@ test('Selecting and deselecting items should update store', () => {
     expect(datagridStore.deselect).toBeCalledWith({id: 1});
 });
 
-test('Selecting and unselecting all items on current page should update store', () => {
+test('Selecting and unselecting all visible items should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
-    datagridStore.structureStrategy.data = [
+    mockStructureStrategyData = [
         {id: 1},
         {id: 2},
         {id: 3},
@@ -222,15 +252,15 @@ test('Selecting and unselecting all items on current page should update store', 
     // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
     headerCheckbox.getDOMNode().checked = true;
     headerCheckbox.simulate('change', {currentTarget: {checked: true}});
-    expect(datagridStore.selectEntirePage).toBeCalledWith();
+    expect(datagridStore.selectVisibleItems).toBeCalledWith();
     headerCheckbox.simulate('change', {currentTarget: {checked: false}});
-    expect(datagridStore.deselectEntirePage).toBeCalledWith();
+    expect(datagridStore.deselectVisibleItems).toBeCalledWith();
 });
 
 test('Clicking a header cell should sort the table', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
-    datagridStore.structureStrategy.data = [
+    mockStructureStrategyData = [
         {id: 1},
         {id: 2},
         {id: 3},
@@ -245,7 +275,7 @@ test('Clicking a header cell should sort the table', () => {
 test('Trigger a search should call search on the store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
-    datagridStore.structureStrategy.data = [
+    mockStructureStrategyData = [
         {id: 1},
         {id: 2},
         {id: 3},
@@ -307,10 +337,12 @@ test('DatagridStore should be updated with current active element', () => {
 
         static StructureStrategy = class {
             data = [];
+            visibleItems = [];
             clear = jest.fn();
             getData = jest.fn();
             findById = jest.fn();
             enhanceItem = jest.fn();
+            remove = jest.fn();
         };
 
         static icon = 'su-th-large';
@@ -332,5 +364,5 @@ test('DatagridStore should be updated with current active element', () => {
     expect(datagridStore.active).toBe(undefined);
     mount(<Datagrid adapters={['test']} store={datagridStore} />);
 
-    expect(datagridStore.setActive).toBeCalledWith('some-uuid');
+    expect(datagridStore.activate).toBeCalledWith('some-uuid');
 });

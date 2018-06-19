@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 import datagridFieldTransformRegistry from '../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry';
 import StringFieldTransformer from '../../../containers/Datagrid/fieldTransformers/StringFieldTransformer';
@@ -53,18 +53,21 @@ jest.mock(
         this.schema = {
             title: {
                 type: 'string',
+                sortable: true,
                 visibility: 'no',
                 label: 'Title',
             },
             description: {
                 type: 'string',
+                sortable: true,
                 visibility: 'yes',
                 label: 'Description',
             },
         };
         this.destroy = jest.fn();
-        this.sendRequest = jest.fn();
+        this.reload = jest.fn();
         this.clearSelection = jest.fn();
+        this.remove = jest.fn();
     })
 );
 
@@ -145,7 +148,7 @@ test('Should render the datagrid with a title', () => {
     expect(datagrid).toMatchSnapshot();
 });
 
-test('Should render the datagrid with the pencil icon if a editRoute has been passed', () => {
+test('Should pass the onItemClick callback when an editRoute has been passed', () => {
     const Datagrid = require('../Datagrid').default;
     const router = {
         bind: jest.fn(),
@@ -158,8 +161,74 @@ test('Should render the datagrid with the pencil icon if a editRoute has been pa
         },
     };
 
-    const datagrid = render(<Datagrid router={router} />);
-    expect(datagrid).toMatchSnapshot();
+    const datagrid = shallow(<Datagrid router={router} />);
+    expect(datagrid.find('Datagrid').prop('onItemClick')).toBeInstanceOf(Function);
+});
+
+test('Should pass the onItemClick callback when an editRoute has been passed', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                adapters: ['table'],
+            },
+        },
+    };
+
+    const datagrid = shallow(<Datagrid router={router} />);
+    expect(datagrid.find('Datagrid').prop('onItemClick')).not.toBeInstanceOf(Function);
+});
+
+test('Should render the datagrid with the add icon if a addRoute has been passed', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                addRoute: 'addRoute',
+                adapters: ['tree_table'],
+            },
+        },
+    };
+
+    const datagrid = shallow(<Datagrid router={router} />);
+    expect(datagrid.find('Datagrid').prop('onAddClick')).toBeInstanceOf(Function);
+});
+
+test('Should render the datagrid without the add icon if a addRoute has been passed', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                adapters: ['tree_table'],
+            },
+        },
+    };
+
+    const datagrid = shallow(<Datagrid router={router} />);
+    expect(datagrid.find('Datagrid').prop('onAddClick')).not.toBeInstanceOf(Function);
+});
+
+test('Should render the datagrid non-searchable if the searchable option has been passed as false', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                adapters: ['tree_table'],
+                searchable: false,
+            },
+        },
+    };
+
+    const datagrid = shallow(<Datagrid router={router} />);
+    expect(datagrid.find('Datagrid').prop('searchable')).toEqual(false);
 });
 
 test('Should throw an error when no resourceKey is defined in the route options', () => {
@@ -533,7 +602,83 @@ test('Should delete selected items when click on delete button', () => {
         expect(ResourceRequester.delete).toBeCalledWith('test', 4);
         expect(ResourceRequester.delete).toBeCalledWith('test', 6);
         expect(datagridStore.clearSelection).toBeCalled();
-        expect(datagridStore.sendRequest).toBeCalled();
+        expect(datagridStore.remove).toBeCalledWith(1, expect.anything(), expect.anything());
+        expect(datagridStore.remove).toBeCalledWith(4, expect.anything(), expect.anything());
+        expect(datagridStore.remove).toBeCalledWith(6, expect.anything(), expect.anything());
         expect(getDeleteItem().loading).toBe(false);
     });
+});
+
+test('Should delete selected items without crashing if a 404 is returned', () => {
+    function getDeleteItem() {
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Delete');
+    }
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Datagrid = require('../Datagrid').default;
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+                adapters: ['table'],
+            },
+        },
+    };
+
+    ResourceRequester.delete.mockReturnValue(Promise.reject({
+        status: 404,
+    }));
+
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
+    datagridStore.selectionIds.push(1, 4, 6);
+
+    expect(getDeleteItem().loading).toBe(false);
+    const clickPromise = getDeleteItem().onClick();
+    expect(getDeleteItem().loading).toBe(true);
+
+    return clickPromise.then(() => {
+        expect(ResourceRequester.delete).toBeCalledWith('test', 1);
+        expect(ResourceRequester.delete).toBeCalledWith('test', 4);
+        expect(ResourceRequester.delete).toBeCalledWith('test', 6);
+        expect(datagridStore.remove).toBeCalledWith(1, expect.anything(), expect.anything());
+        expect(datagridStore.remove).toBeCalledWith(4, expect.anything(), expect.anything());
+        expect(datagridStore.remove).toBeCalledWith(6, expect.anything(), expect.anything());
+        expect(datagridStore.clearSelection).toBeCalled();
+        expect(getDeleteItem().loading).toBe(false);
+    });
+});
+
+test('Should crash when deleting selected items return a different error than 404', () => {
+    function getDeleteItem() {
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Delete');
+    }
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Datagrid = require('../Datagrid').default;
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+                adapters: ['table'],
+            },
+        },
+    };
+
+    ResourceRequester.delete.mockReturnValue(Promise.reject({
+        status: 403,
+    }));
+
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
+    datagridStore.selectionIds.push(1, 4, 6);
+
+    expect(getDeleteItem().loading).toBe(false);
+    expect(getDeleteItem().onClick()).rejects.toHaveProperty('status', 403);
 });

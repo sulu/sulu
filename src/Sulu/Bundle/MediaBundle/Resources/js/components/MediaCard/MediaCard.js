@@ -18,9 +18,9 @@ type Props = {
      * Called when the image at the bottom part of this element was clicked.
      * Gets the new selection state passed as second argument.
      */
-    onClick?: (id: string | number, selected: boolean) => void,
+    onClick?: ?(id: string | number, selected: boolean) => void,
     /** Called when the header or the checkbox was clicked to select/deselect this item */
-    onSelectionChange?: (id: string | number, selected: boolean) => void,
+    onSelectionChange?: ?(id: string | number, selected: boolean) => void,
     /** The title which will be displayed in the header besides the checkbox */
     title: string,
     /** For setting meta information like the file size or extension  */

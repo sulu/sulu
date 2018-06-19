@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
-import TreeListAdapter from '../../adapters/TreeListAdapter';
+import TreeTableAdapter from '../../adapters/TreeTableAdapter';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: function(key) {
@@ -31,63 +31,25 @@ test('Render data with schema', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
-    };
-    const test21 = {
-        data: {
-            id: 4,
-            title: 'Test2.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test22 = {
-        data: {
-            id: 5,
-            title: 'Test2.2',
-            hasChildren: false,
-        },
-        children: [],
+        hasChildren: false,
     };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
-            hasChildren: true,
-        },
-        children: [
-            test21,
-            test22,
-        ],
-    };
-    const test31 = {
-        data: {
-            id: 7,
-            title: 'Test3.1',
-            hasChildren: false,
         },
         children: [],
-    };
-    const test32 = {
-        data: {
-            id: 8,
-            title: 'Test3.2',
-            hasChildren: false,
-        },
-        children: [],
+        hasChildren: true,
     };
     const test3 = {
         data: {
             id: 6,
             title: 'Test3',
-            hasChildren: true,
         },
-        children: [
-            test31,
-            test32,
-        ],
+        children: [],
+        hasChildren: true,
     };
 
     const data = [
@@ -97,18 +59,27 @@ test('Render data with schema', () => {
     ];
     const schema = {
         title: {
+            label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
-            label: 'Title',
         },
     };
     const treeListAdapter = render(
-        <TreeListAdapter
+        <TreeTableAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
             schema={schema}
             selections={[]}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             page={1}
             pageCount={2}
@@ -121,75 +92,79 @@ test('Render data with schema', () => {
     expect(treeListAdapter).toMatchSnapshot();
 });
 
+test('Attach onClick handler for sorting if schema says the header is sortable', () => {
+    const sortSpy = jest.fn();
+
+    const schema = {
+        title: {
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Title',
+        },
+        description: {
+            type: 'string',
+            sortable: false,
+            visibility: 'yes',
+            label: 'Description',
+        },
+    };
+
+    const treeTableAdapter = shallow(
+        <TreeTableAdapter
+            active={undefined}
+            activeItems={[]}
+            data={[]}
+            disabledIds={[]}
+            loading={false}
+            page={2}
+            pageCount={5}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
+            onPageChange={jest.fn()}
+            onSort={sortSpy}
+            schema={schema}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    expect(treeTableAdapter.find('HeaderCell').at(0).prop('onClick')).toBe(sortSpy);
+    expect(treeTableAdapter.find('HeaderCell').at(1).prop('onClick')).toEqual(undefined);
+});
+
 test('Render data with two columns', () => {
     const test1 = {
         data: {
             id: 2,
             title: 'Test1',
             title2: 'Title2 - Test1',
-            hasChildren: false,
         },
         children: [],
-    };
-    const test21 = {
-        data: {
-            id: 4,
-            title: 'Test2.1',
-            title2: 'Title2 - Test2.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test22 = {
-        data: {
-            id: 5,
-            title: 'Test2.2',
-            title2: 'Title2 - Test2.2',
-            hasChildren: false,
-        },
-        children: [],
+        hasChildren: false,
     };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
             title2: 'Title2 - Test2',
-            hasChildren: true,
-        },
-        children: [
-            test21,
-            test22,
-        ],
-    };
-    const test31 = {
-        data: {
-            id: 7,
-            title: 'Test3.1',
-            title2: 'Title2 - Test3.1',
-            hasChildren: false,
         },
         children: [],
-    };
-    const test32 = {
-        data: {
-            id: 8,
-            title: 'Test3.2',
-            title2: 'Title2 - Test3.2',
-            hasChildren: false,
-        },
-        children: [],
+        hasChildren: true,
     };
     const test3 = {
         data: {
             id: 6,
             title: 'Test3',
             title2: 'Title2 - Test3',
-            hasChildren: true,
         },
-        children: [
-            test31,
-            test32,
-        ],
+        children: [],
+        hasChildren: true,
     };
 
     const data = [
@@ -200,22 +175,32 @@ test('Render data with two columns', () => {
     const schema = {
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
         title2: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title2',
         },
     };
     const treeListAdapter = render(
-        <TreeListAdapter
+        <TreeTableAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
             schema={schema}
             selections={[]}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             page={1}
             pageCount={2}
@@ -233,63 +218,25 @@ test('Render data with schema and selections', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
-    };
-    const test21 = {
-        data: {
-            id: 4,
-            title: 'Test2.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test22 = {
-        data: {
-            id: 5,
-            title: 'Test2.2',
-            hasChildren: false,
-        },
-        children: [],
+        hasChildren: false,
     };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
-            hasChildren: true,
-        },
-        children: [
-            test21,
-            test22,
-        ],
-    };
-    const test31 = {
-        data: {
-            id: 7,
-            title: 'Test3.1',
-            hasChildren: false,
         },
         children: [],
-    };
-    const test32 = {
-        data: {
-            id: 8,
-            title: 'Test3.2',
-            hasChildren: false,
-        },
-        children: [],
+        hasChildren: true,
     };
     const test3 = {
         data: {
             id: 6,
             title: 'Test3',
-            hasChildren: true,
         },
-        children: [
-            test31,
-            test32,
-        ],
+        children: [],
+        hasChildren: true,
     };
 
     const data = [
@@ -300,17 +247,26 @@ test('Render data with schema and selections', () => {
     const schema = {
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
     };
     const treeListAdapter = render(
-        <TreeListAdapter
+        <TreeTableAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
             schema={schema}
             selections={[1, 3]}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             page={1}
             pageCount={2}
@@ -323,68 +279,49 @@ test('Render data with schema and selections', () => {
     expect(treeListAdapter).toMatchSnapshot();
 });
 
-test('Execute onItemActivation callback when an item is expanded', () => {
+test('Execute onItemActivation respectively onItemDeactivation callback when an item is clicked', () => {
     const test1 = {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test21 = {
         data: {
             id: 4,
             title: 'Test2.1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test22 = {
         data: {
             id: 5,
             title: 'Test2.2',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
-            hasChildren: true,
         },
         children: [
             test21,
             test22,
         ],
-    };
-    const test31 = {
-        data: {
-            id: 7,
-            title: 'Test3.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test32 = {
-        data: {
-            id: 8,
-            title: 'Test3.2',
-            hasChildren: false,
-        },
-        children: [],
+        hasChildren: true,
     };
     const test3 = {
         data: {
             id: 6,
             title: 'Test3',
-            hasChildren: true,
         },
-        children: [
-            test31,
-            test32,
-        ],
+        children: [],
+        hasChildren: true,
     };
 
     const data = [
@@ -395,22 +332,33 @@ test('Execute onItemActivation callback when an item is expanded', () => {
     const schema = {
         title: {
             type: 'string',
+            sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
     };
+
     const onItemActivationSpy = jest.fn();
+    const onItemDeactivationSpy = jest.fn();
+
     const treeListAdapter = mount(
-        <TreeListAdapter
+        <TreeTableAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
             schema={schema}
             selections={[]}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemClick={undefined}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             page={1}
             pageCount={1}
             onItemActivation={onItemActivationSpy}
+            onItemDeactivation={onItemDeactivationSpy}
             onSort={jest.fn()}
             sortColumn={undefined}
             sortOrder={undefined}
@@ -418,13 +366,12 @@ test('Execute onItemActivation callback when an item is expanded', () => {
     );
 
     // expand the row
-    treeListAdapter.find('Row').at(2).find('span.toggleIcon').simulate('click');
+    treeListAdapter.find('Row[id=6]').find('span.toggleIcon').simulate('click');
     expect(onItemActivationSpy).toBeCalledWith(6);
-    expect(treeListAdapter.render()).toMatchSnapshot();
 
     // close the row
-    treeListAdapter.find('Row').at(2).find('span.toggleIcon').simulate('click');
-    expect(treeListAdapter.render()).toMatchSnapshot();
+    treeListAdapter.find('Row[id=3]').find('span.toggleIcon').simulate('click');
+    expect(onItemDeactivationSpy).toBeCalledWith(3);
 });
 
 test('Render data with pencil button when onItemEdit callback is passed', () => {
@@ -433,9 +380,9 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const data = [
         test1,
@@ -443,22 +390,31 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
     };
     const treeListAdapter = render(
-        <TreeListAdapter
+        <TreeTableAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
             schema={schema}
             selections={[]}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             page={1}
             pageCount={1}
@@ -478,9 +434,9 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const data = [
         test1,
@@ -488,22 +444,32 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
     };
     const treeListAdapter = render(
-        <TreeListAdapter
+        <TreeTableAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
             schema={schema}
             selections={[]}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             page={1}
             pageCount={1}
@@ -523,9 +489,9 @@ test('Click on pencil should execute onItemClick callback', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const data = [
         test1,
@@ -533,22 +499,31 @@ test('Click on pencil should execute onItemClick callback', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
     };
     const treeListAdapter = shallow(
-        <TreeListAdapter
+        <TreeTableAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
             schema={schema}
             selections={[]}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             page={1}
             pageCount={1}
@@ -571,9 +546,9 @@ test('Click on add should execute onAddClick callback', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const data = [
         test1,
@@ -581,23 +556,32 @@ test('Click on add should execute onAddClick callback', () => {
     const schema = {
         title: {
             label: 'Title',
+            sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
             label: 'Description',
+            sortable: true,
             type: 'string',
             visibility: 'yes',
         },
     };
     const rowAddClickSpy = jest.fn();
     const treeListAdapter = shallow(
-        <TreeListAdapter
+        <TreeTableAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
             schema={schema}
             selections={[]}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             page={1}
             pageCount={1}

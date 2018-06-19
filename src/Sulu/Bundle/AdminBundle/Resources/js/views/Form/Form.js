@@ -86,6 +86,9 @@ class Form extends React.PureComponent<Props> {
         const {resourceStore, router} = this.props;
 
         const {
+            attributes: {
+                parentId,
+            },
             route: {
                 options: {
                     editRoute,
@@ -97,9 +100,10 @@ class Form extends React.PureComponent<Props> {
             resourceStore.destroy();
         }
 
-        return this.formStore.save()
+        return this.formStore.save({parent: parentId})
             .then((response) => {
                 this.showSuccessSnackbar();
+
                 if (editRoute) {
                     router.navigate(editRoute, {id: resourceStore.id, locale: resourceStore.locale});
                 }

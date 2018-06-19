@@ -105,6 +105,19 @@ class Datagrid extends React.Component<ViewProps> {
         this.sortOrderDisposer();
     }
 
+    handleAddClick = (rowId) => {
+        const {router} = this.props;
+        const {
+            route: {
+                options: {
+                    addRoute,
+                },
+            },
+        } = router;
+
+        router.navigate(addRoute, {locale: this.locale.get(), parentId: rowId});
+    };
+
     handleEditClick = (rowId) => {
         const {router} = this.props;
         router.navigate(router.route.options.editRoute, {id: rowId, locale: this.locale.get()});
@@ -115,8 +128,10 @@ class Datagrid extends React.Component<ViewProps> {
             route: {
                 options: {
                     adapters,
-                    title,
+                    addRoute,
                     editRoute,
+                    searchable,
+                    title,
                 },
             },
         } = this.props.router;
@@ -125,9 +140,11 @@ class Datagrid extends React.Component<ViewProps> {
             <div className={datagridStyles.datagrid}>
                 {title && <h1>{translate(title)}</h1>}
                 <DatagridContainer
-                    store={this.datagridStore}
                     adapters={adapters}
+                    onAddClick={addRoute && this.handleAddClick}
                     onItemClick={editRoute && this.handleEditClick}
+                    searchable={searchable}
+                    store={this.datagridStore}
                 />
             </div>
         );
@@ -167,9 +184,7 @@ export default withToolbar(Datagrid, function() {
             type: 'button',
             value: translate('sulu_admin.add'),
             icon: 'su-plus-circle',
-            onClick: () => {
-                router.navigate(addRoute, {locale: this.locale.get()});
-            },
+            onClick: this.handleAddClick,
         });
     }
 
@@ -184,12 +199,18 @@ export default withToolbar(Datagrid, function() {
 
             const deletePromises = [];
             this.datagridStore.selectionIds.forEach((id) => {
-                deletePromises.push(ResourceRequester.delete(resourceKey, id));
+                deletePromises.push(
+                    ResourceRequester.delete(resourceKey, id).catch((error) => {
+                        if (error.status !== 404) {
+                            return Promise.reject(error);
+                        }
+                    })
+                );
             });
 
             return Promise.all(deletePromises).then(action(() => {
+                this.datagridStore.selectionIds.forEach(this.datagridStore.remove);
                 this.datagridStore.clearSelection();
-                this.datagridStore.sendRequest();
                 this.deleting = false;
             }));
         }),

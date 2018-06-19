@@ -39,9 +39,16 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
     ];
     const mediaCardAdapter = render(
         <MediaCardOverviewAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
             onSort={jest.fn()}

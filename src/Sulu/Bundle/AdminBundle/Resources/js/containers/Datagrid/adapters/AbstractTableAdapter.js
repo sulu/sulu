@@ -40,34 +40,23 @@ export default class AbstractTableAdapter extends AbstractAdapter {
         });
     }
 
-    renderHeaderCells(sortingEnabled: boolean): Array<*> {
-        const {sortColumn, sortOrder} = this.props;
+    renderHeaderCells(): Array<*> {
+        const {onSort, sortColumn, sortOrder} = this.props;
         const schemaKeys = Object.keys(this.schema);
 
         return schemaKeys.map((schemaKey) => {
-            const label = this.schema[schemaKey].label ? this.schema[schemaKey].label : schemaKey;
+            const columnSchema = this.schema[schemaKey];
+            const label = columnSchema.label ? columnSchema.label : schemaKey;
 
             return(
                 <Table.HeaderCell
                     key={schemaKey}
-                    onClick={sortingEnabled ? this.props.onSort : undefined}
+                    onClick={columnSchema.sortable ? onSort : undefined}
                     name={schemaKey}
                     sortOrder={sortColumn === schemaKey ? sortOrder : undefined}
                 >
                     {label}
                 </Table.HeaderCell>
-            );
-        });
-    }
-
-    renderRows() {
-        const {data, selections} = this.props;
-
-        return data.map((item) => {
-            return (
-                <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
-                    {this.renderCells(item)}
-                </Table.Row>
             );
         });
     }

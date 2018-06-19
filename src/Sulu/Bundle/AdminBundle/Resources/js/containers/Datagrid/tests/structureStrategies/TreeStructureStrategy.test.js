@@ -7,70 +7,51 @@ test('Should be empty after intialization', () => {
     expect(toJS(treeStructureStrategy.data.length)).toEqual(0);
 });
 
-test('Should return the correct child array on a getData call', () => {
+test('Should return the visible data as flat list', () => {
     const treeStructureStrategy = new TreeStructureStrategy();
 
     const test1 = {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test21 = {
         data: {
             id: 4,
             title: 'Test2.1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test22 = {
         data: {
             id: 5,
             title: 'Test2.2',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
-            hasChildren: true,
         },
         children: [
             test21,
             test22,
         ],
-    };
-    const test31 = {
-        data: {
-            id: 7,
-            title: 'Test3.1',
-            hasChildren: false,
-        },
-        children: [],
-    };
-    const test32 = {
-        data: {
-            id: 8,
-            title: 'Test3.2',
-            hasChildren: false,
-        },
-        children: [],
+        hasChildren: true,
     };
     const test3 = {
         data: {
             id: 6,
             title: 'Test3',
-            hasChildren: true,
         },
-        children: [
-            test31,
-            test32,
-        ],
+        children: [],
+        hasChildren: true,
     };
 
     const data = [
@@ -78,13 +59,104 @@ test('Should return the correct child array on a getData call', () => {
             data: {
                 id: 1,
                 title: 'Homepage',
-                hasChildren: true,
             },
             children: [
                 test1,
                 test2,
                 test3,
             ],
+            hasChildren: true,
+        },
+    ];
+
+    treeStructureStrategy.data = data;
+    expect(treeStructureStrategy.visibleItems).toHaveLength(6);
+    expect(treeStructureStrategy.visibleItems[0].title).toEqual('Homepage');
+    expect(treeStructureStrategy.visibleItems[1].title).toEqual('Test1');
+    expect(treeStructureStrategy.visibleItems[2].title).toEqual('Test2');
+    expect(treeStructureStrategy.visibleItems[3].title).toEqual('Test3');
+    expect(treeStructureStrategy.visibleItems[4].title).toEqual('Test2.1');
+    expect(treeStructureStrategy.visibleItems[5].title).toEqual('Test2.2');
+});
+
+test('Should return the correct child array on a getData call', () => {
+    const treeStructureStrategy = new TreeStructureStrategy();
+
+    const test1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test21 = {
+        data: {
+            id: 4,
+            title: 'Test2.1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test22 = {
+        data: {
+            id: 5,
+            title: 'Test2.2',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test2 = {
+        data: {
+            id: 3,
+            title: 'Test2',
+        },
+        children: [
+            test21,
+            test22,
+        ],
+        hasChildren: true,
+    };
+    const test31 = {
+        data: {
+            id: 7,
+            title: 'Test3.1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test32 = {
+        data: {
+            id: 8,
+            title: 'Test3.2',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test3 = {
+        data: {
+            id: 6,
+            title: 'Test3',
+        },
+        children: [
+            test31,
+            test32,
+        ],
+        hasChildren: true,
+    };
+
+    const data = [
+        {
+            data: {
+                id: 1,
+                title: 'Homepage',
+            },
+            children: [
+                test1,
+                test2,
+                test3,
+            ],
+            hasChildren: true,
         },
     ];
 
@@ -105,6 +177,7 @@ test('Should be empty after clear was called', () => {
                 id: 1,
             },
             children: [],
+            hasChildren: false,
         },
     ];
 
@@ -114,11 +187,13 @@ test('Should be empty after clear was called', () => {
 
 test('Should enhance the items with data and children', () => {
     const treeStructureStrategy = new TreeStructureStrategy();
-    expect(treeStructureStrategy.enhanceItem({id: 1})).toEqual({
+    expect(treeStructureStrategy.enhanceItem({id: 1, hasChildren: false})).toEqual({
         data: {
             id: 1,
+            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     });
 });
 
@@ -128,55 +203,54 @@ test('Should find nested items by id or return undefined', () => {
     const homeData = {
         id: 0,
         title: 'Homepage',
-        hasChildren: true,
     };
 
     const child1 = {
         data: {
             id: 1,
             title: 'Child1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
 
     const child2 = {
         data: {
             id: 2,
             title: 'Child2',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
 
     const child3a = {
         data: {
             id: '3a',
             title: 'Child3a',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
 
     const child3b = {
         data: {
             id: '3b',
             title: 'Child3b',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
 
     const child3 = {
         data: {
             id: 3,
             title: 'Child3',
-            hasChildren: true,
         },
         children: [
             child3a,
             child3b,
         ],
+        hasChildren: true,
     };
 
     treeStructureStrategy.data = [
@@ -187,6 +261,7 @@ test('Should find nested items by id or return undefined', () => {
                 child2,
                 child3,
             ],
+            hasChildren: true,
         },
     ];
 
@@ -194,4 +269,183 @@ test('Should find nested items by id or return undefined', () => {
     expect(treeStructureStrategy.findById(2)).toEqual(child2.data);
     expect(treeStructureStrategy.findById('3a')).toEqual(child3a.data);
     expect(treeStructureStrategy.findById(4)).toEqual(undefined);
+});
+
+test('Should delete children when an item gets deactivated', () => {
+    const treeStructureStrategy = new TreeStructureStrategy();
+
+    const test1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test21 = {
+        data: {
+            id: 4,
+            title: 'Test2.1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test22 = {
+        data: {
+            id: 5,
+            title: 'Test2.2',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test2 = {
+        data: {
+            id: 3,
+            title: 'Test2',
+        },
+        children: [
+            test21,
+            test22,
+        ],
+        hasChildren: true,
+    };
+    const test31 = {
+        data: {
+            id: 7,
+            title: 'Test3.1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test32 = {
+        data: {
+            id: 8,
+            title: 'Test3.2',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test3 = {
+        data: {
+            id: 6,
+            title: 'Test3',
+        },
+        children: [
+            test31,
+            test32,
+        ],
+        hasChildren: true,
+    };
+
+    const data = [
+        {
+            data: {
+                id: 1,
+                title: 'Homepage',
+            },
+            children: [
+                test1,
+                test2,
+                test3,
+            ],
+            hasChildren: true,
+        },
+    ];
+
+    treeStructureStrategy.data = data;
+    treeStructureStrategy.deactivate(6);
+    expect(treeStructureStrategy.data).toMatchSnapshot();
+});
+
+test('Should remove items when an item gets removed', () => {
+    const treeStructureStrategy = new TreeStructureStrategy();
+
+    const test1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test2 = {
+        data: {
+            id: 3,
+            title: 'Test2',
+        },
+        children: [],
+        hasChildren: true,
+    };
+    const test3 = {
+        data: {
+            id: 6,
+            title: 'Test3',
+        },
+        children: [],
+        hasChildren: true,
+    };
+
+    const data = [
+        {
+            data: {
+                id: 1,
+                title: 'Homepage',
+            },
+            children: [
+                test1,
+                test2,
+                test3,
+            ],
+            hasChildren: true,
+        },
+    ];
+
+    treeStructureStrategy.data = data;
+    expect(treeStructureStrategy.data[0].children).toHaveLength(3);
+    treeStructureStrategy.remove(6);
+    expect(treeStructureStrategy.data).toMatchSnapshot();
+});
+
+test('Should remove items and set hasChildren to false if it was the last child', () => {
+    const treeStructureStrategy = new TreeStructureStrategy();
+
+    const data = [
+        {
+            data: {
+                id: 1,
+                title: 'Test',
+            },
+            children: [
+                {
+                    data: {
+                        id: 4,
+                        title: 'Subtest',
+                    },
+                    children: [],
+                    hasChildren: false,
+                },
+            ],
+            hasChildren: true,
+        },
+        {
+            data: {
+                id: 2,
+                title: 'Test1',
+            },
+            children: [
+                {
+                    data: {
+                        id: 3,
+                    },
+                    children: [],
+                    hasChildren: false,
+                },
+            ],
+            hasChildren: true,
+        },
+    ];
+
+    treeStructureStrategy.data = data;
+    treeStructureStrategy.remove(3);
+    expect(treeStructureStrategy.data).toMatchSnapshot();
 });

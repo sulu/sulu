@@ -25,6 +25,10 @@ export default class Switch extends React.PureComponent<Props> {
         }
     };
 
+    handleClick = (event: SyntheticEvent<HTMLInputElement>) => {
+        event.stopPropagation();
+    };
+
     render() {
         const {
             icon,
@@ -45,7 +49,7 @@ export default class Switch extends React.PureComponent<Props> {
         );
 
         return (
-            <label className={switchStyles.label}>
+            <label className={switchStyles.label} onClick={this.handleClick}>
                 <span className={switchClass}>
                     <input
                         type={type}

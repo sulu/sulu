@@ -39,10 +39,17 @@ test('Render a basic Masonry view with MediaCards', () => {
     ];
     const mediaCardAdapter = render(
         <MediaCardAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             icon="su-pen"
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
@@ -84,11 +91,17 @@ test('MediaCard should call the the appropriate handler', () => {
     ];
     const mediaCardAdapter = shallow(
         <MediaCardAdapter
+            active={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             icon="su-pen"
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
             onItemClick={mediaCardSelectionChangeSpy}
+            onItemDeactivation={jest.fn()}
             onItemSelectionChange={mediaCardSelectionChangeSpy}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
@@ -109,10 +122,18 @@ test('InfiniteScroller should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const tableAdapter = shallow(
         <MediaCardAdapter
+            active={undefined}
+            activeItems={[]}
             data={[]}
             disabledIds={[]}
             icon="su-pen"
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={pageChangeSpy}
             onSort={jest.fn()}
             page={2}

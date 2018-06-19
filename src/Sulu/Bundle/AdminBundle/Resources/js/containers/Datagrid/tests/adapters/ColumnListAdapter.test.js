@@ -5,49 +5,41 @@ import ColumnListAdapter from '../../adapters/ColumnListAdapter';
 
 test('Render data with edit button', () => {
     const data = [
-        {
-            children: [
-                {
-                    children: [],
-                    data: {
-                        id: 3,
-                        title: 'Page 1.1',
-                        hasChildren: false,
-                    },
-                },
-            ],
-            data: {
+        [
+            {
                 id: 1,
                 title: 'Page 1',
                 hasChildren: true,
             },
-        },
-        {
-            children: [
-                {
-                    children: [],
-                    data: {
-                        id: 4,
-                        title: 'Page 2.1',
-                        hasChildren: true,
-                    },
-                },
-            ],
-            data: {
+            {
                 id: 2,
                 title: 'Page 2',
                 hasChildren: false,
             },
-        },
+        ],
+        [
+            {
+                id: 4,
+                title: 'Page 2.1',
+                hasChildren: true,
+            },
+        ],
+        [],
     ];
 
     const columnListAdapter = render(
         <ColumnListAdapter
             active={4}
+            activeItems={[2, 4]}
             data={data}
             disabledIds={[]}
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
             onItemClick={jest.fn()}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
             page={undefined}
@@ -64,31 +56,28 @@ test('Render data with edit button', () => {
 
 test('Render data without edit button', () => {
     const data = [
-        {
-            children: [
-                {
-                    children: [],
-                    data: {
-                        id: 3,
-                        title: 'Page 1.1',
-                        hasChildren: false,
-                    },
-                },
-            ],
-            data: {
+        [
+            {
                 id: 1,
                 title: 'Page 1',
                 hasChildren: true,
             },
-        },
+        ],
     ];
 
     const columnListAdapter = render(
         <ColumnListAdapter
             active={4}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
             page={undefined}
@@ -105,31 +94,27 @@ test('Render data without edit button', () => {
 
 test('Render data with selection', () => {
     const data = [
-        {
-            children: [
-                {
-                    children: [],
-                    data: {
-                        id: 3,
-                        title: 'Page 1.1',
-                        hasChildren: false,
-                    },
-                },
-            ],
-            data: {
+        [
+            {
                 id: 1,
                 title: 'Page 1',
                 hasChildren: true,
             },
-        },
+        ],
     ];
 
     const columnListAdapter = render(
         <ColumnListAdapter
             active={4}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
@@ -147,31 +132,35 @@ test('Render data with selection', () => {
 
 test('Render data with disabled items', () => {
     const data = [
-        {
-            children: [
-                {
-                    children: [],
-                    data: {
-                        id: 3,
-                        title: 'Page 1.1',
-                        hasChildren: false,
-                    },
-                },
-            ],
-            data: {
+        [
+            {
                 id: 1,
                 title: 'Page 1',
                 hasChildren: true,
             },
-        },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: false,
+            },
+        ],
+        [],
     ];
 
     const columnListAdapter = render(
         <ColumnListAdapter
             active={3}
+            activeItems={[1, 3]}
             data={data}
             disabledIds={[3]}
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
@@ -188,15 +177,23 @@ test('Render data with disabled items', () => {
 });
 
 test('Render with add button in toolbar when onAddClick callback is given', () => {
-    const data = [];
+    const data = [
+        [],
+    ];
 
     const columnListAdapter = render(
         <ColumnListAdapter
             active={4}
+            activeItems={undefined}
             data={data}
             disabledIds={[]}
             loading={false}
             onAddClick={jest.fn()}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
             page={undefined}
@@ -213,30 +210,34 @@ test('Render with add button in toolbar when onAddClick callback is given', () =
 
 test('Render data with loading column', () => {
     const data = [
-        {
-            children: [],
-            data: {
+        [
+            {
                 id: 1,
                 title: 'Page 1',
                 hasChildren: true,
             },
-        },
-        {
-            children: [],
-            data: {
+            {
                 id: 2,
                 title: 'Page 2',
                 hasChildren: false,
             },
-        },
+        ],
+        [],
     ];
 
     const columnListAdapter = render(
         <ColumnListAdapter
             active={1}
+            activeItems={[1]}
             data={data}
             disabledIds={[]}
             loading={true}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
             page={undefined}
@@ -255,49 +256,40 @@ test('Execute onItemActivation callback when an item is clicked with the correct
     const onItemActivationSpy = jest.fn();
 
     const data = [
-        {
-            children: [
-                {
-                    children: [],
-                    data: {
-                        id: 3,
-                        title: 'Page 1.1',
-                        hasChildren: false,
-                    },
-                },
-            ],
-            data: {
+        [
+            {
                 id: 1,
                 title: 'Page 1',
                 hasChildren: true,
             },
-        },
-        {
-            children: [
-                {
-                    children: [],
-                    data: {
-                        id: 4,
-                        title: 'Page 2.1',
-                        hasChildren: true,
-                    },
-                },
-            ],
-            data: {
+            {
                 id: 2,
                 title: 'Page 2',
                 hasChildren: false,
             },
-        },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: false,
+            },
+        ],
     ];
 
     const columnListAdapter = mount(
         <ColumnListAdapter
             active={3}
+            activeItems={[1, 3]}
             data={data}
             disabledIds={[]}
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
             onItemActivation={onItemActivationSpy}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
             page={undefined}
@@ -318,30 +310,31 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
     const itemSelectionChangeSpy = jest.fn();
 
     const data = [
-        {
-            children: [],
-            data: {
+        [
+            {
                 id: 1,
                 title: 'Page 1',
                 hasChildren: true,
-            },
-        },
-        {
-            children: [],
-            data: {
+            },{
                 id: 2,
                 title: 'Page 2',
                 hasChildren: false,
             },
-        },
+        ],
     ];
 
     const columnListAdapter = mount(
         <ColumnListAdapter
             active={3}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
             onItemSelectionChange={itemSelectionChangeSpy}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
