@@ -93,7 +93,8 @@ test('Should be empty after clear was called', () => {
 
     expect(columnStructureStrategy.data).toHaveLength(2);
     columnStructureStrategy.clear();
-    expect(columnStructureStrategy.data).toHaveLength(0);
+    expect(columnStructureStrategy.data).toHaveLength(1);
+    expect(columnStructureStrategy.getData(undefined)).toEqual([]);
 });
 
 test('Should not enhance the items', () => {

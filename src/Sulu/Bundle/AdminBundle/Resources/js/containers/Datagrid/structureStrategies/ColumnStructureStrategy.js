@@ -55,6 +55,7 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
 
     @action clear() {
         this.rawData.clear();
+        this.rawData.set(undefined, []);
     }
 
     enhanceItem(item: Object): Object {
