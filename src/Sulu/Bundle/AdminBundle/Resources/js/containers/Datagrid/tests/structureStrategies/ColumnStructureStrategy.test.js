@@ -21,6 +21,7 @@ test('Should return the data in a column format', () => {
         [{id: 3}],
     ]);
 });
+
 test('Should return the visible data', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();
     columnStructureStrategy.rawData.set(undefined, [{id: 1}]);
@@ -98,4 +99,26 @@ test('Should be empty after clear was called', () => {
 test('Should not enhance the items', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();
     expect(columnStructureStrategy.enhanceItem({id: 1})).toEqual({id: 1});
+});
+
+test('Should return the data in a column format', () => {
+    const columnStructureStrategy = new ColumnStructureStrategy();
+    columnStructureStrategy.rawData.set(undefined, [{id: 1}]);
+    columnStructureStrategy.rawData.set(1, [{id: 2}, {id: 4}]);
+    columnStructureStrategy.rawData.set(2, [{id: 3}, {id: 5}]);
+
+    expect(columnStructureStrategy.data).toEqual([
+        [{id: 1}],
+        [{id: 2}, {id: 4}],
+        [{id: 3}, {id: 5}],
+    ]);
+
+    columnStructureStrategy.remove(3);
+    columnStructureStrategy.remove(4);
+
+    expect(columnStructureStrategy.data).toEqual([
+        [{id: 1}],
+        [{id: 2}],
+        [{id: 5}],
+    ]);
 });

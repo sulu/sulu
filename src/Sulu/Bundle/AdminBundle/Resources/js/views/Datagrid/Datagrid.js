@@ -209,8 +209,8 @@ export default withToolbar(Datagrid, function() {
             });
 
             return Promise.all(deletePromises).then(action(() => {
+                this.datagridStore.selectionIds.forEach(this.datagridStore.remove);
                 this.datagridStore.clearSelection();
-                this.datagridStore.reload();
                 this.deleting = false;
             }));
         }),

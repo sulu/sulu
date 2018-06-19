@@ -86,3 +86,27 @@ test('Should find items by id or return undefined', () => {
     expect(flatStructureStrategy.findById('string')).toEqual(item3);
     expect(flatStructureStrategy.findById(4)).toEqual(undefined);
 });
+
+test('Should remove an item by id', () => {
+    const flatStructureStrategy = new FlatStructureStrategy();
+
+    const item1 = {
+        id: 1,
+        title: 'Homepage',
+    };
+
+    const item2 = {
+        id: 2,
+        title: 'Item 2',
+    };
+
+    flatStructureStrategy.data = [
+        item1,
+        item2,
+    ];
+
+    flatStructureStrategy.remove(2);
+
+    expect(flatStructureStrategy.findById(1)).toEqual(item1);
+    expect(flatStructureStrategy.findById(2)).toEqual(undefined);
+});

@@ -94,6 +94,7 @@ class StructureStrategy {
     getData = jest.fn();
     findById = jest.fn();
     enhanceItem = jest.fn();
+    remove = jest.fn();
 }
 
 class TestAdapter extends AbstractAdapter {
@@ -341,6 +342,7 @@ test('DatagridStore should be updated with current active element', () => {
             getData = jest.fn();
             findById = jest.fn();
             enhanceItem = jest.fn();
+            remove = jest.fn();
         };
 
         static icon = 'su-th-large';

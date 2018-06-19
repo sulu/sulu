@@ -26,6 +26,7 @@ class StructureStrategy {
     getData = jest.fn();
     findById = jest.fn();
     enhanceItem = jest.fn();
+    remove = jest.fn();
 }
 
 class TestAdapter extends AbstractAdapter {

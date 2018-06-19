@@ -31,7 +31,7 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
         } = this.props;
 
         for (const item of items) {
-            const {data} = item;
+            const {data, hasChildren} = item;
 
             rows.push(
                 <Table.Row
@@ -39,7 +39,7 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
                     id={data.id}
                     depth={depth}
                     isLoading={this.props.active === data.id && this.props.loading}
-                    hasChildren={data.hasChildren}
+                    hasChildren={hasChildren}
                     expanded={item.children.length > 0}
                     selected={selections.includes(data.id)}
                 >

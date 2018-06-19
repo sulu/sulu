@@ -31,25 +31,25 @@ test('Render data with schema', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
-            hasChildren: true,
         },
         children: [],
+        hasChildren: true,
     };
     const test3 = {
         data: {
             id: 6,
             title: 'Test3',
-            hasChildren: true,
         },
         children: [],
+        hasChildren: true,
     };
 
     const data = [
@@ -144,27 +144,27 @@ test('Render data with two columns', () => {
             id: 2,
             title: 'Test1',
             title2: 'Title2 - Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
             title2: 'Title2 - Test2',
-            hasChildren: true,
         },
         children: [],
+        hasChildren: true,
     };
     const test3 = {
         data: {
             id: 6,
             title: 'Test3',
             title2: 'Title2 - Test3',
-            hasChildren: true,
         },
         children: [],
+        hasChildren: true,
     };
 
     const data = [
@@ -218,25 +218,25 @@ test('Render data with schema and selections', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
-            hasChildren: true,
         },
         children: [],
+        hasChildren: true,
     };
     const test3 = {
         data: {
             id: 6,
             title: 'Test3',
-            hasChildren: true,
         },
         children: [],
+        hasChildren: true,
     };
 
     const data = [
@@ -284,44 +284,44 @@ test('Execute onItemActivation respectively onItemDeactivation callback when an 
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test21 = {
         data: {
             id: 4,
             title: 'Test2.1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test22 = {
         data: {
             id: 5,
             title: 'Test2.2',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const test2 = {
         data: {
             id: 3,
             title: 'Test2',
-            hasChildren: true,
         },
         children: [
             test21,
             test22,
         ],
+        hasChildren: true,
     };
     const test3 = {
         data: {
             id: 6,
             title: 'Test3',
-            hasChildren: true,
         },
         children: [],
+        hasChildren: true,
     };
 
     const data = [
@@ -380,9 +380,9 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const data = [
         test1,
@@ -434,9 +434,9 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const data = [
         test1,
@@ -489,9 +489,9 @@ test('Click on pencil should execute onItemClick callback', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const data = [
         test1,
@@ -546,9 +546,9 @@ test('Click on add should execute onAddClick callback', () => {
         data: {
             id: 2,
             title: 'Test1',
-            hasChildren: false,
         },
         children: [],
+        hasChildren: false,
     };
     const data = [
         test1,

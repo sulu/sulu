@@ -32,6 +32,16 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
         return this.rawData.get(parent);
     }
 
+    remove(identifier: string | number) {
+        for (const column of this.rawData.values()) {
+            for (const index of column.keys()) {
+                if (column[index].id === identifier) {
+                    column.splice(index, 1);
+                }
+            }
+        }
+    }
+
     findById(identifier: string | number): ?Object {
         for (const column of this.data) {
             for (const item of column) {

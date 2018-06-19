@@ -67,6 +67,7 @@ jest.mock(
         this.destroy = jest.fn();
         this.reload = jest.fn();
         this.clearSelection = jest.fn();
+        this.remove = jest.fn();
     })
 );
 
@@ -601,7 +602,9 @@ test('Should delete selected items when click on delete button', () => {
         expect(ResourceRequester.delete).toBeCalledWith('test', 4);
         expect(ResourceRequester.delete).toBeCalledWith('test', 6);
         expect(datagridStore.clearSelection).toBeCalled();
-        expect(datagridStore.reload).toBeCalled();
+        expect(datagridStore.remove).toBeCalledWith(1, expect.anything(), expect.anything());
+        expect(datagridStore.remove).toBeCalledWith(4, expect.anything(), expect.anything());
+        expect(datagridStore.remove).toBeCalledWith(6, expect.anything(), expect.anything());
         expect(getDeleteItem().loading).toBe(false);
     });
 });
@@ -641,8 +644,10 @@ test('Should delete selected items without crashing if a 404 is returned', () =>
         expect(ResourceRequester.delete).toBeCalledWith('test', 1);
         expect(ResourceRequester.delete).toBeCalledWith('test', 4);
         expect(ResourceRequester.delete).toBeCalledWith('test', 6);
+        expect(datagridStore.remove).toBeCalledWith(1, expect.anything(), expect.anything());
+        expect(datagridStore.remove).toBeCalledWith(4, expect.anything(), expect.anything());
+        expect(datagridStore.remove).toBeCalledWith(6, expect.anything(), expect.anything());
         expect(datagridStore.clearSelection).toBeCalled();
-        expect(datagridStore.reload).toBeCalled();
         expect(getDeleteItem().loading).toBe(false);
     });
 });

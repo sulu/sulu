@@ -158,6 +158,10 @@ export default class DatagridStore {
         return this.structureStrategy.findById(identifier);
     }
 
+    remove = (identifier: string | number): void => {
+        this.structureStrategy.remove(identifier);
+    };
+
     sendRequest = () => {
         if (!this.initialized) {
             return;

@@ -7,50 +7,110 @@ Array [
       Object {
         "children": Array [],
         "data": Object {
-          "hasChildren": false,
           "id": 2,
           "title": "Test1",
         },
+        "hasChildren": false,
       },
       Object {
         "children": Array [
           Object {
             "children": Array [],
             "data": Object {
-              "hasChildren": false,
               "id": 4,
               "title": "Test2.1",
             },
+            "hasChildren": false,
           },
           Object {
             "children": Array [],
             "data": Object {
-              "hasChildren": false,
               "id": 5,
               "title": "Test2.2",
             },
+            "hasChildren": false,
           },
         ],
         "data": Object {
-          "hasChildren": true,
           "id": 3,
           "title": "Test2",
         },
+        "hasChildren": true,
       },
       Object {
         "children": Array [],
         "data": Object {
-          "hasChildren": true,
           "id": 6,
           "title": "Test3",
         },
+        "hasChildren": true,
       },
     ],
     "data": Object {
-      "hasChildren": true,
       "id": 1,
       "title": "Homepage",
     },
+    "hasChildren": true,
+  },
+]
+`;
+
+exports[`Should remove items and set hasChildren to false if it was the last child 1`] = `
+Array [
+  Object {
+    "children": Array [
+      Object {
+        "children": Array [],
+        "data": Object {
+          "id": 4,
+          "title": "Subtest",
+        },
+        "hasChildren": false,
+      },
+    ],
+    "data": Object {
+      "id": 1,
+      "title": "Test",
+    },
+    "hasChildren": true,
+  },
+  Object {
+    "children": Array [],
+    "data": Object {
+      "id": 2,
+      "title": "Test1",
+    },
+    "hasChildren": false,
+  },
+]
+`;
+
+exports[`Should remove items when an item gets removed 1`] = `
+Array [
+  Object {
+    "children": Array [
+      Object {
+        "children": Array [],
+        "data": Object {
+          "id": 2,
+          "title": "Test1",
+        },
+        "hasChildren": false,
+      },
+      Object {
+        "children": Array [],
+        "data": Object {
+          "id": 3,
+          "title": "Test2",
+        },
+        "hasChildren": true,
+      },
+    ],
+    "data": Object {
+      "id": 1,
+      "title": "Homepage",
+    },
+    "hasChildren": true,
   },
 ]
 `;

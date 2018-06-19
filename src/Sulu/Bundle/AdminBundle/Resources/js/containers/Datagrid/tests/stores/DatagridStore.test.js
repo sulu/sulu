@@ -23,6 +23,7 @@ class StructureStrategy {
     enhanceItem = jest.fn((item) => item);
     activate = jest.fn();
     deactivate = jest.fn();
+    remove = jest.fn();
 }
 
 test('The loading strategy should be called when a request is sent', () => {
@@ -736,6 +737,19 @@ test('Should call the deactivate method of the structure strategy if an item get
     datagridStore.deactivate(2);
 
     expect(structureStrategy.deactivate).toBeCalledWith(2);
+});
+
+test('Should call the remove method of the structure strategy if an item gets removed', () => {
+    const page = observable.box();
+    const datagridStore = new DatagridStore('snippets', {page});
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.remove(2);
+
+    expect(structureStrategy.remove).toBeCalledWith(2);
 });
 
 test('Should call all disposers if destroy is called', () => {

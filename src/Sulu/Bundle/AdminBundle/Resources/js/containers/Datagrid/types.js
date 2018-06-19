@@ -67,6 +67,7 @@ export interface StructureStrategyInterface {
     +activeItems?: Array<*>,
     +activate?: (id: ?string | number) => void,
     +deactivate?: (id: ?string | number) => void,
+    remove(id: string | number): void,
     getData(parent: ?string | number): ?Array<*>,
     enhanceItem(item: Object): Object,
     findById(identifier: string | number): ?Object,
@@ -76,6 +77,7 @@ export interface StructureStrategyInterface {
 export type TreeItem = {
     data: DataItem,
     children: Array<TreeItem>,
+    hasChildren: boolean,
 };
 
 export interface FieldTransformer {
