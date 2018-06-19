@@ -14,7 +14,7 @@ adapterStore.add('table', TableAdapter);
 
 <Datagrid store={store} views={['table']} />
 
-store.selections; // returns the the selected items
+store.selections; // returns the selected items
 store.selectionIds; // returns the IDs of the selected items
 store.destroy();
 ```
@@ -83,10 +83,10 @@ responsibility of the adapter to display a pagination component.
 
 #### StructureStrategies
 
-This strategy is responsible for defining how the data in the array has to be structured. Sulu comes with two different
+This strategy is responsible for defining how the data in the array has to be structured. Sulu comes with three different
 `StructureStrategy` implementations. The `FlatStructureStrategy` holds a simple array of objects containing the items.
 The `TreeStructureStrategy` is used when some kind of tree has to be built (e.g. when using the adapter for the
-[`ColumnList`](#columnlist)).
+`tree_table`.
 
 The `StructureStrategy`'s most important method is the `getData` method, which takes a parent as argument. Based on
 this it has to return flat array of objects. The implementation of the `FlatStructureStrategy` can therefore simply
@@ -100,4 +100,10 @@ Furthermore the `StructureStrategy` has to define a parameterless `clear` method
 is changed and has to remove all items. Last but not least there is the `enhanceItem` method, which will be passed to
 the already described `LoadingStrategy` to enable the `StructureStrategy` to modify the data returned from the server
 before being written in its `data` array. This is necessary to create the necessary envelope for the items in the
-`TreeStructureStrategy`.
+`TreeStructureStrategy`. There are also the `activate` and `deactivate` functions, which gets an id when an item gets
+active, e.g. by expanding or collapsing it in the `tree_table` adapter. There are also a `findById` function which
+searches for a given id in the `StructureStrategy` and a `remove` function which deletes some item from the structure.
+
+In addition to the `data` variable there are also `visibleData`, which returns all the visible data as a flat list,
+which is used for the select all functionality of the `Datagrid` and the `activeItems` array, which allows to
+highlight the active items in the `DatagridAdapter`.
