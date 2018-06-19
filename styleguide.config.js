@@ -2,6 +2,7 @@
 /* eslint-disable import/no-nodejs-modules */
 const path = require('path');
 const fs = require('fs');
+const webpack = require('webpack');
 const glob = require('glob');
 
 const firstLetterIsUppercase = (string) => {
@@ -127,7 +128,12 @@ module.exports = { // eslint-disable-line
         devServer: {
             disableHostCheck: true,
         },
-        devtool: 'source-map',
+        devtool: 'eval-source-map',
+        plugins: [
+            new webpack.DefinePlugin({
+                SULU_CONFIG: {},
+            }),
+        ],
         module: {
             rules: [
                 {
