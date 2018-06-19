@@ -24,7 +24,7 @@ type Props = {
      * Callback function to notify about selection and deselection of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
-    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    onRowSelectionChange?: ?(rowId: string | number, selected?: boolean) => void,
     /**
      * Callback function to notify about open of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.

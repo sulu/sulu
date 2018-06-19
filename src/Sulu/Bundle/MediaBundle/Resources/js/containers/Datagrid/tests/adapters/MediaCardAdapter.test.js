@@ -133,6 +133,7 @@ test('InfiniteScroller should be passed correct props', () => {
             onItemActivation={jest.fn()}
             onItemClick={undefined}
             onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
             onPageChange={pageChangeSpy}
             onSort={jest.fn()}
             page={2}
