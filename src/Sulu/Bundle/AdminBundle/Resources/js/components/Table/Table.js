@@ -36,7 +36,7 @@ type Props = {
      */
     onRowCollapse?: (rowId: string | number) => void,
     /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
-    onAllSelectionChange?: (checked: boolean) => void,
+    onAllSelectionChange?: ?(checked: boolean) => void,
     /** Text shown when the table has no entries */
     placeholderText?: string,
 };

@@ -44,6 +44,7 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
             data={data}
             disabledIds={[]}
             loading={false}
+            onAllSelectionChange={undefined}
             onItemActivation={jest.fn()}
             onItemDeactivation={jest.fn()}
             onItemSelectionChange={jest.fn()}
