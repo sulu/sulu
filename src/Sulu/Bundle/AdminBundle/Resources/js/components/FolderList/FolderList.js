@@ -6,7 +6,7 @@ import folderListStyles from './folderList.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Folder>>,
-    onFolderClick?: (folderId: string | number) => void,
+    onFolderClick?: ?(folderId: string | number) => void,
 };
 
 export default class FolderList extends React.PureComponent<Props> {
