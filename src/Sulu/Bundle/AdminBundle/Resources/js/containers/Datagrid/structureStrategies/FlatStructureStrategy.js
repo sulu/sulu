@@ -5,7 +5,7 @@ import type {StructureStrategyInterface} from '../types';
 export default class FlatStructureStrategy implements StructureStrategyInterface {
     @observable data: Array<Object>;
 
-    @computed get visibleData() {
+    @computed get visibleItems() {
         return this.data;
     }
 

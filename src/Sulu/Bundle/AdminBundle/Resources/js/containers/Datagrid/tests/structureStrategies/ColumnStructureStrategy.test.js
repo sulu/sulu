@@ -28,7 +28,7 @@ test('Should return the visible data', () => {
     columnStructureStrategy.rawData.set(1, [{id: 2}, {id: 3}]);
     columnStructureStrategy.rawData.set(2, [{id: 4}]);
 
-    expect(columnStructureStrategy.visibleData).toEqual([
+    expect(columnStructureStrategy.visibleItems).toEqual([
         {id: 1},
         {id: 2},
         {id: 3},

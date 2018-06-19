@@ -50,7 +50,7 @@ test('Should return all current items as visible items', () => {
         item3,
     ];
 
-    expect(flatStructureStrategy.visibleData).toEqual([
+    expect(flatStructureStrategy.visibleItems).toEqual([
         item1,
         item2,
         item3,

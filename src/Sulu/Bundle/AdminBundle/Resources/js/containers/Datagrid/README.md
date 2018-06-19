@@ -86,7 +86,8 @@ responsibility of the adapter to display a pagination component.
 This strategy is responsible for defining how the data in the array has to be structured. Sulu comes with three different
 `StructureStrategy` implementations. The `FlatStructureStrategy` holds a simple array of objects containing the items.
 The `TreeStructureStrategy` is used when some kind of tree has to be built (e.g. when using the adapter for the
-`tree_table`.
+`tree_table`. The `ColumnStructureStrategy` holds the data for the `ColumnListAdapter` in a nested array, whereby the
+first level describes the columns and the second level describes the items.
 
 The `StructureStrategy`'s most important method is the `getData` method, which takes a parent as argument. Based on
 this it has to return flat array of objects. The implementation of the `FlatStructureStrategy` can therefore simply
@@ -104,6 +105,6 @@ before being written in its `data` array. This is necessary to create the necess
 active, e.g. by expanding or collapsing it in the `tree_table` adapter. There are also a `findById` function which
 searches for a given id in the `StructureStrategy` and a `remove` function which deletes some item from the structure.
 
-In addition to the `data` variable there are also `visibleData`, which returns all the visible data as a flat list,
-which is used for the select all functionality of the `Datagrid` and the `activeItems` array, which allows to
-highlight the active items in the `DatagridAdapter`.
+In addition to the `data` variable there are also the `visibleItems` and `activeItems` arrays. The `visibleItems` are
+a flat list of all visible items, which is used for the "Select all" functionality of the `Datagrid`. The
+`activeItems` allow to highlight the active items in the `DatagridAdapter`.

@@ -426,11 +426,11 @@ test('Deselect an item that has not been selected yet', () => {
     datagridStore.destroy();
 });
 
-test('Select the entire page', () => {
+test('Select all visible items', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
-    datagridStore.structureStrategy.visibleData = [{id: 1}, {id: 2}, {id: 3}];
+    datagridStore.structureStrategy.visibleItems = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [
         {id: 1},
         {id: 7},
@@ -446,7 +446,7 @@ test('Deselect all visible items', () => {
         page,
     });
     datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
-    datagridStore.structureStrategy.visibleData = [{id: 1}, {id: 2}, {id: 3}];
+    datagridStore.structureStrategy.visibleItems = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [
         {id: 1},
         {id: 2},

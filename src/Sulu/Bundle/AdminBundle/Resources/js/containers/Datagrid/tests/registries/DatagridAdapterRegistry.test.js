@@ -16,7 +16,7 @@ class LoadingStrategy {
 
 class StructureStrategy {
     data: Array<Object>;
-    visibleData: Array<Object>;
+    visibleItems: Array<Object>;
 
     clear = jest.fn();
     getData = jest.fn();

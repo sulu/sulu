@@ -92,8 +92,8 @@ export default class DatagridStore {
         return this.structureStrategy.data;
     }
 
-    @computed get visibleData(): Array<*> {
-        return this.structureStrategy.visibleData;
+    @computed get visibleItems(): Array<*> {
+        return this.structureStrategy.visibleItems;
     }
 
     @computed get activeItems(): ?Array<*> {
@@ -264,7 +264,7 @@ export default class DatagridStore {
     }
 
     @action selectVisibleItems() {
-        this.visibleData.forEach((item) => {
+        this.visibleItems.forEach((item) => {
             this.select(item);
         });
     }
@@ -280,7 +280,7 @@ export default class DatagridStore {
     }
 
     @action deselectVisibleItems() {
-        this.visibleData.forEach((item) => {
+        this.visibleItems.forEach((item) => {
             this.deselect(item);
         });
     }

@@ -63,7 +63,7 @@ export interface LoadingStrategyInterface {
 export interface StructureStrategyInterface {
     constructor(): void,
     +data: Array<*>,
-    +visibleData: Array<Object>,
+    +visibleItems: Array<Object>,
     +activeItems?: Array<*>,
     +activate?: (id: ?string | number) => void,
     +deactivate?: (id: ?string | number) => void,

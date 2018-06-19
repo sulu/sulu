@@ -70,13 +70,13 @@ test('Should return the visible data as flat list', () => {
     ];
 
     treeStructureStrategy.data = data;
-    expect(treeStructureStrategy.visibleData).toHaveLength(6);
-    expect(treeStructureStrategy.visibleData[0].title).toEqual('Homepage');
-    expect(treeStructureStrategy.visibleData[1].title).toEqual('Test1');
-    expect(treeStructureStrategy.visibleData[2].title).toEqual('Test2');
-    expect(treeStructureStrategy.visibleData[3].title).toEqual('Test3');
-    expect(treeStructureStrategy.visibleData[4].title).toEqual('Test2.1');
-    expect(treeStructureStrategy.visibleData[5].title).toEqual('Test2.2');
+    expect(treeStructureStrategy.visibleItems).toHaveLength(6);
+    expect(treeStructureStrategy.visibleItems[0].title).toEqual('Homepage');
+    expect(treeStructureStrategy.visibleItems[1].title).toEqual('Test1');
+    expect(treeStructureStrategy.visibleItems[2].title).toEqual('Test2');
+    expect(treeStructureStrategy.visibleItems[3].title).toEqual('Test3');
+    expect(treeStructureStrategy.visibleItems[4].title).toEqual('Test2.1');
+    expect(treeStructureStrategy.visibleItems[5].title).toEqual('Test2.2');
 });
 
 test('Should return the correct child array on a getData call', () => {

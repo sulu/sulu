@@ -63,7 +63,7 @@ function findChildrenForParentId(tree: Array<TreeItem>, parent: ?string | number
 export default class TreeStructureStrategy implements StructureStrategyInterface {
     @observable data: Array<TreeItem> = [];
 
-    @computed get visibleData(): Array<Object> {
+    @computed get visibleItems(): Array<Object> {
         return flattenData(this.data);
     }
 

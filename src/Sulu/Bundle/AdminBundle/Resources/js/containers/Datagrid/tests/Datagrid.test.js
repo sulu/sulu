@@ -88,7 +88,7 @@ class LoadingStrategy {
 
 class StructureStrategy {
     data: Array<Object>;
-    visibleData: Array<Object>;
+    visibleItems: Array<Object>;
 
     clear = jest.fn();
     getData = jest.fn();
@@ -337,7 +337,7 @@ test('DatagridStore should be updated with current active element', () => {
 
         static StructureStrategy = class {
             data = [];
-            visibleData = [];
+            visibleItems = [];
             clear = jest.fn();
             getData = jest.fn();
             findById = jest.fn();
