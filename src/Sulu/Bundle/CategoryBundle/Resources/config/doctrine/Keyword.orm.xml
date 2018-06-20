@@ -21,12 +21,12 @@
 
         <many-to-many target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface" field="categoryTranslations"
                       inversed-by="keywords">
-            <join-table name="ca_category_translations_keywords">
+            <join-table name="ca_category_translation_keywords">
                 <join-columns>
-                    <join-column name="keyword_id" referenced-column-name="id"/>
+                    <join-column name="idKeywords" referenced-column-name="id"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="category_meta_id" referenced-column-name="id"/>
+                    <join-column name="idCategoryTranslations" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
