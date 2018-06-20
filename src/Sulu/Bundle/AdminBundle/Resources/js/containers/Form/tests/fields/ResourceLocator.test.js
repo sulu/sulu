@@ -16,6 +16,7 @@ test('Pass props correctly to ResourceLocator', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
+            schemaPath=""
             value="/"
         />
     );
@@ -32,7 +33,7 @@ test('Throw an exception if a non-valid mode is passed', () => {
     };
 
     expect(
-        () => shallow(<ResourceLocator onChange={jest.fn()} schemaOptions={schemaOptions} value="/" />)
+        () => shallow(<ResourceLocator onChange={jest.fn()} schemaOptions={schemaOptions} schemaPath="" value="/" />)
     ).toThrow(/"leaf" or "full"/);
 });
 
@@ -43,6 +44,7 @@ test('Set default value correctly with undefined value', () => {
         <ResourceLocator
             onChange={changeSpy}
             onFinish={jest.fn()}
+            schemaPath=""
             value={undefined}
         />
     );
@@ -57,6 +59,7 @@ test('Set default value correctly with empty string', () => {
         <ResourceLocator
             onChange={changeSpy}
             onFinish={jest.fn()}
+            schemaPath=""
             value=''
         />
     );
@@ -69,9 +72,28 @@ test('Set default mode correctly', () => {
         <ResourceLocator
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'/test/xxx'}
         />
     );
 
     expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('leaf');
 });
+
+test('Should not pass any argument to onFinish callback', () => {
+    const finishSpy = jest.fn();
+
+    const resourceLocator = mount(
+        <ResourceLocator
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            schemaPath=""
+            value={'/test/xxx'}
+        />
+    );
+
+    resourceLocator.find(ResourceLocatorComponent).prop('onBlur')('Test');
+
+    expect(finishSpy).toBeCalledWith();
+});
+

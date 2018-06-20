@@ -9,10 +9,11 @@ test('Pass error correctly to Input component', () => {
 
     const time = shallow(
         <Time
+            error={error}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'xyz'}
-            error={error}
         />
     );
 
@@ -24,6 +25,7 @@ test('Pass props correctly to component', () => {
         <Time
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={undefined}
         />
     );
@@ -37,6 +39,7 @@ test('Pass invalid value correctly to component', () => {
         <Time
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'test'}
         />
     );
@@ -49,6 +52,7 @@ test('Convert value and pass it correctly to component', () => {
         <Time
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'14:20:00'}
         />
     );
@@ -65,6 +69,7 @@ test('Should call onFinish callback on every onChange with correctly converted v
         <Time
             onChange={changeSpy}
             onFinish={finishSpy}
+            schemaPath=""
             value={'14:20:00'}
         />
     );

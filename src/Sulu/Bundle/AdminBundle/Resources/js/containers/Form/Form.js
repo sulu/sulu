@@ -2,6 +2,7 @@
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
+import log from 'loglevel';
 import Loader from '../../components/Loader';
 import Renderer from './Renderer';
 import FormStore from './stores/FormStore';
@@ -31,10 +32,11 @@ export default class Form extends React.Component<Props> {
         this.props.store.change(name, value);
     };
 
-    handleFieldFinish = () => {
+    handleFieldFinish = (schemaPath: string) => {
+        log.debug('Finished editing field with schemaPath "' + schemaPath + '"');
         const {store} = this.props;
 
-        handlerRegistry.getFinishFieldHandlers().forEach((finishFieldHandler) => finishFieldHandler(store));
+        handlerRegistry.getFinishFieldHandlers().forEach((finishFieldHandler) => finishFieldHandler(store, schemaPath));
         store.validate();
     };
 
@@ -52,6 +54,7 @@ export default class Form extends React.Component<Props> {
                         onChange={this.handleChange}
                         onFieldFinish={this.handleFieldFinish}
                         schema={store.schema}
+                        schemaPath=""
                         showAllErrors={this.showAllErrors}
                     />
                 </form>

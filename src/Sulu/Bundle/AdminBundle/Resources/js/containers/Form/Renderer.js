@@ -15,9 +15,10 @@ type Props = {|
     errors?: ErrorCollection,
     formInspector: FormInspector,
     schema: Schema,
+    schemaPath: string,
     showAllErrors: boolean,
     onChange: (string, *) => void,
-    onFieldFinish: ?() => void,
+    onFieldFinish: ?(schemaPath: string) => void,
 |};
 
 @observer
@@ -28,7 +29,7 @@ export default class Renderer extends React.Component<Props> {
 
     @observable modifiedFields: Array<string> = [];
 
-    @action handleFieldFinish = (name: string) => {
+    @action handleFieldFinish = (name: string, schemaPath: string) => {
         const {onFieldFinish} = this.props;
         const {modifiedFields} = this;
 
@@ -37,11 +38,11 @@ export default class Renderer extends React.Component<Props> {
         }
 
         if(onFieldFinish) {
-            onFieldFinish();
+            onFieldFinish(schemaPath);
         }
     };
 
-    renderGridSection(schemaField: SchemaEntry, schemaKey: string) {
+    renderGridSection(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
         const {items, size} = schemaField;
         return (
             <Grid.Section key={schemaKey} className={rendererStyles.gridSection} size={size}>
@@ -53,13 +54,13 @@ export default class Renderer extends React.Component<Props> {
                     </Grid.Item>
                 }
                 {items &&
-                    Object.keys(items).map((key) => this.renderItem(items[key], key))
+                Object.keys(items).map((key) => this.renderItem(items[key], key, schemaPath + '/items/' + key))
                 }
             </Grid.Section>
         );
     }
 
-    renderGridItem(schemaField: SchemaEntry, schemaKey: string) {
+    renderGridItem(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
         const {data, errors, formInspector, onChange, showAllErrors} = this.props;
 
         const error = (showAllErrors || this.modifiedFields.includes(schemaKey)) && errors && errors[schemaKey]
@@ -77,9 +78,10 @@ export default class Renderer extends React.Component<Props> {
                     error={error}
                     formInspector={formInspector}
                     name={schemaKey}
-                    schema={schemaField}
                     onChange={onChange}
                     onFinish={this.handleFieldFinish}
+                    schema={schemaField}
+                    schemaPath={schemaPath}
                     showAllErrors={showAllErrors}
                     value={data[schemaKey]}
                 />
@@ -87,23 +89,26 @@ export default class Renderer extends React.Component<Props> {
         );
     }
 
-    renderItem(schemaField: SchemaEntry, schemaKey: string) {
+    renderItem(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
         if (schemaField.type === 'section') {
-            return this.renderGridSection(schemaField, schemaKey);
+            return this.renderGridSection(schemaField, schemaKey, schemaPath);
         }
 
-        return this.renderGridItem(schemaField, schemaKey);
+        return this.renderGridItem(schemaField, schemaKey, schemaPath);
     }
 
     render() {
         const {
             schema,
+            schemaPath,
         } = this.props;
         const schemaKeys = Object.keys(schema);
 
         return (
             <Grid className={rendererStyles.grid}>
-                {schemaKeys.map((schemaKey) => this.renderItem(schema[schemaKey], schemaKey))}
+                {schemaKeys.map(
+                    (schemaKey) => this.renderItem(schema[schemaKey], schemaKey, schemaPath + '/' + schemaKey)
+                )}
             </Grid>
         );
     }

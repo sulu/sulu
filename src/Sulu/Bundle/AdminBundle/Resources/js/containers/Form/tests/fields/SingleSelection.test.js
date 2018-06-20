@@ -17,7 +17,7 @@ test('Pass correct props to AutoComplete', () => {
     };
 
     const singleSelection = shallow(
-        <SingleSelection fieldTypeOptions={fieldTypeOptions} onChange={jest.fn()} value={value} />
+        <SingleSelection fieldTypeOptions={fieldTypeOptions} onChange={jest.fn()} schemaPath="" value={value} />
     );
 
     expect(singleSelection.find('AutoComplete').props()).toEqual(expect.objectContaining({
@@ -45,7 +45,13 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
     };
 
     const singleSelection = shallow(
-        <SingleSelection fieldTypeOptions={fieldTypeOptions} onChange={changeSpy} onFinish={finishSpy} value={value} />
+        <SingleSelection
+            fieldTypeOptions={fieldTypeOptions}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaPath=""
+            value={value}
+        />
     );
 
     singleSelection.find('AutoComplete').simulate('change', undefined);
@@ -58,6 +64,13 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
     const fieldTypeOptions = {};
 
     expect(
-        () => shallow(<SingleSelection fieldTypeOptions={fieldTypeOptions} onChange={jest.fn()} value={undefined} />)
+        () => shallow(
+            <SingleSelection
+                fieldTypeOptions={fieldTypeOptions}
+                onChange={jest.fn()}
+                schemaPath=""
+                value={undefined}
+            />
+        )
     ).toThrow(/"auto_complete"/);
 });

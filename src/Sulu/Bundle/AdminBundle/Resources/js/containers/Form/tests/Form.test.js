@@ -7,9 +7,15 @@ import FormStore from '../stores/FormStore';
 import handlerRegistry from '../registries/HandlerRegistry';
 import metadataStore from '../stores/MetadataStore';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: (key) => key,
+}));
+
 jest.mock('../registries/FieldRegistry', () => ({
     get: jest.fn((type) => {
         switch (type) {
+            case 'block':
+                return require('../../../containers/FieldBlocks').default;
             case 'text_line':
                 return require('../../../components/Input').default;
         }
@@ -24,7 +30,7 @@ jest.mock('../registries/HandlerRegistry', () => ({
 jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.id = resourceStore.id;
     this.resourceKey = resourceStore.resourceKey;
-    this.data = {};
+    this.data = resourceStore.data;
     this.validate = jest.fn();
     this.schema = {};
     this.set = jest.fn();
@@ -34,6 +40,7 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function (resourceKey, id) {
     this.resourceKey = resourceKey;
     this.id = id;
+    this.data = {};
 }));
 
 jest.mock('../stores/MetadataStore', () => ({
@@ -71,18 +78,85 @@ test('Should validate form when a field has finished being edited', () => {
     expect(store.validate).toBeCalledWith();
 });
 
-test('Should call all finish handlers when a field has finished being edited', () => {
+test('Call finish handlers with formStore and schemaPath when a section field has finished being edited', () => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();
     handlerRegistry.getFinishFieldHandlers.mockReturnValue([handler1, handler2]);
 
     const store = new FormStore(new ResourceStore('snippet', '1'));
+    store.schema = {
+        highlight: {
+            items: {
+                title: {
+                    type: 'text_line',
+                },
+            },
+            type: 'section',
+        },
+    };
     const form = mount(<Form onSubmit={jest.fn()} store={store} />);
 
-    form.find('Renderer').prop('onFieldFinish')();
+    form.find('Field[name="title"] Input').prop('onFinish')();
+    expect(handler1).toHaveBeenLastCalledWith(store, '/highlight/items/title');
+    expect(handler2).toHaveBeenLastCalledWith(store, '/highlight/items/title');
+});
 
-    expect(handler1).toBeCalledWith(store);
-    expect(handler2).toBeCalledWith(store);
+test('Call finish handlers with the formStore and schemaPath when a field has finished being edited', () => {
+    const handler1 = jest.fn();
+    const handler2 = jest.fn();
+    handlerRegistry.getFinishFieldHandlers.mockReturnValue([handler1, handler2]);
+
+    const store = new FormStore(new ResourceStore('snippet', '1'));
+    store.schema = {
+        article: {
+            type: 'text_line',
+        },
+    };
+    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
+
+    form.find('Field[name="article"] Input').prop('onFinish')();
+    expect(handler1).toHaveBeenLastCalledWith(store, '/article');
+    expect(handler2).toHaveBeenLastCalledWith(store, '/article');
+});
+
+test('Call finish handlers with the formStore and schemaPath when a block field has finished being edited', () => {
+    const handler1 = jest.fn();
+    const handler2 = jest.fn();
+    handlerRegistry.getFinishFieldHandlers.mockReturnValue([handler1, handler2]);
+
+    const resourceStore = new ResourceStore('snippet', '1');
+    resourceStore.data = {
+        block: [
+            {
+                text: 'Test',
+                type: 'default',
+            },
+        ],
+    };
+
+    const store = new FormStore(resourceStore);
+    store.schema = {
+        block: {
+            type: 'block',
+            types: {
+                default: {
+                    form: {
+                        text: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Default',
+                },
+            },
+        },
+    };
+
+    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
+    form.find('SortableBlocks').prop('onExpand')(0);
+    form.update();
+    form.find('SortableBlock Field').instance().handleFinish();
+    expect(handler1).toHaveBeenLastCalledWith(store, '/block/types/default/form/text');
+    expect(handler2).toHaveBeenLastCalledWith(store, '/block/types/default/form/text');
 });
 
 test('Should pass formInspector, schema, data and showAllErrors flag to Renderer', () => {

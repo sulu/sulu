@@ -9,10 +9,11 @@ test('Pass error correctly to component', () => {
 
     const field = shallow(
         <Email
+            error={error}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'xyz'}
-            error={error}
         />
     );
 
@@ -24,6 +25,7 @@ test('Pass props correctly to component', () => {
         <Email
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'xyz'}
         />
     );

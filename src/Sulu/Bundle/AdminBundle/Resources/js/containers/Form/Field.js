@@ -14,8 +14,9 @@ type Props = {|
     formInspector: FormInspector,
     name: string,
     onChange: (string, *) => void,
-    onFinish: (name: string) => void,
+    onFinish: (name: string, schemaPath: string) => void,
     schema: SchemaEntry,
+    schemaPath: string,
     showAllErrors: boolean,
     value?: *,
 |};
@@ -31,8 +32,10 @@ export default class Field extends React.Component<Props> {
         onChange(name, value);
     };
 
-    handleFinish = () => {
-        this.props.onFinish(this.props.name);
+    handleFinish = (subSchemaPath: ?string) => {
+        const {name, onFinish, schemaPath} = this.props;
+        // if the fields are nested the deepest field passes its schemaPath up
+        onFinish(name, subSchemaPath || schemaPath);
     };
 
     findErrorKeyword(error: ?Error | ErrorCollection): ?string {
@@ -58,7 +61,7 @@ export default class Field extends React.Component<Props> {
     }
 
     render() {
-        const {error, value, formInspector, schema, showAllErrors, name} = this.props;
+        const {error, value, formInspector, schema, schemaPath, showAllErrors, name} = this.props;
         const {label, maxOccurs, minOccurs, options: schemaOptions, required, type, types} = schema;
         let FieldType;
 
@@ -100,6 +103,7 @@ export default class Field extends React.Component<Props> {
                     onChange={this.handleChange}
                     onFinish={this.handleFinish}
                     schemaOptions={schemaOptions}
+                    schemaPath={schemaPath}
                     showAllErrors={showAllErrors}
                     types={types}
                     value={value}

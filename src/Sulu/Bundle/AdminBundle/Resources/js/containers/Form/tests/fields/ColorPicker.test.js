@@ -9,10 +9,11 @@ test('Pass error correctly to component', () => {
 
     const field = shallow(
         <ColorPicker
+            error={error}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'xyz'}
-            error={error}
         />
     );
 
@@ -27,6 +28,7 @@ test('Pass props correctly to component', () => {
         <ColorPicker
             onChange={onChange}
             onFinish={onFinish}
+            schemaPath=""
             value={'#123123'}
         />
     );

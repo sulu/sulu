@@ -9,10 +9,11 @@ test('Pass error correctly to Input component', () => {
 
     const inputInvalid = shallow(
         <Input
+            error={error}
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            value={'xyz'}
-            error={error}
+            schemaPath=""
+            value="xyz"
         />
     );
 
@@ -24,9 +25,27 @@ test('Pass props correctly to Input component', () => {
         <Input
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            value={'xyz'}
+            schemaPath=""
+            value="xyz"
         />
     );
 
     expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
+});
+
+test('Should not pass any arguments to onFinish callback', () => {
+    const finishSpy = jest.fn();
+
+    const input = shallow(
+        <Input
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            schemaPath=""
+            value="xyz"
+        />
+    );
+
+    input.find('Input').prop('onBlur')('Test');
+
+    expect(finishSpy).toBeCalledWith();
 });

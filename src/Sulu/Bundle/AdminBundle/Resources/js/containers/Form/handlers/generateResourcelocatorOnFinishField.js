@@ -4,6 +4,7 @@ import type {FinishFieldHandler} from '../types';
 
 const generateResourcelocatorOnFinishField: FinishFieldHandler = function (formStore) {
     if (formStore.id) {
+        // do not generate resource locator if on edit form
         return;
     }
 

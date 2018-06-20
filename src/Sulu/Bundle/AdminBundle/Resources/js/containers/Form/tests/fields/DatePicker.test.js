@@ -9,10 +9,11 @@ test('Pass error correctly to component', () => {
 
     const datePicker = shallow(
         <DatePicker
+            error={error}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'xyz'}
-            error={error}
         />
     );
 
@@ -24,6 +25,7 @@ test('Pass props correctly to component', () => {
         <DatePicker
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={undefined}
         />
     );
@@ -37,6 +39,7 @@ test('Pass invalid value correctly to component', () => {
         <DatePicker
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'test'}
         />
     );
@@ -49,6 +52,7 @@ test('Convert value and pass it correctly to component', () => {
         <DatePicker
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'2018-12-03'}
         />
     );
@@ -64,6 +68,7 @@ test('Should call onFinish callback on every onChange with correctly converted v
         <DatePicker
             onChange={changeSpy}
             onFinish={finishSpy}
+            schemaPath=""
             value={'2018-12-03'}
         />
     );

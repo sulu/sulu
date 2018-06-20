@@ -55,6 +55,7 @@ test('Should pass props correctly to component', () => {
             formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
             onChange={changeSpy}
+            schemaPath=""
             value={value}
         />
     );
@@ -84,6 +85,7 @@ test('Should pass id of form as disabledId to avoid assigning something to itsel
             formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
             onChange={jest.fn()}
+            schemaPath=""
             value={undefined}
         />
     );
@@ -104,6 +106,7 @@ test('Should pass empty array if value is not given', () => {
             formInspector={formInspector}
             fieldTypeOptions={fieldOptions}
             onChange={changeSpy}
+            schemaPath=""
             value={undefined}
         />
     );
@@ -118,8 +121,9 @@ test('Should pass empty array if value is not given', () => {
 
 test('Should throw an error if no fieldOptions are passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
-    expect(() => shallow(<Assignment formInspector={formInspector} onChange={jest.fn()} value={undefined} />))
-        .toThrowError(/a "resourceKey" and a "adapter"/);
+    expect(() => shallow(
+        <Assignment formInspector={formInspector} onChange={jest.fn()} schemaPath="" value={undefined} />)
+    ).toThrowError(/a "resourceKey" and a "adapter"/);
 });
 
 test('Should throw an error if no resourceKey is passed in fieldOptions', () => {
@@ -130,6 +134,7 @@ test('Should throw an error if no resourceKey is passed in fieldOptions', () => 
             formInspector={formInspector}
             fieldTypeOptions={{}}
             onChange={jest.fn()}
+            schemaPath=""
             value={undefined}
         />
     )).toThrowError(/"resourceKey"/);
@@ -143,6 +148,7 @@ test('Should throw an error if no adapter is passed in fieldTypeOptions', () => 
             formInspector={formInspector}
             onChange={jest.fn()}
             fieldTypeOptions={{resourceKey: 'test'}}
+            schemaPath=""
             value={undefined}
         />
     )).toThrowError(/"adapter"/);

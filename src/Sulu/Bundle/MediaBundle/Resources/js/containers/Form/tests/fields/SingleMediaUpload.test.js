@@ -22,7 +22,7 @@ test('Pass correct props', () => {
     };
 
     const singleMediaUpload = shallow(
-        <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />
+        <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} schemaPath="" value={undefined} />
     );
 
     expect(singleMediaUpload.prop('collectionId')).toEqual(3);
@@ -42,7 +42,7 @@ test('Pass correct skin to props', () => {
     };
 
     const singleMediaUpload = shallow(
-        <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />
+        <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} schemaPath="" value={undefined} />
     );
 
     expect(singleMediaUpload.prop('skin')).toEqual('round');
@@ -59,7 +59,9 @@ test('Throw if emptyIcon is set but not a valid value', () => {
     };
 
     expect(
-        () => shallow(<SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />)
+        () => shallow(
+            <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} schemaPath="" value={undefined} />
+        )
     ).toThrow('"empty_icon"');
 });
 
@@ -74,7 +76,9 @@ test('Throw if skin is set but not a valid value', () => {
     };
 
     expect(
-        () => shallow(<SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />)
+        () => shallow(
+            <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} schemaPath="" value={undefined} />
+        )
     ).toThrow('"default" or "round"');
 });
 
@@ -89,7 +93,9 @@ test('Throw if image_size is set but not a valid value', () => {
     };
 
     expect(
-        () => shallow(<SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />)
+        () => shallow(
+            <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} schemaPath="" value={undefined} />
+        )
     ).toThrow('"image_size"');
 });
 
@@ -97,7 +103,9 @@ test('Throw if collectionId is not set', () => {
     const schemaOptions = {};
 
     expect(
-        () => shallow(<SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />)
+        () => shallow(
+            <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} schemaPath="" value={undefined} />
+        )
     ).toThrow('"collection_id"');
 });
 
@@ -112,7 +120,13 @@ test('Call onChange and onFinish when upload has completed', () => {
     };
 
     const singleMediaUpload = shallow(
-        <SingleMediaUpload onChange={changeSpy} onFinish={finishSpy} schemaOptions={schemaOptions} value={undefined} />
+        <SingleMediaUpload
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaOptions={schemaOptions}
+            schemaPath=""
+            value={undefined}
+        />
     );
 
     singleMediaUpload.find(SingleMediaUploadComponent).simulate('uploadComplete', media);
@@ -128,7 +142,7 @@ test('Create a MediaUploadStore when constructed', () => {
         },
     };
     const singleMediaUpload = shallow(
-        <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={undefined} />
+        <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} schemaPath="" value={undefined} />
     );
 
     expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
@@ -148,7 +162,7 @@ test('Create a MediaUploadStore when constructed with data', () => {
         },
     };
     const singleMediaUpload = shallow(
-        <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} value={data} />
+        <SingleMediaUpload onChange={jest.fn()} schemaOptions={schemaOptions} schemaPath="" value={data} />
     );
 
     expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);

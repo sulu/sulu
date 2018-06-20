@@ -23,6 +23,7 @@ test('Pass props correctly to SingleSelect', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
+            schemaPath=""
             value="test"
         />
     );
@@ -62,6 +63,7 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
+            schemaPath=""
             value="test"
         />
     )).toThrow(/"default_value"/);
@@ -88,6 +90,7 @@ test('Should throw an exception if value is of wrong type', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
+            schemaPath=""
             value="test"
         />
     )).toThrow(/"values"/);
@@ -115,6 +118,7 @@ test('Should call onFinish callback on every onChange', () => {
             onChange={jest.fn()}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
+            schemaPath=""
             value="test"
         />
     );
@@ -143,17 +147,25 @@ test('Set default value if no value is passed', () => {
             ],
         },
     };
-    shallow(<SingleSelect onChange={changeSpy} onFinish={jest.fn()} schemaOptions={schemaOptions} value={undefined} />);
+    shallow(
+        <SingleSelect
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            schemaPath=""
+            value={undefined}
+        />
+    );
 
     expect(changeSpy).toBeCalledWith('mr');
 });
 
 test('Throw error if no schemaOptions are passed', () => {
-    expect(() => shallow(<SingleSelect onChange={jest.fn()} onFinish={jest.fn()} value={undefined} />))
+    expect(() => shallow(<SingleSelect onChange={jest.fn()} onFinish={jest.fn()} schemaPath="" value={undefined} />))
         .toThrow(/"values"/);
 });
 
 test('Throw error if no value option is passed', () => {
-    expect(() => shallow(<SingleSelect onChange={jest.fn()} onFinish={jest.fn()} value={undefined} />))
+    expect(() => shallow(<SingleSelect onChange={jest.fn()} onFinish={jest.fn()} schemaPath="" value={undefined} />))
         .toThrow(/"values"/);
 });

@@ -33,6 +33,7 @@ test('Render correct label with correct field type', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={{label: 'label1', type: 'text'}}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 
@@ -46,6 +47,7 @@ test('Render correct label with correct field type', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={{label: 'label2', type: 'datetime'}}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 });
@@ -63,6 +65,7 @@ test('Render a required field with correct field type', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={{label: 'label1', required: true, type: 'text'}}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 });
@@ -77,6 +80,7 @@ test('Render a field without a label', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={{type: 'text'}}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 });
@@ -96,6 +100,7 @@ test('Render a field with an error', () => {
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
                 schema={{label: 'label1', type: 'text'}}
+                schemaPath=""
             />
         )
     ).toMatchSnapshot();
@@ -122,6 +127,7 @@ test('Render a field with a error collection', () => {
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
                 schema={{label: 'label1', type: 'text'}}
+                schemaPath=""
             />
         )
     ).toMatchSnapshot();
@@ -148,6 +154,7 @@ test('Pass correct props to FieldType', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={schema}
+            schemaPath="/text"
             showAllErrors={true}
             value="test"
         />
@@ -157,6 +164,7 @@ test('Pass correct props to FieldType', () => {
         formInspector,
         maxOccurs: 4,
         minOccurs: 2,
+        schemaPath: '/text',
         showAllErrors: true,
         types: {},
         value: 'test',
@@ -190,6 +198,7 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={schema}
+            schemaPath=""
             showAllErrors={true}
             value="test"
         />
@@ -225,6 +234,7 @@ test('Call onChange callback when value of Field changes', () => {
             onChange={changeSpy}
             onFinish={jest.fn()}
             schema={{label: 'label', type: 'text'}}
+            schemaPath=""
         />
     );
 
@@ -248,10 +258,11 @@ test('Call onFinish callback after editing the field has finished', () => {
             onChange={jest.fn()}
             onFinish={finishSpy}
             schema={{label: 'label', type: 'text'}}
+            schemaPath="/test"
         />
     );
 
     field.find('Text').simulate('finish');
 
-    expect(finishSpy).toBeCalledWith('test');
+    expect(finishSpy).toBeCalledWith('test', '/test');
 });

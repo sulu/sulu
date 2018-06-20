@@ -38,6 +38,7 @@ test('Should pass props correctly to Renderer', () => {
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
             schema={schema}
+            schemaPath="/test"
         />
     );
 
@@ -47,6 +48,7 @@ test('Should pass props correctly to Renderer', () => {
         formInspector,
         onFieldFinish: fieldFinishSpy,
         schema,
+        schemaPath: '/test',
         showAllErrors: false,
     }));
 });
@@ -63,6 +65,7 @@ test('Should pass showAllErrors prop to Renderer', () => {
             onFieldFinish={jest.fn()}
             showAllErrors={true}
             schema={{}}
+            schemaPath=""
         />
     );
 
@@ -81,6 +84,7 @@ test('Should call onChange callback with correct index', () => {
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
             schema={{}}
+            schemaPath=""
         />
     );
 
@@ -101,6 +105,7 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
             schema={{}}
+            schemaPath=""
         />
     );
 

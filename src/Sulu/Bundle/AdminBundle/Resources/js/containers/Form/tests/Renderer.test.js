@@ -37,6 +37,7 @@ test('Should render a grid', () => {
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
             schema={{}}
+            schemaPath=""
         />
     );
     expect(renderer).toMatchSnapshot();
@@ -63,14 +64,15 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
             schema={schema}
+            schemaPath=""
         />
     );
 
-    renderer.find('Field').at(0).prop('onFinish')();
-    expect(fieldFinishSpy).toHaveBeenCalledTimes(1);
+    renderer.find('Field').at(0).prop('onFinish')('text', '/text');
+    expect(fieldFinishSpy).toHaveBeenLastCalledWith('/text');
 
-    renderer.find('Field').at(1).prop('onFinish')();
-    expect(fieldFinishSpy).toHaveBeenCalledTimes(2);
+    renderer.find('Field').at(1).prop('onFinish')('datetime', '/datetime');
+    expect(fieldFinishSpy).toHaveBeenLastCalledWith('/datetime');
 });
 
 test('Should render field types based on schema', () => {
@@ -96,10 +98,47 @@ test('Should render field types based on schema', () => {
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
             schema={schema}
+            schemaPath=""
         />
     );
 
     expect(renderer).toMatchSnapshot();
+});
+
+test('Should pass correct schemaPath to fields', () => {
+    const schema = {
+        highlight: {
+            items: {
+                title: {
+                    type: 'text_line',
+                },
+                url: {
+                    type: 'text_line',
+                },
+            },
+            type: 'section',
+        },
+        article: {
+            type: 'text_line',
+        },
+    };
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    const renderer = shallow(
+        <Renderer
+            data={{}}
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFieldFinish={jest.fn()}
+            schema={schema}
+            schemaPath="/test"
+        />
+    );
+
+    expect(renderer.find('Field').at(0).prop('schemaPath')).toEqual('/test/highlight/items/title');
+    expect(renderer.find('Field').at(1).prop('schemaPath')).toEqual('/test/highlight/items/url');
+    expect(renderer.find('Field').at(2).prop('schemaPath')).toEqual('/test/article');
 });
 
 test('Should pass name, schema and formInspector to fields', () => {
@@ -126,6 +165,7 @@ test('Should pass name, schema and formInspector to fields', () => {
             onChange={changeSpy}
             onFieldFinish={fieldFinishSpy}
             schema={schema}
+            schemaPath=""
         />
     );
 
@@ -180,6 +220,7 @@ test('Should pass errors to fields that have already been modified at least once
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
             schema={schema}
+            schemaPath=""
         />
     );
 
@@ -228,6 +269,7 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
             schema={schema}
+            schemaPath=""
             showAllErrors={true}
         />
     );
@@ -279,6 +321,7 @@ test('Should render nested sections', () => {
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
             schema={schema}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 });
@@ -320,6 +363,7 @@ test('Should render sections with size', () => {
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
             schema={schema}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 });
@@ -360,6 +404,7 @@ test('Should render sections without label', () => {
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
             schema={schema}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 });

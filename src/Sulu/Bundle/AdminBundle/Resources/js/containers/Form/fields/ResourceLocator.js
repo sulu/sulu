@@ -14,16 +14,22 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
         }
     }
 
+    handleBlur = () => {
+        const {onFinish} = this.props;
+        if (onFinish) {
+            onFinish();
+        }
+    };
+
     render() {
         const {
             onChange,
-            value,
             schemaOptions: {
                 mode: {
                     value: mode,
                 } = {value: 'leaf'},
             } = {},
-            onFinish,
+            value,
         } = this.props;
 
         if (mode !== 'leaf' && mode !== 'full') {
@@ -35,7 +41,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
         }
 
         return (
-            <ResourceLocatorComponent value={value} onChange={onChange} mode={mode} onBlur={onFinish} />
+            <ResourceLocatorComponent value={value} onChange={onChange} mode={mode} onBlur={this.handleBlur} />
         );
     }
 }

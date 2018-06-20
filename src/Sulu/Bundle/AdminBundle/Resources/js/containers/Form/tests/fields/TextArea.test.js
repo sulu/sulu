@@ -9,10 +9,11 @@ test('Pass error correctly to Input component', () => {
 
     const inputInvalid = shallow(
         <TextArea
+            error={error}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'xyz'}
-            error={error}
         />
     );
 
@@ -24,6 +25,7 @@ test('Pass props correctly to Input component', () => {
         <TextArea
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             value={'xyz'}
         />
     );

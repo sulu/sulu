@@ -6,12 +6,12 @@ import CheckboxComponent from '../../../../components/Checkbox';
 import Toggler from '../../../../components/Toggler';
 
 test('Pass the value of true correctly to Checkbox component', () => {
-    const checkbox = shallow(<Checkbox onChange={jest.fn()} value={true} />);
+    const checkbox = shallow(<Checkbox onChange={jest.fn()} schemaPath="" value={true} />);
     expect(checkbox.find(CheckboxComponent).prop('checked')).toEqual(true);
 });
 
 test('Pass the value of false correctly to Checkbox component', () => {
-    const checkbox = shallow(<Checkbox onChange={jest.fn()} value={false} />);
+    const checkbox = shallow(<Checkbox onChange={jest.fn()} schemaPath="" value={false} />);
     expect(checkbox.find(CheckboxComponent).prop('checked')).toEqual(false);
 });
 
@@ -19,7 +19,7 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const checkbox = shallow(<Checkbox onChange={changeSpy} onFinish={finishSpy} value={false} />);
+    const checkbox = shallow(<Checkbox onChange={changeSpy} onFinish={finishSpy} schemaPath="" value={false} />);
     checkbox.find(CheckboxComponent).simulate('change', true);
 
     expect(changeSpy).toBeCalledWith(true);
@@ -27,13 +27,15 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
 });
 
 test('Pass the value of true correctly to Toggler component', () => {
-    const checkbox = shallow(<Checkbox onChange={jest.fn()} schemaOptions={{type: {value: 'toggler'}}} value={true} />);
+    const checkbox = shallow(
+        <Checkbox onChange={jest.fn()} schemaOptions={{type: {value: 'toggler'}}} schemaPath="" value={true} />
+    );
     expect(checkbox.find(Toggler).prop('checked')).toEqual(true);
 });
 
 test('Pass the value of false correctly to Toggler component', () => {
     const checkbox = shallow(
-        <Checkbox onChange={jest.fn()} schemaOptions={{type: {value: 'toggler'}}} value={false} />
+        <Checkbox onChange={jest.fn()} schemaOptions={{type: {value: 'toggler'}}} schemaPath="" value={false} />
     );
     expect(checkbox.find(Toggler).prop('checked')).toEqual(false);
 });
@@ -43,7 +45,13 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
     const finishSpy = jest.fn();
 
     const checkbox = shallow(
-        <Checkbox onChange={changeSpy} onFinish={finishSpy} schemaOptions={{type: {value: 'toggler'}}} value={false} />
+        <Checkbox
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaOptions={{type: {value: 'toggler'}}}
+            schemaPath=""
+            value={false}
+        />
     );
     checkbox.find(Toggler).simulate('change', true);
 

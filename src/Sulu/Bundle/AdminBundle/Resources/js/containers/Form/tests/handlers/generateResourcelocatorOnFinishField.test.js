@@ -24,7 +24,7 @@ jest.mock('../../stores/FormStore', () => jest.fn(function(resourceStore, option
 
 test('Should not request a new URL if on an edit form', () =>{
     const formStore = new FormStore(new ResourceStore('pages', 4));
-    generateResourcelocatorOnFinishField(formStore);
+    generateResourcelocatorOnFinishField(formStore, '');
     expect(Requester.post).not.toBeCalled();
 });
 
@@ -37,7 +37,7 @@ test('Should request a new URL if on an add form', () => {
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
-    generateResourcelocatorOnFinishField(formStore);
+    generateResourcelocatorOnFinishField(formStore, '');
 
     expect(formStore.getValuesByTag).toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).toBeCalledWith(
@@ -62,7 +62,7 @@ test('Should request a new URL including the options from the FormStore if on an
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
-    generateResourcelocatorOnFinishField(formStore);
+    generateResourcelocatorOnFinishField(formStore, '');
 
     expect(formStore.getValuesByTag).toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).toBeCalledWith(
@@ -84,7 +84,7 @@ test('Should not request a new URL if no parts are available', () => {
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
-    generateResourcelocatorOnFinishField(formStore);
+    generateResourcelocatorOnFinishField(formStore, '');
 
     expect(formStore.getValuesByTag).toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).not.toBeCalled();
@@ -99,7 +99,7 @@ test('Should not request a new URL if only empty parts are available', () => {
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
-    generateResourcelocatorOnFinishField(formStore);
+    generateResourcelocatorOnFinishField(formStore, '');
 
     expect(formStore.getValuesByTag).toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).not.toBeCalled();

@@ -7,7 +7,9 @@ import PasswordConfirmationComponent from '../../../../components/PasswordConfir
 test('Pass error correctly to PasswordConfirmation component', () => {
     const error = {keyword: 'required', parameters: {}};
 
-    const passwordConfirmation = shallow(<PasswordConfirmation onChange={jest.fn()} error={error} value={undefined} />);
+    const passwordConfirmation = shallow(
+        <PasswordConfirmation onChange={jest.fn()} error={error} schemaPath="" value={undefined} />
+    );
 
     expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('valid')).toBe(false);
 });
@@ -16,7 +18,7 @@ test('Pass props correctly to PasswordConfirmation component', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const passwordConfirmation = shallow(
-        <PasswordConfirmation onChange={changeSpy} onFinish={finishSpy} value={undefined} />
+        <PasswordConfirmation onChange={changeSpy} onFinish={finishSpy} schemaPath="" value={undefined} />
     );
 
     expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('valid')).toBe(true);
