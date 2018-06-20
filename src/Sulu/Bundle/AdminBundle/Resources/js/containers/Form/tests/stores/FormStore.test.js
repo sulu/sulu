@@ -527,10 +527,43 @@ test('Return all the values for a given tag', () => {
         },
         flag: {
             type: 'checkbox',
+            tags: [
+                {name: 'sulu.other'},
+            ],
         },
     };
 
     expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Value 2']);
+});
+
+test('Return all the values for a given tag sorted by priority', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {
+        title: 'Value 1',
+        description: 'Value 2',
+        flag: true,
+    };
+
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        title: {
+            tags: [
+                {name: 'sulu.resource_locator_part', priority: 10},
+            ],
+            type: 'text_line',
+        },
+        description: {
+            tags: [
+                {name: 'sulu.resource_locator_part', priority: 100},
+            ],
+            type: 'text_area',
+        },
+        flag: {
+            type: 'checkbox',
+        },
+    };
+
+    expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 2', 'Value 1']);
 });
 
 test('Return all the values for a given tag within sections', () => {

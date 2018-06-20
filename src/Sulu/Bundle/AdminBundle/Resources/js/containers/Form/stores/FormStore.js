@@ -31,23 +31,38 @@ function addSchemaProperties(data: Object, key: string, schema: Schema) {
     return data;
 }
 
-function collectTagPaths(
+function sortObjectByPriority(a, b) {
+    if (a.priority > b.priority) {
+        return -1;
+    }
+
+    if (a.priority < b.priority) {
+        return 1;
+    }
+
+    return 0;
+}
+
+function collectTagPathsWithPriority(
     tagName: string,
     data: Object,
     schema: Schema,
     parentPath: Array<string> = ['']
 ) {
-    const paths = [];
+    const pathsWithPriority = [];
     for (const key in schema) {
         const {items, tags, type, types} = schema[key];
 
         if (type === SECTION_TYPE && items) {
-            paths.push(...collectTagPaths(tagName, data, items, parentPath));
-        } else if (types && data[key]) {
+            pathsWithPriority.push(...collectTagPathsWithPriority(tagName, data, items, parentPath));
+            continue;
+        }
+
+        if (types && data[key]) {
             for (const childKey of data[key].keys()) {
                 const childData = data[key][childKey];
-                paths.push(
-                    ...collectTagPaths(
+                pathsWithPriority.push(
+                    ...collectTagPathsWithPriority(
                         tagName,
                         childData,
                         types[childData.type].form,
@@ -55,12 +70,34 @@ function collectTagPaths(
                     )
                 );
             }
-        } else if (tags && tags.some((tag) => tag.name === tagName)) {
-            paths.push(parentPath.concat([key]).join('/'));
+            continue;
+        }
+
+        if (tags) {
+            const filteredTags = tags.filter((tag) => tag.name === tagName);
+            if (filteredTags.length === 0) {
+                continue;
+            }
+
+            pathsWithPriority.push({
+                path: parentPath.concat([key]).join('/'),
+                priority: Math.max(...filteredTags.map((tag) => tag.priority || 0)),
+            });
+            continue;
         }
     }
 
-    return paths;
+    return pathsWithPriority.sort(sortObjectByPriority);
+}
+
+function collectTagPaths(
+    tagName: string,
+    data: Object,
+    schema: Schema,
+    parentPath: Array<string> = ['']
+) {
+    return collectTagPathsWithPriority(tagName, data, schema, parentPath)
+        .map((pathWithPriority) => pathWithPriority.path);
 }
 
 export default class FormStore {

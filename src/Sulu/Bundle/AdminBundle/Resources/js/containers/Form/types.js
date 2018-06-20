@@ -17,6 +17,7 @@ export type Types = {[key: string]: Type};
 
 export type Tag = {
     name: string,
+    priority?: number,
 };
 
 export type SchemaEntry = {
