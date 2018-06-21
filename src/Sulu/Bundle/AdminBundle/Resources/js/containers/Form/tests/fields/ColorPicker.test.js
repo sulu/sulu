@@ -20,6 +20,8 @@ test('Pass error correctly to component', () => {
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -39,6 +41,8 @@ test('Pass props correctly to component', () => {
         <ColorPicker
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={onChange}
             onFinish={onFinish}
             schemaPath=""

@@ -54,6 +54,8 @@ test('Should pass props correctly to component', () => {
         <Assignment
             formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             schemaPath=""
             value={value}
@@ -84,6 +86,8 @@ test('Should pass id of form as disabledId to avoid assigning something to itsel
         <Assignment
             formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             schemaPath=""
             value={undefined}
@@ -105,6 +109,8 @@ test('Should pass empty array if value is not given', () => {
         <Assignment
             formInspector={formInspector}
             fieldTypeOptions={fieldOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             schemaPath=""
             value={undefined}
@@ -126,6 +132,8 @@ test('Should throw an error if no resourceKey is passed in fieldOptions', () => 
         <Assignment
             formInspector={formInspector}
             fieldTypeOptions={{}}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             schemaPath=""
             value={undefined}
@@ -139,6 +147,8 @@ test('Should throw an error if no adapter is passed in fieldTypeOptions', () => 
     expect(() => shallow(
         <Assignment
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             fieldTypeOptions={{resourceKey: 'test'}}
             schemaPath=""

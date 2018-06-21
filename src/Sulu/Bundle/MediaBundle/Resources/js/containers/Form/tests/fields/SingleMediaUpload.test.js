@@ -36,6 +36,8 @@ test('Pass correct props', () => {
     const singleMediaUpload = shallow(
         <SingleMediaUpload
             fieldTypeOptions={{}}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
@@ -64,6 +66,8 @@ test('Pass correct skin to props', () => {
     const singleMediaUpload = shallow(
         <SingleMediaUpload
             fieldTypeOptions={{}}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
@@ -90,6 +94,8 @@ test('Throw if emptyIcon is set but not a valid value', () => {
         () => shallow(
             <SingleMediaUpload
                 fieldTypeOptions={{}}
+                maxOccurs={undefined}
+                minOccurs={undefined}
                 onChange={jest.fn()}
                 formInspector={formInspector}
                 schemaOptions={schemaOptions}
@@ -115,6 +121,8 @@ test('Throw if skin is set but not a valid value', () => {
         () => shallow(
             <SingleMediaUpload
                 fieldTypeOptions={{}}
+                maxOccurs={undefined}
+                minOccurs={undefined}
                 onChange={jest.fn()}
                 formInspector={formInspector}
                 schemaOptions={schemaOptions}
@@ -140,6 +148,8 @@ test('Throw if image_size is set but not a valid value', () => {
         () => shallow(
             <SingleMediaUpload
                 fieldTypeOptions={{}}
+                maxOccurs={undefined}
+                minOccurs={undefined}
                 onChange={jest.fn()}
                 formInspector={formInspector}
                 schemaOptions={schemaOptions}
@@ -159,6 +169,8 @@ test('Throw if collectionId is not set', () => {
             <SingleMediaUpload
                 fieldTypeOptions={{}}
                 formInspector={formInspector}
+                maxOccurs={undefined}
+                minOccurs={undefined}
                 onChange={jest.fn()}
                 schemaOptions={schemaOptions}
                 schemaPath=""
@@ -183,6 +195,8 @@ test('Call onChange and onFinish when upload has completed', () => {
         <SingleMediaUpload
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
@@ -208,6 +222,8 @@ test('Create a MediaUploadStore when constructed', () => {
         <SingleMediaUpload
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             schemaOptions={schemaOptions}
             schemaPath=""
@@ -236,6 +252,8 @@ test('Create a MediaUploadStore when constructed with data', () => {
         <SingleMediaUpload
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             schemaOptions={schemaOptions}
             schemaPath=""

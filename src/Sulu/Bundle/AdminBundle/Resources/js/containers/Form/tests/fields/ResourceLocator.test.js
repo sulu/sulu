@@ -46,6 +46,8 @@ test('Pass props correctly to ResourceLocator', () => {
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
@@ -71,6 +73,8 @@ test('Throw an exception if a non-valid mode is passed', () => {
             <ResourceLocator
                 fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
                 formInspector={formInspector}
+                maxOccurs={undefined}
+                minOccurs={undefined}
                 onChange={jest.fn()}
                 schemaOptions={schemaOptions}
                 schemaPath=""
@@ -88,6 +92,8 @@ test('Throw an exception if a no generationUrl is passed', () => {
             <ResourceLocator
                 fieldTypeOptions={{}}
                 formInspector={formInspector}
+                maxOccurs={undefined}
+                minOccurs={undefined}
                 onChange={jest.fn()}
                 schemaPath=""
                 value="/"
@@ -104,6 +110,8 @@ test('Set default value correctly with undefined value', () => {
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath=""
@@ -122,6 +130,8 @@ test('Set default value correctly with empty string', () => {
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath=""
@@ -138,6 +148,8 @@ test('Set default mode correctly', () => {
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -156,6 +168,8 @@ test('Should not pass any argument to onFinish callback', () => {
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={finishSpy}
             schemaPath=""
@@ -174,6 +188,8 @@ test('Should not request a new URL if on an edit form', () =>{
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath="/url"
@@ -199,6 +215,8 @@ test('Should request a new URL if on an add form', () => {
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath="/url"
@@ -241,6 +259,8 @@ test('Should request a new URL including the options from the FormStore if on an
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath="/url"
@@ -282,6 +302,8 @@ test('Should not request a new URL if no parts are available', () => {
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath="/url"
@@ -310,6 +332,8 @@ test('Should not request a new URL if only empty parts are available', () => {
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath="/url"
@@ -338,6 +362,8 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath="/url"
@@ -366,6 +392,8 @@ test('Should not request a new URL if a field without any tags has finished edit
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath="/url"
@@ -395,6 +423,8 @@ test('Should not request a new URL if there is an error on the form', () => {
         <ResourceLocator
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath="/url"

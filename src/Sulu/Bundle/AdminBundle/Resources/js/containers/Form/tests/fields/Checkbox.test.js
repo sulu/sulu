@@ -15,7 +15,15 @@ jest.mock('../../FormInspector', () => jest.fn());
 test('Pass the value of true correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
-        <Checkbox fieldTypeOptions={{}} formInspector={formInspector} onChange={jest.fn()} schemaPath="" value={true} />
+        <Checkbox
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={jest.fn()}
+            schemaPath=""
+            value={true}
+        />
     );
     expect(checkbox.find(CheckboxComponent).prop('checked')).toEqual(true);
 });
@@ -26,6 +34,8 @@ test('Pass the value of false correctly to Checkbox component', () => {
         <Checkbox
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             schemaPath=""
             value={false}
@@ -43,6 +53,8 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
         <Checkbox
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaPath=""
@@ -61,6 +73,8 @@ test('Pass the value of true correctly to Toggler component', () => {
         <Checkbox
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             schemaOptions={{type: {value: 'toggler'}}}
             schemaPath=""
@@ -76,6 +90,8 @@ test('Pass the value of false correctly to Toggler component', () => {
         <Checkbox
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             schemaOptions={{type: {value: 'toggler'}}}
             schemaPath=""
@@ -94,6 +110,8 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
         <Checkbox
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaOptions={{type: {value: 'toggler'}}}

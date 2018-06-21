@@ -20,6 +20,8 @@ test('Pass error correctly to component', () => {
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -36,6 +38,8 @@ test('Pass props correctly to component', () => {
         <Number
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -64,6 +68,8 @@ test('Pass props correctly to component inclusive schemaOptions', () => {
         <Number
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}

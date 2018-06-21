@@ -20,6 +20,8 @@ test('Pass error correctly to Input component', () => {
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -36,6 +38,8 @@ test('Pass props correctly to component', () => {
         <Time
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -53,6 +57,8 @@ test('Pass invalid value correctly to component', () => {
         <Time
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -69,6 +75,8 @@ test('Convert value and pass it correctly to component', () => {
         <Time
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -89,6 +97,8 @@ test('Should call onFinish callback on every onChange with correctly converted v
         <Time
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaPath=""

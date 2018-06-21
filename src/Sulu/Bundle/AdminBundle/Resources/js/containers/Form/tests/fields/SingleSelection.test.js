@@ -28,6 +28,8 @@ test('Pass correct props to AutoComplete', () => {
         <SingleSelection
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             schemaPath=""
             value={value}
@@ -63,6 +65,8 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
         <SingleSelection
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaPath=""
@@ -85,6 +89,8 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
             <SingleSelection
                 fieldTypeOptions={fieldTypeOptions}
                 formInspector={formInspector}
+                maxOccurs={undefined}
+                minOccurs={undefined}
                 onChange={jest.fn()}
                 schemaPath=""
                 value={undefined}

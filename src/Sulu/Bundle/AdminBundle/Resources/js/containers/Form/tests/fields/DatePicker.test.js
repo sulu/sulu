@@ -20,6 +20,8 @@ test('Pass error correctly to component', () => {
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -36,6 +38,8 @@ test('Pass props correctly to component', () => {
         <DatePicker
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -53,6 +57,8 @@ test('Pass invalid value correctly to component', () => {
         <DatePicker
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -69,6 +75,8 @@ test('Convert value and pass it correctly to component', () => {
         <DatePicker
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -88,6 +96,8 @@ test('Should call onFinish callback on every onChange with correctly converted v
         <DatePicker
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaPath=""

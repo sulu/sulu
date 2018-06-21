@@ -18,6 +18,8 @@ test('Pass error correctly to PasswordConfirmation component', () => {
     const passwordConfirmation = shallow(
         <PasswordConfirmation
             fieldTypeOptions={{}}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             error={error}
             formInspector={formInspector}
@@ -37,6 +39,8 @@ test('Pass props correctly to PasswordConfirmation component', () => {
         <PasswordConfirmation
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaPath=""

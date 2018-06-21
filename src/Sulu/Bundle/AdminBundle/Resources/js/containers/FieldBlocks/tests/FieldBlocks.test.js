@@ -61,6 +61,8 @@ test('Render block with schema', () => {
         <FieldBlocks
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -123,6 +125,8 @@ test('Render block with schema and error on fields already being modified', () =
             fieldTypeOptions={{}}
             error={error}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -189,6 +193,8 @@ test('Render block with schema and error on fields already being modified', () =
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -267,6 +273,8 @@ test('Should pass correct schemaPath to FieldRender', () => {
         <FieldBlocks
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             schemaPath=""
             types={types}
@@ -303,6 +311,8 @@ test('Should call onFinish when a field from the child renderer has finished edi
         <FieldBlocks
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={finishSpy}
             schemaPath=""
@@ -337,6 +347,8 @@ test('Should call onFinish when the order of the blocks has changed', () => {
         <FieldBlocks
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={finishSpy}
             schemaPath=""
@@ -356,6 +368,8 @@ test('Throw error if no types are passed', () => {
         <FieldBlocks
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -370,6 +384,8 @@ test('Throw error if empty type array is passed', () => {
         <FieldBlocks
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""

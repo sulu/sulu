@@ -30,6 +30,8 @@ test('Pass props correctly to SingleSelect', () => {
         <SingleSelect
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
@@ -73,6 +75,8 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         <SingleSelect
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
@@ -103,6 +107,8 @@ test('Should throw an exception if value is of wrong type', () => {
         <SingleSelect
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
@@ -134,6 +140,8 @@ test('Should call onFinish callback on every onChange', () => {
         <SingleSelect
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
@@ -171,6 +179,8 @@ test('Set default value if no value is passed', () => {
         <SingleSelect
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
@@ -188,6 +198,8 @@ test('Throw error if no schemaOptions are passed', () => {
         <SingleSelect
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -202,6 +214,8 @@ test('Throw error if no value option is passed', () => {
         <SingleSelect
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
