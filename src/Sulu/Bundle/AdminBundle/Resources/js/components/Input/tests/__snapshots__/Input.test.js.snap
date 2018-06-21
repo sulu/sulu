@@ -54,17 +54,6 @@ exports[`Input should render collapsed 1`] = `
 </label>
 `;
 
-exports[`Input should render null value as empty string 1`] = `
-<label
-  class="input default"
->
-  <input
-    type="text"
-    value=""
-  />
-</label>
-`;
-
 exports[`Input should render undefined value as empty string 1`] = `
 <label
   class="input default"
