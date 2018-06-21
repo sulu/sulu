@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 trait RouteTrait
 {
-    abstract public function getJsBundleName();
+    abstract public function getBundleName();
 
     private function createBasicRoutes(string $resourceKey, string $path, array $locales = []): array
     {
@@ -41,7 +41,7 @@ trait RouteTrait
         string $parentPath,
         array $locales = []
     ): Route {
-        $bundleName = $this->getJsBundleName();
+        $bundleName = $this->getBundleName();
 
         if (!empty($locales)) {
             $parentPath .= '/:locale';
@@ -62,7 +62,7 @@ trait RouteTrait
         string $name,
         array $locales = []
     ): Route {
-        $bundleName = $this->getJsBundleName();
+        $bundleName = $this->getBundleName();
 
         $editSubRoute = (new Route(sprintf('%s_%s.edit_form.' . $name, $bundleName, $resourceKey), '/' . $name, 'sulu_admin.form'))
             ->addOption('tabTitle', sprintf('%s.' . $name, $bundleName))
@@ -81,7 +81,7 @@ trait RouteTrait
         string $parentPath,
         array $locales = []
     ): Route {
-        $bundleName = $this->getJsBundleName();
+        $bundleName = $this->getBundleName();
 
         if (!empty($locales)) {
             $parentPath .= '/:locale';
@@ -102,7 +102,7 @@ trait RouteTrait
         string $name,
         array $locales = []
     ): Route {
-        $bundleName = $this->getJsBundleName();
+        $bundleName = $this->getBundleName();
 
         $addSubRoute = (new Route(sprintf('%s_%s.add_form.' . $name, $bundleName, $resourceKey), '/' . $name, 'sulu_admin.form'))
             ->addOption('tabTitle', sprintf('%s.' . $name, $bundleName))
@@ -122,7 +122,7 @@ trait RouteTrait
         string $path,
         array $locales = []
     ): Route {
-        $bundleName = $this->getJsBundleName();
+        $bundleName = $this->getBundleName();
 
         if (!empty($locales)) {
             $path = $path . '/:locale';
