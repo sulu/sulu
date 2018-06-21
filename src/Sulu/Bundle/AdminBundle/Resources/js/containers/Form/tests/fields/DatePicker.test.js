@@ -25,6 +25,7 @@ test('Pass error correctly to component', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value={'xyz'}
         />
     );
@@ -43,6 +44,7 @@ test('Pass props correctly to component', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value={undefined}
         />
     );
@@ -62,6 +64,7 @@ test('Pass invalid value correctly to component', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value={'test'}
         />
     );
@@ -80,6 +83,7 @@ test('Convert value and pass it correctly to component', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value={'2018-12-03'}
         />
     );
@@ -101,6 +105,7 @@ test('Should call onFinish callback on every onChange with correctly converted v
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaPath=""
+            showAllErrors={false}
             value={'2018-12-03'}
         />
     );

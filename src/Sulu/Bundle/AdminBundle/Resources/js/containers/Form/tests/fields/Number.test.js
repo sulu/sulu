@@ -25,6 +25,7 @@ test('Pass error correctly to component', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value={50.2}
         />
     );
@@ -43,6 +44,7 @@ test('Pass props correctly to component', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value={50.2}
         />
     );
@@ -74,6 +76,7 @@ test('Pass props correctly to component inclusive schemaOptions', () => {
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
             schemaPath=""
+            showAllErrors={false}
             value={50.2}
         />
     );

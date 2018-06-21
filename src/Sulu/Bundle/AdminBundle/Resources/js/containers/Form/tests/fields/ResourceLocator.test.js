@@ -52,6 +52,7 @@ test('Pass props correctly to ResourceLocator', () => {
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
             schemaPath=""
+            showAllErrors={false}
             value="/"
         />
     );
@@ -79,6 +80,7 @@ test('Throw an exception if a non-valid mode is passed', () => {
                 onFinish={jest.fn()}
                 schemaOptions={schemaOptions}
                 schemaPath=""
+                showAllErrors={false}
                 value="/"
             />
         )
@@ -98,6 +100,7 @@ test('Throw an exception if a no generationUrl is passed', () => {
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
                 schemaPath=""
+                showAllErrors={false}
                 value="/"
             />
         )
@@ -117,6 +120,7 @@ test('Set default value correctly with undefined value', () => {
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value={undefined}
         />
     );
@@ -137,6 +141,7 @@ test('Set default value correctly with empty string', () => {
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value=""
         />
     );
@@ -155,6 +160,7 @@ test('Set default mode correctly', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value="/test/xxx"
         />
     );
@@ -175,6 +181,7 @@ test('Should not pass any argument to onFinish callback', () => {
             onChange={jest.fn()}
             onFinish={finishSpy}
             schemaPath=""
+            showAllErrors={false}
             value="/test/xxx"
         />
     );
@@ -195,6 +202,7 @@ test('Should not request a new URL if on an edit form', () =>{
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath="/url"
+            showAllErrors={false}
             value="/test/xxx"
         />
     );
@@ -222,6 +230,7 @@ test('Should request a new URL if on an add form', () => {
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath="/url"
+            showAllErrors={false}
             value="/test/xxx"
         />
     );
@@ -266,6 +275,7 @@ test('Should request a new URL including the options from the FormStore if on an
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath="/url"
+            showAllErrors={false}
             value="/test/xxx"
         />
     );
@@ -309,6 +319,7 @@ test('Should not request a new URL if no parts are available', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath="/url"
+            showAllErrors={false}
             value="/test/xxx"
         />
     );
@@ -339,6 +350,7 @@ test('Should not request a new URL if only empty parts are available', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath="/url"
+            showAllErrors={false}
             value="/test/xxx"
         />
     );
@@ -369,6 +381,7 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath="/url"
+            showAllErrors={false}
             value="/test/xxx"
         />
     );
@@ -399,6 +412,7 @@ test('Should not request a new URL if a field without any tags has finished edit
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath="/url"
+            showAllErrors={false}
             value="/test/xxx"
         />
     );
@@ -430,6 +444,7 @@ test('Should not request a new URL if there is an error on the form', () => {
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath="/url"
+            showAllErrors={false}
             value="/test/xxx"
         />
     );

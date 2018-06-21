@@ -43,7 +43,7 @@ export type FieldTypeProps<T> = {|
     onFinish: (subSchemaPath: ?string) => void,
     schemaOptions?: SchemaOptions,
     schemaPath: string,
-    showAllErrors?: boolean,
+    showAllErrors: boolean,
     types?: Types,
     value: ?T,
 |};

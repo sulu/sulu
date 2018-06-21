@@ -43,6 +43,7 @@ test('Pass correct props', () => {
             formInspector={formInspector}
             schemaOptions={schemaOptions}
             schemaPath=""
+            showAllErrors={false}
             value={undefined}
         />
     );
@@ -74,6 +75,7 @@ test('Pass correct skin to props', () => {
             formInspector={formInspector}
             schemaOptions={schemaOptions}
             schemaPath=""
+            showAllErrors={false}
             value={undefined}
         />
     );
@@ -103,6 +105,7 @@ test('Throw if emptyIcon is set but not a valid value', () => {
                 formInspector={formInspector}
                 schemaOptions={schemaOptions}
                 schemaPath=""
+                showAllErrors={false}
                 value={undefined}
             />
         )
@@ -131,6 +134,7 @@ test('Throw if skin is set but not a valid value', () => {
                 formInspector={formInspector}
                 schemaOptions={schemaOptions}
                 schemaPath=""
+                showAllErrors={false}
                 value={undefined}
             />
         )
@@ -159,6 +163,7 @@ test('Throw if image_size is set but not a valid value', () => {
                 formInspector={formInspector}
                 schemaOptions={schemaOptions}
                 schemaPath=""
+                showAllErrors={false}
                 value={undefined}
             />
         )
@@ -180,6 +185,7 @@ test('Throw if collectionId is not set', () => {
                 onFinish={jest.fn()}
                 schemaOptions={schemaOptions}
                 schemaPath=""
+                showAllErrors={false}
                 value={undefined}
             />
         )
@@ -207,6 +213,7 @@ test('Call onChange and onFinish when upload has completed', () => {
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
             schemaPath=""
+            showAllErrors={false}
             value={undefined}
         />
     );
@@ -234,6 +241,7 @@ test('Create a MediaUploadStore when constructed', () => {
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
             schemaPath=""
+            showAllErrors={false}
             value={undefined}
         />
     );
@@ -265,6 +273,7 @@ test('Create a MediaUploadStore when constructed with data', () => {
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}
             schemaPath=""
+            showAllErrors={false}
             value={data}
         />
     );

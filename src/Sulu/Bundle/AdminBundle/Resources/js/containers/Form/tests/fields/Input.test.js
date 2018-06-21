@@ -25,6 +25,7 @@ test('Pass error correctly to Input component', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value="xyz"
         />
     );
@@ -43,6 +44,7 @@ test('Pass props correctly to Input component', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value="xyz"
         />
     );
@@ -63,6 +65,7 @@ test('Should not pass any arguments to onFinish callback', () => {
             onChange={jest.fn()}
             onFinish={finishSpy}
             schemaPath=""
+            showAllErrors={false}
             value="xyz"
         />
     );

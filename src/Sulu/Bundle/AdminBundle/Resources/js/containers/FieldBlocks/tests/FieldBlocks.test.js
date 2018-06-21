@@ -66,6 +66,7 @@ test('Render block with schema', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -130,6 +131,7 @@ test('Render block with schema and error on fields already being modified', () =
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -239,6 +241,7 @@ test('Should correctly pass props to the BlockCollection', () => {
             onChange={changeSpy}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -278,6 +281,7 @@ test('Should pass correct schemaPath to FieldRender', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             types={types}
             value={[{}, {}]}
         />
@@ -317,6 +321,7 @@ test('Should call onFinish when a field from the child renderer has finished edi
             onChange={jest.fn()}
             onFinish={finishSpy}
             schemaPath=""
+            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -353,6 +358,7 @@ test('Should call onFinish when the order of the blocks has changed', () => {
             onChange={jest.fn()}
             onFinish={finishSpy}
             schemaPath=""
+            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -374,6 +380,7 @@ test('Throw error if no types are passed', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value={undefined}
         />
     )).toThrow('The "block" field type needs at least one type to be configured!');
@@ -390,6 +397,7 @@ test('Throw error if empty type array is passed', () => {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
+            showAllErrors={false}
             value={[]}
         />
     )).toThrow('The "block" field type needs at least one type to be configured!');

@@ -25,6 +25,7 @@ test('Pass error correctly to PasswordConfirmation component', () => {
             error={error}
             formInspector={formInspector}
             schemaPath=""
+            showAllErrors={false}
             value={undefined}
         />
     );
@@ -45,6 +46,7 @@ test('Pass props correctly to PasswordConfirmation component', () => {
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaPath=""
+            showAllErrors={false}
             value={undefined}
         />
     );
