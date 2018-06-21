@@ -32,6 +32,7 @@ test('Should pass props correctly to Renderer', () => {
     const formRenderer = shallow(
         <FieldRenderer
             data={data}
+            dataPath="/block/0/test"
             errors={errors}
             formInspector={formInspector}
             index={1}
@@ -44,6 +45,7 @@ test('Should pass props correctly to Renderer', () => {
 
     expect(formRenderer.find(Renderer).props()).toEqual(expect.objectContaining({
         data,
+        dataPath: '/block/0/test',
         errors,
         formInspector,
         onFieldFinish: fieldFinishSpy,
@@ -59,6 +61,7 @@ test('Should pass showAllErrors prop to Renderer', () => {
     const formRenderer = shallow(
         <FieldRenderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             index={2}
             onChange={jest.fn()}
@@ -79,6 +82,7 @@ test('Should call onChange callback with correct index', () => {
     const formRenderer = shallow(
         <FieldRenderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             index={2}
             onChange={changeSpy}
@@ -100,6 +104,7 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
     const formRenderer = shallow(
         <FieldRenderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             index={2}
             onChange={jest.fn()}

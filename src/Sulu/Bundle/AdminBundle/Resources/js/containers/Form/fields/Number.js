@@ -29,8 +29,12 @@ export default class Number extends React.Component<FieldTypeProps<?number>> {
         return this.schemaOptions.step ? parseFloat(this.schemaOptions.step.value) : undefined;
     }
 
+    handleBlur = () => {
+        this.props.onFinish();
+    };
+
     render() {
-        const {error, onChange, onFinish, value} = this.props;
+        const {error, onChange, value} = this.props;
 
         return (
             <NumberComponent
@@ -38,7 +42,7 @@ export default class Number extends React.Component<FieldTypeProps<?number>> {
                 max={this.max}
                 step={this.step}
                 onChange={onChange}
-                onBlur={onFinish}
+                onBlur={this.handleBlur}
                 valid={!error}
                 value={value}
             />

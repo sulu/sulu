@@ -17,6 +17,7 @@ test('Pass error correctly to Input component', () => {
 
     const time = shallow(
         <Time
+            dataPath=""
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -38,6 +39,7 @@ test('Pass props correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const time = shallow(
         <Time
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -60,6 +62,7 @@ test('Pass invalid value correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const time = shallow(
         <Time
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -81,6 +84,7 @@ test('Convert value and pass it correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const time = shallow(
         <Time
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -106,6 +110,7 @@ test('Should call onFinish callback on every onChange with correctly converted v
 
     const time = shallow(
         <Time
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}

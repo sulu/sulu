@@ -31,12 +31,12 @@ export default class Form extends React.Component<Props> {
         this.props.store.change(name, value);
     };
 
-    handleFieldFinish = (schemaPath: string) => {
-        log.debug('Finished editing field with schemaPath "' + schemaPath + '"');
+    handleFieldFinish = (dataPath: string, schemaPath: string) => {
+        log.debug('Finished editing field with dataPath "' + dataPath + '" and schemaPath "' + schemaPath + '"');
         const {store} = this.props;
 
         store.validate();
-        this.formInspector.finishField(schemaPath);
+        this.formInspector.finishField(dataPath, schemaPath);
     };
 
     render() {
@@ -48,6 +48,7 @@ export default class Form extends React.Component<Props> {
                 <form>
                     <Renderer
                         data={store.data}
+                        dataPath=""
                         errors={store.errors}
                         formInspector={this.formInspector}
                         onChange={this.handleChange}

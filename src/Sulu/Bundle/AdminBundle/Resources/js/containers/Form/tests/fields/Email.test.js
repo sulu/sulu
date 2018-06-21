@@ -17,6 +17,7 @@ test('Pass error correctly to component', () => {
 
     const field = shallow(
         <Email
+            dataPath=""
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -38,6 +39,7 @@ test('Pass props correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const field = shallow(
         <Email
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}

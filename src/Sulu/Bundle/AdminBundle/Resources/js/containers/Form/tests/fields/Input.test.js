@@ -17,6 +17,7 @@ test('Pass error correctly to Input component', () => {
 
     const inputInvalid = shallow(
         <Input
+            dataPath=""
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -38,6 +39,7 @@ test('Pass props correctly to Input component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const inputValid = shallow(
         <Input
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -61,6 +63,7 @@ test('Should not pass any arguments to onFinish callback', () => {
 
     const input = shallow(
         <Input
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}

@@ -44,6 +44,7 @@ test('Pass props correctly to ResourceLocator', () => {
 
     const resourceLocator = shallow(
         <ResourceLocator
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -74,6 +75,7 @@ test('Throw an exception if a non-valid mode is passed', () => {
     expect(
         () => shallow(
             <ResourceLocator
+                dataPath=""
                 error={undefined}
                 fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
                 formInspector={formInspector}
@@ -97,6 +99,7 @@ test('Throw an exception if a no generationUrl is passed', () => {
     expect(
         () => shallow(
             <ResourceLocator
+                dataPath=""
                 error={undefined}
                 fieldTypeOptions={{}}
                 formInspector={formInspector}
@@ -119,6 +122,7 @@ test('Set default value correctly with undefined value', () => {
 
     shallow(
         <ResourceLocator
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -142,6 +146,7 @@ test('Set default value correctly with empty string', () => {
 
     shallow(
         <ResourceLocator
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -163,6 +168,7 @@ test('Set default mode correctly', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const resourceLocator = mount(
         <ResourceLocator
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -186,6 +192,7 @@ test('Should not pass any argument to onFinish callback', () => {
 
     const resourceLocator = mount(
         <ResourceLocator
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -209,6 +216,7 @@ test('Should not request a new URL if on an edit form', () =>{
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 1)));
     shallow(
         <ResourceLocator
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -239,6 +247,7 @@ test('Should request a new URL if on an add form', () => {
 
     shallow(
         <ResourceLocator
+            dataPath="/block/0/url"
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -266,7 +275,7 @@ test('Should request a new URL if on an add form', () => {
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
-    finishFieldHandler('/url');
+    finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
@@ -286,6 +295,7 @@ test('Should request a new URL including the options from the FormStore if on an
 
     shallow(
         <ResourceLocator
+            dataPath="/block/0/url"
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -314,7 +324,7 @@ test('Should request a new URL including the options from the FormStore if on an
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
-    finishFieldHandler('/url');
+    finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
@@ -332,6 +342,7 @@ test('Should not request a new URL if no parts are available', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            dataPath="/block/0/url"
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -354,7 +365,7 @@ test('Should not request a new URL if no parts are available', () => {
         ],
     });
     formInspector.getValuesByTag.mockReturnValue([]);
-    finishFieldHandler('/url');
+    finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
@@ -365,6 +376,7 @@ test('Should not request a new URL if only empty parts are available', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            dataPath="/block/0/url"
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -387,7 +399,7 @@ test('Should not request a new URL if only empty parts are available', () => {
             {name: 'sulu.rlp.part'},
         ],
     });
-    finishFieldHandler('/url');
+    finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
@@ -398,6 +410,7 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            dataPath="/block/0/url"
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -420,7 +433,7 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
             {name: 'sulu.rlp'},
         ],
     });
-    finishFieldHandler('/url');
+    finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).not.toBeCalledWith('sulu.rlp.part');
@@ -431,6 +444,7 @@ test('Should not request a new URL if a field without any tags has finished edit
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            dataPath="/block/0/url"
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
@@ -448,7 +462,7 @@ test('Should not request a new URL if a field without any tags has finished edit
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
     formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
-    finishFieldHandler('/url');
+    finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).not.toBeCalledWith('sulu.rlp.part');

@@ -98,9 +98,9 @@ test('Should call registered onFinishField handlers', () => {
     formInspector.addFinishFieldHandler(finishFieldHandler1);
     formInspector.addFinishFieldHandler(finishFieldHandler2);
 
-    formInspector.finishField('/test');
-    expect(finishFieldHandler1).toBeCalledWith('/test');
-    expect(finishFieldHandler2).toBeCalledWith('/test');
+    formInspector.finishField('/block/0/test', '/test');
+    expect(finishFieldHandler1).toBeCalledWith('/block/0/test', '/test');
+    expect(finishFieldHandler2).toBeCalledWith('/block/0/test', '/test');
 });
 
 test('Should return the SchemaEntry for a given path by using the FormStore', () => {

@@ -17,6 +17,7 @@ test('Pass error correctly to PasswordConfirmation component', () => {
 
     const passwordConfirmation = shallow(
         <PasswordConfirmation
+            dataPath=""
             fieldTypeOptions={{}}
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -40,6 +41,7 @@ test('Pass props correctly to PasswordConfirmation component', () => {
     const finishSpy = jest.fn();
     const passwordConfirmation = shallow(
         <PasswordConfirmation
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}

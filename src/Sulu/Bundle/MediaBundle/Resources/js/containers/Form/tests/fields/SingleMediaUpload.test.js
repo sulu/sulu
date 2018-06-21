@@ -35,6 +35,7 @@ test('Pass correct props', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             maxOccurs={undefined}
@@ -69,6 +70,7 @@ test('Pass correct skin to props', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             maxOccurs={undefined}
@@ -101,6 +103,7 @@ test('Throw if emptyIcon is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                dataPath=""
                 error={undefined}
                 fieldTypeOptions={{}}
                 maxOccurs={undefined}
@@ -132,6 +135,7 @@ test('Throw if skin is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                dataPath=""
                 error={undefined}
                 fieldTypeOptions={{}}
                 maxOccurs={undefined}
@@ -163,6 +167,7 @@ test('Throw if image_size is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                dataPath=""
                 error={undefined}
                 fieldTypeOptions={{}}
                 maxOccurs={undefined}
@@ -187,6 +192,7 @@ test('Throw if collectionId is not set', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                dataPath=""
                 error={undefined}
                 fieldTypeOptions={{}}
                 formInspector={formInspector}
@@ -217,6 +223,7 @@ test('Call onChange and onFinish when upload has completed', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -247,6 +254,7 @@ test('Create a MediaUploadStore when constructed', () => {
     };
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -281,6 +289,7 @@ test('Create a MediaUploadStore when constructed with data', () => {
     };
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}

@@ -17,6 +17,7 @@ test('Pass error correctly to component', () => {
 
     const field = shallow(
         <ColorPicker
+            dataPath=""
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -41,6 +42,7 @@ test('Pass props correctly to component', () => {
 
     const field = shallow(
         <ColorPicker
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}

@@ -6,6 +6,7 @@ import type {Schema} from '../Form';
 
 type Props = {|
     data: Object,
+    dataPath: string,
     errors?: ErrorCollection,
     formInspector: FormInspector,
     index: number,
@@ -27,11 +28,12 @@ export default class FieldRenderer extends React.Component<Props> {
     };
 
     render() {
-        const {data, errors, formInspector, onFieldFinish, schema, schemaPath, showAllErrors} = this.props;
+        const {data, dataPath, errors, formInspector, onFieldFinish, schema, schemaPath, showAllErrors} = this.props;
 
         return (
             <Renderer
                 data={data}
+                dataPath={dataPath}
                 errors={errors}
                 formInspector={formInspector}
                 onChange={this.handleChange}

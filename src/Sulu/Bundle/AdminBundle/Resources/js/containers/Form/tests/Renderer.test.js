@@ -33,6 +33,7 @@ test('Should render a grid', () => {
     const renderer = render(
         <Renderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
@@ -60,6 +61,7 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
     const renderer = mount(
         <Renderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
@@ -68,11 +70,11 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
         />
     );
 
-    renderer.find('Field').at(0).prop('onFinish')('text', '/text');
-    expect(fieldFinishSpy).toHaveBeenLastCalledWith('/text');
+    renderer.find('Field').at(0).prop('onFinish')('/text', '/text');
+    expect(fieldFinishSpy).toHaveBeenLastCalledWith('/text', '/text');
 
-    renderer.find('Field').at(1).prop('onFinish')('datetime', '/datetime');
-    expect(fieldFinishSpy).toHaveBeenLastCalledWith('/datetime');
+    renderer.find('Field').at(1).prop('onFinish')('/datetime', '/datetime');
+    expect(fieldFinishSpy).toHaveBeenLastCalledWith('/datetime', '/datetime');
 });
 
 test('Should render field types based on schema', () => {
@@ -94,6 +96,7 @@ test('Should render field types based on schema', () => {
     const renderer = render(
         <Renderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
@@ -128,6 +131,7 @@ test('Should pass correct schemaPath to fields', () => {
     const renderer = shallow(
         <Renderer
             data={{}}
+            dataPath="/block/0"
             formInspector={formInspector}
             onChange={jest.fn()}
             onFieldFinish={jest.fn()}
@@ -137,8 +141,11 @@ test('Should pass correct schemaPath to fields', () => {
     );
 
     expect(renderer.find('Field').at(0).prop('schemaPath')).toEqual('/test/highlight/items/title');
+    expect(renderer.find('Field').at(0).prop('dataPath')).toEqual('/block/0/title');
     expect(renderer.find('Field').at(1).prop('schemaPath')).toEqual('/test/highlight/items/url');
+    expect(renderer.find('Field').at(1).prop('dataPath')).toEqual('/block/0/url');
     expect(renderer.find('Field').at(2).prop('schemaPath')).toEqual('/test/article');
+    expect(renderer.find('Field').at(2).prop('dataPath')).toEqual('/block/0/article');
 });
 
 test('Should pass name, schema and formInspector to fields', () => {
@@ -161,6 +168,7 @@ test('Should pass name, schema and formInspector to fields', () => {
     const renderer = shallow(
         <Renderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={fieldFinishSpy}
@@ -215,6 +223,7 @@ test('Should pass errors to fields that have already been modified at least once
     const renderer = shallow(
         <Renderer
             data={{}}
+            dataPath=""
             errors={errors}
             formInspector={formInspector}
             onChange={changeSpy}
@@ -224,7 +233,7 @@ test('Should pass errors to fields that have already been modified at least once
         />
     );
 
-    renderer.find('Field').at(0).simulate('finish', 'text');
+    renderer.find('Field').at(0).simulate('finish', '/text');
 
     const fields = renderer.find('Field');
 
@@ -264,6 +273,7 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
     const renderer = shallow(
         <Renderer
             data={{}}
+            dataPath=""
             errors={errors}
             formInspector={formInspector}
             onChange={changeSpy}
@@ -317,6 +327,7 @@ test('Should render nested sections', () => {
     expect(render(
         <Renderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
@@ -359,6 +370,7 @@ test('Should render sections with size', () => {
     expect(render(
         <Renderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
@@ -400,6 +412,7 @@ test('Should render sections without label', () => {
     expect(render(
         <Renderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}

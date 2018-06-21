@@ -17,6 +17,7 @@ test('Pass error correctly to Input component', () => {
 
     const inputInvalid = shallow(
         <TextArea
+            dataPath=""
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -38,6 +39,7 @@ test('Pass props correctly to Input component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const inputValid = shallow(
         <TextArea
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}

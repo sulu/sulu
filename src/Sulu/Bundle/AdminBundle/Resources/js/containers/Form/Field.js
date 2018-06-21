@@ -10,11 +10,12 @@ import FormInspector from './FormInspector';
 import type {SchemaEntry} from './types';
 
 type Props = {|
+    dataPath: string,
     error?: Error | ErrorCollection,
     formInspector: FormInspector,
     name: string,
     onChange: (string, *) => void,
-    onFinish: (name: string, schemaPath: string) => void,
+    onFinish: (dataPath: string, schemaPath: string) => void,
     schema: SchemaEntry,
     schemaPath: string,
     showAllErrors: boolean,
@@ -32,10 +33,10 @@ export default class Field extends React.Component<Props> {
         onChange(name, value);
     };
 
-    handleFinish = (subSchemaPath: ?string) => {
-        const {name, onFinish, schemaPath} = this.props;
-        // if the fields are nested the deepest field passes its schemaPath up
-        onFinish(name, subSchemaPath || schemaPath);
+    handleFinish = (subDataPath: ?string, subSchemaPath: ?string) => {
+        const {dataPath, onFinish, schemaPath} = this.props;
+        // if the fields are nested the deepest field passes its pathes up
+        onFinish(subDataPath || dataPath, subSchemaPath || schemaPath);
     };
 
     findErrorKeyword(error: ?Error | ErrorCollection): ?string {
@@ -61,7 +62,7 @@ export default class Field extends React.Component<Props> {
     }
 
     render() {
-        const {error, value, formInspector, schema, schemaPath, showAllErrors, name} = this.props;
+        const {dataPath, error, value, formInspector, schema, schemaPath, showAllErrors, name} = this.props;
         const {label, maxOccurs, minOccurs, options: schemaOptions, required, type, types} = schema;
         let FieldType;
 
@@ -95,6 +96,7 @@ export default class Field extends React.Component<Props> {
             <div className={fieldClass}>
                 {label && <label className={fieldStyles.label}>{label}{required && ' *'}</label>}
                 <FieldType
+                    dataPath={dataPath}
                     error={error}
                     fieldTypeOptions={fieldTypeOptions}
                     formInspector={formInspector}

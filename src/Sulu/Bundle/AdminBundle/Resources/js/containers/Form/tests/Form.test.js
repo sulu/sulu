@@ -88,7 +88,7 @@ test('Should validate form before calling finish handlers when a field has finis
     form.find('Renderer').prop('onFieldFinish')();
 });
 
-test('Call finish handlers on formInspector when a section field has finished being edited', () => {
+test('Call finish handlers with dataPath and schemaPath when a section field has finished being edited', () => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();
 
@@ -108,11 +108,11 @@ test('Call finish handlers on formInspector when a section field has finished be
     form.instance().formInspector.addFinishFieldHandler(handler2);
 
     form.find('Field[name="title"] Input').prop('onFinish')();
-    expect(handler1).toHaveBeenLastCalledWith('/highlight/items/title');
-    expect(handler2).toHaveBeenLastCalledWith('/highlight/items/title');
+    expect(handler1).toHaveBeenLastCalledWith('/title', '/highlight/items/title');
+    expect(handler2).toHaveBeenLastCalledWith('/title', '/highlight/items/title');
 });
 
-test('Call finish handlers on formInspector when a field has finished being edited', () => {
+test('Call finish handlers with dataPath and schemaPath when a field has finished being edited', () => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();
 
@@ -127,11 +127,11 @@ test('Call finish handlers on formInspector when a field has finished being edit
     form.instance().formInspector.addFinishFieldHandler(handler2);
 
     form.find('Field[name="article"] Input').prop('onFinish')();
-    expect(handler1).toHaveBeenLastCalledWith('/article');
-    expect(handler2).toHaveBeenLastCalledWith('/article');
+    expect(handler1).toHaveBeenLastCalledWith('/article', '/article');
+    expect(handler2).toHaveBeenLastCalledWith('/article', '/article');
 });
 
-test('Call finish handlers with the formStore and schemaPath when a block field has finished being edited', () => {
+test('Call finish handlers with dataPath and schemaPath when a block field has finished being edited', () => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();
 
@@ -168,8 +168,8 @@ test('Call finish handlers with the formStore and schemaPath when a block field 
     form.find('SortableBlocks').prop('onExpand')(0);
     form.update();
     form.find('SortableBlock Field').instance().handleFinish();
-    expect(handler1).toHaveBeenLastCalledWith('/block/types/default/form/text');
-    expect(handler2).toHaveBeenLastCalledWith('/block/types/default/form/text');
+    expect(handler1).toHaveBeenLastCalledWith('/block/0/text', '/block/types/default/form/text');
+    expect(handler2).toHaveBeenLastCalledWith('/block/0/text', '/block/types/default/form/text');
 });
 
 test('Should pass formInspector, schema, data and showAllErrors flag to Renderer', () => {

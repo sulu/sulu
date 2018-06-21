@@ -34,13 +34,14 @@ export type SchemaOption = {
 export type SchemaOptions = {[key: string]: SchemaOption};
 
 export type FieldTypeProps<T> = {|
+    dataPath: string,
     error: ?Error | ErrorCollection,
     fieldTypeOptions: Object,
     formInspector: FormInspector,
     maxOccurs: ?number,
     minOccurs: ?number,
     onChange: (value: T) => void,
-    onFinish: (subSchemaPath: ?string) => void,
+    onFinish: (subDataPath: ?string, subSchemaPath: ?string) => void,
     schemaOptions?: SchemaOptions,
     schemaPath: string,
     showAllErrors: boolean,

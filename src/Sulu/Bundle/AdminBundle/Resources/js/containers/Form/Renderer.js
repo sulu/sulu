@@ -12,13 +12,14 @@ import type {Schema, SchemaEntry} from './types';
 
 type Props = {|
     data: Object,
+    dataPath: string,
     errors?: ErrorCollection,
     formInspector: FormInspector,
     schema: Schema,
     schemaPath: string,
     showAllErrors: boolean,
     onChange: (string, *) => void,
-    onFieldFinish: ?(schemaPath: string) => void,
+    onFieldFinish: ?(dataPath: string, schemaPath: string) => void,
 |};
 
 @observer
@@ -29,16 +30,16 @@ export default class Renderer extends React.Component<Props> {
 
     @observable modifiedFields: Array<string> = [];
 
-    @action handleFieldFinish = (name: string, schemaPath: string) => {
+    @action handleFieldFinish = (dataPath: string, schemaPath: string) => {
         const {onFieldFinish} = this.props;
         const {modifiedFields} = this;
 
-        if (!modifiedFields.includes(name)) {
-            modifiedFields.push(name);
+        if (!modifiedFields.includes(dataPath)) {
+            modifiedFields.push(dataPath);
         }
 
         if(onFieldFinish) {
-            onFieldFinish(schemaPath);
+            onFieldFinish(dataPath, schemaPath);
         }
     };
 
@@ -54,16 +55,18 @@ export default class Renderer extends React.Component<Props> {
                     </Grid.Item>
                 }
                 {items &&
-                Object.keys(items).map((key) => this.renderItem(items[key], key, schemaPath + '/items/' + key))
-                }
+                Object.keys(items).map(
+                    (key) => this.renderItem(items[key], key, schemaPath + '/items/' + key)
+                )}
             </Grid.Section>
         );
     }
 
     renderGridItem(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
-        const {data, errors, formInspector, onChange, showAllErrors} = this.props;
+        const {data, dataPath, errors, formInspector, onChange, showAllErrors} = this.props;
+        const itemDataPath = dataPath + '/' + schemaKey;
 
-        const error = (showAllErrors || this.modifiedFields.includes(schemaKey)) && errors && errors[schemaKey]
+        const error = (showAllErrors || this.modifiedFields.includes(itemDataPath)) && errors && errors[schemaKey]
             ? errors[schemaKey]
             : undefined;
 
@@ -75,6 +78,7 @@ export default class Renderer extends React.Component<Props> {
                 spaceAfter={schemaField.spaceAfter}
             >
                 <Field
+                    dataPath={itemDataPath}
                     error={error}
                     formInspector={formInspector}
                     name={schemaKey}
@@ -107,7 +111,11 @@ export default class Renderer extends React.Component<Props> {
         return (
             <Grid className={rendererStyles.grid}>
                 {schemaKeys.map(
-                    (schemaKey) => this.renderItem(schema[schemaKey], schemaKey, schemaPath + '/' + schemaKey)
+                    (schemaKey) => this.renderItem(
+                        schema[schemaKey],
+                        schemaKey,
+                        schemaPath + '/' + schemaKey
+                    )
                 )}
             </Grid>
         );

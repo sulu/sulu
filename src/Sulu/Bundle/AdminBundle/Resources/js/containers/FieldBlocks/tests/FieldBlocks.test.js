@@ -59,6 +59,7 @@ test('Render block with schema', () => {
 
     const fieldBlocks = mount(
         <FieldBlocks
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -124,6 +125,7 @@ test('Render block with schema and error on fields already being modified', () =
 
     const fieldBlocks = mount(
         <FieldBlocks
+            dataPath="/block"
             fieldTypeOptions={{}}
             error={error}
             formInspector={formInspector}
@@ -131,7 +133,7 @@ test('Render block with schema and error on fields already being modified', () =
             minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schemaPath=""
+            schemaPath="/block"
             showAllErrors={false}
             types={types}
             value={value}
@@ -142,8 +144,8 @@ test('Render block with schema and error on fields already being modified', () =
     fieldBlocks.find('Block').at(1).simulate('click');
     fieldBlocks.find('Block').at(2).simulate('click');
 
-    fieldBlocks.find('Block').at(0).find('Field').at(0).prop('onFinish')('text');
-    fieldBlocks.find('Block').at(1).find('Field').at(0).prop('onFinish')('text');
+    fieldBlocks.find('Block').at(0).find('Field').at(0).prop('onFinish')('/block/0/text', '/block/text');
+    fieldBlocks.find('Block').at(1).find('Field').at(0).prop('onFinish')('/block/1/text', '/block/text');
 
     expect(pretty(fieldBlocks.html())).toMatchSnapshot();
 });
@@ -193,6 +195,7 @@ test('Render block with schema and error on fields already being modified', () =
 
     const fieldBlocks = mount(
         <FieldBlocks
+            dataPath=""
             error={error}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -235,6 +238,7 @@ test('Should correctly pass props to the BlockCollection', () => {
 
     const fieldBlocks = shallow(
         <FieldBlocks
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -276,6 +280,7 @@ test('Should pass correct schemaPath to FieldRender', () => {
 
     const fieldBlocks = mount(
         <FieldBlocks
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -317,6 +322,7 @@ test('Should call onFinish when a field from the child renderer has finished edi
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
         <FieldBlocks
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -355,6 +361,7 @@ test('Should call onFinish when the order of the blocks has changed', () => {
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
         <FieldBlocks
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -378,6 +385,7 @@ test('Throw error if no types are passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <FieldBlocks
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -397,6 +405,7 @@ test('Throw error if empty type array is passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <FieldBlocks
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}

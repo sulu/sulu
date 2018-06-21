@@ -28,6 +28,7 @@ test('Render correct label with correct field type', () => {
     });
     expect(render(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
@@ -42,6 +43,7 @@ test('Render correct label with correct field type', () => {
     });
     expect(render(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
@@ -60,6 +62,7 @@ test('Render a required field with correct field type', () => {
     });
     expect(render(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
@@ -75,6 +78,7 @@ test('Render a field without a label', () => {
 
     expect(render(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
@@ -94,6 +98,7 @@ test('Render a field with an error', () => {
     expect(
         render(
             <Field
+                dataPath=""
                 error={{keyword: 'minLength', parameters: {}}}
                 formInspector={formInspector}
                 name="test"
@@ -121,6 +126,7 @@ test('Render a field with a error collection', () => {
     expect(
         render(
             <Field
+                dataPath=""
                 error={error}
                 formInspector={formInspector}
                 name="test"
@@ -149,6 +155,7 @@ test('Pass correct props to FieldType', () => {
     };
     const field = shallow(
         <Field
+            dataPath="/block/0/text"
             formInspector={formInspector}
             name="text"
             onChange={jest.fn()}
@@ -161,6 +168,7 @@ test('Pass correct props to FieldType', () => {
     );
 
     expect(field.find('Text').props()).toEqual(expect.objectContaining({
+        dataPath: '/block/0/text',
         formInspector,
         maxOccurs: 4,
         minOccurs: 2,
@@ -193,6 +201,7 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
     };
     const field = shallow(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="text"
             onChange={jest.fn()}
@@ -229,6 +238,7 @@ test('Call onChange callback when value of Field changes', () => {
     const changeSpy = jest.fn();
     const field = shallow(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="test"
             onChange={changeSpy}
@@ -253,6 +263,7 @@ test('Call onFinish callback after editing the field has finished', () => {
     const finishSpy = jest.fn();
     const field = shallow(
         <Field
+            dataPath="/block/0/test"
             formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
@@ -264,5 +275,5 @@ test('Call onFinish callback after editing the field has finished', () => {
 
     field.find('Text').simulate('finish');
 
-    expect(finishSpy).toBeCalledWith('test', '/test');
+    expect(finishSpy).toBeCalledWith('/block/0/test', '/test');
 });

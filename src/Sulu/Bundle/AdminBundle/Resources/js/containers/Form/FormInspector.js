@@ -49,7 +49,7 @@ export default class FormInspector {
         this.finishFieldHandlers.push(finishFieldHandler);
     }
 
-    finishField(schemaPath: string) {
-        this.finishFieldHandlers.forEach((finishFieldHandler) => finishFieldHandler(schemaPath));
+    finishField(dataPath: string, schemaPath: string) {
+        this.finishFieldHandlers.forEach((finishFieldHandler) => finishFieldHandler(dataPath, schemaPath));
     }
 }

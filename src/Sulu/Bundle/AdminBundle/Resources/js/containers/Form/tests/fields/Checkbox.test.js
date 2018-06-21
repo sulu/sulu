@@ -16,6 +16,7 @@ test('Pass the value of true correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -36,6 +37,7 @@ test('Pass the value of false correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -59,6 +61,7 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
 
     const checkbox = shallow(
         <Checkbox
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -82,6 +85,7 @@ test('Pass the value of true correctly to Toggler component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -103,6 +107,7 @@ test('Pass the value of false correctly to Toggler component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
@@ -127,6 +132,7 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
 
     const checkbox = shallow(
         <Checkbox
+            dataPath=""
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}

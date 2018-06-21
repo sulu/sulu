@@ -17,7 +17,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
             throw new Error('The "generationUrl" fieldTypeOption must be a string!');
         }
 
-        formInspector.addFinishFieldHandler((schemaPath) => {
+        formInspector.addFinishFieldHandler((dataPath, schemaPath) => {
             if (formInspector.id) {
                 // do not generate resource locator if on edit form
                 return;
