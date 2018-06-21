@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Divider from '../../components/Divider';
@@ -28,15 +28,8 @@ export default class Renderer extends React.Component<Props> {
         showAllErrors: false,
     };
 
-    @observable modifiedFields: Array<string> = [];
-
     @action handleFieldFinish = (dataPath: string, schemaPath: string) => {
         const {onFieldFinish} = this.props;
-        const {modifiedFields} = this;
-
-        if (!modifiedFields.includes(dataPath)) {
-            modifiedFields.push(dataPath);
-        }
 
         if(onFieldFinish) {
             onFieldFinish(dataPath, schemaPath);
@@ -66,7 +59,7 @@ export default class Renderer extends React.Component<Props> {
         const {data, dataPath, errors, formInspector, onChange, showAllErrors} = this.props;
         const itemDataPath = dataPath + '/' + schemaKey;
 
-        const error = (showAllErrors || this.modifiedFields.includes(itemDataPath)) && errors && errors[schemaKey]
+        const error = (showAllErrors || formInspector.isFieldModified(itemDataPath)) && errors && errors[schemaKey]
             ? errors[schemaKey]
             : undefined;
 

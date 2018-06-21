@@ -7,7 +7,9 @@ import FormInspector from '../../Form/FormInspector';
 import FormStore from '../../Form/stores/FormStore';
 import ResourceStore from '../../../stores/ResourceStore';
 
-jest.mock('../../Form/FormInspector', () => jest.fn());
+jest.mock('../../Form/FormInspector', () => jest.fn(function() {
+    this.isFieldModified = jest.fn();
+}));
 jest.mock('../../Form/stores/FormStore', () => jest.fn());
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
@@ -123,6 +125,10 @@ test('Render block with schema and error on fields already being modified', () =
         },
     ];
 
+    formInspector.isFieldModified.mockImplementation((dataPath) => {
+        return dataPath === '/block/0/text' || dataPath === '/block/1/text';
+    });
+
     const fieldBlocks = mount(
         <FieldBlocks
             dataPath="/block"
@@ -143,9 +149,6 @@ test('Render block with schema and error on fields already being modified', () =
     fieldBlocks.find('Block').at(0).simulate('click');
     fieldBlocks.find('Block').at(1).simulate('click');
     fieldBlocks.find('Block').at(2).simulate('click');
-
-    fieldBlocks.find('Block').at(0).find('Field').at(0).prop('onFinish')('/block/0/text', '/block/text');
-    fieldBlocks.find('Block').at(1).find('Field').at(0).prop('onFinish')('/block/1/text', '/block/text');
 
     expect(pretty(fieldBlocks.html())).toMatchSnapshot();
 });

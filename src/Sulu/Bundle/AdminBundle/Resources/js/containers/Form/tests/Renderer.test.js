@@ -6,7 +6,9 @@ import FormInspector from '../FormInspector';
 import FormStore from '../stores/FormStore';
 import ResourceStore from '../../../stores/ResourceStore';
 
-jest.mock('../FormInspector', () => jest.fn());
+jest.mock('../FormInspector', () => jest.fn(function() {
+    this.isFieldModified = jest.fn();
+}));
 jest.mock('../stores/FormStore', () => jest.fn());
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
@@ -219,6 +221,9 @@ test('Should pass errors to fields that have already been modified at least once
     const changeSpy = jest.fn();
 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    formInspector.isFieldModified.mockImplementation((dataPath) => {
+        return dataPath === '/text' ? true : false;
+    });
 
     const renderer = shallow(
         <Renderer
@@ -232,8 +237,6 @@ test('Should pass errors to fields that have already been modified at least once
             schemaPath=""
         />
     );
-
-    renderer.find('Field').at(0).simulate('finish', '/text');
 
     const fields = renderer.find('Field');
 
