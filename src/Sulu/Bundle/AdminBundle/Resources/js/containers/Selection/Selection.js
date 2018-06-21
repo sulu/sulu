@@ -4,9 +4,9 @@ import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {MultiItemSelection} from '../../components';
-import AssignmentStore from './stores/AssignmentStore';
+import SelectionStore from './stores/SelectionStore';
 import DatagridOverlay from './DatagridOverlay';
-import assignmentStyles from './assignment.scss';
+import selectionStyles from './selection.scss';
 
 type Props = {|
     adapter: string,
@@ -22,7 +22,7 @@ type Props = {|
 |};
 
 @observer
-export default class Assignment extends React.Component<Props> {
+export default class Selection extends React.Component<Props> {
     static defaultProps = {
         disabledIds: [],
         displayProperties: [],
@@ -30,7 +30,7 @@ export default class Assignment extends React.Component<Props> {
         value: [],
     };
 
-    assignmentStore: AssignmentStore;
+    selectionStore: SelectionStore;
     changeDisposer: () => void;
     changeAutorunInitialized: boolean = false;
 
@@ -41,9 +41,9 @@ export default class Assignment extends React.Component<Props> {
 
         const {onChange, locale, resourceKey, value} = this.props;
 
-        this.assignmentStore = new AssignmentStore(resourceKey, value, locale);
+        this.selectionStore = new SelectionStore(resourceKey, value, locale);
         this.changeDisposer = autorun(() => {
-            const itemIds = this.assignmentStore.items.map((item) => item.id);
+            const itemIds = this.selectionStore.items.map((item) => item.id);
 
             if (!this.changeAutorunInitialized) {
                 this.changeAutorunInitialized = true;
@@ -57,11 +57,11 @@ export default class Assignment extends React.Component<Props> {
     componentWillReceiveProps(nextProps: Props) {
         const {value: newValue} = nextProps;
 
-        if (newValue.every((id) => this.assignmentStore.items.some((item) => item.id === id))) {
+        if (newValue.every((id) => this.selectionStore.items.some((item) => item.id === id))) {
             return;
         }
 
-        this.assignmentStore.loadItems(nextProps.value);
+        this.selectionStore.loadItems(nextProps.value);
     }
 
     componentWillUnmount() {
@@ -85,27 +85,27 @@ export default class Assignment extends React.Component<Props> {
     };
 
     handleOverlayConfirm = (selectedItems: Array<Object>) => {
-        this.assignmentStore.set(selectedItems);
+        this.selectionStore.set(selectedItems);
         this.closeOverlay();
     };
 
     handleRemove = (id: number | string) => {
-        this.assignmentStore.removeById(id);
+        this.selectionStore.removeById(id);
     };
 
     handleSorted = (oldItemIndex: number, newItemIndex: number) => {
-        this.assignmentStore.move(oldItemIndex, newItemIndex);
+        this.selectionStore.move(oldItemIndex, newItemIndex);
     };
 
     render() {
         const {adapter, disabledIds, displayProperties, icon, label, locale, resourceKey, overlayTitle} = this.props;
-        const {items, loading} = this.assignmentStore;
+        const {items, loading} = this.selectionStore;
         const columns = displayProperties.length;
 
         return (
             <Fragment>
                 <MultiItemSelection
-                    label={label && this.assignmentStore.items.length + ' ' + label}
+                    label={label && this.selectionStore.items.length + ' ' + label}
                     leftButton={{
                         icon,
                         onClick: this.handleOverlayOpen,
@@ -119,7 +119,7 @@ export default class Assignment extends React.Component<Props> {
                             <div>
                                 {displayProperties.map((displayProperty) => (
                                     <span
-                                        className={assignmentStyles.itemColumn}
+                                        className={selectionStyles.itemColumn}
                                         key={displayProperty}
                                         style={{width: 100 / columns + '%'}}
                                     >

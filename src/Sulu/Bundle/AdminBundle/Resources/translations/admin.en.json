@@ -15,7 +15,7 @@
     "sulu_admin.cancel": "Cancel",
     "sulu_admin.error_required": "This field must have a value",
     "sulu_admin.error_minlength": "The minimal length of this field was undershot",
-    "sulu_admin.error_minitems": "This field has too few assignments",
+    "sulu_admin.error_minitems": "This field has too few selections",
     "sulu_admin.welcome": "Welcome",
     "sulu_admin.reset_password": "Reset password",
     "sulu_admin.back_to_website": "Back to website",

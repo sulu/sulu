@@ -32,14 +32,14 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                 'sulu_admin',
                 [
                     'field_type_options' => [
-                        'assignment' => [
+                        'selection' => [
                             'snippet' => [
                                 'adapter' => 'table',
                                 'displayProperties' => ['title'],
                                 'icon' => 'su-snippet',
-                                'label' => 'sulu_snippet.assignment_label',
+                                'label' => 'sulu_snippet.selection_label',
                                 'resourceKey' => 'snippets',
-                                'overlayTitle' => 'sulu_snippet.assignment_overlay_title',
+                                'overlayTitle' => 'sulu_snippet.selection_overlay_title',
                             ],
                         ],
                     ],

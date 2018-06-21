@@ -18,7 +18,7 @@ import {
     BoolFieldTransformer,
 } from '../../containers/Datagrid';
 import {
-    Assignment,
+    Selection,
     Checkbox,
     ColorPicker,
     DatePicker,
@@ -90,7 +90,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('text_area', TextArea);
     fieldRegistry.add('time', Time);
 
-    registerFieldTypesWithOptions(fieldTypeOptions['assignment'], Assignment);
+    registerFieldTypesWithOptions(fieldTypeOptions['selection'], Selection);
     registerFieldTypesWithOptions(fieldTypeOptions['single_selection'], SingleSelection);
 }
 

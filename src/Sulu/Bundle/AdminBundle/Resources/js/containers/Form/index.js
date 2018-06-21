@@ -3,7 +3,7 @@ import Form from './Form';
 import FormInspector from './FormInspector';
 import fieldRegistry from './registries/FieldRegistry';
 import FormStore from './stores/FormStore';
-import Assignment from './fields/Assignment';
+import Selection from './fields/Selection';
 import SingleSelection from './fields/SingleSelection';
 import Checkbox from './fields/Checkbox';
 import ColorPicker from './fields/ColorPicker';
@@ -22,7 +22,7 @@ import type {Schema, Types} from './types';
 
 export {
     fieldRegistry,
-    Assignment,
+    Selection,
     Checkbox,
     ColorPicker,
     DatePicker,
