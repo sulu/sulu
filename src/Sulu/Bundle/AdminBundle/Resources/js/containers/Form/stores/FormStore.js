@@ -113,6 +113,7 @@ export default class FormStore {
     schemaDisposer: ?() => void;
     typeDisposer: ?() => void;
     pathsByTag: {[tagName: string]: Array<string>} = {};
+    @observable modifiedFields: Array<string> = [];
 
     constructor(resourceStore: ResourceStore, options: Object = {}) {
         this.resourceStore = resourceStore;
@@ -235,7 +236,11 @@ export default class FormStore {
             return Promise.reject('Errors occured when trying to save the data from the FormStore');
         }
 
-        return this.resourceStore.save({...this.options, ...options});
+        return this.resourceStore.save({...this.options, ...options}).then((response) => {
+            const {modifiedFields} = this;
+            modifiedFields.splice(0, modifiedFields.length);
+            return response;
+        });
     }
 
     set(name: string, value: mixed) {
@@ -244,6 +249,12 @@ export default class FormStore {
 
     change(name: string, value: mixed) {
         this.resourceStore.change(name, value);
+    }
+
+    finishField(dataPath: string) {
+        if (!this.modifiedFields.includes(dataPath)) {
+            this.modifiedFields.push(dataPath);
+        }
     }
 
     @computed get locale(): ?IObservableValue<string> {

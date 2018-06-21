@@ -30,6 +30,7 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.schema = {};
     this.set = jest.fn();
     this.change = jest.fn();
+    this.finishField = jest.fn();
 }));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function (resourceKey, id) {

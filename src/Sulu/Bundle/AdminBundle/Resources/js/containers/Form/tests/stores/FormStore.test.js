@@ -747,3 +747,19 @@ test('Return SchemaEntry for given schemaPath', () => {
         type: 'text_line',
     });
 });
+
+test('Remember fields being finished as modified fields and forget about them after saving', () => {
+    const formStore = new FormStore(new ResourceStore('test'));
+    formStore.finishField('/block/0/text');
+    formStore.finishField('/block/0/text');
+    formStore.finishField('/block/1/text');
+
+    expect(formStore.modifiedFields).toEqual([
+        '/block/0/text',
+        '/block/1/text',
+    ]);
+
+    return formStore.save().then(() => {
+        expect(formStore.modifiedFields).toHaveLength(0);
+    });
+});

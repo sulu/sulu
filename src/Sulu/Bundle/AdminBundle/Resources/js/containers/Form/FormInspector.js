@@ -50,6 +50,7 @@ export default class FormInspector {
     }
 
     finishField(dataPath: string, schemaPath: string) {
+        this.formStore.finishField(dataPath);
         this.finishFieldHandlers.forEach((finishFieldHandler) => finishFieldHandler(dataPath, schemaPath));
     }
 }
