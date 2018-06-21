@@ -112,6 +112,7 @@ export default class FormStore {
     @observable typesLoading: boolean = true;
     schemaDisposer: ?() => void;
     typeDisposer: ?() => void;
+    pathsByTag: {[tagName: string]: Array<string>} = {};
 
     constructor(resourceStore: ResourceStore, options: Object = {}) {
         this.resourceStore = resourceStore;
@@ -163,6 +164,7 @@ export default class FormStore {
 
     @action handleSchemaResponse = ([schema, jsonSchema]: [Schema, Object]) => {
         this.validator = ajv.compile(jsonSchema);
+        this.pathsByTag = {};
 
         this.schema = schema;
         const schemaFields = Object.keys(schema)
@@ -281,9 +283,16 @@ export default class FormStore {
     };
 
     getValuesByTag(tagName: string): Array<mixed> {
-        const {data, schema} = this;
+        return this.getPathsByTag(tagName).map(this.getValueByPath);
+    }
 
-        return collectTagPaths(tagName, data, schema).map(this.getValueByPath);
+    getPathsByTag(tagName: string) {
+        const {data, schema} = this;
+        if (!(tagName in this.pathsByTag)) {
+            this.pathsByTag[tagName] = collectTagPaths(tagName, data, schema);
+        }
+
+        return this.pathsByTag[tagName];
     }
 
     getSchemaEntryByPath(schemaPath: string): SchemaEntry {

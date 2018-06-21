@@ -229,9 +229,11 @@ test('Change type should update schema and data', (done) => {
     metadataStore.getSchema.mockReturnValue(sidebarPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const formStore = new FormStore(resourceStore);
+    const cachedPathsByTag = formStore.pathsByTag;
 
     setTimeout(() => {
         expect(formStore.schema).toBe(sidebarMetadata);
+        expect(formStore.pathsByTag).not.toBe(cachedPathsByTag);
         expect(formStore.data).toEqual({
             title: 'Title',
             description: undefined,
