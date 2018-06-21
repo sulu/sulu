@@ -28,6 +28,7 @@ test('Pass props correctly to SingleSelect', () => {
     };
     const singleSelect = shallow(
         <SingleSelect
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -74,6 +75,7 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
 
     expect(() => shallow(
         <SingleSelect
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -107,6 +109,7 @@ test('Should throw an exception if value is of wrong type', () => {
 
     expect(() => shallow(
         <SingleSelect
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -141,6 +144,7 @@ test('Should call onFinish callback on every onChange', () => {
 
     const singleSelect = shallow(
         <SingleSelect
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -181,6 +185,7 @@ test('Set default value if no value is passed', () => {
     };
     shallow(
         <SingleSelect
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -201,6 +206,7 @@ test('Throw error if no schemaOptions are passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <SingleSelect
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -218,6 +224,7 @@ test('Throw error if no value option is passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <SingleSelect
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}

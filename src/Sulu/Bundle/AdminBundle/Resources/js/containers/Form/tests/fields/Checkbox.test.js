@@ -16,6 +16,7 @@ test('Pass the value of true correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -34,6 +35,7 @@ test('Pass the value of false correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -55,6 +57,7 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
 
     const checkbox = shallow(
         <Checkbox
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -76,6 +79,7 @@ test('Pass the value of true correctly to Toggler component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -95,6 +99,7 @@ test('Pass the value of false correctly to Toggler component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -117,6 +122,7 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
 
     const checkbox = shallow(
         <Checkbox
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}

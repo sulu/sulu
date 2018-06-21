@@ -40,6 +40,7 @@ test('Pass props correctly to component', () => {
 
     const field = shallow(
         <ColorPicker
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}

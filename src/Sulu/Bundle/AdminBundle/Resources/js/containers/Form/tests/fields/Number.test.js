@@ -37,6 +37,7 @@ test('Pass props correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const field = shallow(
         <Number
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -68,6 +69,7 @@ test('Pass props correctly to component inclusive schemaOptions', () => {
 
     const field = shallow(
         <Number
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}

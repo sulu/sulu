@@ -59,6 +59,7 @@ test('Render block with schema', () => {
 
     const fieldBlocks = mount(
         <FieldBlocks
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -234,6 +235,7 @@ test('Should correctly pass props to the BlockCollection', () => {
 
     const fieldBlocks = shallow(
         <FieldBlocks
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={2}
@@ -274,6 +276,7 @@ test('Should pass correct schemaPath to FieldRender', () => {
 
     const fieldBlocks = mount(
         <FieldBlocks
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -314,6 +317,7 @@ test('Should call onFinish when a field from the child renderer has finished edi
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
         <FieldBlocks
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -351,6 +355,7 @@ test('Should call onFinish when the order of the blocks has changed', () => {
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
         <FieldBlocks
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -373,6 +378,7 @@ test('Throw error if no types are passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <FieldBlocks
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -390,6 +396,7 @@ test('Throw error if empty type array is passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <FieldBlocks
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}

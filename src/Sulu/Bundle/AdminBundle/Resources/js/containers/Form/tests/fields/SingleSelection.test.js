@@ -26,6 +26,7 @@ test('Pass correct props to AutoComplete', () => {
 
     const singleSelection = shallow(
         <SingleSelection
+            error={undefined}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -65,6 +66,7 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
 
     const singleSelection = shallow(
         <SingleSelection
+            error={undefined}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -90,6 +92,7 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
     expect(
         () => shallow(
             <SingleSelection
+                error={undefined}
                 fieldTypeOptions={fieldTypeOptions}
                 formInspector={formInspector}
                 maxOccurs={undefined}

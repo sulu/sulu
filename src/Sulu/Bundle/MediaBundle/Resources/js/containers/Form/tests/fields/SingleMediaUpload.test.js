@@ -35,6 +35,7 @@ test('Pass correct props', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            error={undefined}
             fieldTypeOptions={{}}
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -67,6 +68,7 @@ test('Pass correct skin to props', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            error={undefined}
             fieldTypeOptions={{}}
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -97,6 +99,7 @@ test('Throw if emptyIcon is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                error={undefined}
                 fieldTypeOptions={{}}
                 maxOccurs={undefined}
                 minOccurs={undefined}
@@ -126,6 +129,7 @@ test('Throw if skin is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                error={undefined}
                 fieldTypeOptions={{}}
                 maxOccurs={undefined}
                 minOccurs={undefined}
@@ -155,6 +159,7 @@ test('Throw if image_size is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                error={undefined}
                 fieldTypeOptions={{}}
                 maxOccurs={undefined}
                 minOccurs={undefined}
@@ -177,6 +182,7 @@ test('Throw if collectionId is not set', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                error={undefined}
                 fieldTypeOptions={{}}
                 formInspector={formInspector}
                 maxOccurs={undefined}
@@ -205,6 +211,7 @@ test('Call onChange and onFinish when upload has completed', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -233,6 +240,7 @@ test('Create a MediaUploadStore when constructed', () => {
     };
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -265,6 +273,7 @@ test('Create a MediaUploadStore when constructed with data', () => {
     };
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}

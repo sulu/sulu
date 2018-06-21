@@ -37,6 +37,7 @@ test('Pass props correctly to Input component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const inputValid = shallow(
         <Input
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -58,6 +59,7 @@ test('Should not pass any arguments to onFinish callback', () => {
 
     const input = shallow(
         <Input
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}

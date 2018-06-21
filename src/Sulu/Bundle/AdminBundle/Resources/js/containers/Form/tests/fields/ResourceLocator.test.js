@@ -44,6 +44,7 @@ test('Pass props correctly to ResourceLocator', () => {
 
     const resourceLocator = shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -72,6 +73,7 @@ test('Throw an exception if a non-valid mode is passed', () => {
     expect(
         () => shallow(
             <ResourceLocator
+                error={undefined}
                 fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
                 formInspector={formInspector}
                 maxOccurs={undefined}
@@ -93,6 +95,7 @@ test('Throw an exception if a no generationUrl is passed', () => {
     expect(
         () => shallow(
             <ResourceLocator
+                error={undefined}
                 fieldTypeOptions={{}}
                 formInspector={formInspector}
                 maxOccurs={undefined}
@@ -113,6 +116,7 @@ test('Set default value correctly with undefined value', () => {
 
     shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -134,6 +138,7 @@ test('Set default value correctly with empty string', () => {
 
     shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -153,6 +158,7 @@ test('Set default mode correctly', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const resourceLocator = mount(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -174,6 +180,7 @@ test('Should not pass any argument to onFinish callback', () => {
 
     const resourceLocator = mount(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -195,6 +202,7 @@ test('Should not request a new URL if on an edit form', () =>{
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 1)));
     shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -223,6 +231,7 @@ test('Should request a new URL if on an add form', () => {
 
     shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -268,6 +277,7 @@ test('Should request a new URL including the options from the FormStore if on an
 
     shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -312,6 +322,7 @@ test('Should not request a new URL if no parts are available', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -343,6 +354,7 @@ test('Should not request a new URL if only empty parts are available', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -374,6 +386,7 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -405,6 +418,7 @@ test('Should not request a new URL if a field without any tags has finished edit
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}
@@ -437,6 +451,7 @@ test('Should not request a new URL if there is an error on the form', () => {
 
     shallow(
         <ResourceLocator
+            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             maxOccurs={undefined}

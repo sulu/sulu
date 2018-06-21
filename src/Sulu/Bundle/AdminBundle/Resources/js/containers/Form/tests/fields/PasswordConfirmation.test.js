@@ -39,6 +39,7 @@ test('Pass props correctly to PasswordConfirmation component', () => {
     const finishSpy = jest.fn();
     const passwordConfirmation = shallow(
         <PasswordConfirmation
+            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
             maxOccurs={undefined}

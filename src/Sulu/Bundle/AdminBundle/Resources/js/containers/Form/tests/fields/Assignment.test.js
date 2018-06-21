@@ -52,6 +52,7 @@ test('Should pass props correctly to component', () => {
 
     const assignment = shallow(
         <Assignment
+            error={undefined}
             formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
             maxOccurs={undefined}
@@ -86,6 +87,7 @@ test('Should pass id of form as disabledId to avoid assigning something to itsel
 
     const assignment = shallow(
         <Assignment
+            error={undefined}
             formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
             maxOccurs={undefined}
@@ -111,6 +113,7 @@ test('Should pass empty array if value is not given', () => {
 
     const assignment = shallow(
         <Assignment
+            error={undefined}
             formInspector={formInspector}
             fieldTypeOptions={fieldOptions}
             maxOccurs={undefined}
@@ -136,6 +139,7 @@ test('Should throw an error if no resourceKey is passed in fieldOptions', () => 
 
     expect(() => shallow(
         <Assignment
+            error={undefined}
             formInspector={formInspector}
             fieldTypeOptions={{}}
             maxOccurs={undefined}
@@ -154,6 +158,7 @@ test('Should throw an error if no adapter is passed in fieldTypeOptions', () => 
 
     expect(() => shallow(
         <Assignment
+            error={undefined}
             formInspector={formInspector}
             maxOccurs={undefined}
             minOccurs={undefined}
