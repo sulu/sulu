@@ -35,7 +35,7 @@ export default class Form extends React.Component<Props> {
         log.debug('Finished editing field with schemaPath "' + schemaPath + '"');
         const {store} = this.props;
 
-        this.formInspector.finishField();
+        this.formInspector.finishField(schemaPath);
         store.validate();
     };
 

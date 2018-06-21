@@ -37,4 +37,4 @@ export type Schema = {
     [string]: SchemaEntry,
 };
 
-export type FinishFieldHandler = () => void;
+export type FinishFieldHandler = (schemaPath: string) => void;

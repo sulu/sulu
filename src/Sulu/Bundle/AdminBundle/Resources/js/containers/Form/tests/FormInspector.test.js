@@ -89,7 +89,7 @@ test('Should call registered onFinishField handlers', () => {
     formInspector.addFinishFieldHandler(finishFieldHandler1);
     formInspector.addFinishFieldHandler(finishFieldHandler2);
 
-    formInspector.finishField();
-    expect(finishFieldHandler1).toBeCalledWith();
-    expect(finishFieldHandler2).toBeCalledWith();
+    formInspector.finishField('/test');
+    expect(finishFieldHandler1).toBeCalledWith('/test');
+    expect(finishFieldHandler2).toBeCalledWith('/test');
 });
