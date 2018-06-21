@@ -754,12 +754,12 @@ test('Remember fields being finished as modified fields and forget about them af
     formStore.finishField('/block/0/text');
     formStore.finishField('/block/1/text');
 
-    expect(formStore.modifiedFields).toEqual([
-        '/block/0/text',
-        '/block/1/text',
-    ]);
+    expect(formStore.isFieldModified('/block/0/text')).toEqual(true);
+    expect(formStore.isFieldModified('/block/1/text')).toEqual(true);
+    expect(formStore.isFieldModified('/block/2/text')).toEqual(false);
 
     return formStore.save().then(() => {
-        expect(formStore.modifiedFields).toHaveLength(0);
+        expect(formStore.isFieldModified('/block/0/text')).toEqual(false);
+        expect(formStore.isFieldModified('/block/1/text')).toEqual(false);
     });
 });

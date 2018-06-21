@@ -53,4 +53,8 @@ export default class FormInspector {
         this.formStore.finishField(dataPath);
         this.finishFieldHandlers.forEach((finishFieldHandler) => finishFieldHandler(dataPath, schemaPath));
     }
+
+    isFieldModified(dataPath: string): boolean {
+        return this.formStore.isFieldModified(dataPath);
+    }
 }

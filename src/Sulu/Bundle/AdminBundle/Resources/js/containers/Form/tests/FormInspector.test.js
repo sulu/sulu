@@ -24,6 +24,7 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.getValuesByTag = jest.fn();
     this.getSchemaEntryByPath = jest.fn();
     this.finishField = jest.fn();
+    this.isFieldModified = jest.fn();
 }));
 
 test('Should return the resourceKey from the FormStore', () => {
@@ -123,4 +124,13 @@ test('Should return the SchemaEntry for a given path by using the FormStore', ()
 
     expect(formInspector.getSchemaEntryByPath('/test')).toBe(schemaEntry);
     expect(formStore.getSchemaEntryByPath).toBeCalledWith('/test');
+});
+
+test('Should return if a field is modified by using the FormStore', () => {
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    formStore.isFieldModified.mockReturnValue(true);
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.isFieldModified('/test')).toBe(true);
+    expect(formStore.isFieldModified).toBeCalledWith('/test');
 });

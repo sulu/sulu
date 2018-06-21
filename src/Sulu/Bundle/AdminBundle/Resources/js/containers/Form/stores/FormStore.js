@@ -257,6 +257,10 @@ export default class FormStore {
         }
     }
 
+    isFieldModified(dataPath: string): boolean {
+        return this.modifiedFields.includes(dataPath);
+    }
+
     @computed get locale(): ?IObservableValue<string> {
         return this.resourceStore.locale;
     }
