@@ -18,6 +18,7 @@ test('Pass error correctly to Input component', () => {
     const inputInvalid = shallow(
         <Input
             error={error}
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -33,6 +34,7 @@ test('Pass props correctly to Input component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const inputValid = shallow(
         <Input
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -50,6 +52,7 @@ test('Should not pass any arguments to onFinish callback', () => {
 
     const input = shallow(
         <Input
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={finishSpy}

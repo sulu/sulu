@@ -18,6 +18,7 @@ test('Pass error correctly to component', () => {
     const field = shallow(
         <Email
             error={error}
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -33,6 +34,7 @@ test('Pass props correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const field = shallow(
         <Email
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}

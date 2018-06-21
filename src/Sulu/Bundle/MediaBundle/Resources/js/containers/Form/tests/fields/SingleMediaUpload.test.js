@@ -35,6 +35,7 @@ test('Pass correct props', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            fieldTypeOptions={{}}
             onChange={jest.fn()}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
@@ -62,6 +63,7 @@ test('Pass correct skin to props', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            fieldTypeOptions={{}}
             onChange={jest.fn()}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
@@ -87,6 +89,7 @@ test('Throw if emptyIcon is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                fieldTypeOptions={{}}
                 onChange={jest.fn()}
                 formInspector={formInspector}
                 schemaOptions={schemaOptions}
@@ -111,6 +114,7 @@ test('Throw if skin is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                fieldTypeOptions={{}}
                 onChange={jest.fn()}
                 formInspector={formInspector}
                 schemaOptions={schemaOptions}
@@ -135,6 +139,7 @@ test('Throw if image_size is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                fieldTypeOptions={{}}
                 onChange={jest.fn()}
                 formInspector={formInspector}
                 schemaOptions={schemaOptions}
@@ -152,6 +157,7 @@ test('Throw if collectionId is not set', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
+                fieldTypeOptions={{}}
                 formInspector={formInspector}
                 onChange={jest.fn()}
                 schemaOptions={schemaOptions}
@@ -175,6 +181,7 @@ test('Call onChange and onFinish when upload has completed', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
@@ -199,6 +206,7 @@ test('Create a MediaUploadStore when constructed', () => {
     };
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             schemaOptions={schemaOptions}
@@ -226,6 +234,7 @@ test('Create a MediaUploadStore when constructed with data', () => {
     };
     const singleMediaUpload = shallow(
         <SingleMediaUpload
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             schemaOptions={schemaOptions}

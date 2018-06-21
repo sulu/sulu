@@ -18,6 +18,7 @@ test('Pass error correctly to Input component', () => {
     const inputInvalid = shallow(
         <TextArea
             error={error}
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -33,6 +34,7 @@ test('Pass props correctly to Input component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const inputValid = shallow(
         <TextArea
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}

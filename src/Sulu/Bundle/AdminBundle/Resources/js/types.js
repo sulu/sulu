@@ -35,7 +35,7 @@ export type SchemaOptions = {[key: string]: SchemaOption};
 
 export type FieldTypeProps<T> = {|
     error?: Error | ErrorCollection,
-    fieldTypeOptions?: Object,
+    fieldTypeOptions: Object,
     formInspector: FormInspector,
     maxOccurs?: number,
     minOccurs?: number,

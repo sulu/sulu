@@ -119,13 +119,6 @@ test('Should pass empty array if value is not given', () => {
     }));
 });
 
-test('Should throw an error if no fieldOptions are passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
-    expect(() => shallow(
-        <Assignment formInspector={formInspector} onChange={jest.fn()} schemaPath="" value={undefined} />)
-    ).toThrowError(/a "resourceKey" and a "adapter"/);
-});
-
 test('Should throw an error if no resourceKey is passed in fieldOptions', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 

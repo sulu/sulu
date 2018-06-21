@@ -18,6 +18,7 @@ test('Pass error correctly to component', () => {
     const field = shallow(
         <ColorPicker
             error={error}
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -36,6 +37,7 @@ test('Pass props correctly to component', () => {
 
     const field = shallow(
         <ColorPicker
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={onChange}
             onFinish={onFinish}

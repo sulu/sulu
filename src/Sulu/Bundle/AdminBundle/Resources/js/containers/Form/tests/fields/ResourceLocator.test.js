@@ -44,6 +44,7 @@ test('Pass props correctly to ResourceLocator', () => {
 
     const resourceLocator = shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -68,6 +69,7 @@ test('Throw an exception if a non-valid mode is passed', () => {
     expect(
         () => shallow(
             <ResourceLocator
+                fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
                 formInspector={formInspector}
                 onChange={jest.fn()}
                 schemaOptions={schemaOptions}
@@ -78,12 +80,29 @@ test('Throw an exception if a non-valid mode is passed', () => {
     ).toThrow(/"leaf" or "full"/);
 });
 
+test('Throw an exception if a no generationUrl is passed', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+
+    expect(
+        () => shallow(
+            <ResourceLocator
+                fieldTypeOptions={{}}
+                formInspector={formInspector}
+                onChange={jest.fn()}
+                schemaPath=""
+                value="/"
+            />
+        )
+    ).toThrow(/"generationUrl"/);
+});
+
 test('Set default value correctly with undefined value', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const changeSpy = jest.fn();
 
     shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={jest.fn()}
@@ -101,6 +120,7 @@ test('Set default value correctly with empty string', () => {
 
     shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={jest.fn()}
@@ -116,6 +136,7 @@ test('Set default mode correctly', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const resourceLocator = mount(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -133,6 +154,7 @@ test('Should not pass any argument to onFinish callback', () => {
 
     const resourceLocator = mount(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={finishSpy}
@@ -150,6 +172,7 @@ test('Should not request a new URL if on an edit form', () =>{
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 1)));
     shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -174,6 +197,7 @@ test('Should request a new URL if on an add form', () => {
 
     shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={jest.fn()}
@@ -215,6 +239,7 @@ test('Should request a new URL including the options from the FormStore if on an
 
     shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={jest.fn()}
@@ -255,6 +280,7 @@ test('Should not request a new URL if no parts are available', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -282,6 +308,7 @@ test('Should not request a new URL if only empty parts are available', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -309,6 +336,7 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -336,6 +364,7 @@ test('Should not request a new URL if a field without any tags has finished edit
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -364,6 +393,7 @@ test('Should not request a new URL if there is an error on the form', () => {
 
     shallow(
         <ResourceLocator
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={jest.fn()}
@@ -374,6 +404,7 @@ test('Should not request a new URL if there is an error on the form', () => {
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
+    // $FlowFixMe
     formInspector.errors = {title: {}};
     formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
     formInspector.getSchemaEntryByPath.mockReturnValue({

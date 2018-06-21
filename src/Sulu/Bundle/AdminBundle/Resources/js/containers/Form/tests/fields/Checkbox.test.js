@@ -15,7 +15,7 @@ jest.mock('../../FormInspector', () => jest.fn());
 test('Pass the value of true correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
-        <Checkbox formInspector={formInspector} onChange={jest.fn()} schemaPath="" value={true} />
+        <Checkbox fieldTypeOptions={{}} formInspector={formInspector} onChange={jest.fn()} schemaPath="" value={true} />
     );
     expect(checkbox.find(CheckboxComponent).prop('checked')).toEqual(true);
 });
@@ -23,7 +23,13 @@ test('Pass the value of true correctly to Checkbox component', () => {
 test('Pass the value of false correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
-        <Checkbox formInspector={formInspector} onChange={jest.fn()} schemaPath="" value={false} />
+        <Checkbox
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            schemaPath=""
+            value={false}
+        />
     );
     expect(checkbox.find(CheckboxComponent).prop('checked')).toEqual(false);
 });
@@ -34,7 +40,14 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
     const finishSpy = jest.fn();
 
     const checkbox = shallow(
-        <Checkbox formInspector={formInspector} onChange={changeSpy} onFinish={finishSpy} schemaPath="" value={false} />
+        <Checkbox
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaPath=""
+            value={false}
+        />
     );
     checkbox.find(CheckboxComponent).simulate('change', true);
 
@@ -46,6 +59,7 @@ test('Pass the value of true correctly to Toggler component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             schemaOptions={{type: {value: 'toggler'}}}
@@ -60,6 +74,7 @@ test('Pass the value of false correctly to Toggler component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             schemaOptions={{type: {value: 'toggler'}}}
@@ -77,6 +92,7 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
 
     const checkbox = shallow(
         <Checkbox
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}

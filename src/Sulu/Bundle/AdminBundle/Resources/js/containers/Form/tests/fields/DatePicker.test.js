@@ -18,6 +18,7 @@ test('Pass error correctly to component', () => {
     const datePicker = shallow(
         <DatePicker
             error={error}
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -33,6 +34,7 @@ test('Pass props correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const datePicker = shallow(
         <DatePicker
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -49,6 +51,7 @@ test('Pass invalid value correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const datePicker = shallow(
         <DatePicker
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -64,6 +67,7 @@ test('Convert value and pass it correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const datePicker = shallow(
         <DatePicker
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -82,6 +86,7 @@ test('Should call onFinish callback on every onChange with correctly converted v
 
     const datePicker = shallow(
         <DatePicker
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}

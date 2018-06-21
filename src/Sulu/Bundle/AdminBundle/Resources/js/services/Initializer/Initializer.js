@@ -84,7 +84,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('number', Number);
     fieldRegistry.add('password_confirmation', PasswordConfirmation);
     fieldRegistry.add('phone', Phone);
-    fieldRegistry.add('resource_locator', ResourceLocator);
+    fieldRegistry.add('resource_locator', ResourceLocator, {generationUrl: Config.endpoints.generateUrl});
     fieldRegistry.add('single_select', SingleSelect);
     fieldRegistry.add('text_line', Input);
     fieldRegistry.add('text_area', TextArea);

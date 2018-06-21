@@ -10,7 +10,12 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
     constructor(props: FieldTypeProps<string>) {
         super(props);
 
-        const {onChange, formInspector, value} = this.props;
+        const {onChange, fieldTypeOptions, formInspector, value} = this.props;
+
+        const {generationUrl} = fieldTypeOptions;
+        if (typeof generationUrl !== 'string') {
+            throw new Error('The "generationUrl" fieldTypeOption must be a string!');
+        }
 
         formInspector.addFinishFieldHandler((schemaPath) => {
             if (formInspector.id) {
@@ -35,8 +40,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
             }
 
             Requester.post(
-                // TODO get URL from somewhere instead of hardcoding
-                '/admin/api/resourcelocators?action=generate',
+                generationUrl,
                 {
                     parts,
                     locale: formInspector.locale,

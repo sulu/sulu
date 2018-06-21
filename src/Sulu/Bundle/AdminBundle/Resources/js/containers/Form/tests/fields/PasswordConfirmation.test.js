@@ -17,6 +17,7 @@ test('Pass error correctly to PasswordConfirmation component', () => {
 
     const passwordConfirmation = shallow(
         <PasswordConfirmation
+            fieldTypeOptions={{}}
             onChange={jest.fn()}
             error={error}
             formInspector={formInspector}
@@ -34,6 +35,7 @@ test('Pass props correctly to PasswordConfirmation component', () => {
     const finishSpy = jest.fn();
     const passwordConfirmation = shallow(
         <PasswordConfirmation
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
