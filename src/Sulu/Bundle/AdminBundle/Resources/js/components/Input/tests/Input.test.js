@@ -37,9 +37,9 @@ test('Input should render with value', () => {
     expect(render(<Input value="My value" onChange={onChange} onBlur={jest.fn()} />)).toMatchSnapshot();
 });
 
-test('Input should render null value as empty string', () => {
+test('Input should render undefined value as empty string', () => {
     const onChange = jest.fn();
-    expect(render(<Input value={null} onChange={onChange} onBlur={jest.fn()} />)).toMatchSnapshot();
+    expect(render(<Input value={undefined} onChange={onChange} onBlur={jest.fn()} />)).toMatchSnapshot();
 });
 
 test('Input should call the callback when the input changes', () => {
@@ -50,12 +50,12 @@ test('Input should call the callback when the input changes', () => {
     expect(onChange).toHaveBeenCalledWith('my-value', event);
 });
 
-test('Input should call the callback with null if the input value is removed', () => {
+test('Input should call the callback with undefined if the input value is removed', () => {
     const onChange = jest.fn();
     const input = shallow(<Input value="My value" onChange={onChange} onBlur={jest.fn()} />);
     const event = {currentTarget: {value: ''}};
     input.find('input').simulate('change', event);
-    expect(onChange).toHaveBeenCalledWith(null, event);
+    expect(onChange).toHaveBeenCalledWith(undefined, event);
 });
 
 test('Input should call the callback when icon was clicked', () => {
@@ -68,15 +68,15 @@ test('Input should call the callback when icon was clicked', () => {
 
 test('Input should render with a loader', () => {
     const onChange = jest.fn();
-    expect(render(<Input value={null} loading={true} onChange={onChange} onBlur={jest.fn()} />)).toMatchSnapshot();
+    expect(render(<Input value={undefined} loading={true} onChange={onChange} onBlur={jest.fn()} />)).toMatchSnapshot();
 });
 
 test('Input should render collapsed', () => {
-    expect(render(<Input value={null} onChange={jest.fn()} collapsed={true} />)).toMatchSnapshot();
+    expect(render(<Input value={undefined} onChange={jest.fn()} collapsed={true} />)).toMatchSnapshot();
 });
 
 test('Input should render append container when onClearClick callback is provided', () => {
-    expect(render(<Input value={null} onChange={jest.fn()} onClearClick={jest.fn()} />)).toMatchSnapshot();
+    expect(render(<Input value={undefined} onChange={jest.fn()} onClearClick={jest.fn()} />)).toMatchSnapshot();
 });
 
 test('Input should render append container with icon when onClearClick callback is provided and value is set', () => {
@@ -92,7 +92,7 @@ test('Input should should call the callback when clear icon was clicked', () => 
 
 test('Input should render with dark skin', () => {
     expect(
-        render(<Input icon="su-pen" value={null} onChange={jest.fn()} onClearClick={jest.fn()} skin="dark" />)
+        render(<Input icon="su-pen" value={undefined} onChange={jest.fn()} onClearClick={jest.fn()} skin="dark" />)
     ).toMatchSnapshot();
 });
 
