@@ -24,8 +24,6 @@ import {
     DatePicker,
     Email,
     fieldRegistry,
-    generateResourcelocatorOnFinishField,
-    handlerRegistry,
     Input,
     Number,
     PasswordConfirmation,
@@ -102,10 +100,6 @@ function registerFieldTypesWithOptions(fieldTypeOptions, Component) {
             fieldRegistry.add(fieldTypeKey, Component, fieldTypeOptions[fieldTypeKey]);
         }
     }
-}
-
-function registerFormHandlers() {
-    handlerRegistry.addFinishFieldHandler(generateResourcelocatorOnFinishField);
 }
 
 function processConfig(config: Object) {
@@ -186,7 +180,6 @@ class Initializer {
                     registerDatagridAdapters();
                     registerDatagridFieldTransformers();
                     registerFieldTypes(config['sulu_admin'].fieldTypeOptions);
-                    registerFormHandlers();
                     setMomentLocale();
                 }
 

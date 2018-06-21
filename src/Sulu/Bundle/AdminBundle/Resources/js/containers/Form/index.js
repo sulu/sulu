@@ -2,7 +2,6 @@
 import Form from './Form';
 import FormInspector from './FormInspector';
 import fieldRegistry from './registries/FieldRegistry';
-import handlerRegistry from './registries/HandlerRegistry';
 import FormStore from './stores/FormStore';
 import Assignment from './fields/Assignment';
 import SingleSelection from './fields/SingleSelection';
@@ -19,13 +18,10 @@ import ResourceLocator from './fields/ResourceLocator';
 import Renderer from './Renderer';
 import TextArea from './fields/TextArea';
 import Time from './fields/Time';
-import generateResourcelocatorOnFinishField from './handlers/generateResourcelocatorOnFinishField';
 import type {Schema, Types} from './types';
 
 export {
     fieldRegistry,
-    generateResourcelocatorOnFinishField,
-    handlerRegistry,
     Assignment,
     Checkbox,
     ColorPicker,

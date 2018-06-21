@@ -34,9 +34,6 @@ jest.mock('../../../containers/Form', () => ({
     fieldRegistry: {
         add: jest.fn(),
     },
-    handlerRegistry: {
-        addFinishFieldHandler: jest.fn(),
-    },
     SingleSelection: jest.fn(),
 }));
 

@@ -1,15 +1,24 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import ResourceStore from '../../../../stores/ResourceStore';
+import FormInspector from '../../FormInspector';
+import FormStore from '../../stores/FormStore';
 import Time from '../../fields/Time';
 import DatePickerComponent from '../../../../components/DatePicker';
 
+jest.mock('../../../../stores/ResourceStore', () => jest.fn());
+jest.mock('../../stores/FormStore', () => jest.fn());
+jest.mock('../../FormInspector', () => jest.fn());
+
 test('Pass error correctly to Input component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const error = {};
 
     const time = shallow(
         <Time
             error={error}
+            formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -21,8 +30,10 @@ test('Pass error correctly to Input component', () => {
 });
 
 test('Pass props correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const time = shallow(
         <Time
+            formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -35,8 +46,10 @@ test('Pass props correctly to component', () => {
 });
 
 test('Pass invalid value correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const time = shallow(
         <Time
+            formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -48,8 +61,10 @@ test('Pass invalid value correctly to component', () => {
 });
 
 test('Convert value and pass it correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const time = shallow(
         <Time
+            formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -62,11 +77,13 @@ test('Convert value and pass it correctly to component', () => {
 });
 
 test('Should call onFinish callback on every onChange with correctly converted value', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const finishSpy = jest.fn();
     const changeSpy = jest.fn();
 
     const time = shallow(
         <Time
+            formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaPath=""

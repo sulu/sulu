@@ -1,15 +1,24 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import ResourceStore from '../../../../stores/ResourceStore';
+import FormInspector from '../../FormInspector';
+import FormStore from '../../stores/FormStore';
 import ColorPicker from '../../fields/ColorPicker';
 import ColorPickerComponent from '../../../../components/ColorPicker';
 
+jest.mock('../../../../stores/ResourceStore', () => jest.fn());
+jest.mock('../../stores/FormStore', () => jest.fn());
+jest.mock('../../FormInspector', () => jest.fn());
+
 test('Pass error correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const error = {keyword: 'minLength', parameters: {}};
 
     const field = shallow(
         <ColorPicker
             error={error}
+            formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -21,11 +30,13 @@ test('Pass error correctly to component', () => {
 });
 
 test('Pass props correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const onFinish = jest.fn();
     const onChange = jest.fn();
 
     const field = shallow(
         <ColorPicker
+            formInspector={formInspector}
             onChange={onChange}
             onFinish={onFinish}
             schemaPath=""

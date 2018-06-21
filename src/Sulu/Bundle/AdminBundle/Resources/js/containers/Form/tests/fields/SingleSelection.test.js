@@ -1,9 +1,17 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import ResourceStore from '../../../../stores/ResourceStore';
+import FormInspector from '../../FormInspector';
+import FormStore from '../../stores/FormStore';
 import SingleSelection from '../../fields/SingleSelection';
 
+jest.mock('../../../../stores/ResourceStore', () => jest.fn());
+jest.mock('../../stores/FormStore', () => jest.fn());
+jest.mock('../../FormInspector', () => jest.fn());
+
 test('Pass correct props to AutoComplete', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const value = {
         test: 'value',
     };
@@ -17,7 +25,13 @@ test('Pass correct props to AutoComplete', () => {
     };
 
     const singleSelection = shallow(
-        <SingleSelection fieldTypeOptions={fieldTypeOptions} onChange={jest.fn()} schemaPath="" value={value} />
+        <SingleSelection
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            schemaPath=""
+            value={value}
+        />
     );
 
     expect(singleSelection.find('AutoComplete').props()).toEqual(expect.objectContaining({
@@ -29,6 +43,7 @@ test('Pass correct props to AutoComplete', () => {
 });
 
 test('Call onChange and onFinish when AutoComplete changes', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -47,6 +62,7 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
     const singleSelection = shallow(
         <SingleSelection
             fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaPath=""
@@ -61,12 +77,14 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
 });
 
 test('Throw an error if the auto_complete configuration was omitted', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const fieldTypeOptions = {};
 
     expect(
         () => shallow(
             <SingleSelection
                 fieldTypeOptions={fieldTypeOptions}
+                formInspector={formInspector}
                 onChange={jest.fn()}
                 schemaPath=""
                 value={undefined}

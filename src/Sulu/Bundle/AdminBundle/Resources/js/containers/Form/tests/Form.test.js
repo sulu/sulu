@@ -4,7 +4,6 @@ import {mount, render, shallow} from 'enzyme';
 import Form from '../Form';
 import ResourceStore from '../../../stores/ResourceStore';
 import FormStore from '../stores/FormStore';
-import handlerRegistry from '../registries/HandlerRegistry';
 import metadataStore from '../stores/MetadataStore';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -21,10 +20,6 @@ jest.mock('../registries/FieldRegistry', () => ({
         }
     }),
     getOptions: jest.fn().mockReturnValue({}),
-}));
-
-jest.mock('../registries/HandlerRegistry', () => ({
-    getFinishFieldHandlers: jest.fn().mockReturnValue([]),
 }));
 
 jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
@@ -78,10 +73,9 @@ test('Should validate form when a field has finished being edited', () => {
     expect(store.validate).toBeCalledWith();
 });
 
-test('Call finish handlers with formStore and schemaPath when a section field has finished being edited', () => {
+test('Call finish handlers on formInspector when a section field has finished being edited', () => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();
-    handlerRegistry.getFinishFieldHandlers.mockReturnValue([handler1, handler2]);
 
     const store = new FormStore(new ResourceStore('snippet', '1'));
     store.schema = {
@@ -95,16 +89,17 @@ test('Call finish handlers with formStore and schemaPath when a section field ha
         },
     };
     const form = mount(<Form onSubmit={jest.fn()} store={store} />);
+    form.instance().formInspector.addFinishFieldHandler(handler1);
+    form.instance().formInspector.addFinishFieldHandler(handler2);
 
     form.find('Field[name="title"] Input').prop('onFinish')();
-    expect(handler1).toHaveBeenLastCalledWith(store, '/highlight/items/title');
-    expect(handler2).toHaveBeenLastCalledWith(store, '/highlight/items/title');
+    expect(handler1).toHaveBeenLastCalledWith();
+    expect(handler2).toHaveBeenLastCalledWith();
 });
 
-test('Call finish handlers with the formStore and schemaPath when a field has finished being edited', () => {
+test('Call finish handlers on formInspector when a field has finished being edited', () => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();
-    handlerRegistry.getFinishFieldHandlers.mockReturnValue([handler1, handler2]);
 
     const store = new FormStore(new ResourceStore('snippet', '1'));
     store.schema = {
@@ -113,16 +108,17 @@ test('Call finish handlers with the formStore and schemaPath when a field has fi
         },
     };
     const form = mount(<Form onSubmit={jest.fn()} store={store} />);
+    form.instance().formInspector.addFinishFieldHandler(handler1);
+    form.instance().formInspector.addFinishFieldHandler(handler2);
 
     form.find('Field[name="article"] Input').prop('onFinish')();
-    expect(handler1).toHaveBeenLastCalledWith(store, '/article');
-    expect(handler2).toHaveBeenLastCalledWith(store, '/article');
+    expect(handler1).toHaveBeenLastCalledWith();
+    expect(handler2).toHaveBeenLastCalledWith();
 });
 
 test('Call finish handlers with the formStore and schemaPath when a block field has finished being edited', () => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();
-    handlerRegistry.getFinishFieldHandlers.mockReturnValue([handler1, handler2]);
 
     const resourceStore = new ResourceStore('snippet', '1');
     resourceStore.data = {
@@ -152,11 +148,13 @@ test('Call finish handlers with the formStore and schemaPath when a block field 
     };
 
     const form = mount(<Form onSubmit={jest.fn()} store={store} />);
+    form.instance().formInspector.addFinishFieldHandler(handler1);
+    form.instance().formInspector.addFinishFieldHandler(handler2);
     form.find('SortableBlocks').prop('onExpand')(0);
     form.update();
     form.find('SortableBlock Field').instance().handleFinish();
-    expect(handler1).toHaveBeenLastCalledWith(store, '/block/types/default/form/text');
-    expect(handler2).toHaveBeenLastCalledWith(store, '/block/types/default/form/text');
+    expect(handler1).toHaveBeenLastCalledWith();
+    expect(handler2).toHaveBeenLastCalledWith();
 });
 
 test('Should pass formInspector, schema, data and showAllErrors flag to Renderer', () => {

@@ -206,6 +206,7 @@ test('Render block with schema and error on fields already being modified', () =
 });
 
 test('Should correctly pass props to the BlockCollection', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const types = {
         default: {
             title: 'Default',
@@ -222,6 +223,7 @@ test('Should correctly pass props to the BlockCollection', () => {
 
     const fieldBlocks = shallow(
         <FieldBlocks
+            formInspector={formInspector}
             maxOccurs={2}
             minOccurs={1}
             onChange={changeSpy}
@@ -310,6 +312,7 @@ test('Should call onFinish when a field from the child renderer has finished edi
 });
 
 test('Should call onFinish when the order of the blocks has changed', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const types = {
         default: {
             title: 'Default',
@@ -325,7 +328,14 @@ test('Should call onFinish when the order of the blocks has changed', () => {
 
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
-        <FieldBlocks onChange={jest.fn()} onFinish={finishSpy} schemaPath="" types={types} value={value} />
+        <FieldBlocks
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            schemaPath=""
+            types={types}
+            value={value}
+        />
     );
 
     fieldBlocks.find('BlockCollection').prop('onSortEnd')(0, 2);
@@ -334,11 +344,21 @@ test('Should call onFinish when the order of the blocks has changed', () => {
 });
 
 test('Throw error if no types are passed', () => {
-    expect(() => shallow(<FieldBlocks onChange={jest.fn()} onFinish={jest.fn()} schemaPath="" value={undefined} />))
-        .toThrow('The "block" field type needs at least one type to be configured!');
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    expect(() => shallow(
+        <FieldBlocks
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath=""
+            value={undefined}
+        />
+    )).toThrow('The "block" field type needs at least one type to be configured!');
 });
 
 test('Throw error if empty type array is passed', () => {
-    expect(() => shallow(<FieldBlocks onChange={jest.fn()} onFinish={jest.fn()} schemaPath="" value={[]} />))
-        .toThrow('The "block" field type needs at least one type to be configured!');
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    expect(() => shallow(
+        <FieldBlocks formInspector={formInspector} onChange={jest.fn()} onFinish={jest.fn()} schemaPath="" value={[]} />
+    )).toThrow('The "block" field type needs at least one type to be configured!');
 });

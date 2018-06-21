@@ -6,7 +6,6 @@ import log from 'loglevel';
 import Loader from '../../components/Loader';
 import Renderer from './Renderer';
 import FormStore from './stores/FormStore';
-import handlerRegistry from './registries/HandlerRegistry';
 import FormInspector from './FormInspector';
 
 type Props = {
@@ -36,7 +35,7 @@ export default class Form extends React.Component<Props> {
         log.debug('Finished editing field with schemaPath "' + schemaPath + '"');
         const {store} = this.props;
 
-        handlerRegistry.getFinishFieldHandlers().forEach((finishFieldHandler) => finishFieldHandler(store, schemaPath));
+        this.formInspector.finishField();
         store.validate();
     };
 

@@ -1,15 +1,24 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import ResourceStore from '../../../../stores/ResourceStore';
+import FormInspector from '../../FormInspector';
+import FormStore from '../../stores/FormStore';
 import Number from '../../fields/Number';
 import NumberComponent from '../../../../components/Number';
 
+jest.mock('../../../../stores/ResourceStore', () => jest.fn());
+jest.mock('../../stores/FormStore', () => jest.fn());
+jest.mock('../../FormInspector', () => jest.fn());
+
 test('Pass error correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const error = {keyword: 'minLength', parameters: {}};
 
     const field = shallow(
         <Number
             error={error}
+            formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -21,8 +30,10 @@ test('Pass error correctly to component', () => {
 });
 
 test('Pass props correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const field = shallow(
         <Number
+            formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaPath=""
@@ -34,6 +45,7 @@ test('Pass props correctly to component', () => {
 });
 
 test('Pass props correctly to component inclusive schemaOptions', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const schemaOptions = {
         min: {
             value: 50,
@@ -48,6 +60,7 @@ test('Pass props correctly to component inclusive schemaOptions', () => {
 
     const field = shallow(
         <Number
+            formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schemaOptions={schemaOptions}

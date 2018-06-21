@@ -18,6 +18,7 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.id = resourceStore.id;
     this.locale = resourceStore.locale;
     this.data = resourceStore.data;
+    this.options = {};
     this.schema = {};
     this.getValueByPath = jest.fn();
     this.getValuesByTag = jest.fn();
@@ -48,6 +49,18 @@ test('Should return the id from the FormStore', () => {
     expect(formInspector.id).toEqual(3);
 });
 
+test('Should return the options from the FormStore', () => {
+    const formStore = new FormStore(new ResourceStore('test', 1));
+    formStore.options = {
+        webspace: 'example',
+    };
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.options).toEqual({
+        webspace: 'example',
+    });
+});
+
 test('Should return the value for a path by using the FormStore', () => {
     const data = [];
     const formStore = new FormStore(new ResourceStore('test', 3));
@@ -67,4 +80,16 @@ test('Should return the values for a given tag by using the FormStore', () => {
 
     expect(formInspector.getValuesByTag('/test')).toBe(data);
     expect(formStore.getValuesByTag).toBeCalledWith('/test');
+});
+
+test('Should call registered onFinishField handlers', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 3)));
+    const finishFieldHandler1 = jest.fn();
+    const finishFieldHandler2 = jest.fn();
+    formInspector.addFinishFieldHandler(finishFieldHandler1);
+    formInspector.addFinishFieldHandler(finishFieldHandler2);
+
+    formInspector.finishField();
+    expect(finishFieldHandler1).toBeCalledWith();
+    expect(finishFieldHandler2).toBeCalledWith();
 });
