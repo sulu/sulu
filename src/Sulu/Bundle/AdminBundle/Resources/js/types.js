@@ -44,6 +44,6 @@ export type FieldTypeProps<T> = {|
     schemaOptions?: SchemaOptions,
     schemaPath: string,
     showAllErrors: boolean,
-    types?: Types,
+    types: ?Types,
     value: ?T,
 |};

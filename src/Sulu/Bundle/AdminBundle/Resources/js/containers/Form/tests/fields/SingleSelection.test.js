@@ -35,6 +35,7 @@ test('Pass correct props to AutoComplete', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={value}
         />
     );
@@ -75,6 +76,7 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
             onFinish={finishSpy}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={value}
         />
     );
@@ -101,6 +103,7 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
                 onFinish={jest.fn()}
                 schemaPath=""
                 showAllErrors={false}
+                types={undefined}
                 value={undefined}
             />
         )

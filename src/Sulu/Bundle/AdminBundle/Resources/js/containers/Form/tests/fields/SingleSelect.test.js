@@ -38,6 +38,7 @@ test('Pass props correctly to SingleSelect', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value="test"
         />
     );
@@ -85,6 +86,7 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value="test"
         />
     )).toThrow(/"default_value"/);
@@ -119,6 +121,7 @@ test('Should throw an exception if value is of wrong type', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value="test"
         />
     )).toThrow(/"values"/);
@@ -154,6 +157,7 @@ test('Should call onFinish callback on every onChange', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value="test"
         />
     );
@@ -195,6 +199,7 @@ test('Set default value if no value is passed', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     );
@@ -215,6 +220,7 @@ test('Throw error if no schemaOptions are passed', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={undefined}
         />)
     ) .toThrow(/"values"/);
@@ -233,6 +239,7 @@ test('Throw error if no value option is passed', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={undefined}
         />)
     ).toThrow(/"values"/);

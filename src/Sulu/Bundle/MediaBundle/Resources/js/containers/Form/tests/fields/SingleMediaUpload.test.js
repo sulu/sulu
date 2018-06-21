@@ -45,6 +45,7 @@ test('Pass correct props', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     );
@@ -78,6 +79,7 @@ test('Pass correct skin to props', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     );
@@ -109,6 +111,7 @@ test('Throw if emptyIcon is set but not a valid value', () => {
                 schemaOptions={schemaOptions}
                 schemaPath=""
                 showAllErrors={false}
+                types={undefined}
                 value={undefined}
             />
         )
@@ -139,6 +142,7 @@ test('Throw if skin is set but not a valid value', () => {
                 schemaOptions={schemaOptions}
                 schemaPath=""
                 showAllErrors={false}
+                types={undefined}
                 value={undefined}
             />
         )
@@ -169,6 +173,7 @@ test('Throw if image_size is set but not a valid value', () => {
                 schemaOptions={schemaOptions}
                 schemaPath=""
                 showAllErrors={false}
+                types={undefined}
                 value={undefined}
             />
         )
@@ -192,6 +197,7 @@ test('Throw if collectionId is not set', () => {
                 schemaOptions={schemaOptions}
                 schemaPath=""
                 showAllErrors={false}
+                types={undefined}
                 value={undefined}
             />
         )
@@ -221,6 +227,7 @@ test('Call onChange and onFinish when upload has completed', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     );
@@ -250,6 +257,7 @@ test('Create a MediaUploadStore when constructed', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     );
@@ -283,6 +291,7 @@ test('Create a MediaUploadStore when constructed with data', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={data}
         />
     );

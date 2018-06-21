@@ -25,6 +25,7 @@ test('Pass the value of true correctly to Checkbox component', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={true}
         />
     );
@@ -44,6 +45,7 @@ test('Pass the value of false correctly to Checkbox component', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={false}
         />
     );
@@ -66,6 +68,7 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
             onFinish={finishSpy}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={false}
         />
     );
@@ -89,6 +92,7 @@ test('Pass the value of true correctly to Toggler component', () => {
             schemaOptions={{type: {value: 'toggler'}}}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={true}
         />
     );
@@ -109,6 +113,7 @@ test('Pass the value of false correctly to Toggler component', () => {
             schemaOptions={{type: {value: 'toggler'}}}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={false}
         />
     );
@@ -132,6 +137,7 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
             schemaOptions={{type: {value: 'toggler'}}}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={false}
         />
     );

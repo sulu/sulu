@@ -387,6 +387,7 @@ test('Throw error if no types are passed', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     )).toThrow('The "block" field type needs at least one type to be configured!');
@@ -405,6 +406,7 @@ test('Throw error if empty type array is passed', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={[]}
         />
     )).toThrow('The "block" field type needs at least one type to be configured!');

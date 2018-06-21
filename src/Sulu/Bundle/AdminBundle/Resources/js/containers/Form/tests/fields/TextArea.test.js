@@ -26,6 +26,7 @@ test('Pass error correctly to Input component', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={'xyz'}
         />
     );
@@ -46,6 +47,7 @@ test('Pass props correctly to Input component', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={'xyz'}
         />
     );

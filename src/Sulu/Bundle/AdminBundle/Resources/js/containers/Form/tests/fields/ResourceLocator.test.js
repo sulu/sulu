@@ -54,6 +54,7 @@ test('Pass props correctly to ResourceLocator', () => {
             schemaOptions={schemaOptions}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value="/"
         />
     );
@@ -83,6 +84,7 @@ test('Throw an exception if a non-valid mode is passed', () => {
                 schemaOptions={schemaOptions}
                 schemaPath=""
                 showAllErrors={false}
+                types={undefined}
                 value="/"
             />
         )
@@ -104,6 +106,7 @@ test('Throw an exception if a no generationUrl is passed', () => {
                 onFinish={jest.fn()}
                 schemaPath=""
                 showAllErrors={false}
+                types={undefined}
                 value="/"
             />
         )
@@ -125,6 +128,7 @@ test('Set default value correctly with undefined value', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     );
@@ -147,6 +151,7 @@ test('Set default value correctly with empty string', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value=""
         />
     );
@@ -167,6 +172,7 @@ test('Set default mode correctly', () => {
             onFinish={jest.fn()}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value="/test/xxx"
         />
     );
@@ -189,6 +195,7 @@ test('Should not pass any argument to onFinish callback', () => {
             onFinish={finishSpy}
             schemaPath=""
             showAllErrors={false}
+            types={undefined}
             value="/test/xxx"
         />
     );
@@ -211,6 +218,7 @@ test('Should not request a new URL if on an edit form', () =>{
             onFinish={jest.fn()}
             schemaPath="/url"
             showAllErrors={false}
+            types={undefined}
             value="/test/xxx"
         />
     );
@@ -240,6 +248,7 @@ test('Should request a new URL if on an add form', () => {
             onFinish={jest.fn()}
             schemaPath="/url"
             showAllErrors={false}
+            types={undefined}
             value="/test/xxx"
         />
     );
@@ -286,6 +295,7 @@ test('Should request a new URL including the options from the FormStore if on an
             onFinish={jest.fn()}
             schemaPath="/url"
             showAllErrors={false}
+            types={undefined}
             value="/test/xxx"
         />
     );
@@ -331,6 +341,7 @@ test('Should not request a new URL if no parts are available', () => {
             onFinish={jest.fn()}
             schemaPath="/url"
             showAllErrors={false}
+            types={undefined}
             value="/test/xxx"
         />
     );
@@ -363,6 +374,7 @@ test('Should not request a new URL if only empty parts are available', () => {
             onFinish={jest.fn()}
             schemaPath="/url"
             showAllErrors={false}
+            types={undefined}
             value="/test/xxx"
         />
     );
@@ -395,6 +407,7 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
             onFinish={jest.fn()}
             schemaPath="/url"
             showAllErrors={false}
+            types={undefined}
             value="/test/xxx"
         />
     );
@@ -427,6 +440,7 @@ test('Should not request a new URL if a field without any tags has finished edit
             onFinish={jest.fn()}
             schemaPath="/url"
             showAllErrors={false}
+            types={undefined}
             value="/test/xxx"
         />
     );
@@ -460,6 +474,7 @@ test('Should not request a new URL if there is an error on the form', () => {
             onFinish={jest.fn()}
             schemaPath="/url"
             showAllErrors={false}
+            types={undefined}
             value="/test/xxx"
         />
     );
