@@ -4,7 +4,15 @@
         {{ property.getTitle(userLocale) }}
     </label>
 
-    {% include type.template %}
+    {% if type.template|default(false) %}
+        {% include type.template %}
+    {% else %}
+        <div>
+            <span class="badge badge-red">Template for content type "{{ type.name }}" was not defined.</span>
+        </div>
+
+        <div class="block-content" data-sort-mode-id="{{ id|raw }}"></div>
+    {% endif %}
 
     {% if property.getInfoText(userLocale) %}
         <div class="input-description">{{ property.getInfoText(userLocale) }}</div>

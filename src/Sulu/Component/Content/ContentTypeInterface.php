@@ -96,31 +96,6 @@ interface ContentTypeInterface
     );
 
     /**
-     * TODO: Remove this before 2.0 release.
-     *
-     * Returns a template to render a form.
-     *
-     * @return string
-     */
-    public function getTemplate();
-
-    /**
-     * Returns default parameters.
-     *
-     * @param PropertyInterface|null $property
-     *
-     * @return array
-     */
-    public function getDefaultParams(PropertyInterface $property = null);
-
-    /**
-     * returns default value of content type.
-     *
-     * @return mixed
-     */
-    public function getDefaultValue();
-
-    /**
      * Prepare view data (or metadata) for the template.
      *
      * @param PropertyInterface $property

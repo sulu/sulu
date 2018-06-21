@@ -2,6 +2,16 @@
 
 ## dev-develop
 
+### Content Types
+
+The following functions where removed from the `ContentTypeInterface`:
+
+ - getTemplate
+ - getDefaultParams
+ - getDefaultValue
+
+When you have a custom content type you need to register a field type on the same name.
+
 ### Test Setup changed
 
 If you use the SuluTestBundle to test your custom sulu bundles you maybe need to change in your test config.yml
