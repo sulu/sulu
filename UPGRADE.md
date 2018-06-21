@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### sulu.rlp tag deprecated
+
+The `sulu.rlp` tag, which can be added in the template XMLs, is not used anymore by the new UI. Instead the result of
+the URL generation will be simply put into the `resource_locator` field type.
+
 ### Test Setup changed
 
 If you use the SuluTestBundle to test your custom sulu bundles you maybe need to change in your test config.yml
