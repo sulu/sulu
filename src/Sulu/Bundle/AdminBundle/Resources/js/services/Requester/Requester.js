@@ -9,6 +9,13 @@ const defaultOptions = {
     },
 };
 
+function transformData(data: Object) {
+    return Object.keys(data).reduce((transformedData: Object, key) => {
+        transformedData[key] = data[key] === undefined ? null : data[key];
+        return transformedData;
+    }, {});
+}
+
 function handleResponse(response: Response) {
     for (const handleResponseHook of Requester.handleResponseHooks) {
         handleResponseHook(response);
@@ -35,12 +42,12 @@ export default class Requester {
     }
 
     static post(url: string, data: Object): Promise<Object> {
-        return fetch(url, {...defaultOptions, method: 'POST', body: JSON.stringify(data)})
+        return fetch(url, {...defaultOptions, method: 'POST', body: JSON.stringify(transformData(data))})
             .then(handleResponse);
     }
 
     static put(url: string, data: Object): Promise<Object> {
-        return fetch(url, {...defaultOptions, method: 'PUT', body: JSON.stringify(data)})
+        return fetch(url, {...defaultOptions, method: 'PUT', body: JSON.stringify(transformData(data))})
             .then(handleResponse);
     }
 

@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import Requester from '../Requester';
 
 test('Should execute GET request and return JSON', () => {
@@ -56,6 +56,7 @@ test('Should execute POST request and return JSON', () => {
     const data = {
         title: 'Titel',
         description: 'Description',
+        test: undefined,
     };
     const requestPromise = Requester.post('/some-url', data).then((response) => {
         expect(response).toBe('test');
@@ -63,7 +64,11 @@ test('Should execute POST request and return JSON', () => {
 
     expect(window.fetch).toBeCalledWith('/some-url', {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+            title: 'Titel',
+            description: 'Description',
+            test: null,
+        }),
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });
@@ -85,6 +90,7 @@ test('Should execute PUT request and return JSON', () => {
     const data = {
         title: 'Titel',
         description: 'Description',
+        test: undefined,
     };
     const requestPromise = Requester.put('/some-url', data).then((response) => {
         expect(response).toBe('test');
@@ -92,7 +98,11 @@ test('Should execute PUT request and return JSON', () => {
 
     expect(window.fetch).toBeCalledWith('/some-url', {
         method: 'PUT',
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+            title: 'Titel',
+            description: 'Description',
+            test: null,
+        }),
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });

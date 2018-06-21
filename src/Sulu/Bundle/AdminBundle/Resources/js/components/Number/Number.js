@@ -31,13 +31,13 @@ export default class Number extends React.PureComponent<Props> {
     };
 
     handleChange = (value: ?string, event: SyntheticEvent<HTMLInputElement>) => {
-        let number = null;
+        let number = undefined;
 
         if (value) {
             number = parseFloat(value);
 
             if (isNaN(number)) {
-                number = null;
+                number = undefined;
             }
         }
 

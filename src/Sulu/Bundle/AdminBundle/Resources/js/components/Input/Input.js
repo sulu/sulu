@@ -38,7 +38,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        this.props.onChange(event.currentTarget.value || null, event);
+        this.props.onChange(event.currentTarget.value || undefined, event);
     };
 
     handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
