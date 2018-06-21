@@ -5,7 +5,7 @@ import Ajv from 'ajv';
 import jsonpointer from 'jsonpointer';
 import log from 'loglevel';
 import ResourceStore from '../../../stores/ResourceStore';
-import type {Schema, SchemaTypes} from '../types';
+import type {Schema, SchemaEntry, SchemaTypes} from '../types';
 import metadataStore from './MetadataStore';
 
 // TODO do not hardcode "template", use some kind of metadata instead
@@ -220,7 +220,10 @@ export default class FormStore {
         }
 
         this.errors = errors;
-        log.info('Form validation detected the following errors: ', toJS(this.errors));
+
+        if (Object.keys(this.errors).length > 0) {
+            log.info('Form validation detected the following errors: ', toJS(this.errors));
+        }
     }
 
     @action save(options: Object = {}): Promise<Object> {
@@ -281,5 +284,9 @@ export default class FormStore {
         const {data, schema} = this;
 
         return collectTagPaths(tagName, data, schema).map(this.getValueByPath);
+    }
+
+    getSchemaEntryByPath(schemaPath: string): SchemaEntry {
+        return jsonpointer.get(this.schema, schemaPath);
     }
 }

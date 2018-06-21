@@ -704,3 +704,44 @@ test('Return all the values for a given tag within blocks', () => {
 
     expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Block 1', 'Block 2']);
 });
+
+test('Return SchemaEntry for given schemaPath', () => {
+    const formStore = new FormStore(new ResourceStore('test'));
+    formStore.schema = {
+        title: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_line',
+        },
+        description: {
+            type: 'text_area',
+        },
+        block: {
+            type: 'block',
+            types: {
+                default: {
+                    form: {
+                        text: {
+                            tags: [
+                                {name: 'sulu.resource_locator_part'},
+                            ],
+                            type: 'text_line',
+                        },
+                        description: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Default',
+                },
+            },
+        },
+    };
+
+    expect(formStore.getSchemaEntryByPath('/block/types/default/form/text')).toEqual({
+        tags: [
+            {name: 'sulu.resource_locator_part'},
+        ],
+        type: 'text_line',
+    });
+});

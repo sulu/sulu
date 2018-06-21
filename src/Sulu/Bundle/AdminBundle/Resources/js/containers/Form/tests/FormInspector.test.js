@@ -22,6 +22,7 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.schema = {};
     this.getValueByPath = jest.fn();
     this.getValuesByTag = jest.fn();
+    this.getSchemaEntryByPath = jest.fn();
 }));
 
 test('Should return the resourceKey from the FormStore', () => {
@@ -92,4 +93,16 @@ test('Should call registered onFinishField handlers', () => {
     formInspector.finishField('/test');
     expect(finishFieldHandler1).toBeCalledWith('/test');
     expect(finishFieldHandler2).toBeCalledWith('/test');
+});
+
+test('Should return the SchemaEntry for a given path by using the FormStore', () => {
+    const schemaEntry = {
+        type: 'text_line',
+    };
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    formStore.getSchemaEntryByPath.mockReturnValue(schemaEntry);
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.getSchemaEntryByPath('/test')).toBe(schemaEntry);
+    expect(formStore.getSchemaEntryByPath).toBeCalledWith('/test');
 });

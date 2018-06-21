@@ -4,19 +4,26 @@ import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import Requester from '../../../services/Requester';
 import type {FieldTypeProps} from '../../../types';
 
+const PART_TAG = 'sulu.rlp.part';
+
 export default class ResourceLocator extends React.Component<FieldTypeProps<string>> {
     constructor(props: FieldTypeProps<string>) {
         super(props);
 
         const {onChange, formInspector, value} = this.props;
 
-        formInspector.addFinishFieldHandler(() => {
+        formInspector.addFinishFieldHandler((schemaPath) => {
             if (formInspector.id) {
                 // do not generate resource locator if on edit form
                 return;
             }
 
-            const parts = formInspector.getValuesByTag('sulu.rlp.part')
+            const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(schemaPath);
+            if (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) {
+                return;
+            }
+
+            const parts = formInspector.getValuesByTag(PART_TAG)
                 .filter((part) => part !== null && part !== undefined);
 
             if (parts.length === 0) {

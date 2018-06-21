@@ -37,6 +37,10 @@ export default class FormInspector {
         return this.formStore.getValuesByTag(tagName);
     }
 
+    getSchemaEntryByPath(schemaPath: string) {
+        return this.formStore.getSchemaEntryByPath(schemaPath);
+    }
+
     addFinishFieldHandler(finishFieldHandler: FinishFieldHandler) {
         this.finishFieldHandlers.push(finishFieldHandler);
     }

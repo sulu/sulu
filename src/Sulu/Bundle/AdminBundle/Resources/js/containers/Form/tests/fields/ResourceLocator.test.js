@@ -26,6 +26,7 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.options = formStore.options;
     this.addFinishFieldHandler = jest.fn();
     this.getValuesByTag = jest.fn();
+    this.getSchemaEntryByPath = jest.fn().mockReturnValue({});
 }));
 
 jest.mock('../../../../services/Requester', () => ({
@@ -151,14 +152,14 @@ test('Should not request a new URL if on an edit form', () =>{
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schemaPath=""
+            schemaPath="/url"
             value="/test/xxx"
         />
     );
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    finishFieldHandler();
+    finishFieldHandler('/url');
     expect(Requester.post).not.toBeCalled();
 });
 
@@ -175,7 +176,7 @@ test('Should request a new URL if on an add form', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={jest.fn()}
-            schemaPath=""
+            schemaPath="/url"
             value="/test/xxx"
         />
     );
@@ -183,13 +184,19 @@ test('Should request a new URL if on an add form', () => {
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
     formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getSchemaEntryByPath.mockReturnValue({
+        tags: [
+            {name: 'sulu.rlp.part'},
+        ],
+    });
     const resourceLocatorPromise = Promise.resolve({
         resourcelocator: '/test',
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
-    finishFieldHandler();
+    finishFieldHandler('/url');
 
+    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).toBeCalledWith(
         '/admin/api/resourcelocators?action=generate',
@@ -210,7 +217,7 @@ test('Should request a new URL including the options from the FormStore if on an
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={jest.fn()}
-            schemaPath=""
+            schemaPath="/url"
             value="/test/xxx"
         />
     );
@@ -218,13 +225,20 @@ test('Should request a new URL including the options from the FormStore if on an
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
     formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getSchemaEntryByPath.mockReturnValue({
+        tags: [
+            {name: 'sulu.rlp.part'},
+        ],
+    });
+
     const resourceLocatorPromise = Promise.resolve({
         resourcelocator: '/test',
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
-    finishFieldHandler();
+    finishFieldHandler('/url');
 
+    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).toBeCalledWith(
         '/admin/api/resourcelocators?action=generate',
@@ -243,16 +257,22 @@ test('Should not request a new URL if no parts are available', () => {
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schemaPath=""
+            schemaPath="/url"
             value="/test/xxx"
         />
     );
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
+    formInspector.getSchemaEntryByPath.mockReturnValue({
+        tags: [
+            {name: 'sulu.rlp.part'},
+        ],
+    });
     formInspector.getValuesByTag.mockReturnValue([]);
-    finishFieldHandler();
+    finishFieldHandler('/url');
 
+    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).not.toBeCalled();
 });
@@ -264,7 +284,7 @@ test('Should not request a new URL if only empty parts are available', () => {
             formInspector={formInspector}
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schemaPath=""
+            schemaPath="/url"
             value="/test/xxx"
         />
     );
@@ -272,8 +292,63 @@ test('Should not request a new URL if only empty parts are available', () => {
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
     formInspector.getValuesByTag.mockReturnValue([null, undefined]);
-    finishFieldHandler();
+    formInspector.getSchemaEntryByPath.mockReturnValue({
+        tags: [
+            {name: 'sulu.rlp.part'},
+        ],
+    });
+    finishFieldHandler('/url');
 
+    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
+    expect(Requester.post).not.toBeCalled();
+});
+
+test('Should not request a new URL if a field without the "sulu.rlp.part" tag has finished editing', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    shallow(
+        <ResourceLocator
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath="/url"
+            value="/test/xxx"
+        />
+    );
+
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+
+    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getSchemaEntryByPath.mockReturnValue({
+        tags: [
+            {name: 'sulu.rlp'},
+        ],
+    });
+    finishFieldHandler('/url');
+
+    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
+    expect(formInspector.getValuesByTag).not.toBeCalledWith('sulu.rlp.part');
+    expect(Requester.post).not.toBeCalled();
+});
+
+test('Should not request a new URL if a field without any tags has finished editing', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    shallow(
+        <ResourceLocator
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath="/url"
+            value="/test/xxx"
+        />
+    );
+
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+
+    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    finishFieldHandler('/url');
+
+    expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
+    expect(formInspector.getValuesByTag).not.toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).not.toBeCalled();
 });
