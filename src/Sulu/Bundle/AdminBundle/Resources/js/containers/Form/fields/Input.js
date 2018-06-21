@@ -5,10 +5,7 @@ import type {FieldTypeProps} from '../../../types';
 
 export default class Input extends React.Component<FieldTypeProps<?string>> {
     handleBlur = () => {
-        const {onFinish} = this.props;
-        if (onFinish) {
-            onFinish();
-        }
+        this.props.onFinish();
     };
 
     render() {

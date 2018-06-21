@@ -57,6 +57,7 @@ test('Should pass props correctly to component', () => {
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             schemaPath=""
             value={value}
         />
@@ -89,6 +90,7 @@ test('Should pass id of form as disabledId to avoid assigning something to itsel
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             schemaPath=""
             value={undefined}
         />
@@ -112,6 +114,7 @@ test('Should pass empty array if value is not given', () => {
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             schemaPath=""
             value={undefined}
         />
@@ -135,6 +138,7 @@ test('Should throw an error if no resourceKey is passed in fieldOptions', () => 
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             schemaPath=""
             value={undefined}
         />
@@ -150,6 +154,7 @@ test('Should throw an error if no adapter is passed in fieldTypeOptions', () => 
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             fieldTypeOptions={{resourceKey: 'test'}}
             schemaPath=""
             value={undefined}

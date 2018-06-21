@@ -8,10 +8,7 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
     handleChange = (checked: boolean) => {
         const {onChange, onFinish} = this.props;
         onChange(checked);
-
-        if (onFinish) {
-            onFinish();
-        }
+        onFinish();
     };
 
     render() {

@@ -34,10 +34,7 @@ export default class DatePicker extends React.Component<FieldTypeProps<?string>>
         const stringValue = createStringValue(value);
 
         onChange(stringValue);
-
-        if (onFinish) {
-            onFinish();
-        }
+        onFinish();
     };
 
     render() {

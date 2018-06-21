@@ -58,9 +58,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
 
     handleBlur = () => {
         const {onFinish} = this.props;
-        if (onFinish) {
-            onFinish();
-        }
+        onFinish();
     };
 
     render() {

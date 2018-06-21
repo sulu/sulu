@@ -31,6 +31,7 @@ test('Pass correct props to AutoComplete', () => {
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             schemaPath=""
             value={value}
         />
@@ -92,6 +93,7 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
                 maxOccurs={undefined}
                 minOccurs={undefined}
                 onChange={jest.fn()}
+                onFinish={jest.fn()}
                 schemaPath=""
                 value={undefined}
             />

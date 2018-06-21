@@ -276,6 +276,7 @@ test('Should pass correct schemaPath to FieldRender', () => {
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             schemaPath=""
             types={types}
             value={[{}, {}]}

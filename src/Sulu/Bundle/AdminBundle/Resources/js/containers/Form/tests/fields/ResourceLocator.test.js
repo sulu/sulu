@@ -76,6 +76,7 @@ test('Throw an exception if a non-valid mode is passed', () => {
                 maxOccurs={undefined}
                 minOccurs={undefined}
                 onChange={jest.fn()}
+                onFinish={jest.fn()}
                 schemaOptions={schemaOptions}
                 schemaPath=""
                 value="/"
@@ -95,6 +96,7 @@ test('Throw an exception if a no generationUrl is passed', () => {
                 maxOccurs={undefined}
                 minOccurs={undefined}
                 onChange={jest.fn()}
+                onFinish={jest.fn()}
                 schemaPath=""
                 value="/"
             />

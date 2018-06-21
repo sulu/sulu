@@ -8,9 +8,7 @@ export default class PasswordConfirmation extends React.Component<FieldTypeProps
         const {onFinish, onChange} = this.props;
 
         onChange(value);
-        if (onFinish) {
-            onFinish();
-        }
+        onFinish();
     };
 
     render() {

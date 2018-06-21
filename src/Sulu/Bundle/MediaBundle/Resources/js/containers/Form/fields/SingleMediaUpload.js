@@ -25,9 +25,7 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Me
         const {onChange, onFinish} = this.props;
 
         onChange(media);
-        if (onFinish) {
-            onFinish();
-        }
+        onFinish();
     };
 
     render() {

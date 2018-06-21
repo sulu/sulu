@@ -21,6 +21,7 @@ test('Pass error correctly to PasswordConfirmation component', () => {
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             error={error}
             formInspector={formInspector}
             schemaPath=""
