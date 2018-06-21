@@ -73,6 +73,21 @@ test('Should validate form when a field has finished being edited', () => {
     expect(store.validate).toBeCalledWith();
 });
 
+test('Should validate form before calling finish handlers when a field has finished being edited', () => {
+    const handler1 = jest.fn(() => {
+        expect(validateCalled).toEqual(true);
+    });
+    const store = new FormStore(new ResourceStore('snippet', '1'));
+    metadataStore.getSchema.mockReturnValue({});
+
+    const form = mount(<Form onSubmit={jest.fn()} store={store} />);
+    form.instance().formInspector.addFinishFieldHandler(handler1);
+
+    let validateCalled = false;
+    store.validate.mockImplementation(() => validateCalled = true);
+    form.find('Renderer').prop('onFieldFinish')();
+});
+
 test('Call finish handlers on formInspector when a section field has finished being edited', () => {
     const handler1 = jest.fn();
     const handler2 = jest.fn();

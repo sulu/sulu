@@ -18,6 +18,10 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
                 return;
             }
 
+            if (Object.keys(formInspector.errors).length > 0) {
+                return;
+            }
+
             const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(schemaPath);
             if (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) {
                 return;

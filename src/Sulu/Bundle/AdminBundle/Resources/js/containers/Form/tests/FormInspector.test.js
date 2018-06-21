@@ -50,6 +50,14 @@ test('Should return the id from the FormStore', () => {
     expect(formInspector.id).toEqual(3);
 });
 
+test('Should return the errors from the FormStore', () => {
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    formStore.errors = {};
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.errors).toBe(formStore.errors);
+});
+
 test('Should return the options from the FormStore', () => {
     const formStore = new FormStore(new ResourceStore('test', 1));
     formStore.options = {

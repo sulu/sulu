@@ -24,6 +24,7 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;
     this.locale = formStore.locale;
     this.options = formStore.options;
+    this.errors = {};
     this.addFinishFieldHandler = jest.fn();
     this.getValuesByTag = jest.fn();
     this.getSchemaEntryByPath = jest.fn().mockReturnValue({});
@@ -350,5 +351,40 @@ test('Should not request a new URL if a field without any tags has finished edit
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).not.toBeCalledWith('sulu.rlp.part');
+    expect(Requester.post).not.toBeCalled();
+});
+
+test('Should not request a new URL if there is an error on the form', () => {
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
+    const changeSpy = jest.fn();
+
+    shallow(
+        <ResourceLocator
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            schemaPath="/url"
+            value="/test/xxx"
+        />
+    );
+
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+
+    formInspector.errors = {title: {}};
+    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getSchemaEntryByPath.mockReturnValue({
+        tags: [
+            {name: 'sulu.rlp.part'},
+        ],
+    });
+
+    finishFieldHandler('/url');
+
+    expect(formInspector.getSchemaEntryByPath).not.toBeCalled();
+    expect(formInspector.getValuesByTag).not.toBeCalled();
     expect(Requester.post).not.toBeCalled();
 });

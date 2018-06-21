@@ -104,7 +104,7 @@ export default class FormStore {
     resourceStore: ResourceStore;
     schema: Schema;
     validator: ?(data: Object) => boolean;
-    @observable errors: Object;
+    @observable errors: Object = {};
     options: Object;
     @observable type: string;
     @observable types: SchemaTypes = {};

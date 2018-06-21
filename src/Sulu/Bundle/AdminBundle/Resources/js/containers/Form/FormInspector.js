@@ -25,6 +25,10 @@ export default class FormInspector {
         return this.formStore.options;
     }
 
+    @computed get errors(): Object {
+        return this.formStore.errors;
+    }
+
     @computed get id(): ?string | number {
         return this.formStore.id;
     }
