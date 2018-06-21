@@ -28,6 +28,7 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.addFinishFieldHandler = jest.fn();
     this.getValuesByTag = jest.fn();
     this.getSchemaEntryByPath = jest.fn().mockReturnValue({});
+    this.isFieldModified = jest.fn().mockReturnValue(false);
 }));
 
 jest.mock('../../../../services/Requester', () => ({
@@ -467,4 +468,44 @@ test('Should not request a new URL if a field without any tags has finished edit
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getValuesByTag).not.toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).not.toBeCalled();
+});
+
+test('Should not request a new URL if the resource locator field has already been edited', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), {webspace: 'example'}));
+    const changeSpy = jest.fn();
+
+    shallow(
+        <ResourceLocator
+            dataPath="/block/0/url"
+            error={undefined}
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            schemaPath="/url"
+            showAllErrors={false}
+            types={undefined}
+            value="/test/xxx"
+        />
+    );
+
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+
+    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getSchemaEntryByPath.mockReturnValue({
+        tags: [
+            {name: 'sulu.rlp.part'},
+        ],
+    });
+    formInspector.isFieldModified.mockReturnValue(true);
+
+    finishFieldHandler('/block/0/url', '/url');
+
+    expect(formInspector.isFieldModified).toHaveBeenCalledTimes(1);
+    expect(formInspector.isFieldModified).toBeCalledWith('/block/0/url');
+    expect(formInspector.getSchemaEntryByPath).not.toBeCalledWith('/url');
+    expect(formInspector.getValuesByTag).not.toBeCalledWith('sulu.rlp.part');
+    expect(Requester.post).not.toBeCalledWith();
 });
