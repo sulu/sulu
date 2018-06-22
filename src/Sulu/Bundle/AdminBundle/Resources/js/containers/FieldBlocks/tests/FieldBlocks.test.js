@@ -7,7 +7,9 @@ import FormInspector from '../../Form/FormInspector';
 import FormStore from '../../Form/stores/FormStore';
 import ResourceStore from '../../../stores/ResourceStore';
 
-jest.mock('../../Form/FormInspector', () => jest.fn());
+jest.mock('../../Form/FormInspector', () => jest.fn(function() {
+    this.isFieldModified = jest.fn();
+}));
 jest.mock('../../Form/stores/FormStore', () => jest.fn());
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
@@ -59,9 +61,16 @@ test('Render block with schema', () => {
 
     const fieldBlocks = mount(
         <FieldBlocks
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -116,12 +125,22 @@ test('Render block with schema and error on fields already being modified', () =
         },
     ];
 
+    formInspector.isFieldModified.mockImplementation((dataPath) => {
+        return dataPath === '/block/0/text' || dataPath === '/block/1/text';
+    });
+
     const fieldBlocks = mount(
         <FieldBlocks
+            dataPath="/block"
+            fieldTypeOptions={{}}
             error={error}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath="/block"
+            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -131,9 +150,6 @@ test('Render block with schema and error on fields already being modified', () =
     fieldBlocks.find('Block').at(1).simulate('click');
     fieldBlocks.find('Block').at(2).simulate('click');
 
-    fieldBlocks.find('Block').at(0).find('Field').at(0).prop('onFinish')('text');
-    fieldBlocks.find('Block').at(1).find('Field').at(0).prop('onFinish')('text');
-
     expect(pretty(fieldBlocks.html())).toMatchSnapshot();
 });
 
@@ -182,10 +198,15 @@ test('Render block with schema and error on fields already being modified', () =
 
     const fieldBlocks = mount(
         <FieldBlocks
+            dataPath=""
             error={error}
+            fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
             showAllErrors={true}
             types={types}
             value={value}
@@ -203,6 +224,7 @@ test('Render block with schema and error on fields already being modified', () =
 });
 
 test('Should correctly pass props to the BlockCollection', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const types = {
         default: {
             title: 'Default',
@@ -219,10 +241,16 @@ test('Should correctly pass props to the BlockCollection', () => {
 
     const fieldBlocks = shallow(
         <FieldBlocks
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
             maxOccurs={2}
             minOccurs={1}
             onChange={changeSpy}
             onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -237,6 +265,45 @@ test('Should correctly pass props to the BlockCollection', () => {
         },
         value,
     }));
+});
+
+test('Should pass correct schemaPath to FieldRender', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={types}
+            value={[{}, {}]}
+        />
+    );
+
+    fieldBlocks.find('SortableBlocks').prop('onExpand')(0);
+    fieldBlocks.find('SortableBlocks').prop('onExpand')(1);
+    fieldBlocks.update();
+
+    expect(fieldBlocks.find('FieldRenderer').at(0).prop('schemaPath')).toEqual('/types/default/form');
+    expect(fieldBlocks.find('FieldRenderer').at(1).prop('schemaPath')).toEqual('/types/default/form');
 });
 
 test('Should call onFinish when a field from the child renderer has finished editing', () => {
@@ -258,9 +325,16 @@ test('Should call onFinish when a field from the child renderer has finished edi
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
         <FieldBlocks
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={finishSpy}
+            schemaPath=""
+            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -273,6 +347,7 @@ test('Should call onFinish when a field from the child renderer has finished edi
 });
 
 test('Should call onFinish when the order of the blocks has changed', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const types = {
         default: {
             title: 'Default',
@@ -287,7 +362,22 @@ test('Should call onFinish when the order of the blocks has changed', () => {
     const value = [{}];
 
     const finishSpy = jest.fn();
-    const fieldBlocks = mount(<FieldBlocks onChange={jest.fn()} onFinish={finishSpy} types={types} value={value} />);
+    const fieldBlocks = mount(
+        <FieldBlocks
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            schemaPath=""
+            showAllErrors={false}
+            types={types}
+            value={value}
+        />
+    );
 
     fieldBlocks.find('BlockCollection').prop('onSortEnd')(0, 2);
 
@@ -295,11 +385,41 @@ test('Should call onFinish when the order of the blocks has changed', () => {
 });
 
 test('Throw error if no types are passed', () => {
-    expect(() => shallow(<FieldBlocks onChange={jest.fn()} onFinish={jest.fn()} value={undefined} />))
-        .toThrow('The "block" field type needs at least one type to be configured!');
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    expect(() => shallow(
+        <FieldBlocks
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={undefined}
+        />
+    )).toThrow('The "block" field type needs at least one type to be configured!');
 });
 
 test('Throw error if empty type array is passed', () => {
-    expect(() => shallow(<FieldBlocks onChange={jest.fn()} onFinish={jest.fn()} value={[]} />))
-        .toThrow('The "block" field type needs at least one type to be configured!');
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    expect(() => shallow(
+        <FieldBlocks
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={[]}
+        />
+    )).toThrow('The "block" field type needs at least one type to be configured!');
 });

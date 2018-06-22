@@ -45,10 +45,7 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
         onChange({
             ids: this.mediaSelectionStore.selectedMediaIds,
         });
-
-        if (onFinish) {
-            onFinish();
-        }
+        onFinish();
     }
 
     getLabel(itemCount: number) {

@@ -32,21 +32,25 @@ test('Should pass props correctly to Renderer', () => {
     const formRenderer = shallow(
         <FieldRenderer
             data={data}
+            dataPath="/block/0/test"
             errors={errors}
             formInspector={formInspector}
             index={1}
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
             schema={schema}
+            schemaPath="/test"
         />
     );
 
     expect(formRenderer.find(Renderer).props()).toEqual(expect.objectContaining({
         data,
+        dataPath: '/block/0/test',
         errors,
         formInspector,
         onFieldFinish: fieldFinishSpy,
         schema,
+        schemaPath: '/test',
         showAllErrors: false,
     }));
 });
@@ -57,12 +61,14 @@ test('Should pass showAllErrors prop to Renderer', () => {
     const formRenderer = shallow(
         <FieldRenderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             index={2}
             onChange={jest.fn()}
             onFieldFinish={jest.fn()}
             showAllErrors={true}
             schema={{}}
+            schemaPath=""
         />
     );
 
@@ -76,11 +82,13 @@ test('Should call onChange callback with correct index', () => {
     const formRenderer = shallow(
         <FieldRenderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             index={2}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
             schema={{}}
+            schemaPath=""
         />
     );
 
@@ -96,11 +104,13 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
     const formRenderer = shallow(
         <FieldRenderer
             data={{}}
+            dataPath=""
             formInspector={formInspector}
             index={2}
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
             schema={{}}
+            schemaPath=""
         />
     );
 

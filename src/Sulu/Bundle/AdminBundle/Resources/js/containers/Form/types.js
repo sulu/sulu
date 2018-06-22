@@ -14,6 +14,11 @@ export type Type = {
 };
 export type Types = {[key: string]: Type};
 
+export type Tag = {
+    name: string,
+    priority?: number,
+};
+
 export type SchemaEntry = {
     items?: Schema,
     label?: string,
@@ -23,6 +28,7 @@ export type SchemaEntry = {
     required?: boolean,
     size?: Size,
     spaceAfter?: Size,
+    tags?: Array<Tag>,
     type: string,
     types?: Types,
 };
@@ -30,3 +36,5 @@ export type SchemaEntry = {
 export type Schema = {
     [string]: SchemaEntry,
 };
+
+export type FinishFieldHandler = (dataPath: string, schemaPath: string) => void;

@@ -10,12 +10,14 @@ import FormInspector from './FormInspector';
 import type {SchemaEntry} from './types';
 
 type Props = {|
+    dataPath: string,
     error?: Error | ErrorCollection,
     formInspector: FormInspector,
     name: string,
     onChange: (string, *) => void,
-    onFinish: (name: string) => void,
+    onFinish: (dataPath: string, schemaPath: string) => void,
     schema: SchemaEntry,
+    schemaPath: string,
     showAllErrors: boolean,
     value?: *,
 |};
@@ -31,8 +33,10 @@ export default class Field extends React.Component<Props> {
         onChange(name, value);
     };
 
-    handleFinish = () => {
-        this.props.onFinish(this.props.name);
+    handleFinish = (subDataPath: ?string, subSchemaPath: ?string) => {
+        const {dataPath, onFinish, schemaPath} = this.props;
+        // if the fields are nested the deepest field passes its pathes up
+        onFinish(subDataPath || dataPath, subSchemaPath || schemaPath);
     };
 
     findErrorKeyword(error: ?Error | ErrorCollection): ?string {
@@ -58,7 +62,7 @@ export default class Field extends React.Component<Props> {
     }
 
     render() {
-        const {error, value, formInspector, schema, showAllErrors, name} = this.props;
+        const {dataPath, error, value, formInspector, schema, schemaPath, showAllErrors, name} = this.props;
         const {label, maxOccurs, minOccurs, options: schemaOptions, required, type, types} = schema;
         let FieldType;
 
@@ -92,6 +96,7 @@ export default class Field extends React.Component<Props> {
             <div className={fieldClass}>
                 {label && <label className={fieldStyles.label}>{label}{required && ' *'}</label>}
                 <FieldType
+                    dataPath={dataPath}
                     error={error}
                     fieldTypeOptions={fieldTypeOptions}
                     formInspector={formInspector}
@@ -100,6 +105,7 @@ export default class Field extends React.Component<Props> {
                     onChange={this.handleChange}
                     onFinish={this.handleFinish}
                     schemaOptions={schemaOptions}
+                    schemaPath={schemaPath}
                     showAllErrors={showAllErrors}
                     types={types}
                     value={value}

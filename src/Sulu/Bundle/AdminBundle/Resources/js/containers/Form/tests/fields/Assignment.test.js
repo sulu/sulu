@@ -52,9 +52,17 @@ test('Should pass props correctly to component', () => {
 
     const assignment = shallow(
         <Assignment
+            dataPath=""
+            error={undefined}
             formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
+            onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
             value={value}
         />
     );
@@ -81,9 +89,17 @@ test('Should pass id of form as disabledId to avoid assigning something to itsel
 
     const assignment = shallow(
         <Assignment
+            dataPath=""
+            error={undefined}
             formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     );
@@ -101,9 +117,17 @@ test('Should pass empty array if value is not given', () => {
 
     const assignment = shallow(
         <Assignment
+            dataPath=""
+            error={undefined}
             formInspector={formInspector}
             fieldTypeOptions={fieldOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
+            onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     );
@@ -116,20 +140,22 @@ test('Should pass empty array if value is not given', () => {
     }));
 });
 
-test('Should throw an error if no fieldOptions are passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
-    expect(() => shallow(<Assignment formInspector={formInspector} onChange={jest.fn()} value={undefined} />))
-        .toThrowError(/a "resourceKey" and a "adapter"/);
-});
-
 test('Should throw an error if no resourceKey is passed in fieldOptions', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
     expect(() => shallow(
         <Assignment
+            dataPath=""
+            error={undefined}
             formInspector={formInspector}
             fieldTypeOptions={{}}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     )).toThrowError(/"resourceKey"/);
@@ -140,9 +166,17 @@ test('Should throw an error if no adapter is passed in fieldTypeOptions', () => 
 
     expect(() => shallow(
         <Assignment
+            dataPath=""
+            error={undefined}
             formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             fieldTypeOptions={{resourceKey: 'test'}}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     )).toThrowError(/"adapter"/);

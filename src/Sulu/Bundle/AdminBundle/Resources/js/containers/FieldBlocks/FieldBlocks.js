@@ -24,14 +24,11 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
     handleSortEnd = () => {
         const {onFinish} = this.props;
-
-        if (onFinish) {
-            onFinish();
-        }
+        onFinish();
     };
 
     renderBlockContent = (value: Object, type: ?string, index: number) => {
-        const {error, formInspector, onFinish, showAllErrors, types} = this.props;
+        const {dataPath, error, formInspector, onFinish, schemaPath, showAllErrors, types} = this.props;
 
         if (!formInspector) {
             throw new Error('The FieldBlocks field type needs a formInspector to work properly');
@@ -41,12 +38,14 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
         }
 
-        const blockType = type ? types[type] : types[Object.keys(types)[0]]; // TODO replace with a default type
+        const blockTypeKey = type || Object.keys(types)[0]; // TODO replace with a default type
+        const blockType = types[blockTypeKey];
 
         const errors = ((toJS(error): any): ?BlockError);
 
         return (
             <FieldRenderer
+                dataPath={dataPath + '/' + index}
                 data={value}
                 errors={errors && errors.length > index && errors[index] ? errors[index] : undefined}
                 formInspector={formInspector}
@@ -54,6 +53,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
                 onChange={this.handleBlockChange}
                 onFieldFinish={onFinish}
                 schema={blockType.form}
+                schemaPath={schemaPath + '/types/' + blockTypeKey + '/form'}
                 showAllErrors={showAllErrors}
             />
         );

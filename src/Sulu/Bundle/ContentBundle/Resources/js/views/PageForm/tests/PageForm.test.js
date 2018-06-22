@@ -555,6 +555,11 @@ test('Should save form when submitted and redirect to editRoute when creating a 
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
+    expect(pageForm.instance().formStore.options).toEqual({
+        parent: 'test-parent-id',
+        webspace: 'sulu',
+    });
+
     return Promise.all([webspacePromise, schemaTypesPromise, schemaPromise]).then(() => {
         pageForm.update();
         pageForm.find('Form').at(0).instance().props.onSubmit('publish');
@@ -562,8 +567,6 @@ test('Should save form when submitted and redirect to editRoute when creating a 
         expect(pageForm.instance().formStore.save).toBeCalledWith(
             {
                 action: 'publish',
-                parent: 'test-parent-id',
-                webspace: 'sulu',
             }
         );
 

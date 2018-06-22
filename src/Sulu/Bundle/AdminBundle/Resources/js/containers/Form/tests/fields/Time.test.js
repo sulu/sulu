@@ -1,18 +1,34 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import ResourceStore from '../../../../stores/ResourceStore';
+import FormInspector from '../../FormInspector';
+import FormStore from '../../stores/FormStore';
 import Time from '../../fields/Time';
 import DatePickerComponent from '../../../../components/DatePicker';
 
+jest.mock('../../../../stores/ResourceStore', () => jest.fn());
+jest.mock('../../stores/FormStore', () => jest.fn());
+jest.mock('../../FormInspector', () => jest.fn());
+
 test('Pass error correctly to Input component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const error = {};
 
     const time = shallow(
         <Time
+            dataPath=""
+            error={error}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
             value={'xyz'}
-            error={error}
         />
     );
 
@@ -20,10 +36,20 @@ test('Pass error correctly to Input component', () => {
 });
 
 test('Pass props correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const time = shallow(
         <Time
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
             value={undefined}
         />
     );
@@ -33,10 +59,20 @@ test('Pass props correctly to component', () => {
 });
 
 test('Pass invalid value correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const time = shallow(
         <Time
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
             value={'test'}
         />
     );
@@ -45,10 +81,20 @@ test('Pass invalid value correctly to component', () => {
 });
 
 test('Convert value and pass it correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const time = shallow(
         <Time
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
             value={'14:20:00'}
         />
     );
@@ -58,13 +104,23 @@ test('Convert value and pass it correctly to component', () => {
 });
 
 test('Should call onFinish callback on every onChange with correctly converted value', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const finishSpy = jest.fn();
     const changeSpy = jest.fn();
 
     const time = shallow(
         <Time
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
             value={'14:20:00'}
         />
     );

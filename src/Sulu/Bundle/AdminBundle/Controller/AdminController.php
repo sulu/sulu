@@ -259,12 +259,13 @@ class AdminController
     {
         $endpoints = [
             'config' => $this->router->generate('sulu_admin_v2.config'),
-            'translations' => $this->router->generate('sulu_admin_v2.translation'),
             'loginCheck' => $this->router->generate('sulu_admin.login_check_v2'),
             'logout' => $this->router->generate('sulu_admin.logout'),
             'reset' => $this->router->generate('sulu_security.reset_password.email'),
             'resetResend' => $this->router->generate('sulu_security.reset_password.email.resend'),
             'resources' => $this->router->generate('sulu_admin_v2.resources', ['resource' => ':resource']),
+            'translations' => $this->router->generate('sulu_admin_v2.translation'),
+            'generateUrl' => $this->router->generate('post_resourcelocator', ['action' => 'generate']),
         ];
 
         return $this->engine->renderResponse(

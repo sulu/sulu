@@ -107,6 +107,9 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('animals', $resource->types->default->form);
         $this->assertObjectHasAttribute('blog', $resource->types->default->form);
         $this->assertObjectHasAttribute('localized_blog', $resource->types->default->form);
+        // check if form has tags
+        $this->assertEquals('sulu.rlp.part', $resource->types->default->form->title->tags[0]->name);
+        $this->assertEquals(100, $resource->types->default->form->title->tags[0]->priority);
         // check field "animals"
         $this->assertObjectHasAttribute('label', $resource->types->default->form->animals);
         $this->assertObjectHasAttribute('type', $resource->types->default->form->animals);

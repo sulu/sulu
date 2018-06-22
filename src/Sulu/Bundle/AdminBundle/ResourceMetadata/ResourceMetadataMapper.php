@@ -18,6 +18,7 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FieldType;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Option;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Section;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Tag;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -122,6 +123,12 @@ class ResourceMetadataMapper
     protected function mapProperty(PropertyMetadata $property, string $locale): FormField
     {
         $field = new FormField($property->getName());
+        foreach ($property->getTags() as $tag) {
+            $fieldTag = new Tag();
+            $fieldTag->setName($tag['name']);
+            $fieldTag->setPriority($tag['priority']);
+            $field->addTag($fieldTag);
+        }
 
         $field->setLabel($property->getTitle($locale));
         $field->setType($property->getType());

@@ -18,6 +18,13 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.id = resourceStore.id;
     this.locale = resourceStore.locale;
     this.data = resourceStore.data;
+    this.options = {};
+    this.schema = {};
+    this.getValueByPath = jest.fn();
+    this.getValuesByTag = jest.fn();
+    this.getSchemaEntryByPath = jest.fn();
+    this.finishField = jest.fn();
+    this.isFieldModified = jest.fn();
 }));
 
 test('Should return the resourceKey from the FormStore', () => {
@@ -45,12 +52,85 @@ test('Should return the id from the FormStore', () => {
     expect(formInspector.id).toEqual(3);
 });
 
-test('Should return value for property path', () => {
-    const resourceStore = new ResourceStore('test', 3);
-    resourceStore.data = {test: 'value'};
-
-    const formStore = new FormStore(resourceStore);
+test('Should return the errors from the FormStore', () => {
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    formStore.errors = {};
     const formInspector = new FormInspector(formStore);
 
-    expect(formInspector.getValueByPath('/test')).toEqual('value');
+    expect(formInspector.errors).toBe(formStore.errors);
+});
+
+test('Should return the options from the FormStore', () => {
+    const formStore = new FormStore(new ResourceStore('test', 1));
+    formStore.options = {
+        webspace: 'example',
+    };
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.options).toEqual({
+        webspace: 'example',
+    });
+});
+
+test('Should return the value for a path by using the FormStore', () => {
+    const data = [];
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    // $FlowFixMe
+    formStore.getValueByPath.mockReturnValue(data);
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.getValueByPath('/test')).toBe(data);
+    expect(formStore.getValueByPath).toBeCalledWith('/test');
+});
+
+test('Should return the values for a given tag by using the FormStore', () => {
+    const data = [];
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    formStore.getValuesByTag.mockReturnValue(data);
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.getValuesByTag('/test')).toBe(data);
+    expect(formStore.getValuesByTag).toBeCalledWith('/test');
+});
+
+test('Should call finishField method from formStore', () => {
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    const formInspector = new FormInspector(formStore);
+
+    formInspector.finishField('/block/0/test', '/test');
+
+    expect(formStore.finishField).toBeCalledWith('/block/0/test');
+});
+
+test('Should call registered onFinishField handlers', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 3)));
+    const finishFieldHandler1 = jest.fn();
+    const finishFieldHandler2 = jest.fn();
+    formInspector.addFinishFieldHandler(finishFieldHandler1);
+    formInspector.addFinishFieldHandler(finishFieldHandler2);
+
+    formInspector.finishField('/block/0/test', '/test');
+    expect(finishFieldHandler1).toBeCalledWith('/block/0/test', '/test');
+    expect(finishFieldHandler2).toBeCalledWith('/block/0/test', '/test');
+});
+
+test('Should return the SchemaEntry for a given path by using the FormStore', () => {
+    const schemaEntry = {
+        type: 'text_line',
+    };
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    formStore.getSchemaEntryByPath.mockReturnValue(schemaEntry);
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.getSchemaEntryByPath('/test')).toBe(schemaEntry);
+    expect(formStore.getSchemaEntryByPath).toBeCalledWith('/test');
+});
+
+test('Should return if a field is modified by using the FormStore', () => {
+    const formStore = new FormStore(new ResourceStore('test', 3));
+    formStore.isFieldModified.mockReturnValue(true);
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.isFieldModified('/test')).toBe(true);
+    expect(formStore.isFieldModified).toBeCalledWith('/test');
 });

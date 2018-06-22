@@ -229,9 +229,11 @@ test('Change type should update schema and data', (done) => {
     metadataStore.getSchema.mockReturnValue(sidebarPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const formStore = new FormStore(resourceStore);
+    const cachedPathsByTag = formStore.pathsByTag;
 
     setTimeout(() => {
         expect(formStore.schema).toBe(sidebarMetadata);
+        expect(formStore.pathsByTag).not.toBe(cachedPathsByTag);
         expect(formStore.data).toEqual({
             title: 'Title',
             description: undefined,
@@ -375,7 +377,18 @@ test('Save the store should call the resourceStore save function', () => {
     const formStore = new FormStore(new ResourceStore('snippets', '3', {locale: observable.box()}));
 
     formStore.save();
-    expect(formStore.resourceStore.save).toBeCalled();
+    expect(formStore.resourceStore.save).toBeCalledWith({});
+    formStore.destroy();
+});
+
+test('Save the store should call the resourceStore save function with the passed options', () => {
+    const formStore = new FormStore(
+        new ResourceStore('snippets', '3', {locale: observable.box()}),
+        {option1: 'value1', option2: 'value2'}
+    );
+
+    formStore.save({option: 'value'});
+    expect(formStore.resourceStore.save).toBeCalledWith({option: 'value', option1: 'value1', option2: 'value2'});
     formStore.destroy();
 });
 
@@ -481,4 +494,272 @@ test('Destroying the store should not fail if no disposers are available', () =>
     formStore.typeDisposer = undefined;
 
     formStore.destroy();
+});
+
+test('Should return value for property path', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {test: 'value'};
+
+    const formStore = new FormStore(resourceStore);
+
+    expect(formStore.getValueByPath('/test')).toEqual('value');
+});
+
+test('Return all the values for a given tag', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {
+        title: 'Value 1',
+        description: 'Value 2',
+        flag: true,
+    };
+
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        title: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_line',
+        },
+        description: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_area',
+        },
+        flag: {
+            type: 'checkbox',
+            tags: [
+                {name: 'sulu.other'},
+            ],
+        },
+    };
+
+    expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Value 2']);
+});
+
+test('Return all the values for a given tag sorted by priority', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {
+        title: 'Value 1',
+        description: 'Value 2',
+        flag: true,
+    };
+
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        title: {
+            tags: [
+                {name: 'sulu.resource_locator_part', priority: 10},
+            ],
+            type: 'text_line',
+        },
+        description: {
+            tags: [
+                {name: 'sulu.resource_locator_part', priority: 100},
+            ],
+            type: 'text_area',
+        },
+        flag: {
+            type: 'checkbox',
+        },
+    };
+
+    expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 2', 'Value 1']);
+});
+
+test('Return all the values for a given tag within sections', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = {
+        title: 'Value 1',
+        description: 'Value 2',
+        flag: true,
+        article: 'Value 3',
+    };
+
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        highlight: {
+            items: {
+                title: {
+                    tags: [
+                        {name: 'sulu.resource_locator_part'},
+                    ],
+                    type: 'text_line',
+                },
+                description: {
+                    tags: [
+                        {name: 'sulu.resource_locator_part'},
+                    ],
+                    type: 'text_area',
+                },
+                flag: {
+                    type: 'checkbox',
+                },
+            },
+            type: 'section',
+        },
+        article: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_area',
+        },
+    };
+
+    expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Value 2', 'Value 3']);
+});
+
+test('Return all the values for a given tag with empty blocks', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = observable({
+        title: 'Value 1',
+        description: 'Value 2',
+    });
+
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        title: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_line',
+        },
+        description: {
+            type: 'text_area',
+        },
+        block: {
+            type: 'block',
+            types: {
+                default: {
+                    form: {
+                        text: {
+                            tags: [
+                                {name: 'sulu.resource_locator_part'},
+                            ],
+                            type: 'text_line',
+                        },
+                        description: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Default',
+                },
+            },
+        },
+    };
+
+    expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1']);
+});
+
+test('Return all the values for a given tag within blocks', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    resourceStore.data = observable({
+        title: 'Value 1',
+        description: 'Value 2',
+        block: [
+            {type: 'default', text: 'Block 1', description: 'Block Description 1'},
+            {type: 'default', text: 'Block 2', description: 'Block Description 2'},
+            {type: 'other', text: 'Block 3', description: 'Block Description 2'},
+        ],
+    });
+
+    const formStore = new FormStore(resourceStore);
+    formStore.schema = {
+        title: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_line',
+        },
+        description: {
+            type: 'text_area',
+        },
+        block: {
+            type: 'block',
+            types: {
+                default: {
+                    form: {
+                        text: {
+                            tags: [
+                                {name: 'sulu.resource_locator_part'},
+                            ],
+                            type: 'text_line',
+                        },
+                        description: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Default',
+                },
+                other: {
+                    form: {
+                        text: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Other',
+                },
+            },
+        },
+    };
+
+    expect(formStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Block 1', 'Block 2']);
+});
+
+test('Return SchemaEntry for given schemaPath', () => {
+    const formStore = new FormStore(new ResourceStore('test'));
+    formStore.schema = {
+        title: {
+            tags: [
+                {name: 'sulu.resource_locator_part'},
+            ],
+            type: 'text_line',
+        },
+        description: {
+            type: 'text_area',
+        },
+        block: {
+            type: 'block',
+            types: {
+                default: {
+                    form: {
+                        text: {
+                            tags: [
+                                {name: 'sulu.resource_locator_part'},
+                            ],
+                            type: 'text_line',
+                        },
+                        description: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Default',
+                },
+            },
+        },
+    };
+
+    expect(formStore.getSchemaEntryByPath('/block/types/default/form/text')).toEqual({
+        tags: [
+            {name: 'sulu.resource_locator_part'},
+        ],
+        type: 'text_line',
+    });
+});
+
+test('Remember fields being finished as modified fields and forget about them after saving', () => {
+    const formStore = new FormStore(new ResourceStore('test'));
+    formStore.finishField('/block/0/text');
+    formStore.finishField('/block/0/text');
+    formStore.finishField('/block/1/text');
+
+    expect(formStore.isFieldModified('/block/0/text')).toEqual(true);
+    expect(formStore.isFieldModified('/block/1/text')).toEqual(true);
+    expect(formStore.isFieldModified('/block/2/text')).toEqual(false);
+
+    return formStore.save().then(() => {
+        expect(formStore.isFieldModified('/block/0/text')).toEqual(false);
+        expect(formStore.isFieldModified('/block/1/text')).toEqual(false);
+    });
 });

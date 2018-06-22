@@ -28,11 +28,13 @@ test('Render correct label with correct field type', () => {
     });
     expect(render(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={{label: 'label1', type: 'text'}}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 
@@ -41,11 +43,13 @@ test('Render correct label with correct field type', () => {
     });
     expect(render(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={{label: 'label2', type: 'datetime'}}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 });
@@ -58,11 +62,13 @@ test('Render a required field with correct field type', () => {
     });
     expect(render(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={{label: 'label1', required: true, type: 'text'}}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 });
@@ -72,11 +78,13 @@ test('Render a field without a label', () => {
 
     expect(render(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={{type: 'text'}}
+            schemaPath=""
         />
     )).toMatchSnapshot();
 });
@@ -90,12 +98,14 @@ test('Render a field with an error', () => {
     expect(
         render(
             <Field
+                dataPath=""
                 error={{keyword: 'minLength', parameters: {}}}
                 formInspector={formInspector}
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
                 schema={{label: 'label1', type: 'text'}}
+                schemaPath=""
             />
         )
     ).toMatchSnapshot();
@@ -116,12 +126,14 @@ test('Render a field with a error collection', () => {
     expect(
         render(
             <Field
+                dataPath=""
                 error={error}
                 formInspector={formInspector}
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
                 schema={{label: 'label1', type: 'text'}}
+                schemaPath=""
             />
         )
     ).toMatchSnapshot();
@@ -143,20 +155,24 @@ test('Pass correct props to FieldType', () => {
     };
     const field = shallow(
         <Field
+            dataPath="/block/0/text"
             formInspector={formInspector}
             name="text"
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={schema}
+            schemaPath="/text"
             showAllErrors={true}
             value="test"
         />
     );
 
     expect(field.find('Text').props()).toEqual(expect.objectContaining({
+        dataPath: '/block/0/text',
         formInspector,
         maxOccurs: 4,
         minOccurs: 2,
+        schemaPath: '/text',
         showAllErrors: true,
         types: {},
         value: 'test',
@@ -185,11 +201,13 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
     };
     const field = shallow(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="text"
             onChange={jest.fn()}
             onFinish={jest.fn()}
             schema={schema}
+            schemaPath=""
             showAllErrors={true}
             value="test"
         />
@@ -220,11 +238,13 @@ test('Call onChange callback when value of Field changes', () => {
     const changeSpy = jest.fn();
     const field = shallow(
         <Field
+            dataPath=""
             formInspector={formInspector}
             name="test"
             onChange={changeSpy}
             onFinish={jest.fn()}
             schema={{label: 'label', type: 'text'}}
+            schemaPath=""
         />
     );
 
@@ -243,15 +263,17 @@ test('Call onFinish callback after editing the field has finished', () => {
     const finishSpy = jest.fn();
     const field = shallow(
         <Field
+            dataPath="/block/0/test"
             formInspector={formInspector}
             name="test"
             onChange={jest.fn()}
             onFinish={finishSpy}
             schema={{label: 'label', type: 'text'}}
+            schemaPath="/test"
         />
     );
 
     field.find('Text').simulate('finish');
 
-    expect(finishSpy).toBeCalledWith('test');
+    expect(finishSpy).toBeCalledWith('/block/0/test', '/test');
 });

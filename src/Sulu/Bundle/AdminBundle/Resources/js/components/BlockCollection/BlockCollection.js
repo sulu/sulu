@@ -10,8 +10,8 @@ import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
 type Props = {
-    maxOccurs?: number,
-    minOccurs?: number,
+    maxOccurs?: ?number,
+    minOccurs?: ?number,
     onChange: (value: Array<BlockEntry>) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
     renderBlockContent: RenderBlockContentCallback,

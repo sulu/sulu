@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
 import Input from '../Input';
 import resourceLocatorStyles from './resourceLocator.scss';
 
@@ -16,7 +17,6 @@ export default class ResourceLocator extends React.PureComponent<Props> {
     };
 
     fixed: string = '';
-    changeable: string = '';
 
     constructor(props: Props) {
         super(props);
@@ -26,11 +26,10 @@ export default class ResourceLocator extends React.PureComponent<Props> {
         switch (mode) {
             case 'full':
                 this.fixed = '/';
-                this.changeable = value.substring(1);
                 break;
             case 'leaf':
                 const parts = value.split('/');
-                this.changeable = parts.pop();
+                parts.pop();
                 this.fixed = parts.join('/') + '/';
                 break;
             default:
@@ -38,9 +37,9 @@ export default class ResourceLocator extends React.PureComponent<Props> {
         }
     }
 
-    componentWillReceiveProps = (nextProps: Props) => {
-        this.changeable = nextProps.value.substring(this.fixed.length);
-    };
+    @computed get changeableValue() {
+        return this.props.value.substring(this.fixed.length);
+    }
 
     handleChange = (value: ?string) => {
         const {onChange} = this.props;
@@ -54,7 +53,7 @@ export default class ResourceLocator extends React.PureComponent<Props> {
         return (
             <div className={resourceLocatorStyles.resourceLocator}>
                 <span className={resourceLocatorStyles.fixed}>{this.fixed}</span>
-                <Input onChange={this.handleChange} onBlur={onBlur} value={this.changeable} />
+                <Input onChange={this.handleChange} onBlur={onBlur} value={this.changeableValue} />
             </div>
         );
     }

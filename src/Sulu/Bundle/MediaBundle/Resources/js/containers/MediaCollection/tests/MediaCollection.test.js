@@ -29,6 +29,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             }
 
             this.data = resourceStore.data;
+            this.isFieldModified = jest.fn();
         }),
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
