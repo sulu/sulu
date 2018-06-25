@@ -104,7 +104,6 @@ export default class DatagridStore {
         loadingStrategy: LoadingStrategyInterface,
         structureStrategy: StructureStrategyInterface
     ) => {
-        this.reset();
         this.updateLoadingStrategy(loadingStrategy);
         this.updateStructureStrategy(structureStrategy);
     };
@@ -112,6 +111,10 @@ export default class DatagridStore {
     @action updateLoadingStrategy = (loadingStrategy: LoadingStrategyInterface) => {
         if (this.loadingStrategy && this.loadingStrategy === loadingStrategy) {
             return;
+        }
+
+        if (this.loadingStrategy) {
+            this.reset();
         }
 
         if (this.structureStrategy) {
