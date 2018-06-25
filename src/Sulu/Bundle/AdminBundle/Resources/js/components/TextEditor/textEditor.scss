@@ -1,0 +1,56 @@
+@import '../../containers/Application/colors.scss';
+
+$textEditorBorderRadius: 3px;
+$textEditorButtonBorderRadius: 2px;
+$textEditorToolbarBackgroundColor: $silver;
+$textEditorBackgroundColor: $white;
+$textEditorBorderColor: $silver;
+$textEditorButtonActiveBackground: $dustyGray;
+
+:global {
+    .ck.ck-toolbar {
+        background-color: $textEditorToolbarBackgroundColor;
+        border-radius: $textEditorBorderRadius;
+        margin-bottom: 10px;
+        padding: 10px;
+        height: 40px;
+
+        .ck.ck-button {
+            display: flex;
+            background-color: transparent;
+            border: none;
+            border-radius: $textEditorButtonBorderRadius;
+            height: 20px;
+            width: 20px;
+            padding: 4px;
+            margin-right: 5px;
+
+            &.ck-on {
+                background-color: $textEditorButtonActiveBackground;
+            }
+
+            .ck.ck-icon {
+                width: 12px;
+                height: 12px;
+                justify-content: center;
+            }
+
+            .ck.ck-button__label {
+                display: none;
+            }
+        }
+    }
+
+    .ck.ck-content {
+        background-color: $textEditorBackgroundColor;
+        border: 1px solid $textEditorBorderColor;
+        border-radius: $textEditorBorderRadius;
+        padding: 10px;
+        font-size: 12px;
+        line-height: 20px;
+
+        p {
+            margin-top: 0;
+        }
+    }
+}

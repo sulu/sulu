@@ -2,10 +2,14 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import log from 'loglevel';
+import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
+import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-
+import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
+import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
+import './textEditor.scss';
 
 type Props = {
     data: string,
@@ -46,8 +50,18 @@ export default class TextEditor extends React.Component<Props> {
         ClassicEditor
             .create(this.domContainer, {
                 plugins: [
+                    BoldPlugin,
                     EssentialsPlugin,
+                    ItalicPlugin,
                     ParagraphPlugin,
+                    StrikethroughPlugin,
+                    UnderlinePlugin,
+                ],
+                toolbar: [
+                    'bold',
+                    'italic',
+                    'underline',
+                    'strikethrough',
                 ],
             })
             .then((editor) => {

@@ -170,6 +170,10 @@ module.exports = { // eslint-disable-line
                     ],
                 },
                 {
+                    test: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    use: 'raw-loader',
+                },
+                {
                     test: /\.(jpg|gif|png)(\?.*$|$)/,
                     use: [
                         {
@@ -179,6 +183,7 @@ module.exports = { // eslint-disable-line
                 },
                 {
                     test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
+                    exclude: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
                     use: [
                         {
                             loader: 'file-loader',
