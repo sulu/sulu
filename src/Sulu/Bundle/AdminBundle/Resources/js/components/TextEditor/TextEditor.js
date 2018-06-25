@@ -2,6 +2,7 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import log from 'loglevel';
+import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
@@ -22,7 +23,6 @@ export default class TextEditor extends React.Component<Props> {
 
     static defaultProps = {
         data: '',
-        config: {},
     };
 
     constructor(props: Props) {
@@ -50,6 +50,7 @@ export default class TextEditor extends React.Component<Props> {
         ClassicEditor
             .create(this.domContainer, {
                 plugins: [
+                    AlignmentPlugin,
                     BoldPlugin,
                     EssentialsPlugin,
                     ItalicPlugin,
@@ -62,6 +63,11 @@ export default class TextEditor extends React.Component<Props> {
                     'italic',
                     'underline',
                     'strikethrough',
+                    '|',
+                    'alignment:left',
+                    'alignment:center',
+                    'alignment:right',
+                    'alignment:justify',
                 ],
             })
             .then((editor) => {

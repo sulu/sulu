@@ -39,6 +39,10 @@ $textEditorButtonActiveBackground: $dustyGray;
                 display: none;
             }
         }
+
+        .ck.ck-toolbar__separator {
+            width: 20px;
+        }
     }
 
     .ck.ck-content {

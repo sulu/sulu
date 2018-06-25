@@ -4,6 +4,7 @@
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
     "dependencies": {
+        "@ckeditor/ckeditor5-alignment": "^10.0.1",
         "@ckeditor/ckeditor5-basic-styles": "^10.0.1",
         "@ckeditor/ckeditor5-editor-classic": "^10.0.1",
         "@ckeditor/ckeditor5-essentials": "^10.1.0",
