@@ -4,6 +4,8 @@ import type {ElementRef} from 'react';
 import log from 'loglevel';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+
 
 type Props = {
     data: string,
@@ -45,6 +47,7 @@ export default class TextEditor extends React.Component<Props> {
             .create(this.domContainer, {
                 plugins: [
                     EssentialsPlugin,
+                    ParagraphPlugin,
                 ],
             })
             .then((editor) => {
