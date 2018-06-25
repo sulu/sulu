@@ -11,14 +11,14 @@ import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
-import './textEditor.scss';
+import './ckeditor5.scss';
 
 type Props = {
     data: string,
     onChange: (data: string) => void,
 };
 
-export default class TextEditor extends React.Component<Props> {
+export default class CKEditor5 extends React.Component<Props> {
     domContainer: ?ElementRef<'div'>;
     editorInstance: any;
 
