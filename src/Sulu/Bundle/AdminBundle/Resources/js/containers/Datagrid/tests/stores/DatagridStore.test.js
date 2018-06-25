@@ -15,6 +15,10 @@ function LoadingStrategy() {
     this.destroy = jest.fn();
 }
 
+function OtherLoadingStrategy() {
+    this.load = jest.fn().mockReturnValue({then: jest.fn()});
+}
+
 class StructureStrategy {
     @observable data = [];
     clear = jest.fn();
@@ -677,17 +681,18 @@ test('Should not reset page count to 0 and page to 1 when sort order stays the s
     datagridStore.destroy();
 });
 
-test('Should reset page count and page when strategy changes', () => {
+test('Should reset page count and page when loading strategy changes', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
+    const otherLoadingStrategy = new OtherLoadingStrategy();
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     datagridStore.setPage(5);
     datagridStore.pageCount = 7;
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateStrategies(otherLoadingStrategy, structureStrategy);
 
     expect(page.get()).toEqual(1);
     expect(datagridStore.pageCount).toEqual(0);
