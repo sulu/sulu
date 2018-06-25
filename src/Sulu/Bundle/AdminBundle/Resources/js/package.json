@@ -4,6 +4,8 @@
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
     "dependencies": {
+        "@ckeditor/ckeditor5-editor-classic": "^10.0.1",
+        "@ckeditor/ckeditor5-essentials": "^10.1.0",
         "ajv": "^6.1.1",
         "classnames": "^2.2.5",
         "debounce": "^1.0.2",
