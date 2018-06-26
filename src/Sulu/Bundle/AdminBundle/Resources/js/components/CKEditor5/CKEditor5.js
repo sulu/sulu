@@ -85,7 +85,8 @@ export default class CKEditor5 extends React.Component<Props> {
                     const document = this.editorInstance.model.document;
                     document.on('change', () => {
                         if (document.differ.getChanges().length > 0) {
-                            this.props.onChange(editor.getData());
+                            const editorData = editor.getData();
+                            this.props.onChange(editorData === '<p>&nbsp;</p>' ? undefined : editorData);
                         }
                     });
                 }

@@ -50,6 +50,32 @@ test('Call onChange prop when something changed', () => {
     });
 });
 
+test('Call onChange prop with undefined if editor only contains an empty paragraph', () => {
+    const changeSpy = jest.fn();
+    const editor = {
+        setData: jest.fn(),
+        getData: jest.fn().mockReturnValue('<p>&nbsp;</p>'),
+        model: {
+            document: {
+                on: jest.fn(),
+                differ: {
+                    getChanges: jest.fn().mockReturnValue([{}]),
+                },
+            },
+        },
+    };
+
+    const editorPromise = Promise.resolve(editor);
+    ClassicEditor.create.mockReturnValue(editorPromise);
+
+    mount(<CKEditor5 onChange={changeSpy} value={undefined} />);
+
+    return editorPromise.then(() => {
+        editor.model.document.on.mock.calls[0][1]();
+        expect(changeSpy).toBeCalledWith(undefined);
+    });
+});
+
 test('Do not call onChange prop when nothing changed', () => {
     const changeSpy = jest.fn();
     const editor = {
