@@ -29,7 +29,7 @@
         <property
             name="avatar"
             visibility="always"
-            list:translation="public.avatar"
+            list:translation="sulu_contact.avatar"
             list:type="thumbnails"
             list:sortable="false"
         >
@@ -48,7 +48,7 @@
             name="fullName"
             searchability="yes"
             filter-type="string"
-            list:translation="public.name"
+            list:translation="sulu_contact.name"
             list:sortable="false"
             orm:glue=" "
         >
@@ -61,7 +61,7 @@
             visibility="always"
             searchability="yes"
             filter-type="string"
-            list:translation="contact.contacts.firstName"
+            list:translation="sulu_contact.first_name"
         >
             <orm:field-name>firstName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
@@ -72,7 +72,7 @@
             visibility="always"
             searchability="yes"
             filter-type="string"
-            list:translation="contact.contacts.lastName"
+            list:translation="sulu_contact.last_name"
         >
             <orm:field-name>lastName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
@@ -83,13 +83,13 @@
             visibility="always"
             searchability="yes"
             filter-type="string"
-            list:translation="public.email"
+            list:translation="sulu_contact.email"
         >
             <orm:field-name>mainEmail</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="account" visibility="always" list:translation="contact.contacts.company">
+        <property name="account" visibility="always" list:translation="sulu_contact.organization">
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
 
@@ -102,7 +102,7 @@
         </property>
 
         <identity-property name="accountId" visibility="never" filter-type="auto-complete"
-                  list:translation="contact.contacts.company">
+                  list:translation="sulu_contact.organization">
             <orm:field-name>account</orm:field-name>
             <orm:entity-name>SuluContactBundle:AccountContact</orm:entity-name>
 
@@ -119,28 +119,28 @@
         </identity-property>
 
         <property name="city" visibility="always" filter-type="string"
-                  list:translation="contact.address.city">
+                  list:translation="sulu_contact.city">
             <orm:field-name>city</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
 
             <orm:joins ref="address"/>
         </property>
 
-        <property name="zip" filter-type="string" list:translation="contact.address.zip">
+        <property name="zip" filter-type="string" list:translation="sulu_contact.zip">
             <orm:field-name>zip</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
 
             <orm:joins ref="address"/>
         </property>
 
-        <property name="street" filter-type="string" list:translation="contact.address.street">
+        <property name="street" filter-type="string" list:translation="sulu_contact.street">
             <orm:field-name>street</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
 
             <orm:joins ref="address"/>
         </property>
 
-        <property name="number" filter-type="string" list:translation="contact.address.number">
+        <property name="number" filter-type="string" list:translation="sulu_contact.number">
             <orm:field-name>number</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
 
@@ -150,7 +150,7 @@
         <concatenation-property
             name="addressLine"
             filter-type="string"
-            list:translation="contact.address.address-line"
+            list:translation="sulu_contact.address_line"
             list:sortable="false"
             orm:glue=" "
         >
@@ -158,14 +158,14 @@
             <orm:field property-ref="number"/>
         </concatenation-property>
 
-        <property name="state" filter-type="string" list:translation="contact.address.state">
+        <property name="state" filter-type="string" list:translation="sulu_contact.state">
             <orm:field-name>state</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
 
             <orm:joins ref="address"/>
         </property>
 
-        <property name="countryCode" visibility="always" list:translation="contact.address.countryCode">
+        <property name="countryCode" visibility="always" list:translation="sulu_contact.country">
             <orm:field-name>code</orm:field-name>
             <orm:entity-name>SuluContactBundle:Country</orm:entity-name>
 
@@ -181,7 +181,7 @@
             name="countryId"
             visibility="never"
             filter-type="auto-complete"
-            list:translation="contact.address.countryCode"
+            list:translation="sulu_contact.country"
         >
             <orm:field-name>country</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
@@ -196,42 +196,42 @@
             </filter-type-parameters>
         </identity-property>
 
-        <property name="mainPhone" visibility="always" filter-type="string" list:translation="public.phone">
+        <property name="mainPhone" visibility="always" filter-type="string" list:translation="sulu_contact.phone">
             <orm:field-name>mainPhone</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="id" filter-type="integer" list:translation="public.id" list:type="integer">
+        <property name="id" filter-type="integer" list:translation="sulu_admin.id" list:type="integer">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="mainFax" filter-type="string" list:translation="public.fax">
+        <property name="mainFax" filter-type="string" list:translation="sulu_contact.fax">
             <orm:field-name>mainFax</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="mainUrl" filter-type="string" list:translation="public.url">
+        <property name="mainUrl" filter-type="string" list:translation="sulu_contact.website">
             <orm:field-name>mainUrl</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="created" filter-type="datetime" list:translation="public.created" list:type="datetime">
+        <property name="created" filter-type="datetime" list:translation="sulu_admin.created" list:type="datetime">
             <orm:field-name>created</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="changed" filter-type="datetime" list:translation="public.changed" list:type="datetime">
+        <property name="changed" filter-type="datetime" list:translation="sulu_admin.changed" list:type="datetime">
             <orm:field-name>changed</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="birthday" filter-type="date" list:translation="contact.contacts.birthday" list:type="date">
+        <property name="birthday" filter-type="date" list:translation="sulu_contact.birthday" list:type="date">
             <orm:field-name>birthday</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="title" list:translation="public.title">
+        <property name="title" list:translation="sulu_contact.title">
             <orm:field-name>title</orm:field-name>
             <orm:entity-name>SuluContactBundle:ContactTitle</orm:entity-name>
 
@@ -247,7 +247,7 @@
             name="titleId"
             visibility="never"
             filter-type="auto-complete"
-           list:translation="public.title"
+            list:translation="sulu_contact.title"
         >
             <orm:field-name>title</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
@@ -260,12 +260,12 @@
             </filter-type-parameters>
         </identity-property>
 
-        <property name="salutation" filter-type="string" list:translation="contact.contacts.salutation">
+        <property name="salutation" filter-type="string" list:translation="sulu_contact.salutation">
             <orm:field-name>salutation</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="formOfAddress" filter-type="string" list:translation="contact.contacts.formOfAddress">
+        <property name="formOfAddress" filter-type="string" list:translation="sulu_contact.form_of_address">
             <orm:field-name>formOfAddress</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
@@ -273,7 +273,7 @@
         <property
             name="position"
             filter-type="string"
-            list:translation="contact.contacts.position"
+            list:translation="sulu_contact.position"
             list:sortable="false"
         >
             <orm:field-name>position</orm:field-name>
@@ -295,7 +295,7 @@
             name="tagIds"
             visibility="never"
             filter-type="tags"
-            list:translation="public.tags"
+            list:translation="sulu_tag.tags"
             orm:glue=","
         >
             <orm:field-name>id</orm:field-name>
