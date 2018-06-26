@@ -4,6 +4,7 @@ exports[`Render a SingleMediaDropzone 1`] = `
 <div
   aria-disabled="false"
   class="mediaContainer default"
+  style="position:relative"
 >
   <img
     class="thumbnail"
@@ -25,7 +26,7 @@ exports[`Render a SingleMediaDropzone 1`] = `
   </div>
   <input
     autocomplete="off"
-    style="display:none"
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
     type="file"
   />
 </div>
@@ -35,6 +36,7 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
 <div
   aria-disabled="false"
   class="mediaContainer default"
+  style="position:relative"
 >
   <img
     class="thumbnail"
@@ -88,7 +90,7 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
   </div>
   <input
     autocomplete="off"
-    style="display:none"
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
     type="file"
   />
 </div>
@@ -98,6 +100,7 @@ exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
 <div
   aria-disabled="false"
   class="mediaContainer default"
+  style="position:relative"
 >
   <div
     class="emptyIndicator"
@@ -123,7 +126,7 @@ exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
   </div>
   <input
     autocomplete="off"
-    style="display:none"
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
     type="file"
   />
 </div>
@@ -133,6 +136,7 @@ exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
 <div
   aria-disabled="false"
   class="mediaContainer default"
+  style="position:relative"
 >
   <div
     class="emptyIndicator"
@@ -158,7 +162,7 @@ exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
   </div>
   <input
     autocomplete="off"
-    style="display:none"
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
     type="file"
   />
 </div>
@@ -168,6 +172,7 @@ exports[`Render a SingleMediaDropzone with the round skin 1`] = `
 <div
   aria-disabled="false"
   class="mediaContainer round"
+  style="position:relative"
 >
   <img
     class="thumbnail"
@@ -189,7 +194,7 @@ exports[`Render a SingleMediaDropzone with the round skin 1`] = `
   </div>
   <input
     autocomplete="off"
-    style="display:none"
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
     type="file"
   />
 </div>
