@@ -10,8 +10,11 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
-test('Pass props correctly to Input component', () => {
+test('Pass props correctly to TextEditor', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
     const textEditor = shallow(
         <TextEditor
             dataPath=""
@@ -20,8 +23,8 @@ test('Pass props correctly to Input component', () => {
             formInspector={formInspector}
             maxOccurs={undefined}
             minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
+            onChange={changeSpy}
+            onFinish={finishSpy}
             schemaPath=""
             showAllErrors={false}
             types={undefined}
@@ -31,6 +34,8 @@ test('Pass props correctly to Input component', () => {
 
     expect(textEditor.find('TextEditor').props()).toEqual(expect.objectContaining({
         adapter: 'ckeditor5',
+        onBlur: finishSpy,
+        onChange: changeSpy,
         value: 'xyz',
     }));
 });

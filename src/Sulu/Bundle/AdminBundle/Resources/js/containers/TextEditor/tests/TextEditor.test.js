@@ -10,12 +10,17 @@ jest.mock('../registries/TextEditorRegistry', () => ({
 
 test('Render the TextEditor', () => {
     textEditorRegistry.get.mockReturnValue(() => (<textarea />));
-    expect(render(<TextEditor adapter="test" onChange={jest.fn()} value={undefined} />)).toMatchSnapshot();
+    expect(
+        render(<TextEditor adapter="test" onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />)
+    ).toMatchSnapshot();
 });
 
 test('Throw an exception if a not existing adapter is used', () => {
     textEditorRegistry.get.mockImplementation((key) => {
         throw new Error(key);
     });
-    expect(() => shallow(<TextEditor adapter="test" onChange={jest.fn()} value={undefined} />)).toThrow(/test/);
+
+    expect(
+        () => shallow(<TextEditor adapter="test" onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />)
+    ).toThrow(/test/);
 });

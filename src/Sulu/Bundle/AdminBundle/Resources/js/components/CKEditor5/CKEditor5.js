@@ -14,6 +14,7 @@ import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import './ckeditor5.scss';
 
 type Props = {|
+    onBlur: () => void,
     onChange: (value: ?string) => void,
     value: ?string,
 |};
@@ -81,12 +82,29 @@ export default class CKEditor5 extends React.Component<Props> {
                 // TODO: Pass data via constructor.
                 this.editorInstance.setData(this.props.value);
 
-                if (this.props.onChange) {
-                    const document = this.editorInstance.model.document;
-                    document.on('change', () => {
-                        if (document.differ.getChanges().length > 0) {
+                const {onBlur, onChange} = this.props;
+                const {
+                    model: {
+                        document: modelDocument,
+                    },
+                    editing: {
+                        view: {
+                            document: viewDocument,
+                        },
+                    },
+                } = this.editorInstance;
+
+                if (onBlur) {
+                    viewDocument.on('blur', () => {
+                        onBlur();
+                    });
+                }
+
+                if (onChange) {
+                    modelDocument.on('change', () => {
+                        if (modelDocument.differ.getChanges().length > 0) {
                             const editorData = editor.getData();
-                            this.props.onChange(editorData === '<p>&nbsp;</p>' ? undefined : editorData);
+                            onChange(editorData === '<p>&nbsp;</p>' ? undefined : editorData);
                         }
                     });
                 }
