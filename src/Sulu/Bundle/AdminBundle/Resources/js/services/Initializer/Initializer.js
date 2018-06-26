@@ -106,8 +106,7 @@ function registerFieldTypesWithOptions(fieldTypeOptions, Component) {
     }
 }
 
-function registerTextEditors()
-{
+function registerTextEditors() {
     textEditorRegistry.add('ckeditor5', CKEditor5);
 }
 

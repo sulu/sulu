@@ -20,7 +20,7 @@ type Props = {|
 |};
 
 export default class CKEditor5 extends React.Component<Props> {
-    domContainer: ?ElementRef<'div'>;
+    containerRef: ?ElementRef<'div'>;
     editorInstance: any;
 
     static defaultProps = {
@@ -33,9 +33,9 @@ export default class CKEditor5 extends React.Component<Props> {
         this.editorInstance = null;
     }
 
-    setDomContainerRef = (domContainer: ?ElementRef<'div'>) => {
-        this.domContainer = domContainer;
-    };
+    setContainerRef = (containerRef: ?ElementRef<'div'>) => {
+        this.containerRef = containerRef;
+    }
 
     shouldComponentUpdate() {
         return false;
@@ -50,7 +50,7 @@ export default class CKEditor5 extends React.Component<Props> {
 
     componentDidMount() {
         ClassicEditor
-            .create(this.domContainer, {
+            .create(this.containerRef, {
                 plugins: [
                     AlignmentPlugin,
                     BoldPlugin,
@@ -79,7 +79,6 @@ export default class CKEditor5 extends React.Component<Props> {
             .then((editor) => {
                 this.editorInstance = editor;
 
-                // TODO: Pass data via constructor.
                 this.editorInstance.setData(this.props.value);
 
                 const {onBlur, onChange} = this.props;
@@ -121,6 +120,6 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     render() {
-        return <div ref={this.setDomContainerRef}></div>;
+        return <div ref={this.setContainerRef}></div>;
     }
 }
