@@ -32,8 +32,11 @@ import {
     SingleSelect,
     SingleSelection,
     TextArea,
+    TextEditor,
     Time,
 } from '../../containers/Form';
+import Draft from '../../components/Draft';
+import {textEditorRegistry} from '../../containers/TextEditor';
 import FieldBlocks from '../../containers/FieldBlocks';
 import userStore from '../../stores/UserStore';
 import {navigationRegistry} from '../../containers/Navigation';
@@ -88,7 +91,10 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('single_select', SingleSelect);
     fieldRegistry.add('text_line', Input);
     fieldRegistry.add('text_area', TextArea);
+    fieldRegistry.add('text_editor', TextEditor);
     fieldRegistry.add('time', Time);
+
+    textEditorRegistry.add('draft', Draft);
 
     registerFieldTypesWithOptions(fieldTypeOptions['assignment'], Assignment);
     registerFieldTypesWithOptions(fieldTypeOptions['single_selection'], SingleSelection);
