@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * BUGFIX      #4042 [AudienceTargetingBundle] Add symfony 3.4.12 as conflict to fix caching tests
     * HOTFIX      #4019 [Component]               Fix handling of authored date on safari
     * HOTFIX      #4017 [SnippetBundle]           Fix snippet conflict overlay
 
