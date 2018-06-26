@@ -35,7 +35,7 @@ export default class CKEditor5 extends React.Component<Props> {
 
     setContainerRef = (containerRef: ?ElementRef<'div'>) => {
         this.containerRef = containerRef;
-    }
+    };
 
     shouldComponentUpdate() {
         return false;
