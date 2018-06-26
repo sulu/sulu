@@ -26,8 +26,8 @@
                 <source>content-navigation.contacts.documents</source>
                 <target>Documenten</target>
             </trans-unit>
-            <trans-unit id="a50af522ac181350142c0b4720e39a7f" resname="contact.contacts.assignment">
-                <source>contact.contacts.assignment</source>
+            <trans-unit id="a50af522ac181350142c0b4720e39a7f" resname="contact.contacts.selection">
+                <source>contact.contacts.selection</source>
                 <target>Toewijzing</target>
             </trans-unit>
             <trans-unit id="a50af522ac181350142c0b4720e49a8f" resname="contact.contacts.categories.label">

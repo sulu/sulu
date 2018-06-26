@@ -3,8 +3,8 @@ import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import {observable} from 'mobx';
 import pretty from 'pretty';
-import Assignment from '../Assignment';
-import AssignmentStore from '../stores/AssignmentStore';
+import Selection from '../Selection';
+import SelectionStore from '../stores/SelectionStore';
 
 jest.mock('../../../utils', () => ({
     translate: jest.fn((key) => key),
@@ -22,7 +22,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.setActive = jest.fn();
 }));
 
-jest.mock('../stores/AssignmentStore', () => jest.fn(function() {
+jest.mock('../stores/SelectionStore', () => jest.fn(function() {
     this.items = [];
     this.set = jest.fn();
     this.move = jest.fn();
@@ -38,144 +38,144 @@ beforeEach(() => {
 });
 
 test('Show with default plus icon', () => {
-    expect(render(<Assignment adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />))
+    expect(render(<Selection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />))
         .toMatchSnapshot();
 });
 
 test('Show with passed label', () => {
     expect(render(
-        <Assignment
+        <Selection
             adapter="column_list"
             onChange={jest.fn()}
             label="Select Snippets"
             resourceKey="snippets"
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
         />
     )).toMatchSnapshot();
 });
 
 test('Show with passed icon', () => {
     expect(render(
-        <Assignment
+        <Selection
             adapter="table"
             onChange={jest.fn()}
             icon="su-document"
             resourceKey="snippets"
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
         />
     )).toMatchSnapshot();
 });
 
 test('Pass locale to DatagridOverlay', () => {
     const locale = observable.box('de');
-    const assignment = mount(
-        <Assignment
+    const selection = mount(
+        <Selection
             adapter="table"
             onChange={jest.fn()}
             locale={locale}
             resourceKey="snippets"
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
         />
     );
 
-    expect(assignment.find('DatagridOverlay').prop('locale').get()).toEqual('de');
+    expect(selection.find('DatagridOverlay').prop('locale').get()).toEqual('de');
 });
 
 test('Pass disabledIds to DatagridOverlay', () => {
     const disabledIds = [1, 2, 4];
 
-    const assignment = mount(
-        <Assignment
+    const selection = mount(
+        <Selection
             adapter="table"
             disabledIds={disabledIds}
             onChange={jest.fn()}
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
             resourceKey="snippets"
         />
     );
 
-    expect(assignment.find('DatagridOverlay').prop('disabledIds')).toEqual(disabledIds);
+    expect(selection.find('DatagridOverlay').prop('disabledIds')).toEqual(disabledIds);
 });
 
 test('Show with passed values as items in right locale', () => {
     const locale = observable.box('en');
 
     // $FlowFixMe
-    AssignmentStore.mockImplementationOnce(function () {
+    SelectionStore.mockImplementationOnce(function () {
         this.items = [{id: 1, title: 'Title 1'}, {id: 2, title: 'Title 2'}, {id: 5, title: 'Title 5'}];
     });
 
     expect(render(
-        <Assignment
+        <Selection
             adapter="table"
             displayProperties={['id', 'title']}
             onChange={jest.fn()}
             locale={locale}
             resourceKey="snippets"
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
             value={[1, 2, 5]}
         />
     )).toMatchSnapshot();
 
-    expect(AssignmentStore).toBeCalledWith('snippets', [1, 2, 5], locale);
+    expect(SelectionStore).toBeCalledWith('snippets', [1, 2, 5], locale);
 });
 
 test('Should open an overlay', () => {
-    const assignment = mount(
-        <Assignment adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />
+    const selection = mount(
+        <Selection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />
     );
 
-    assignment.find('Button[icon="su-plus"]').simulate('click');
+    selection.find('Button[icon="su-plus"]').simulate('click');
 
     const body = document.body;
     expect(pretty(body ? body.innerHTML : null)).toMatchSnapshot();
 });
 
 test('Should close an overlay using the close button', () => {
-    const assignment = mount(
-        <Assignment
+    const selection = mount(
+        <Selection
             adapter="table"
             onChange={jest.fn()}
             resourceKey="snippets"
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
         />
     );
 
-    assignment.find('Button[icon="su-plus"]').simulate('click');
+    selection.find('Button[icon="su-plus"]').simulate('click');
 
     const closeButton = document.querySelector('.su-times');
     if (closeButton) {
         closeButton.click();
     }
 
-    assignment.update();
-    expect(assignment.find('DatagridOverlay').prop('open')).toEqual(false);
+    selection.update();
+    expect(selection.find('DatagridOverlay').prop('open')).toEqual(false);
 });
 
 test('Should close an overlay using the confirm button', () => {
-    const assignment = mount(
-        <Assignment adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Assignment" />
+    const selection = mount(
+        <Selection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />
     );
 
-    assignment.find('Button[icon="su-plus"]').simulate('click');
+    selection.find('Button[icon="su-plus"]').simulate('click');
 
     const confirmButton = document.querySelector('button.primary');
     if (confirmButton) {
         confirmButton.click();
     }
 
-    assignment.update();
-    expect(assignment.find('DatagridOverlay').prop('open')).toEqual(false);
+    selection.update();
+    expect(selection.find('DatagridOverlay').prop('open')).toEqual(false);
 });
 
 test('Should call the onChange callback when clicking the confirm button', () => {
     const changeSpy = jest.fn();
-    const assignment = mount(
-        <Assignment adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Assignment" />
+    const selection = mount(
+        <Selection adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Selection" />
     );
 
-    assignment.find('Button[icon="su-plus"]').simulate('click');
-    const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
+    selection.find('Button[icon="su-plus"]').simulate('click');
+    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
     datagridStore.selections = [3, 7, 2];
 
     const confirmButton = document.querySelector('button.primary');
@@ -183,42 +183,42 @@ test('Should call the onChange callback when clicking the confirm button', () =>
         confirmButton.click();
     }
 
-    expect(assignment.instance().assignmentStore.set).toBeCalledWith([3, 7, 2]);
+    expect(selection.instance().selectionStore.set).toBeCalledWith([3, 7, 2]);
 });
 
 test('Should instantiate the DatagridStore with the correct resourceKey and destroy it on unmount', () => {
-    const assignment = mount(
-        <Assignment adapter="table" onChange={jest.fn()} resourceKey="pages" overlayTitle="Assignment" />
+    const selection = mount(
+        <Selection adapter="table" onChange={jest.fn()} resourceKey="pages" overlayTitle="Selection" />
     );
 
-    assignment.find('Button[icon="su-plus"]').simulate('click');
+    selection.find('Button[icon="su-plus"]').simulate('click');
 
-    const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
+    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
     expect(datagridStore.resourceKey).toEqual('pages');
 
-    assignment.unmount();
+    selection.unmount();
     expect(datagridStore.destroy).toBeCalled();
 });
 
 test('Should instantiate the DatagridStore with the preselected ids', () => {
     // $FlowFixMe
-    AssignmentStore.mockImplementationOnce(function () {
+    SelectionStore.mockImplementationOnce(function () {
         this.items = [{id: 1}, {id: 5}, {id: 8}];
     });
 
-    const assignment = mount(
-        <Assignment
+    const selection = mount(
+        <Selection
             adapter="table"
             onChange={jest.fn()}
             value={[1, 5, 8]}
             resourceKey="pages"
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
         />
     );
 
-    assignment.find('Button[icon="su-plus"]').simulate('click');
+    selection.find('Button[icon="su-plus"]').simulate('click');
 
-    const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
+    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
     expect(datagridStore.select).toBeCalledWith({id: 1});
     expect(datagridStore.select).toBeCalledWith({id: 5});
     expect(datagridStore.select).toBeCalledWith({id: 8});
@@ -228,32 +228,32 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     const locale = observable.box('en');
 
     // $FlowFixMe
-    AssignmentStore.mockImplementationOnce(function () {
+    SelectionStore.mockImplementationOnce(function () {
         this.items = [{id: 1}, {id: 5}, {id: 8}];
         this.loadItems = jest.fn();
     });
 
-    const assignment = mount(
-        <Assignment
+    const selection = mount(
+        <Selection
             adapter="table"
             onChange={jest.fn()}
             locale={locale}
             value={[1, 5, 8]}
             resourceKey="pages"
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
         />
     );
 
-    assignment.find('Button[icon="su-plus"]').simulate('click');
+    selection.find('Button[icon="su-plus"]').simulate('click');
 
-    const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
+    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
     expect(datagridStore.select).toBeCalledWith({id: 1});
     expect(datagridStore.select).toBeCalledWith({id: 5});
     expect(datagridStore.select).toBeCalledWith({id: 8});
 
-    assignment.setProps({value: [1, 3]});
+    selection.setProps({value: [1, 3]});
     expect(datagridStore.clearSelection).toBeCalled();
-    const loadItemsCall = assignment.instance().assignmentStore.loadItems.mock.calls[0];
+    const loadItemsCall = selection.instance().selectionStore.loadItems.mock.calls[0];
     expect(loadItemsCall[0]).toEqual([1, 3]);
 });
 
@@ -261,92 +261,92 @@ test('Should not reload items if all new ids have already been loaded', () => {
     const locale = observable.box('en');
 
     // $FlowFixMe
-    AssignmentStore.mockImplementationOnce(function () {
+    SelectionStore.mockImplementationOnce(function () {
         this.items = [{id: 1}, {id: 5}, {id: 8}];
         this.loadItems = jest.fn();
     });
 
-    const assignment = mount(
-        <Assignment
+    const selection = mount(
+        <Selection
             adapter="table"
             onChange={jest.fn()}
             locale={locale}
             value={[1, 5, 8]}
             resourceKey="pages"
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
         />
     );
 
-    assignment.find('Button[icon="su-plus"]').simulate('click');
+    selection.find('Button[icon="su-plus"]').simulate('click');
 
-    const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
+    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
     expect(datagridStore.select).toBeCalledWith({id: 1});
     expect(datagridStore.select).toBeCalledWith({id: 5});
     expect(datagridStore.select).toBeCalledWith({id: 8});
 
-    assignment.setProps({value: [1, 5]});
+    selection.setProps({value: [1, 5]});
     expect(datagridStore.clearSelection).toBeCalled();
-    expect(assignment.instance().assignmentStore.loadItems).not.toBeCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
 });
 
 test('Should not reinstantiate the DatagridStore with the preselected ids when new props have the same values', () => {
     const locale = observable.box('en');
 
     // $FlowFixMe
-    AssignmentStore.mockImplementationOnce(function () {
+    SelectionStore.mockImplementationOnce(function () {
         this.items = [{id: 1}, {id: 5}, {id: 8}];
         this.loadItems = jest.fn();
     });
 
-    const assignment = mount(
-        <Assignment
+    const selection = mount(
+        <Selection
             adapter="table"
             onChange={jest.fn()}
             locale={locale}
             value={[1, 5, 8]}
             resourceKey="pages"
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
         />
     );
 
-    assignment.find('Button[icon="su-plus"]').simulate('click');
+    selection.find('Button[icon="su-plus"]').simulate('click');
 
-    const datagridStore = assignment.find('DatagridOverlay').instance().datagridStore;
+    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
 
-    assignment.setProps({value: [1, 5, 8]});
+    selection.setProps({value: [1, 5, 8]});
     expect(datagridStore.clearSelection).toBeCalled();
-    expect(assignment.instance().assignmentStore.loadItems).not.toBeCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
 });
 
 test('Should remove an item when the remove button is clicked', () => {
     const changeSpy = jest.fn();
-    const assignment = shallow(
-        <Assignment
+    const selection = shallow(
+        <Selection
             adapter="table"
             onChange={changeSpy}
             resourceKey="snippets"
             value={[3, 7, 9]}
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
         />
     );
 
-    assignment.find('MultiItemSelection').prop('onItemRemove')(7);
-    expect(assignment.instance().assignmentStore.removeById).toBeCalledWith(7);
+    selection.find('MultiItemSelection').prop('onItemRemove')(7);
+    expect(selection.instance().selectionStore.removeById).toBeCalledWith(7);
 });
 
 test('Should reorder the items on drag and drop', () => {
     const changeSpy = jest.fn();
-    const assignment = shallow(
-        <Assignment
+    const selection = shallow(
+        <Selection
             adapter="table"
             onChange={changeSpy}
             resourceKey="snippets"
             value={[3, 7, 9]}
-            overlayTitle="Assignment"
+            overlayTitle="Selection"
         />
     );
 
-    assignment.find('MultiItemSelection').prop('onItemsSorted')(1, 2);
+    selection.find('MultiItemSelection').prop('onItemsSorted')(1, 2);
 
-    expect(assignment.instance().assignmentStore.move).toBeCalledWith(1, 2);
+    expect(selection.instance().selectionStore.move).toBeCalledWith(1, 2);
 });

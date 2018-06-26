@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {shallow} from 'enzyme';
-import Assignment from '../../fields/Assignment';
+import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -37,8 +37,8 @@ test('Should pass props correctly to component', () => {
         adapter: 'table',
         displayProperties: ['id', 'title'],
         icon: '',
-        label: 'sulu_snippet.assignment_label',
-        overlayTitle: 'sulu_snippet.assignment_overlay_title',
+        label: 'sulu_snippet.selection_label',
+        overlayTitle: 'sulu_snippet.selection_overlay_title',
         resourceKey: 'snippets',
     };
 
@@ -50,8 +50,8 @@ test('Should pass props correctly to component', () => {
         )
     );
 
-    const assignment = shallow(
-        <Assignment
+    const selection = shallow(
+        <Selection
             dataPath=""
             error={undefined}
             formInspector={formInspector}
@@ -67,14 +67,14 @@ test('Should pass props correctly to component', () => {
         />
     );
 
-    expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
+    expect(selection.find('Selection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
         displayProperties: ['id', 'title'],
-        label: 'sulu_snippet.assignment_label',
+        label: 'sulu_snippet.selection_label',
         locale,
         onChange: changeSpy,
         resourceKey: 'snippets',
-        overlayTitle: 'sulu_snippet.assignment_overlay_title',
+        overlayTitle: 'sulu_snippet.selection_overlay_title',
         value,
     }));
 });
@@ -87,8 +87,8 @@ test('Should pass id of form as disabledId to avoid assigning something to itsel
 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('pages', 4)));
 
-    const assignment = shallow(
-        <Assignment
+    const selection = shallow(
+        <Selection
             dataPath=""
             error={undefined}
             formInspector={formInspector}
@@ -104,7 +104,7 @@ test('Should pass id of form as disabledId to avoid assigning something to itsel
         />
     );
 
-    expect(assignment.find('Assignment').prop('disabledIds')).toEqual([4]);
+    expect(selection.find('Selection').prop('disabledIds')).toEqual([4]);
 });
 
 test('Should pass empty array if value is not given', () => {
@@ -115,8 +115,8 @@ test('Should pass empty array if value is not given', () => {
     };
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
-    const assignment = shallow(
-        <Assignment
+    const selection = shallow(
+        <Selection
             dataPath=""
             error={undefined}
             formInspector={formInspector}
@@ -132,7 +132,7 @@ test('Should pass empty array if value is not given', () => {
         />
     );
 
-    expect(assignment.find('Assignment').props()).toEqual(expect.objectContaining({
+    expect(selection.find('Selection').props()).toEqual(expect.objectContaining({
         adapter: 'column_list',
         onChange: changeSpy,
         resourceKey: 'pages',
@@ -144,7 +144,7 @@ test('Should throw an error if no resourceKey is passed in fieldOptions', () => 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
     expect(() => shallow(
-        <Assignment
+        <Selection
             dataPath=""
             error={undefined}
             formInspector={formInspector}
@@ -165,7 +165,7 @@ test('Should throw an error if no adapter is passed in fieldTypeOptions', () => 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
     expect(() => shallow(
-        <Assignment
+        <Selection
             dataPath=""
             error={undefined}
             formInspector={formInspector}

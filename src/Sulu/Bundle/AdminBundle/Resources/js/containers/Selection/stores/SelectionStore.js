@@ -4,7 +4,7 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line
 import {arrayMove} from '../../../components';
 import {ResourceRequester} from '../../../services';
 
-export default class AssignmentStore {
+export default class SelectionStore {
     @observable items: Array<Object> = [];
     @observable loading: boolean = false;
     resourceKey: string;

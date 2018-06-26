@@ -4,12 +4,13 @@ exports[`Render a MultiMediaDropzone 1`] = `
 <div
   aria-disabled="false"
   class="dropzone"
+  style="position:relative"
 >
   <div />
   <input
     autocomplete="off"
     multiple=""
-    style="display:none"
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
     type="file"
   />
 </div>
@@ -19,6 +20,7 @@ exports[`Render a MultiMediaDropzone while media is uploaded 1`] = `
 <div
   aria-disabled="false"
   class="dropzone"
+  style="position:relative"
 >
   <div
     class="dropzoneOverlay"
@@ -74,7 +76,7 @@ exports[`Render a MultiMediaDropzone while media is uploaded 1`] = `
   <input
     autocomplete="off"
     multiple=""
-    style="display:none"
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
     type="file"
   />
 </div>
@@ -84,6 +86,7 @@ exports[`Render a MultiMediaDropzone while the overlay is visible 1`] = `
 <div
   aria-disabled="false"
   class="dropzone"
+  style="position:relative"
 >
   <div
     class="dropzoneOverlay"
@@ -124,7 +127,7 @@ exports[`Render a MultiMediaDropzone while the overlay is visible 1`] = `
   <input
     autocomplete="off"
     multiple=""
-    style="display:none"
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
     type="file"
   />
 </div>

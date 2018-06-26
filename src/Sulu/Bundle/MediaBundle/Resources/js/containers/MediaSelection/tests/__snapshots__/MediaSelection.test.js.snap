@@ -11,7 +11,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
         <header>Select media<span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <div class=\\"overlay\\">
-            <div class=\\"dropzone\\" aria-disabled=\\"false\\">
+            <div class=\\"dropzone\\" style=\\"position: relative;\\" aria-disabled=\\"false\\">
               <div>
                 <div class=\\"collectionSection\\">
                   <ul class=\\"breadcrumb\\">
@@ -143,7 +143,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                   </section>
                 </div>
               </div>
-              <input type=\\"file\\" style=\\"display: none;\\" multiple=\\"\\" autocomplete=\\"off\\">
+              <input type=\\"file\\" style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.00001; pointer-events: none;\\" multiple=\\"\\" autocomplete=\\"off\\">
             </div>
           </div>
         </article>

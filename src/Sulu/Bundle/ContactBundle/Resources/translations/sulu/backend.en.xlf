@@ -26,9 +26,9 @@
                 <source>content-navigation.contacts.documents</source>
                 <target>Documents</target>
             </trans-unit>
-            <trans-unit id="a50af522ac181350142c0b4720e39a7f" resname="contact.contacts.assignment">
-                <source>contact.contacts.assignment</source>
-                <target>Assignment</target>
+            <trans-unit id="a50af522ac181350142c0b4720e39a7f" resname="contact.contacts.selection">
+                <source>contact.contacts.selection</source>
+                <target>Selection</target>
             </trans-unit>
             <trans-unit id="a50af522ac181350142c0b4720e49a8f" resname="contact.contacts.categories.label">
                 <source>contact.contacts.categories.label</source>
