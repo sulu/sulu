@@ -8,6 +8,7 @@
     "sulu_contact.contact_selection_label": "Kontakt(e) ausgewählt",
     "sulu_contact.account_selection_label": "Organisation(en) ausgewählt",
     "sulu_contact.avatar": "Avatar",
+    "sulu_contact.logo": "Logo",
     "sulu_contact.name": "Name",
     "sulu_contact.first_name": "Vorname",
     "sulu_contact.last_name": "Nachname",
@@ -26,5 +27,10 @@
     "sulu_contact.title": "Titel",
     "sulu_contact.salutation": "Grußformel",
     "sulu_contact.form_of_address": "Anrede",
-    "sulu_contact.position": "Position"
+    "sulu_contact.position": "Position",
+    "sulu_contact.corporation": "Gesellschaft",
+    "sulu_contact.main_contact": "Hauptansprechpartner",
+    "sulu_contact.uid": "UID",
+    "sulu_contact.register_number": "Firmenbuchnummer",
+    "sulu_contact.jurisdiction": "Gerichtsstand"
 }

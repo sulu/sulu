@@ -8,6 +8,7 @@
     "sulu_contact.contact_selection_label": "contact(s) selected",
     "sulu_contact.account_selection_label": "account(s) selected",
     "sulu_contact.avatar": "Avatar",
+    "sulu_contact.logo": "Logo",
     "sulu_contact.name": "Name",
     "sulu_contact.first_name": "First Name",
     "sulu_contact.last_name": "Last Name",
@@ -26,5 +27,10 @@
     "sulu_contact.title": "Title",
     "sulu_contact.salutation": "Saluation",
     "sulu_contact.form_of_address": "Form of Address",
-    "sulu_contact.position": "Position"
+    "sulu_contact.position": "Position",
+    "sulu_contact.corporation": "Corporation",
+    "sulu_contact.main_contact": "Main Contact",
+    "sulu_contact.uid": "UID",
+    "sulu_contact.register_number": "Register Number",
+    "sulu_contact.jurisdiction": "Jurisdiction"
 }
