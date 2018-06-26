@@ -8,6 +8,7 @@ import Datagrid, {
     PaginatedLoadingStrategy,
 } from './Datagrid';
 import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './Datagrid';
+import {textEditorRegistry} from './TextEditor';
 import {viewRegistry} from './ViewRenderer';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
@@ -32,6 +33,7 @@ export {
     FormStore,
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
+    textEditorRegistry,
     viewRegistry,
     withToolbar,
 };

@@ -13,17 +13,17 @@ import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethro
 import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import './ckeditor5.scss';
 
-type Props = {
-    data: string,
-    onChange: (data: string) => void,
-};
+type Props = {|
+    onChange: (value: ?string) => void,
+    value: ?string,
+|};
 
 export default class CKEditor5 extends React.Component<Props> {
     domContainer: ?ElementRef<'div'>;
     editorInstance: any;
 
     static defaultProps = {
-        data: '',
+        value: '',
     };
 
     constructor(props: Props) {
@@ -41,9 +41,9 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     componentDidUpdate() {
-        const {data} = this.props;
-        if (this.editorInstance && data) {
-            this.editorInstance.setData(data);
+        const {value} = this.props;
+        if (this.editorInstance && value) {
+            this.editorInstance.setData(value);
         }
     }
 
@@ -79,7 +79,7 @@ export default class CKEditor5 extends React.Component<Props> {
                 this.editorInstance = editor;
 
                 // TODO: Pass data via constructor.
-                this.editorInstance.setData(this.props.data);
+                this.editorInstance.setData(this.props.value);
 
                 if (this.props.onChange) {
                     const document = this.editorInstance.model.document;

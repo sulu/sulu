@@ -1,6 +1,7 @@
 // @flow
 import {action, observable} from 'mobx';
 import moment from 'moment';
+import CKEditor5 from '../../components/CKEditor5';
 import {
     ColumnListAdapter,
     datagridAdapterRegistry,
@@ -32,9 +33,11 @@ import {
     SingleSelect,
     SingleSelection,
     TextArea,
+    TextEditor,
     Time,
 } from '../../containers/Form';
 import FieldBlocks from '../../containers/FieldBlocks';
+import {textEditorRegistry} from '../../containers/TextEditor';
 import userStore from '../../stores/UserStore';
 import {navigationRegistry} from '../../containers/Navigation';
 import resourceMetadataStore from '../../stores/ResourceMetadataStore';
@@ -88,6 +91,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('single_select', SingleSelect);
     fieldRegistry.add('text_line', Input);
     fieldRegistry.add('text_area', TextArea);
+    fieldRegistry.add('text_editor', TextEditor);
     fieldRegistry.add('time', Time);
 
     registerFieldTypesWithOptions(fieldTypeOptions['assignment'], Assignment);
@@ -100,6 +104,11 @@ function registerFieldTypesWithOptions(fieldTypeOptions, Component) {
             fieldRegistry.add(fieldTypeKey, Component, fieldTypeOptions[fieldTypeKey]);
         }
     }
+}
+
+function registerTextEditors()
+{
+    textEditorRegistry.add('ckeditor5', CKEditor5);
 }
 
 function processConfig(config: Object) {
@@ -180,6 +189,7 @@ class Initializer {
                     registerDatagridAdapters();
                     registerDatagridFieldTransformers();
                     registerFieldTypes(config['sulu_admin'].fieldTypeOptions);
+                    registerTextEditors();
                     setMomentLocale();
                 }
 

@@ -68,7 +68,8 @@
     },
     "jest": {
         "moduleNameMapper": {
-            "\\.(scss|css)$": "identity-obj-proxy"
+            "\\.(scss|css)$": "identity-obj-proxy",
+            "\\.svg$": "<rootDir>/__mocks__/svgMock.js"
         },
         "setupFiles": [
             "jest-canvas-mock"
@@ -79,7 +80,7 @@
         ],
         "clearMocks": true,
         "transformIgnorePatterns": [
-            "node_modules/(?!(sulu-(.*)-bundle)/)"
+            "node_modules/(?!(sulu-(.*)-bundle|@ckeditor)/)"
         ]
     }
 }

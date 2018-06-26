@@ -1,4 +1,4 @@
 // @flow
-import TextEditor from './TextEditor';
+import CKEditor5 from './CKEditor5';
 
-export default TextEditor;
+export default CKEditor5;

@@ -4,6 +4,7 @@ import moment from 'moment';
 import initializer from '../Initializer';
 import Requester from '../../Requester';
 import {Assignment, fieldRegistry, SingleSelection} from '../../../containers/Form';
+import {textEditorRegistry} from '../../../containers/TextEditor';
 import {setTranslations} from '../../../utils/Translator';
 import routeRegistry from '../../Router/registries/RouteRegistry';
 import navigationRegistry from '../../../containers/Navigation/registries/NavigationRegistry';
@@ -35,6 +36,12 @@ jest.mock('../../../containers/Form', () => ({
         add: jest.fn(),
     },
     SingleSelection: jest.fn(),
+}));
+
+jest.mock('../../../containers/TextEditor', () => ({
+    textEditorRegistry: {
+        add: jest.fn(),
+    },
 }));
 
 jest.mock('../../../containers/ViewRenderer/registries/ViewRegistry', () => ({
@@ -135,6 +142,7 @@ test('Should initialize when everything works', () => {
             expect(datagridAdapterRegistry.add).toBeCalled();
             expect(datagridFieldTransformerRegistry.add).toBeCalled();
             expect(fieldRegistry.add).toBeCalled();
+            expect(textEditorRegistry.add).toBeCalled();
 
             // dynamic things
             expect(fieldRegistry.add)
