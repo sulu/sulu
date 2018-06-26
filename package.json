@@ -69,12 +69,12 @@
     "jest": {
         "moduleNameMapper": {
             "\\.(scss|css)$": "identity-obj-proxy",
-            "\\.svg$": "<rootDir>/__mocks__/svgMock.js"
+            "\\.svg$": "<rootDir>/tests/js/mocks/svg.js"
         },
         "setupFiles": [
             "jest-canvas-mock"
         ],
-        "setupTestFrameworkScriptFile": "./testSetup.config.js",
+        "setupTestFrameworkScriptFile": "./tests/js/testSetup.config.js",
         "snapshotSerializers": [
             "enzyme-to-json/serializer"
         ],
