@@ -93,16 +93,6 @@ class AudienceTargetingGroups extends ComplexContentType implements ContentTypeE
     }
 
     /**
-     * returns a template to render a form.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return 'SuluAudienceTargetingBundle:Template:content-types/audience_targeting_groups.html.twig';
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function exportData($propertyValue)

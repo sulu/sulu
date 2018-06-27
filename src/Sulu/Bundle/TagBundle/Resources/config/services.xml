@@ -33,7 +33,6 @@
             <tag name="sulu.content.type" alias="tag_list"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
             <argument type="service" id="sulu_tag.tag_manager"/>
-            <argument>%sulu_tag.content.type.tag_list.template%</argument>
         </service>
 
         <service id="sulu_tag.tag_request_handler" class="%sulu_tag.tag_request_handler.class%">

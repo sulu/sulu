@@ -27,11 +27,6 @@ use Sulu\Component\Content\SimpleContentType;
 class TeaserContentType extends SimpleContentType implements PreResolvableContentTypeInterface
 {
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var TeaserProviderPoolInterface
      */
     private $teaserProviderPool;
@@ -47,31 +42,20 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
     private $referenceStorePool;
 
     /**
-     * @param string $template
      * @param TeaserProviderPoolInterface $providerPool
      * @param TeaserManagerInterface $teaserManager
      * @param ReferenceStorePoolInterface $referenceStorePool
      */
     public function __construct(
-        $template,
         TeaserProviderPoolInterface $providerPool,
         TeaserManagerInterface $teaserManager,
         ReferenceStorePoolInterface $referenceStorePool
     ) {
         parent::__construct('teaser_selection');
 
-        $this->template = $template;
         $this->teaserProviderPool = $providerPool;
         $this->teaserManager = $teaserManager;
         $this->referenceStorePool = $referenceStorePool;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

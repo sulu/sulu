@@ -29,17 +29,9 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
      */
     private $categoryManager;
 
-    /**
-     * Holds the template for rendering this content type in the admin.
-     *
-     * @var string
-     */
-    private $template;
-
-    public function __construct(CategoryManagerInterface $categoryManager, $template)
+    public function __construct(CategoryManagerInterface $categoryManager)
     {
         $this->categoryManager = $categoryManager;
-        $this->template = $template;
     }
 
     /**
@@ -114,16 +106,6 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
             $property = $node->getProperty($property->getName());
             $property->remove();
         }
-    }
-
-    /**
-     * returns a template to render a form.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

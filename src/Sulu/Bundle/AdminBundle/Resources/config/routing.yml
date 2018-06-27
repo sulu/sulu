@@ -30,11 +30,6 @@ sulu_admin.content_navigation:
     type: rest
     resource: sulu_admin.content_navigation_controller
 
-sulu_admin.csv_export.form:
-    path: /templates/csv-export-form
-    defaults:
-        _controller: sulu_admin.template_controller:csvExportFormAction
-
 sulu_admin.login_check:
     path: /login
 

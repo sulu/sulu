@@ -9,7 +9,6 @@
 
     <services>
         <service id="sulu_contact.content.contact" class="%sulu_contact.content.contact.class%">
-            <argument>%sulu_contact.content-type.contact.template%</argument>
             <argument type="service" id="sulu_contact.contact_manager" />
             <argument type="service" id="sulu_contact.account_manager" />
             <argument type="service" id="jms_serializer" />

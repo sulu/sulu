@@ -18,22 +18,8 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class ResourceLocator extends SimpleContentType
 {
-    /**
-     * @var string
-     */
-    private $template;
-
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('ResourceLocator', '');
-        $this->template = $template;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 }

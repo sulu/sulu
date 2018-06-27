@@ -159,25 +159,6 @@ class ContentTypeTest extends TestCase
         return $configuration;
     }
 
-    public function testTemplate()
-    {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig'
-        );
-
-        $this->assertEquals(
-            'SuluContentBundle:Template:content-types/smart_content.html.twig',
-            $smartContent->getTemplate()
-        );
-    }
-
     public function testWrite()
     {
         $smartContent = new SmartContent(
@@ -187,8 +168,7 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+            $this->tagReferenceStore->reveal()
         );
 
         $node = $this->getMockForAbstractClass(
@@ -252,8 +232,7 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+            $this->tagReferenceStore->reveal()
         );
 
         $config = [
@@ -308,8 +287,7 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+            $this->tagReferenceStore->reveal()
         );
 
         $property = $this->getMockForAbstractClass(
@@ -413,8 +391,7 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+            $this->tagReferenceStore->reveal()
         );
 
         $property = $this->getContentDataProperty(
@@ -459,8 +436,7 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+            $this->tagReferenceStore->reveal()
         );
 
         $property = $this->getMockForAbstractClass(
@@ -585,8 +561,7 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+            $this->tagReferenceStore->reveal()
         );
 
         if ($exception) {
@@ -698,8 +673,7 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+            $this->tagReferenceStore->reveal()
         );
 
         if ($exception) {
@@ -920,7 +894,6 @@ class ContentTypeTest extends TestCase
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
             $this->tagReferenceStore->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig',
             $this->targetGroupStore->reveal()
         );
 
@@ -960,7 +933,6 @@ class ContentTypeTest extends TestCase
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
             $this->tagReferenceStore->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig',
             $this->targetGroupStore->reveal()
         );
 

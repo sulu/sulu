@@ -18,22 +18,8 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class Password extends SimpleContentType
 {
-    private $template;
-
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('Password', '');
-
-        $this->template = $template;
-    }
-
-    /**
-     * returns a template to render a form.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 }

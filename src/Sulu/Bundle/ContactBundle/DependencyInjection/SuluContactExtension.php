@@ -134,10 +134,6 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
             'sulu_contact.account_form.category_root',
             $config['form']['account']['category_root']
         );
-        $container->setParameter(
-            'sulu_contact.content-type.contact.template',
-            $config['types']['contact']['template']
-        );
 
         $this->configurePersistence($config['objects'], $container);
     }

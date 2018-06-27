@@ -51,11 +51,6 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
     private $referenceStore;
 
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var bool
      */
     private $showDrafts;
@@ -65,14 +60,12 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
         ContentQueryBuilderInterface $contentQueryBuilder,
         ReferenceStoreInterface $referenceStore,
         LoggerInterface $logger,
-        $template,
         $showDrafts
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->referenceStore = $referenceStore;
         $this->logger = $logger;
-        $this->template = $template;
         $this->showDrafts = $showDrafts;
     }
 
@@ -150,14 +143,6 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
         if ($node->hasProperty($property->getName())) {
             $node->getProperty($property->getName())->remove();
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

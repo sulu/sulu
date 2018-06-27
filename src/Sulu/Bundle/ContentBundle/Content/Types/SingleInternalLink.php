@@ -23,25 +23,18 @@ use Sulu\Component\Content\SimpleContentType;
 class SingleInternalLink extends SimpleContentType implements PreResolvableContentTypeInterface
 {
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var ReferenceStoreInterface
      */
     private $referenceStore;
 
     /**
      * @param ReferenceStoreInterface $referenceStore
-     * @param string $template
      */
-    public function __construct(ReferenceStoreInterface $referenceStore, $template)
+    public function __construct(ReferenceStoreInterface $referenceStore)
     {
         parent::__construct('SingleInternalLink', '');
 
         $this->referenceStore = $referenceStore;
-        $this->template = $template;
     }
 
     /**
@@ -82,14 +75,6 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
         $property->setValue($value);
 
         return $value;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

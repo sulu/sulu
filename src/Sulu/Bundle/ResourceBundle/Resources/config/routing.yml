@@ -1,7 +1,0 @@
-filter_form:
-    path: /template/filter/form.html
-    defaults: { _controller: SuluResourceBundle:Template:filterForm }
-
-filter_list:
-    path: /template/filter/list.html
-    defaults: { _controller: SuluResourceBundle:Template:filterList }

@@ -25,11 +25,6 @@ class TextEditorTest extends TestCase
     const VALIDATE_UNPUBLISHED = 'unpublished';
 
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var MarkupParserInterface
      */
     private $markupParser;
@@ -61,7 +56,7 @@ class TextEditorTest extends TestCase
         $this->property = $this->prophesize(PropertyInterface::class);
         $this->nodeProperty = $this->prophesize(NodePropertyInterface::class);
 
-        $this->textEditor = new TextEditor($this->template, $this->markupParser->reveal());
+        $this->textEditor = new TextEditor($this->markupParser->reveal());
     }
 
     public function testRead()

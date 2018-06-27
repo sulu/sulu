@@ -45,11 +45,6 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                         ],
                     ],
                 ],
-                'content_types' => [
-                    'route' => [
-                        'template' => '@Test/route.html.twig',
-                    ],
-                ],
                 'objects' => [
                     'route' => [
                         'model' => 'TestRouteEntity',

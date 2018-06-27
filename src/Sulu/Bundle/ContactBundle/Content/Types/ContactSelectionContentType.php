@@ -36,11 +36,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
     const PREFIX_ACCOUNT = 'a';
 
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var ContactManagerInterface
      */
     private $contactManager;
@@ -76,7 +71,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
     private $contactReferenceStore;
 
     public function __construct(
-        $template,
         ContactManagerInterface $contactManager,
         ContactManagerInterface $accountManager,
         SerializerInterface $serializer,
@@ -85,7 +79,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         ReferenceStoreInterface $accountReferenceStore,
         ReferenceStoreInterface $contactReferenceStore
     ) {
-        $this->template = $template;
         $this->contactManager = $contactManager;
         $this->accountManager = $accountManager;
         $this->serializer = $serializer;
@@ -200,14 +193,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
     public function getDefaultValue()
     {
         return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

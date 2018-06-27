@@ -32,9 +32,6 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_admin.template_controller" class="Sulu\Bundle\AdminBundle\Controller\TemplateController">
-            <argument type="service" id="templating"/>
-        </service>
         <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%"/>
         <service id="sulu_admin.js_config_pool" class="%sulu_admin.js_config_pool.class%"/>
         <service id="sulu_admin.widgets_handler" class="%sulu_admin.widgets_handler.class%">

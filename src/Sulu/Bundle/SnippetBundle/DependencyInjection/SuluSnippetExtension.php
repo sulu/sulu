@@ -112,11 +112,6 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-
-        $container->setParameter(
-            'sulu_snippet.content-type.template',
-            $config['types']['snippet']['template']
-        );
         $container->setParameter(
             'sulu_snippet.content-type.default_enabled',
             $config['types']['snippet']['default_enabled']

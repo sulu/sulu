@@ -46,19 +46,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('content_types')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->arrayNode('route')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->scalarNode('template')
-                                    ->defaultValue('SuluRouteBundle:Template:content-types/route.html.twig')
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
             ->end();
 
         $this->addObjectsSection($rootNode);

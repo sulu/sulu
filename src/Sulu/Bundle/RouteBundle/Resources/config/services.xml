@@ -5,8 +5,6 @@
 
     <services>
         <service id="sulu_route.content_type" class="Sulu\Bundle\RouteBundle\Content\Type\RouteContentType">
-            <argument type="string">%sulu_route.content_types.route.template%</argument>
-
             <tag name="sulu.content.type" alias="route"/>
         </service>
     </services>

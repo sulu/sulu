@@ -65,7 +65,6 @@ class InternalLinksTest extends TestCase
             $this->contentQueryExecutor->reveal(),
             $this->contentQueryBuilder->reveal(), $this->referenceStore->reveal(),
             $this->logger->reveal(),
-            'some_template.html.twig',
             false
         );
 
@@ -95,7 +94,6 @@ class InternalLinksTest extends TestCase
             $this->contentQueryExecutor->reveal(),
             $this->contentQueryBuilder->reveal(), $this->referenceStore->reveal(),
             $this->logger->reveal(),
-            'some_template.html.twig',
             false
         );
 
@@ -120,7 +118,6 @@ class InternalLinksTest extends TestCase
             $this->contentQueryBuilder->reveal(),
             $this->referenceStore->reveal(),
             $this->logger->reveal(),
-            'some_template.html.twig',
             false
         );
 

@@ -47,11 +47,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     private $referenceStore;
 
     /**
-     * @var string
-     */
-    protected $template;
-
-    /**
      * @var bool
      */
     protected $defaultEnabled;
@@ -61,28 +56,17 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
      * @param SnippetResolverInterface $snippetResolver
      * @param ReferenceStoreInterface $referenceStore
      * @param true $defaultEnabled
-     * @param string $template
      */
     public function __construct(
         DefaultSnippetManagerInterface $defaultSnippetManager,
         SnippetResolverInterface $snippetResolver,
         ReferenceStoreInterface $referenceStore,
-        $defaultEnabled,
-        $template
+        $defaultEnabled
     ) {
         $this->snippetResolver = $snippetResolver;
         $this->defaultSnippetManager = $defaultSnippetManager;
         $this->referenceStore = $referenceStore;
         $this->defaultEnabled = $defaultEnabled;
-        $this->template = $template;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

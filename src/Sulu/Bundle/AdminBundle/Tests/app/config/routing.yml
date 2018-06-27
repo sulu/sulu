@@ -1,7 +1,3 @@
-sulu_tag:
-    resource: "@SuluTagBundle/Resources/config/routing.yml"
-    prefix:   /admin/tag
-
 sulu_tag_api:
     resource: "@SuluTagBundle/Resources/config/routing_api.yml"
     prefix:   /admin/api
@@ -9,10 +5,6 @@ sulu_tag_api:
 sulu_admin:
     resource: "@SuluAdminBundle/Resources/config/routing.yml"
     prefix: /admin
-
-sulu_contact:
-    resource: "@SuluContactBundle/Resources/config/routing.yml"
-    prefix: /admin/contact
 
 sulu_contact_api:
     type: rest
@@ -27,10 +19,6 @@ sulu_security_api:
     type: rest
     resource: "@SuluSecurityBundle/Resources/config/routing_api.xml"
     prefix: /admin/api
-
-sulu_content:
-    resource: "@SuluContentBundle/Resources/config/routing.yml"
-    prefix: /admin/content
 
 sulu_content_api:
     type: rest
@@ -48,10 +36,6 @@ sulu_media_api:
     type: rest
     resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
-
-sulu_category:
-    resource: "@SuluCategoryBundle/Resources/config/routing.yml"
-    prefix: /admin/category
 
 sulu_category_api:
     type: rest
