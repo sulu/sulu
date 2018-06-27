@@ -1,4 +1,6 @@
 {
     "sulu_security.roles": "Benutzerrollen",
-    "sulu_security.permissions": "Berechtigungen"
+    "sulu_security.permissions": "Berechtigungen",
+    "sulu_security.name": "Name",
+    "sulu_security.system": "System"
 }
