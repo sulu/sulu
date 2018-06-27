@@ -58,7 +58,6 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\WebsocketBundle\SuluWebsocketBundle(),
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
             new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
-            new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
             new \Sulu\Bundle\HashBundle\SuluHashBundle(),
             new \Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),
             new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),

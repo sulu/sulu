@@ -85,7 +85,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('type', $resource->datagrid->id);
 
         $this->assertEquals('id', $resource->datagrid->id->name);
-        $this->assertEquals('public.id', $resource->datagrid->id->label);
+        $this->assertEquals('ID', $resource->datagrid->id->label);
         $this->assertEquals('string', $resource->datagrid->id->type);
 
         // check for types
