@@ -58,7 +58,6 @@ class AppKernel extends SuluKernel
             new Sulu\Bundle\LocationBundle\SuluLocationBundle(),
             new Sulu\Bundle\HttpCacheBundle\SuluHttpCacheBundle(),
             new Sulu\Bundle\WebsocketBundle\SuluWebsocketBundle(),
-            new Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
             new Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
             new Sulu\Bundle\HashBundle\SuluHashBundle(),
             new Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),

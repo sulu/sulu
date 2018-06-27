@@ -8,7 +8,7 @@
             name="id"
             visibility="no"
             searchability="yes"
-            list:translation="public.id"
+            list:translation="sulu_admin.id"
         >
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.role.class%</orm:entity-name>
@@ -18,7 +18,7 @@
             name="name"
             visibility="yes"
             searchability="yes"
-            list:translation="public.name"
+            list:translation="sulu_security.name"
         >
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>%sulu.model.role.class%</orm:entity-name>
@@ -28,7 +28,7 @@
             name="system"
             visibility="yes"
             searchability="yes"
-            list:translation="security.roles.system"
+            list:translation="sulu_security.system"
         >
             <orm:field-name>system</orm:field-name>
             <orm:entity-name>%sulu.model.role.class%</orm:entity-name>
@@ -37,7 +37,7 @@
         <property
             name="created"
             visibility="yes"
-            list:translation="public.created"
+            list:translation="sulu_admin.created"
         >
             <orm:field-name>created</orm:field-name>
             <orm:entity-name>%sulu.model.role.class%</orm:entity-name>
@@ -47,7 +47,7 @@
             name="changed"
             visibility="no"
             list:type="datetime"
-            list:translation="public.changed"
+            list:translation="sulu_admin.changed"
         >
             <orm:field-name>changed</orm:field-name>
             <orm:entity-name>%sulu.model.role.class%</orm:entity-name>

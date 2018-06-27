@@ -160,8 +160,7 @@
     "scripts": {
         "sulu-scripts": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sulu\\Bundle\\TranslateBundle\\Composer\\TranslateScriptHandler::installTranslations"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
         ],
         "post-install-cmd": [
             "@sulu-scripts"

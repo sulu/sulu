@@ -2,12 +2,12 @@
        xmlns:list="http://schemas.sulu.io/class/list"
        xmlns:orm="http://schemas.sulu.io/class/doctrine">
     <properties>
-        <property name="id" list:translation="public.id" visibility="no" list:type="integer">
+        <property name="id" list:translation="sulu_admin.id" visibility="no" list:type="integer">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.keyword.class%</orm:entity-name>
         </property>
 
-        <property name="keyword" list:translation="sulu.category.keyword" visibility="always" list:editable="true">
+        <property name="keyword" list:translation="sulu_category.keyword" visibility="always" list:editable="true">
             <orm:field-name>keyword</orm:field-name>
             <orm:entity-name>%sulu.model.keyword.class%</orm:entity-name>
         </property>
@@ -29,7 +29,7 @@
             </orm:joins>
         </group-concat-property>
 
-        <count-property name="categoryTranslationCount" visibility="always" list:translation="sulu.category.used-multiple">
+        <count-property name="categoryTranslationCount" visibility="always" list:translation="sulu_category.multiple_usage">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
 

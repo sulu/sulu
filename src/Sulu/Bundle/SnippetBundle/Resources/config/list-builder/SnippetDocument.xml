@@ -5,9 +5,9 @@
     <properties>
         <property
             name="id"
-            visibility="always"
+            visibility="no"
             filter-type="string"
-            list:translation="public.id"
+            list:translation="sulu_admin.id"
         />
 
         <property
@@ -15,7 +15,7 @@
             visibility="always"
             searchability="yes"
             filter-type="string"
-            list:translation="public.title"
+            list:translation="sulu_snippet.title"
         />
     </properties>
 </class>

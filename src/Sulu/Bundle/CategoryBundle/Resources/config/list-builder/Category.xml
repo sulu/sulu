@@ -23,7 +23,7 @@
     </orm:joins>
 
     <properties>
-        <property name="id" list:translations="public.id" visibility="no">
+        <property name="id" list:translation="sulu_admin.id" visibility="no">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
         </property>
@@ -35,7 +35,7 @@
             <orm:field-name>rgt</orm:field-name>
             <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
         </property>
-        <property name="key" list:translations="public.key" visibility="no">
+        <property name="key" list:translation="sulu_category.key" visibility="no">
             <orm:field-name>key</orm:field-name>
             <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
         </property>
@@ -43,16 +43,16 @@
             <orm:field-name>depth</orm:field-name>
             <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
         </property>
-        <property name="parent" list:translations="category.parent" visibility="no">
+        <property name="parent" visibility="never">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.category.class%Parent</orm:entity-name>
             <orm:joins ref="parent"/>
         </property>
-        <property name="defaultLocale" list:translations="public.defaultLocale" visibility="no">
+        <property name="defaultLocale" visibility="no">
             <orm:field-name>defaultLocale</orm:field-name>
             <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
         </property>
-        <case-property name="name" list:translations="public.name" visibility="always" searchability="yes">
+        <case-property name="name" list:translation="sulu_category.name" visibility="always" searchability="yes">
             <orm:field>
                 <orm:field-name>translation</orm:field-name>
                 <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
@@ -64,7 +64,7 @@
                 <orm:joins ref="defaultTranslation"/>
             </orm:field>
         </case-property>
-        <case-property name="locale" list:translation="public.locale">
+        <case-property name="locale">
             <orm:field>
                 <orm:field-name>locale</orm:field-name>
                 <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
@@ -75,12 +75,12 @@
                 <orm:entity-name>%sulu.model.category.class%</orm:entity-name>
             </orm:field>
         </case-property>
-        <property name="created" list:translation="public.created" visibility="no" list:type="datetime">
+        <property name="created" list:translation="sulu_admin.created" visibility="no" list:type="datetime">
             <orm:field-name>created</orm:field-name>
             <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
             <orm:joins ref="translation"/>
         </property>
-        <property name="changed" list:translation="public.changed" visibility="no" list:type="datetime">
+        <property name="changed" list:translation="sulu_admin.changed" visibility="no" list:type="datetime">
             <orm:field-name>changed</orm:field-name>
             <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
             <orm:joins ref="translation"/>
