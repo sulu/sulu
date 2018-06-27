@@ -18,5 +18,6 @@
     "sulu_media.download_media": "Download media",
     "sulu_media.delete_media": "Delete media",
     "sulu_media.delete_media_warning_title": "Delete media",
-    "sulu_media.delete_media_warning_text": "This operation deletes a media and cannot be undone. Do you really wish to proceed?"
+    "sulu_media.delete_media_warning_text": "This operation deletes a media and cannot be undone. Do you really wish to proceed?",
+    "sulu_media.title": "Title"
 }

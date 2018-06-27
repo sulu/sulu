@@ -18,5 +18,6 @@
     "sulu_media.download_media": "Medium downloaden",
     "sulu_media.delete_media": "Medium löschen",
     "sulu_media.delete_media_warning_title": "Medium löschen",
-    "sulu_media.delete_media_warning_text": "Diese Operation löscht ein Medium und kann nicht rückgängig gemacht werden. Wollen sie wirklich fortfahren?"
+    "sulu_media.delete_media_warning_text": "Diese Operation löscht ein Medium und kann nicht rückgängig gemacht werden. Wollen sie wirklich fortfahren?",
+    "sulu_media.title": "Titel"
 }
