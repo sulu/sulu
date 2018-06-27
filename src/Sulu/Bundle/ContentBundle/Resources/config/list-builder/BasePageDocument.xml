@@ -7,14 +7,14 @@
             visibility="no"
             filter-type="string"
             list:sortable="false"
-            list:translation="public.id"
+            list:translation="sulu_admin.id"
         />
         <property
             name="title"
             visibility="always"
             filter-type="string"
             list:sortable="false"
-            list:translation="public.title"
+            list:translation="sulu_content.title"
         />
     </properties>
 </class>
