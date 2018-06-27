@@ -60,7 +60,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('field_type_options')
                     ->children()
-                        ->arrayNode('assignment')
+                        ->arrayNode('selection')
                             ->useAttributeAsKey('name')
                             ->prototype('array')
                                 ->children()

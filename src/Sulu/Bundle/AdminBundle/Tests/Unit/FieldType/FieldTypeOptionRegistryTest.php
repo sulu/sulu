@@ -33,17 +33,17 @@ class FieldTypeOptionRegistryTest extends TestCase
 
     public function testToArray()
     {
-        $this->fieldTypeOptionRegistry->add('snippet', 'assignment', ['resourceKey' => 'snippet']);
-        $this->fieldTypeOptionRegistry->add('internal_links', 'assignment', ['resourceKey' => 'pages']);
+        $this->fieldTypeOptionRegistry->add('snippet', 'selection', ['resourceKey' => 'snippet']);
+        $this->fieldTypeOptionRegistry->add('internal_links', 'selection', ['resourceKey' => 'page']);
         $this->fieldTypeOptionRegistry->add('test', 'test', []);
 
         $this->assertEquals([
-            'assignment' => [
+            'selection' => [
                 'snippet' => [
                     'resourceKey' => 'snippet',
                 ],
                 'internal_links' => [
-                    'resourceKey' => 'pages',
+                    'resourceKey' => 'page',
                 ],
             ],
             'test' => [

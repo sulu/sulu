@@ -35,14 +35,14 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                 'sulu_admin',
                 [
                     'field_type_options' => [
-                        'assignment' => [
+                        'selection' => [
                             'internal_links' => [
                                 'adapter' => 'column_list',
                                 'displayProperties' => ['title'],
                                 'icon' => 'su-document',
-                                'label' => 'sulu_content.assignment_label',
+                                'label' => 'sulu_content.selection_label',
                                 'resourceKey' => 'pages',
-                                'overlayTitle' => 'sulu_content.assignment_overlay_title',
+                                'overlayTitle' => 'sulu_content.selection_overlay_title',
                             ],
                         ],
                     ],

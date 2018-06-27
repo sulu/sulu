@@ -3,7 +3,7 @@ import 'core-js/library/fn/promise';
 import moment from 'moment';
 import initializer from '../Initializer';
 import Requester from '../../Requester';
-import {Assignment, fieldRegistry, SingleSelection} from '../../../containers/Form';
+import {Selection, fieldRegistry, SingleSelection} from '../../../containers/Form';
 import {textEditorRegistry} from '../../../containers/TextEditor';
 import {setTranslations} from '../../../utils/Translator';
 import routeRegistry from '../../Router/registries/RouteRegistry';
@@ -31,7 +31,7 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 jest.mock('../../../containers/Form', () => ({
-    Assignment: jest.fn(),
+    Selection: jest.fn(),
     fieldRegistry: {
         add: jest.fn(),
     },
@@ -93,7 +93,7 @@ test('Should initialize when everything works', () => {
     const configData = {
         sulu_admin: {
             fieldTypeOptions: {
-                assignment: {
+                selection: {
                     contact_selection: {
                         resourceKey: 'contacts',
                     },
@@ -146,7 +146,7 @@ test('Should initialize when everything works', () => {
 
             // dynamic things
             expect(fieldRegistry.add)
-                .toBeCalledWith('contact_selection', Assignment, {resourceKey: 'contacts'});
+                .toBeCalledWith('contact_selection', Selection, {resourceKey: 'contacts'});
             expect(fieldRegistry.add)
                 .toBeCalledWith('single_account_selection', SingleSelection, {resourceKey: 'accounts'});
 

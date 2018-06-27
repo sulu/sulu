@@ -30,7 +30,7 @@ test('Should instantiate the DatagridStore with locale', () => {
             onConfirm={jest.fn()}
             open={false}
             resourceKey="snippets"
-            title="Assignment"
+            title="Selection"
         />
     );
 
@@ -45,7 +45,7 @@ test('Should instantiate the DatagridStore without locale', () => {
             onConfirm={jest.fn()}
             open={false}
             resourceKey="snippets"
-            title="Assignment"
+            title="Selection"
         />
     );
 
@@ -63,7 +63,7 @@ test('Should pass disabledIds to the Datagrid', () => {
             onConfirm={jest.fn()}
             open={false}
             resourceKey="snippets"
-            title="Assignment"
+            title="Selection"
         />
     );
 
@@ -80,7 +80,7 @@ test('Should call onConfirm with the current selection', () => {
             open={true}
             preSelectedItems={[{id: 1}, {id: 2}, {id: 3}]}
             resourceKey="snippets"
-            title="Assignment"
+            title="Selection"
         />
     );
 
@@ -104,7 +104,7 @@ test('Should select the preSelectedItems in the DatagridStore', () => {
             open={true}
             preSelectedItems={[{id: 1}, {id: 2}, {id: 3}]}
             resourceKey="snippets"
-            title="Assignment"
+            title="Selection"
         />
     );
 
@@ -123,7 +123,7 @@ test('Should not fail when preSelectedItems is undefined', () => {
             onConfirm={jest.fn()}
             open={true}
             resourceKey="snippets"
-            title="Assignment"
+            title="Selection"
         />
     );
 

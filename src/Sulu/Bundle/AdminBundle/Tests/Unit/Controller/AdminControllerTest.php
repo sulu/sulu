@@ -258,7 +258,7 @@ class AdminControllerTest extends TestCase
         $this->user->getContact()->willReturn($contact->reveal());
         $this->user->getLocale()->willReturn('en');
 
-        $fieldTypeOptions = ['assignment' => []];
+        $fieldTypeOptions = ['selection' => []];
         $this->fieldTypeOptionRegistry->toArray()->willReturn($fieldTypeOptions);
 
         $this->viewHandler->handle(Argument::that(function(View $view) use ($fieldTypeOptions, $routes) {
