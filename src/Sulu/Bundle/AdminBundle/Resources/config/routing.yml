@@ -26,10 +26,6 @@ sulu_admin.navigation:
     type: rest
     resource: Sulu\Bundle\AdminBundle\Controller\NavigationsController
 
-sulu_admin.content_navigation:
-    type: rest
-    resource: sulu_admin.content_navigation_controller
-
 sulu_admin.login_check:
     path: /login
 

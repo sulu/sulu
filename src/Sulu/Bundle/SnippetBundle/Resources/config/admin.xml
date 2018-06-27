@@ -5,7 +5,6 @@
 
     <parameters>
         <parameter key="sulu_snippet.admin.class">Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin</parameter>
-        <parameter key="sulu_snippet.content_navigation_provider.class">Sulu\Bundle\SnippetBundle\Admin\SnippetContentNavigationProvider</parameter>
         <parameter key="sulu_snippet.jsconfig.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
     </parameters>
 
@@ -16,20 +15,6 @@
             <argument>%sulu_snippet.content-type.default_enabled%</argument>
 
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
-        <service id="sulu_snippet.content_navigation_provider" class="%sulu_snippet.content_navigation_provider.class%">
-            <tag name="sulu_admin.content_navigation" alias="snippet"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
-        <service id="sulu_snippet.webspace_navigation_provider"
-                 class="Sulu\Bundle\SnippetBundle\Admin\WebspaceContentNavigationProvider">
-            <argument type="service" id="sulu_security.security_checker"/>
-            <argument>%sulu_snippet.content-type.default_enabled%</argument>
-
-            <tag name="sulu_admin.content_navigation" alias="webspace"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 

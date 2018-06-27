@@ -3,11 +3,9 @@
     <parameters>
         <parameter key="sulu_admin.admin_controller.class">Sulu\Bundle\AdminBundle\Controller\AdminController</parameter>
         <parameter key="sulu_admin.admin_pool.class">Sulu\Bundle\AdminBundle\Admin\AdminPool</parameter>
-        <parameter key="sulu_admin.content_navigation_registry.class">Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistry</parameter>
         <parameter key="sulu_admin.js_config_pool.class">Sulu\Bundle\AdminBundle\Admin\JsConfigPool</parameter>
         <parameter key="sulu_admin.widgets_handler.class">Sulu\Bundle\AdminBundle\Widgets\WidgetsHandler</parameter>
         <parameter key="sulu_admin.js_config.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
-        <parameter key="sulu_admin.content_navigation_controller.class">Sulu\Bundle\AdminBundle\Controller\ContentNavigationController</parameter>
     </parameters>
 
     <services>
@@ -42,15 +40,6 @@
             <tag name="sulu.js_config"/>
             <argument>sulu_admin.widget_groups</argument>
             <argument>%sulu_admin.widget_groups%</argument>
-        </service>
-        <service id="sulu_admin.content_navigation_registry" class="%sulu_admin.content_navigation_registry.class%">
-            <argument type="service" id="service_container"/>
-        </service>
-        <service id="sulu_admin.content_navigation_controller" class="%sulu_admin.content_navigation_controller.class%">
-            <argument type="service" id="sulu_admin.content_navigation_registry"/>
-            <argument type="service" id="fos_rest.view_handler"/>
-
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_admin.metadata.resource_metadata_pool" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool" />

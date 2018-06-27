@@ -177,10 +177,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('command.xml');
         $loader->load('link-tag.xml');
 
-        if (array_key_exists('SuluAutomationBundle', $bundles)) {
-            $loader->load('automation.xml');
-        }
-
         if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
             $loader->load('rule.xml');
         }

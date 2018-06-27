@@ -12,11 +12,6 @@
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_audience_targeting.admin.content_navigation_provider"
-                 class="Sulu\Bundle\AudienceTargetingBundle\Admin\TargetGroupContentNavigationProvider">
-            <tag name="sulu_admin.content_navigation" alias="target-group"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
         <!--SERIALIZER-->
         <service id="sulu_audience_targeting.serializer.target_group_subscriber"
                  class="Sulu\Bundle\AudienceTargetingBundle\Serializer\Subscriber\TargetGroupSerializeSubscriber">

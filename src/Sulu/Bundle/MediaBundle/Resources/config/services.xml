@@ -3,7 +3,6 @@
     <parameters>
         <parameter key="sulu_media.admin.class">Sulu\Bundle\MediaBundle\Admin\MediaAdmin</parameter>
         <parameter key="sulu_media.media_manager.class">Sulu\Bundle\MediaBundle\Media\Manager\MediaManager</parameter>
-        <parameter key="sulu_media.admin.content_navigation_provider.class">Sulu\Bundle\MediaBundle\Admin\MediaContentNavigationProvider</parameter>
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidator</parameter>
@@ -34,11 +33,6 @@
             <tag name="sulu.context" context="admin"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.core.localization_manager"/>            
-        </service>
-        <service id="sulu_media.admin.content_navigation_provider" class="%sulu_media.admin.content_navigation_provider.class%">
-            <argument type="service" id="sulu_security.security_checker"/>
-            <tag name="sulu_admin.content_navigation" alias="media"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
