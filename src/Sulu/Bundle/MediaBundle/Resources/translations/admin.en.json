@@ -19,5 +19,12 @@
     "sulu_media.delete_media": "Delete media",
     "sulu_media.delete_media_warning_title": "Delete media",
     "sulu_media.delete_media_warning_text": "This operation deletes a media and cannot be undone. Do you really wish to proceed?",
-    "sulu_media.title": "Title"
+    "sulu_media.title": "Title",
+    "sulu_media.thumbnail": "Thumbnail",
+    "sulu_media.type": "Type",
+    "sulu_media.version": "Version",
+    "sulu_media.name": "Name",
+    "sulu_media.size": "Filesize",
+    "sulu_media.mime_type": "MIME-Type",
+    "sulu_media.description": "Description"
 }

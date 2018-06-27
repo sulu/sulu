@@ -41,17 +41,17 @@
     </orm:joins>
 
     <properties>
-        <property name="id" list:translation="public.id" visibility="no" list:type="integer">
+        <property name="id" list:translation="sulu_admin.id" visibility="no" list:type="integer">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
 
-        <property name="changed" list:translation="public.changed" visibility="no" list:type="datetime">
+        <property name="changed" list:translation="sulu_admin.changed" visibility="no" list:type="datetime">
             <orm:field-name>changed</orm:field-name>
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
 
-        <property name="created" list:translation="public.created" visibility="no" list:type="datetime">
+        <property name="created" list:translation="sulu_admin.created" visibility="no" list:type="datetime">
             <orm:field-name>created</orm:field-name>
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
@@ -61,46 +61,46 @@
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </identity-property>
 
-        <property name="thumbnails" list:translation="media.media.thumbnails" visibility="always" list:type="thumbnails"
+        <property name="thumbnails" list:translation="sulu_media.thumbnail" visibility="always" list:type="thumbnails"
                   list:sortable="false"/>
         <property name="url" visibility="never"/>
 
-        <property name="type" list:translation="public.type" visibility="always">
+        <property name="type" list:translation="sulu_media.type" visibility="always">
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>SuluMediaBundle:MediaType</orm:entity-name>
 
             <orm:joins ref="type"/>
         </property>
 
-        <property name="version" list:translation="public.version">
+        <property name="version" list:translation="sulu_media.version">
             <orm:field-name>version</orm:field-name>
             <orm:entity-name>SuluMediaBundle:File</orm:entity-name>
 
             <orm:joins ref="file"/>
         </property>
 
-        <property name="name" list:translation="public.name" visibility="always" searchability="yes">
+        <property name="name" list:translation="sulu_media.name" visibility="always" searchability="yes">
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
             <orm:joins ref="fileVersion"/>
         </property>
 
-        <property name="subVersion" visibility="none">
+        <property name="subVersion" visibility="never">
             <orm:field-name>subVersion</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
             <orm:joins ref="fileVersion"/>
         </property>
 
-        <property name="size" list:translation="media.media.size" visibility="always" list:type="bytes">
+        <property name="size" list:translation="sulu_media.size" visibility="always" list:type="bytes">
             <orm:field-name>size</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
             <orm:joins ref="fileVersion"/>
         </property>
 
-        <property name="mimeType" list:translation="media.media.mime-type" visibility="always">
+        <property name="mimeType" list:translation="sulu_media.mime_type" visibility="always">
             <orm:field-name>mimeType</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
@@ -129,7 +129,7 @@
             </orm:field>
         </case-property>
 
-        <case-property name="title" list:translation="public.title" visibility="always" list:type="title" searchability="yes">
+        <case-property name="title" list:translation="sulu_media.title" visibility="always" list:type="title" searchability="yes">
             <orm:field>
                 <orm:field-name>title</orm:field-name>
                 <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
@@ -144,7 +144,7 @@
             </orm:field>
         </case-property>
 
-        <property name="description" list:translation="public.description" searchability="yes">
+        <property name="description" list:translation="sulu_media.description" searchability="yes">
             <orm:field-name>description</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
 
