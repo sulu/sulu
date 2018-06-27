@@ -27,6 +27,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -65,6 +66,11 @@ class PreviewRenderer implements PreviewRendererInterface
     private $eventDispatcher;
 
     /**
+     * @var ReplacerInterface
+     */
+    private $replacer;
+
+    /**
      * @var array
      */
     private $previewDefaults;
@@ -73,6 +79,11 @@ class PreviewRenderer implements PreviewRendererInterface
      * @var string
      */
     private $environment;
+
+    /**
+     * @var string
+     */
+    private $defaultHost;
 
     /**
      * @var string
@@ -95,8 +106,10 @@ class PreviewRenderer implements PreviewRendererInterface
         KernelFactoryInterface $kernelFactory,
         WebspaceManagerInterface $webspaceManager,
         EventDispatcherInterface $eventDispatcher,
+        ReplacerInterface $replacer,
         array $previewDefaults,
         $environment,
+        $defaultHost,
         $targetGroupHeader = null
     ) {
         $this->routeDefaultsProvider = $routeDefaultsProvider;
@@ -104,8 +117,10 @@ class PreviewRenderer implements PreviewRendererInterface
         $this->kernelFactory = $kernelFactory;
         $this->webspaceManager = $webspaceManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->replacer = $replacer;
         $this->previewDefaults = $previewDefaults;
         $this->environment = $environment;
+        $this->defaultHost = $defaultHost;
         $this->targetGroupHeader = $targetGroupHeader;
     }
 
@@ -132,7 +147,6 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         $webspace = $portalInformation->getWebspace();
-        $localization = $webspace->getLocalization($locale);
 
         $query = [];
         $request = [];
@@ -142,48 +156,19 @@ class PreviewRenderer implements PreviewRendererInterface
             $request = $currentRequest->request->all();
         }
 
-        $attributes = new RequestAttributes(
-            [
-                'webspace' => $webspace,
-                'locale' => $locale,
-                'localization' => $localization,
-                'portal' => $portalInformation->getPortal(),
-                'portalUrl' => $portalInformation->getUrl(),
-                'resourceLocatorPrefix' => $portalInformation->getPrefix(),
-                'getParameters' => $query,
-                'postParameters' => $request,
-                'analyticsKey' => $this->previewDefaults['analyticsKey'],
-                'portalInformation' => $portalInformation,
-            ]
-        );
-
-        $defaults = $this->routeDefaultsProvider->getByEntity(get_class($object), $id, $locale, $object);
-
-        // Controller arguments
-        $defaults['object'] = $object;
-        $defaults['preview'] = true;
-        $defaults['partial'] = $partial;
-        $defaults['_sulu'] = $attributes;
+        $attributes = $this->routeDefaultsProvider->getByEntity(get_class($object), $id, $locale, $object);
 
         // get server parameters
-        $server = [
-            'SERVER_NAME' => null,
-            'HTTP_HOST' => null,
-            'SERVER_PORT' => null,
-        ];
+        $server = $this->createServerAttributes($portalInformation, $currentRequest);
 
-        if ($currentRequest) {
-            $server = $currentRequest->server->all();
-        }
-
-        $request = new Request($query, $request, $defaults, [], [], $server);
+        $request = new Request($query, $request, $attributes, [], [], $server);
         $request->setLocale($locale);
 
         if ($this->targetGroupHeader && $targetGroupId) {
             $request->headers->set($this->targetGroupHeader, $targetGroupId);
         }
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent($attributes));
+        $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent(new RequestAttributes()));
 
         try {
             $response = $this->handle($request);
@@ -220,6 +205,46 @@ class PreviewRenderer implements PreviewRendererInterface
 
             throw $e;
         }
+    }
+
+    /**
+     * Create server attributes.
+     *
+     * @param PortalInformation $portalInformation
+     * @param Request|null $currentRequest
+     *
+     * @return array
+     */
+    private function createServerAttributes(PortalInformation $portalInformation, Request $currentRequest = null)
+    {
+        // get server parameters
+        $server = [];
+        $host = $this->defaultHost;
+        // FIXME default scheme and port should be configurable.
+        $scheme = 'http';
+        $port = 80;
+
+        if ($currentRequest) {
+            $server = $currentRequest->server->all();
+            $scheme = $currentRequest->getScheme();
+            $host = $currentRequest->getHost();
+            $port = $currentRequest->getPort();
+        }
+
+        $portalUrl = $scheme . '://' . $this->replacer->replaceHost($portalInformation->getUrl(), $host);
+        $portalUrlParts = parse_url($portalUrl);
+
+        $httpHost = $portalUrlParts['host'];
+        if (!in_array($port, [80, 443])) {
+            $httpHost .= ':' . $port;
+        }
+
+        $server['SERVER_NAME'] = $portalUrlParts['host'];
+        $server['SERVER_PORT'] = $port;
+        $server['HTTP_HOST'] = $httpHost;
+        $server['REQUEST_URI'] = $portalUrlParts['path'] . '/_sulu_preview';
+
+        return $server;
     }
 
     /**
