@@ -74,7 +74,12 @@ module.exports = (env, argv) => ({ // eslint-disable-line no-undef
                 ],
             },
             {
+                test: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                use: 'raw-loader',
+            },
+            {
                 test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
+                exclude: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
                 use: [
                     {
                         loader: 'file-loader',

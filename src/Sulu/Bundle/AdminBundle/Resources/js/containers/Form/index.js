@@ -17,6 +17,7 @@ import SingleSelect from './fields/SingleSelect';
 import ResourceLocator from './fields/ResourceLocator';
 import Renderer from './Renderer';
 import TextArea from './fields/TextArea';
+import TextEditor from './fields/TextEditor';
 import Time from './fields/Time';
 import type {Schema, Types} from './types';
 
@@ -38,6 +39,7 @@ export {
     SingleSelect,
     SingleSelection,
     TextArea,
+    TextEditor,
     Time,
 };
 export type {Schema, Types};

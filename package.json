@@ -55,6 +55,7 @@
         "postcss-nested": "^2.1.0",
         "postcss-simple-vars": "^4.0.0",
         "pretty": "^2.0.0",
+        "raw-loader": "^0.5.1",
         "react-styleguidist": "^7.0.0",
         "react-test-renderer": "^16.2.0",
         "rimraf": "^2.6.2",
@@ -67,18 +68,19 @@
     },
     "jest": {
         "moduleNameMapper": {
-            "\\.(scss|css)$": "identity-obj-proxy"
+            "\\.(scss|css)$": "identity-obj-proxy",
+            "\\.svg$": "<rootDir>/tests/js/mocks/svg.js"
         },
         "setupFiles": [
             "jest-canvas-mock"
         ],
-        "setupTestFrameworkScriptFile": "./testSetup.config.js",
+        "setupTestFrameworkScriptFile": "./tests/js/testSetup.config.js",
         "snapshotSerializers": [
             "enzyme-to-json/serializer"
         ],
         "clearMocks": true,
         "transformIgnorePatterns": [
-            "node_modules/(?!(sulu-(.*)-bundle)/)"
+            "node_modules/(?!(sulu-(.*)-bundle|@ckeditor)/)"
         ]
     }
 }
