@@ -18,7 +18,6 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.phpcr.session"/>
-            <argument>%sulu_admin.name%</argument>
         </service>
         <service id="sulu_content.js_config.webspace_input_types"
                  class="Sulu\Bundle\ContentBundle\Admin\WebspaceInputTypesJsConfig">

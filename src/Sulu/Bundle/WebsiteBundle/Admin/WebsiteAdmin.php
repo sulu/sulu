@@ -12,8 +12,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -46,44 +44,10 @@ class WebsiteAdmin extends Admin
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
-        SecurityCheckerInterface $securityChecker,
-        $title
+        SecurityCheckerInterface $securityChecker
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
-
-        if (!$this->securityChecker) {
-            return;
-        }
-
-        $rootNavigationItem = new NavigationItem($title);
-
-        $section = new NavigationItem('navigation.modules');
-        $section->setPosition(20);
-
-        if ($this->checkLivePermissionForAllWebspaces()) {
-            $settings = new NavigationItem('navigation.settings');
-            $settings->setPosition(40);
-            $settings->setIcon('gear');
-
-            $cache = new NavigationItem('navigation.settings.cache', $settings);
-            $cache->setPosition(50);
-            $cache->setAction('settings/cache');
-            $cache->setIcon('hdd-o');
-
-            $section->addChild($settings);
-            $rootNavigationItem->addChild($section);
-        }
-
-        $this->setNavigation(new Navigation($rootNavigationItem));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getJsBundleName()
-    {
-        return 'suluwebsite';
     }
 
     /**
@@ -107,23 +71,5 @@ class WebsiteAdmin extends Admin
                 'Webspace Settings' => $webspaceContexts,
             ],
         ];
-    }
-
-    /**
-     * Check the permissions for all webspaces.
-     * Returns true if the user has live permission in all webspaces.
-     *
-     * @return bool
-     */
-    private function checkLivePermissionForAllWebspaces()
-    {
-        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $context = ContentAdmin::SECURITY_CONTEXT_PREFIX . $webspace->getKey();
-            if (!$this->securityChecker->hasPermission($context, PermissionTypes::LIVE)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

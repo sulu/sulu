@@ -25,38 +25,12 @@ class TagAdmin extends Admin
      */
     private $securityChecker;
 
-    public function __construct(SecurityCheckerInterface $securityChecker, $title)
+    public function __construct(SecurityCheckerInterface $securityChecker)
     {
         $this->securityChecker = $securityChecker;
-
-        if (!$this->securityChecker) {
-            return;
-        }
-
-        $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('navigation.modules');
-        $section->setPosition(20);
-
-        $settings = new NavigationItem('navigation.settings');
-        $settings->setPosition(40);
-        $settings->setIcon('settings');
-
-        if ($this->securityChecker->hasPermission('sulu.settings.tags', 'view')) {
-            $roles = new NavigationItem('navigation.settings.tags', $settings);
-            $roles->setPosition(30);
-            $roles->setAction('settings/tags');
-            $roles->setIcon('settings');
-        }
-
-        if ($settings->hasChildren()) {
-            $section->addChild($settings);
-            $rootNavigationItem->addChild($section);
-        }
-
-        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    public function getNavigationV2(): Navigation
+    public function getNavigation(): Navigation
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
 
@@ -98,14 +72,6 @@ class TagAdmin extends Admin
                 ->addOption('backRoute', 'sulu_tag.datagrid')
                 ->setParent('sulu_tag.edit_form'),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getJsBundleName()
-    {
-        return 'sulutag';
     }
 
     /**

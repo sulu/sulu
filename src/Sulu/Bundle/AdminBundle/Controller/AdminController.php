@@ -274,52 +274,6 @@ class AdminController
     }
 
     /**
-     * Returns a array of all bundles.
-     *
-     * @return JsonResponse
-     *
-     * @deprecated Will not be needed anymore with the new version of the admin and be removed in 2.0
-     */
-    public function bundlesAction()
-    {
-        $admins = [];
-
-        foreach ($this->adminPool->getAdmins() as $admin) {
-            $name = $admin->getJsBundleName();
-            if (null !== $name) {
-                $admins[] = $name;
-            }
-        }
-
-        return new JsonResponse($admins);
-    }
-
-    /**
-     * Returns contexts of admin.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function contextsAction(Request $request)
-    {
-        $contexts = $this->adminPool->getSecurityContexts();
-        $mappedContexts = [];
-        foreach ($contexts as $system => $sections) {
-            foreach ($sections as $section => $contexts) {
-                foreach ($contexts as $context => $permissionTypes) {
-                    $this->addContext($mappedContexts, $system, $section, $context, $permissionTypes);
-                }
-            }
-        }
-
-        $requestedSystem = $request->get('system');
-        $response = (null !== $requestedSystem) ? $mappedContexts[$requestedSystem] : $mappedContexts;
-
-        return new JsonResponse($response);
-    }
-
-    /**
      * Will transform the different representations of permission types to the same representation and adds it to the
      * passed array.
      *

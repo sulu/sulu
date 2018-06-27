@@ -7,14 +7,6 @@
     </parameters>
 
     <services>
-        <!-- sulu-admin -->
-        <service id="sulu_preview.admin" class="Sulu\Bundle\PreviewBundle\Admin\PreviewAdmin">
-            <argument>%sulu_admin.name%</argument>
-
-            <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
         <service id="sulu_preview.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument type="string">sulu_preview</argument>
             <argument type="collection">

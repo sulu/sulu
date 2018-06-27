@@ -5,7 +5,6 @@
 
     <services>
         <service id="sulu_custom_urls.admin" class="Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin">
-            <argument>%sulu_admin.name%</argument>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
 
             <tag name="sulu.admin"/>

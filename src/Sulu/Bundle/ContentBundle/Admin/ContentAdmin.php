@@ -55,60 +55,14 @@ class ContentAdmin extends Admin
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
-        SessionManagerInterface $sessionManager,
-        $title
+        SessionManagerInterface $sessionManager
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
         $this->sessionManager = $sessionManager;
-
-        if (!$this->securityChecker) {
-            return;
-        }
-
-        $rootNavigationItem = new NavigationItem($title);
-
-        $section = new NavigationItem('navigation.webspaces');
-        $section->setPosition(10);
-
-        $rootNavigationItem->addChild($section);
-
-        $position = 10;
-
-        /** @var Webspace $webspace */
-        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), PermissionTypes::VIEW)) {
-                $webspaceItem = new NavigationItem($webspace->getName());
-                $webspaceItem->setPosition($position++);
-                $webspaceItem->setIcon('bullseye');
-
-                $indexUuid = $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier();
-
-                $indexPageItem = new NavigationItem('navigation.webspaces.index-page');
-                $indexPageItem->setPosition(10);
-                $indexPageItem->setAction(
-                    'content/contents/' . $webspace->getKey() . '/edit:' . $indexUuid . '/content'
-                );
-                $webspaceItem->addChild($indexPageItem);
-
-                $contentItem = new NavigationItem('navigation.webspaces.content');
-                $contentItem->setPosition(20);
-                $contentItem->setAction('content/contents/' . $webspace->getKey());
-                $webspaceItem->addChild($contentItem);
-
-                $webspaceSettingsItem = new NavigationItem('navigation.webspaces.settings');
-                $webspaceSettingsItem->setPosition(30);
-                $webspaceSettingsItem->setAction(sprintf('content/webspace/settings:%s/general', $webspace->getKey()));
-                $webspaceItem->addChild($webspaceSettingsItem);
-
-                $section->addChild($webspaceItem);
-            }
-        }
-
-        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    public function getNavigationV2(): Navigation
+    public function getNavigation(): Navigation
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
 
@@ -127,14 +81,6 @@ class ContentAdmin extends Admin
         }
 
         return new Navigation($rootNavigationItem);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getJsBundleName()
-    {
-        return 'sulucontent';
     }
 
     /**

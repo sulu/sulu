@@ -30,16 +30,6 @@ sulu_admin.content_navigation:
     type: rest
     resource: sulu_admin.content_navigation_controller
 
-sulu_admin.routes:
-    path: /bundles
-    defaults:
-        _controller: sulu_admin.admin_controller:bundlesAction
-
-sulu_admin.contexts:
-    path: /contexts
-    defaults:
-        _controller: sulu_admin.admin_controller:contextsAction
-
 sulu_admin.csv_export.form:
     path: /templates/csv-export-form
     defaults:

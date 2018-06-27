@@ -6,7 +6,6 @@
 
     <parameters>
         <parameter key="sulu_websocket.manager.class">Sulu\Component\Websocket\RatchetAppManager</parameter>
-        <parameter key="sulu_websocket.admin.class">Sulu\Bundle\WebsocketBundle\Admin\WebsocketAdmin</parameter>
         <parameter key="sulu_websocket.jsconfig.class">Sulu\Bundle\WebsocketBundle\Admin\AppJsConfig</parameter>
         <parameter key="sulu_websocket.admin.message_dispatcher.app.class">Sulu\Component\Websocket\MessageDispatcher\MessageDispatcherApp</parameter>
         <parameter key="sulu_websocket.admin.message_dispatcher.app.cache.class">Doctrine\Common\Cache\FilesystemCache</parameter>
@@ -19,10 +18,6 @@
             <argument type="string">%sulu_websocket.server.port%</argument>
             <argument type="string">%sulu_websocket.server.http_host%</argument>
             <argument type="string">%sulu_websocket.server.ip_address%</argument>
-        </service>
-
-        <service id="sulu_websocket.admin" class="%sulu_websocket.admin.class%">
-            <tag name="sulu.admin"/>
         </service>
 
         <service id="sulu_content.js_config.server" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">

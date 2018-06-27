@@ -66,12 +66,12 @@ class NavigationRegistry
             }
 
             if (null === $navigation) {
-                $navigation = $admin->getNavigationV2();
+                $navigation = $admin->getNavigation();
 
                 continue;
             }
 
-            $navigation = $navigation->merge($admin->getNavigationV2());
+            $navigation = $navigation->merge($admin->getNavigation());
         }
 
         foreach ($navigation->getRoot()->getChildren() as $child) {

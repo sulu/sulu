@@ -14,7 +14,6 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%sulu_snippet.content-type.default_enabled%</argument>
-            <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>

@@ -16,7 +16,6 @@
             <tag name="sulu.context" context="admin"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.core.localization_manager"/>
-            <argument>%sulu_admin.name%</argument>
         </service>
         <service id="sulu_category.content_navigation_provider" class="%sulu_category.content_navigation_provider.class%">
             <tag name="sulu_admin.content_navigation" alias="category"/>
