@@ -503,16 +503,6 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals('Hotel de', $newPage->getTitle());
     }
 
-    public function testGetFields()
-    {
-        $this->client->request('GET', '/snippet/fields');
-        $response = $this->client->getResponse();
-        $this->assertHttpStatusCode(200, $response);
-        $body = $response->getContent();
-        $fields = json_decode($body);
-        $this->assertNotNull($fields);
-    }
-
     private function loadFixtures()
     {
         // HOTELS

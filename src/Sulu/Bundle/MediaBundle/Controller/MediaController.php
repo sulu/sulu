@@ -54,24 +54,6 @@ class MediaController extends AbstractMediaController implements
     protected static $entityKey = 'media';
 
     /**
-     * returns all fields that can be used by list.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     *
-     * @Get("media/fields")
-     */
-    public function getFieldsAction(Request $request)
-    {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-
-        return $this->handleView(
-            $this->view(array_values($this->getFieldDescriptors($locale)), 200)
-        );
-    }
-
-    /**
      * Shows a single media with the given id.
      *
      * @param $id

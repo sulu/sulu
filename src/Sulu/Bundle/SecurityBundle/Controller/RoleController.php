@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineUniqueConstraintViolationException;
-use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
@@ -39,18 +38,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
 
     const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
 
-    protected $fieldsDefault = ['name'];
-
-    protected $fieldsExcluded = [];
-
-    protected $fieldsHidden = ['changed', 'created'];
-
-    protected $fieldsRelations = [];
-
-    protected $fieldsSortOrder = [0 => 'id', 1 => 'name'];
-
-    protected $fieldsTranslationKeys = [];
-
     protected $bundlePrefix = 'security.roles.';
 
     /**
@@ -72,19 +59,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
         $this->fieldDescriptors = $this->get(
             'sulu_core.list_builder.field_descriptor_factory'
         )->getFieldDescriptorForClass($this->getParameter('sulu.model.role.class'));
-    }
-
-    /**
-     * returns all fields that can be used by list.
-     *
-     * @Get("roles/fields")
-     *
-     * @return mixed
-     */
-    public function getFieldsAction()
-    {
-        // default contacts list
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
     }
 
     /**

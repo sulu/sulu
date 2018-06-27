@@ -43,31 +43,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
     protected static $entityKey = 'categories';
 
     /**
-     * Returns all fields that can be used by list.
-     *
-     * @Get("categories/fields")
-     *
-     * @param Request $request
-     *
-     * @return mixed
-     */
-    public function getFieldsAction(Request $request)
-    {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-        $fieldDescriptors = $this->getFieldDescriptors($locale);
-
-        // unset list-irrelevant field descriptors
-        unset($fieldDescriptors['lft']);
-        unset($fieldDescriptors['rgt']);
-        unset($fieldDescriptors['depth']);
-        unset($fieldDescriptors['parent']);
-        unset($fieldDescriptors['locale']);
-        unset($fieldDescriptors['defaultLocale']);
-
-        return $this->handleView($this->view(array_values($fieldDescriptors), 200));
-    }
-
-    /**
      * Returns the category which is assigned to the given id.
      *
      * @param $id
