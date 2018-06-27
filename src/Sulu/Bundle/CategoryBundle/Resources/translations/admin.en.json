@@ -1,4 +1,6 @@
 {
     "sulu_category.categories": "Categories",
-    "sulu_category.details": "Details"
+    "sulu_category.details": "Details",
+    "sulu_category.key": "Key",
+    "sulu_category.name": "Name"
 }
