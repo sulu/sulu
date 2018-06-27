@@ -14,10 +14,8 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
@@ -29,27 +27,19 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
-use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 
 class AdminController
 {
     const TRANSLATION_DOMAIN = 'admin';
-
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
 
     /**
      * @var UrlGeneratorInterface
@@ -67,11 +57,6 @@ class AdminController
     private $adminPool;
 
     /**
-     * @var JsConfigPool
-     */
-    private $jsConfigPool;
-
-    /**
      * @var SerializerInterface
      */
     private $serializer;
@@ -85,11 +70,6 @@ class AdminController
      * @var EngineInterface
      */
     private $engine;
-
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
 
     /**
      * @var TranslatorBagInterface
@@ -132,24 +112,9 @@ class AdminController
     private $environment;
 
     /**
-     * @var string
-     */
-    private $adminName;
-
-    /**
      * @var array
      */
     private $locales;
-
-    /**
-     * @var string
-     */
-    private $suluVersion;
-
-    /**
-     * @var array
-     */
-    private $translatedLocales;
 
     /**
      * @var array
@@ -162,15 +127,12 @@ class AdminController
     private $fallbackLocale;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorizationChecker,
         UrlGeneratorInterface $urlGenerator,
         TokenStorageInterface $tokenStorage,
         AdminPool $adminPool,
-        JsConfigPool $jsConfigPool,
         SerializerInterface $serializer,
         ViewHandlerInterface $viewHandler,
         EngineInterface $engine,
-        LocalizationManagerInterface $localizationManager,
         TranslatorBagInterface $translatorBag,
         ResourceMetadataPool $resourceMetadataPool,
         RouteRegistry $routeRegistry,
@@ -179,22 +141,16 @@ class AdminController
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         ContactManagerInterface $contactManager,
         $environment,
-        $adminName,
         array $locales,
-        $suluVersion,
-        $translatedLocales,
         $translations,
         $fallbackLocale
     ) {
-        $this->authorizationChecker = $authorizationChecker;
         $this->urlGenerator = $urlGenerator;
         $this->tokenStorage = $tokenStorage;
         $this->adminPool = $adminPool;
-        $this->jsConfigPool = $jsConfigPool;
         $this->serializer = $serializer;
         $this->viewHandler = $viewHandler;
         $this->engine = $engine;
-        $this->localizationManager = $localizationManager;
         $this->translatorBag = $translatorBag;
         $this->resourceMetadataPool = $resourceMetadataPool;
         $this->routeRegistry = $routeRegistry;
@@ -203,68 +159,21 @@ class AdminController
         $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
         $this->contactManager = $contactManager;
         $this->environment = $environment;
-        $this->adminName = $adminName;
         $this->locales = $locales;
-        $this->suluVersion = $suluVersion;
-        $this->translatedLocales = $translatedLocales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
     }
 
-    /**
-     * Renders admin ui.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @deprecated Should be replaced with indexV2Action
-     */
     public function indexAction()
     {
-        if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            return new RedirectResponse($this->urlGenerator->generate('sulu_admin.login', []));
-        }
-
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        // get js config from bundles
-        $jsConfig = $this->jsConfigPool->getConfigParams();
-
-        // render template
-        if ('dev' === $this->environment) {
-            $template = 'SuluAdminBundle:Admin:index.html.twig';
-        } else {
-            $template = 'SuluAdminBundle:Admin:index.html.dist.twig';
-        }
-
-        return $this->engine->renderResponse(
-            $template,
-            [
-                'name' => $this->adminName,
-                'locales' => array_keys($this->localizationManager->getLocalizations()),
-                'translated_locales' => $this->translatedLocales,
-                'translations' => $this->translations,
-                'fallback_locale' => $this->fallbackLocale,
-                'suluVersion' => $this->suluVersion,
-                'user' => $this->serializer->serialize(
-                    $user,
-                    'array',
-                    SerializationContext::create()->setGroups(['frontend'])
-                ),
-                'config' => $jsConfig,
-            ]
-        );
-    }
-
-    public function indexV2Action()
-    {
         $endpoints = [
-            'config' => $this->router->generate('sulu_admin_v2.config'),
-            'loginCheck' => $this->router->generate('sulu_admin.login_check_v2'),
+            'config' => $this->router->generate('sulu_admin.config'),
+            'loginCheck' => $this->router->generate('sulu_admin.login_check'),
             'logout' => $this->router->generate('sulu_admin.logout'),
             'reset' => $this->router->generate('sulu_security.reset_password.email'),
             'resetResend' => $this->router->generate('sulu_security.reset_password.email.resend'),
-            'resources' => $this->router->generate('sulu_admin_v2.resources', ['resource' => ':resource']),
-            'translations' => $this->router->generate('sulu_admin_v2.translation'),
+            'resources' => $this->router->generate('sulu_admin.resources', ['resource' => ':resource']),
+            'translations' => $this->router->generate('sulu_admin.translation'),
             'generateUrl' => $this->router->generate('post_resourcelocator', ['action' => 'generate']),
         ];
 
@@ -281,7 +190,7 @@ class AdminController
     /**
      * Returns all the configuration for the admin interface.
      */
-    public function configV2Action(): Response
+    public function configAction(): Response
     {
         $user = $this->tokenStorage->getToken()->getUser();
         $contact = $this->contactManager->getById($user->getContact()->getId(), $user->getLocale());
@@ -408,16 +317,6 @@ class AdminController
         $response = (null !== $requestedSystem) ? $mappedContexts[$requestedSystem] : $mappedContexts;
 
         return new JsonResponse($response);
-    }
-
-    /**
-     * Returns config for admin.
-     *
-     * @return JsonResponse
-     */
-    public function configAction()
-    {
-        return new JsonResponse($this->jsConfigPool->getConfigParams());
     }
 
     /**

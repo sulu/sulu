@@ -12,15 +12,12 @@
 
     <services>
         <service id="sulu_admin.admin_controller" class="%sulu_admin.admin_controller.class%">
-            <argument type="service" id="security.authorization_checker"/>
             <argument type="service" id="router"/>
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="sulu_admin.admin_pool"/>
-            <argument type="service" id="sulu_admin.js_config_pool"/>
             <argument type="service" id="jms_serializer"/>
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="templating"/>
-            <argument type="service" id="sulu.core.localization_manager"/>
             <argument type="service" id="translator.default"/>
             <argument type="service" id="sulu_admin.metadata.resource_metadata_pool"/>
             <argument type="service" id="sulu_admin.route_registry"/>
@@ -29,10 +26,7 @@
             <argument type="service" id="sulu_admin.field_type_option_registry"/>
             <argument type="service" id="sulu_contact.contact_manager" />
             <argument>%kernel.environment%</argument>
-            <argument>%sulu_admin.name%</argument>
             <argument>%sulu_core.locales%</argument>
-            <argument>%sulu.version%</argument>
-            <argument>%sulu_core.translated_locales%</argument>
             <argument>%sulu_core.translations%</argument>
             <argument>%sulu_core.fallback_locale%</argument>
 

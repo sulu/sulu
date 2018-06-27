@@ -9,11 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Controller;
+namespace Sulu\Bundle\AdminBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
-use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
@@ -34,24 +33,15 @@ class AdminControllerTest extends SuluTestCase
     public function testIndexAction()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/'); // required because test user does not exist otherwise
-
-        $userSetting = new UserSetting();
-        $userSetting->setKey('test');
-        $userSetting->setValue(json_encode(['key' => 'value']));
-        $userSetting->setUser($this->getTestUser());
-        $this->em->persist($userSetting);
-        $this->em->flush();
-
         $client->request('GET', '/admin/');
 
-        $this->assertContains('"settings":{"test":{"key":"value"}}', $client->getResponse()->getContent());
+        $this->assertContains('const SULU_CONFIG = ', $client->getResponse()->getContent());
     }
 
     public function testGetConfig()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/v2/config');
+        $client->request('GET', '/admin/config');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
