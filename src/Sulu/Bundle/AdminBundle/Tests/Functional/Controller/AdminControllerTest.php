@@ -30,14 +30,6 @@ class AdminControllerTest extends SuluTestCase
         $collectionType->load($this->getEntityManager());
     }
 
-    public function testIndexAction()
-    {
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/');
-
-        $this->assertContains('const SULU_CONFIG = ', $client->getResponse()->getContent());
-    }
-
     public function testGetConfig()
     {
         $client = $this->createAuthenticatedClient();
