@@ -117,18 +117,20 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
         $this->pathBuilder->build(['%base%', 'webspace1', '%route%'])->willReturn('/cmf/webspace1/routes');
         $this->pathBuilder->build(['%base%', 'webspace2', '%route%'])->willReturn('/cmf/webspace2/routes');
 
-        $routeNode = $this->prophesize(RouteDocument::class);
-        $this->documentManager->create('route')->willReturn($routeNode->reveal());
+        $routeDocument = $this->prophesize(RouteDocument::class);
+        $this->documentManager->create('route')->willReturn($routeDocument->reveal());
 
+        $homeDocument = $this->prophesize(HomeDocument::class);
+        $this->documentManager->create('home')->willReturn($homeDocument->reveal());
         $this->documentManager->find(
             '/cmf/webspace1/contents',
             'en',
             ['load_ghost_content' => false]
-        )->willReturn(new HomeDocument());
+        )->willReturn($homeDocument->reveal());
         $this->documentManager->find(Argument::cetera())->willThrow(DocumentNotFoundException::class);
 
         $this->documentManager->persist(
-            Argument::type(HomeDocument::class),
+            $homeDocument->reveal(),
             'de',
             [
                 'path' => '/cmf/webspace1/contents',
@@ -137,14 +139,14 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
             ]
         )->shouldBeCalled();
         $this->documentManager->persist(
-            Argument::type(HomeDocument::class),
+            $homeDocument->reveal(),
             'en',
             [
                 'ignore_required' => true,
             ]
         )->shouldBeCalled();
         $this->documentManager->persist(
-            Argument::type(HomeDocument::class),
+            $homeDocument->reveal(),
             'de',
             [
                 'path' => '/cmf/webspace2/contents',
@@ -153,27 +155,27 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
             ]
         )->shouldBeCalled();
 
-        $this->documentManager->publish(Argument::type(HomeDocument::class), 'de')->shouldBeCalledTimes(2);
-        $this->documentManager->publish(Argument::type(HomeDocument::class), 'en')->shouldBeCalledTimes(1);
+        $this->documentManager->publish($homeDocument->reveal(), 'de')->shouldBeCalledTimes(2);
+        $this->documentManager->publish($homeDocument->reveal(), 'en')->shouldBeCalledTimes(1);
 
         $this->documentManager->persist(
-            Argument::type(RouteDocument::class),
+            $routeDocument->reveal(),
             'de',
             ['path' => '/cmf/webspace1/routes/de', 'auto_create' => true]
         )->shouldBeCalled();
         $this->documentManager->persist(
-            Argument::type(RouteDocument::class),
+            $routeDocument->reveal(),
             'en',
             ['path' => '/cmf/webspace1/routes/en', 'auto_create' => true]
         )->shouldBeCalled();
         $this->documentManager->persist(
-            Argument::type(RouteDocument::class),
+            $routeDocument->reveal(),
             'de',
             ['path' => '/cmf/webspace2/routes/de', 'auto_create' => true]
         )->shouldBeCalled();
 
-        $this->documentManager->publish(Argument::type(RouteDocument::class), 'de')->shouldBeCalledTimes(2);
-        $this->documentManager->publish(Argument::type(RouteDocument::class), 'en')->shouldBeCalledTimes(1);
+        $this->documentManager->publish($routeDocument->reveal(), 'de')->shouldBeCalledTimes(2);
+        $this->documentManager->publish($routeDocument->reveal(), 'en')->shouldBeCalledTimes(1);
 
         $this->documentManager->flush()->shouldBeCalled();
 

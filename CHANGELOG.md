@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #4042 [AudienceTargetingBundle] Add symfony 3.4.12 as conflict to fix caching tests
     * HOTFIX      #4019 [Component]               Fix handling of authored date on safari
     * HOTFIX      #4017 [SnippetBundle]           Fix snippet conflict overlay
+    * HOTFIX      #4044 [Webspace]                Fixed document creation in webspace-initializer
 
 * 1.6.19 (2018-05-24)
     * HOTFIX      #3980 [PreviewBundle]           Fix kernel.project_dir parameter for PreviewKernel
