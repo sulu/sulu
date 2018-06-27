@@ -47,9 +47,10 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_security.authentication_entry_point" class="%sulu_security.authentication_entry_point.class%">
-            <argument type="service" id="router"/>
-        </service>
+        <service
+            id="sulu_security.authentication_entry_point"
+            class="%sulu_security.authentication_entry_point.class%"
+        />
 
         <service id="sulu_security.authentication_handler" class="%sulu_security.authentication_handler.class%">
             <argument type="service" id="router"/>
