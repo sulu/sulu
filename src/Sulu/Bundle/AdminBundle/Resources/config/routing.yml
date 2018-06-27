@@ -18,10 +18,6 @@ sulu_admin.resources:
     defaults:
         _controller: sulu_admin.admin_controller:resourcesAction
 
-sulu_admin.widget_group:
-    path: /widget-groups/{groupAlias}
-    defaults: { _controller: SuluAdminBundle:WidgetGroups:group }
-
 sulu_admin.navigation:
     type: rest
     resource: Sulu\Bundle\AdminBundle\Controller\NavigationsController

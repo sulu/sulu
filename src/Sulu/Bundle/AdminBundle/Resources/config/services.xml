@@ -4,7 +4,6 @@
         <parameter key="sulu_admin.admin_controller.class">Sulu\Bundle\AdminBundle\Controller\AdminController</parameter>
         <parameter key="sulu_admin.admin_pool.class">Sulu\Bundle\AdminBundle\Admin\AdminPool</parameter>
         <parameter key="sulu_admin.js_config_pool.class">Sulu\Bundle\AdminBundle\Admin\JsConfigPool</parameter>
-        <parameter key="sulu_admin.widgets_handler.class">Sulu\Bundle\AdminBundle\Widgets\WidgetsHandler</parameter>
         <parameter key="sulu_admin.js_config.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
     </parameters>
 
@@ -32,15 +31,6 @@
         </service>
         <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%"/>
         <service id="sulu_admin.js_config_pool" class="%sulu_admin.js_config_pool.class%"/>
-        <service id="sulu_admin.widgets_handler" class="%sulu_admin.widgets_handler.class%">
-            <argument type="service" id="templating"/>
-            <argument>%sulu_admin.widget_groups%</argument>
-        </service>
-        <service id="sulu_admin.js_config" class="%sulu_admin.js_config.class%">
-            <tag name="sulu.js_config"/>
-            <argument>sulu_admin.widget_groups</argument>
-            <argument>%sulu_admin.widget_groups%</argument>
-        </service>
 
         <service id="sulu_admin.metadata.resource_metadata_pool" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool" />
 
