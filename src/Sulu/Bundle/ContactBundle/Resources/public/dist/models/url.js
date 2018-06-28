@@ -1,1 +1,0 @@
-define(["mvc/relationalmodel","mvc/hasone","sulucontact/models/urlType"],function(a,b,c){return a({defaults:{id:null,url:"",urlType:null},relations:[{type:b,key:"urlType",relatedModel:c}]})});

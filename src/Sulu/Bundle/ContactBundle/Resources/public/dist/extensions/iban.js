@@ -1,1 +1,0 @@
-!function(){"use strict";define(["vendor/iban-converter"],function(a){return{name:"iban",initialize:function(b){var c=b.sandbox;c.iban={},c.iban.isValid=function(b){return a.isValid(b)},c.iban.printFormat=function(b,c){return a.printFormat(b,c)}}}})}();

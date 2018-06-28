@@ -1,1 +1,0 @@
-define(["mvc/relationalmodel"],function(a){"use strict";return a({contactId:null,urlRoot:function(){return"/admin/api/contact/"+this.contactId+"/medias"},defaults:{id:null}})});

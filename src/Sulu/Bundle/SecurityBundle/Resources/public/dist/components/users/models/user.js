@@ -1,1 +1,0 @@
-define(["mvc/relationalmodel","mvc/hasmany","./userRole","sulucontact/models/contact","mvc/hasone"],function(a,b,c,d,e){"use strict";return new a({urlRoot:"/admin/api/users",defaults:{username:"",password:"",email:"",locale:"en",contact:[],userRoles:[]},relations:[{type:b,key:"userRoles",relatedModel:c},{type:e,key:"contact",relatedModel:d}]})});
