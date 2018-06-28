@@ -158,7 +158,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider portalDataProvider
      */
-    public function testRender1($scheme, $portalUrl)
+    public function testRender($scheme, $portalUrl)
     {
         $object = $this->prophesize(\stdClass::class);
 

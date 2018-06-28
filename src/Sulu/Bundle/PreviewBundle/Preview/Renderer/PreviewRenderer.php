@@ -147,6 +147,7 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         $webspace = $portalInformation->getWebspace();
+        $localization = $webspace->getLocalization($locale);
 
         $query = [];
         $request = [];
@@ -168,7 +169,23 @@ class PreviewRenderer implements PreviewRendererInterface
             $request->headers->set($this->targetGroupHeader, $targetGroupId);
         }
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent(new RequestAttributes()));
+        // TODO Remove this event in 2.0 as it is not longer needed to set the correct theme.
+        $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent(
+            new RequestAttributes(
+                [
+                    'webspace' => $webspace,
+                    'locale' => $locale,
+                    'localization' => $localization,
+                    'portal' => $portalInformation->getPortal(),
+                    'portalUrl' => $portalInformation->getUrl(),
+                    'resourceLocatorPrefix' => $portalInformation->getPrefix(),
+                    'getParameters' => $query,
+                    'postParameters' => $request,
+                    'analyticsKey' => $this->previewDefaults['analyticsKey'],
+                    'portalInformation' => $portalInformation,
+                ]
+            )
+        ));
 
         try {
             $response = $this->handle($request);
@@ -233,6 +250,7 @@ class PreviewRenderer implements PreviewRendererInterface
 
         $portalUrl = $scheme . '://' . $this->replacer->replaceHost($portalInformation->getUrl(), $host);
         $portalUrlParts = parse_url($portalUrl);
+        $prefixPath = isset($portalUrlParts['path']) ? $portalUrlParts['path'] : '';
 
         $httpHost = $portalUrlParts['host'];
         if (!in_array($port, [80, 443])) {
@@ -242,7 +260,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $server['SERVER_NAME'] = $portalUrlParts['host'];
         $server['SERVER_PORT'] = $port;
         $server['HTTP_HOST'] = $httpHost;
-        $server['REQUEST_URI'] = $portalUrlParts['path'] . '/_sulu_preview';
+        $server['REQUEST_URI'] = $prefixPath . '/_sulu_preview';
 
         return $server;
     }
