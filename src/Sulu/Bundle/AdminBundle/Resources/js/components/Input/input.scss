@@ -7,6 +7,7 @@ $inputBorderRadius: 3px;
 $inputHeight: 30px;
 $inputColor: $black;
 $inputFontSize: 12px;
+$inputPrependWidth: 34px;
 $iconColor: $dustyGray;
 $iconBorderPadding: 5px;
 $placeholderColor: $dustyGray;
@@ -31,7 +32,7 @@ $darkIconColor: $doveGray;
     position: relative;
 
     input {
-        width: 100%;
+        width: calc(100% - $inputPrependWidth);
         flex-grow: 1;
         border: none;
         border-radius: $inputBorderRadius;
@@ -92,7 +93,7 @@ $darkIconColor: $doveGray;
 
 .prepended-container {
     position: relative;
-    flex: 0 0 34px;
+    flex: 0 0 $inputPrependWidth;
     height: calc($inputHeight - 2 * $iconBorderPadding);
     box-shadow: $inputBorderWidth 0 0 $inputBorderColor;
     display: flex;
