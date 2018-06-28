@@ -20,23 +20,9 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class TextLine extends SimpleContentType
 {
-    private $template;
-
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('TextLine', '');
-
-        $this->template = $template;
-    }
-
-    /**
-     * returns a template to render a form.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

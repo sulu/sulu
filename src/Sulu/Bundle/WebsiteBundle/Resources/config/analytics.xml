@@ -3,13 +3,6 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="sulu_website.webspace_navigation_provider"
-                 class="Sulu\Bundle\WebsiteBundle\Admin\WebspaceContentNavigationProvider">
-            <argument type="service" id="sulu_security.security_checker"/>
-            <tag name="sulu_admin.content_navigation" alias="webspace"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
         <service id="sulu_website.analytics.repository"
                  class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>

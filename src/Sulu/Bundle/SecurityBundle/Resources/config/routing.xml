@@ -3,15 +3,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://symfony.com/schema/routing
         http://symfony.com/schema/routing/routing-1.0.xsd">
-    <route id="sulu_security.template.role.form" path="/template/role/form.html">
-        <default key="_controller">SuluSecurityBundle:Template:roleForm</default>
-    </route>
-    <route id="sulu_security.template.permission.form" path="/template/permission/form.html">
-        <default key="_controller">SuluSecurityBundle:Template:permissionform</default>
-    </route>
-    <route id="sulu_security.template.role.list" path="/template/role/list.html">
-        <default key="_controller">SuluSecurityBundle:Template:roleList</default>
-    </route>
     <route id="sulu_security.reset_password.email" path="reset/email">
         <default key="_controller">SuluSecurityBundle:Resetting:sendEmail</default>
     </route>
@@ -21,9 +12,6 @@
     </route>
     <route id="sulu_security.reset_password.reset" path="reset">
         <default key="_controller">SuluSecurityBundle:Resetting:reset</default>
-    </route>
-    <route id="sulu_security.permission_tab.form" path="/template/permission-tab/form.html">
-        <default key="_controller">SuluSecurityBundle:Template:permissionTabForm</default>
     </route>
 
     <import type="rest" resource="sulu_security.profile_controller"/>

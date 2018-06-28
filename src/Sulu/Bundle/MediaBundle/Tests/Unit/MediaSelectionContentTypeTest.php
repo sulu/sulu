@@ -42,14 +42,8 @@ class MediaSelectionContentTypeTest extends TestCase
 
         $this->mediaSelection = new MediaSelectionContentType(
             $this->mediaManager->reveal(),
-            $this->mediaReferenceStore->reveal(),
-            'SuluMediaBundle:Template:image-selection.html.twig'
+            $this->mediaReferenceStore->reveal()
         );
-    }
-
-    public function testTemplate()
-    {
-        $this->assertEquals('SuluMediaBundle:Template:image-selection.html.twig', $this->mediaSelection->getTemplate());
     }
 
     public function testWrite()

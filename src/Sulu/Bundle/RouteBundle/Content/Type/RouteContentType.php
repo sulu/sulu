@@ -20,27 +20,9 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class RouteContentType extends SimpleContentType
 {
-    /**
-     * @var string
-     */
-    private $template;
-
-    /**
-     * @param string $template
-     */
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('Route', '');
-
-        $this->template = $template;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

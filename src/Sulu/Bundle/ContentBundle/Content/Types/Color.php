@@ -18,22 +18,8 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class Color extends SimpleContentType
 {
-    private $template;
-
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('Color', '');
-
-        $this->template = $template;
-    }
-
-    /**
-     * returns a template to render a form.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 }

@@ -31,7 +31,6 @@ class LocationContentTypeTest extends TestCase
         $this->mapManager = $this->getMockBuilder('Sulu\Bundle\LocationBundle\Map\MapManager')->getMock();
         $this->locationContent = new LocationContentType(
             $this->nodeRepository,
-            'Foo:bar.html.twig',
             $this->mapManager,
             'some_geolocator'
         );

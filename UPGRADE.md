@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### Admin Navigation
+
+The admin navigation should not be built into the constructor anymore. Instead the `getNavigation` function from the
+`Admin` class should return a `Navigation` object. This makes it easier to override only this part of the Admin.
+
 ### sulu.rlp tag deprecated
 
 The `sulu.rlp` tag, which can be added in the template XMLs, is not used anymore by the new UI. Instead the result of

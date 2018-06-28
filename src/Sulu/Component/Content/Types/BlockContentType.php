@@ -35,21 +35,13 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     private $contentTypeManager;
 
     /**
-     * template for form generation.
-     *
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var string
      */
     private $languageNamespace;
 
-    public function __construct(ContentTypeManagerInterface $contentTypeManager, $template, $languageNamespace)
+    public function __construct(ContentTypeManagerInterface $contentTypeManager, $languageNamespace)
     {
         $this->contentTypeManager = $contentTypeManager;
-        $this->template = $template;
         $this->languageNamespace = $languageNamespace;
     }
 
@@ -308,14 +300,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         foreach ($node->getProperties($property->getName() . '-*')  as $nodeProperty) {
             $node->getProperty($nodeProperty->getName())->remove();
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

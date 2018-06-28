@@ -33,11 +33,6 @@ class SuluRouteExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
         $container->setParameter('sulu_route.mappings', $config['mappings']);
 
-        $container->setParameter(
-            'sulu_route.content_types.route.template',
-            $config['content_types']['route']['template']
-        );
-
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('routing.xml');

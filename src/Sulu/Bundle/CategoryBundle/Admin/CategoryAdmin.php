@@ -34,8 +34,7 @@ class CategoryAdmin extends Admin
 
     public function __construct(
         SecurityCheckerInterface $securityChecker,
-        LocalizationManagerInterface $localizationManager,
-        $title
+        LocalizationManagerInterface $localizationManager
     ) {
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
@@ -43,30 +42,9 @@ class CategoryAdmin extends Admin
         if (!$this->securityChecker) {
             return;
         }
-
-        $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('navigation.modules');
-        $section->setPosition(20);
-
-        $settings = new NavigationItem('navigation.settings');
-        $settings->setPosition(40);
-        $settings->setIcon('cog');
-
-        if ($this->securityChecker->hasPermission('sulu.settings.categories', PermissionTypes::VIEW)) {
-            $categories = new NavigationItem('navigation.settings.categories', $settings);
-            $categories->setPosition(20);
-            $categories->setAction('settings/categories');
-        }
-
-        if ($settings->hasChildren()) {
-            $section->addChild($settings);
-            $rootNavigationItem->addChild($section);
-        }
-
-        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    public function getNavigationV2(): Navigation
+    public function getNavigation(): Navigation
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
         $settings = $this->getNavigationItemSettings();
@@ -121,14 +99,6 @@ class CategoryAdmin extends Admin
                 ->addOption('backRoute', 'sulu_category.datagrid')
                 ->setParent('sulu_category.edit_form'),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getJsBundleName()
-    {
-        return 'sulucategory';
     }
 
     /**

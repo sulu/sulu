@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -45,20 +44,6 @@ class KeywordController extends RestController implements ClassResourceInterface
      * {@inheritdoc}
      */
     protected static $entityKey = 'keywords';
-
-    /**
-     * Returns field-descriptors for keywords.
-     *
-     * @param int $categoryId
-     *
-     * @return Response
-     *
-     * @Get("/categories/{categoryId}/keywords/fields")
-     */
-    public function fieldsAction($categoryId)
-    {
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors())));
-    }
 
     /**
      * Returns list of keywords filtered by the category.

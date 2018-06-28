@@ -1,7 +1,3 @@
-sulu_resource:
-    resource: "@SuluResourceBundle/Resources/config/routing.yml"
-    prefix:
-
 sulu_resource_api:
     resource: "@SuluResourceBundle/Resources/config/routing_api.yml"
     prefix: /api

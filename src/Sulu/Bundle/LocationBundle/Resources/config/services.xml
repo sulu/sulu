@@ -3,7 +3,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_location.content.type.location.class">Sulu\Bundle\LocationBundle\Content\Types\LocationContentType</parameter>
-        <parameter key="sulu_location.admin.class">Sulu\Bundle\LocationBundle\Admin\LocationAdmin</parameter>
         <parameter key="sulu_location.map_manager.class">Sulu\Bundle\LocationBundle\Map\MapManager</parameter>
     </parameters>
 
@@ -11,7 +10,6 @@
         <!-- content-types -->
         <service id="sulu_location.content.type.location" class="%sulu_location.content.type.location.class%">
             <argument type="service" id="sulu_content.node_repository"/>
-            <argument>%sulu.content.type.location.template%</argument>
             <argument type="service" id="sulu_location.map_manager"/>
             <argument>%sulu_location.geolocator.name%</argument>
 
@@ -23,13 +21,6 @@
         <service id="sulu_location.controller.geoloactor"
                  class="Sulu\Bundle\LocationBundle\Controller\GeolocatorController">
             <argument type="service" id="sulu_location.geolocator.manager"/>
-        </service>
-
-        <!-- Admin class -->
-        <service id="sulu_location.admin" class="%sulu_location.admin.class%">
-            <argument>%sulu_admin.name%</argument>
-            <tag name="sulu.admin" />
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Map services -->

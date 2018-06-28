@@ -12,8 +12,6 @@
 namespace Sulu\Bundle\CustomUrlBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -41,25 +39,14 @@ class CustomUrlAdmin extends Admin
      */
     private $webspaceManager;
 
-    public function __construct($title, WebspaceManagerInterface $webspaceManager)
+    public function __construct(WebspaceManagerInterface $webspaceManager)
     {
-        $rootNavigationItem = new NavigationItem($title);
-        $this->setNavigation(new Navigation($rootNavigationItem));
-
         $this->webspaceManager = $webspaceManager;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getJsBundleName()
-    {
-        return 'sulucustomurl';
-    }
-
-    /**
-         * {@inheritdoc}
-         */
     public function getSecurityContexts()
     {
         $webspaceContexts = [];

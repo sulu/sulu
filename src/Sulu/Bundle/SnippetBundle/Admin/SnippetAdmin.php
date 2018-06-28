@@ -57,35 +57,14 @@ class SnippetAdmin extends Admin
     public function __construct(
         SecurityCheckerInterface $securityChecker,
         WebspaceManagerInterface $webspaceManager,
-        $defaultEnabled,
-        $title
+        $defaultEnabled
     ) {
         $this->securityChecker = $securityChecker;
         $this->webspaceManager = $webspaceManager;
         $this->defaultEnabled = $defaultEnabled;
-
-        if (!$this->securityChecker) {
-            return;
-        }
-
-        $rootNavigationItem = new NavigationItem($title);
-
-        $section = new NavigationItem('navigation.modules');
-        $section->setPosition(20);
-
-        if ($this->securityChecker->hasPermission('sulu.global.snippets', 'view')) {
-            $snippet = new NavigationItem('navigation.snippets');
-            $snippet->setPosition(10);
-            $snippet->setIcon('sticky-note-o');
-            $snippet->setAction('snippet/snippets');
-            $section->addChild($snippet);
-            $rootNavigationItem->addChild($section);
-        }
-
-        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    public function getNavigationV2(): Navigation
+    public function getNavigation(): Navigation
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
 
@@ -147,14 +126,6 @@ class SnippetAdmin extends Admin
                 ->addOption('backRoute', 'sulu_snippet.datagrid')
                 ->setParent('sulu_snippet.edit_form'),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getJsBundleName()
-    {
-        return 'sulusnippet';
     }
 
     /**

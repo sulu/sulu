@@ -158,8 +158,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
-        $this->processTemplates($container, $config);
-
         if (array_key_exists('SuluSearchBundle', $bundles)) {
             $this->processSearch($config, $loader, $container);
         }
@@ -179,10 +177,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('command.xml');
         $loader->load('link-tag.xml');
 
-        if (array_key_exists('SuluAutomationBundle', $bundles)) {
-            $loader->load('automation.xml');
-        }
-
         if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
             $loader->load('rule.xml');
         }
@@ -190,66 +184,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $this->appendDefaultAuthor($config, $container);
 
         $container->setParameter('sulu_content.seo', $config['seo']);
-    }
-
-    private function processTemplates(ContainerBuilder $container, $config)
-    {
-        $container->setParameter(
-            'sulu.content.type.smart_content.template',
-            $config['types']['smart_content']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.internal_links.template',
-            $config['types']['internal_links']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.single_internal_link.template',
-            $config['types']['single_internal_link']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.phone.template',
-            $config['types']['phone']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.password.template',
-            $config['types']['password']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.url.template',
-            $config['types']['url']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.email.template',
-            $config['types']['email']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.date.template',
-            $config['types']['date']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.time.template',
-            $config['types']['time']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.color.template',
-            $config['types']['color']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.checkbox.template',
-            $config['types']['checkbox']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.multiple_select.template',
-            $config['types']['multiple_select']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.single_select.template',
-            $config['types']['single_select']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.teaser_selection.template',
-            $config['types']['teaser_selection']['template']
-        );
     }
 
     private function processSearch($config, LoaderInterface $loader, ContainerBuilder $container)

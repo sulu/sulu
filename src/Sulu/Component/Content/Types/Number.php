@@ -21,13 +21,9 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class Number extends SimpleContentType
 {
-    private $template;
-
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('Number');
-
-        $this->template = $template;
     }
 
     public function write(
@@ -60,15 +56,5 @@ class Number extends SimpleContentType
         $property->setValue($this->decodeValue($value));
 
         return $value;
-    }
-
-    /**
-     * returns a template to render a form.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 }

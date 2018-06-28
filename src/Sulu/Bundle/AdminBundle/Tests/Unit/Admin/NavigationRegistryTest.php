@@ -80,7 +80,7 @@ class NavigationRegistryTest extends TestCase
         $navigation1->setMainRoute('route1');
 
         $rootItem1->addChild($navigation1);
-        $this->admin1->getNavigationV2()->willReturn(new Navigation($rootItem1));
+        $this->admin1->getNavigation()->willReturn(new Navigation($rootItem1));
 
         $rootItem2 = new NavigationItem('Root');
 
@@ -93,7 +93,7 @@ class NavigationRegistryTest extends TestCase
         $navigation2->addChild($navigationChild2);
 
         $rootItem2->addChild($navigation2);
-        $this->admin2->getNavigationV2()->willReturn(new Navigation($rootItem2));
+        $this->admin2->getNavigation()->willReturn(new Navigation($rootItem2));
 
         $route1 = $this->prophesize(Route::class);
         $route1->getPath()->willReturn('/route1');
@@ -166,8 +166,8 @@ class NavigationRegistryTest extends TestCase
         $navigation1->setMainRoute('route1');
 
         $rootItem1->addChild($navigation1);
-        $this->admin1->getNavigationV2()->willReturn(new Navigation($rootItem1))->shouldBeCalledTimes(1);
-        $this->admin2->getNavigationV2()->willReturn(new Navigation($rootItem1))->shouldBeCalledTimes(1);
+        $this->admin1->getNavigation()->willReturn(new Navigation($rootItem1))->shouldBeCalledTimes(1);
+        $this->admin2->getNavigation()->willReturn(new Navigation($rootItem1))->shouldBeCalledTimes(1);
 
         $route1 = $this->prophesize(Route::class);
         $route1->getPath()->willReturn('/route1');

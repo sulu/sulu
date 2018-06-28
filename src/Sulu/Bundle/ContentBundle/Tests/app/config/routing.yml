@@ -1,7 +1,3 @@
-sulu_content:
-    resource: "@SuluContentBundle/Resources/config/routing.yml"
-    prefix: /content
-
 sulu_content_api:
     type: rest
     resource: "@SuluContentBundle/Resources/config/routing_api.yml"

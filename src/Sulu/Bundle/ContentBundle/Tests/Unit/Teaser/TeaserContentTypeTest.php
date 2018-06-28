@@ -27,11 +27,6 @@ use Sulu\Component\Content\Compat\StructureInterface;
 class TeaserContentTypeTest extends TestCase
 {
     /**
-     * @var string
-     */
-    private $template = 'SuluTestBundle:Templates:content-type.html.twig';
-
-    /**
      * @var TeaserProviderPoolInterface
      */
     private $teaserProviderPool;
@@ -66,16 +61,10 @@ class TeaserContentTypeTest extends TestCase
         $this->referenceStorePool->getStore('media')->willReturn($this->mediaReferenceStore->reveal());
 
         $this->contentType = new TeaserContentType(
-            $this->template,
             $this->teaserProviderPool->reveal(),
             $this->teaserManager->reveal(),
             $this->referenceStorePool->reveal()
         );
-    }
-
-    public function testGetTemplate()
-    {
-        $this->assertEquals($this->template, $this->contentType->getTemplate());
     }
 
     public function testGetDefaultParameter()

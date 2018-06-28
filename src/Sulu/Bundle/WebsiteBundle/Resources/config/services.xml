@@ -32,7 +32,6 @@
         <service id="sulu_website.admin" class="%sulu_website.admin.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="sulu_security.security_checker" />
-            <argument type="string">%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>

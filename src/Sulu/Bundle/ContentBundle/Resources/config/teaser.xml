@@ -23,7 +23,6 @@
 
         <!-- content-type -->
         <service id="sulu_content.teaser.content_type" class="Sulu\Bundle\ContentBundle\Teaser\TeaserContentType">
-            <argument>%sulu.content.type.teaser_selection.template%</argument>
             <argument type="service" id="sulu_content.teaser.provider_pool"/>
             <argument type="service" id="sulu_content.teaser.manager"/>
             <argument type="service" id="sulu_website.reference_store_pool"/>

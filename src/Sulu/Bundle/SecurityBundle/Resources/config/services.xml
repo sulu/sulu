@@ -22,8 +22,6 @@
         <parameter key="sulu_security.mask_converter.class">Sulu\Component\Security\Authorization\MaskConverter</parameter>
         <parameter key="sulu_security.salt_generator.class">Sulu\Component\Security\Authentication\SaltGenerator</parameter>
         <parameter key="sulu_security.token_generator.class">Sulu\Bundle\SecurityBundle\Util\TokenGenerator</parameter>
-        <parameter key="sulu_security.contacts_content_navigation_provider.class">Sulu\Bundle\SecurityBundle\Admin\ContactsContentNavigationProvider</parameter>
-        <parameter key="sulu_security.roles_content_navigation_provider.class">Sulu\Bundle\SecurityBundle\Admin\RolesContentNavigationProvider</parameter>
         <parameter key="sulu_security.security_context_voter.class">Sulu\Component\Security\Authorization\SecurityContextVoter</parameter>
         <parameter key="sulu_security.access_control_manager.class">Sulu\Component\Security\Authorization\AccessControl\AccessControlManager</parameter>
         <parameter key="sulu_security.phpcr_access_control_provider.class">Sulu\Component\Security\Authorization\AccessControl\PhpcrAccessControlProvider</parameter>
@@ -43,14 +41,14 @@
     <services>
         <service id="sulu_security.admin" class="%sulu_security.admin.class%">
             <argument type="service" id="sulu_security.security_checker"/>
-            <argument>%sulu_admin.name%</argument>
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_security.authentication_entry_point" class="%sulu_security.authentication_entry_point.class%">
-            <argument type="service" id="router"/>
-        </service>
+        <service
+            id="sulu_security.authentication_entry_point"
+            class="%sulu_security.authentication_entry_point.class%"
+        />
 
         <service id="sulu_security.authentication_handler" class="%sulu_security.authentication_handler.class%">
             <argument type="service" id="router"/>
@@ -67,17 +65,6 @@
         </service>
 
         <service id="sulu_security.token_generator" class="%sulu_security.token_generator.class%">
-        </service>
-
-        <service id="sulu_security.roles_content_navigation_provider" class="%sulu_security.roles_content_navigation_provider.class%">
-            <tag name="sulu_admin.content_navigation" alias="roles"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
-        <service id="sulu_security.contacts_content_navigation_provider" class="%sulu_security.contacts_content_navigation_provider.class%">
-            <argument type="service" id="sulu_security.security_checker"/>
-            <tag name="sulu_admin.content_navigation" alias="contact"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_security.security_context_voter" class="%sulu_security.security_context_voter.class%" public="false">

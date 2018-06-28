@@ -1,7 +1,0 @@
-<script type="text/javascript">
-    (function() {
-        {% autoescape false %}
-        App.emit('sulu.content.localizations', {{ localizations|json_encode }});
-        {% endautoescape %}
-    })();
-</script>

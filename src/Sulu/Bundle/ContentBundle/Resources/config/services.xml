@@ -3,8 +3,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_content.admin.class">Sulu\Bundle\ContentBundle\Admin\ContentAdmin</parameter>
-        <parameter key="sulu_content.twig_extension.class">Sulu\Bundle\ContentBundle\Twig\ContentTwigExtension</parameter>
-        <parameter key="sulu_content.content_navigation_provider.class">Sulu\Bundle\ContentBundle\Admin\ContentContentNavigationProvider</parameter>
         <parameter key="sulu_content.node_repository.class">Sulu\Bundle\ContentBundle\Repository\NodeRepository</parameter>
         <parameter key="sulu_content.rl_repository.class">Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository</parameter>
         <parameter key="sulu_content.extension.seo.class">Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension</parameter>
@@ -18,7 +16,6 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.phpcr.session"/>
-            <argument>%sulu_admin.name%</argument>
         </service>
         <service id="sulu_content.js_config.webspace_input_types"
                  class="Sulu\Bundle\ContentBundle\Admin\WebspaceInputTypesJsConfig">
@@ -29,15 +26,6 @@
         </service>
 
         <!-- content -->
-        <service id="sulu_content.content_navigation_provider" class="%sulu_content.content_navigation_provider.class%">
-            <argument type="service" id="sulu_security.security_checker"/>
-            <tag name="sulu_admin.content_navigation" alias="content"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-        <service id="sulu_content.twig_extension" class="%sulu_content.twig_extension.class%">
-            <tag name="twig.extension"/>
-            <argument type="service" id="sulu.content.type_manager"/>
-        </service>
         <service id="sulu_content.permission_listener" class="Sulu\Bundle\ContentBundle\Search\EventListener\PermissionListener">
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="massive_search.search_manager"/>
@@ -45,11 +33,6 @@
         </service>
 
         <!-- webspace settings -->
-        <service id="sulu_content.webspace_navigation_provider"
-                 class="Sulu\Bundle\ContentBundle\Admin\WebspaceContentNavigationProvider">
-            <tag name="sulu_admin.content_navigation" alias="webspace"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
         <service id="sulu_content.webspace.serializer.event_subscriber"
                  class="Sulu\Bundle\ContentBundle\EventListener\WebspaceSerializeEventSubscriber">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
@@ -57,13 +40,6 @@
             <argument type="string">%kernel.environment%</argument>
 
             <tag name="jms_serializer.event_subscriber" />
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
-        <!-- roles -->
-        <service id="sulu_content.roles_content_navigation_provider"
-                 class="Sulu\Bundle\ContentBundle\Admin\RolesContentNavigationProvider">
-            <tag name="sulu_admin.content_navigation" alias="roles"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 

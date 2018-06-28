@@ -178,23 +178,6 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * returns all fields that can be used by list.
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function fieldsAction(Request $request)
-    {
-        if ((bool) $request->get('accountContacts')) {
-            return $this->handleView($this->view(array_values($this->getAccountContactFieldDescriptors()), 200));
-        }
-
-        // default contacts list
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
-    }
-
-    /**
      * lists all contacts
      * optional parameter 'flat' calls listAction.
      *

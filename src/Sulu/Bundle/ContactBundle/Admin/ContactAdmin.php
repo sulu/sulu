@@ -25,44 +25,9 @@ class ContactAdmin extends Admin
      */
     private $securityChecker;
 
-    public function __construct(SecurityCheckerInterface $securityChecker, $title)
+    public function __construct(SecurityCheckerInterface $securityChecker)
     {
         $this->securityChecker = $securityChecker;
-
-        if (!$this->securityChecker) {
-            return;
-        }
-
-        $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('navigation.modules');
-        $section->setPosition(20);
-
-        $contacts = new NavigationItem('navigation.contacts');
-        $contacts->setPosition(30);
-        $contacts->setIcon('user');
-
-        if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
-            $people = new NavigationItem('navigation.contacts.people');
-            $people->setPosition(10);
-            $people->setIcon('users');
-            $people->setAction('contacts/contacts');
-            $contacts->addChild($people);
-        }
-
-        if ($this->securityChecker->hasPermission('sulu.contact.organizations', PermissionTypes::VIEW)) {
-            $companies = new NavigationItem('navigation.contacts.companies');
-            $companies->setPosition(20);
-            $companies->setIcon('building');
-            $companies->setAction('contacts/accounts');
-            $contacts->addChild($companies);
-        }
-
-        if ($contacts->hasChildren()) {
-            $rootNavigationItem->addChild($section);
-            $section->addChild($contacts);
-        }
-
-        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
     public function getNavigationItemContacts(): NavigationItem
@@ -74,7 +39,7 @@ class ContactAdmin extends Admin
         return $contacts;
     }
 
-    public function getNavigationV2(): Navigation
+    public function getNavigation(): Navigation
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
         $contacts = $this->getNavigationItemContacts();
@@ -144,14 +109,6 @@ class ContactAdmin extends Admin
                 ->addOption('backRoute', 'sulu_contact.accounts_datagrid')
                 ->setParent('sulu_contact.account_edit_form'),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getJsBundleName()
-    {
-        return 'sulucontact';
     }
 
     /**

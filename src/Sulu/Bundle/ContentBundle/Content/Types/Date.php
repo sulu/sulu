@@ -21,13 +21,9 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class Date extends SimpleContentType
 {
-    private $template;
-
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('Date');
-
-        $this->template = $template;
     }
 
     /**
@@ -69,14 +65,6 @@ class Date extends SimpleContentType
         $property->setValue($value);
 
         return $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

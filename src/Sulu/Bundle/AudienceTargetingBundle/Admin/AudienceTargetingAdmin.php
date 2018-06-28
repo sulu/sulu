@@ -55,8 +55,6 @@ class AudienceTargetingAdmin extends Admin
             $section->addChild($settings);
             $rootNavigationItem->addChild($section);
         }
-
-        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
     /**
@@ -76,13 +74,5 @@ class AudienceTargetingAdmin extends Admin
                 ],
             ],
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getJsBundleName()
-    {
-        return 'suluaudiencetargeting';
     }
 }

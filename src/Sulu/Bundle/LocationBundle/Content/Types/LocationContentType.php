@@ -31,11 +31,6 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
     private $nodeRepository;
 
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var MapManager
      */
     private $mapManager;
@@ -47,22 +42,12 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
 
     public function __construct(
         NodeRepositoryInterface $nodeRepository,
-        $template,
         MapManager $mapManager,
         $geolocatorName
     ) {
         $this->nodeRepository = $nodeRepository;
-        $this->template = $template;
         $this->mapManager = $mapManager;
         $this->geolocatorName = $geolocatorName;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

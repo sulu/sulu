@@ -120,7 +120,6 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $this->configureDocumentManager($config, $container);
         $this->configurePathSegmentRegistry($config, $container);
 
-        $loader->load('admin.xml');
         $loader->load('core.xml');
         $loader->load('behaviors.xml');
         $loader->load('serializer.xml');

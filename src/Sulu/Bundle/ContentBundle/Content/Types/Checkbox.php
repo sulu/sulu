@@ -20,18 +20,9 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class Checkbox extends SimpleContentType
 {
-    /**
-     * form template for content type.
-     *
-     * @var string
-     */
-    private $template;
-
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('Checkbox', false);
-
-        $this->template = $template;
     }
 
     /**
@@ -52,16 +43,6 @@ class Checkbox extends SimpleContentType
         } else {
             $node->setProperty($property->getName(), false);
         }
-    }
-
-    /**
-     * returns a template to render a form.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

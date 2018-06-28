@@ -20,11 +20,6 @@ class ConfigurationTest extends TestCase
     use ConfigurationTestCaseTrait;
 
     protected $expectedDefaultConfig = [
-        'types' => [
-            'location' => [
-                'template' => 'SuluLocationBundle:Template:content-types/location.html.twig',
-            ],
-        ],
         'enabled_providers' => ['leaflet', 'google'],
         'default_provider' => 'leaflet',
         'geolocator' => 'nominatim',

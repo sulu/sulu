@@ -28,27 +28,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_category')
-            ->children()
-                ->arrayNode('content')
-                ->addDefaultsIfNotSet()
-                    ->children()
-                        ->arrayNode('types')
-                        ->addDefaultsIfNotSet()
-                            ->children()
-                                ->arrayNode('category_list')
-                                ->addDefaultsIfNotSet()
-                                    ->children()
-                                        ->scalarNode('template')
-                                            ->defaultValue('SuluCategoryBundle:Template:content-types/category_list.html.twig')
-                                        ->end()
-                                    ->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ->end();
+        $rootNode = $treeBuilder->root('sulu_category');
 
         $this->addObjectsSection($rootNode);
 

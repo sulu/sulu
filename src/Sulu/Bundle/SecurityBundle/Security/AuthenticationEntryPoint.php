@@ -11,10 +11,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
@@ -25,26 +23,10 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
     /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator)
-    {
-        $this->urlGenerator = $urlGenerator;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        if (0 === strpos($request->getPathInfo(), '/admin/api') || $request->isXmlHttpRequest()) {
-            $response = new Response('', 401);
-        } else {
-            $response = new RedirectResponse($this->urlGenerator->generate('sulu_admin.login'));
-        }
-
-        return $response;
+        return new Response('', 401);
     }
 }

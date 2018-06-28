@@ -27,7 +27,6 @@
             <argument type="service" id="sulu_snippet.resolver"/>
             <argument type="service" id="sulu_snippet.reference_store.snippet"/>
             <argument>%sulu_snippet.content-type.default_enabled%</argument>
-            <argument>%sulu_snippet.content-type.template%</argument>
 
             <tag name="sulu.content.type" alias="snippet"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />

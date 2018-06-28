@@ -42,44 +42,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
 
     protected $unsortable = [];
 
-    protected $fieldsDefault = [
-        'name',
-    ];
-
-    protected $fieldsValidation = [
-        'name' => [
-            'required' => true,
-        ],
-    ];
-
-    protected $fieldsEditable = [
-        'name',
-    ];
-
-    protected $fieldsExcluded = [];
-
-    protected $fieldsHidden = [
-        'created',
-        'id',
-        'creator_contact_lastName',
-        'changed',
-    ];
-
-    protected $fieldsRelations = [
-        'creator_contact_lastName',
-    ];
-
-    protected $fieldsSortOrder = [
-        '0' => 'name',
-        '1' => 'creator_contact_lastName',
-        '2' => 'changed',
-    ];
-
-    protected $fieldsTranslationKeys = [
-        'name' => 'tags.name',
-        'creator_contact_lastName' => 'tags.author',
-    ];
-
     protected $bundlePrefix = 'tags.';
 
     /**
@@ -88,18 +50,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
     private function getManager()
     {
         return $this->get('sulu_tag.tag_manager');
-    }
-
-    /**
-     * returns all fields that can be used by list.
-     *
-     * @Get("tags/fields")
-     *
-     * @return mixed
-     */
-    public function getFieldsAction()
-    {
-        return $this->handleView($this->view(array_values($this->getManager()->getFieldDescriptors())));
     }
 
     /**

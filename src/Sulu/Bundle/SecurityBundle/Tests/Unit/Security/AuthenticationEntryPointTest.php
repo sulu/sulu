@@ -29,38 +29,9 @@ class AuthenticationEntryPointTest extends TestCase
         $this->authenticationEntryPoint = new AuthenticationEntryPoint($urlGenerator->reveal());
     }
 
-    public function provideUrlData()
-    {
-        return [
-            [
-                '/admin/api/test',
-                401,
-            ],
-            [
-                '/admin/template/test',
-                302,
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider provideUrlData
-     */
-    public function testStart($url, $statusCode)
+    public function testStart()
     {
         $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
-        $request->getPathInfo()->willReturn($url);
-        $request->isXmlHttpRequest()->willReturn(false);
-        $result = $this->authenticationEntryPoint->start($request->reveal());
-
-        $this->assertEquals($statusCode, $result->getStatusCode());
-    }
-
-    public function testStartAjax()
-    {
-        $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
-        $request->isXmlHttpRequest()->willReturn(true);
-        $request->getPathInfo()->willReturn(true);
         $result = $this->authenticationEntryPoint->start($request->reveal());
 
         $this->assertEquals(401, $result->getStatusCode());

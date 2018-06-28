@@ -25,11 +25,6 @@ class TextEditor extends SimpleContentType
     const INVALID_REGEX = '/(<%s:[a-z]+\b[^\/>]*)(\/>|>[^<]*<\/%s:[^\/>]*>)/';
 
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var MarkupParserInterface
      */
     private $markupParser;
@@ -39,11 +34,10 @@ class TextEditor extends SimpleContentType
      */
     private $markupNamespace;
 
-    public function __construct($template, MarkupParserInterface $markupParser, $markupNamespace = 'sulu')
+    public function __construct(MarkupParserInterface $markupParser, $markupNamespace = 'sulu')
     {
         parent::__construct('TextEditor', '');
 
-        $this->template = $template;
         $this->markupParser = $markupParser;
         $this->markupNamespace = $markupNamespace;
     }
@@ -115,14 +109,6 @@ class TextEditor extends SimpleContentType
     private function removeValidation($content)
     {
         return preg_replace('/ sulu:validation-state="[a-zA-Z ]*"/', '', $content);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

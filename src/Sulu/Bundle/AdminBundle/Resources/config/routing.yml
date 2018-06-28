@@ -1,66 +1,25 @@
-sulu_admin_v2:
-    path:  /v2
-    defaults:
-        _controller: sulu_admin.admin_controller:indexV2Action
-
-sulu_admin_v2.config:
-    path: /v2/config
-    defaults:
-        _controller: sulu_admin.admin_controller:configV2Action
-
-sulu_admin_v2.translation:
-    path: /v2/translations
-    defaults:
-        _controller: sulu_admin.admin_controller:translationsAction
-
-sulu_admin_v2.resources:
-    path: /resources/{resource}
-    defaults:
-        _controller: sulu_admin.admin_controller:resourcesAction
-
 sulu_admin:
     path:  /
     defaults:
         _controller: sulu_admin.admin_controller:indexAction
-
-sulu_admin.widget_group:
-    path: /widget-groups/{groupAlias}
-    defaults: { _controller: SuluAdminBundle:WidgetGroups:group }
-
-sulu_admin.navigation:
-    type: rest
-    resource: Sulu\Bundle\AdminBundle\Controller\NavigationsController
-
-sulu_admin.content_navigation:
-    type: rest
-    resource: sulu_admin.content_navigation_controller
-
-sulu_admin.routes:
-    path: /bundles
-    defaults:
-        _controller: sulu_admin.admin_controller:bundlesAction
 
 sulu_admin.config:
     path: /config
     defaults:
         _controller: sulu_admin.admin_controller:configAction
 
-sulu_admin.contexts:
-    path: /contexts
+sulu_admin.translation:
+    path: /translations
     defaults:
-        _controller: sulu_admin.admin_controller:contextsAction
+        _controller: sulu_admin.admin_controller:translationsAction
 
-sulu_admin.csv_export.form:
-    path: /templates/csv-export-form
+sulu_admin.resources:
+    path: /resources/{resource}
     defaults:
-        _controller: sulu_admin.template_controller:csvExportFormAction
+        _controller: sulu_admin.admin_controller:resourcesAction
 
-sulu_admin.login:
+sulu_admin.login_check:
     path: /login
-    defaults: { _controller: SuluAdminBundle:Security:login }
-
-sulu_admin.login_check_v2:
-    path: /v2/login
 
 sulu_admin.logout:
     path: /logout
@@ -68,6 +27,3 @@ sulu_admin.logout:
 sulu_admin.reset:
     path: /reset/{token}
     defaults: { _controller: SuluAdminBundle:Security:reset }
-
-sulu_admin.login_check:
-    path: /login_check

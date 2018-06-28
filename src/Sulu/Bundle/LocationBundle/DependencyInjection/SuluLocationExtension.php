@@ -30,24 +30,9 @@ class SuluLocationExtension extends Extension
         $loader->load('services.xml');
         $loader->load('geolocator.xml');
 
-        $this->configureContentTypes($config, $container);
         $this->configureMapManager($config, $container);
 
         $this->configureGeolocators($config, $container);
-    }
-
-    /**
-     * Configure the sulu content types.
-     *
-     * @param array $config - Resolved configuration
-     * @param ContainerBuilder
-     */
-    private function configureContentTypes($config, $container)
-    {
-        $container->setParameter(
-            'sulu.content.type.location.template',
-            $config['types']['location']['template']
-        );
     }
 
     /**

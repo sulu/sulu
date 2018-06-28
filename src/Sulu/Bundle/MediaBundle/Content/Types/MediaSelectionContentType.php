@@ -33,20 +33,14 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     private $mediaManager;
 
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var ReferenceStoreInterface
      */
     private $referenceStore;
 
-    public function __construct(MediaManagerInterface $mediaManager, ReferenceStoreInterface $referenceStore, $template)
+    public function __construct(MediaManagerInterface $mediaManager, ReferenceStoreInterface $referenceStore)
     {
         $this->mediaManager = $mediaManager;
         $this->referenceStore = $referenceStore;
-        $this->template = $template;
     }
 
     /**
@@ -139,14 +133,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         if ($node->hasProperty($property->getName())) {
             $node->getProperty($property->getName())->remove();
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

@@ -25,38 +25,12 @@ class SecurityAdmin extends Admin
      */
     private $securityChecker;
 
-    public function __construct(SecurityCheckerInterface $securityChecker, $title)
+    public function __construct(SecurityCheckerInterface $securityChecker)
     {
         $this->securityChecker = $securityChecker;
-
-        if (!$this->securityChecker) {
-            return;
-        }
-
-        $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('navigation.modules');
-        $section->setPosition(20);
-
-        $settings = new NavigationItem('navigation.settings');
-        $settings->setPosition(40);
-        $settings->setIcon('gear');
-
-        if ($this->securityChecker->hasPermission('sulu.security.roles', PermissionTypes::VIEW)) {
-            $roles = new NavigationItem('security.roles.title', $settings);
-            $roles->setPosition(10);
-            $roles->setAction('settings/roles');
-            $roles->setIcon('gear');
-        }
-
-        if ($settings->hasChildren()) {
-            $section->addChild($settings);
-            $rootNavigationItem->addChild($section);
-        }
-
-        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    public function getNavigationV2(): Navigation
+    public function getNavigation(): Navigation
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
 
@@ -117,13 +91,5 @@ class SecurityAdmin extends Admin
                 ->addOption('idQueryParameter', 'contactId')
                 ->setParent('sulu_contact.contact_edit_form'),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getJsBundleName()
-    {
-        return 'sulusecurity';
     }
 }

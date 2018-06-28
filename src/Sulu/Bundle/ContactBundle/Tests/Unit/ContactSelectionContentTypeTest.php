@@ -33,11 +33,6 @@ class ContactSelectionContentTypeTest extends TestCase
     /**
      * @var string
      */
-    private $template = '@TestBundle:Templates:my-template.html.twig';
-
-    /**
-     * @var string
-     */
     private $webspaceKey = 'sulu_test';
 
     /**
@@ -115,26 +110,9 @@ class ContactSelectionContentTypeTest extends TestCase
         $this->contactReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
     }
 
-    public function testGetTemplate()
-    {
-        $type = new ContactSelectionContentType(
-            $this->template,
-            $this->contactManager->reveal(),
-            $this->accountManager->reveal(),
-            $this->serializer->reveal(),
-            new CustomerIdConverter(),
-            new IndexComparator(),
-            $this->accountReferenceStore->reveal(),
-            $this->contactReferenceStore->reveal()
-        );
-
-        $this->assertEquals($this->template, $type->getTemplate());
-    }
-
     public function testRead()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -161,7 +139,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testReadNull()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -188,7 +165,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testReadPropertyNotExists()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -215,7 +191,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testWrite()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -242,7 +217,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testWriteNull()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -270,7 +244,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testRemove()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -303,7 +276,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testGetViewData()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -321,7 +293,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testGetDefaultValue()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -339,7 +310,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testGetDefaultParams()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -363,7 +333,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testHasValue()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -390,7 +359,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testGetContentDataOnlyContact()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -433,7 +401,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testGetContentDataCombined()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -476,7 +443,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testGetContentDataOrderOnlyContact()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -520,7 +486,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testGetContentDataEmpty()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -542,7 +507,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testGetContentDataNull()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -564,7 +528,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testGetContentDataWrongType()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -586,7 +549,6 @@ class ContactSelectionContentTypeTest extends TestCase
     public function testPreResolve()
     {
         $type = new ContactSelectionContentType(
-            $this->template,
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),

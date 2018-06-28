@@ -53,20 +53,6 @@ class CollectionController extends RestController implements ClassResourceInterf
     protected static $entityKey = 'collections';
 
     /**
-     * returns all fields that can be used by list.
-     *
-     * @Get("collection/fields")
-     *
-     * @return mixed
-     */
-    public function getFieldsAction()
-    {
-        $fieldDescriptors = array_values($this->getCollectionManager()->getFieldDescriptors());
-
-        return $this->handleView($this->view($fieldDescriptors, 200));
-    }
-
-    /**
      * Shows a single collection with the given id.
      *
      * @param $id

@@ -21,23 +21,9 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class MultipleSelect extends SimpleContentType
 {
-    /**
-     * @var string
-     */
-    private $template;
-
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('MultipleSelect', []);
-        $this->template = $template;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

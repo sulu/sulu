@@ -20,23 +20,9 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class SingleSelect extends SimpleContentType
 {
-    /**
-     * @var string
-     */
-    private $template;
-
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('SingleSelect', '');
-        $this->template = $template;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

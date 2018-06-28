@@ -20,16 +20,9 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class Url extends SimpleContentType
 {
-    /**
-     * @var string
-     */
-    private $template;
-
-    public function __construct($template)
+    public function __construct()
     {
         parent::__construct('Url', '');
-
-        $this->template = $template;
     }
 
     /**
@@ -57,15 +50,5 @@ class Url extends SimpleContentType
                 'collection'
             ),
         ];
-    }
-
-    /**
-     * returns a template to render a form.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 }

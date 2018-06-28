@@ -92,17 +92,6 @@ class AccountController extends RestController implements ClassResourceInterface
     protected $accountAddressesFieldDescriptors;
 
     /**
-     * Returns all fields that can be used by list.
-     *
-     * @return mixed
-     */
-    public function fieldsAction()
-    {
-        // Default contacts list.
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
-    }
-
-    /**
      * Lists all contacts of an account.
      * optional parameter 'flat' calls listAction.
      *

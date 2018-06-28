@@ -3,8 +3,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_contact.admin.class">Sulu\Bundle\ContactBundle\Admin\ContactAdmin</parameter>
-        <parameter key="sulu_contact.contact_content_navigation_provider.class">Sulu\Bundle\ContactBundle\Admin\ContactContentNavigationProvider</parameter>
-        <parameter key="sulu_contact.account_content_navigation_provider.class">Sulu\Bundle\ContactBundle\Admin\AccountContentNavigationProvider</parameter>
         <parameter key="sulu_contact.account_listener.class">Sulu\Bundle\ContactBundle\EventListener\AccountListener</parameter>
         <parameter key="sulu_contact.contact_manager.class">Sulu\Bundle\ContactBundle\Contact\ContactManager</parameter>
         <parameter key="sulu_contact.account_manager.class">Sulu\Bundle\ContactBundle\Contact\AccountManager</parameter>
@@ -23,17 +21,8 @@
     <services>
         <service id="sulu_contact.admin" class="%sulu_contact.admin.class%">
             <argument type="service" id="sulu_security.security_checker" />
-            <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-        <service id="sulu_contact.contact_content_navigation_provider" class="%sulu_contact.contact_content_navigation_provider.class%">
-            <tag name="sulu_admin.content_navigation" alias="contact"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-        <service id="sulu_contact.account_content_navigation_provider" class="%sulu_contact.account_content_navigation_provider.class%">
-            <tag name="sulu_admin.content_navigation" alias="account"/>
             <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_contact.contact_title_repository" class="%sulu_contact.contact_title_repository.class%">

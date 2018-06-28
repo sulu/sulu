@@ -29,17 +29,9 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
      */
     private $tagManager;
 
-    /**
-     * Holds the template for rendering this content type in the admin.
-     *
-     * @var string
-     */
-    private $template;
-
-    public function __construct(TagManagerInterface $tagManager, $template)
+    public function __construct(TagManagerInterface $tagManager)
     {
         $this->tagManager = $tagManager;
-        $this->template = $template;
     }
 
     /**
@@ -80,16 +72,6 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
         if ($node->hasProperty($property->getName())) {
             $node->getProperty($property->getName())->remove();
         }
-    }
-
-    /**
-     * returns a template to render a form.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

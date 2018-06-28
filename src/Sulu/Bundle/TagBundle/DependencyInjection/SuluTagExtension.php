@@ -50,12 +50,6 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
 
         $this->configurePersistence($config['objects'], $container);
 
-        // set content types
-        $container->setParameter(
-            'sulu_tag.content.type.tag_list.template',
-            $config['content']['types']['tag_list']['template']
-        );
-
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
     }

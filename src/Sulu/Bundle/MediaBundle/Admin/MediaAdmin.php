@@ -35,33 +35,13 @@ class MediaAdmin extends Admin
 
     public function __construct(
         SecurityCheckerInterface $securityChecker,
-        LocalizationManager $localizationManager,
-        $title
+        LocalizationManager $localizationManager
     ) {
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
-
-        if (!$this->securityChecker) {
-            return;
-        }
-
-        $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('navigation.modules');
-        $section->setPosition(20);
-
-        if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {
-            $media = new NavigationItem('navigation.media');
-            $media->setPosition(20);
-            $media->setIcon('image');
-            $media->setAction('media/collections');
-            $section->addChild($media);
-            $rootNavigationItem->addChild($section);
-        }
-
-        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    public function getNavigationV2(): Navigation
+    public function getNavigation(): Navigation
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
 
@@ -77,14 +57,6 @@ class MediaAdmin extends Admin
         }
 
         return new Navigation($rootNavigationItem);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getJsBundleName()
-    {
-        return 'sulumedia';
     }
 
     /**

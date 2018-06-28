@@ -31,11 +31,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var TagManagerInterface
      */
     private $tagManager;
@@ -92,7 +87,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
      * @param CategoryRequestHandlerInterface $categoryRequestHandler
      * @param ReferenceStoreInterface $tagReferenceStore
      * @param ReferenceStoreInterface $categoryReferenceStore
-     * @param string $template
      * @param TargetGroupStoreInterface $targetGroupStore
      */
     public function __construct(
@@ -103,7 +97,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         CategoryRequestHandlerInterface $categoryRequestHandler,
         ReferenceStoreInterface $tagReferenceStore,
         ReferenceStoreInterface $categoryReferenceStore,
-        $template,
         TargetGroupStoreInterface $targetGroupStore = null
     ) {
         $this->dataProviderPool = $dataProviderPool;
@@ -113,7 +106,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $this->categoryRequestHandler = $categoryRequestHandler;
         $this->tagReferenceStore = $tagReferenceStore;
         $this->categoryReferenceStore = $categoryReferenceStore;
-        $this->template = $template;
         $this->targetGroupStore = $targetGroupStore;
     }
 
@@ -229,14 +221,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             $defaults,
             $provider->getDefaultPropertyParameter()
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

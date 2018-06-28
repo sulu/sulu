@@ -128,28 +128,23 @@
 
         <!-- simple content types -->
         <service id="sulu.content.type.number" class="%sulu.content.type.number.class%">
-            <argument>%sulu.content.type.text_line.template%</argument>
             <tag name="sulu.content.type" alias="number"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
         <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%">
-            <argument>%sulu.content.type.text_line.template%</argument>
             <tag name="sulu.content.type" alias="text_line"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
         <service id="sulu.content.type.text_area" class="%sulu.content.type.text_line.class%">
-            <argument>%sulu.content.type.text_area.template%</argument>
             <tag name="sulu.content.type" alias="text_area"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
         <service id="sulu.content.type.text_editor" class="%sulu.content.type.text_editor.class%">
-            <argument>%sulu.content.type.text_editor.template%</argument>
             <argument type="service" id="sulu_markup.parser"/>
             <tag name="sulu.content.type" alias="text_editor"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
         <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
-            <argument>%sulu.content.type.resource_locator.template%</argument>
             <tag name="sulu.content.type" alias="resource_locator"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
@@ -157,7 +152,6 @@
         <!-- complex content types -->
         <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
             <argument type="service" id="sulu.content.type_manager"/>
-            <argument>%sulu.content.type.block.template%</argument>
             <argument>%sulu.content.language.namespace%</argument>
             <tag name="sulu.content.type" alias="block"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
