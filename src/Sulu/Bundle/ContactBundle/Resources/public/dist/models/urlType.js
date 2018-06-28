@@ -1,1 +1,0 @@
-define(["mvc/relationalmodel"],function(a){return a({defaults:{id:null,name:""}})});

@@ -1,1 +1,0 @@
-define(["mvc/relationalmodel"],function(a){"use strict";return a({urlRoot:"/admin/api/categories",defaults:function(){return{id:null,key:null,name:"",meta:[]}}})});
