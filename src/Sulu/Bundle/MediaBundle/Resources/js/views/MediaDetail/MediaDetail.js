@@ -55,28 +55,30 @@ class MediaDetail extends React.Component<Props> {
 
     render() {
         return (
-            <Grid className={mediaDetailStyles.mediaDetail}>
-                <Grid.Section size={4} className={mediaDetailStyles.imageSection}>
-                    <Grid.Item>
-                        <SingleMediaUpload
-                            deletable={false}
-                            downloadable={false}
-                            imageSize="sulu-400x400-inset"
-                            mediaUploadStore={this.mediaUploadStore}
-                            uploadText={translate('sulu_media.upload_or_replace')}
-                        />
-                    </Grid.Item>
-                </Grid.Section>
-                <Grid.Section size={8}>
-                    <Grid.Item>
-                        <Form
-                            ref={this.setFormRef}
-                            store={this.formStore}
-                            onSubmit={this.handleSubmit}
-                        />
-                    </Grid.Item>
-                </Grid.Section>
-            </Grid>
+            <div className={mediaDetailStyles.mediaDetail}>
+                <Grid>
+                    <Grid.Section size={4} className={mediaDetailStyles.imageSection}>
+                        <Grid.Item>
+                            <SingleMediaUpload
+                                deletable={false}
+                                downloadable={false}
+                                imageSize="sulu-400x400-inset"
+                                mediaUploadStore={this.mediaUploadStore}
+                                uploadText={translate('sulu_media.upload_or_replace')}
+                            />
+                        </Grid.Item>
+                    </Grid.Section>
+                    <Grid.Section size={8}>
+                        <Grid.Item className={mediaDetailStyles.form}>
+                            <Form
+                                ref={this.setFormRef}
+                                store={this.formStore}
+                                onSubmit={this.handleSubmit}
+                            />
+                        </Grid.Item>
+                    </Grid.Section>
+                </Grid>
+            </div>
         );
     }
 }

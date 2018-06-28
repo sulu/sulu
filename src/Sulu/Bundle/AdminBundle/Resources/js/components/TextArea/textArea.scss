@@ -3,11 +3,13 @@
 $textareaBorderColor: $silver;
 $textareaErrorBorderColor: $persianRed;
 $textareaBackgroundColor: $white;
+$textareaColor: $black;
 
 .text-area {
     width: 100%;
     min-height: 75px;
     background-color: $textareaBackgroundColor;
+    color: $textareaColor;
     padding: 10px;
     border: 1px solid $textareaBorderColor;
     border-radius: 3px;

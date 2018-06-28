@@ -2,70 +2,74 @@
 
 exports[`Render a loading MediaDetail view 1`] = `
 <div
-  class="grid mediaDetail"
+  class="mediaDetail"
 >
   <div
-    class="section imageSection size size-4 space-before-0 space-after-0"
+    class="grid"
   >
     <div
-      class="item size size-12 space-before-0 space-after-0"
+      class="section imageSection size size-4 space-before-0 space-after-0"
     >
       <div
-        aria-disabled="false"
-        class="mediaContainer default"
-        style="position: relative;"
+        class="item size size-12 space-before-0 space-after-0"
       >
-        <img
-          class="thumbnail"
-          src="sulu-400x400-inset"
-        />
         <div
-          class="uploadIndicatorContainer"
+          aria-disabled="false"
+          class="mediaContainer default"
+          style="position: relative;"
         >
+          <img
+            class="thumbnail"
+            src="sulu-400x400-inset"
+          />
           <div
-            class="uploadIndicator"
+            class="uploadIndicatorContainer"
           >
-            <div>
-              <span
-                aria-label="fa-cloud-upload"
-                class="uploadIcon fa fa-cloud-upload"
-              />
-              <div
-                class="uploadInfoText"
-              >
-                Upload or replace
+            <div
+              class="uploadIndicator"
+            >
+              <div>
+                <span
+                  aria-label="fa-cloud-upload"
+                  class="uploadIcon fa fa-cloud-upload"
+                />
+                <div
+                  class="uploadInfoText"
+                >
+                  Upload or replace
+                </div>
               </div>
             </div>
           </div>
+          <input
+            autocomplete="off"
+            style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.00001; pointer-events: none;"
+            type="file"
+          />
         </div>
-        <input
-          autocomplete="off"
-          style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.00001; pointer-events: none;"
-          type="file"
+        <div
+          class="buttons"
         />
+        <div />
       </div>
-      <div
-        class="buttons"
-      />
-      <div />
     </div>
-  </div>
-  <div
-    class="section size size-8 space-before-0 space-after-0"
-  >
     <div
-      class="item size size-12 space-before-0 space-after-0"
+      class="section size size-8 space-before-0 space-after-0"
     >
       <div
-        class="spinner"
-        style="width: 40px; height: 40px;"
+        class="item form size size-12 space-before-0 space-after-0"
       >
         <div
-          class="doubleBounce1"
-        />
-        <div
-          class="doubleBounce2"
-        />
+          class="spinner"
+          style="width: 40px; height: 40px;"
+        >
+          <div
+            class="doubleBounce1"
+          />
+          <div
+            class="doubleBounce2"
+          />
+        </div>
       </div>
     </div>
   </div>

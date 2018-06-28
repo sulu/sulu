@@ -15,7 +15,7 @@ $buttonCellBorderColor: $white;
 $buttonCellColor: $buttonCellBackgroundColorHover;
 $buttonCellColorHover: $buttonCellBackgroundColor;
 $emptyMessageColor: $silver;
-$rowMinHeight: 40px;
+$rowHeight: 40px;
 $paddingCell: 4px;
 $borderWidth: 1px;
 
@@ -110,6 +110,8 @@ $borderWidth: 1px;
 }
 
 .row {
+    height: $rowHeight;
+
     &:hover {
         .cell {
             border-color: $cellBorderColorActive;
@@ -133,6 +135,7 @@ $borderWidth: 1px;
 .cell,
 .button-cell {
     margin: 0;
+    height: $rowHeight;
     padding: $paddingCell 20px;
     font-size: 12px;
     border-width: $borderWidth 0;
@@ -158,7 +161,7 @@ $borderWidth: 1px;
 
 .cell-content {
     height: 100%;
-    min-height: calc($rowMinHeight - $paddingCell * 2 - $borderWidth * 2);
+    min-height: calc($rowHeight - $paddingCell * 2 - $borderWidth * 2);
     display: flex;
     align-items: center;
 }
@@ -182,6 +185,7 @@ $borderWidth: 1px;
         visibility: hidden;
         width: 100%;
         height: 100%;
+        padding: 0;
         border: none;
         color: $buttonCellBackgroundColorHover;
         cursor: pointer;
