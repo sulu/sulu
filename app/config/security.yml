@@ -21,7 +21,7 @@ security:
         - { path: ^/admin/translations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/config, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_USER }
 
     firewalls:
         admin:
