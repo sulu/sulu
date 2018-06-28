@@ -1,29 +1,6 @@
 // @flow
 import Requester from '../Requester';
 
-test('Should execute GET request and return JSON', () => {
-    const response = {
-        json: jest.fn(),
-        ok: true,
-    };
-    response.json.mockReturnValue('test');
-    const promise = new Promise((resolve) => resolve(response));
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
-
-    const requestPromise = Requester.get('/some-url').then((data) => {
-        expect(data).toBe('test');
-    });
-
-    expect(window.fetch).toBeCalledWith('/some-url', {
-        credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
-    });
-
-    return requestPromise;
-});
-
 test('Should execute GET request and reject with response when the response contains error', () => {
     const response = {
         ok: false,
@@ -42,12 +19,45 @@ test('Should execute GET request and reject with response when the response cont
     });
 });
 
+test('Should execute GET request and replace null and empty string with undefined', () => {
+    const response = {
+        json: jest.fn(),
+        ok: true,
+    };
+    response.json.mockReturnValue(Promise.resolve({
+        test1: undefined,
+        test2: null,
+        test3: '',
+        test4: 'something',
+    }));
+    const promise = new Promise((resolve) => resolve(response));
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    const requestPromise = Requester.get('/some-url').then((data) => {
+        expect(data).toEqual({
+            test1: undefined,
+            test2: undefined,
+            test3: undefined,
+            test4: 'something',
+        });
+    });
+
+    expect(window.fetch).toBeCalledWith('/some-url', {
+        credentials: 'same-origin',
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+    });
+
+    return requestPromise;
+});
+
 test('Should execute POST request and return JSON', () => {
     const response = {
         json: jest.fn(),
         ok: true,
     };
-    response.json.mockReturnValue('test');
+    response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}))
     const promise = new Promise((resolve) => resolve(response));
 
     window.fetch = jest.fn();
@@ -59,7 +69,7 @@ test('Should execute POST request and return JSON', () => {
         test: undefined,
     };
     const requestPromise = Requester.post('/some-url', data).then((response) => {
-        expect(response).toBe('test');
+        expect(response).toEqual({test: undefined, value: 'test'});
     });
 
     expect(window.fetch).toBeCalledWith('/some-url', {
@@ -81,7 +91,7 @@ test('Should execute PUT request and return JSON', () => {
         json: jest.fn(),
         ok: true,
     };
-    response.json.mockReturnValue('test');
+    response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}));
     const promise = new Promise((resolve) => resolve(response));
 
     window.fetch = jest.fn();
@@ -93,7 +103,7 @@ test('Should execute PUT request and return JSON', () => {
         test: undefined,
     };
     const requestPromise = Requester.put('/some-url', data).then((response) => {
-        expect(response).toBe('test');
+        expect(response).toEqual({test: undefined, value: 'test'});
     });
 
     expect(window.fetch).toBeCalledWith('/some-url', {
@@ -115,14 +125,14 @@ test('Should execute DELETE request and return JSON', () => {
         json: jest.fn(),
         ok: true,
     };
-    response.json.mockReturnValue('test');
+    response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}));
     const promise = new Promise((resolve) => resolve(response));
 
     window.fetch = jest.fn();
     window.fetch.mockReturnValue(promise);
 
     const requestPromise = Requester.delete('/some-url').then((data) => {
-        expect(data).toBe('test');
+        expect(data).toEqual({test: undefined, value: 'test'});
     });
 
     expect(window.fetch).toBeCalledWith('/some-url', {

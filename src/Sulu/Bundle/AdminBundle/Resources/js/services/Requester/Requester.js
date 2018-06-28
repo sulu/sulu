@@ -9,7 +9,15 @@ const defaultOptions = {
     },
 };
 
-function transformData(data: Object) {
+function transformResponseBody(data: Object) {
+    return Object.keys(data).reduce((transformedData: Object, key) => {
+        const value = data[key];
+        transformedData[key] = value === null || value === '' ? undefined : data[key];
+        return transformedData;
+    }, {});
+}
+
+function transformRequestData(data: Object) {
     return Object.keys(data).reduce((transformedData: Object, key) => {
         transformedData[key] = data[key] === undefined ? null : data[key];
         return transformedData;
@@ -30,7 +38,9 @@ function handleResponse(response: Response) {
         return {};
     }
 
-    return response.json();
+    return response.json().then((data) => {
+        return transformResponseBody(data);
+    });
 }
 
 export default class Requester {
@@ -42,12 +52,12 @@ export default class Requester {
     }
 
     static post(url: string, data: Object): Promise<Object> {
-        return fetch(url, {...defaultOptions, method: 'POST', body: JSON.stringify(transformData(data))})
+        return fetch(url, {...defaultOptions, method: 'POST', body: JSON.stringify(transformRequestData(data))})
             .then(handleResponse);
     }
 
     static put(url: string, data: Object): Promise<Object> {
-        return fetch(url, {...defaultOptions, method: 'PUT', body: JSON.stringify(transformData(data))})
+        return fetch(url, {...defaultOptions, method: 'PUT', body: JSON.stringify(transformRequestData(data))})
             .then(handleResponse);
     }
 
