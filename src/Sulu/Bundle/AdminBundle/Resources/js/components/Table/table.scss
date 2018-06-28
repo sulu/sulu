@@ -133,6 +133,7 @@ $borderWidth: 1px;
 .cell,
 .button-cell {
     margin: 0;
+    height: 100%;
     padding: $paddingCell 20px;
     font-size: 12px;
     border-width: $borderWidth 0;
