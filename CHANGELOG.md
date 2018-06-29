@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.5
+* 1.5.16 (2018-06-29)
     * ENHANCEMENT #4028 [MediaBundle]           Log errors in image generation
     * ENHANCEMENT #3850 [SecurityBundle]        Allow user to be null for security config
     * ENHANCEMENT #3850 [MediaBundle]           Allow user to be null for security expression in service build
