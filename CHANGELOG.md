@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-master
     * BUGFIX      #4042 [AudienceTargetingBundle] Add symfony 3.4.12 as conflict to fix caching tests
     * HOTFIX      #4019 [Component]               Fix handling of authored date on safari
+    * HOTFIX      #4027 [PreviewBundle]           Fix correct url in preview
     * HOTFIX      #4017 [SnippetBundle]           Fix snippet conflict overlay
     * BUGFIX      #4044 [PreviewBundle]           Fixed support method for PageRouteDefaultsProvider
     * HOTFIX      #4044 [Webspace]                Fixed document creation in webspace-initializer
