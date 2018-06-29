@@ -8,6 +8,11 @@ CHANGELOG for Sulu
     * HOTFIX      #4017 [SnippetBundle]           Fix snippet conflict overlay
     * BUGFIX      #4044 [PreviewBundle]           Fixed support method for PageRouteDefaultsProvider
     * HOTFIX      #4044 [Webspace]                Fixed document creation in webspace-initializer
+    * ENHANCEMENT #4028 [MediaBundle]             Log errors in image generation
+    * ENHANCEMENT #3850 [SecurityBundle]          Allow user to be null for security config
+    * ENHANCEMENT #3850 [MediaBundle]             Allow user to be null for security expression in service build
+    * BUGFIX      #4018 [SnippetBundle]           Fix conflict when saving snippet in new language
+    * BUGFiX      #3995 [TestBundle]              Fix tests for latest Symfony version
 
 * 1.6.19 (2018-05-24)
     * HOTFIX      #3980 [PreviewBundle]           Fix kernel.project_dir parameter for PreviewKernel
