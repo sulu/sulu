@@ -209,7 +209,7 @@ ALTER TABLE me_file_version_meta CHANGE title title VARCHAR(191) NOT NULL;
 ALTER TABLE me_file_versions CHANGE name name VARCHAR(191) NOT NULL;
 ```
 
-Create new tables ca_category_translations_keywords and ca_category_translations_medias
+Create new tables ca_category_translations_keywords and ca_category_translation_medias
 
 ```sql
 CREATE TABLE ca_category_translation_keywords (idKeywords INT NOT NULL, idCategoryTranslations INT NOT NULL, INDEX IDX_D15FBE37F9FC9F05 (idKeywords), INDEX IDX_D15FBE3717CA14DA (idCategoryTranslations), PRIMARY KEY(idKeywords, idCategoryTranslations)) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB;
@@ -230,7 +230,7 @@ INSERT INTO ca_category_translation_keywords (idKeywords, idCategoryTranslations
 DROP TABLE ca_category_translations_keywords;
 ```
 
-Migrate values from category_translation_media_interface to ca_category_translations_medias:
+Migrate values from category_translation_media_interface to ca_category_translation_medias:
 
 ```sql
 INSERT INTO ca_category_translation_medias (idCategoryTranslations, idMedia) SELECT category_translation_id, media_interface_id FROM category_translation_media_interface;
