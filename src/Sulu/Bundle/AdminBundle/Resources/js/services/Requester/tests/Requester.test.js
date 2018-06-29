@@ -57,7 +57,7 @@ test('Should execute POST request and return JSON', () => {
         json: jest.fn(),
         ok: true,
     };
-    response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}))
+    response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}));
     const promise = new Promise((resolve) => resolve(response));
 
     window.fetch = jest.fn();

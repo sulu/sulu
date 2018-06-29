@@ -89,25 +89,28 @@ class UserStore {
         if (this.resetSuccess) {
             // if email was already sent use different api
             return Requester.post(Config.endpoints.resetResend, {user: user})
+                .then(() => {
+                    this.setLoading(false);
+                })
                 .catch((error) => {
                     if (error.status !== 400) {
                         return Promise.reject(error);
                     }
-                })
-                .finally(() => {
                     this.setLoading(false);
                 });
         }
 
         return Requester.post(Config.endpoints.reset, {user: user})
+            .then(() => {
+                this.setLoading(false);
+                this.setResetSuccess(true);
+            })
             .catch((error) => {
+                this.setLoading(false);
+                this.setResetSuccess(true);
                 if (error.status !== 400) {
                     return Promise.reject(error);
                 }
-            })
-            .finally(() => {
-                this.setLoading(false);
-                this.setResetSuccess(true);
             });
     }
 

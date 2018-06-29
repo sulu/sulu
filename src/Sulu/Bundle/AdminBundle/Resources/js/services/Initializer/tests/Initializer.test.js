@@ -132,7 +132,7 @@ test('Should initialize when everything works', () => {
     expect(initializer.loading).toBe(true);
 
     return initPromise
-        .finally(() => {
+        .then(() => {
             expect(setTranslations).toBeCalledWith(translationData);
             expect(initializer.initializedTranslationsLocale).toBe('en');
             expect(moment.locale).toBeCalledWith('en-US');
@@ -202,7 +202,7 @@ test('Should not reinitialize everything when it was already initialized', () =>
     expect(initializer.loading).toBe(true);
 
     return initPromise
-        .finally(() => {
+        .then(() => {
             expect(setTranslations).not.toBeCalled();
 
             // static things
@@ -251,7 +251,7 @@ test('Should not crash when the config request throws an 401 error', () => {
     expect(initializer.loading).toBe(true);
 
     return initPromise
-        .finally(() => {
+        .catch(() => {
             expect(setTranslations).toBeCalledWith(translationData);
             expect(initializer.initializedTranslationsLocale).toBe('en');
             expect(initializer.initialized).toBe(false);

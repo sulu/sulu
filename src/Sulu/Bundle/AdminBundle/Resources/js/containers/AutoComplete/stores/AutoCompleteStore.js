@@ -36,9 +36,12 @@ export default class AutoCompleteStore {
         }).then(action((response) => {
             this.clearSearchResults();
             this.searchResults.push(...response._embedded[resourceKey]);
-            return this.searchResults;
-        })).finally(action(() => {
             this.loading = false;
-        }));
+            return this.searchResults;
+        })).catch(action(() => {
+            this.loading = false;
+        })).then(() => {
+            return [];
+        });
     };
 }

@@ -15,7 +15,7 @@ entries.unshift('core-js/fn/array/includes');
 entries.unshift('core-js/fn/array/find-index');
 entries.unshift('core-js/fn/array/fill');
 entries.unshift('core-js/fn/array/from');
-entries.unshift('core-js/fn/promise');
+entries.unshift('core-js/library/fn/promise');
 entries.unshift('core-js/fn/symbol');
 entries.unshift('whatwg-fetch');
 entries.unshift('url-search-params-polyfill');
