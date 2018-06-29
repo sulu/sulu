@@ -697,40 +697,6 @@ class AccountControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
         $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
         $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
-
-        $client->request('GET', '/api/accounts/' . $response->id);
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals('A small notice', $response->note);
-        $this->assertEquals(1, $response->depth);
-        $this->assertEquals($this->account->getId(), $response->parent->id);
-        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
-        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
-        $this->assertEquals('123456789', $response->phones[0]->phone);
-        $this->assertEquals('987654321', $response->phones[1]->phone);
-        $this->assertEquals('123456789-1', $response->faxes[0]->fax);
-        $this->assertEquals('987654321-1', $response->faxes[1]->fax);
-        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
-        $this->assertEquals('1', $response->addresses[0]->number);
-        $this->assertEquals('0000', $response->addresses[0]->zip);
-        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
-        $this->assertEquals('Musterstate', $response->addresses[0]->state);
-        $this->assertEquals('Note 1', $response->notes[0]->value);
-        $this->assertEquals('Note 2', $response->notes[1]->value);
-
-        $this->assertEquals(true, $response->addresses[0]->billingAddress);
-        $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
-        $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
-        $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
-        $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
-
-        $this->assertObjectHasAttribute('logo', $response);
-        $this->assertEquals($this->logo->getId(), $response->logo->id);
-        $this->assertObjectHasAttribute('thumbnails', $response->logo);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
-        $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
     }
 
     public function testPostWithCategory()
@@ -1405,108 +1371,6 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('note1', $response->addresses[0]->note);
             $this->assertEquals('Private', $response->addresses[0]->addressType->name);
         }
-
-        $client->request(
-            'GET',
-            '/api/accounts/' . $this->account->getId()
-        );
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals('A small notice', $response->note);
-
-        $this->assertEquals(2, count($response->urls));
-        $this->assertEquals('http://example.company.com', $response->urls[0]->url);
-        $this->assertEquals('Private', $response->urls[0]->urlType->name);
-        $this->assertEquals('http://test.company.com', $response->urls[1]->url);
-        $this->assertEquals('Private', $response->urls[1]->urlType->name);
-
-        $this->assertEquals(2, count($response->emails));
-        $this->assertEquals('office@company.com', $response->emails[0]->email);
-        $this->assertEquals('Private', $response->emails[0]->emailType->name);
-        $this->assertEquals('erika.mustermann@company.com', $response->emails[1]->email);
-        $this->assertEquals('Private', $response->emails[1]->emailType->name);
-
-        $this->assertEquals(2, count($response->phones));
-        $this->assertEquals('4567890', $response->phones[0]->phone);
-        $this->assertEquals('Private', $response->phones[0]->phoneType->name);
-        $this->assertEquals('789456123', $response->phones[1]->phone);
-        $this->assertEquals('Private', $response->phones[1]->phoneType->name);
-
-        $this->assertEquals(2, count($response->faxes));
-        $this->assertEquals('4567890-1', $response->faxes[0]->fax);
-        $this->assertEquals('Private', $response->faxes[0]->faxType->name);
-        $this->assertEquals('789456123-1', $response->faxes[1]->fax);
-        $this->assertEquals('Private', $response->faxes[1]->faxType->name);
-
-        $this->assertEquals(2, count($response->notes));
-        $this->assertEquals('Note1', $response->notes[0]->value);
-        $this->assertEquals('Note2', $response->notes[1]->value);
-
-        $this->assertObjectHasAttribute('logo', $response);
-        $this->assertEquals($this->logo->getId(), $response->logo->id);
-        $this->assertObjectHasAttribute('thumbnails', $response->logo);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
-        $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
-
-        if ('Bahnhofstraße' === $response->addresses[0]->street) {
-            $this->assertEquals(2, count($response->addresses));
-            $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
-            $this->assertEquals('2', $response->addresses[0]->number);
-            $this->assertEquals('0022', $response->addresses[0]->zip);
-            $this->assertEquals('Dornbirn', $response->addresses[0]->city);
-            $this->assertEquals('state1', $response->addresses[0]->state);
-            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
-            $this->assertEquals('ML', $response->addresses[0]->country->code);
-            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
-
-            $this->assertEquals(true, $response->addresses[0]->billingAddress);
-            $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
-            $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
-            $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
-            $this->assertEquals('note', $response->addresses[0]->note);
-            $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
-
-            $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
-            $this->assertEquals('3', $response->addresses[1]->number);
-            $this->assertEquals('2222', $response->addresses[1]->zip);
-            $this->assertEquals('Dornbirn', $response->addresses[1]->city);
-            $this->assertEquals('state1', $response->addresses[1]->state);
-            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
-            $this->assertEquals('ML', $response->addresses[1]->country->code);
-            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
-            $this->assertEquals('note1', $response->addresses[1]->note);
-        } else {
-            $this->assertEquals(2, count($response->addresses));
-            $this->assertEquals('Bahnhofstraße', $response->addresses[1]->street);
-            $this->assertEquals('2', $response->addresses[1]->number);
-            $this->assertEquals('0022', $response->addresses[1]->zip);
-            $this->assertEquals('Dornbirn', $response->addresses[1]->city);
-            $this->assertEquals('state1', $response->addresses[1]->state);
-            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
-            $this->assertEquals('ML', $response->addresses[1]->country->code);
-            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
-
-            $this->assertEquals(true, $response->addresses[1]->billingAddress);
-            $this->assertEquals(true, $response->addresses[1]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[1]->deliveryAddress);
-            $this->assertEquals('Dornbirn', $response->addresses[1]->postboxCity);
-            $this->assertEquals('6850', $response->addresses[1]->postboxPostcode);
-            $this->assertEquals('4711', $response->addresses[1]->postboxNumber);
-            $this->assertEquals('note', $response->addresses[1]->note);
-
-            $this->assertEquals('Rathausgasse', $response->addresses[0]->street);
-            $this->assertEquals('3', $response->addresses[0]->number);
-            $this->assertEquals('2222', $response->addresses[0]->zip);
-            $this->assertEquals('Dornbirn', $response->addresses[0]->city);
-            $this->assertEquals('state1', $response->addresses[0]->state);
-            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
-            $this->assertEquals('ML', $response->addresses[0]->country->code);
-            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
-            $this->assertEquals('note1', $response->addresses[0]->note);
-        }
     }
 
     public function testPutNoDetails()
@@ -1527,16 +1391,9 @@ class AccountControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $client->request(
-            'GET',
-            '/api/accounts/' . $this->account->getId()
-        );
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('ExampleCompany', $response->name);
-
         $this->assertEquals(0, count($response->urls));
         $this->assertEquals(0, count($response->emails));
         $this->assertEquals(0, count($response->phones));
@@ -1727,10 +1584,6 @@ class AccountControllerTest extends SuluTestCase
 
         $client->request('DELETE', '/api/accounts/4711');
         $this->assertHttpStatusCode(404, $client->getResponse());
-
-        $client->request('GET', '/api/accounts?flat=true');
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(3, $response->total);
     }
 
     /**
@@ -1840,7 +1693,7 @@ class AccountControllerTest extends SuluTestCase
     /**
      * Test if delete info returns right isAllowed, when there is a superaccount.
      */
-    public function testGetDeletInfoByIdWithSuperAccount()
+    public function testGetDeleteInfoByIdWithSuperAccount()
     {
         // changing test data: adding child accounts
         for ($i = 0; $i < 5; ++$i) {
