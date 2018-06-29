@@ -2,9 +2,13 @@
 
 $borderRadius: 4px;
 $buttonWidth: 33px;
+$paginationColor: $gray;
+$buttonBackgroundColor: $wildSand;
+$buttonBorderColor: $scorpion;
+$buttonActiveColor: $blueZodiac;
 
 .pagination {
-    color: $gray;
+    color: $paginationColor;
     font-size: 12px;
     display: flex;
     justify-content: space-between;
@@ -23,15 +27,15 @@ $buttonWidth: 33px;
 .next,
 .previous {
     display: inline-block;
-    height: 40px;
+    height: 30px;
     width: $buttonWidth;
-    background-color: $white;
-    border: 1px solid $mischka;
+    background-color: $buttonBackgroundColor;
+    border: 1px solid $buttonBorderColor;
     text-align: center;
-    font-size: 18px;
+    font-size: 12px;
 
     &:not(:disabled) {
-        color: $blueZodiac;
+        color: $buttonActiveColor;
         cursor: pointer;
     }
 }
