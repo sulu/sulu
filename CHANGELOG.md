@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.20 (2018-06-29)
     * BUGFIX      #4042 [AudienceTargetingBundle] Add symfony 3.4.12 as conflict to fix caching tests
     * HOTFIX      #4019 [Component]               Fix handling of authored date on safari
     * HOTFIX      #4027 [PreviewBundle]           Fix correct url in preview
@@ -235,7 +235,11 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
-* dev-release/1.5
+* 1.5.16 (2018-06-29)
+    * ENHANCEMENT #4028 [MediaBundle]           Log errors in image generation
+    * ENHANCEMENT #3850 [SecurityBundle]        Allow user to be null for security config
+    * ENHANCEMENT #3850 [MediaBundle]           Allow user to be null for security expression in service build
+    * BUGFIX      #4018 [SnippetBundle]         Fix conflict when saving snippet in new language
     * BUGFiX      #3995 [TestBundle]            Fix tests for latest Symfony version
 
 * 1.5.15 (2018-05-24)
