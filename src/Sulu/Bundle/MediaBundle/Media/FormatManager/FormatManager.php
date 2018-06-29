@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
@@ -27,8 +30,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Sulu format manager for media.
  */
-class FormatManager implements FormatManagerInterface
+class FormatManager implements FormatManagerInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * The repository for communication with the database.
      *
@@ -97,6 +102,7 @@ class FormatManager implements FormatManagerInterface
         $this->fileSystem = new Filesystem();
         $this->formats = $formats;
         $this->supportedMimeTypes = $supportedMimeTypes;
+        $this->logger = new NullLogger();
     }
 
     /**
@@ -140,6 +146,7 @@ class FormatManager implements FormatManagerInterface
                 );
             }
         } catch (MediaException $e) {
+            $this->logger->error($e->getMessage(), $e->getTrace());
             $responseContent = null;
             $status = 404;
             $mimeType = null;

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Security;
 
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -57,12 +58,19 @@ class SecurityConfig implements JsConfigInterface
     public function getParameters()
     {
         $parameters = [];
+
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token || !$token->getUser() instanceof UserInterface) {
+            return [];
+        }
+
         foreach ($this->adminPool->getSecurityContexts() as $system => $sections) {
             foreach ($sections as $section => $contexts) {
                 foreach ($contexts as $context => $permissionTypes) {
                     $parameters[$context] = $this->accessControlManager->getUserPermissions(
                         new SecurityCondition($context),
-                        $this->tokenStorage->getToken()->getUser()
+                        $token->getUser()
                     );
                 }
             }

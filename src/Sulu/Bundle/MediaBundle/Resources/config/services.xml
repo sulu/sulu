@@ -170,6 +170,9 @@
             <argument type="string">%sulu_media.format_manager.response_headers%</argument>
             <argument>%sulu_media.image.formats%</argument>
             <argument>%sulu_media.format_manager.mime_types%</argument>
+            <call method="setLogger">
+                <argument type="service" id="logger"/>
+            </call>
         </service>
 
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
@@ -215,10 +218,10 @@
             <argument>sulu-media</argument>
             <argument type="collection">
                 <argument key="permissions" type="expression">
-                    service('sulu_security.access_control_manager').getUserPermissions(
+                    service('security.token_storage').getToken() ? service('sulu_security.access_control_manager').getUserPermissions(
                         service('sulu_media.security_context'),
                         service('security.token_storage').getToken().getUser()
-                    )
+                    ) : null
                 </argument>
                 <argument key="maxFilesize" type="string">%sulu_media.upload.max_filesize%</argument>
                 <argument key="adobeCreativeKey" type="string">%sulu_media.adobe_creative_key%</argument>

@@ -178,7 +178,7 @@ class PreviewTest extends TestCase
         $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
         $changes = $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU']);
 
-        $this->assertEquals(['title' => [['property' => 'title', 'href' => '#', 'html' => 'SULU']]], $changes);
+        $this->assertEquals(['title' => [['property' => 'title', 'href' => '/test', 'html' => 'SULU']]], $changes);
     }
 
     public function testUpdateNoData()
@@ -304,7 +304,7 @@ class PreviewTest extends TestCase
             ['title' => 'SULU']
         );
 
-        $this->assertEquals('<html><body><a property="title" href="#">SULU</a></html></body>', $response);
+        $this->assertEquals('<html><body><a property="title" href="/test">SULU</a></html></body>', $response);
     }
 
     public function testUpdateContextNoContext()
@@ -358,7 +358,7 @@ class PreviewTest extends TestCase
             ['title' => 'SULU']
         );
 
-        $this->assertEquals('<html><body><a property="title" href="#">SULU</a></html></body>', $response);
+        $this->assertEquals('<html><body><a property="title" href="/test">SULU</a></html></body>', $response);
     }
 
     public function testUpdateContextNoData()
@@ -472,7 +472,7 @@ class PreviewTest extends TestCase
         $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
         $response = $preview->render($token, 'sulu_io', 'de');
 
-        $this->assertEquals('<a property="title" href="#">test</a>', $response);
+        $this->assertEquals('<a property="title" href="/test">test</a>', $response);
     }
 
     public function testRenderWithStyle()
@@ -522,10 +522,10 @@ class PreviewTest extends TestCase
 
         $this->assertEquals(
             '<link rel="stylesheet" type="text/css" href="theme.css">' .
-            '<a property="title" href="#">test</a>' .
-            '<a href="#">test</a>' .
-            '<form action="#"></form>' .
-            '<form class="form" action="#"></form>',
+            '<a property="title" href="/test">test</a>' .
+            '<a href="/test">test</a>' .
+            '<form action="/test"></form>' .
+            '<form class="form" action="/test"></form>',
             $response
         );
     }

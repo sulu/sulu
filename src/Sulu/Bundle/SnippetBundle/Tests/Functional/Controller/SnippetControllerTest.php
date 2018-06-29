@@ -93,6 +93,13 @@ class SnippetControllerTest extends SuluTestCase
                     'description' => 'Hello World',
                 ],
             ],
+            [
+                'nl',
+                [
+                    'title' => '',
+                    'description' => '',
+                ],
+            ],
         ];
     }
 

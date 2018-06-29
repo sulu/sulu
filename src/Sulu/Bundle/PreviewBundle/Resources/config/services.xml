@@ -27,10 +27,12 @@
             <argument type="service" id="sulu_preview.preview.kernel_factory"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
             <argument type="collection">
                 <argument type="string" key="analyticsKey">%sulu_preview.defaults.analytics_key%</argument>
             </argument>
             <argument type="string">%kernel.environment%</argument>
+            <argument type="string">%sulu_websocket.server.http_host%</argument>
             <argument type="expression">
                 container.hasParameter('sulu_audience_targeting.headers.target_group')
                     ? parameter('sulu_audience_targeting.headers.target_group')
