@@ -169,13 +169,15 @@ class Initializer {
     initializeTranslations() {
         const locale = userStore.user ? userStore.user.locale : getDefaultLocale();
 
-        if (this.initializedTranslationsLocale === locale) {
-            return Promise.resolve();
-        }
+        const promise = this.initializedTranslationsLocale === locale
+            ? Promise.resolve()
+            : Requester.get(Config.endpoints.translations + '?locale=' + locale).then((translations) => {
+                setTranslations(translations);
+                this.setInitializedTranslationsLocale(locale);
+            });
 
-        return Requester.get(Config.endpoints.translations + '?locale=' + locale).then((translations) => {
-            setTranslations(translations);
-            this.setInitializedTranslationsLocale(locale);
+        return promise.then(() => {
+            this.setLoading(false);
         });
     }
 
@@ -199,14 +201,12 @@ class Initializer {
                 userStore.setLoggedIn(true);
 
                 this.setInitialized();
+                return this.initializeTranslations();
             }).catch((error) => {
                 if (error.status !== 401) {
                     return Promise.reject(error);
                 }
-            }).finally(() => {
-                return this.initializeTranslations().then(() => {
-                    this.setLoading(false);
-                });
+                return this.initializeTranslations();
             });
         });
     }

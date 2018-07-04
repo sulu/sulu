@@ -115,7 +115,7 @@ test('Should show error when login is not working and error status is 401', () =
     expect(userStore.loading).toBe(true);
 
     return loginPromise
-        .finally(() => {
+        .then(() => {
             expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
             expect(initializer.initialize).not.toBeCalled();
             expect(userStore.loginError).toBe(true);
