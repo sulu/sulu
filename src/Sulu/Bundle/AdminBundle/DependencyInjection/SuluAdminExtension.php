@@ -44,6 +44,9 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                     'web_link' => [
                         'enabled' => true,
                     ],
+                    'translator' =>  [
+                        'enabled' => true,
+                    ],
                 ]
             );
         }

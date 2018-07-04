@@ -78,7 +78,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('config_dir')
-                    ->defaultValue('%kernel.project_dir%/config/sulu/webspaces')
+                    ->defaultValue('%kernel.project_dir%/config/webspaces')
                 ->end()
             ->end()
         ->end();

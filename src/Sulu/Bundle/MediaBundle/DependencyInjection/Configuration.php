@@ -79,7 +79,7 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('local')
                         ->addDefaultsIfNotSet()
                         ->children()
-                            ->scalarNode('path')->defaultValue('%kernel.var_dir%/uploads/media')->end()
+                            ->scalarNode('path')->defaultValue('%kernel.project_dir%/var/uploads/media')->end()
                             ->scalarNode('segments')->defaultValue(10)->end()
                         ->end()
                     ->end()

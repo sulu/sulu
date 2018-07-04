@@ -80,6 +80,12 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             );
         }
 
+        if ($container->hasExtension('framework')) {
+            $container->prependExtensionConfig('framework', [
+                'form' => true,
+            ]);
+        }
+
         if ($container->hasExtension('sulu_core')) {
             $container->prependExtensionConfig(
                 'sulu_core',

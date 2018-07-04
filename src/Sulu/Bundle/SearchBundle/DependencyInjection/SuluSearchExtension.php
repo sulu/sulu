@@ -54,7 +54,7 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
             ],
             'adapters' => [
                 'zend_lucene' => [
-                    'basepath' => '%kernel.var_dir%/indexes',
+                    'basepath' => '%kernel.project_dir%/var/indexes',
                 ],
             ],
         ]);

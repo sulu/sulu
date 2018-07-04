@@ -13,7 +13,7 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\CacheLifetime;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\HttpCacheBundle\Cache\AbstractHttpCache;
+use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
@@ -101,7 +101,7 @@ class CacheLifetimeEnhancerTest extends TestCase
         );
 
         if ($cacheLifetime > 0) {
-            $this->responseHeaderBag->set(AbstractHttpCache::HEADER_REVERSE_PROXY_TTL, $cacheLifetime)->shouldBeCalled();
+            $this->responseHeaderBag->set(SuluHttpCache::HEADER_REVERSE_PROXY_TTL, $cacheLifetime)->shouldBeCalled();
             $this->response->setPublic()->shouldBeCalled();
             $this->response->setMaxAge($this->maxAge)->shouldBeCalled();
             $this->response->setSharedMaxAge($this->sharedMaxAge)->shouldBeCalled();

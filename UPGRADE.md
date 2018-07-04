@@ -270,10 +270,10 @@ The following default configurations where changed to use the symfony 4 folder s
 | Configuration                                | Old Default                                  | New Default
 |----------------------------------------------|----------------------------------------------|-----------------------------------------------
 | sulu_core.webspaces.config_dir               | %kernel.root_dir%/Resources/webspaces        | %kernel.project_dir%/config/sulu/webspaces
-| sulu_media.storage.local.path                | %kernel.root_dir%/../uploads/media           | %kernel.var_dir%/uploads/media
+| sulu_media.storage.local.path                | %kernel.root_dir%/../uploads/media           | %kernel.project_dir%/var/uploads/media
 | sulu_media.format_cache..path                | %kernel.root_dir%/../web/uploads/media       | %kernel.project_dir%/public/uploads/media
-| sulu_media.image_format_files[0]             | %kernel.root_dir%/config/image-formats.xml   | %kernel.prject_dir%/config/image-formats.xml
-| massive_search.adapters.zend_lucene.basepath | %kernel.root_dir%/data                       | %kernel.var_dir%/indexes
+| sulu_media.image_format_files[0]             | %kernel.root_dir%/config/image-formats.xml   | %kernel.project_dir%/config/image-formats.xml
+| massive_search.adapters.zend_lucene.basepath | %kernel.root_dir%/data                       | %kernel.project_dir%/var/indexes
 
 ### Test Setup changed
 

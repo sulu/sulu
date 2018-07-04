@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * Abstract class to extend from when using Symfony cache.
  * Add needed subscriber in the constructor.
  */
-abstract class AbstractHttpCache extends HttpCache implements CacheInvalidation
+class SuluHttpCache extends HttpCache implements CacheInvalidation
 {
     use EventDispatchingHttpCache;
 

@@ -74,44 +74,6 @@ swiftmailer:
     password: ~
     spool: { type: memory }
 
-# DoctrineCache Configuration
-doctrine_cache:
-    providers:
-        phpcr_meta:
-            type: 'file_system'
-        phpcr_nodes:
-            type: 'file_system'
-
-# MassiveSearch Configuration
-massive_search:
-    adapters:
-        zend_lucene:
-            basepath: '%kernel.var_dir%/indexes'
-
-# JMS Serializer Configuration
-jms_serializer:
-    metadata:
-        debug: '%kernel.debug%'
-
-# SuluCore Configuration
-sulu_core:
-    webspace:
-        config_dir: '%kernel.project_dir%/config/sulu/webspaces'
-    content:
-        structure:
-            default_type:
-                snippet: 'default'
-            paths:
-                homepage:
-                    path: '%kernel.project_dir%/Resources/templates/pages'
-                    type: 'home'
-                page:
-                    path: '%kernel.project_dir%/Resources/templates/pages'
-                    type: 'page'
-                snippet:
-                    path: '%kernel.project_dir%/Resources/templates/snippets'
-                    type: 'snippet'
-
 # SuluAdmin Configuration
 sulu_admin:
     name: 'Sulu'

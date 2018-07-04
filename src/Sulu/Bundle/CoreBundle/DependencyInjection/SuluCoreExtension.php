@@ -105,6 +105,22 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             );
         }
 
+        if ($container->hasExtension('framework')) {
+            $container->prependExtensionConfig(
+                'framework',
+                [
+                    'session' => [
+                        'save_path' => '%kernel.project_dir%/var/sessions/%sulu.context%/%kernel.environment%',
+                    ],
+                    'templating' => [
+                        'engines' => [
+                            'twig',
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('doctrine')) {
             $container->prependExtensionConfig(
                 'doctrine',
