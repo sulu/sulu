@@ -1,8 +1,7 @@
 @import '../../containers/Application/variables.scss';
 
 .datagrid {
-    height: 100%;
-    padding: $viewPadding;
+    margin: $viewPadding;
     display: flex;
     flex-direction: column;
 
