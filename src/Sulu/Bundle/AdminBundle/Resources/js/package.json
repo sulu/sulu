@@ -21,16 +21,13 @@
         "jsonpointer": "^4.0.1",
         "loglevel": "^1.4.1",
         "masonry-layout": "^4.2.0",
-        "mobx-react": "^5.0.0",
         "moment": "^2.19.2",
         "mousetrap": "^1.6.1",
         "normalize.css": "^7.0.0",
         "path-to-regexp": "^1.7.0",
-        "react": "^16.2.0",
         "react-circular-progressbar": "^0.5.0",
         "react-color": "^2.14.1",
         "react-datetime": "^2.11.0",
-        "react-dom": "^16.2.0",
         "react-portal": "^4.1.0",
         "react-sortable-hoc": "^0.6.7",
         "url-search-params-polyfill": "^2.0.0",
@@ -43,6 +40,9 @@
         "pretty": "^2.0.0"
     },
     "peerDependencies": {
-        "mobx": "^4.0.0"
+        "mobx": "^4.0.0",
+        "react": "^16.2.0",
+        "react-dom": "^16.2.0",
+        "mobx-react": "^5.0.0"
     }
 }
