@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
-class SecurityConfigTest extends \PHPUnit_Framework_TestCase
+class SecurityConfigTest extends TestCase
 {
     /**
      * @var SecurityConfig
