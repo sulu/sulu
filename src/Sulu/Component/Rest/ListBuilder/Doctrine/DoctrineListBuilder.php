@@ -29,6 +29,7 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -98,6 +99,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     private $idField;
 
+    /**
+     * @var string
+     */
+    private $securedEntityName;
+
     public function __construct(
         EntityManager $em,
         $entityName,
@@ -114,6 +120,18 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->entityName,
             'public.id'
         );
+
+        $this->securedEntityName = $entityName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPermissionCheck(UserInterface $user, $permission, $entityName = null)
+    {
+        parent::setPermissionCheck($user, $permission);
+
+        $this->securedEntityName = $entityName ?: $this->entityName;
     }
 
     /**
@@ -336,8 +354,8 @@ class DoctrineListBuilder extends AbstractListBuilder
                 $queryBuilder,
                 $this->user,
                 $this->permissions[$this->permission],
-                $this->entityName,
-                $this->entityName
+                $this->securedEntityName,
+                $this->securedEntityName
             );
         }
 

@@ -31,6 +31,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -93,6 +94,16 @@ class MediaController extends AbstractMediaController implements
                             PermissionTypes::VIEW
                         );
                     }
+
+                    $this->getSecurityChecker()->checkPermission(
+                        new SecurityCondition(
+                            $this->getSecurityContext(),
+                            $locale,
+                            $this->getSecuredClass(),
+                            $collection->getId()
+                        ),
+                        PermissionTypes::VIEW
+                    );
 
                     return $media;
                 }
@@ -201,6 +212,13 @@ class MediaController extends AbstractMediaController implements
             }
             $listBuilder->addSelectField($fieldDescriptors['collection']);
             $listBuilder->where($fieldDescriptors['collection'], $collectionId);
+        } else {
+            $listBuilder->addSearchField($fieldDescriptors['collection']);
+            $listBuilder->setPermissionCheck(
+                $this->getUser(),
+                PermissionTypes::VIEW,
+                $this->getParameter('sulu.model.collection.class')
+            );
         }
 
         // If no limit is set in request and limit is set by ids

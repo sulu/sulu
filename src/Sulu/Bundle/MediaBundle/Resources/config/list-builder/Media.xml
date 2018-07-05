@@ -35,7 +35,7 @@
     </orm:joins>
     <orm:joins name="collection">
         <orm:join>
-            <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
+            <orm:entity-name>%sulu.model.collection.class%</orm:entity-name>
             <orm:field-name>%sulu.model.media.class%.collection</orm:field-name>
         </orm:join>
     </orm:joins>
@@ -56,10 +56,12 @@
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
 
-        <identity-property name="collection" display="never">
-            <orm:field-name>collection</orm:field-name>
-            <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
-        </identity-property>
+        <property name="collection" display="never">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.collection.class%</orm:entity-name>
+
+            <orm:joins ref="collection"/>
+        </property>
 
         <property name="thumbnails" list:translation="media.media.thumbnails" display="always" list:type="thumbnails"
                   list:sortable="false"/>
@@ -153,14 +155,14 @@
 
         <property name="lft" display="never">
             <orm:field-name>lft</orm:field-name>
-            <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
+            <orm:entity-name>%sulu.model.collection.class%</orm:entity-name>
 
             <orm:joins ref="collection"/>
         </property>
 
         <property name="rgt" display="never">
             <orm:field-name>rgt</orm:field-name>
-            <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
+            <orm:entity-name>%sulu.model.collection.class%</orm:entity-name>
 
             <orm:joins ref="collection"/>
         </property>

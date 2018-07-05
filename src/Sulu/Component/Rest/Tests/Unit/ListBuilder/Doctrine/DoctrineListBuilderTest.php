@@ -872,4 +872,42 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->doctrineListBuilder->execute();
     }
+
+    public function testSetPermissionCheckWithSecuredEntityName()
+    {
+        $user = $this->prophesize(User::class);
+        $role = $this->prophesize(Role::class);
+        $role->getId()->willReturn(1);
+        $user->getRoleObjects()->willReturn([$role->reveal()]);
+
+        $this->doctrineListBuilder->setPermissionCheck($user->reveal(), PermissionTypes::VIEW, \stdClass::class);
+
+        $this->queryBuilder->leftJoin(
+            AccessControl::class,
+            'accessControl',
+            'WITH',
+            'accessControl.entityClass = :entityClass AND accessControl.entityId = stdClass.id'
+        )->shouldBeCalled();
+        $this->queryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
+        $this->queryBuilder->andWhere(
+            'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
+        )->shouldBeCalled();
+        $this->queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL')->shouldBeCalled();
+        $this->queryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
+        $this->queryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
+        $this->queryBuilder->setParameter('permission', 64)->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    /**
+     * Check if only one query is executed when no limit and no expressions.
+     */
+    public function testSingleQuery()
+    {
+        $this->entityManager->createQueryBuilder()->shouldBeCalledTimes(1)->willReturn($this->queryBuilder->reveal());
+
+        $this->doctrineListBuilder->limit(null);
+        $this->doctrineListBuilder->execute();
+    }
 }
