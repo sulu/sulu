@@ -7,7 +7,7 @@ $inputBorderRadius: 3px;
 $inputHeight: 30px;
 $inputColor: $black;
 $inputFontSize: 12px;
-$inputPrependWidth: 34px;
+$inputPrependWidth: 32px;
 $iconColor: $dustyGray;
 $iconBorderPadding: 5px;
 $placeholderColor: $dustyGray;
@@ -56,6 +56,7 @@ $darkIconColor: $doveGray;
     &.collapsed {
         input {
             padding-left: 0;
+            padding-right: 0;
             width: 0;
         }
     }
@@ -99,6 +100,7 @@ $darkIconColor: $doveGray;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: $inputPrependWidth;
 
     &.dark {
         box-shadow: $inputBorderWidth 0 0 $darkInputBorderColor;
@@ -113,6 +115,10 @@ $darkIconColor: $doveGray;
     position: absolute;
     height: calc($inputHeight - 2 * $iconBorderPadding);
     right: 0;
+
+    .icon {
+        margin-right: 10px;
+    }
 }
 
 .icon {
@@ -120,7 +126,6 @@ $darkIconColor: $doveGray;
     font-size: 14px;
     flex-grow: 0;
     color: $iconColor;
-    margin: 0 10px;
     line-height: calc($inputHeight - 2 * $iconBorderPadding);
 
     &.dark {

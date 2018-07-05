@@ -1,7 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
 $borderRadius: 4px;
-$buttonWidth: 33px;
+$buttonWidth: 34px;
 $paginationColor: $gray;
 $buttonBackgroundColor: $wildSand;
 $buttonBorderColor: $scorpion;
@@ -38,11 +38,14 @@ $buttonActiveColor: $blueZodiac;
         color: $buttonActiveColor;
         cursor: pointer;
     }
+
+    span {
+        line-height: 28px;
+    }
 }
 
 .previous {
     border-radius: $borderRadius 0 0 $borderRadius;
-    width: calc($buttonWidth + 1px);
 }
 
 .next {

@@ -107,6 +107,10 @@ $iconColorActive: $white;
         background-color: $iconBorderColor;
         color: $iconColorActive;
     }
+
+    span {
+        line-height: 28px;
+    }
 }
 
 .loader {

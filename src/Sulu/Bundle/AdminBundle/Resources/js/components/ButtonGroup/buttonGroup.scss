@@ -3,6 +3,7 @@
 .button {
     border-radius: 0;
     border-right: 0;
+    width: 34px;
 
     &:first-child {
         border-top-left-radius: $iconBorderRadius;
