@@ -5,6 +5,7 @@ const glob = require('glob');
 const webpack = require('webpack');
 const CleanObsoleteChunksPlugin = require('webpack-clean-obsolete-chunks');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const entries = glob.sync(
     path.resolve(__dirname, 'src/Sulu/Bundle/*/Resources/js/index.js') // eslint-disable-line no-undef
@@ -19,8 +20,6 @@ entries.unshift('core-js/fn/promise');
 entries.unshift('core-js/fn/symbol');
 entries.unshift('whatwg-fetch');
 entries.unshift('url-search-params-polyfill');
-
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const basePath = 'admin/build';
 
