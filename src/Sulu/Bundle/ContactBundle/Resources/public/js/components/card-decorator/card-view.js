@@ -253,8 +253,8 @@ define(function() {
              */
             renderItem: function(id, picture, title, firstInfoRow, secondInfoRow, appendAtBottom) {
                 this.$items[id] = this.sandbox.dom.createElement(
-                    this.sandbox.util.template(templates.item)({
-                        name: this.sandbox.util.cropTail(String(title), 25),
+                    this.sandbox.util.template(templates.item, {
+                        name: this.sandbox.util.cropTail(this.sandbox.util.escapeHtml(String(title)), 25),
                         picture: picture,
                         pictureIcon: this.options.icons.picture
                     })
@@ -298,9 +298,9 @@ define(function() {
                     this.sandbox.dom.append($item, $container);
                 }
                 this.sandbox.dom.append($container, this.sandbox.dom.createElement(
-                    this.sandbox.util.template(templates.infoRow)({
+                    this.sandbox.util.template(templates.infoRow, {
                         icon: icon,
-                        text: this.sandbox.util.cropMiddle(String(text), 22)
+                        text: this.sandbox.util.cropMiddle(this.sandbox.util.escapeHtml(String(text)), 22)
                     }))
                 );
             },
