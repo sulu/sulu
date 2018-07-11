@@ -213,7 +213,7 @@ class MediaController extends AbstractMediaController implements
             $listBuilder->addSelectField($fieldDescriptors['collection']);
             $listBuilder->where($fieldDescriptors['collection'], $collectionId);
         } else {
-            $listBuilder->addSearchField($fieldDescriptors['collection']);
+            $listBuilder->addPermissionCheckField($fieldDescriptors['collection']);
             $listBuilder->setPermissionCheck(
                 $this->getUser(),
                 PermissionTypes::VIEW,

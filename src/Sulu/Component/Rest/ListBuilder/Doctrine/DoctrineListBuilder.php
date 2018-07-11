@@ -104,6 +104,13 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     private $securedEntityName;
 
+    /**
+     * Array of unique field descriptors needed for secure-check.
+     *
+     * @var array
+     */
+    private $permissionCheckFields = [];
+
     public function __construct(
         EntityManager $em,
         $entityName,
@@ -132,6 +139,14 @@ class DoctrineListBuilder extends AbstractListBuilder
         parent::setPermissionCheck($user, $permission);
 
         $this->securedEntityName = $entityName ?: $this->entityName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addPermissionCheckField(DoctrineFieldDescriptor $fieldDescriptor)
+    {
+        $this->permissionCheckFields[$fieldDescriptor->getEntityName()] = $fieldDescriptor;
     }
 
     /**
@@ -391,6 +406,12 @@ class DoctrineListBuilder extends AbstractListBuilder
                     }
                     $addJoins = array_merge($addJoins, [$entityName => $join]);
                 }
+            }
+        }
+
+        if ($this->user && $this->permission && array_key_exists($this->permission, $this->permissions)) {
+            foreach ($this->permissionCheckFields as $permissionCheckField) {
+                $addJoins = array_merge($addJoins, $permissionCheckField->getJoins());
             }
         }
 
