@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-release/1.5
     * HOTFIX      #4058 [ContactBundle]         Added escaping of name in contact-list
+    * HOTFIX      #4058 [ContactBundle]         Added escaping for address and bank-accounts
     * HOTFIX      #4058 [MediaBundle]           Added escaping of name in media-list
 
 * 1.5.16 (2018-06-29)
