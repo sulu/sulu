@@ -944,15 +944,4 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->doctrineListBuilder->execute();
     }
-
-    /**
-     * Check if only one query is executed when no limit and no expressions.
-     */
-    public function testSingleQuery()
-    {
-        $this->entityManager->createQueryBuilder()->shouldBeCalledTimes(1)->willReturn($this->queryBuilder->reveal());
-
-        $this->doctrineListBuilder->limit(null);
-        $this->doctrineListBuilder->execute();
-    }
 }

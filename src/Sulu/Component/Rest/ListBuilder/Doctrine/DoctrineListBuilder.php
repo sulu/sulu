@@ -134,11 +134,11 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * {@inheritdoc}
      */
-    public function setPermissionCheck(UserInterface $user, $permission, $entityName = null)
+    public function setPermissionCheck(UserInterface $user, $permission, $securedEntityName = null)
     {
         parent::setPermissionCheck($user, $permission);
 
-        $this->securedEntityName = $entityName ?: $this->entityName;
+        $this->securedEntityName = $securedEntityName ?: $this->entityName;
     }
 
     /**
