@@ -42,36 +42,21 @@ export default class DatagridStore {
         this.options = options;
         this.sendRequestDisposer = autorun(this.sendRequest);
 
+        const callResetForChangedObservable = (change: IValueWillChange<*>) => {
+            if (this.initialized && change.object.get() !== change.newValue) {
+                this.reset();
+            }
+            return change;
+        };
+
         const {locale} = this.observableOptions;
         if (locale) {
-            this.localeDisposer = intercept(locale, '', (change: IValueWillChange<number>) => {
-                if (locale.get() !== change.newValue) {
-                    this.reset();
-                }
-                return change;
-            });
+            this.localeDisposer = intercept(locale, '', callResetForChangedObservable);
         }
 
-        this.searchDisposer = intercept(this.searchTerm, '', (change: IValueWillChange<string>) => {
-            if (this.searchTerm.get() !== change.newValue) {
-                this.reset();
-            }
-            return change;
-        });
-
-        this.sortColumnDisposer = intercept(this.sortColumn, '', (change: IValueWillChange<string>) => {
-            if (this.sortColumn.get() !== change.newValue) {
-                this.reset();
-            }
-            return change;
-        });
-
-        this.sortOrderDisposer = intercept(this.sortOrder, '', (change: IValueWillChange<SortOrder>) => {
-            if (this.sortOrder.get() !== change.newValue) {
-                this.reset();
-            }
-            return change;
-        });
+        this.searchDisposer = intercept(this.searchTerm, '', callResetForChangedObservable);
+        this.sortColumnDisposer = intercept(this.sortColumn, '', callResetForChangedObservable);
+        this.sortOrderDisposer = intercept(this.sortOrder, '', callResetForChangedObservable);
 
         metadataStore.getSchema(this.resourceKey)
             .then(action((schema) => {
