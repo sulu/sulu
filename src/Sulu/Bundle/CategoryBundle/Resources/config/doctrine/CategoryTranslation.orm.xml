@@ -13,6 +13,14 @@
         <field name="description" type="text" column="description" nullable="true"/>
 
         <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
+            <join-table name="ca_category_translation_medias">
+                <join-columns>
+                    <join-column name="idCategoryTranslations" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idMedia" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+                </inverse-join-columns>
+            </join-table>
             <order-by>
                 <order-by-field name="id" direction="ASC"/>
             </order-by>
