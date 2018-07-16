@@ -271,7 +271,7 @@ define([
             return templates.contentItem(
                 item.id,
                 item.collection,
-                item.title,
+                this.sandbox.util.escapeHtml(item.title),
                 item.thumbnails ? item.thumbnails[this.options.thumbnailSize] : null,
                 item.locale !== this.options.locale ? item.locale : null,
                 item.type,
