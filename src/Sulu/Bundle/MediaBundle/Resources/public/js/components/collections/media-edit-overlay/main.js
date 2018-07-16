@@ -334,7 +334,7 @@ define([
                         supportKeyInput: false,
                         slides: [
                             {
-                                title: this.media.title,
+                                title: this.sandbox.util.escapeHtml(this.media.title),
                                 subTitle: this.sandbox.util.cropMiddle(
                                     this.media.mimeType + ', ' + this.sandbox.util.formatBytes(this.media.size),
                                     32
