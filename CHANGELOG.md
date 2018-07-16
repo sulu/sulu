@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-release/1.5
+    * HOTFIX      #4063 [ContentComponent]      Fixed copy language function, which didn't copy the extension data
     * HOTFIX      #4056 [MediaBundle]           Added security-check for collection permission to media-controller
     * HOTFIX      #4058 [ContactBundle]         Added escaping of name in contact-list
     * HOTFIX      #4058 [ContactBundle]         Added escaping for address and bank-accounts
