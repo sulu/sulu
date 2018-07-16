@@ -62,7 +62,7 @@
 
                                 <div class="address-row clickable pointer">
 
-                                    <span><~= addressString ~></span>
+                                    <span><~= _.escape(addressString) ~></span>
 
                                     <div class="hidden">
                                         <input type="hidden" data-mapper-property="id" class="id-value"/>
@@ -248,7 +248,8 @@
                                     <div class="bank-account-row clickable pointer">
                                         <span data-mapper-property="id" data-form="true" class="hidden"></span>
 
-                                        <span data-mapper-property="bankName" data-form="true"></span>
+                                        <input type="hidden" data-mapper-property="bankName"/>
+                                        <span><~= _.escape(bankName) ~></span>
                                         <span><%=translate('public.bic')%></span>
                                         <span data-mapper-property="bic" data-form="true"></span>
                                         <span><%=translate('public.iban')%></span>
