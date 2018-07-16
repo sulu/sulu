@@ -41,6 +41,7 @@
 
 # Text editors backup files
 *~
+*.swp
 
 # Meld
 *.orig
