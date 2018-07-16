@@ -292,9 +292,9 @@ define([
                 this.$items[id] = this.sandbox.dom.createElement(
                     this.sandbox.util.template(itemTemplate, {
                         image: image,
-                        title: this.sandbox.util.cropMiddle(String(title), titleWidth),
+                        title: this.sandbox.util.cropMiddle(this.sandbox.util.escapeHtml(String(title)), titleWidth),
                         fallbackLocale: fallbackLocale,
-                        description: this.sandbox.util.cropMiddle(String(description), 35),
+                        description: this.sandbox.util.cropMiddle(this.sandbox.util.escapeHtml(String(description)), 35),
                         isVideo: isVideo,
                         domain: window.location.protocol + '//' + window.location.host,
                         selectable: this.options.selectable,

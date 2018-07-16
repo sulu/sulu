@@ -886,4 +886,76 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->limit(null);
         $this->doctrineListBuilder->execute();
     }
+
+    public function testSetPermissionCheckWithSecuredEntityName()
+    {
+        $user = $this->prophesize(User::class);
+        $role = $this->prophesize(Role::class);
+        $role->getId()->willReturn(1);
+        $user->getRoleObjects()->willReturn([$role->reveal()]);
+
+        $this->doctrineListBuilder->setPermissionCheck($user->reveal(), PermissionTypes::VIEW, \stdClass::class);
+
+        $this->queryBuilder->leftJoin(
+            AccessControl::class,
+            'accessControl',
+            'WITH',
+            'accessControl.entityClass = :entityClass AND accessControl.entityId = stdClass.id'
+        )->shouldBeCalled();
+        $this->queryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
+        $this->queryBuilder->andWhere(
+            'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
+        )->shouldBeCalled();
+        $this->queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL')->shouldBeCalled();
+        $this->queryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
+        $this->queryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
+        $this->queryBuilder->setParameter('permission', 64)->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetPermissionCheckWithSecuredEntityNameAndAdditionalJoins()
+    {
+        $user = $this->prophesize(User::class);
+        $role = $this->prophesize(Role::class);
+        $role->getId()->willReturn(1);
+        $user->getRoleObjects()->willReturn([$role->reveal()]);
+
+        $joinFieldDescriptor = $this->prophesize(DoctrineJoinDescriptor::class);
+        $joinFieldDescriptor->getEntityName()->willReturn('MyTest');
+        $joinFieldDescriptor->getJoin()->willReturn('stdClass.myTest');
+        $joinFieldDescriptor->getJoinMethod()->willReturn(DoctrineJoinDescriptor::JOIN_METHOD_LEFT);
+        $joinFieldDescriptor->getJoinConditionMethod()->willReturn(DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_ON);
+        $joinFieldDescriptor->getJoinCondition()->willReturn('stdClass.id = MyTest.id');
+
+        $permissionCheckField = $this->prophesize(DoctrineFieldDescriptor::class);
+        $permissionCheckField->getEntityName()->willReturn('MyTest');
+        $permissionCheckField->getJoins()->willReturn(['MyTest' => $joinFieldDescriptor->reveal()]);
+
+        $this->doctrineListBuilder->setPermissionCheck($user->reveal(), PermissionTypes::VIEW, \stdClass::class);
+        $this->doctrineListBuilder->addPermissionCheckField($permissionCheckField->reveal());
+
+        $this->queryBuilder->leftJoin(
+            'stdClass.myTest',
+            'MyTest',
+            'ON',
+            'stdClass.id = MyTest.id'
+        )->shouldBeCalled();
+        $this->queryBuilder->leftJoin(
+            AccessControl::class,
+            'accessControl',
+            'WITH',
+            'accessControl.entityClass = :entityClass AND accessControl.entityId = stdClass.id'
+        )->shouldBeCalled();
+        $this->queryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
+        $this->queryBuilder->andWhere(
+            'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
+        )->shouldBeCalled();
+        $this->queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL')->shouldBeCalled();
+        $this->queryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
+        $this->queryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
+        $this->queryBuilder->setParameter('permission', 64)->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
 }

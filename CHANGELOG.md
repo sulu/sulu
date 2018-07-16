@@ -240,6 +240,13 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
+* dev-release/1.5
+    * HOTFIX      #4056 [MediaBundle]           Added security-check for collection permission to media-controller
+    * HOTFIX      #4058 [ContactBundle]         Added escaping of name in contact-list
+    * HOTFIX      #4058 [ContactBundle]         Added escaping for address and bank-accounts
+    * HOTFIX      #4058 [MediaBundle]           Added escaping of name in media-list
+    * HOTFIX      #4057 [SecurityBundle]        Removed password-hash from user-api
+
 * 1.5.16 (2018-06-29)
     * ENHANCEMENT #4028 [MediaBundle]           Log errors in image generation
     * ENHANCEMENT #3850 [SecurityBundle]        Allow user to be null for security config

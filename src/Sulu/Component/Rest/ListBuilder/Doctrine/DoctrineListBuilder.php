@@ -29,6 +29,7 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -98,6 +99,18 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     private $idField;
 
+    /**
+     * @var string
+     */
+    private $securedEntityName;
+
+    /**
+     * Array of unique field descriptors needed for secure-check.
+     *
+     * @var array
+     */
+    private $permissionCheckFields = [];
+
     public function __construct(
         EntityManager $em,
         $entityName,
@@ -114,6 +127,26 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->entityName,
             'public.id'
         );
+
+        $this->securedEntityName = $entityName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPermissionCheck(UserInterface $user, $permission, $securedEntityName = null)
+    {
+        parent::setPermissionCheck($user, $permission);
+
+        $this->securedEntityName = $securedEntityName ?: $this->entityName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addPermissionCheckField(DoctrineFieldDescriptor $fieldDescriptor)
+    {
+        $this->permissionCheckFields[$fieldDescriptor->getEntityName()] = $fieldDescriptor;
     }
 
     /**
@@ -351,8 +384,8 @@ class DoctrineListBuilder extends AbstractListBuilder
                 $queryBuilder,
                 $this->user,
                 $this->permissions[$this->permission],
-                $this->entityName,
-                $this->entityName
+                $this->securedEntityName,
+                $this->securedEntityName
             );
         }
 
@@ -388,6 +421,12 @@ class DoctrineListBuilder extends AbstractListBuilder
                     }
                     $addJoins = array_merge($addJoins, [$entityName => $join]);
                 }
+            }
+        }
+
+        if ($this->user && $this->permission && array_key_exists($this->permission, $this->permissions)) {
+            foreach ($this->permissionCheckFields as $permissionCheckField) {
+                $addJoins = array_merge($addJoins, $permissionCheckField->getJoins());
             }
         }
 
