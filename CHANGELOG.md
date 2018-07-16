@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.5
+    * HOTFIX      #4057 [SecurityBundle]        Removed password-hash from user-api
+
 * 1.5.16 (2018-06-29)
     * ENHANCEMENT #4028 [MediaBundle]           Log errors in image generation
     * ENHANCEMENT #3850 [SecurityBundle]        Allow user to be null for security config
