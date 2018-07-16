@@ -203,22 +203,6 @@ class AutoNameSubscriberTest extends TestCase
     }
 
     /**
-     * It should rename the node if the document is being saved in the default locale.
-     */
-    public function testAlreadyHasNode()
-    {
-        $this->persistEvent->getNode()->willReturn($this->node->reveal());
-        $this->persistEvent->getLocale()->willReturn(self::DEFAULT_LOCALE);
-        $this->doTestAutoName('hai-bye', 'hai-2', false, true);
-        $this->node->getParent()->willReturn($this->parentNode->reveal());
-        $this->parentNode->getNodeNames()->willReturn(['hai-bye']);
-        $this->node->hasNode()->willReturn(true);
-        $this->node->getName()->willReturn('foo');
-
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-    }
-
-    /**
      * It should not rename the node if the document is being saved a non-default locale.
      */
     public function testAlreadyHasNodeNonDefaultLocale()
