@@ -493,6 +493,10 @@ class ContentMapper implements ContentMapperInterface
             $destDocument->setTitle($document->getTitle());
             $destDocument->getStructure()->bind($document->getStructure()->toArray());
 
+            if ($document instanceof ExtensionBehavior) {
+                $destDocument->setExtensionsData($document->getExtensionsData());
+            }
+
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($destDocument instanceof ResourceSegmentBehavior) {
                 $resourceLocator = $resourceLocatorStrategy->generate(
