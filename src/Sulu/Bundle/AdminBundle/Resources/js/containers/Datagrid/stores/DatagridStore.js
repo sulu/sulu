@@ -2,6 +2,7 @@
 import {action, autorun, computed, intercept, observable} from 'mobx';
 import type {IObservableValue, IValueWillChange} from 'mobx';
 import log from 'loglevel';
+import ResourceRequester from '../../../services/ResourceRequester';
 import type {
     LoadingStrategyInterface,
     ObservableOptions,
@@ -145,6 +146,18 @@ export default class DatagridStore {
     findById(identifier: string | number): ?Object {
         return this.structureStrategy.findById(identifier);
     }
+
+    delete = (identifier: string | number): Promise<void> => {
+        const queryOptions = {...this.options};
+
+        const {locale} = this.observableOptions;
+        if (locale) {
+            queryOptions.locale = locale.get();
+        }
+
+        return ResourceRequester.delete(this.resourceKey, identifier, queryOptions)
+            .then(() => this.remove(identifier));
+    };
 
     remove = (identifier: string | number): void => {
         this.structureStrategy.remove(identifier);
