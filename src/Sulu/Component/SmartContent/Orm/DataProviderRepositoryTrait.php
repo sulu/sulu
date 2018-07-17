@@ -60,6 +60,7 @@ trait DataProviderRepositoryTrait
 
         $queryBuilder = $this->createQueryBuilder('c')
             ->select('c.id')
+            ->distinct()
             ->orderBy('c.id', 'ASC');
 
         $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
@@ -194,10 +195,8 @@ trait DataProviderRepositoryTrait
         switch ($operator) {
             case 'or':
                 return $this->appendRelationOr($queryBuilder, $relation, $values, $alias);
-                break;
             case 'and':
                 return $this->appendRelationAnd($queryBuilder, $relation, $values, $alias);
-                break;
         }
 
         return [];
