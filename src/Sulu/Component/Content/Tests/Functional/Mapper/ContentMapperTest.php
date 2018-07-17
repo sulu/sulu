@@ -1436,6 +1436,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('Page-1', $result->title);
         $this->assertEquals('/page-1', $result->url);
+        $this->assertEquals($data['ext']['test1'], $result['ext']['test1']);
     }
 
     public function testMultipleLanguagesCopy()
@@ -1448,11 +1449,13 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('Page-1', $result->title);
         $this->assertEquals('/page-1', $result->url);
+        $this->assertEquals($data['ext']['test1'], $result['ext']['test1']);
 
         $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'de_at');
 
         $this->assertEquals('Page-1', $result->title);
         $this->assertEquals('/page-1', $result->url);
+        $this->assertEquals($data['ext']['test1'], $result['ext']['test1']);
     }
 
     private function prepareCopyLanguageTree()
@@ -1961,6 +1964,12 @@ class ContentMapperTest extends SuluTestCase
         $data = [
             'title' => 'Page-1',
             'url' => '/page-1',
+            'ext' => [
+                'test1' => [
+                    'a' => 'That´s a test',
+                    'b' => 'That´s a second test',
+                ],
+            ],
         ];
 
         $data = $this->save($data, 'overview', 'sulu_io', 'de', 1);
