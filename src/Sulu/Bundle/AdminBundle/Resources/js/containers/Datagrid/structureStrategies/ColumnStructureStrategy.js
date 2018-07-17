@@ -2,6 +2,10 @@
 import {action, computed, observable} from 'mobx';
 import type {StructureStrategyInterface} from '../types';
 
+function removeColumnsAfterIndex(parents, columnIndex, rawData) {
+    parents.filter((parent, index) => index > columnIndex).forEach((parent) => rawData.delete(parent));
+}
+
 export default class ColumnStructureStrategy implements StructureStrategyInterface {
     @observable rawData: Map<?string | number, Array<Object>> = new Map();
 
@@ -22,9 +26,8 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
     }
 
     activate(id: ?string | number) {
-        const parents = this.activeItems;
         const columnIndex = this.data.findIndex((column) => column.findIndex((item) => item.id === id) !== -1);
-        parents.filter((parent, index) => index > columnIndex).forEach((parent) => this.rawData.delete(parent));
+        removeColumnsAfterIndex(this.activeItems, columnIndex, this.rawData);
         this.rawData.set(id, []);
     }
 
@@ -32,11 +35,15 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
         return this.rawData.get(parent);
     }
 
-    remove(identifier: string | number) {
+    @action remove(identifier: string | number) {
         for (const column of this.rawData.values()) {
             for (const index of column.keys()) {
-                // TODO do not hardcode id but use metdata instead
-                if (column[index].id === identifier) {
+                // TODO do not hardcode id but use metadata instead
+                const id = column[index].id;
+                if (id === identifier) {
+                    if (this.activeItems.includes(id)) {
+                        removeColumnsAfterIndex(this.activeItems, index, this.rawData);
+                    }
                     column.splice(index, 1);
                 }
             }
@@ -46,7 +53,7 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
     findById(identifier: string | number): ?Object {
         for (const column of this.data) {
             for (const item of column) {
-                // TODO do not hardcode id but use metdata instead
+                // TODO do not hardcode id but use metadata instead
                 if (item.id === identifier) {
                     return item;
                 }

@@ -56,6 +56,8 @@ test('Should remove the columns after the activated item', () => {
     columnStructureStrategy.rawData.set(1, column2);
     const column3 = [{id: 3}];
     columnStructureStrategy.rawData.set(2, column3);
+    const column4 = [{id: 4}];
+    columnStructureStrategy.rawData.set(3, column4);
 
     columnStructureStrategy.activate(2);
     expect(columnStructureStrategy.data).toEqual([
@@ -102,7 +104,7 @@ test('Should not enhance the items', () => {
     expect(columnStructureStrategy.enhanceItem({id: 1})).toEqual({id: 1});
 });
 
-test('Should return the data in a column format', () => {
+test('Should remove an entry', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();
     columnStructureStrategy.rawData.set(undefined, [{id: 1}]);
     columnStructureStrategy.rawData.set(1, [{id: 2}, {id: 4}]);
@@ -121,5 +123,19 @@ test('Should return the data in a column format', () => {
         [{id: 1}],
         [{id: 2}],
         [{id: 5}],
+    ]);
+});
+
+test('Should remove an entry with the following columns if the entry was active', () => {
+    const columnStructureStrategy = new ColumnStructureStrategy();
+    columnStructureStrategy.rawData.set(undefined, [{id: 1}]);
+    columnStructureStrategy.rawData.set(1, [{id: 2}, {id: 4}]);
+    columnStructureStrategy.rawData.set(4, [{id: 3}, {id: 5}]);
+
+    columnStructureStrategy.remove(4);
+
+    expect(columnStructureStrategy.data).toEqual([
+        [{id: 1}],
+        [{id: 2}],
     ]);
 });
