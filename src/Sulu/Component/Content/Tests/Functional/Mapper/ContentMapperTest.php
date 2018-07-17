@@ -1436,7 +1436,13 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals('Page-1', $result->title);
         $this->assertEquals('/page-1', $result->url);
-        $this->assertEquals($data['ext']['test1'], $result['ext']['test1']);
+        $this->assertEquals(
+            [
+                'a' => 'That´s a test',
+                'b' => 'That´s a second test',
+            ],
+            $result->getExt()['test1']
+        );
     }
 
     public function testMultipleLanguagesCopy()
@@ -1445,17 +1451,29 @@ class ContentMapperTest extends SuluTestCase
 
         $this->mapper->copyLanguage($data->getUuid(), 1, 'sulu_io', 'de', ['en', 'de_at']);
 
-        $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'en')->toArray();
+        $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'en');
 
-        $this->assertEquals('Page-1', $result['title']);
-        $this->assertEquals('/page-1', $result['url']);
-        $this->assertEquals($data['ext']['test1'], $result['ext']['test1']);
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('/page-1', $result->url);
+        $this->assertEquals(
+            [
+                'a' => 'That´s a test',
+                'b' => 'That´s a second test',
+            ],
+            $result->getExt()['test1']
+        );
 
-        $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'de_at')->toArray();
+        $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'de_at');
 
-        $this->assertEquals('Page-1', $result['title']);
-        $this->assertEquals('/page-1', $result['url']);
-        $this->assertEquals($data['ext']['test1'], $result['ext']['test1']);
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('/page-1', $result->url);
+        $this->assertEquals(
+            [
+                'a' => 'That´s a test',
+                'b' => 'That´s a second test',
+            ],
+            $result->getExt()['test1']
+        );
     }
 
     private function prepareCopyLanguageTree()
