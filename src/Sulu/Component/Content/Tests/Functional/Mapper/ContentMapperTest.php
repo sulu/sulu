@@ -1445,16 +1445,16 @@ class ContentMapperTest extends SuluTestCase
 
         $this->mapper->copyLanguage($data->getUuid(), 1, 'sulu_io', 'de', ['en', 'de_at']);
 
-        $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'en');
+        $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'en')->toArray();
 
-        $this->assertEquals('Page-1', $result->title);
-        $this->assertEquals('/page-1', $result->url);
+        $this->assertEquals('Page-1', $result['title']);
+        $this->assertEquals('/page-1', $result['url']);
         $this->assertEquals($data['ext']['test1'], $result['ext']['test1']);
 
-        $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'de_at');
+        $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'de_at')->toArray();
 
-        $this->assertEquals('Page-1', $result->title);
-        $this->assertEquals('/page-1', $result->url);
+        $this->assertEquals('Page-1', $result['title']);
+        $this->assertEquals('/page-1', $result['url']);
         $this->assertEquals($data['ext']['test1'], $result['ext']['test1']);
     }
 
