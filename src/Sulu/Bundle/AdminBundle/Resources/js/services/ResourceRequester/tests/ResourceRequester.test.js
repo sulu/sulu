@@ -100,3 +100,10 @@ test('Should send a delete request to the correct URL', () => {
     ResourceRequester.delete('contacts', 9);
     expect(Requester.delete).toBeCalledWith('/contacts/9');
 });
+
+test('Should send a delete request with passed options as query parameters', () => {
+    const options = {locale: 'en', webspace: 'sulu'};
+    Requester.delete.mockReturnValue({});
+    ResourceRequester.delete('snippets', 5, options);
+    expect(Requester.delete).toBeCalledWith('/snippets/5?locale=en&webspace=sulu');
+});
