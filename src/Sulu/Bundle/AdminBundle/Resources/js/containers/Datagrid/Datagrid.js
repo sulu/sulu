@@ -4,6 +4,8 @@ import {observable, action, computed} from 'mobx';
 import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
+import Dialog from '../../components/Dialog';
+import {translate} from '../../utils/Translator';
 import type {SortOrder} from './types';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
@@ -32,6 +34,9 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     @observable currentAdapterKey: string;
+    @observable showDeleteDialog: boolean = false;
+    @observable deleting: boolean = false;
+    deleteId: ?string | number;
 
     @computed get currentAdapter(): typeof AbstractAdapter {
         return datagridAdapterRegistry.get(this.currentAdapterKey);
@@ -79,6 +84,28 @@ export default class Datagrid extends React.Component<Props> {
             new this.currentAdapter.LoadingStrategy(),
             new this.currentAdapter.StructureStrategy()
         );
+    };
+
+    @action handleDeleteClick = (id: string | number) => {
+        this.deleteId = id;
+        this.showDeleteDialog = true;
+    };
+
+    @action handleDeleteDialogConfirmClick = () => {
+        if (!this.deleteId) {
+            throw new Error('The id for deletion was not set. This should not happen, and is like caused by a bug.');
+        }
+
+        this.deleting = true;
+        this.props.store.delete(this.deleteId).then(action(() => {
+            this.deleteId = undefined;
+            this.deleting = false;
+            this.showDeleteDialog = false;
+        }));
+    };
+
+    @action handleDeleteDialogCancelClick = () => {
+        this.showDeleteDialog = false;
     };
 
     handlePageChange = (page: number) => {
@@ -159,6 +186,7 @@ export default class Datagrid extends React.Component<Props> {
                         loading={store.loading}
                         onAddClick={onAddClick}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
+                        onDeleteClick={this.handleDeleteClick}
                         onItemActivation={this.handleItemActivation}
                         onItemDeactivation={this.handleItemDeactivation}
                         onItemClick={onItemClick}
@@ -173,6 +201,17 @@ export default class Datagrid extends React.Component<Props> {
                         selections={store.selectionIds}
                     />
                 </div>
+                <Dialog
+                    confirmLoading={this.deleting}
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleDeleteDialogCancelClick}
+                    onConfirm={this.handleDeleteDialogConfirmClick}
+                    open={this.showDeleteDialog}
+                    title={translate('sulu_admin.delete_warning_title')}
+                >
+                    {translate('sulu_admin.delete_warning_text')}
+                </Dialog>
             </Fragment>
         );
     }

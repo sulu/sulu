@@ -8,6 +8,23 @@ exports[`Render data with disabled items 1`] = `
     class="columnListToolbarContainer"
   >
     <div
+      class="toolbarContainer"
+      style="margin-left:0"
+    >
+      <div
+        class="toolbar"
+      >
+        <div
+          class="item primary"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </div>
+      </div>
+    </div>
+    <div
       class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
       <div
@@ -140,6 +157,23 @@ exports[`Render data with edit button 1`] = `
   <div
     class="columnListToolbarContainer"
   >
+    <div
+      class="toolbarContainer"
+      style="margin-left:0"
+    >
+      <div
+        class="toolbar"
+      >
+        <div
+          class="item primary"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </div>
+      </div>
+    </div>
     <div
       class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
@@ -327,6 +361,23 @@ exports[`Render data with loading column 1`] = `
   <div
     class="columnListToolbarContainer"
   >
+    <div
+      class="toolbarContainer"
+      style="margin-left:0"
+    >
+      <div
+        class="toolbar"
+      >
+        <div
+          class="item primary"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </div>
+      </div>
+    </div>
     <div
       class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
@@ -601,6 +652,23 @@ exports[`Render data with selection 1`] = `
     class="columnListToolbarContainer"
   >
     <div
+      class="toolbarContainer"
+      style="margin-left:0"
+    >
+      <div
+        class="toolbar"
+      >
+        <div
+          class="item primary"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </div>
+      </div>
+    </div>
+    <div
       class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
       <div
@@ -677,6 +745,23 @@ exports[`Render data without edit button 1`] = `
   <div
     class="columnListToolbarContainer"
   >
+    <div
+      class="toolbarContainer"
+      style="margin-left:0"
+    >
+      <div
+        class="toolbar"
+      >
+        <div
+          class="item primary"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </div>
+      </div>
+    </div>
     <div
       class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
@@ -760,6 +845,14 @@ exports[`Render with add button in toolbar when onAddClick callback is given 1`]
           <span
             aria-label="su-plus-circle"
             class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item primary"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
           />
         </div>
       </div>

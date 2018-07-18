@@ -19,5 +19,6 @@ Array [
       Test Adapter
     </div>
   </div>,
+  <div />,
 ]
 `;

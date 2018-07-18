@@ -35,5 +35,7 @@
     "sulu_admin.creator": "Ersteller",
     "sulu_admin.created": "Erstellt am",
     "sulu_admin.changer": "Autor",
-    "sulu_admin.changed": "Geändert am"
+    "sulu_admin.changed": "Geändert am",
+    "sulu_admin.delete_warning_title": "Löschen?",
+    "sulu_admin.delete_warning_text": "Diese Operation löscht Daten und kann nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?"
 }

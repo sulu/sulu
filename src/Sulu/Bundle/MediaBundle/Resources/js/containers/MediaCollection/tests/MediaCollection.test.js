@@ -286,7 +286,7 @@ test('Should send a request to add a new collection via the overlay', () => {
     expect(collectionStore.resourceStore.clone).not.toBeCalled();
     expect(field.mock.calls[0][0].value).toEqual(undefined);
 
-    expect(mediaCollection.find('Dialog').prop('open')).toEqual(false);
+    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
     expect(mediaCollection.find('Overlay').prop('open')).toEqual(true);
     expect(document.querySelector('.content header').outerHTML).toEqual(expect.stringContaining('Add collection'));
 
@@ -346,7 +346,7 @@ test('Should send a request to update the collection via the overlay', () => {
     expect(collectionStore.resourceStore.clone).toBeCalled();
     expect(field.mock.calls[0][0].value).toEqual('Title');
 
-    expect(mediaCollection.find('Dialog').prop('open')).toEqual(false);
+    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
     expect(mediaCollection.find('Overlay').prop('open')).toEqual(true);
     expect(document.querySelector('.content header').outerHTML).toEqual(expect.stringContaining('Edit collection'));
 
@@ -391,7 +391,7 @@ test('Confirming the delete dialog should delete the item', () => {
 
     mediaCollection.find('Icon[name="su-trash-alt"]').simulate('click');
 
-    expect(mediaCollection.find('Dialog').prop('open')).toEqual(true);
+    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(true);
     expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
@@ -402,7 +402,7 @@ test('Confirming the delete dialog should delete the item', () => {
     return promise.then(() => {
         expect(collectionNavigateSpy).toBeCalledWith(null);
         mediaCollection.update();
-        expect(mediaCollection.find('Dialog').prop('open')).toEqual(false);
+        expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
     });
 });
 

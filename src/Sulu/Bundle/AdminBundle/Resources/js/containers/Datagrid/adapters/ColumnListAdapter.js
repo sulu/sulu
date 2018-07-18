@@ -3,6 +3,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import ColumnList from '../../../components/ColumnList';
 import PublishIndicator from '../../../components/PublishIndicator';
+import {translate} from '../../../utils/Translator';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import ColumnStructureStrategy from '../structureStrategies/ColumnStructureStrategy';
 import AbstractAdapter from './AbstractAdapter';
@@ -52,6 +53,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
             disabledIds,
             loading,
             onAddClick,
+            onDeleteClick,
             onItemClick,
             onItemSelectionChange,
             selections,
@@ -82,6 +84,23 @@ export default class ColumnListAdapter extends AbstractAdapter {
                 onClick: this.handleColumnAdd,
             });
         }
+
+        toolbarItems.push({
+            icon: 'su-cog',
+            type: 'dropdown',
+            options: [
+                {
+                    label: translate('sulu_admin.delete'),
+                    onClick: (index) => {
+                        if (!activeItems) {
+                            return;
+                        }
+
+                        onDeleteClick(activeItems[((index + 1: any): number)]);
+                    },
+                },
+            ],
+        });
 
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
