@@ -248,8 +248,8 @@ DROP TABLE category_translation_media_interface;
 Some resources in app/config/admin/routing.yml need to be removed:
 - sulu_tag
 - sulu_contact
+- sulu_content
 - sulu_category
-- sulu_custom_urls_api 
 
 ### Security changes
 The admin security needs to be changed (app/config/admin/security.yml).
