@@ -32,8 +32,6 @@
                 <title lang="en">Resourcelocator</title>
                 <title lang="de">Adresse</title>
             </meta>
-
-            <tag name="sulu.rlp"/>
         </property>
 
         <property name="article" type="text_editor">

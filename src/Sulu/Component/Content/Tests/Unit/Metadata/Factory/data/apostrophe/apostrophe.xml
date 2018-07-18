@@ -33,8 +33,6 @@
                         <title lang="en">Resource Locator</title>
                         <title lang="de">Adresse</title>
                     </meta>
-
-                    <tag name="sulu.rlp"/>
                 </property>
             </properties>
         </section>

@@ -31,8 +31,6 @@
             </meta>
 
             <indexField />
-
-            <tag name="sulu.rlp"/>
         </property>
 
         <property name="images" type="media_selection">

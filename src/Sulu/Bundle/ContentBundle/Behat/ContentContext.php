@@ -61,8 +61,6 @@ class ContentContext extends BaseStructureContext implements SnippetAcceptingCon
                 <title lang="de">Adresse</title>
                 <title lang="en">Resourcelocator</title>
             </meta>
-
-            <tag name="sulu.rlp"/>
         </property>
 
 %s

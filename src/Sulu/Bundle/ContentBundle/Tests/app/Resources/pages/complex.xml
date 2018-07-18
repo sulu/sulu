@@ -31,8 +31,6 @@
                 <title lang="de">Adresse</title>
                 <title lang="en">Resourcelocator</title>
             </meta>
-
-            <tag name="sulu.rlp"/>
         </property>
 
         <block name="block1" 

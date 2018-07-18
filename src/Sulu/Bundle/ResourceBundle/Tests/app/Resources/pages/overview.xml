@@ -14,9 +14,7 @@
             <tag name="sulu.rlp.part" />
         </property>
         <property name="tags" type="text_line" minOccurs="2" maxOccurs="10"/>
-        <property name="url" type="resource_locator" mandatory="true">
-            <tag name="sulu.rlp" />
-        </property>
+        <property name="url" type="resource_locator" mandatory="true"/>
         <property name="article" type="text_area" mandatory="false"/>
         <property name="blog" type="text_area" mandatory="false"/>
         <property name="external" type="url" mandatory="false" />
