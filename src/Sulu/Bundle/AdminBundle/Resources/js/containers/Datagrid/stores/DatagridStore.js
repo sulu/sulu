@@ -156,7 +156,10 @@ export default class DatagridStore {
         }
 
         return ResourceRequester.delete(this.resourceKey, identifier, queryOptions)
-            .then(() => this.remove(identifier));
+            .then(() => {
+                this.deselectById(identifier);
+                this.remove(identifier);
+            });
     };
 
     remove = (identifier: string | number): void => {
@@ -272,7 +275,12 @@ export default class DatagridStore {
 
     @action deselect(row: Object) {
         // TODO do not hardcode id but use metdata instead
-        const index = this.selections.findIndex((item) => item.id === row.id);
+        this.deselectById(row.id);
+    }
+
+    @action deselectById(id: string | number) {
+        // TODO do not hardcode id but use metdata instead
+        const index = this.selections.findIndex((item) => item.id === id);
         if (index === -1) {
             return;
         }

@@ -466,6 +466,23 @@ test('Deselect all visible items', () => {
     datagridStore.destroy();
 });
 
+test('Deselect an item by id', () => {
+    const page = observable.box();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.structureStrategy.visibleItems = [{id: 1}, {id: 2}, {id: 3}];
+    datagridStore.selections = [
+        {id: 1},
+        {id: 2},
+        {id: 7},
+    ];
+    datagridStore.deselectById(7);
+    expect(toJS(datagridStore.selectionIds)).toEqual([1, 2]);
+    datagridStore.destroy();
+});
+
 test('Clear the selection', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {
@@ -834,6 +851,29 @@ test('Should delete the item with the given ID', () => {
     expect(ResourceRequester.delete).toBeCalledWith('snippets', 5, {locale: 'en', webspace: 'sulu'});
 
     return deletePromise.then(() => {
+        expect(structureStrategy.remove).toBeCalledWith(5);
+    });
+});
+
+test('Should delete the item with the given ID and remove it from the selection afterwards', () => {
+    const page = observable.box(1);
+    const locale = observable.box('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const deletePromise = Promise.resolve({id: 5});
+    ResourceRequester.delete.mockReturnValue(deletePromise);
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.select({id: 5});
+    expect(datagridStore.selections.toJS()).toEqual([{id: 5}]);
+    datagridStore.delete(5);
+
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', 5, {locale: 'en'});
+
+    return deletePromise.then(() => {
+        expect(datagridStore.selections.toJS()).toEqual([]);
         expect(structureStrategy.remove).toBeCalledWith(5);
     });
 });
