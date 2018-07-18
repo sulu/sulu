@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.5
+* 1.5.17 (2018-07-18)
     * HOTFIX      #4063 [ContentComponent]      Fixed copy language function, which didn't copy the extension data
     * HOTFIX      #4056 [MediaBundle]           Added security-check for collection permission to media-controller
     * HOTFIX      #5060 [MediaBundle]           Added escaping of media edit overlay title
