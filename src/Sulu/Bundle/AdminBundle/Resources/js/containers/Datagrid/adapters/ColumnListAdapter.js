@@ -85,17 +85,23 @@ export default class ColumnListAdapter extends AbstractAdapter {
             });
         }
 
+        if (!activeItems) {
+            throw new Error(
+                'The ColumnListAdapter does not work without activeItems. '
+                + 'This error should not happen and is likely a bug.'
+            );
+        }
+
         toolbarItems.push({
             icon: 'su-cog',
             type: 'dropdown',
             options: [
                 {
+                    isDisabled: (index) => {
+                        return activeItems[((index + 1: any): number)] === undefined;
+                    },
                     label: translate('sulu_admin.delete'),
                     onClick: (index) => {
-                        if (!activeItems) {
-                            return;
-                        }
-
                         onDeleteClick(activeItems[((index + 1: any): number)]);
                     },
                 },

@@ -192,7 +192,7 @@ test('Render with add button in toolbar when onAddClick callback is given', () =
     const columnListAdapter = render(
         <ColumnListAdapter
             active={4}
-            activeItems={undefined}
+            activeItems={[]}
             data={data}
             disabledIds={[]}
             loading={false}
@@ -467,4 +467,110 @@ test('Execute onDeleteClick callback when an item is deleted with the correct id
     columnListAdapter.find('ToolbarDropdown').find('ToolbarDropdownListOption button').at(0).simulate('click');
 
     expect(deleteClickSpy).toBeCalledWith(3);
+});
+
+test('Enable delete button if an item in this column has been activated', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+            },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: false,
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            active={3}
+            activeItems={[1, 3]}
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onDeleteClick={jest.fn()}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
+            onPageChange={jest.fn()}
+            onSort={jest.fn()}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    expect(columnListAdapter.find('Toolbar ToolbarDropdown button').at(0).prop('disabled')).toEqual(false);
+});
+
+test('Disable delete button if no item in this column has been activated', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+            },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: false,
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            active={3}
+            activeItems={[1]}
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onDeleteClick={jest.fn()}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
+            onPageChange={jest.fn()}
+            onSort={jest.fn()}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    expect(columnListAdapter.find('Toolbar ToolbarDropdown button').at(0).prop('disabled')).toEqual(true);
 });
