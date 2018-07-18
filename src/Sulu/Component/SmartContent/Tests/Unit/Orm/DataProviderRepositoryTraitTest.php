@@ -62,7 +62,7 @@ class DataProviderRepositoryTraitTest extends \PHPUnit_Framework_TestCase
         $query->method('getScalarResult')->willReturn([]);
         $queryBuilder = $this->prophesize(QueryBuilder::class);
         $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->groupBy(Argument::cetera())->willReturn($queryBuilder);
         $queryBuilder->orderBy(Argument::cetera())->willReturn($queryBuilder);
         $queryBuilder->getQuery()->willReturn($query);
 
@@ -70,8 +70,8 @@ class DataProviderRepositoryTraitTest extends \PHPUnit_Framework_TestCase
 
         $findByFiltersIdsReflection->invoke($this->dataProviderRepositoryTrait, [], 1, 5, null, 'de');
 
-        // using distinct here is essential, since due to our joins multiple rows might be returned
+        // using groupBy here is essential, since due to our joins multiple rows might be returned
         // this makes problems if also a limit is used
-        $queryBuilder->distinct()->shouldBeCalled();
+        $queryBuilder->groupBy('c.id')->shouldBeCalled();
     }
 }
