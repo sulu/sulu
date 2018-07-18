@@ -1,6 +1,16 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.21 (2018-07-18)
+    * HOTFIX      #4063 [ContentComponent]      Fixed copy language function, which didn't copy the extension data
+    * HOTFIX      #4056 [MediaBundle]           Added security-check for collection permission to media-controller
+    * HOTFIX      #5060 [MediaBundle]           Added escaping of media edit overlay title
+    * HOTFIX      #4067 [SmartContent]          Avoid returning the same id multiple times in filter query of smart content
+    * HOTFIX      #4058 [ContactBundle]         Added escaping of name in contact-list
+    * HOTFIX      #4058 [ContactBundle]         Added escaping for address and bank-accounts
+    * HOTFIX      #4058 [MediaBundle]           Added escaping of name in media-list
+    * HOTFIX      #4057 [SecurityBundle]        Removed password-hash from user-api
+
 * 1.6.20 (2018-06-29)
     * BUGFIX      #4042 [AudienceTargetingBundle] Add symfony 3.4.12 as conflict to fix caching tests
     * HOTFIX      #4019 [Component]               Fix handling of authored date on safari
@@ -240,8 +250,11 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
-* dev-release/1.5
+* 1.5.17 (2018-07-18)
+    * HOTFIX      #4063 [ContentComponent]      Fixed copy language function, which didn't copy the extension data
     * HOTFIX      #4056 [MediaBundle]           Added security-check for collection permission to media-controller
+    * HOTFIX      #5060 [MediaBundle]           Added escaping of media edit overlay title
+    * HOTFIX      #4067 [SmartContent]          Avoid returning the same id multiple times in filter query of smart content
     * HOTFIX      #4058 [ContactBundle]         Added escaping of name in contact-list
     * HOTFIX      #4058 [ContactBundle]         Added escaping for address and bank-accounts
     * HOTFIX      #4058 [MediaBundle]           Added escaping of name in media-list
