@@ -69,6 +69,10 @@ trait DataProviderRepositoryTrait
         if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
             $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
             $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, 'c', $locale);
+
+            foreach ($filters['sortBy'] as $sortColumn) {
+                $queryBuilder->addSelect($sortColumn);
+            }
         }
 
         $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
