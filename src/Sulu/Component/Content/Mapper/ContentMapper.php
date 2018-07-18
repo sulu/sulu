@@ -507,6 +507,10 @@ class ContentMapper implements ContentMapperInterface
                 $documentAccessor->set(WorkflowStageSubscriber::PUBLISHED_FIELD, null);
             }
 
+            if ($document instanceof ExtensionBehavior) {
+                $destDocument->setExtensionsData($document->getExtensionsData());
+            }
+
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($destDocument instanceof ResourceSegmentBehavior) {
                 $resourceLocator = $resourceLocatorStrategy->generate(

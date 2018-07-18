@@ -81,11 +81,6 @@ class UserController extends RestController implements ClassResourceInterface, S
             'locale',
             $this->container->getParameter('sulu.model.user.class')
         );
-        $this->fieldDescriptors['salt'] = new DoctrineFieldDescriptor(
-            'salt',
-            'salt',
-            $this->container->getParameter('sulu.model.user.class')
-        );
         $this->fieldDescriptors['apiKey'] = new DoctrineFieldDescriptor(
             'apiKey',
             'apiKey',
