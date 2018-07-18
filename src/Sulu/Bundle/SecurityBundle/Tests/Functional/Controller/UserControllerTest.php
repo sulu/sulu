@@ -795,6 +795,7 @@ class UserControllerTest extends SuluTestCase
             'PUT',
             '/api/users/' . $this->user1->getId(),
             [
+                'username' => 'manager',
                 'locale' => 'en',
                 'contact' => [
                     'id' => $this->contact1->getId(),

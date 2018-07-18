@@ -13,6 +13,7 @@ namespace Sulu\Component\SmartContent\Tests\Orm;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
@@ -35,7 +36,7 @@ class Query extends AbstractQuery
     }
 }
 
-class DataProviderRepositoryTraitTest extends \PHPUnit_Framework_TestCase
+class DataProviderRepositoryTraitTest extends TestCase
 {
     /**
      * @var DataProviderRepositoryTrait
