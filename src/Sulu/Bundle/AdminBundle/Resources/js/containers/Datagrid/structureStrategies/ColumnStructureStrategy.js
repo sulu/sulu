@@ -36,13 +36,18 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
     }
 
     @action remove(identifier: string | number) {
-        for (const column of this.rawData.values()) {
+        for (const columnIndex of this.activeItems.keys()) {
+            const column = this.rawData.get(this.activeItems[columnIndex]);
+            if (!column) {
+                continue;
+            }
+
             for (const index of column.keys()) {
                 // TODO do not hardcode id but use metadata instead
                 const id = column[index].id;
                 if (id === identifier) {
                     if (this.activeItems.includes(id)) {
-                        removeColumnsAfterIndex(this.activeItems, index, this.rawData);
+                        removeColumnsAfterIndex(this.activeItems, columnIndex, this.rawData);
                     }
                     column.splice(index, 1);
                 }

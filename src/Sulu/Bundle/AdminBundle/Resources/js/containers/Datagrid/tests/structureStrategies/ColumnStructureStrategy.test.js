@@ -128,14 +128,44 @@ test('Should remove an entry', () => {
 
 test('Should remove an entry with the following columns if the entry was active', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();
-    columnStructureStrategy.rawData.set(undefined, [{id: 1}]);
+    columnStructureStrategy.rawData.set(undefined, [{id: 10}]);
     columnStructureStrategy.rawData.set(1, [{id: 2}, {id: 4}]);
     columnStructureStrategy.rawData.set(4, [{id: 3}, {id: 5}]);
 
     columnStructureStrategy.remove(4);
 
     expect(columnStructureStrategy.data).toEqual([
+        [{id: 10}],
+        [{id: 2}],
+    ]);
+});
+
+test('Should remove an entry with the following columns if the entry was active and string ids are used', () => {
+    const columnStructureStrategy = new ColumnStructureStrategy();
+    columnStructureStrategy.rawData.set(undefined, [{id: 'z1'}]);
+    columnStructureStrategy.rawData.set('z1', [{id: 'y2'}, {id: 'w4'}]);
+    columnStructureStrategy.rawData.set('w4', [{id: 'x3'}, {id: 'v5'}]);
+
+    columnStructureStrategy.remove('w4');
+
+    expect(columnStructureStrategy.data).toEqual([
+        [{id: 'z1'}],
+        [{id: 'y2'}],
+    ]);
+});
+
+test('Should remove the last entry of the last column and leave the last column if an item is left', () => {
+    const columnStructureStrategy = new ColumnStructureStrategy();
+    columnStructureStrategy.rawData.set(undefined, [{id: 1}]);
+    columnStructureStrategy.rawData.set(1, [{id: 2}]);
+    columnStructureStrategy.rawData.set(2, [{id: 3}, {id: 4}]);
+    columnStructureStrategy.rawData.set(4, []);
+
+    columnStructureStrategy.remove(4);
+
+    expect(columnStructureStrategy.data).toEqual([
         [{id: 1}],
         [{id: 2}],
+        [{id: 3}],
     ]);
 });
