@@ -5,6 +5,7 @@ export type ItemButtonConfig = {
 };
 
 export type ToolbarDropdownOptionConfig = {
+    isDisabled?: (columnIndex?: string | number) => boolean,
     label: string,
     onClick: (columnIndex?: string | number) => void,
 };

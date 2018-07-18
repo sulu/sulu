@@ -35,6 +35,9 @@ exports[`Should render with active 2`] = `
           <li>
             <button class=\\"option\\">Option1</button>
           </li>
+          <li>
+            <button class=\\"option\\" disabled=\\"\\">Option1</button>
+          </li>
         </ul>
       </div>
     </div>

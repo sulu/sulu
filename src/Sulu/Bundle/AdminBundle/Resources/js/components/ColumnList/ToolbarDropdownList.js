@@ -22,10 +22,15 @@ export default class ToolbarDropdownList extends React.Component<Props> {
 
         return options.map((dropdownOptionConfig: ToolbarDropdownOptionConfig, columnIndex: number) => {
             const key = `option-${columnIndex}`;
-            const {onClick, label} = dropdownOptionConfig;
+            const {isDisabled, onClick, label} = dropdownOptionConfig;
 
             return (
-                <ToolbarDropdownListOption key={key} onClick={onClick} columnIndex={this.props.columnIndex}>
+                <ToolbarDropdownListOption
+                    disabled={isDisabled ? isDisabled(this.props.columnIndex) : undefined}
+                    key={key}
+                    onClick={onClick}
+                    columnIndex={this.props.columnIndex}
+                >
                     {label}
                 </ToolbarDropdownListOption>
             );

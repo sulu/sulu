@@ -26,6 +26,11 @@ test('Should render with active', () => {
                     label: 'Option1',
                     onClick: jest.fn(),
                 },
+                {
+                    isDisabled: () => true,
+                    label: 'Option1',
+                    onClick: jest.fn(),
+                },
             ],
         },
     ];
