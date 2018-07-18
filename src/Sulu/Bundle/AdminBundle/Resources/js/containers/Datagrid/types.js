@@ -6,6 +6,10 @@ export type DataItem = {
     id: string | number,
 };
 
+export type ColumnItem = DataItem & {
+    hasChildren: boolean,
+};
+
 export type SchemaEntry = {
     label: string,
     type: string,
