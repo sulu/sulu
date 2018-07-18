@@ -60,8 +60,8 @@ trait DataProviderRepositoryTrait
 
         $queryBuilder = $this->createQueryBuilder('c')
             ->select('c.id')
-            ->orderBy('c.id', 'ASC')
-            ->groupBy('c.id');
+            ->distinct()
+            ->orderBy('c.id', 'ASC');
 
         $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
         $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
