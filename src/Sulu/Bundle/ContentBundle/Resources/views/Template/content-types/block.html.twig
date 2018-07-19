@@ -33,9 +33,7 @@
                         <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
 
                         <div class="collapsed-container empty">
-                            {% if property.types|length > 1 %}
-                                <div class="type">{{ type.getTitle(userLocale) }}</div>
-                            {% endif %}
+                            <div class="type">{{ type.getTitle(userLocale) }}</div>
                             <div class="title"></div>
                             <div class="image"></div>
                             <div class="text hidden"></div>
