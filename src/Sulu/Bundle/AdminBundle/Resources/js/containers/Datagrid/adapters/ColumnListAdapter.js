@@ -2,6 +2,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import ColumnList from '../../../components/ColumnList';
+import PublishIndicator from '../../../components/PublishIndicator';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import ColumnStructureStrategy from '../structureStrategies/ColumnStructureStrategy';
 import AbstractAdapter from './AbstractAdapter';
@@ -91,7 +92,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
                             loading={index >= this.props.data.length - 1 && loading}
                         >
                             {items.map((item: Object) => (
-                                // TODO: Don't access properties like "hasChildren" or "title" directly
+                                // TODO: Don't access "hasChildren", "published", "publishedState" or "title" directly
                                 <ColumnList.Item
                                     active={activeItems ? activeItems.includes(item.id) : undefined}
                                     disabled={disabledIds.includes(item.id)}
@@ -99,6 +100,13 @@ export default class ColumnListAdapter extends AbstractAdapter {
                                     id={item.id}
                                     key={item.id}
                                     selected={selections.includes(item.id)}
+                                    indicators={[
+                                        <PublishIndicator
+                                            key={1}
+                                            draft={item.publishedState === undefined ? false : !item.publishedState}
+                                            published={item.publishedState === undefined ? false : item.published}
+                                        />,
+                                    ]}
                                 >
                                     {item.title}
                                 </ColumnList.Item>

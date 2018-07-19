@@ -252,6 +252,53 @@ test('Render data with loading column', () => {
     expect(columnListAdapter).toMatchSnapshot();
 });
 
+test('Render data with published and draft state', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+                publishedState: false,
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+                publishedState: false,
+                published: '2017-05-12',
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = render(
+        <ColumnListAdapter
+            active={1}
+            activeItems={[1]}
+            data={data}
+            disabledIds={[]}
+            loading={true}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
+            onPageChange={jest.fn()}
+            onSort={jest.fn()}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    expect(columnListAdapter).toMatchSnapshot();
+});
+
 test('Execute onItemActivation callback when an item is clicked with the correct parameter', () => {
     const onItemActivationSpy = jest.fn();
 
