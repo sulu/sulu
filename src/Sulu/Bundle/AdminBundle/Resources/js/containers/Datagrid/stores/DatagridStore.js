@@ -156,10 +156,26 @@ export default class DatagridStore {
         }
 
         return ResourceRequester.delete(this.resourceKey, identifier, queryOptions)
-            .then(() => {
+            .then(action(() => {
                 this.deselectById(identifier);
                 this.remove(identifier);
-            });
+            }));
+    };
+
+    @action deleteSelection = () => {
+        const deletePromises = [];
+        this.selectionIds.forEach((id) => {
+            deletePromises.push(this.delete(id).catch((error) => {
+                if (error.status !== 404) {
+                    return Promise.reject(error);
+                }
+            }));
+        });
+
+        return Promise.all(deletePromises).then(() => {
+            this.selectionIds.forEach(this.remove);
+            this.clearSelection();
+        });
     };
 
     remove = (identifier: string | number): void => {

@@ -897,6 +897,68 @@ test('Should delete the item with the given ID without locale', () => {
     });
 });
 
+test('Should delete all selected items', () => {
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore('snippets', {page});
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    datagridStore.select({id: 1});
+    datagridStore.select({id: 2});
+
+    const deletePromise = datagridStore.deleteSelection();
+
+    return deletePromise.then(() => {
+        expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', 1, {});
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', 2, {});
+        expect(structureStrategy.remove).toBeCalledWith(1);
+        expect(structureStrategy.remove).toBeCalledWith(2);
+        expect(datagridStore.selections).toEqual([]);
+    });
+});
+
+test('Should delete all selected items and succeed even if one of them returns a 404', () => {
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore('snippets', {page});
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    ResourceRequester.delete.mockReturnValue(Promise.reject({status: 404}));
+
+    datagridStore.select({id: 1});
+    datagridStore.select({id: 2});
+
+    const deletePromise = datagridStore.deleteSelection();
+
+    return deletePromise.then(() => {
+        expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', 1, {});
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', 2, {});
+        expect(structureStrategy.remove).toBeCalledWith(1);
+        expect(structureStrategy.remove).toBeCalledWith(2);
+        expect(datagridStore.selections).toEqual([]);
+    });
+});
+
+test('Should crash when deleting all selected items and one request fails with another error than 404', (done) => {
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore('snippets', {page});
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    ResourceRequester.delete.mockReturnValue(Promise.reject({status: 500}));
+
+    datagridStore.select({id: 1});
+    datagridStore.select({id: 2});
+
+    const deletePromise = datagridStore.deleteSelection();
+    deletePromise.catch((error) => {
+        expect(error.status).toEqual(500);
+        done();
+    });
+});
+
 test('Should call all disposers if destroy is called', () => {
     const datagridStore = new DatagridStore('snippets', {page: observable.box()});
     datagridStore.sendRequestDisposer = jest.fn();
