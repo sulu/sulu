@@ -14,3 +14,12 @@ test('Should render item as selected', () => {
 test('Should render item as disabled', () => {
     expect(render(<Item id={1} disabled={true}>Test</Item>)).toMatchSnapshot();
 });
+
+test('Should render item with indicators', () => {
+    const indicators = [
+        <span key={1}>ghost</span>,
+        <span key={2}>shadow</span>,
+    ];
+
+    expect(render(<Item id={2} indicators={indicators}>Test with indicators</Item>)).toMatchSnapshot();
+});

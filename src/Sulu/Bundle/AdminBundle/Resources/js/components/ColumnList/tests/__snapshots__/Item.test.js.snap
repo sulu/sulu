@@ -36,6 +36,9 @@ exports[`Should render item as disabled 1`] = `
       </div>
     </div>
   </span>
+  <span
+    class="children"
+  />
 </div>
 `;
 
@@ -75,6 +78,9 @@ exports[`Should render item as not selected by default 1`] = `
       </div>
     </div>
   </span>
+  <span
+    class="children"
+  />
 </div>
 `;
 
@@ -114,5 +120,64 @@ exports[`Should render item as selected 1`] = `
       </div>
     </div>
   </span>
+  <span
+    class="children"
+  />
+</div>
+`;
+
+exports[`Should render item with indicators 1`] = `
+<div
+  class="item"
+>
+  <span
+    class="buttons"
+  />
+  <span
+    class="text"
+  >
+    <div
+      aria-label="Test with indicators"
+      class="croppedText"
+      title="Test with indicators"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Test with 
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          indicators
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Test with indicators
+      </div>
+    </div>
+  </span>
+  <span
+    class="indicator"
+  >
+    <span>
+      ghost
+    </span>
+  </span>
+  <span
+    class="indicator"
+  >
+    <span>
+      shadow
+    </span>
+  </span>
+  <span
+    class="children"
+  />
 </div>
 `;

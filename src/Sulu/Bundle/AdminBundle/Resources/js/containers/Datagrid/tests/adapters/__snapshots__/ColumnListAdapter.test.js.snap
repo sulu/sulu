@@ -59,9 +59,13 @@ exports[`Render data with disabled items 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
-            />
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -109,6 +113,9 @@ exports[`Render data with disabled items 1`] = `
                 </div>
               </div>
             </span>
+            <span
+              class="children"
+            />
           </div>
         </div>
         <div
@@ -179,9 +186,13 @@ exports[`Render data with edit button 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
-            />
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
           <div
             class="item active"
@@ -225,6 +236,9 @@ exports[`Render data with edit button 1`] = `
                 </div>
               </div>
             </span>
+            <span
+              class="children"
+            />
           </div>
         </div>
         <div
@@ -273,9 +287,13 @@ exports[`Render data with edit button 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
-            />
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -339,9 +357,13 @@ exports[`Render data with loading column 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
-            />
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
           <div
             class="item"
@@ -378,6 +400,9 @@ exports[`Render data with loading column 1`] = `
                 </div>
               </div>
             </span>
+            <span
+              class="children"
+            />
           </div>
         </div>
         <div
@@ -464,9 +489,13 @@ exports[`Render data with selection 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
-            />
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -527,9 +556,13 @@ exports[`Render data without edit button 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
-            />
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
         </div>
       </div>
