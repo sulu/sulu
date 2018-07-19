@@ -5,7 +5,7 @@ exports[`Render WebspaceOverview 1`] = `
   class="webspaceOverview"
 >
   <div
-    class="webspaceSelect"
+    class="headerContainer"
   >
     <div
       class="webspaceSelect"
@@ -26,10 +26,6 @@ exports[`Render WebspaceOverview 1`] = `
         />
       </button>
     </div>
-  </div>
-  <div
-    class="headerContainer"
-  >
     <div
       class="toolbar"
     >
