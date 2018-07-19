@@ -22,7 +22,9 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                   <div><span class=\\"su-plus clickable\\" aria-label=\\"su-plus\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-pen clickable\\" aria-label=\\"su-pen\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\"
                       role=\\"button\\" tabindex=\\"0\\"></span></div>
                 </div>
-                <div class=\\"toolbar\\"></div>
+                <div class=\\"headerContainer\\">
+                  <div class=\\"toolbar\\"></div>
+                </div>
                 <div class=\\"datagrid\\">
                   <section>
                     <ul class=\\"folderList\\">
@@ -57,11 +59,13 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
               </div>
               <div class=\\"divider\\"></div>
               <div>
-                <div class=\\"toolbar\\">
-                  <label class=\\"input dark collapsed hasAppendIcon\\">
-                    <div class=\\"prependedContainer dark collapsed\\"><span class=\\"icon dark iconClickable collapsed su-search clickable\\" aria-label=\\"su-search\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
-                    <input type=\\"text\\" value=\\"\\">
-                  </label>
+                <div class=\\"headerContainer\\">
+                  <div class=\\"toolbar\\">
+                    <label class=\\"input dark collapsed hasAppendIcon\\">
+                      <div class=\\"prependedContainer dark collapsed\\"><span class=\\"icon dark iconClickable collapsed su-search clickable\\" aria-label=\\"su-search\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+                      <input type=\\"text\\" value=\\"\\">
+                    </label>
+                  </div>
                 </div>
                 <div class=\\"datagrid\\">
                   <section>

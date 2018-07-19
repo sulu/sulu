@@ -4,10 +4,19 @@
     height: 100%;
 }
 
+.header-container {
+    display: flex;
+    margin-bottom: 40px;
+
+    .toolbar {
+        flex-grow: 1;
+    }
+}
+
 .toolbar {
-    margin-bottom: 30px;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
 
     & > * {
         height: 30px;

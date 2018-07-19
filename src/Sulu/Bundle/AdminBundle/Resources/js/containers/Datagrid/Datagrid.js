@@ -2,6 +2,7 @@
 import {observer} from 'mobx-react';
 import {observable, action, computed} from 'mobx';
 import React, {Fragment} from 'react';
+import type {Node} from 'react';
 import equal from 'fast-deep-equal';
 import type {SortOrder} from './types';
 import DatagridStore from './stores/DatagridStore';
@@ -14,6 +15,7 @@ import datagridStyles from './datagrid.scss';
 type Props = {|
     adapters: Array<string>,
     disabledIds: Array<string | number>,
+    header?: Node,
     onItemClick?: (itemId: string | number) => void,
     onAddClick?: (id: string | number) => void,
     selectable: boolean,
@@ -124,6 +126,7 @@ export default class Datagrid extends React.Component<Props> {
         const {
             adapters,
             disabledIds,
+            header,
             onItemClick,
             onAddClick,
             searchable,
@@ -134,15 +137,18 @@ export default class Datagrid extends React.Component<Props> {
 
         return (
             <Fragment>
-                <div className={datagridStyles.toolbar}>
-                    {searchable &&
-                        <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
-                    }
-                    <AdapterSwitch
-                        adapters={adapters}
-                        currentAdapter={this.currentAdapterKey}
-                        onAdapterChange={this.handleAdapterChange}
-                    />
+                <div className={datagridStyles.headerContainer}>
+                    {header}
+                    <div className={datagridStyles.toolbar}>
+                        {searchable &&
+                            <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
+                        }
+                        <AdapterSwitch
+                            adapters={adapters}
+                            currentAdapter={this.currentAdapterKey}
+                            onAdapterChange={this.handleAdapterChange}
+                        />
+                    </div>
                 </div>
                 <div className={datagridStyles.datagrid}>
                     <Adapter

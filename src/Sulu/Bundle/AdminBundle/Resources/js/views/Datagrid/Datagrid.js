@@ -138,9 +138,9 @@ class Datagrid extends React.Component<ViewProps> {
 
         return (
             <div className={datagridStyles.datagrid}>
-                {title && <h1>{translate(title)}</h1>}
                 <DatagridContainer
                     adapters={adapters}
+                    header={title && <h1 className={datagridStyles.header}>{translate(title)}</h1>}
                     onAddClick={addRoute && this.handleAddClick}
                     onItemClick={editRoute && this.handleEditClick}
                     searchable={searchable}

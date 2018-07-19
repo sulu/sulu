@@ -28,35 +28,39 @@ exports[`Render WebspaceOverview 1`] = `
     </div>
   </div>
   <div
-    class="toolbar"
+    class="headerContainer"
   >
-    <div>
-      <button
-        class="button icon active button"
-        type="button"
-      >
-        <span
-          class="text"
+    <div
+      class="toolbar"
+    >
+      <div>
+        <button
+          class="button icon active button"
+          type="button"
         >
           <span
-            aria-label="su-columns"
-            class="su-columns"
-          />
-        </span>
-      </button>
-      <button
-        class="button icon button"
-        type="button"
-      >
-        <span
-          class="text"
+            class="text"
+          >
+            <span
+              aria-label="su-columns"
+              class="su-columns"
+            />
+          </span>
+        </button>
+        <button
+          class="button icon button"
+          type="button"
         >
           <span
-            aria-label="su-columns"
-            class="su-columns"
-          />
-        </span>
-      </button>
+            class="text"
+          >
+            <span
+              aria-label="su-columns"
+              class="su-columns"
+            />
+          </span>
+        </button>
+      </div>
     </div>
   </div>
   <div

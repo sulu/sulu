@@ -4,30 +4,36 @@ exports[`Should render the datagrid with a title 1`] = `
 <div
   class="datagrid"
 >
-  <h1>
-    Snippets
-  </h1>
   <div
-    class="toolbar"
+    class="headerContainer"
   >
-    <label
-      class="input dark collapsed hasAppendIcon"
+    <h1
+      class="header"
     >
-      <div
-        class="prependedContainer dark collapsed"
+      Snippets
+    </h1>
+    <div
+      class="toolbar"
+    >
+      <label
+        class="input dark collapsed hasAppendIcon"
       >
-        <span
-          aria-label="su-search"
-          class="icon dark iconClickable collapsed su-search clickable"
-          role="button"
-          tabindex="0"
+        <div
+          class="prependedContainer dark collapsed"
+        >
+          <span
+            aria-label="su-search"
+            class="icon dark iconClickable collapsed su-search clickable"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <input
+          type="text"
+          value=""
         />
-      </div>
-      <input
-        type="text"
-        value=""
-      />
-    </label>
+      </label>
+    </div>
   </div>
   <div
     class="datagrid"
@@ -180,26 +186,30 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
   class="datagrid"
 >
   <div
-    class="toolbar"
+    class="headerContainer"
   >
-    <label
-      class="input dark collapsed hasAppendIcon"
+    <div
+      class="toolbar"
     >
-      <div
-        class="prependedContainer dark collapsed"
+      <label
+        class="input dark collapsed hasAppendIcon"
       >
-        <span
-          aria-label="su-search"
-          class="icon dark iconClickable collapsed su-search clickable"
-          role="button"
-          tabindex="0"
+        <div
+          class="prependedContainer dark collapsed"
+        >
+          <span
+            aria-label="su-search"
+            class="icon dark iconClickable collapsed su-search clickable"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <input
+          type="text"
+          value=""
         />
-      </div>
-      <input
-        type="text"
-        value=""
-      />
-    </label>
+      </label>
+    </div>
   </div>
   <div
     class="datagrid"
