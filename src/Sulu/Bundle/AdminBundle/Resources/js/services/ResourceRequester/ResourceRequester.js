@@ -32,6 +32,11 @@ export default class ResourceRequester {
         return Requester.post(endpoint + ResourceRequester.buildQueryString(queryOptions), data);
     }
 
+    static postWithId(resourceKey: string, id: number | string, data: Object, queryOptions: ?Object) {
+        const endpoint = resourceMetadataStore.getEndpoint(resourceKey);
+        return Requester.post(endpoint + '/' + id + ResourceRequester.buildQueryString(queryOptions), data);
+    }
+
     static put(resourceKey: string, id: number | string, data: Object, queryOptions: ?Object) {
         const endpoint = resourceMetadataStore.getEndpoint(resourceKey);
         return Requester.put(endpoint + '/' + id + ResourceRequester.buildQueryString(queryOptions), data);
