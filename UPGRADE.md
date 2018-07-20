@@ -134,7 +134,13 @@ command:
 composer require pulse00/ffmpeg-bundle:^0.6
 ```
 
+Otherwise remove `new Dubture\FFmpegBundle\DubtureFFmpegBundle(),` from the list in app/AbstractKernel.php
+
 ### Deprecations
+
+Removed following Bundles:
+
+* Sulu\Bundle\TranslateBundle\SuluTranslateBundle (needs to be removed from the list in app/AbstractKernel.php)
 
 Removed following Classes:
 
@@ -235,6 +241,62 @@ Migrate values from category_translation_media_interface to ca_category_translat
 ```sql
 INSERT INTO ca_category_translation_medias (idCategoryTranslations, idMedia) SELECT category_translation_id, media_interface_id FROM category_translation_media_interface;
 DROP TABLE category_translation_media_interface;
+```
+
+### Routing changes
+
+Some resources in app/config/admin/routing.yml need to be removed:
+- sulu_tag
+- sulu_contact
+- sulu_content
+- sulu_category
+
+### Security changes
+The admin security needs to be changed (app/config/admin/security.yml).
+The new settings are:
+
+```yaml
+security:
+    access_decision_manager:
+        strategy: unanimous
+        allow_if_all_abstain: true
+
+    encoders:
+        Sulu\Bundle\SecurityBundle\Entity\User:
+            algorithm: sha512
+            iterations: 5000
+            encode_as_base64: false
+
+    providers:
+        sulu:
+            id: sulu_security.user_provider
+
+    access_control:
+        - { path: ^/admin/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/security/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/_wdt, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/translations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_USER }
+
+    firewalls:
+        admin:
+            pattern: ^/
+            anonymous: ~
+            entry_point: sulu_security.authentication_entry_point
+            json_login:
+                check_path: sulu_admin.login_check
+                success_handler: sulu_security.authentication_handler
+                failure_handler: sulu_security.authentication_handler
+            logout:
+                path: sulu_admin.logout
+                success_handler: sulu_security.logout_success_handler
+
+sulu_security:
+    checker:
+        enabled: true
 ```
 
 ## 1.6.17
