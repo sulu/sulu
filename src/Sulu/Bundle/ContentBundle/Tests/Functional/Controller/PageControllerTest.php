@@ -97,4 +97,17 @@ class PageControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('id', $page2);
         $this->assertObjectNotHasAttribute('uuid', $page2);
     }
+
+    public function testPostTriggerAction()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $webspaceUuid = $this->session->getNode('/cmf/sulu_io/contents')->getIdentifier();
+
+        $client->request(
+            'POST',
+            '/api/pages/' . $webspaceUuid . '?webspace=sulu_io&action=copy-locale&locale=en&dest=de'
+        );
+        $this->assertHttpStatusCode(200, $client->getResponse());
+    }
 }
