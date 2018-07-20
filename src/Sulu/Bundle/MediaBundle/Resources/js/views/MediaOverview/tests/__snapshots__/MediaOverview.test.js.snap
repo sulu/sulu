@@ -56,8 +56,12 @@ exports[`Render a simple MediaOverview 1`] = `
         </div>
       </div>
       <div
-        class="toolbar"
-      />
+        class="headerContainer"
+      >
+        <div
+          class="toolbar"
+        />
+      </div>
       <div
         class="datagrid"
       >
@@ -164,53 +168,57 @@ exports[`Render a simple MediaOverview 1`] = `
     />
     <div>
       <div
-        class="toolbar"
+        class="headerContainer"
       >
-        <label
-          class="input dark collapsed hasAppendIcon"
+        <div
+          class="toolbar"
         >
-          <div
-            class="prependedContainer dark collapsed"
+          <label
+            class="input dark collapsed hasAppendIcon"
           >
-            <span
-              aria-label="su-search"
-              class="icon dark iconClickable collapsed su-search clickable"
-              role="button"
-              tabindex="0"
+            <div
+              class="prependedContainer dark collapsed"
+            >
+              <span
+                aria-label="su-search"
+                class="icon dark iconClickable collapsed su-search clickable"
+                role="button"
+                tabindex="0"
+              />
+            </div>
+            <input
+              type="text"
+              value=""
             />
+          </label>
+          <div>
+            <button
+              class="button icon active button"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                <span
+                  aria-label="su-th-large"
+                  class="su-th-large"
+                />
+              </span>
+            </button>
+            <button
+              class="button icon button"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                <span
+                  aria-label="su-align-justify"
+                  class="su-align-justify"
+                />
+              </span>
+            </button>
           </div>
-          <input
-            type="text"
-            value=""
-          />
-        </label>
-        <div>
-          <button
-            class="button icon active button"
-            type="button"
-          >
-            <span
-              class="text"
-            >
-              <span
-                aria-label="su-th-large"
-                class="su-th-large"
-              />
-            </span>
-          </button>
-          <button
-            class="button icon button"
-            type="button"
-          >
-            <span
-              class="text"
-            >
-              <span
-                aria-label="su-align-justify"
-                class="su-align-justify"
-              />
-            </span>
-          </button>
         </div>
       </div>
       <div

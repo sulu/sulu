@@ -167,7 +167,7 @@ test('Render the adapter in non-selectable mode', () => {
 test('Render the adapter in non-searchable mode', () => {
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     expect(
-        render(<Datagrid adapters={['test']} searchable={false} store={datagridStore} />)
+        render(<Datagrid adapters={['test']} header={<h1>Title</h1>} searchable={false} store={datagridStore} />)
     ).toMatchSnapshot();
 });
 

@@ -5,7 +5,7 @@ exports[`Render WebspaceOverview 1`] = `
   class="webspaceOverview"
 >
   <div
-    class="webspaceSelect"
+    class="headerContainer"
   >
     <div
       class="webspaceSelect"
@@ -26,37 +26,37 @@ exports[`Render WebspaceOverview 1`] = `
         />
       </button>
     </div>
-  </div>
-  <div
-    class="toolbar"
-  >
-    <div>
-      <button
-        class="button icon active button"
-        type="button"
-      >
-        <span
-          class="text"
+    <div
+      class="toolbar"
+    >
+      <div>
+        <button
+          class="button icon active button"
+          type="button"
         >
           <span
-            aria-label="su-columns"
-            class="su-columns"
-          />
-        </span>
-      </button>
-      <button
-        class="button icon button"
-        type="button"
-      >
-        <span
-          class="text"
+            class="text"
+          >
+            <span
+              aria-label="su-columns"
+              class="su-columns"
+            />
+          </span>
+        </button>
+        <button
+          class="button icon button"
+          type="button"
         >
           <span
-            aria-label="su-columns"
-            class="su-columns"
-          />
-        </span>
-      </button>
+            class="text"
+          >
+            <span
+              aria-label="su-columns"
+              class="su-columns"
+            />
+          </span>
+        </button>
+      </div>
     </div>
   </div>
   <div

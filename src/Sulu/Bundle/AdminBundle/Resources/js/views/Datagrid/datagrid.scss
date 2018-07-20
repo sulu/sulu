@@ -2,10 +2,8 @@
 
 .datagrid {
     margin: $viewPadding;
-    display: flex;
-    flex-direction: column;
+}
 
-    > :not(h1) {
-        flex-grow: 1;
-    }
+.header {
+    margin: 0;
 }

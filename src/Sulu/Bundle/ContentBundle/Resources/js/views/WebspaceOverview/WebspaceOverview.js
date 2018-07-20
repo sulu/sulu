@@ -2,7 +2,7 @@
 import {action, autorun, observable, computed} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
-import React, {Fragment} from 'react';
+import React from 'react';
 import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers';
 import {Loader} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
@@ -136,8 +136,11 @@ class WebspaceOverview extends React.Component<ViewProps> {
         return (
             <div className={webspaceOverviewStyles.webspaceOverview}>
                 {this.webspaces
-                    ? <Fragment>
-                        <div className={webspaceOverviewStyles.webspaceSelect}>
+                    ? <Datagrid
+                        adapters={['column_list', 'tree_table']}
+                        onAddClick={this.handleAddClick}
+                        onItemClick={this.handleEditClick}
+                        header={this.webspace &&
                             <WebspaceSelect value={this.webspace.get()} onChange={this.handleWebspaceChange}>
                                 {this.webspaces.map((webspace) => (
                                     <WebspaceSelect.Item key={webspace.key} value={webspace.key}>
@@ -145,16 +148,11 @@ class WebspaceOverview extends React.Component<ViewProps> {
                                     </WebspaceSelect.Item>
                                 ))}
                             </WebspaceSelect>
-                        </div>
-                        <Datagrid
-                            adapters={['column_list', 'tree_table']}
-                            onAddClick={this.handleAddClick}
-                            onItemClick={this.handleEditClick}
-                            selectable={false}
-                            searchable={false}
-                            store={this.datagridStore}
-                        />
-                    </Fragment>
+                        }
+                        selectable={false}
+                        searchable={false}
+                        store={this.datagridStore}
+                    />
                     : <div>
                         <Loader />
                     </div>

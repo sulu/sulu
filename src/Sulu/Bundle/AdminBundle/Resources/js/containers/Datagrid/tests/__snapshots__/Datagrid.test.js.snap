@@ -3,8 +3,15 @@
 exports[`Render the adapter in non-searchable mode 1`] = `
 Array [
   <div
-    class="toolbar"
-  />,
+    class="headerContainer"
+  >
+    <h1>
+      Title
+    </h1>
+    <div
+      class="toolbar"
+    />
+  </div>,
   <div
     class="datagrid"
   >
