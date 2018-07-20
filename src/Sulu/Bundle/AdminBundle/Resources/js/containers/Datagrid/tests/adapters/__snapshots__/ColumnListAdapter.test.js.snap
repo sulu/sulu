@@ -59,9 +59,16 @@ exports[`Render data with disabled items 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
+              class="indicator"
             />
+            <span
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -109,6 +116,12 @@ exports[`Render data with disabled items 1`] = `
                 </div>
               </div>
             </span>
+            <span
+              class="indicator"
+            />
+            <span
+              class="children"
+            />
           </div>
         </div>
         <div
@@ -179,9 +192,16 @@ exports[`Render data with edit button 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
+              class="indicator"
             />
+            <span
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
           <div
             class="item active"
@@ -225,6 +245,12 @@ exports[`Render data with edit button 1`] = `
                 </div>
               </div>
             </span>
+            <span
+              class="indicator"
+            />
+            <span
+              class="children"
+            />
           </div>
         </div>
         <div
@@ -273,9 +299,16 @@ exports[`Render data with edit button 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
+              class="indicator"
             />
+            <span
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -339,9 +372,16 @@ exports[`Render data with loading column 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
+              class="indicator"
             />
+            <span
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
           <div
             class="item"
@@ -378,6 +418,154 @@ exports[`Render data with loading column 1`] = `
                 </div>
               </div>
             </span>
+            <span
+              class="indicator"
+            />
+            <span
+              class="children"
+            />
+          </div>
+        </div>
+        <div
+          class="column"
+        >
+          <div
+            class="loader"
+          >
+            <div
+              class="spinner"
+              style="width:40px;height:40px"
+            >
+              <div
+                class="doubleBounce1"
+              />
+              <div
+                class="doubleBounce2"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render data with published and draft state 1`] = `
+<div
+  class="columnListAdapter"
+>
+  <div
+    class="columnListToolbarContainer"
+  >
+    <div
+      class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
+    >
+      <div
+        class="columnList"
+      >
+        <div
+          class="column"
+        >
+          <div
+            class="item active"
+          >
+            <span
+              class="buttons"
+            />
+            <span
+              class="text"
+            >
+              <div
+                aria-label="Page 1"
+                class="croppedText"
+                title="Page 1"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 1
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 1
+                </div>
+              </div>
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                class="draft"
+              />
+            </span>
+            <span
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
+          </div>
+          <div
+            class="item"
+          >
+            <span
+              class="buttons"
+            />
+            <span
+              class="text"
+            >
+              <div
+                aria-label="Page 2"
+                class="croppedText"
+                title="Page 2"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 2
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2
+                </div>
+              </div>
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                class="published"
+              />
+              <span
+                class="draft"
+              />
+            </span>
+            <span
+              class="children"
+            />
           </div>
         </div>
         <div
@@ -464,9 +652,16 @@ exports[`Render data with selection 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
+              class="indicator"
             />
+            <span
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -527,9 +722,16 @@ exports[`Render data without edit button 1`] = `
               </div>
             </span>
             <span
-              aria-label="su-angle-right"
-              class="children su-angle-right"
+              class="indicator"
             />
+            <span
+              class="children"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right"
+              />
+            </span>
           </div>
         </div>
       </div>

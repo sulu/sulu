@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {Node} from 'react';
 import classNames from 'classnames';
 import CroppedText from '../CroppedText';
 import Icon from '../Icon';
@@ -14,6 +15,7 @@ type Props = {|
     disabled: boolean,
     hasChildren: boolean,
     id: string | number,
+    indicators?: Array<Node>,
     onClick?: (id: string | number) => void,
     selected: boolean,
 |};
@@ -49,7 +51,7 @@ export default class Item extends React.Component<Props> {
     };
 
     render() {
-        const {active, children, disabled, hasChildren, selected} = this.props;
+        const {active, children, disabled, hasChildren, indicators, selected} = this.props;
 
         const itemClass = classNames(
             itemStyles.item,
@@ -68,9 +70,16 @@ export default class Item extends React.Component<Props> {
                 <span className={itemStyles.text}>
                     <CroppedText>{children}</CroppedText>
                 </span>
-                {hasChildren &&
-                    <Icon className={itemStyles.children} name="su-angle-right" />
-                }
+                {indicators && indicators.map((indicator, index) => (
+                    <span key={index} className={itemStyles.indicator}>
+                        {indicator}
+                    </span>
+                ))}
+                <span className={itemStyles.children}>
+                    {hasChildren &&
+                        <Icon name="su-angle-right" />
+                    }
+                </span>
             </div>
         );
     }

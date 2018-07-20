@@ -3,19 +3,22 @@
 $itemBackgroundColorSelected: $alabaster;
 $itemBackgroundColorHover: $concrete;
 $itemColorDisabled: $dustyGray;
+$itemButtonBackgroundColor: $shakespeare;
+$itemButtonColor: $white;
+
+$itemHeight: 40px;
 
 .item {
-    height: 40px;
+    height: $itemHeight;
     align-items: center;
     cursor: pointer;
     display: flex;
-    padding: 0 20px;
 
     .text {
         font-size: 12px;
         flex-grow: 1;
         width: 0;
-        padding-right: 10px;
+        padding: 0 10px;
     }
 
     &.active {
@@ -33,14 +36,19 @@ $itemColorDisabled: $dustyGray;
 
     .children {
         font-weight: normal;
+        width: 36px;
     }
 }
 
 .button {
-    height: 20px;
-    width: 20px;
+    background-color: $itemButtonBackgroundColor;
+    color: $itemButtonColor;
+    height: $itemHeight;
+    width: 40px;
     font-size: 20px;
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
     &:last-child {
         margin-right: 5px;
@@ -58,4 +66,8 @@ $itemColorDisabled: $dustyGray;
             visibility: visible;
         }
     }
+}
+
+.indicator {
+    margin-right: 10px;
 }

@@ -35,7 +35,7 @@ class PageController extends NodeController
             // Therefore we set the fields to a default value if flat is passed as true, because the other APIs are also
             // checking the flat flag, and the behavior is consistent this way.
             // This should not happen if ids are passed, because the NodeController behaves different then as well
-            $request->query->set('fields', 'title');
+            $request->query->set('fields', 'title,published');
         }
 
         return $this->transformResponse(parent::cgetAction($request));

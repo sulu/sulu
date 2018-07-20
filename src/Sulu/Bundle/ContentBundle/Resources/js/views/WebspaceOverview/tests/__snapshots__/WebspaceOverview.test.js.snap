@@ -110,6 +110,12 @@ exports[`Render WebspaceOverview 1`] = `
                 <span
                   class="text"
                 />
+                <span
+                  class="indicator"
+                />
+                <span
+                  class="children"
+                />
               </div>
             </div>
           </div>

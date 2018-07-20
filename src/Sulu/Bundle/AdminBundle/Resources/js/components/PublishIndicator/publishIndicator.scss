@@ -1,0 +1,27 @@
+@import '../../containers/Application/colors.scss';
+
+$indicatorDraftBackgroundColor: $gold;
+$indicatorPublishedBackgroundColor: $mantis;
+$indicatorBorderColor: $white;
+$indicatorDimension: 18px;
+
+.published,
+.draft {
+    display: inline-block;
+    border: 2px $indicatorBorderColor solid;
+    border-radius: 50%;
+    height: $indicatorDimension;
+    width: $indicatorDimension;
+}
+
+.published + .draft {
+    margin-left: -10px;
+}
+
+.draft {
+    background-color: $indicatorDraftBackgroundColor;
+}
+
+.published {
+    background-color: $indicatorPublishedBackgroundColor;
+}
