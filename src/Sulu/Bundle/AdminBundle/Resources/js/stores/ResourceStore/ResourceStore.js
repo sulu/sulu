@@ -194,6 +194,7 @@ export default class ResourceStore {
                 {action: 'copy-locale', locale: locale, dest: this.locale.get(), ...options}
             ).then(action((response) => {
                 this.data = response;
+                return response;
             }));
     }
 

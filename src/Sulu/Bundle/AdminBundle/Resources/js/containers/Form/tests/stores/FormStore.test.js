@@ -10,6 +10,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.save = jest.fn().mockReturnValue(Promise.resolve());
     this.set = jest.fn();
     this.change = jest.fn();
+    this.copyFromLocale = jest.fn();
     this.data = {};
     this.loading = false;
 
@@ -761,5 +762,28 @@ test('Remember fields being finished as modified fields and forget about them af
     return formStore.save().then(() => {
         expect(formStore.isFieldModified('/block/0/text')).toEqual(false);
         expect(formStore.isFieldModified('/block/1/text')).toEqual(false);
+    });
+});
+
+test('Set new type after copying from different locale', () => {
+    const schemaTypesPromise = Promise.resolve({
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    });
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 5);
+    const formStore = new FormStore(resourceStore);
+
+    resourceStore.copyFromLocale.mockReturnValue(Promise.resolve({template: 'sidebar'}));
+
+    return schemaTypesPromise.then(() => {
+        formStore.setType('footer');
+        const promise = formStore.copyFromLocale('de');
+
+        return promise.then(() => {
+            expect(formStore.type).toEqual('sidebar');
+        });
     });
 });
