@@ -12,6 +12,7 @@ type Props = SwitchProps & {
 
 export default class Radio extends React.PureComponent<Props> {
     static defaultProps = {
+        checked: false,
         skin: 'dark',
     };
 
@@ -28,6 +29,7 @@ export default class Radio extends React.PureComponent<Props> {
             checked,
             children,
         } = this.props;
+
         const radioClass = classNames(
             radioStyles.radio,
             radioStyles[this.props.skin]
