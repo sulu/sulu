@@ -58,11 +58,6 @@ export default class ResourceTabs extends React.Component<ViewProps> {
         } = route;
 
         const ChildComponent = children ? children({locales: locales, resourceStore: this.resourceStore}) : null;
-        const loader = (
-            <div className={resourceTabsStyle.loader}>
-                <Loader />
-            </div>
-        );
 
         const selectedRouteIndex = ChildComponent
             ? route.children.findIndex((childRoute) => childRoute === ChildComponent.props.route)
@@ -80,8 +75,10 @@ export default class ResourceTabs extends React.Component<ViewProps> {
                         );
                     })}
                 </Tabs>
-                {(this.resourceStore.loading)
-                    ? loader
+                {this.resourceStore.loading
+                    ? <div className={resourceTabsStyle.loader}>
+                        <Loader />
+                    </div>
                     : ChildComponent
                 }
             </Fragment>
