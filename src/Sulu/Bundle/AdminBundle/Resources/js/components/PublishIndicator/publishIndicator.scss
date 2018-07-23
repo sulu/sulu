@@ -7,7 +7,8 @@ $indicatorDimension: 18px;
 
 .published,
 .draft {
-    display: inline-block;
+    display: block;
+    float: left;
     border: 2px $indicatorBorderColor solid;
     border-radius: 50%;
     height: $indicatorDimension;

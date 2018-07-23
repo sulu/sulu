@@ -36,7 +36,7 @@ $itemHeight: 40px;
 
     .children {
         font-weight: normal;
-        width: 36px;
+        width: 25px;
     }
 }
 
@@ -49,10 +49,6 @@ $itemHeight: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    &:last-child {
-        margin-right: 5px;
-    }
 }
 
 .buttons {
