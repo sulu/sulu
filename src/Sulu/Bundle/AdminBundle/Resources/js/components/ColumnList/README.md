@@ -57,6 +57,13 @@ const toolbarItems = [
                     alert('Clicked option2 for column with index: ' + index);
                 },
             },
+            {
+                isDisabled: (index) => true,
+                label: 'Option3 ',
+                onClick: (index) => {
+                    alert('This alert will never be called, because the button is disabled...');
+                },
+            },
         ],
     },
 ];

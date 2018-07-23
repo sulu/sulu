@@ -5,11 +5,12 @@ import ToolbarDropdownListOption from './ToolbarDropdownListOption';
 import type {ToolbarDropdownOptionConfig} from './types';
 import toolbarDropdownStyles from './toolbarDropdown.scss';
 
-type Props = {
+type Props = {|
     columnIndex?: number,
     options: Array<ToolbarDropdownOptionConfig>,
+    onClick: () => void,
     skin?: 'primary' | 'secondary',
-};
+|};
 
 export default class ToolbarDropdownList extends React.Component<Props> {
     static defaultProps = {
@@ -21,10 +22,15 @@ export default class ToolbarDropdownList extends React.Component<Props> {
 
         return options.map((dropdownOptionConfig: ToolbarDropdownOptionConfig, columnIndex: number) => {
             const key = `option-${columnIndex}`;
-            const {onClick, label} = dropdownOptionConfig;
+            const {isDisabled, onClick, label} = dropdownOptionConfig;
 
             return (
-                <ToolbarDropdownListOption key={key} onClick={onClick} columnIndex={this.props.columnIndex}>
+                <ToolbarDropdownListOption
+                    disabled={isDisabled ? isDisabled(this.props.columnIndex) : undefined}
+                    key={key}
+                    onClick={onClick}
+                    columnIndex={this.props.columnIndex}
+                >
                     {label}
                 </ToolbarDropdownListOption>
             );
@@ -32,7 +38,7 @@ export default class ToolbarDropdownList extends React.Component<Props> {
     };
 
     render() {
-        const {skin} = this.props;
+        const {onClick, skin} = this.props;
 
         const className = classNames(
             toolbarDropdownStyles.list,
@@ -40,7 +46,7 @@ export default class ToolbarDropdownList extends React.Component<Props> {
         );
 
         return (
-            <div className={toolbarDropdownStyles.listContainer}>
+            <div className={toolbarDropdownStyles.listContainer} onClick={onClick}>
                 <ul className={className}>
                     {this.renderOptions()}
                 </ul>

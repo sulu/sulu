@@ -19,6 +19,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.activeItems = [];
     this.activate = jest.fn();
     this.deactivate = jest.fn();
+    this.delete = jest.fn();
     this.sort = jest.fn();
     this.sortColumn = {
         get: jest.fn(),
@@ -365,4 +366,54 @@ test('DatagridStore should be updated with current active element', () => {
     mount(<Datagrid adapters={['test']} store={datagridStore} />);
 
     expect(datagridStore.activate).toBeCalledWith('some-uuid');
+});
+
+test('Delete warning should just disappear when onDeleteClick callback is called and overlay is cancelled', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
+
+    datagrid.find('TableAdapter').prop('onDeleteClick')(5);
+    datagrid.update();
+    expect(datagrid.find('Dialog').prop('open')).toEqual(true);
+
+    datagrid.find('Dialog').prop('onCancel')();
+    datagrid.update();
+    expect(datagrid.find('Dialog').prop('open')).toEqual(false);
+
+    expect(datagridStore.delete).not.toBeCalled();
+});
+
+test('DatagridStore should delete item when onDeleteClick callback is called and overlay is confirmed', () => {
+    const deletePromise = Promise.resolve();
+
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    // $FlowFixMe
+    datagridStore.delete.mockReturnValue(deletePromise);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
+
+    datagrid.find('TableAdapter').prop('onDeleteClick')(5);
+    datagrid.update();
+    expect(datagrid.find('Dialog').prop('open')).toEqual(true);
+
+    datagrid.find('Dialog').prop('onConfirm')();
+    expect(datagrid.instance().deleting).toEqual(true);
+    expect(datagridStore.delete).toBeCalledWith(5);
+
+    return deletePromise.then(() => {
+        datagrid.update();
+        expect(datagrid.instance().deleting).toEqual(false);
+        expect(datagrid.find('Dialog').prop('open')).toEqual(false);
+    });
 });

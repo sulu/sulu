@@ -6,6 +6,10 @@ export type DataItem = {
     id: string | number,
 };
 
+export type ColumnItem = DataItem & {
+    hasChildren: boolean,
+};
+
 export type SchemaEntry = {
     label: string,
     type: string,
@@ -25,11 +29,12 @@ export type DatagridAdapterProps = {
     data: Array<*>,
     disabledIds: Array<string | number>,
     loading: boolean,
+    onAddClick: ?(id: string | number) => void,
+    onDeleteClick: (id: string | number) => void,
     onAllSelectionChange: ?(selected?: boolean) => void,
     onItemClick: ?(itemId: string | number) => void,
     onItemActivation: (itemId: string | number) => void,
     onItemDeactivation: (itemId: string | number) => void,
-    onAddClick: ?(id: string | number) => void,
     onItemSelectionChange: ?(rowId: string | number, selected?: boolean) => void,
     onPageChange: (page: number) => void,
     onSort: (column: string, order: SortOrder) => void,

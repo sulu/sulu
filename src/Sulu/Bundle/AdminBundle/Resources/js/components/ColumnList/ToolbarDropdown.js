@@ -54,7 +54,7 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
                             >
                                 <ToolbarDropdownList
                                     columnIndex={columnIndex}
-                                    style={popoverStyle}
+                                    onClick={this.handlePopoverClose}
                                     options={options}
                                 />
                             </div>

@@ -83,6 +83,14 @@ exports[`Render WebspaceOverview 1`] = `
                 class="su-plus-circle"
               />
             </div>
+            <div
+              class="item primary"
+            >
+              <span
+                aria-label="su-cog"
+                class="su-cog"
+              />
+            </div>
           </div>
         </div>
         <div
@@ -123,5 +131,6 @@ exports[`Render WebspaceOverview 1`] = `
       </div>
     </div>
   </div>
+  <div />
 </div>
 `;

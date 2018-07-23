@@ -46,6 +46,10 @@ jest.mock('../../../stores/WebspaceStore', () => ({
     loadWebspaces: jest.fn(() => Promise.resolve()),
 }));
 
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
+    translate: (key) => key,
+}));
+
 beforeEach(() => {
     jest.resetModules();
 });

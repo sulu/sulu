@@ -44,8 +44,8 @@ export default class ResourceRequester {
         return Requester.get(endpoint + ResourceRequester.buildQueryString(queryOptions));
     }
 
-    static delete(resourceKey: string, id: number | string) {
+    static delete(resourceKey: string, id: number | string, queryOptions: ?Object) {
         const endpoint = resourceMetadataStore.getEndpoint(resourceKey);
-        return Requester.delete(endpoint + '/' + id);
+        return Requester.delete(endpoint + '/' + id + ResourceRequester.buildQueryString(queryOptions));
     }
 }

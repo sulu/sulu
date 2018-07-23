@@ -1,11 +1,16 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import 'url-search-params-polyfill';
 import {autorun, observable, toJS, when} from 'mobx';
+import ResourceRequester from '../../../../services/ResourceRequester';
 import DatagridStore from '../../stores/DatagridStore';
 import metadataStore from '../../stores/MetadataStore';
 
 jest.mock('../../stores/MetadataStore', () => ({
     getSchema: jest.fn(() => Promise.resolve()),
+}));
+
+jest.mock('../../../../services/ResourceRequester', () => ({
+    delete: jest.fn(),
 }));
 
 function LoadingStrategy() {
@@ -461,6 +466,23 @@ test('Deselect all visible items', () => {
     datagridStore.destroy();
 });
 
+test('Deselect an item by id', () => {
+    const page = observable.box();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
+    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.structureStrategy.visibleItems = [{id: 1}, {id: 2}, {id: 3}];
+    datagridStore.selections = [
+        {id: 1},
+        {id: 2},
+        {id: 7},
+    ];
+    datagridStore.deselectById(7);
+    expect(toJS(datagridStore.selectionIds)).toEqual([1, 2]);
+    datagridStore.destroy();
+});
+
 test('Clear the selection', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {
@@ -811,6 +833,130 @@ test('Should call the remove method of the structure strategy if an item gets re
     datagridStore.remove(2);
 
     expect(structureStrategy.remove).toBeCalledWith(2);
+});
+
+test('Should delete the item with the given ID', () => {
+    const page = observable.box(1);
+    const locale = observable.box('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale}, {webspace: 'sulu'});
+    const deletePromise = Promise.resolve();
+    ResourceRequester.delete.mockReturnValue(deletePromise);
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.delete(5);
+
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', 5, {locale: 'en', webspace: 'sulu'});
+
+    return deletePromise.then(() => {
+        expect(structureStrategy.remove).toBeCalledWith(5);
+    });
+});
+
+test('Should delete the item with the given ID and remove it from the selection afterwards', () => {
+    const page = observable.box(1);
+    const locale = observable.box('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const deletePromise = Promise.resolve({id: 5});
+    ResourceRequester.delete.mockReturnValue(deletePromise);
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.select({id: 5});
+    expect(datagridStore.selections.toJS()).toEqual([{id: 5}]);
+    datagridStore.delete(5);
+
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', 5, {locale: 'en'});
+
+    return deletePromise.then(() => {
+        expect(datagridStore.selections.toJS()).toEqual([]);
+        expect(structureStrategy.remove).toBeCalledWith(5);
+    });
+});
+
+test('Should delete the item with the given ID without locale', () => {
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore('snippets', {page}, {webspace: 'sulu'});
+    const deletePromise = Promise.resolve();
+    ResourceRequester.delete.mockReturnValue(deletePromise);
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.delete(5);
+
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', 5, {webspace: 'sulu'});
+
+    return deletePromise.then(() => {
+        expect(structureStrategy.remove).toBeCalledWith(5);
+    });
+});
+
+test('Should delete all selected items', () => {
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore('snippets', {page});
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    datagridStore.select({id: 1});
+    datagridStore.select({id: 2});
+
+    const deletePromise = datagridStore.deleteSelection();
+
+    return deletePromise.then(() => {
+        expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', 1, {});
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', 2, {});
+        expect(structureStrategy.remove).toBeCalledWith(1);
+        expect(structureStrategy.remove).toBeCalledWith(2);
+        expect(datagridStore.selections).toEqual([]);
+    });
+});
+
+test('Should delete all selected items and succeed even if one of them returns a 404', () => {
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore('snippets', {page});
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    ResourceRequester.delete.mockReturnValue(Promise.reject({status: 404}));
+
+    datagridStore.select({id: 1});
+    datagridStore.select({id: 2});
+
+    const deletePromise = datagridStore.deleteSelection();
+
+    return deletePromise.then(() => {
+        expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', 1, {});
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', 2, {});
+        expect(structureStrategy.remove).toBeCalledWith(1);
+        expect(structureStrategy.remove).toBeCalledWith(2);
+        expect(datagridStore.selections).toEqual([]);
+    });
+});
+
+test('Should crash when deleting all selected items and one request fails with another error than 404', (done) => {
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore('snippets', {page});
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    ResourceRequester.delete.mockReturnValue(Promise.reject({status: 500}));
+
+    datagridStore.select({id: 1});
+    datagridStore.select({id: 2});
+
+    const deletePromise = datagridStore.deleteSelection();
+    deletePromise.catch((error) => {
+        expect(error.status).toEqual(500);
+        done();
+    });
 });
 
 test('Should call all disposers if destroy is called', () => {

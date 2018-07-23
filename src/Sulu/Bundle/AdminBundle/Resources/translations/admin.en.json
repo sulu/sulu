@@ -35,5 +35,7 @@
     "sulu_admin.creator": "Creator",
     "sulu_admin.created": "Created on",
     "sulu_admin.changer": "Author",
-    "sulu_admin.changed": "Changed on"
+    "sulu_admin.changed": "Changed on",
+    "sulu_admin.delete_warning_title": "Delete?",
+    "sulu_admin.delete_warning_text": "This operation deletes data and cannot be undone. Do you really wish to proceed?"
 }

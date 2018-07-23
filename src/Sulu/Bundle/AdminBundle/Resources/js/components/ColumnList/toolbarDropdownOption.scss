@@ -2,6 +2,7 @@
 
 $optionTextColor: $blueZodiac;
 $optionTextColorHover: $shakespeare;
+$optionTextColorDisabled: $dustyGray;
 
 .option {
     display: block;
@@ -15,10 +16,16 @@ $optionTextColorHover: $shakespeare;
     background-color: transparent;
     color: $optionTextColor;
 
-    &:hover,
-    &:active,
-    &:focus {
-        cursor: pointer;
-        color: $optionTextColorHover;
+    &:disabled {
+        color: $optionTextColorDisabled;
+    }
+
+    &:not(:disabled) {
+        &:hover,
+        &:active,
+        &:focus {
+            cursor: pointer;
+            color: $optionTextColorHover;
+        }
     }
 }

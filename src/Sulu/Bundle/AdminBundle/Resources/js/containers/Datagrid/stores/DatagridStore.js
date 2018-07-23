@@ -2,6 +2,7 @@
 import {action, autorun, computed, intercept, observable} from 'mobx';
 import type {IObservableValue, IValueWillChange} from 'mobx';
 import log from 'loglevel';
+import ResourceRequester from '../../../services/ResourceRequester';
 import type {
     LoadingStrategyInterface,
     ObservableOptions,
@@ -146,6 +147,37 @@ export default class DatagridStore {
         return this.structureStrategy.findById(identifier);
     }
 
+    delete = (identifier: string | number): Promise<void> => {
+        const queryOptions = {...this.options};
+
+        const {locale} = this.observableOptions;
+        if (locale) {
+            queryOptions.locale = locale.get();
+        }
+
+        return ResourceRequester.delete(this.resourceKey, identifier, queryOptions)
+            .then(action(() => {
+                this.deselectById(identifier);
+                this.remove(identifier);
+            }));
+    };
+
+    @action deleteSelection = () => {
+        const deletePromises = [];
+        this.selectionIds.forEach((id) => {
+            deletePromises.push(this.delete(id).catch((error) => {
+                if (error.status !== 404) {
+                    return Promise.reject(error);
+                }
+            }));
+        });
+
+        return Promise.all(deletePromises).then(() => {
+            this.selectionIds.forEach(this.remove);
+            this.clearSelection();
+        });
+    };
+
     remove = (identifier: string | number): void => {
         this.structureStrategy.remove(identifier);
     };
@@ -259,7 +291,12 @@ export default class DatagridStore {
 
     @action deselect(row: Object) {
         // TODO do not hardcode id but use metdata instead
-        const index = this.selections.findIndex((item) => item.id === row.id);
+        this.deselectById(row.id);
+    }
+
+    @action deselectById(id: string | number) {
+        // TODO do not hardcode id but use metdata instead
+        const index = this.selections.findIndex((item) => item.id === id);
         if (index === -1) {
             return;
         }

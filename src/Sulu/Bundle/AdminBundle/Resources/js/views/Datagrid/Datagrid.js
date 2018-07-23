@@ -7,7 +7,6 @@ import {default as DatagridContainer} from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import ResourceRequester from '../../services/ResourceRequester';
 import type {Route} from '../../services/Router/types';
 import userStore from '../../stores/UserStore';
 import {translate} from '../../utils/Translator';
@@ -159,7 +158,6 @@ export default withToolbar(Datagrid, function() {
             options: {
                 addRoute,
                 locales,
-                resourceKey,
             },
         },
     } = router;
@@ -197,22 +195,14 @@ export default withToolbar(Datagrid, function() {
         onClick: action(() => {
             this.deleting = true;
 
-            const deletePromises = [];
-            this.datagridStore.selectionIds.forEach((id) => {
-                deletePromises.push(
-                    ResourceRequester.delete(resourceKey, id).catch((error) => {
-                        if (error.status !== 404) {
-                            return Promise.reject(error);
-                        }
-                    })
-                );
-            });
-
-            return Promise.all(deletePromises).then(action(() => {
-                this.datagridStore.selectionIds.forEach(this.datagridStore.remove);
-                this.datagridStore.clearSelection();
-                this.deleting = false;
-            }));
+            return this.datagridStore.deleteSelection()
+                .then(action(() => {
+                    this.deleting = false;
+                }))
+                .catch(action((error) => {
+                    this.deleting = false;
+                    return Promise.reject(error);
+                }));
         }),
     });
 
