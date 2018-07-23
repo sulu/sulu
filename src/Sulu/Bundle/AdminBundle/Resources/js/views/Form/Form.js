@@ -9,6 +9,7 @@ import ResourceStore from '../../stores/ResourceStore';
 import formStyles from './form.scss';
 
 type Props = ViewProps & {
+    locales: Array<string>,
     resourceStore: ResourceStore,
 };
 
@@ -32,6 +33,19 @@ class Form extends React.PureComponent<Props> {
         return resourceKey && resourceStore.resourceKey !== resourceKey;
     }
 
+    @computed get locales() {
+        const {
+            locales: propsLocales,
+            route: {
+                options: {
+                    locales: routeLocales,
+                },
+            },
+        } = this.props;
+
+        return routeLocales ? routeLocales : propsLocales;
+    }
+
     constructor(props: Props) {
         super(props);
 
@@ -44,7 +58,6 @@ class Form extends React.PureComponent<Props> {
                 options: {
                     idQueryParameter,
                     resourceKey,
-                    locales,
                 },
             },
         } = router;
@@ -58,13 +71,13 @@ class Form extends React.PureComponent<Props> {
 
         if (this.hasOwnResourceStore) {
             let locale = resourceStore.locale;
-            if ((typeof locales === 'boolean' && locales === true)) {
+            if ((typeof this.locales === 'boolean' && this.locales === true)) {
                 locale = observable.box();
             }
 
-            if ((Array.isArray(locales) || isObservableArray(locales)) && locales.length > 0) {
+            if ((Array.isArray(this.locales) || isObservableArray(this.locales)) && this.locales.length > 0) {
                 const parentLocale = resourceStore.locale ? resourceStore.locale.get() : undefined;
-                if (locales.includes(parentLocale)) {
+                if (this.locales.includes(parentLocale)) {
                     locale = observable.box(parentLocale);
                 } else {
                     locale = observable.box();
@@ -151,7 +164,7 @@ class Form extends React.PureComponent<Props> {
 
 export default withToolbar(Form, function() {
     const {router} = this.props;
-    const {backRoute, locales} = router.route.options;
+    const {backRoute} = router.route.options;
     const formTypes = this.formStore.types;
     const {errors, resourceStore, showSuccess} = this;
 
@@ -166,13 +179,13 @@ export default withToolbar(Form, function() {
             },
         }
         : undefined;
-    const locale = locales
+    const locale = this.locales
         ? {
             value: resourceStore.locale.get(),
             onChange: (locale) => {
                 resourceStore.setLocale(locale);
             },
-            options: locales.map((locale) => ({
+            options: this.locales.map((locale) => ({
                 value: locale,
                 label: locale,
             })),

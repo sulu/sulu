@@ -332,7 +332,32 @@ test('Should show locales from router options in toolbar', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form locales={[]} router={router} route={route} resourceStore={resourceStore} />);
+
+    const toolbarConfig = toolbarFunction.call(form.instance());
+    expect(toolbarConfig.locale.options).toEqual([
+        {value: 'en', label: 'en'},
+        {value: 'de', label: 'de'},
+    ]);
+});
+
+test('Should show locales from props in toolbar if route has no locales', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+
+    const route = {
+        options: {},
+    };
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+    const form = mount(<Form locales={['en', 'de']} router={router} route={route} resourceStore={resourceStore} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.locale.options).toEqual([
