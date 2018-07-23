@@ -291,6 +291,7 @@ test('Render data with published and draft state', () => {
             loading={true}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
             onItemDeactivation={jest.fn()}

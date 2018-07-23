@@ -510,6 +510,23 @@ exports[`Render data with published and draft state 1`] = `
     class="columnListToolbarContainer"
   >
     <div
+      class="toolbarContainer"
+      style="margin-left:0"
+    >
+      <div
+        class="toolbar"
+      >
+        <div
+          class="item primary"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </div>
+      </div>
+    </div>
+    <div
       class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
       <div
