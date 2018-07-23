@@ -51,7 +51,13 @@ export default class ResourceTabs extends React.Component<ViewProps> {
 
     render() {
         const {children, route} = this.props;
-        const ChildComponent = children ? children({resourceStore: this.resourceStore}) : null;
+        const {
+            options: {
+                locales,
+            },
+        } = route;
+
+        const ChildComponent = children ? children({locales: locales, resourceStore: this.resourceStore}) : null;
         const loader = (
             <div className={resourceTabsStyle.loader}>
                 <Loader />

@@ -198,11 +198,13 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
     expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
 });
 
-test('Should pass the ResourceStore to child components', () => {
+test('Should pass the ResourceStore and locales to child components', () => {
+    const locales = observable(['de', 'en']);
     const route = {
         children: [],
         options: {
             resourceKey: 'snippets',
+            locales,
         },
     };
     const router = {
@@ -218,4 +220,5 @@ test('Should pass the ResourceStore to child components', () => {
     ).instance();
 
     expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
+    expect(ChildComponent.mock.calls[0][0].locales).toBe(locales);
 });
