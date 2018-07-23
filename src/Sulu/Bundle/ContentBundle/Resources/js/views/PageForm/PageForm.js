@@ -6,8 +6,6 @@ import {FormStore, Form, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import WebspaceStore from '../../stores/WebspaceStore';
-import type {Webspace} from '../../stores/WebspaceStore/types';
 import pageFormStyles from './pageForm.scss';
 
 type Props = ViewProps & {
@@ -18,7 +16,6 @@ type Props = ViewProps & {
 class PageForm extends React.Component<Props> {
     formStore: FormStore;
     form: ?Form;
-    @observable webspace: Webspace;
     @observable errors = [];
     showSuccess = observable.box(false);
 
@@ -37,11 +34,6 @@ class PageForm extends React.Component<Props> {
         if (resourceStore.locale) {
             router.bind('locale', resourceStore.locale);
         }
-
-        WebspaceStore.loadWebspace(router.attributes.webspace)
-            .then(action((webspace) => {
-                this.webspace = webspace;
-            }));
     }
 
     componentWillUnmount() {
@@ -108,9 +100,8 @@ class PageForm extends React.Component<Props> {
 }
 
 export default withToolbar(PageForm, function() {
-    const {router} = this.props;
+    const {locales, router} = this.props;
     const formTypes = this.formStore.types;
-    const webspace = this.webspace;
 
     const backButton = {
         onClick: () => {
@@ -122,15 +113,15 @@ export default withToolbar(PageForm, function() {
         },
     };
 
-    const locale = webspace
+    const locale = locales
         ? {
             value: this.props.resourceStore.locale.get(),
             onChange: (locale) => {
                 this.props.resourceStore.setLocale(locale);
             },
-            options: webspace.allLocalizations.map((localization) => ({
-                value: localization.localization,
-                label: localization.name,
+            options: locales.map((localization) => ({
+                value: localization,
+                label: localization,
             })),
         }
         : undefined;

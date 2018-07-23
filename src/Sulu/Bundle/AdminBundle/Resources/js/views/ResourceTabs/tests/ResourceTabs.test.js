@@ -216,9 +216,41 @@ test('Should pass the ResourceStore and locales to child components', () => {
 
     const ChildComponent = jest.fn(() => null);
     const resourceTabs = mount(
-        <ResourceTabs router={router} route={route}>{(props) => (<ChildComponent {...props} />)}</ResourceTabs>
+        <ResourceTabs
+            locales={[]}
+            router={router}
+            route={route}
+        >
+            {(props) => (<ChildComponent {...props} />)}
+        </ResourceTabs>
     ).instance();
 
     expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
     expect(ChildComponent.mock.calls[0][0].locales).toBe(locales);
+});
+
+test('Should pass locales from route options instead of props to child components', () => {
+    const route = {
+        children: [],
+        options: {
+            resourceKey: 'snippets',
+            locales: ['de', 'en'],
+        },
+    };
+    const router = {
+        route,
+        attributes: {
+            id: 5,
+        },
+    };
+
+    const ChildComponent = jest.fn(() => null);
+    const resourceTabs = mount(
+        <ResourceTabs locales={['fr', 'nl']} router={router} route={route}>
+            {(props) => (<ChildComponent {...props} />)}
+        </ResourceTabs>
+    ).instance();
+
+    expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
+    expect(ChildComponent.mock.calls[0][0].locales).toEqual(['de', 'en']);
 });

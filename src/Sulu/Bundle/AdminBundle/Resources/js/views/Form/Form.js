@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {action, computed, isObservableArray, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -13,7 +14,8 @@ type Props = ViewProps & {
     resourceStore: ResourceStore,
 };
 
-class Form extends React.PureComponent<Props> {
+@observer
+class Form extends React.Component<Props> {
     resourceStore: ResourceStore;
     formStore: FormStore;
     form: ?FormContainer;
@@ -71,10 +73,6 @@ class Form extends React.PureComponent<Props> {
 
         if (this.hasOwnResourceStore) {
             let locale = resourceStore.locale;
-            if ((typeof this.locales === 'boolean' && this.locales === true)) {
-                locale = observable.box();
-            }
-
             if ((Array.isArray(this.locales) || isObservableArray(this.locales)) && this.locales.length > 0) {
                 const parentLocale = resourceStore.locale ? resourceStore.locale.get() : undefined;
                 if (this.locales.includes(parentLocale)) {

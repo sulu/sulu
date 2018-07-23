@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {isObservableArray, observable} from 'mobx';
+import {computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Tabs from '../../components/Tabs';
 import Loader from '../../components/Loader';
@@ -9,11 +9,15 @@ import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
 import resourceTabsStyle from './resourceTabs.scss';
 
+type Props = ViewProps & {
+    locales?: Array<string>,
+};
+
 @observer
-export default class ResourceTabs extends React.Component<ViewProps> {
+export default class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
 
-    constructor(props: ViewProps) {
+    constructor(props: Props) {
         super(props);
 
         const {router, route} = this.props;
@@ -25,15 +29,11 @@ export default class ResourceTabs extends React.Component<ViewProps> {
         const {
             options: {
                 resourceKey,
-                locales,
             },
         } = route;
 
         const options = {};
-        if (
-            (typeof locales === 'boolean' && locales === true)
-            || ((Array.isArray(locales) || isObservableArray(locales)) && locales.length > 0)
-        ) {
+        if (this.locales) {
             options.locale = observable.box();
         }
 
@@ -44,6 +44,19 @@ export default class ResourceTabs extends React.Component<ViewProps> {
         this.resourceStore.destroy();
     }
 
+    @computed get locales() {
+        const {
+            locales: propsLocales,
+            route: {
+                options: {
+                    locales: routeLocales,
+                },
+            },
+        } = this.props;
+
+        return routeLocales ? routeLocales : propsLocales;
+    }
+
     handleSelect = (index: number) => {
         const {router, route} = this.props;
         router.navigate(route.children[index].name, router.attributes);
@@ -51,13 +64,8 @@ export default class ResourceTabs extends React.Component<ViewProps> {
 
     render() {
         const {children, route} = this.props;
-        const {
-            options: {
-                locales,
-            },
-        } = route;
 
-        const ChildComponent = children ? children({locales: locales, resourceStore: this.resourceStore}) : null;
+        const ChildComponent = children ? children({locales: this.locales, resourceStore: this.resourceStore}) : null;
 
         const selectedRouteIndex = ChildComponent
             ? route.children.findIndex((childRoute) => childRoute === ChildComponent.props.route)

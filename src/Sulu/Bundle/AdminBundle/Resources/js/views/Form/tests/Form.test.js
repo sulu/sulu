@@ -167,31 +167,6 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
     expect(formResourceStore.locale.get()).toEqual('en');
 });
 
-test('Should create a new resourceStore if the passed resourceKey differs with own boolean locales', () => {
-    const Form = require('../Form').default;
-    const ResourceStore = require('../../../stores/ResourceStore').default;
-    const resourceStore = new ResourceStore('snippets', 10, {});
-    const route = {
-        options: {
-            resourceKey: 'pages',
-            locales: true,
-        },
-    };
-    const router = {
-        attributes: {},
-        bind: jest.fn(),
-        route,
-    };
-
-    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
-    const formResourceStore = form.instance().resourceStore;
-
-    expect(resourceStore).not.toBe(formResourceStore);
-    expect(resourceStore.resourceKey).toEqual('snippets');
-    expect(formResourceStore.resourceKey).toEqual('pages');
-    expect(formResourceStore.locale.get()).toEqual(undefined);
-});
-
 test('Should instantiate the ResourceStore with the idQueryParameter if given', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;

@@ -53,7 +53,7 @@ import Datagrid from '../../views/Datagrid';
 
 function registerViews() {
     viewRegistry.add('sulu_admin.form', Form);
-    viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
+    viewRegistry.add('sulu_admin.resource_tabs', (ResourceTabs: any));
     viewRegistry.add('sulu_admin.datagrid', Datagrid);
 }
 

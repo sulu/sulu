@@ -50,42 +50,6 @@ beforeEach(() => {
     jest.resetModules();
 });
 
-jest.mock('../../../stores/WebspaceStore', () => ({
-    loadWebspace: jest.fn(() => Promise.resolve()),
-}));
-
-test('Should load the correct webspace', () => {
-    const webspaceStore = require('../../../stores/WebspaceStore');
-    const webspace = {key: 'sulu', localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}]};
-    const promise = Promise.resolve(webspace);
-    webspaceStore.loadWebspace.mockReturnValue(promise);
-
-    const PageForm = require('../PageForm').default;
-    const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
-    const resourceStore = new ResourceStore('pages', 1, {locale: observable.box()});
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: true,
-            },
-        },
-        attributes: {
-            webspace: 'sulu',
-        },
-    };
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
-    expect(pageForm.instance().webspace).toEqual(undefined);
-
-    return promise.then(() => {
-        pageForm.update();
-        expect(pageForm.instance().webspace.key).toBe(webspace.key);
-        expect(pageForm.instance().webspace.localizations.length).toEqual(webspace.localizations.length);
-    });
-});
-
 test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
     const PageForm = require('../PageForm').default;
@@ -105,7 +69,7 @@ test('Should navigate to defined route on back button click', () => {
             webspace: 'sulu',
         },
     };
-    const form = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const form = mount(<PageForm locales={['en', 'de']} router={router} resourceStore={resourceStore} />);
     resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
@@ -114,14 +78,6 @@ test('Should navigate to defined route on back button click', () => {
 });
 
 test('Should change locale in form store via locale chooser', () => {
-    const webspaceStore = require('../../../stores/WebspaceStore');
-    const webspace = {
-        key: 'sulu',
-        localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
-    const promise = Promise.resolve(webspace);
-    webspaceStore.loadWebspace.mockReturnValue(promise);
     const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
@@ -142,34 +98,22 @@ test('Should change locale in form store via locale chooser', () => {
         },
     };
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm locales={['en', 'de']} router={router} resourceStore={resourceStore} />);
     pageForm.instance().formStore.locale.set('en');
 
-    return promise.then(() => {
-        pageForm.update();
-
-        const toolbarConfig = toolbarFunction.call(pageForm.instance());
-        expect(toolbarConfig.locale.value).toBe('en');
-        expect(toolbarConfig.locale.options).toEqual(
-            expect.arrayContaining(
-                [
-                    expect.objectContaining({label: 'en', value: 'en'}),
-                    expect.objectContaining({label: 'de', value: 'de'}),
-                ]
-            )
-        );
-    });
+    const toolbarConfig = toolbarFunction.call(pageForm.instance());
+    expect(toolbarConfig.locale.value).toBe('en');
+    expect(toolbarConfig.locale.options).toEqual(
+        expect.arrayContaining(
+            [
+                expect.objectContaining({label: 'en', value: 'en'}),
+                expect.objectContaining({label: 'de', value: 'de'}),
+            ]
+        )
+    );
 });
 
 test('Should show loading templates chooser in toolbar while types are loading', () => {
-    const webspaceStore = require('../../../stores/WebspaceStore');
-    const webspace = {
-        key: 'sulu',
-        localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
-    const promise = Promise.resolve(webspace);
-    webspaceStore.loadWebspace.mockReturnValue(promise);
     const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
@@ -197,15 +141,6 @@ test('Should show loading templates chooser in toolbar while types are loading',
 });
 
 test('Should show templates chooser in toolbar if types are available', () => {
-    const webspaceStore = require('../../../stores/WebspaceStore');
-    const webspace = {
-        key: 'sulu',
-        localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
-    const webspacePromise = Promise.resolve(webspace);
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
-
     const PageForm = require('../PageForm').default;
     const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
@@ -238,7 +173,7 @@ test('Should show templates chooser in toolbar if types are available', () => {
     });
     metadataStore.getSchemaTypes.mockReturnValue(typesPromise);
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm locales={['en', 'de']} router={router} resourceStore={resourceStore} />);
 
     return typesPromise.then(() => {
         const toolbarConfig = toolbarFunction.call(pageForm.instance());
@@ -247,15 +182,6 @@ test('Should show templates chooser in toolbar if types are available', () => {
 });
 
 test('Should change template on click in template chooser', () => {
-    const webspaceStore = require('../../../stores/WebspaceStore');
-    const webspace = {
-        key: 'sulu',
-        localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
-    const webspacePromise = Promise.resolve(webspace);
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
-
     const PageForm = require('../PageForm').default;
     const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
@@ -317,12 +243,11 @@ test('Should change template on click in template chooser', () => {
     });
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm locales={['en', 'de']} router={router} resourceStore={resourceStore} />);
 
     jsonSchemaResolve({});
 
     return Promise.all([
-        webspacePromise,
         typesPromise,
         homepageTemplatePromise,
         defaultTemplatePromise,
@@ -352,14 +277,6 @@ test('Should render save buttons disabled only if form is not dirty', () => {
         return saveButtonDropdown.options.find((option) => option.label === label);
     }
 
-    const webspaceStore = require('../../../stores/WebspaceStore');
-    const webspace = {
-        key: 'sulu',
-        localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
-    const promise = Promise.resolve(webspace);
-    webspaceStore.loadWebspace.mockReturnValue(promise);
     const withToolbar = require('sulu-admin-bundle/containers/Toolbar/withToolbar');
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
@@ -380,30 +297,18 @@ test('Should render save buttons disabled only if form is not dirty', () => {
         },
     };
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm locales={['en', 'de']} router={router} resourceStore={resourceStore} />);
     pageForm.instance().formStore.locale.set('en');
 
-    return promise.then(() => {
-        pageForm.update();
+    expect(getSaveItem('Save as draft').disabled).toBe(true);
+    expect(getSaveItem('Save and publish').disabled).toBe(true);
 
-        expect(getSaveItem('Save as draft').disabled).toBe(true);
-        expect(getSaveItem('Save and publish').disabled).toBe(true);
-
-        resourceStore.dirty = true;
-        expect(getSaveItem('Save as draft').disabled).toBe(false);
-        expect(getSaveItem('Save and publish').disabled).toBe(false);
-    });
+    resourceStore.dirty = true;
+    expect(getSaveItem('Save as draft').disabled).toBe(false);
+    expect(getSaveItem('Save and publish').disabled).toBe(false);
 });
 
 test('Should set showSuccess flag after form submission', (done) => {
-    const webspaceStore = require('../../../stores/WebspaceStore');
-    const webspace = {
-        key: 'sulu',
-        localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
-    const webspacePromise = Promise.resolve(webspace);
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
     const locale = observable.box();
@@ -433,7 +338,7 @@ test('Should set showSuccess flag after form submission', (done) => {
         },
     };
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm locales={['en', 'de']} router={router} resourceStore={resourceStore} />);
     pageForm.instance().formStore.save = jest.fn().mockReturnValue(Promise.resolve({}));
 
     resourceStore.locale.set('de');
@@ -448,14 +353,6 @@ test('Should set showSuccess flag after form submission', (done) => {
 });
 
 test('Should keep errors after form submission has failed', (done) => {
-    const webspaceStore = require('../../../stores/WebspaceStore');
-    const webspace = {
-        key: 'sulu',
-        localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
-    const webspacePromise = Promise.resolve(webspace);
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
     const locale = observable.box();
@@ -485,7 +382,7 @@ test('Should keep errors after form submission has failed', (done) => {
         },
     };
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm locales={['en', 'de']} router={router} resourceStore={resourceStore} />);
     const error = {code: 100, message: 'Something went wrong'};
     const errorPromise = Promise.resolve(error);
     const formSavePromise = Promise.reject({json: jest.fn().mockReturnValue(errorPromise)});
@@ -503,16 +400,6 @@ test('Should keep errors after form submission has failed', (done) => {
 });
 
 test('Should save form when submitted and redirect to editRoute when creating a new page', () => {
-    const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
-    ResourceRequester.put.mockReturnValue(Promise.resolve());
-    const webspaceStore = require('../../../stores/WebspaceStore');
-    const webspace = {
-        key: 'sulu',
-        localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
-    const webspacePromise = Promise.resolve(webspace);
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
     const PageForm = require('../PageForm').default;
     const ResourceStore = require('sulu-admin-bundle/stores/ResourceStore').default;
     const locale = observable.box();
@@ -542,7 +429,7 @@ test('Should save form when submitted and redirect to editRoute when creating a 
         },
     };
 
-    const pageForm = mount(<PageForm router={router} resourceStore={resourceStore} />);
+    const pageForm = mount(<PageForm locales={['en', 'de']} router={router} resourceStore={resourceStore} />);
     pageForm.instance().formStore.save = jest.fn();
     const savePromise = Promise.resolve({id: 'newId'});
     pageForm.instance().formStore.save.mockImplementation(() => {
@@ -560,7 +447,7 @@ test('Should save form when submitted and redirect to editRoute when creating a 
         webspace: 'sulu',
     });
 
-    return Promise.all([webspacePromise, schemaTypesPromise, schemaPromise]).then(() => {
+    return Promise.all([schemaTypesPromise, schemaPromise]).then(() => {
         pageForm.update();
         pageForm.find('Form').at(0).instance().props.onSubmit('publish');
         expect(resourceStore.destroy).toBeCalled();
