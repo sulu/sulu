@@ -27,7 +27,7 @@ class PageForm extends React.Component<Props> {
             resourceStore,
             {
                 webspace: router.attributes.webspace,
-                parent: router.attributes.parentId,
+                parentId: router.attributes.parentId,
             }
         );
 

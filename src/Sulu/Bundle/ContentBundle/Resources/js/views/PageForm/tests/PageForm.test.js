@@ -443,7 +443,7 @@ test('Should save form when submitted and redirect to editRoute when creating a 
     resourceStore.destroy = jest.fn();
 
     expect(pageForm.instance().formStore.options).toEqual({
-        parent: 'test-parent-id',
+        parentId: 'test-parent-id',
         webspace: 'sulu',
     });
 

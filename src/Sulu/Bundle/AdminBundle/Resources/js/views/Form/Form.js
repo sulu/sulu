@@ -53,16 +53,16 @@ class Form extends React.Component<Props> {
 
         const {resourceStore, router} = this.props;
         const {
-            attributes: {
-                id,
-            },
+            attributes,
             route: {
                 options: {
                     idQueryParameter,
                     resourceKey,
+                    routerAttributesToFormStore,
                 },
             },
         } = router;
+        const {id} = attributes;
 
         if (!resourceStore) {
             throw new Error(
@@ -89,7 +89,16 @@ class Form extends React.Component<Props> {
             this.resourceStore = resourceStore;
         }
 
-        this.formStore = new FormStore(this.resourceStore);
+        const formStoreOptions = routerAttributesToFormStore
+            ? routerAttributesToFormStore.reduce(
+                (options: Object, routerAttribute: string) => {
+                    options[routerAttribute] = attributes[routerAttribute];
+                    return options;
+                },
+                {}
+            )
+            : {};
+        this.formStore = new FormStore(this.resourceStore, formStoreOptions);
 
         if (this.resourceStore.locale) {
             router.bind('locale', this.resourceStore.locale);
@@ -112,9 +121,6 @@ class Form extends React.Component<Props> {
         const {resourceStore, router} = this.props;
 
         const {
-            attributes: {
-                parentId,
-            },
             route: {
                 options: {
                     editRoute,
@@ -126,7 +132,7 @@ class Form extends React.Component<Props> {
             resourceStore.destroy();
         }
 
-        return this.formStore.save({parent: parentId})
+        return this.formStore.save()
             .then((response) => {
                 this.showSuccessSnackbar();
 

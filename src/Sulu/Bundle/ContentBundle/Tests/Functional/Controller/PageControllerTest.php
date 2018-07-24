@@ -65,7 +65,7 @@ class PageControllerTest extends SuluTestCase
 
         $webspaceUuid = $this->session->getNode('/cmf/sulu_io/contents')->getIdentifier();
 
-        $client->request('GET', '/api/pages?locale=en&flat=true&parent=' . $webspaceUuid);
+        $client->request('GET', '/api/pages?locale=en&flat=true&parentId=' . $webspaceUuid);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());

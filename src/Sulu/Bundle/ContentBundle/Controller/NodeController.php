@@ -434,7 +434,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $webspace = $this->getWebspace($request);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
 
-        $parentUuid = $request->get('parent');
+        $parentUuid = $request->get('parentId');
         $depth = $request->get('depth', 1);
         $depth = intval($depth);
         $flat = $request->get('flat', 'true');
@@ -467,7 +467,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     protected function cgetContent(Request $request)
     {
-        $parent = $request->get('parent');
+        $parent = $request->get('parentId');
         $properties = array_filter(explode(',', $request->get('fields', '')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
@@ -480,7 +480,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         if (!$webspaceKey && !$webspaceNodes && !$parent) {
-            throw new MissingParameterChoiceException(get_class($this), ['webspace', 'webspace-nodes', 'parent']);
+            throw new MissingParameterChoiceException(get_class($this), ['webspace', 'webspace-nodes', 'parentId']);
         }
 
         if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
@@ -794,7 +794,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         if (null !== ($uuid = $request->get('uuid'))) {
             $id = $uuid;
-        } elseif (null !== ($parent = $request->get('parent')) && Request::METHOD_GET !== $request->getMethod()) {
+        } elseif (null !== ($parent = $request->get('parentId')) && Request::METHOD_GET !== $request->getMethod()) {
             // the user is always allowed to get the children of a node
             // so the security check only applies for requests not being GETs
             $id = $parent;
@@ -930,8 +930,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
     {
         $data = $request->request->all();
 
-        if ($request->query->has('parent')) {
-            $data['parent'] = $request->query->get('parent');
+        if ($request->query->has('parentId')) {
+            $data['parent'] = $request->query->get('parentId');
         }
 
         $form = $this->createForm(

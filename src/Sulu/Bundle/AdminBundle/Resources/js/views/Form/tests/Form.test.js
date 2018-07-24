@@ -640,7 +640,7 @@ test('Should save form when submitted', (done) => {
     jsonSchemaResolve({});
 });
 
-test('Should save form when submitted with parent', (done) => {
+test('Should save form when submitted with mapped router attributes', (done) => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
@@ -663,6 +663,7 @@ test('Should save form when submitted with parent', (done) => {
     const route = {
         options: {
             locales: [],
+            routerAttributesToFormStore: ['parentId', 'webspace'],
         },
     };
     const router = {
@@ -672,6 +673,7 @@ test('Should save form when submitted with parent', (done) => {
         attributes: {
             id: 8,
             parentId: 3,
+            webspace: 'sulu_io',
         },
     };
     const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
@@ -685,7 +687,8 @@ test('Should save form when submitted with parent', (done) => {
         jsonSchemaPromise.then(() => {
             form.find('Form').at(1).instance().submit();
             expect(resourceStore.destroy).not.toBeCalled();
-            expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en', parent: 3});
+            expect(ResourceRequester.put)
+                .toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en', parentId: 3, webspace: 'sulu_io'});
             done();
         });
     });
