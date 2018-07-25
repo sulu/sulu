@@ -3,8 +3,6 @@
 
 $itemBackgroundColorPrimary: $silver;
 $itemBackgroundColorSecondary: $shakespeare;
-$itemBorderColor: $black;
-$itemBorderColorSecondary: $concrete;
 
 $borderRadius: 3px;
 $dropdownContainerBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
@@ -21,11 +19,11 @@ $dropdownContainerBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
     text-align: center;
     padding: 5px 0;
     cursor: pointer;
-    border-left: 1px solid $itemBorderColor;
+    margin-left: 1px;
 
     &:first-child {
         border-top-left-radius: $borderRadius;
-        border-left: none;
+        margin-left: 0;
     }
 
     &:last-child {
@@ -38,8 +36,6 @@ $dropdownContainerBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
 
     &.secondary {
         background: $itemBackgroundColorSecondary;
-        border-left: 1px solid $itemBorderColorSecondary;
-        border-right: 1px solid $itemBorderColorSecondary;
         color: $white;
     }
 }
