@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, isObservableArray, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
@@ -71,24 +71,6 @@ class Form extends React.Component<Props> {
             );
         }
 
-        if (this.hasOwnResourceStore) {
-            let locale = resourceStore.locale;
-            if ((Array.isArray(this.locales) || isObservableArray(this.locales)) && this.locales.length > 0) {
-                const parentLocale = resourceStore.locale ? resourceStore.locale.get() : undefined;
-                if (this.locales.includes(parentLocale)) {
-                    locale = observable.box(parentLocale);
-                } else {
-                    locale = observable.box();
-                }
-            }
-
-            this.resourceStore = idQueryParameter
-                ? new ResourceStore(resourceKey, id, {locale: locale}, {}, idQueryParameter)
-                : new ResourceStore(resourceKey, id, {locale: locale});
-        } else {
-            this.resourceStore = resourceStore;
-        }
-
         const formStoreOptions = routerAttributesToFormStore
             ? routerAttributesToFormStore.reduce(
                 (options: Object, routerAttribute: string) => {
@@ -98,6 +80,20 @@ class Form extends React.Component<Props> {
                 {}
             )
             : {};
+
+        if (this.hasOwnResourceStore) {
+            let locale = resourceStore.locale;
+            if (!locale && this.locales) {
+                locale = observable.box();
+            }
+
+            this.resourceStore = idQueryParameter
+                ? new ResourceStore(resourceKey, id, {locale}, formStoreOptions, idQueryParameter)
+                : new ResourceStore(resourceKey, id, {locale}, formStoreOptions);
+        } else {
+            this.resourceStore = resourceStore;
+        }
+
         this.formStore = new FormStore(this.resourceStore, formStoreOptions);
 
         if (this.resourceStore.locale) {

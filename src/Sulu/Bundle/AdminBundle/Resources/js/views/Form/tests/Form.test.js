@@ -164,7 +164,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
     expect(resourceStore).not.toBe(formResourceStore);
     expect(resourceStore.resourceKey).toEqual('snippets');
     expect(formResourceStore.resourceKey).toEqual('pages');
-    expect(formResourceStore.locale.get()).toEqual('en');
+    expect(formResourceStore.locale).toBe(locale);
 });
 
 test('Should instantiate the ResourceStore with the idQueryParameter if given', () => {
