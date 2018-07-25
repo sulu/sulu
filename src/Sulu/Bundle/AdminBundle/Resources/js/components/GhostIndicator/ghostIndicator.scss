@@ -3,6 +3,7 @@
 $ghostIndicatorColor: $shakespeare;
 
 .ghost-indicator {
+    display: block;
     color: $ghostIndicatorColor;
     border: 1px solid $ghostIndicatorColor;
     border-radius: 3px;

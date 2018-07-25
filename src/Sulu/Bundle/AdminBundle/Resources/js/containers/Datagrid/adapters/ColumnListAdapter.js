@@ -2,6 +2,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import ColumnList from '../../../components/ColumnList';
+import GhostIndicator from '../../../components/GhostIndicator';
 import PublishIndicator from '../../../components/PublishIndicator';
 import {translate} from '../../../utils/Translator';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
@@ -117,21 +118,26 @@ export default class ColumnListAdapter extends AbstractAdapter {
                             loading={index >= this.props.data.length - 1 && loading}
                         >
                             {items.map((item: Object) => (
-                                // TODO: Don't access "hasChildren", "published", "publishedState" or "title" directly
+                                // TODO: Don't access hasChildren, published, publishedState, title or type directly
                                 <ColumnList.Item
                                     active={activeItems ? activeItems.includes(item.id) : undefined}
                                     disabled={disabledIds.includes(item.id)}
                                     hasChildren={item.hasChildren}
                                     id={item.id}
+                                    indicators={item.type && item.type.name === 'ghost'
+                                        ? [
+                                            <GhostIndicator key={'ghost'} locale={item.type.value} />,
+                                        ]
+                                        : [
+                                            <PublishIndicator
+                                                key={'publish'}
+                                                draft={item.publishedState === undefined ? false : !item.publishedState}
+                                                published={item.publishedState === undefined ? false : item.published}
+                                            />,
+                                        ]
+                                    }
                                     key={item.id}
                                     selected={selections.includes(item.id)}
-                                    indicators={[
-                                        <PublishIndicator
-                                            key={1}
-                                            draft={item.publishedState === undefined ? false : !item.publishedState}
-                                            published={item.publishedState === undefined ? false : item.published}
-                                        />,
-                                    ]}
                                 >
                                     {item.title}
                                 </ColumnList.Item>
