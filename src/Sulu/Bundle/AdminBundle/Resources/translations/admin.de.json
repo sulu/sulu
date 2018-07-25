@@ -13,6 +13,8 @@
     "sulu_admin.confirm": "Bestätigen",
     "sulu_admin.ok": "Ok",
     "sulu_admin.cancel": "Abbrechen",
+    "sulu_admin.yes": "Ja",
+    "sulu_admin.no": "Nein",
     "sulu_admin.error_required": "Dieses Feld muss ausgefüllt werden",
     "sulu_admin.error_minlength": "Die minimale Länge dieses Feldes wurde unterschritten",
     "sulu_admin.error_minitems": "Dieses Feld hat zu wenig Zuweisungen",
@@ -37,5 +39,8 @@
     "sulu_admin.changer": "Autor",
     "sulu_admin.changed": "Geändert am",
     "sulu_admin.delete_warning_title": "Löschen?",
-    "sulu_admin.delete_warning_text": "Diese Operation löscht Daten und kann nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?"
+    "sulu_admin.delete_warning_text": "Diese Operation löscht Daten und kann nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?",
+    "sulu_admin.ghost_dialog_title": "Sprachvariante kopieren?",
+    "sulu_admin.ghost_dialog_description": "Diese Seite existiert nicht in dieser Sprache. Wollen Sie den Inhalt aus einer anderen Sprache kopieren?",
+    "sulu_admin.choose_language": "Sprache wählen"
 }

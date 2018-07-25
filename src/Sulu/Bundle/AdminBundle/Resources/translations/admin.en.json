@@ -13,6 +13,8 @@
     "sulu_admin.confirm": "Confirm",
     "sulu_admin.ok": "Ok",
     "sulu_admin.cancel": "Cancel",
+    "sulu_admin.yes": "Yes",
+    "sulu_admin.no": "No",
     "sulu_admin.error_required": "This field must have a value",
     "sulu_admin.error_minlength": "The minimal length of this field was undershot",
     "sulu_admin.error_minitems": "This field has too few selections",
@@ -37,5 +39,8 @@
     "sulu_admin.changer": "Author",
     "sulu_admin.changed": "Changed on",
     "sulu_admin.delete_warning_title": "Delete?",
-    "sulu_admin.delete_warning_text": "This operation deletes data and cannot be undone. Do you really wish to proceed?"
+    "sulu_admin.delete_warning_text": "This operation deletes data and cannot be undone. Do you really wish to proceed?",
+    "sulu_admin.ghost_dialog_title": "Copy language?",
+    "sulu_admin.ghost_dialog_description": "This page does not exist in this language. Do you want to copy content from another language?",
+    "sulu_admin.choose_language": "Choose language"
 }

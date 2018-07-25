@@ -3,7 +3,7 @@ import {Requester} from 'sulu-admin-bundle/services';
 import type {Webspace} from './types';
 
 class WebspaceStore {
-    baseUrl: string = '/admin/api/webspaces';
+    baseUrl: string = '/admin/api/webspaces'; // TODO get URL from server
 
     webspacePromise: Promise<Object>;
 
