@@ -78,7 +78,7 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
 
         if (onAddClick) {
             buttons.push({
-                icon: 'su-plus',
+                icon: 'su-plus-circle',
                 onClick: onAddClick,
             });
         }
