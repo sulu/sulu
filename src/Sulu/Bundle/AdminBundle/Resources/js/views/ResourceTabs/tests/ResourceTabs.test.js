@@ -18,64 +18,6 @@ jest.mock('../../../utils/Translator', () => ({
 
 jest.mock('../../../stores/ResourceStore');
 
-test('Should render the loader if loading prop is set to true', () => {
-    const route = {
-        options: {
-            resourceKey: 'test',
-        },
-        children: [
-            {
-                name: 'Tab 1',
-                options: {
-                    tabTitle: 'tabTitle1',
-                },
-            },
-        ],
-    };
-    const router = {
-        attributes: {
-            id: 1,
-        },
-        route,
-    };
-
-    const Child = () => (<h1>Child</h1>);
-
-    expect(render(<ResourceTabs loading={true} router={router} route={route}>{() => (<Child />)}</ResourceTabs>))
-        .toMatchSnapshot();
-});
-
-test('Should render the loader if the resourceStore is still loading', () => {
-    const route = {
-        options: {
-            resourceKey: 'test',
-        },
-        children: [
-            {
-                name: 'Tab 1',
-                options: {
-                    tabTitle: 'tabTitle1',
-                },
-            },
-        ],
-    };
-    const router = {
-        attributes: {
-            id: 1,
-        },
-        route,
-    };
-
-    const Child = () => (<h1>Child</h1>);
-
-    ResourceStore.mockImplementationOnce(function() {
-        this.loading = true;
-    });
-
-    expect(render(<ResourceTabs router={router} route={route}>{() => (<Child />)}</ResourceTabs>))
-        .toMatchSnapshot();
-});
-
 test('Should render the child components after the tabs', () => {
     const route = {
         options: {

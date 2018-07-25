@@ -3,14 +3,11 @@ import React, {Fragment} from 'react';
 import {computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Tabs from '../../components/Tabs';
-import Loader from '../../components/Loader';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
-import resourceTabsStyle from './resourceTabs.scss';
 
 type Props = ViewProps & {
-    loading: boolean,
     locales?: Array<string>,
 };
 
@@ -68,15 +65,7 @@ export default class ResourceTabs extends React.Component<Props> {
     };
 
     render() {
-        const {children, loading, route} = this.props;
-
-        if (loading || this.resourceStore.loading) {
-            return (
-                <div className={resourceTabsStyle.loader}>
-                    <Loader />
-                </div>
-            );
-        }
+        const {children, route} = this.props;
 
         const ChildComponent = children ? children({locales: this.locales, resourceStore: this.resourceStore}) : null;
 
