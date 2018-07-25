@@ -160,20 +160,7 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
         >
           <span
             class="buttons"
-          >
-            <span
-              aria-label="fa-heart"
-              class="button fa fa-heart clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="fa-pencil"
-              class="button fa fa-pencil clickable"
-              role="button"
-              tabindex="0"
-            />
-          </span>
+          />
           <span
             class="text"
           >

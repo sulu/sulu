@@ -7,15 +7,14 @@ import classNames from 'classnames';
 import Column from './Column';
 import Item from './Item';
 import Toolbar from './Toolbar';
-import type {ItemButtonConfig, ToolbarItemConfig} from './types';
+import type { ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
-type Props = {
+type Props = {|
     children: ChildrenArray<Element<typeof Column>>,
-    buttons?: Array<ItemButtonConfig>,
     toolbarItems: Array<ToolbarItemConfig>,
     onItemClick: (id: string | number) => void,
-};
+|};
 
 @observer
 export default class ColumnList extends React.Component<Props> {
@@ -119,7 +118,6 @@ export default class ColumnList extends React.Component<Props> {
                 column,
                 {
                     index: index,
-                    buttons: this.props.buttons,
                     onActive: this.handleActive,
                     onItemClick: onItemClick,
                     scrolling,

@@ -1,6 +1,7 @@
 The `ColumnList` component consists out of three parts: `ColumnList`, `Column` and `Item`. The `toolbarItems` prop
 can be used to configure the toolbar above every column. There is also a `indicators` prop on the `Item`, which
-contains an array of JSX, that will be displayed on the right side of the item.
+contains an array of JSX, that will be displayed on the right side of the item. `buttons` are also added on the `Item`,
+because they can differ from `Item` to `Item`.
 
 ```
 const Icon = require('../Icon').default;
@@ -76,17 +77,17 @@ const indicators = [
 <div style={{height: '60vh'}}>
     <ColumnList buttons={buttons} onItemClick={handleItemClick} toolbarItems={toolbarItems}>
         <ColumnList.Column>
-            <ColumnList.Item id="1">Google 1</ColumnList.Item>
-            <ColumnList.Item id="2" hasChildren="true" disabled={true}>Apple 1</ColumnList.Item>
-            <ColumnList.Item id="3">Microsoft 1</ColumnList.Item>
+            <ColumnList.Item buttons={buttons} id="1">Google 1</ColumnList.Item>
+            <ColumnList.Item buttons={buttons} id="2" hasChildren="true" disabled={true}>Apple 1</ColumnList.Item>
+            <ColumnList.Item buttons={buttons} id="3">Microsoft 1</ColumnList.Item>
         </ColumnList.Column>
         <ColumnList.Column>
-            <ColumnList.Item id="1-1" indicators={indicators}>Item 1</ColumnList.Item>
-            <ColumnList.Item id="1-2" hasChildren="true" indicators={indicators}>Item 1</ColumnList.Item>
+            <ColumnList.Item buttons={buttons} id="1-1" indicators={indicators}>Item 1</ColumnList.Item>
+            <ColumnList.Item buttons={buttons} id="1-2" hasChildren="true" indicators={indicators}>Item 1</ColumnList.Item>
         </ColumnList.Column>
         <ColumnList.Column>
-            <ColumnList.Item id="1-1-1">Item 1</ColumnList.Item>
-            <ColumnList.Item id="1-1-2">Item 1</ColumnList.Item>
+            <ColumnList.Item buttons={buttons} id="1-1-1">Item 1</ColumnList.Item>
+            <ColumnList.Item buttons={buttons} id="1-1-2">Item 1</ColumnList.Item>
         </ColumnList.Column>
         <ColumnList.Column />
     </ColumnList>

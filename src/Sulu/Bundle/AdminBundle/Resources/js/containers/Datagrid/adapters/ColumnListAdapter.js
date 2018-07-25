@@ -61,19 +61,26 @@ export default class ColumnListAdapter extends AbstractAdapter {
         } = this.props;
 
         const buttons = [];
+        const ghostButtons = [];
 
         if (onItemClick) {
             buttons.push({
                 icon: 'su-pen',
                 onClick: onItemClick,
             });
+            ghostButtons.push({
+                icon: 'su-plus-circle',
+                onClick: onItemClick,
+            });
         }
 
         if (onItemSelectionChange) {
-            buttons.push({
+            const checkButton = {
                 icon: 'su-check',
                 onClick: this.handleItemSelectionChange,
-            });
+            };
+            buttons.push(checkButton);
+            ghostButtons.push(checkButton);
         }
 
         const toolbarItems = [];
@@ -111,7 +118,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
-                <ColumnList buttons={buttons} onItemClick={this.handleItemClick} toolbarItems={toolbarItems}>
+                <ColumnList onItemClick={this.handleItemClick} toolbarItems={toolbarItems}>
                     {this.props.data.map((items, index) => (
                         <ColumnList.Column
                             key={index}
@@ -121,6 +128,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
                                 // TODO: Don't access hasChildren, published, publishedState, title or type directly
                                 <ColumnList.Item
                                     active={activeItems ? activeItems.includes(item.id) : undefined}
+                                    buttons={item.type && item.type.name === 'ghost' ? ghostButtons : buttons}
                                     disabled={disabledIds.includes(item.id)}
                                     hasChildren={item.hasChildren}
                                     id={item.id}
