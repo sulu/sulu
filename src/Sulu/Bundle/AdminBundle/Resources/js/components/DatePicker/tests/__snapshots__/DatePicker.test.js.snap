@@ -54,7 +54,7 @@ exports[`DatePicker should render 1`] = `
               }
             }
           >
-            <Component
+            <DateTime
               className=""
               closeOnSelect={true}
               closeOnTab={true}
@@ -71,6 +71,8 @@ exports[`DatePicker should render 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              onNavigateBack={[Function]}
+              onNavigateForward={[Function]}
               onViewModeChange={[Function]}
               open={false}
               renderInput={[Function]}
@@ -672,7 +674,7 @@ exports[`DatePicker should render 1`] = `
                   </Component>
                 </div>
               </div>
-            </Component>
+            </DateTime>
           </div>
         </div>
       </Portal>
