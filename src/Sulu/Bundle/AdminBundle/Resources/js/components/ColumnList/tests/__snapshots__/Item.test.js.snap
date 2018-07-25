@@ -3,6 +3,7 @@
 exports[`Should render item as disabled 1`] = `
 <div
   class="item disabled"
+  role="button"
 >
   <span
     class="buttons"
@@ -45,6 +46,7 @@ exports[`Should render item as disabled 1`] = `
 exports[`Should render item as not selected by default 1`] = `
 <div
   class="item"
+  role="button"
 >
   <span
     class="buttons"
@@ -87,6 +89,7 @@ exports[`Should render item as not selected by default 1`] = `
 exports[`Should render item as selected 1`] = `
 <div
   class="item selected"
+  role="button"
 >
   <span
     class="buttons"
@@ -129,6 +132,7 @@ exports[`Should render item as selected 1`] = `
 exports[`Should render item with indicators 1`] = `
 <div
   class="item"
+  role="button"
 >
   <span
     class="buttons"

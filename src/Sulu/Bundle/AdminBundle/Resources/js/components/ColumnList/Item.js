@@ -63,7 +63,7 @@ export default class Item extends React.Component<Props> {
         );
 
         return (
-            <div onClick={this.handleClick} className={itemClass}>
+            <div onClick={this.handleClick} className={itemClass} role="button">
                 <span className={itemStyles.buttons}>
                     {this.renderButtons()}
                 </span>

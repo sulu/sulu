@@ -104,6 +104,7 @@ exports[`Render WebspaceOverview 1`] = `
             >
               <div
                 class="item"
+                role="button"
               >
                 <span
                   class="buttons"

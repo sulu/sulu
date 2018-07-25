@@ -371,7 +371,7 @@ test('Collapse should be called correctly', () => {
         </Table>
     );
 
-    table.find('Row').at(1).find('span.toggleIcon').simulate('click');
+    table.find('Row').at(1).find('span.toggleIcon Icon').simulate('click');
     expect(onRowCollapse).toHaveBeenCalledTimes(1);
 });
 
@@ -407,6 +407,6 @@ test('Expand should be called correctly', () => {
         </Table>
     );
 
-    table.find('Row').at(1).find('span.toggleIcon').simulate('click');
+    table.find('Row').at(1).find('span.toggleIcon Icon').simulate('click');
     expect(onRowExpand).toHaveBeenCalledTimes(1);
 });

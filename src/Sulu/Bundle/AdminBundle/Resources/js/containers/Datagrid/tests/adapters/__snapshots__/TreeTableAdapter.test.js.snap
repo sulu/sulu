@@ -146,7 +146,9 @@ exports[`Render data with schema 1`] = `
             >
               <span
                 aria-label="su-angle-right"
-                class="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
               />
             </span>
             Test2
@@ -167,7 +169,9 @@ exports[`Render data with schema 1`] = `
             >
               <span
                 aria-label="su-angle-right"
-                class="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
               />
             </span>
             Test3
@@ -227,7 +231,9 @@ exports[`Render data with schema and selections 1`] = `
             >
               <span
                 aria-label="su-angle-right"
-                class="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
               />
             </span>
             Test2
@@ -248,7 +254,9 @@ exports[`Render data with schema and selections 1`] = `
             >
               <span
                 aria-label="su-angle-right"
-                class="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
               />
             </span>
             Test3
@@ -324,7 +332,9 @@ exports[`Render data with two columns 1`] = `
             >
               <span
                 aria-label="su-angle-right"
-                class="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
               />
             </span>
             Test2
@@ -354,7 +364,9 @@ exports[`Render data with two columns 1`] = `
             >
               <span
                 aria-label="su-angle-right"
-                class="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
               />
             </span>
             Test3
