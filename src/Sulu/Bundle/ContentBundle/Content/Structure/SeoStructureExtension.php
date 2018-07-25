@@ -60,6 +60,8 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
      */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
+        $this->setLanguageCode($languageCode, 'i18n', null);
+
         $this->saveProperty($node, $data, 'title');
         $this->saveProperty($node, $data, 'description');
         $this->saveProperty($node, $data, 'keywords');

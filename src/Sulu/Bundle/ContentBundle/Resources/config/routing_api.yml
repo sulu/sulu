@@ -14,9 +14,8 @@ sulu_content.page:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\PageController
 
-sulu_content.node.seo:
+sulu_content.page_seo:
     type: rest
-    parent: sulu_content.node
     resource: Sulu\Bundle\ContentBundle\Controller\SeoController
 
 sulu_content.webspace.localization:
