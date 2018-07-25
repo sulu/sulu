@@ -10,12 +10,17 @@ import ResourceStore from '../../stores/ResourceStore';
 import resourceTabsStyle from './resourceTabs.scss';
 
 type Props = ViewProps & {
+    loading: boolean,
     locales?: Array<string>,
 };
 
 @observer
 export default class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
+
+    static defaultProps = {
+        loading: false,
+    };
 
     constructor(props: Props) {
         super(props);
@@ -63,7 +68,15 @@ export default class ResourceTabs extends React.Component<Props> {
     };
 
     render() {
-        const {children, route} = this.props;
+        const {children, loading, route} = this.props;
+
+        if (loading || this.resourceStore.loading) {
+            return (
+                <div className={resourceTabsStyle.loader}>
+                    <Loader />
+                </div>
+            );
+        }
 
         const ChildComponent = children ? children({locales: this.locales, resourceStore: this.resourceStore}) : null;
 
@@ -83,12 +96,7 @@ export default class ResourceTabs extends React.Component<Props> {
                         );
                     })}
                 </Tabs>
-                {this.resourceStore.loading
-                    ? <div className={resourceTabsStyle.loader}>
-                        <Loader />
-                    </div>
-                    : ChildComponent
-                }
+                {ChildComponent}
             </Fragment>
         );
     }
