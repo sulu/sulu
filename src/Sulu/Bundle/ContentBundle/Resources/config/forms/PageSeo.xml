@@ -2,6 +2,12 @@
 <properties xmlns="http://schemas.sulu.io/template/template"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
+    <property name="search_result" type="search_result" colspan="9">
+        <meta>
+            <title lang="en">Search Engine Results Pages Preview (SERP)</title>
+            <title lang="de">Suchergebnis Vorschau (SERP)</title>
+        </meta>
+    </property>
     <property name="title" type="text_line">
         <meta>
             <title lang="en">Title (Meta title)</title>

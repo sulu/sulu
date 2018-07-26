@@ -214,11 +214,13 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('A', $result['a']);
         $this->assertEquals('B', $result['b']);
         $this->assertEquals('/testtitle', $result['path']);
+        $this->assertEquals('/news/test', $result['url']);
 
         $result = $this->nodeRepository->loadExtensionData($data->getUuid(), 'test1', 'sulu_io', 'en');
         $this->assertEquals('A', $result['a']);
         $this->assertEquals('B', $result['b']);
         $this->assertEquals('/testtitle', $result['path']);
+        $this->assertEquals('/news/test', $result['url']);
     }
 
     public function testGetByIds()

@@ -1,0 +1,27 @@
+$searchResultBackgroundColor: #fff;
+$searchResultLinkColor: #1a0dab;
+$searchResultUrlColor: #006621;
+$searchResultDescriptionColor: #545454;
+
+.search-result {
+    background-color: $searchResultBackgroundColor;
+    padding: 10px;
+}
+
+.title {
+    color: $searchResultLinkColor;
+    font-size: 18px;
+    line-height: 21.5px;
+}
+
+.url {
+    color: $searchResultUrlColor;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.description {
+    color: $searchResultDescriptionColor;
+    font-size: 13px;
+    line-height: 1.4;
+}
