@@ -5,46 +5,40 @@ import Input from '../Input';
 import resourceLocatorStyles from './resourceLocator.scss';
 
 type Props = {|
-    value: string,
-    onChange: (value: string) => void,
+    value: ?string,
+    onChange: (value: ?string) => void,
     onBlur?: () => void,
     mode: 'full' | 'leaf',
 |};
 
 export default class ResourceLocator extends React.PureComponent<Props> {
-    static defaultProps = {
-        value: '/',
-    };
-
-    fixed: string = '';
+    fixed: string = '/';
 
     constructor(props: Props) {
         super(props);
 
         const {value, mode} = this.props;
 
-        switch (mode) {
-            case 'full':
-                this.fixed = '/';
-                break;
-            case 'leaf':
-                const parts = value.split('/');
-                parts.pop();
-                this.fixed = parts.join('/') + '/';
-                break;
-            default:
-                throw new Error('Unknown mode given: "' + mode + '"');
+        if (mode === 'leaf' && value) {
+            const parts = value.split('/');
+            parts.pop();
+            this.fixed = parts.join('/') + '/';
         }
     }
 
     @computed get changeableValue() {
-        return this.props.value.substring(this.fixed.length);
+        const {value} = this.props;
+        if (!value) {
+            return undefined;
+        }
+
+        return value.substring(this.fixed.length);
     }
 
     handleChange = (value: ?string) => {
         const {onChange} = this.props;
 
-        onChange(value ? this.fixed + value : this.fixed);
+        onChange(value ? this.fixed + value : undefined);
     };
 
     render() {

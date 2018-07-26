@@ -10,10 +10,22 @@ test('ResourceLocator should render with type full', () => {
         .toMatchSnapshot();
 });
 
+test('ResourceLocator should render with type full and a value of undefined', () => {
+    const onChange = jest.fn();
+    expect(render(<ResourceLocator value={undefined} mode="full" onChange={onChange} onBlur={jest.fn()} />))
+        .toMatchSnapshot();
+});
+
 test('ResourceLocator should render with type leaf', () => {
     const onChange = jest.fn();
     const value = '/parent/child';
     expect(render(<ResourceLocator value={value} mode="leaf" onChange={onChange} onBlur={jest.fn()} />))
+        .toMatchSnapshot();
+});
+
+test('ResourceLocator should render with type leaf and a value of undefined', () => {
+    const onChange = jest.fn();
+    expect(render(<ResourceLocator value={undefined} mode="leaf" onChange={onChange} onBlur={jest.fn()} />))
         .toMatchSnapshot();
 });
 
@@ -35,6 +47,13 @@ test('ResourceLocator should call the onChange callback when the input changes w
     );
     resourceLocator.find('Input').props().onChange('child-new');
     expect(onChange).toHaveBeenCalledWith('/parent/child-new');
+});
+
+test('ResourceLocator should call the onChange callback with undefined if no input is given', () => {
+    const onChange = jest.fn();
+    const resourceLocator = mount(<ResourceLocator value="/url" mode="leaf" onChange={onChange} />);
+    resourceLocator.find('Input').prop('onChange')(undefined);
+    expect(onChange).toHaveBeenCalledWith(undefined);
 });
 
 test('ResourceLocator should call the onBlur callback when the Input finishes editing', () => {
