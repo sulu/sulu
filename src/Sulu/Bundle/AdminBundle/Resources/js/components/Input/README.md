@@ -57,3 +57,15 @@ const onChange = (newValue) => {
 
 <Input value={state.value} maxCharacters={5} onChange={onChange} />
 ```
+
+It even supports limiting the amount of segments, which is super useful if a specific number of keywords should be
+delimited e.g. by a comma.
+
+```javascript
+initialState = {value: ''};
+const onChange = (newValue) => {
+    setState({value: newValue});
+};
+
+<Input value={state.value} maxSegments={5} segmentDelimiter="," onChange={onChange} />
+```

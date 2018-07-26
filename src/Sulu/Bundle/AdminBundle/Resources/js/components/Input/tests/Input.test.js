@@ -50,6 +50,18 @@ test('Input should render with a character counter', () => {
     expect(render(<Input value="asdf" onChange={jest.fn()} onBlur={jest.fn()} maxCharacters={2} />)).toMatchSnapshot();
 });
 
+test('Input should render with a segment counter', () => {
+    expect(render(
+        <Input
+            value="keyword1, keyword2"
+            onChange={jest.fn()}
+            onBlur={jest.fn()}
+            maxSegments={3}
+            segmentDelimiter=","
+        />
+    )).toMatchSnapshot();
+});
+
 test('Input should call the callback when the input changes', () => {
     const onChange = jest.fn();
     const input = shallow(<Input value="My value" onChange={onChange} onBlur={jest.fn()} />);

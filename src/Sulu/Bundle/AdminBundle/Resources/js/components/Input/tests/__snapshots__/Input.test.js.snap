@@ -109,6 +109,24 @@ exports[`Input should render with a loader 1`] = `
 </label>
 `;
 
+exports[`Input should render with a segment counter 1`] = `
+Array [
+  <label
+    class="input default"
+  >
+    <input
+      type="text"
+      value="keyword1, keyword2"
+    />
+  </label>,
+  <label
+    class="segmentCounter"
+  >
+    1 sulu_admin.segments_left
+  </label>,
+]
+`;
+
 exports[`Input should render with dark skin 1`] = `
 <label
   class="input dark hasAppendIcon"

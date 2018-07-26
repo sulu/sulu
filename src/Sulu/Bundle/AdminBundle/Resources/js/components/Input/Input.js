@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import CharacterCounter from '../CharacterCounter';
 import Icon from '../Icon';
 import Loader from '../Loader';
+import SegmentCounter from '../SegmentCounter';
 import inputStyles from './input.scss';
 import type {InputProps} from './types';
 
@@ -57,12 +58,14 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
             loading,
             collapsed,
             maxCharacters,
+            maxSegments,
             name,
             placeholder,
             onBlur,
             onIconClick,
             onClearClick,
             onKeyPress,
+            segmentDelimiter,
             type,
             value,
             iconStyle,
@@ -153,6 +156,13 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                 </label>
                 {maxCharacters &&
                     <CharacterCounter max={maxCharacters} value={value} />
+                }
+                {segmentDelimiter && maxSegments &&
+                    <SegmentCounter
+                        delimiter={segmentDelimiter}
+                        max={maxSegments}
+                        value={value ? value.toString() : undefined}
+                    />
                 }
             </Fragment>
         );

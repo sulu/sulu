@@ -63,6 +63,12 @@ test('Pass props correctly including maxCharacters to Input component', () => {
         max_characters: {
             value: '70',
         },
+        max_segments: {
+            value: '6',
+        },
+        segment_delimiter: {
+            value: ',',
+        },
     };
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const inputValid = shallow(
@@ -84,6 +90,8 @@ test('Pass props correctly including maxCharacters to Input component', () => {
     );
 
     expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(70);
+    expect(inputValid.find(InputComponent).prop('maxSegments')).toBe(6);
+    expect(inputValid.find(InputComponent).prop('segmentDelimiter')).toBe(',');
     expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
 });
 
