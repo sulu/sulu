@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should show a negative count 1`] = `
+<label
+  class="segmentCounter exceeded"
+>
+  -2 sulu_admin.segments_left
+</label>
+`;
+
+exports[`Should show a positive count 1`] = `
+<label
+  class="segmentCounter"
+>
+  2 sulu_admin.segments_left
+</label>
+`;
+
+exports[`Should show a positive count if nothing is passed 1`] = `
+<label
+  class="segmentCounter"
+>
+  20 sulu_admin.segments_left
+</label>
+`;

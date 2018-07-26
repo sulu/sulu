@@ -1,0 +1,14 @@
+@import '../../containers/Application/colors.scss';
+
+$segmentCounterColor: $scorpion;
+$segmentCounterExceededColor: $persianRed;
+
+.segment-counter {
+    color: $segmentCounterColor;
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.exceeded {
+    color: $segmentCounterExceededColor;
+}
