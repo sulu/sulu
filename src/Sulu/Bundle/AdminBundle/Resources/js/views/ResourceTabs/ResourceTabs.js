@@ -15,10 +15,6 @@ type Props = ViewProps & {
 export default class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
 
-    static defaultProps = {
-        loading: false,
-    };
-
     constructor(props: Props) {
         super(props);
 

@@ -46,6 +46,12 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                             ],
                         ],
                     ],
+                    'resources' => [
+                        'pages_seo' => [
+                            'form' => ['@SuluContentBundle/Resources/config/forms/PageSeo.xml'],
+                            'endpoint' => 'get_page-seos',
+                        ],
+                    ],
                 ]
             );
         }

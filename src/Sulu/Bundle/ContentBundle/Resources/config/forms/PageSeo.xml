@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<properties xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
+    <property name="title" type="text_line">
+        <meta>
+            <title lang="en">Title (Meta title)</title>
+            <title lang="de">Titel (Meta title)</title>
+        </meta>
+    </property>
+    <property name="description" type="text_area">
+        <meta>
+            <title lang="en">Description (Meta Description)</title>
+            <title lang="de">Beschreibung (Meta Description)</title>
+        </meta>
+    </property>
+    <property name="keywords" type="text_line">
+        <meta>
+            <title lang="en">Keywords (Meta Keywords)</title>
+            <title lang="de">Keywords (Meta Keywords)</title>
+        </meta>
+    </property>
+    <property name="canonicalUrl" type="text_line">
+        <meta>
+            <title lang="en">Canonical URL (Canonical Tag)</title>
+            <title lang="de">Canonical URL (Canonical Tag)</title>
+        </meta>
+    </property>
+    <property name="noIndex" type="checkbox">
+        <meta>
+            <title lang="en">no-index (page will not be indexed by search engines)</title>
+            <title lang="de">no-index (Seite wird nicht von Suchmaschinen indiziert)</title>
+        </meta>
+        <params>
+            <param name="type" value="toggler" />
+        </params>
+    </property>
+    <property name="noFollow" type="checkbox">
+        <meta>
+            <title lang="en">no-follow (links on this page will not be followed by the search engine)</title>
+            <title lang="de">no-follow (Links auf der Seite wird von Suchmaschinen nicht gefolgt)</title>
+        </meta>
+        <params>
+            <param name="type" value="toggler" />
+        </params>
+    </property>
+    <property name="hideInSitemap" type="checkbox">
+        <meta>
+            <title lang="en">Hide in sitemap</title>
+            <title lang="de">In Sitemap ausblenden</title>
+        </meta>
+        <params>
+            <param name="type" value="toggler" />
+        </params>
+    </property>
+</properties>
