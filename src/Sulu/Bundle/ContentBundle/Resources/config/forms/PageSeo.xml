@@ -31,6 +31,10 @@
             <title lang="en">Keywords (Meta Keywords)</title>
             <title lang="de">Keywords (Meta Keywords)</title>
         </meta>
+        <params>
+            <param name="segment_delimiter" value="," />
+            <param name="max_segments" value="5" />
+        </params>
     </property>
     <property name="canonicalUrl" type="text_line">
         <meta>

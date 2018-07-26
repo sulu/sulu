@@ -5,10 +5,25 @@ import type {FieldTypeProps} from '../../../types';
 
 export default class TextArea extends React.Component<FieldTypeProps<?string>> {
     render() {
-        const {error, onChange, onFinish, value} = this.props;
+        const {
+            error,
+            onChange,
+            onFinish,
+            schemaOptions: {
+                max_characters: {
+                    value: maxCharacters,
+                } = {},
+            } = {},
+            value,
+        } = this.props;
+
+        if (maxCharacters && isNaN(maxCharacters)) {
+            throw new Error('The "max_characters" schema option must be a number!');
+        }
 
         return (
             <TextAreaComponent
+                maxCharacters={maxCharacters ? parseInt(maxCharacters) : undefined}
                 onChange={onChange}
                 onBlur={onFinish}
                 valid={!error}

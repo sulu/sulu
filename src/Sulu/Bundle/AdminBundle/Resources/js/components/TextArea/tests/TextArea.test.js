@@ -3,6 +3,10 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import TextArea from '../TextArea';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 test('TextArea should render', () => {
     expect(render(<TextArea value="My value" onChange={jest.fn()} />)).toMatchSnapshot();
 });
@@ -23,6 +27,10 @@ test('TextArea should render with value', () => {
 
 test('TextArea should render null value as empty string', () => {
     expect(render(<TextArea value={null} onChange={jest.fn()} />)).toMatchSnapshot();
+});
+
+test('TextArea should render with value and character counter', () => {
+    expect(render(<TextArea maxCharacters={10} onChange={jest.fn()} value="My value" />)).toMatchSnapshot();
 });
 
 test('TextArea should call onBlur when it loses focus', () => {
