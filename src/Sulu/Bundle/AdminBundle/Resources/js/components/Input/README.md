@@ -46,3 +46,14 @@ const onChange = (newValue) => {
 
 <Input value={state.value} onChange={onChange} onBlur={() => alert('Focus lost!')} />
 ```
+
+The component also supports limiting the amount of characters typed into it.
+
+```javascript
+initialState = {value: ''};
+const onChange = (newValue) => {
+    setState({value: newValue});
+};
+
+<Input value={state.value} maxCharacters={5} onChange={onChange} />
+```

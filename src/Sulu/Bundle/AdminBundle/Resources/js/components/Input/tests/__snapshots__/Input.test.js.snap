@@ -65,6 +65,24 @@ exports[`Input should render undefined value as empty string 1`] = `
 </label>
 `;
 
+exports[`Input should render with a character counter 1`] = `
+Array [
+  <label
+    class="input default"
+  >
+    <input
+      type="text"
+      value="asdf"
+    />
+  </label>,
+  <label
+    class="characterCounter exceeded"
+  >
+    -2 sulu_admin.characters_left
+  </label>,
+]
+`;
+
 exports[`Input should render with a loader 1`] = `
 <label
   class="input default"

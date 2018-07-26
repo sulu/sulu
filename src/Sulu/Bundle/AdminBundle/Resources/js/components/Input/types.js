@@ -12,6 +12,7 @@ export type InputProps<T: ?string | ?number> = {|
     inputRef?: (ref: ?ElementRef<'input'>) => void,
     valid: boolean,
     value: ?T,
+    maxCharacters?: number,
     onBlur?: () => void,
     onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
     onClearClick?: () => void,

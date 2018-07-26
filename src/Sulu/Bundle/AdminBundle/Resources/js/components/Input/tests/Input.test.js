@@ -3,6 +3,10 @@ import React from 'react';
 import {render, mount, shallow} from 'enzyme';
 import Input from '../Input';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 test('Input should render', () => {
     const onChange = jest.fn();
     expect(render(<Input value="My value" onChange={onChange} onBlur={jest.fn()} />)).toMatchSnapshot();
@@ -40,6 +44,10 @@ test('Input should render with value', () => {
 test('Input should render undefined value as empty string', () => {
     const onChange = jest.fn();
     expect(render(<Input value={undefined} onChange={onChange} onBlur={jest.fn()} />)).toMatchSnapshot();
+});
+
+test('Input should render with a character counter', () => {
+    expect(render(<Input value="asdf" onChange={jest.fn()} onBlur={jest.fn()} maxCharacters={2} />)).toMatchSnapshot();
 });
 
 test('Input should call the callback when the input changes', () => {

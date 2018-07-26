@@ -13,12 +13,18 @@
             <title lang="en">Title (Meta title)</title>
             <title lang="de">Titel (Meta title)</title>
         </meta>
+        <params>
+            <param name="max_characters" value="55" />
+        </params>
     </property>
     <property name="description" type="text_area">
         <meta>
             <title lang="en">Description (Meta Description)</title>
             <title lang="de">Beschreibung (Meta Description)</title>
         </meta>
+        <params>
+            <param name="max_characters" value="320" />
+        </params>
     </property>
     <property name="keywords" type="text_line">
         <meta>

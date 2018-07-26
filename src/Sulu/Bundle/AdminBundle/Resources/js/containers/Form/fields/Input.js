@@ -9,10 +9,24 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
     };
 
     render() {
-        const {error, onChange, value} = this.props;
+        const {
+            error,
+            onChange,
+            schemaOptions: {
+                max_characters: {
+                    value: maxCharacters,
+                } = {},
+            } = {},
+            value,
+        } = this.props;
+
+        if (maxCharacters && isNaN(maxCharacters)) {
+            throw new Error('The "max_characters" schema option must be a number!');
+        }
 
         return (
             <InputComponent
+                maxCharacters={maxCharacters ? parseInt(maxCharacters) : undefined}
                 onChange={onChange}
                 onBlur={this.handleBlur}
                 valid={!error}
