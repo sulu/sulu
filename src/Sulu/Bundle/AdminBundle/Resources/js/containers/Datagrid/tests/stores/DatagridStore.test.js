@@ -538,7 +538,7 @@ test('Should reset the data array and set page to 1 when the reload method is ca
 
             datagridStore.reload();
             expect(structureStrategy.clear).toBeCalled();
-            expect(datagridStore.active).toBe(undefined);
+            expect(datagridStore.active.get()).toBe(undefined);
 
             expect(page.get()).toBe(1);
             expect(loadingStrategy.load).toBeCalled();
@@ -787,7 +787,7 @@ test('Should trigger a mobx autorun if activate is called with the same id', () 
 
     let lastActive;
     const autorunDisposer = autorun(() => {
-        lastActive = datagridStore.active;
+        lastActive = datagridStore.active.get();
     });
     lastActive = undefined;
     datagridStore.activate(3);

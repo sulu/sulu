@@ -14,13 +14,13 @@ import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
     @observable pageCount: number = 0;
-    @observable active: ?string | number = undefined;
     @observable selections: Array<Object> = [];
     @observable dataLoading: boolean = true;
     @observable schemaLoading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
     @observable options: Object;
+    active: IObservableValue<?string | number> = observable.box();
     sortColumn: IObservableValue<string> = observable.box();
     sortOrder: IObservableValue<SortOrder> = observable.box();
     searchTerm: IObservableValue<?string> = observable.box();
@@ -195,14 +195,14 @@ export default class DatagridStore {
 
         this.setDataLoading(true);
 
-        const data = this.structureStrategy.getData(this.active);
+        const data = this.structureStrategy.getData(this.active.get());
         if (!data) {
             throw new Error('The active item does not exist in the Datagrid');
         }
 
         const options = {...observableOptions, ...this.options};
-        if (this.active) {
-            options.parentId = this.active;
+        if (this.active.get()) {
+            options.parentId = this.active.get();
         }
 
         options.sortBy = this.sortColumn.get();
@@ -242,7 +242,7 @@ export default class DatagridStore {
     }
 
     @action setActive(active: ?string | number) {
-        this.active = active;
+        this.active.set(active);
     }
 
     @action activate(id: ?string | number) {

@@ -63,6 +63,9 @@ jest.mock('sulu-admin-bundle/containers', () => {
             });
             this.loading = false;
             this.pageCount = 3;
+            this.active = {
+                get: jest.fn(),
+            };
             this.sortColumn = {
                 get: jest.fn(),
             };

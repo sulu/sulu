@@ -9,6 +9,9 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
     DatagridStore: jest.fn(function() {
         this.activeItems = [];
+        this.active = {
+            get: jest.fn(),
+        };
         this.sortColumn = {
             get: jest.fn(),
         };
