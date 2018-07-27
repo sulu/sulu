@@ -30,6 +30,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
     }
 
     @action handleWebspaceChange = (value: string) => {
+        this.datagridStore.destroy();
         this.webspace.set(value);
         this.setDefaultLocaleForWebspace();
     };

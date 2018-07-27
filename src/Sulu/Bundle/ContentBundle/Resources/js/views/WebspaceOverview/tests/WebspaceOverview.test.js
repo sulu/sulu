@@ -137,6 +137,7 @@ test('Should change webspace when value of webspace select is changed', () => {
 
         webspaceOverview.update();
         webspaceOverview.find('WebspaceSelect').prop('onChange')('sulu_blog');
+        expect(webspaceOverview.instance().datagridStore.destroy).toBeCalledWith();
         expect(webspaceOverview.instance().webspace.get()).toBe('sulu_blog');
         expect(webspaceOverview.instance().locale.get()).toBe('de');
         expect(userStore.setPersistentSetting).lastCalledWith('sulu_content.webspace_overview.webspace', 'sulu_blog');
