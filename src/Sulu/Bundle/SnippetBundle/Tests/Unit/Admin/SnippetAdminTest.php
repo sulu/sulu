@@ -65,7 +65,6 @@ class SnippetAdminTest extends TestCase
         $addDetailRoute = $routes[2];
         $editFormRoute = $routes[3];
         $editDetailRoute = $routes[4];
-        $taxonomiesRoute = $routes[5];
 
         $this->assertAttributeEquals('sulu_snippet.datagrid', 'name', $listRoute);
         $this->assertAttributeSame([
@@ -99,13 +98,5 @@ class SnippetAdminTest extends TestCase
             'tabTitle' => 'sulu_snippet.details',
             'backRoute' => 'sulu_snippet.datagrid',
         ], 'options', $editDetailRoute);
-        $this->assertAttributeEquals('sulu_snippet.edit_form.taxonomies', 'name', $taxonomiesRoute);
-        $this->assertAttributeEquals('sulu_snippet.edit_form', 'parent', $taxonomiesRoute);
-        $this->assertAttributeSame([
-            'resourceKey' => 'snippets',
-            'tabTitle' => 'sulu_snippet.taxonomies',
-            'adapters' => ['table'],
-            'backRoute' => 'sulu_snippet.datagrid',
-        ], 'options', $taxonomiesRoute);
     }
 }
