@@ -35,6 +35,7 @@ exports[`Render data with disabled items 1`] = `
         >
           <div
             class="item active selected"
+            role="button"
           >
             <span
               class="buttons"
@@ -93,6 +94,7 @@ exports[`Render data with disabled items 1`] = `
         >
           <div
             class="item active disabled"
+            role="button"
           >
             <span
               class="buttons"
@@ -185,6 +187,7 @@ exports[`Render data with loading column 1`] = `
         >
           <div
             class="item active"
+            role="button"
           >
             <span
               class="buttons"
@@ -232,6 +235,7 @@ exports[`Render data with loading column 1`] = `
           </div>
           <div
             class="item"
+            role="button"
           >
             <span
               class="buttons"
@@ -333,6 +337,7 @@ exports[`Render data with selection 1`] = `
         >
           <div
             class="item selected"
+            role="button"
           >
             <span
               class="buttons"
@@ -427,6 +432,7 @@ exports[`Render data without edit button 1`] = `
         >
           <div
             class="item"
+            role="button"
           >
             <span
               class="buttons"
@@ -514,6 +520,7 @@ exports[`Render different kind of data with edit button 1`] = `
         >
           <div
             class="item"
+            role="button"
           >
             <span
               class="buttons"
@@ -572,6 +579,7 @@ exports[`Render different kind of data with edit button 1`] = `
           </div>
           <div
             class="item active"
+            role="button"
           >
             <span
               class="buttons"
@@ -632,6 +640,7 @@ exports[`Render different kind of data with edit button 1`] = `
         >
           <div
             class="item active"
+            role="button"
           >
             <span
               class="buttons"
@@ -692,6 +701,7 @@ exports[`Render different kind of data with edit button 1`] = `
           </div>
           <div
             class="item"
+            role="button"
           >
             <span
               class="buttons"

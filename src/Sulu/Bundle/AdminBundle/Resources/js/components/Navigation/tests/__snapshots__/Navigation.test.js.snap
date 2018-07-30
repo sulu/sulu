@@ -59,6 +59,7 @@ exports[`The component should render and handle clicks correctly 1`] = `
     >
       <div
         class="title"
+        role="button"
       >
         <span
           aria-label="su-search"
@@ -72,6 +73,7 @@ exports[`The component should render and handle clicks correctly 1`] = `
     >
       <div
         class="title"
+        role="button"
       >
         <span
           aria-label="fa-bullseye"
@@ -154,6 +156,7 @@ exports[`The component should render with all available props and handle clicks 
     >
       <div
         class="title"
+        role="button"
       >
         <span
           aria-label="su-search"
@@ -167,6 +170,7 @@ exports[`The component should render with all available props and handle clicks 
     >
       <div
         class="title"
+        role="button"
       >
         <span
           aria-label="su-webspace"
@@ -180,6 +184,7 @@ exports[`The component should render with all available props and handle clicks 
     >
       <div
         class="title"
+        role="button"
       >
         <span
           aria-label="fa-image"
@@ -193,6 +198,7 @@ exports[`The component should render with all available props and handle clicks 
     >
       <div
         class="title"
+        role="button"
       >
         <span
           aria-label="fa-newspaper-o"
@@ -206,6 +212,7 @@ exports[`The component should render with all available props and handle clicks 
     >
       <div
         class="title"
+        role="button"
       >
         <span
           aria-label="fa-sticky-note-o"
@@ -215,10 +222,11 @@ exports[`The component should render with all available props and handle clicks 
       </div>
     </div>
     <div
-      class="item active hasChildren"
+      class="item active"
     >
       <div
         class="title"
+        role="button"
       >
         <span
           aria-label="su-user-1"
@@ -232,6 +240,7 @@ exports[`The component should render with all available props and handle clicks 
         >
           <div
             class="title"
+            role="button"
           >
             Contact 1
           </div>
@@ -241,6 +250,7 @@ exports[`The component should render with all available props and handle clicks 
         >
           <div
             class="title"
+            role="button"
           >
             Contact 2
           </div>
@@ -250,6 +260,7 @@ exports[`The component should render with all available props and handle clicks 
         >
           <div
             class="title"
+            role="button"
           >
             Contact 3
           </div>
@@ -263,10 +274,11 @@ exports[`The component should render with all available props and handle clicks 
       />
     </div>
     <div
-      class="item hasChildren"
+      class="item"
     >
       <div
         class="title"
+        role="button"
       >
         <span
           aria-label="fa-gear"

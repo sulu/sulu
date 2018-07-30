@@ -148,12 +148,14 @@ export default class Row extends React.PureComponent<Props> {
 
         return (
             <span
-                onClick={expanded === false ? this.handleExpand : this.handleCollapse}
                 className={tableStyles.toggleIcon}
             >
                 {isLoading
                     ? <Loader size={10} />
-                    : <Icon name={expanded === true ? 'su-angle-down' : 'su-angle-right'} />
+                    : <Icon
+                        onClick={expanded === false ? this.handleExpand : this.handleCollapse}
+                        name={expanded === true ? 'su-angle-down' : 'su-angle-right'}
+                    />
                 }
             </span>
         );

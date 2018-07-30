@@ -371,11 +371,11 @@ test('Execute onItemActivation respectively onItemDeactivation callback when an 
     );
 
     // expand the row
-    treeListAdapter.find('Row[id=6]').find('span.toggleIcon').simulate('click');
+    treeListAdapter.find('Row[id=6]').find('span.toggleIcon Icon').simulate('click');
     expect(onItemActivationSpy).toBeCalledWith(6);
 
     // close the row
-    treeListAdapter.find('Row[id=3]').find('span.toggleIcon').simulate('click');
+    treeListAdapter.find('Row[id=3]').find('span.toggleIcon Icon').simulate('click');
     expect(onItemDeactivationSpy).toBeCalledWith(3);
 });
 

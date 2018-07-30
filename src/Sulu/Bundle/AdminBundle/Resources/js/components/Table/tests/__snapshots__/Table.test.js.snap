@@ -509,7 +509,9 @@ exports[`Render the Table component in tree structure 1`] = `
             >
               <span
                 aria-label="su-angle-right"
-                class="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
               />
             </span>
             Column Text
@@ -549,7 +551,9 @@ exports[`Render the Table component in tree structure 1`] = `
             >
               <span
                 aria-label="su-angle-right"
-                class="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
               />
             </span>
             Column Text

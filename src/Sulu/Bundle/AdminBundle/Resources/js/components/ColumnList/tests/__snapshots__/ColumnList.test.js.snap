@@ -48,6 +48,7 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
       >
         <div
           class="item selected"
+          role="button"
         >
           <span
             class="buttons"
@@ -100,158 +101,7 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
         </div>
         <div
           class="item"
-        >
-          <span
-            class="buttons"
-          >
-            <span
-              aria-label="fa-heart"
-              class="button fa fa-heart clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="fa-pencil"
-              class="button fa fa-pencil clickable"
-              role="button"
-              tabindex="0"
-            />
-          </span>
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Item 1"
-              class="croppedText"
-              title="Item 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Ite
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  m 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Item 1
-              </div>
-            </div>
-          </span>
-          <span
-            class="children"
-          >
-            <span
-              aria-label="su-angle-right"
-              class="su-angle-right"
-            />
-          </span>
-        </div>
-        <div
-          class="item"
-        >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Item 1"
-              class="croppedText"
-              title="Item 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Ite
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  m 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Item 1
-              </div>
-            </div>
-          </span>
-          <span
-            class="children"
-          />
-        </div>
-      </div>
-      <div
-        class="column"
-      >
-        <div
-          class="item"
-        >
-          <span
-            class="buttons"
-          >
-            <span
-              aria-label="fa-heart"
-              class="button fa fa-heart clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="fa-pencil"
-              class="button fa fa-pencil clickable"
-              role="button"
-              tabindex="0"
-            />
-          </span>
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Item 1"
-              class="croppedText"
-              title="Item 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Ite
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  m 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Item 1
-              </div>
-            </div>
-          </span>
-          <span
-            class="children"
-          />
-        </div>
-        <div
-          class="item"
+          role="button"
         >
           <span
             class="buttons"
@@ -307,12 +157,53 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
             />
           </span>
         </div>
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
       </div>
       <div
         class="column"
       >
         <div
           class="item"
+          role="button"
         >
           <span
             class="buttons"
@@ -365,6 +256,122 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
         </div>
         <div
           class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          >
+            <span
+              aria-label="fa-heart"
+              class="button fa fa-heart clickable"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="fa-pencil"
+              class="button fa fa-pencil clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          >
+            <span
+              aria-label="su-angle-right"
+              class="su-angle-right"
+            />
+          </span>
+        </div>
+      </div>
+      <div
+        class="column"
+      >
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          >
+            <span
+              aria-label="fa-heart"
+              class="button fa fa-heart clickable"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="fa-pencil"
+              class="button fa fa-pencil clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+        <div
+          class="item"
+          role="button"
         >
           <span
             class="buttons"
@@ -472,6 +479,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
       >
         <div
           class="item selected"
+          role="button"
         >
           <span
             class="buttons"
@@ -511,6 +519,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
         </div>
         <div
           class="item"
+          role="button"
         >
           <span
             class="buttons"
@@ -555,6 +564,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
         </div>
         <div
           class="item"
+          role="button"
         >
           <span
             class="buttons"
@@ -598,6 +608,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
       >
         <div
           class="item"
+          role="button"
         >
           <span
             class="buttons"
@@ -637,6 +648,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
         </div>
         <div
           class="item"
+          role="button"
         >
           <span
             class="buttons"
@@ -685,6 +697,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
       >
         <div
           class="item"
+          role="button"
         >
           <span
             class="buttons"
@@ -724,6 +737,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
         </div>
         <div
           class="item"
+          role="button"
         >
           <span
             class="buttons"
