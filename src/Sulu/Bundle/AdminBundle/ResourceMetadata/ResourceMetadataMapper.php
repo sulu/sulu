@@ -131,6 +131,7 @@ class ResourceMetadataMapper
         }
 
         $field->setLabel($property->getTitle($locale));
+        $field->setDescription($property->getDescription($locale));
         $field->setType($property->getType());
         $field->setSize($property->getSize());
         $field->setRequired($property->isRequired());

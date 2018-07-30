@@ -20,6 +20,7 @@ export type Tag = {
 };
 
 export type SchemaEntry = {
+    description?: string,
     items?: Schema,
     label?: string,
     maxOccurs?: number,

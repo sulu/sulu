@@ -31,12 +31,17 @@ $errorLabelHeight: 20px;
     text-align: left;
 }
 
+.description-label,
 .error-label {
     display: block;
-    color: $errorLabelColor;
+    color: $labelColor;
     font-size: 10px;
     line-height: $errorLabelHeight;
     height: $errorLabelHeight;
+}
+
+.error-label {
+    color: $errorLabelColor;
 }
 
 .field-exception {

@@ -63,7 +63,7 @@ export default class Field extends React.Component<Props> {
 
     render() {
         const {dataPath, error, value, formInspector, schema, schemaPath, showAllErrors, name} = this.props;
-        const {label, maxOccurs, minOccurs, options: schemaOptions, required, type, types} = schema;
+        const {description, label, maxOccurs, minOccurs, options: schemaOptions, required, type, types} = schema;
         let FieldType;
 
         try {
@@ -110,6 +110,11 @@ export default class Field extends React.Component<Props> {
                     types={types}
                     value={value}
                 />
+                {description &&
+                    <label className={fieldStyles.descriptionLabel}>
+                        {description}
+                    </label>
+                }
                 <label className={fieldStyles.errorLabel}>
                     {errorKeyword && translate('sulu_admin.error_' + errorKeyword.toLowerCase())}
                 </label>

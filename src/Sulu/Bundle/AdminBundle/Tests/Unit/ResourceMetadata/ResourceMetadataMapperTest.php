@@ -135,6 +135,7 @@ class ResourceMetadataMapperTest extends TestCase
         $field3 = $form->getItems()['test3'];
         $this->assertSame($field3->getName(), 'test3');
         $this->assertSame($field3->getLabel(), 'Test 3');
+        $this->assertSame($field3->getDescription(), 'Description 3');
         $this->assertSame($field3->getType(), 'single_select');
         $this->assertCount(2, $field3->getOptions());
 
@@ -252,6 +253,9 @@ class ResourceMetadataMapperTest extends TestCase
         $property3->setType('single_select');
         $property3->setTitles([
             'de' => 'Test 3',
+        ]);
+        $property3->setDescriptions([
+            'de' => 'Description 3',
         ]);
         $property3->setParameters(
             [

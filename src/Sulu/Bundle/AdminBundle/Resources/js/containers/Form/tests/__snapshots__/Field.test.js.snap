@@ -1,5 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render a field with a description 1`] = `
+<div
+  class="field"
+>
+  <label
+    class="label"
+  >
+    label1
+  </label>
+  <input
+    type="text"
+  />
+  <label
+    class="descriptionLabel"
+  >
+    Small description describing the field
+  </label>
+  <label
+    class="errorLabel"
+  />
+</div>
+`;
+
 exports[`Render a field with a error collection 1`] = `
 <div
   class="field error"
