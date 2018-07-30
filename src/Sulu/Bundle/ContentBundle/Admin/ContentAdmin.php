@@ -113,6 +113,7 @@ class ContentAdmin extends Admin
             (new Route('sulu_content.page_edit_form.seo', '/seo', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_seo')
                 ->addOption('resourceKey', 'pages_seo')
+                ->addOption('backRoute', 'sulu_content.webspaces')
                 ->setParent('sulu_content.page_edit_form'),
         ];
     }
