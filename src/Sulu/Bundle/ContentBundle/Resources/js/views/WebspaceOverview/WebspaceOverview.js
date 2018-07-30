@@ -98,6 +98,8 @@ class WebspaceOverview extends React.Component<ViewProps> {
         apiOptions.webspace = this.webspace;
 
         this.datagridStore = new DatagridStore('pages', observableOptions, apiOptions);
+        router.bind('active', this.datagridStore.active);
+
         WebspaceStore.loadWebspaces()
             .then(action((webspaces) => {
                 this.webspaces = webspaces;

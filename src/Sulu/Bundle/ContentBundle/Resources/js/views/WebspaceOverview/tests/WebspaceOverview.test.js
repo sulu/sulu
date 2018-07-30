@@ -189,4 +189,5 @@ test('Should bind router', () => {
     expect(router.bind).toBeCalledWith('page', page, '1');
     expect(router.bind).toBeCalledWith('locale', locale);
     expect(router.bind).toBeCalledWith('webspace', webspace);
+    expect(router.bind).toBeCalledWith('active', webspaceOverview.instance().datagridStore.active);
 });
