@@ -233,8 +233,8 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/nodes/%s', $page10->getUuid()),
-            ['webspace' => 'sulu_io', 'language' => 'de', 'tree' => true, 'fields' => 'title']
+            '/api/nodes',
+            ['webspace' => 'sulu_io', 'language' => 'de', 'expandedIds' => $page10->getUuid(), 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
@@ -432,9 +432,9 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/nodes/' . $page1->getUuid(),
+            '/api/nodes',
             [
-                'tree' => 'true',
+                'expandedIds' => $page1->getUuid(),
                 'webspace' => 'sulu_io',
                 'language' => 'de',
                 'webspace-nodes' => 'single',
@@ -484,9 +484,9 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/nodes/' . $page1->getUuid(),
+            '/api/nodes',
             [
-                'tree' => 'true',
+                'expandedIds' => $page1->getUuid(),
                 'webspace' => 'sulu_io',
                 'language' => 'de',
                 'webspace-nodes' => 'all',

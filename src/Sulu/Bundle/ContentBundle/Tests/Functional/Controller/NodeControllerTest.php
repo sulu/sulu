@@ -340,7 +340,7 @@ class NodeControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/nodes/not-existing-id?webspace=sulu_io&language=en&fields=title,order,published&tree=true');
+        $client->request('GET', '/api/nodes?expandedIds=not-existing-id&webspace=sulu_io&language=en&fields=title,order,published');
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
@@ -988,7 +988,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/nodes?id=' . $data[2]['id'] . '&tree=true&webspace=sulu_io&language=en&exclude-ghosts=false'
+            '/api/nodes?expandedIds=' . $data[2]['id'] . '&fields=title&webspace=sulu_io&language=en&exclude-ghosts=false'
         );
 
         $response = $client->getResponse()->getContent();
@@ -998,22 +998,22 @@ class NodeControllerTest extends SuluTestCase
         // check if tree is correctly loaded till the given id
         $node1 = $response->_embedded->nodes[0];
         $this->assertEquals($data[0]['path'], $node1->path);
-        $this->assertFalse($node1->hasSub);
+        $this->assertFalse($node1->hasChildren);
         $this->assertEmpty($node1->_embedded->nodes);
 
         $node2 = $response->_embedded->nodes[1];
         $this->assertEquals($data[1]['path'], $node2->path);
-        $this->assertTrue($node2->hasSub);
+        $this->assertTrue($node2->hasChildren);
         $this->assertCount(2, $node2->_embedded->nodes);
 
         $node3 = $node2->_embedded->nodes[0];
         $this->assertEquals($data[2]['path'], $node3->path);
-        $this->assertFalse($node3->hasSub);
+        $this->assertFalse($node3->hasChildren);
         $this->assertCount(0, $node3->_embedded->nodes);
 
         $node4 = $node2->_embedded->nodes[1];
         $this->assertEquals($data[3]['path'], $node4->path);
-        $this->assertTrue($node4->hasSub);
+        $this->assertTrue($node4->hasChildren);
         $this->assertCount(0, $node4->_embedded->nodes);
     }
 
@@ -1932,12 +1932,12 @@ class NodeControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/nodes?uuid=' . $securedPage->getUuid() . '&tree=true&webspace=sulu_io&language=en'
+            '/api/nodes?expandedIds=' . $securedPage->getUuid() . '&fields=title&webspace=sulu_io&language=en'
         );
 
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertArrayHasKey('_permissions', $response['_embedded']['nodes'][0]['_embedded'][0]);
+        $this->assertArrayHasKey('_permissions', $response['_embedded']['nodes'][0]);
 
         $client->request('GET', '/api/nodes/' . $securedPage->getUuid() . '?language=en&webspace=sulu_io');
 
