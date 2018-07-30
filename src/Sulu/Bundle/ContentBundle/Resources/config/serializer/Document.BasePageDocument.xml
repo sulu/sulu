@@ -42,6 +42,7 @@
         <property name="path" exclude="true"/>
         <property name="internal" type="boolean" groups="defaultPage"/>
         <property name="webspaceName" type="string"/>
+        <property name="extensions" type="Sulu\Component\Content\Document\Extension\ExtensionContainer" exclude="true" />
         <property name="structure" type="Sulu\Component\Content\Document\Structure\Structure" groups="preview"/>
         <property name="children" exclude="true" type="Sulu\Component\DocumentManager\Collection\ChildrenCollection"/>
         <property name="suluOrder" type="integer" serialized-name="order" groups="defaultPage,smallPage"/>

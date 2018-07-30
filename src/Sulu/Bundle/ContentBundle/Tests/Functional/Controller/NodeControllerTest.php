@@ -650,11 +650,6 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $response->creator);
         $this->assertEquals($this->getTestUserId(), $response->creator);
 
-        $this->assertEquals(2, count((array) $response->ext));
-
-        $this->assertEquals(7, count((array) $response->ext->seo));
-        $this->assertEquals(8, count((array) $response->ext->excerpt));
-
         $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?language=en');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
