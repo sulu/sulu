@@ -590,7 +590,7 @@ test('Should render save button disabled only if form is not dirty', () => {
 
 test('Should save form when submitted', (done) => {
     const ResourceRequester = require('../../../services/ResourceRequester');
-    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const metadataStore = require('../../../containers/Form/stores/MetadataStore');
@@ -642,7 +642,7 @@ test('Should save form when submitted', (done) => {
 
 test('Should save form when submitted with parent', (done) => {
     const ResourceRequester = require('../../../services/ResourceRequester');
-    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const metadataStore = require('../../../containers/Form/stores/MetadataStore');

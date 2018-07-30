@@ -7,18 +7,21 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('Render data with edit button', () => {
+test('Render different kind of data with edit button', () => {
     const data = [
         [
             {
                 id: 1,
                 title: 'Page 1',
                 hasChildren: true,
+                publishedState: false,
             },
             {
                 id: 2,
                 title: 'Page 2',
                 hasChildren: false,
+                publishedState: false,
+                published: '2017-08-23',
             },
         ],
         [
@@ -26,6 +29,21 @@ test('Render data with edit button', () => {
                 id: 4,
                 title: 'Page 2.1',
                 hasChildren: true,
+                type: {
+                    name: 'ghost',
+                    value: 'nl',
+                },
+            },
+            {
+                id: 5,
+                title: 'Page 2.2',
+                hasChildren: true,
+                publishedState: false,
+                published: '2017-07-02',
+                type: {
+                    name: 'ghost',
+                    value: 'nl',
+                },
             },
         ],
         [],
@@ -229,54 +247,6 @@ test('Render data with loading column', () => {
                 id: 2,
                 title: 'Page 2',
                 hasChildren: false,
-            },
-        ],
-        [],
-    ];
-
-    const columnListAdapter = render(
-        <ColumnListAdapter
-            active={1}
-            activeItems={[1]}
-            data={data}
-            disabledIds={[]}
-            loading={true}
-            onAddClick={undefined}
-            onAllSelectionChange={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
-            onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
-            onItemSelectionChange={undefined}
-            onPageChange={jest.fn()}
-            onSort={jest.fn()}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
-        />
-    );
-
-    expect(columnListAdapter).toMatchSnapshot();
-});
-
-test('Render data with published and draft state', () => {
-    const data = [
-        [
-            {
-                id: 1,
-                title: 'Page 1',
-                hasChildren: true,
-                publishedState: false,
-            },
-            {
-                id: 2,
-                title: 'Page 2',
-                hasChildren: false,
-                publishedState: false,
-                published: '2017-05-12',
             },
         ],
         [],

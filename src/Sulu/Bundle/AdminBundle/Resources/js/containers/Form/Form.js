@@ -1,12 +1,13 @@
 // @flow
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import React from 'react';
+import React, {Fragment} from 'react';
 import log from 'loglevel';
 import Loader from '../../components/Loader';
 import Renderer from './Renderer';
 import FormStore from './stores/FormStore';
 import FormInspector from './FormInspector';
+import GhostDialog from './GhostDialog';
 
 type Props = {
     store: FormStore,
@@ -16,6 +17,23 @@ type Props = {
 @observer
 export default class Form extends React.Component<Props> {
     @observable showAllErrors = false;
+    @observable showGhostDialog = false;
+
+    constructor(props: Props) {
+        super(props);
+
+        const {store} = this.props;
+        const {
+            data: {
+                concreteLanguages,
+            },
+            locale,
+        } = store;
+
+        if (concreteLanguages && locale && !concreteLanguages.includes(locale.get())) {
+            this.showGhostDialog = true;
+        }
+    }
 
     @computed get formInspector(): FormInspector {
         return new FormInspector(this.props.store);
@@ -31,6 +49,15 @@ export default class Form extends React.Component<Props> {
         this.props.store.change(name, value);
     };
 
+    @action handleGhostDialogCancel = () => {
+        this.showGhostDialog = false;
+    };
+
+    @action handleGhostDialogConfirm = (locale: string) => {
+        this.props.store.copyFromLocale(locale);
+        this.showGhostDialog = false;
+    };
+
     handleFieldFinish = (dataPath: string, schemaPath: string) => {
         log.debug('Finished editing field with dataPath "' + dataPath + '" and schemaPath "' + schemaPath + '"');
         const {store} = this.props;
@@ -41,23 +68,38 @@ export default class Form extends React.Component<Props> {
 
     render() {
         const {store} = this.props;
+        const {
+            data: {
+                concreteLanguages,
+            },
+        } = store;
 
         return store.loading
             ? <Loader />
             : (
-                <form>
-                    <Renderer
-                        data={store.data}
-                        dataPath=""
-                        errors={store.errors}
-                        formInspector={this.formInspector}
-                        onChange={this.handleChange}
-                        onFieldFinish={this.handleFieldFinish}
-                        schema={store.schema}
-                        schemaPath=""
-                        showAllErrors={this.showAllErrors}
-                    />
-                </form>
+                <Fragment>
+                    {store.id && concreteLanguages &&
+                        <GhostDialog
+                            locales={concreteLanguages}
+                            onCancel={this.handleGhostDialogCancel}
+                            onConfirm={this.handleGhostDialogConfirm}
+                            open={this.showGhostDialog}
+                        />
+                    }
+                    <form>
+                        <Renderer
+                            data={store.data}
+                            dataPath=""
+                            errors={store.errors}
+                            formInspector={this.formInspector}
+                            onChange={this.handleChange}
+                            onFieldFinish={this.handleFieldFinish}
+                            schema={store.schema}
+                            schemaPath=""
+                            showAllErrors={this.showAllErrors}
+                        />
+                    </form>
+                </Fragment>
             );
     }
 }

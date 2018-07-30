@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render with given locale 1`] = `
+<span
+  class="ghostIndicator"
+>
+  de-at
+</span>
+`;

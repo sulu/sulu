@@ -1,0 +1,14 @@
+@import '../../containers/Application/colors.scss';
+
+$ghostIndicatorColor: $shakespeare;
+
+.ghost-indicator {
+    display: block;
+    color: $ghostIndicatorColor;
+    border: 1px solid $ghostIndicatorColor;
+    border-radius: 3px;
+    font-size: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 5px;
+}

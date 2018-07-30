@@ -23,6 +23,7 @@ The "light" style looks like as in the following example:
 
 In most cases the state management of the radio buttons will be the same.
 For that matter the `RadioGroup` component makes the use of the radio buttons more convenient.
+
 ```
 const RadioGroup = require('./RadioGroup').default;
 

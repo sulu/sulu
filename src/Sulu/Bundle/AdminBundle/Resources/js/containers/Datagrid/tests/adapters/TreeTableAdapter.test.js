@@ -602,7 +602,7 @@ test('Click on add should execute onAddClick callback', () => {
     );
     const buttons = treeListAdapter.find('Table').prop('buttons');
     expect(buttons).toHaveLength(1);
-    expect(buttons[0].icon).toBe('su-plus');
+    expect(buttons[0].icon).toBe('su-plus-circle');
 
     buttons[0].onClick(1);
     expect(rowAddClickSpy).toBeCalledWith(1);

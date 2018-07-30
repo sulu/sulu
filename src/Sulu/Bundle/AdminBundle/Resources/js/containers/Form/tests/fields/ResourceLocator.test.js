@@ -117,54 +117,6 @@ test('Throw an exception if a no generationUrl is passed', () => {
     ).toThrow(/"generationUrl"/);
 });
 
-test('Set default value correctly with undefined value', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
-    const changeSpy = jest.fn();
-
-    shallow(
-        <ResourceLocator
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
-            formInspector={formInspector}
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={changeSpy}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
-        />
-    );
-
-    expect(changeSpy).toBeCalledWith('/');
-});
-
-test('Set default value correctly with empty string', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
-    const changeSpy = jest.fn();
-
-    shallow(
-        <ResourceLocator
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
-            formInspector={formInspector}
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={changeSpy}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value=""
-        />
-    );
-
-    expect(changeSpy).toBeCalledWith('/');
-});
-
 test('Set default mode correctly', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const resourceLocator = mount(
@@ -238,7 +190,7 @@ test('Should not request a new URL if on an edit form', () =>{
     expect(Requester.post).not.toBeCalled();
 });
 
-test('Should request a new URL if on an add form', () => {
+test('Should request a new URL if no URL was defined', () => {
     const formInspector = new FormInspector(
         new FormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')})
@@ -259,7 +211,7 @@ test('Should request a new URL if on an add form', () => {
             schemaPath="/url"
             showAllErrors={false}
             types={undefined}
-            value="/test/xxx"
+            value={undefined}
         />
     );
 
@@ -290,7 +242,48 @@ test('Should request a new URL if on an add form', () => {
     });
 });
 
-test('Should request a new URL including the options from the FormStore if on an add form', () => {
+test('Should not request a new URL if URL was defined', () => {
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
+    const changeSpy = jest.fn();
+
+    shallow(
+        <ResourceLocator
+            dataPath="/block/0/url"
+            error={undefined}
+            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            schemaPath="/url"
+            showAllErrors={false}
+            types={undefined}
+            value="/url"
+        />
+    );
+
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+
+    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getSchemaEntryByPath.mockReturnValue({
+        tags: [
+            {name: 'sulu.rlp.part'},
+        ],
+    });
+
+    finishFieldHandler('/block/0/url', '/url');
+
+    expect(formInspector.getSchemaEntryByPath).not.toBeCalled();
+    expect(formInspector.getValuesByTag).not.toBeCalled();
+    expect(Requester.post).not.toBeCalled();
+});
+
+test('Should request a new URL including the options from the FormStore if no URL was defined', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), {webspace: 'example'}));
     const changeSpy = jest.fn();
 
@@ -307,7 +300,7 @@ test('Should request a new URL including the options from the FormStore if on an
             schemaPath="/url"
             showAllErrors={false}
             types={undefined}
-            value="/test/xxx"
+            value={undefined}
         />
     );
 
@@ -354,7 +347,7 @@ test('Should not request a new URL if no parts are available', () => {
             schemaPath="/url"
             showAllErrors={false}
             types={undefined}
-            value="/test/xxx"
+            value={undefined}
         />
     );
 
@@ -388,7 +381,7 @@ test('Should not request a new URL if only empty parts are available', () => {
             schemaPath="/url"
             showAllErrors={false}
             types={undefined}
-            value="/test/xxx"
+            value={undefined}
         />
     );
 
@@ -422,7 +415,7 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
             schemaPath="/url"
             showAllErrors={false}
             types={undefined}
-            value="/test/xxx"
+            value={undefined}
         />
     );
 
@@ -456,7 +449,7 @@ test('Should not request a new URL if a field without any tags has finished edit
             schemaPath="/url"
             showAllErrors={false}
             types={undefined}
-            value="/test/xxx"
+            value={undefined}
         />
     );
 
@@ -487,7 +480,7 @@ test('Should not request a new URL if the resource locator field has already bee
             schemaPath="/url"
             showAllErrors={false}
             types={undefined}
-            value="/test/xxx"
+            value={undefined}
         />
     );
 

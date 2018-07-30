@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Post;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,6 +40,14 @@ class PageController extends NodeController
         }
 
         return $this->transformResponse(parent::cgetAction($request));
+    }
+
+    /**
+     * @Post("/pages/{uuid}")
+     */
+    public function postTriggerAction($uuid, Request $request)
+    {
+        return parent::postTriggerAction($uuid, $request);
     }
 
     protected function cgetContent(Request $request)

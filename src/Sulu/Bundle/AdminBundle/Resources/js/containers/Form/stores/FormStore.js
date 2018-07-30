@@ -243,6 +243,15 @@ export default class FormStore {
         });
     }
 
+    copyFromLocale(locale: string) {
+        return this.resourceStore.copyFromLocale(locale, this.options)
+            .then((response) => {
+                if (this.hasTypes) {
+                    this.setType(response[TYPE]);
+                }
+            });
+    }
+
     set(name: string, value: mixed) {
         this.resourceStore.set(name, value);
     }

@@ -6,6 +6,7 @@ import Requester from '../../Requester/Requester';
 jest.mock('../../Requester/Requester', () => ({
     get: jest.fn(),
     put: jest.fn(),
+    post: jest.fn(),
     delete: jest.fn(),
 }));
 
@@ -106,4 +107,20 @@ test('Should send a delete request with passed options as query parameters', () 
     Requester.delete.mockReturnValue({});
     ResourceRequester.delete('snippets', 5, options);
     expect(Requester.delete).toBeCalledWith('/snippets/5?locale=en&webspace=sulu');
+});
+
+test('Should send a post request and return the promise', () => {
+    const promise = {};
+    Requester.post.mockReturnValue(promise);
+    const result = ResourceRequester.post('snippets', {});
+    expect(Requester.post).toBeCalledWith('/snippets', {});
+    expect(result).toBe(promise);
+});
+
+test('Should send a post request with an ID and return the promise', () => {
+    const promise = {};
+    Requester.post.mockReturnValue(promise);
+    const result = ResourceRequester.postWithId('snippets', 5, {});
+    expect(Requester.post).toBeCalledWith('/snippets/5', {});
+    expect(result).toBe(promise);
 });

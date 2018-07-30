@@ -1,0 +1,18 @@
+@import '../../containers/Application/colors.scss';
+
+$ghostDialogLabelColor: $scorpion;
+
+.ghost-dialog {
+    text-align: left;
+}
+
+.locale-select {
+    width: 50%;
+}
+
+.label {
+    display: block;
+    color: $ghostDialogLabelColor;
+    font-size: 12px;
+    margin-bottom: 5px;
+}

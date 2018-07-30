@@ -20,6 +20,26 @@ exports[`ResourceLocator should render with type full 1`] = `
 </div>
 `;
 
+exports[`ResourceLocator should render with type full and a value of undefined 1`] = `
+<div
+  class="resourceLocator"
+>
+  <span
+    class="fixed"
+  >
+    /
+  </span>
+  <label
+    class="input default"
+  >
+    <input
+      type="text"
+      value=""
+    />
+  </label>
+</div>
+`;
+
 exports[`ResourceLocator should render with type leaf 1`] = `
 <div
   class="resourceLocator"
@@ -35,6 +55,26 @@ exports[`ResourceLocator should render with type leaf 1`] = `
     <input
       type="text"
       value="child"
+    />
+  </label>
+</div>
+`;
+
+exports[`ResourceLocator should render with type leaf and a value of undefined 1`] = `
+<div
+  class="resourceLocator"
+>
+  <span
+    class="fixed"
+  >
+    /
+  </span>
+  <label
+    class="input default"
+  >
+    <input
+      type="text"
+      value=""
     />
   </label>
 </div>

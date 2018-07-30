@@ -5,7 +5,7 @@ import Radio from './Radio';
 
 type Props = {
     value: string,
-    onChange?: () => void,
+    onChange?: (value: ?string | number) => void,
     className?: string,
     children: ChildrenArray<Element<typeof Radio>>,
 };

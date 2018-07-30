@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
 import Form from '../Form';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -26,18 +27,21 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.id = resourceStore.id;
     this.resourceKey = resourceStore.resourceKey;
     this.data = resourceStore.data;
+    this.locale = resourceStore.locale;
     this.validate = jest.fn();
     this.schema = {};
     this.set = jest.fn();
     this.change = jest.fn();
     this.finishField = jest.fn();
     this.isFieldModified = jest.fn();
+    this.copyFromLocale = jest.fn();
 }));
 
-jest.mock('../../../stores/ResourceStore', () => jest.fn(function (resourceKey, id) {
+jest.mock('../../../stores/ResourceStore', () => jest.fn(function (resourceKey, id, observableOptions = {}) {
     this.resourceKey = resourceKey;
     this.id = id;
     this.data = {};
+    this.locale = observableOptions.locale;
 }));
 
 jest.mock('../stores/MetadataStore', () => ({
@@ -244,4 +248,65 @@ test('Should change data on store without sections', () => {
     form.find('Input').at(0).instance().handleChange({currentTarget: {value: 'value!'}});
 
     expect(store.change).toBeCalledWith('item11', 'value!');
+});
+
+test('Should show a GhostDialog if the current locale is not translated', () => {
+    const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
+    resourceStore.data.concreteLanguages = ['en'];
+    const formStore = new FormStore(resourceStore);
+    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
+
+    expect(form.find('GhostDialog').prop('open')).toEqual(true);
+});
+
+test('Should not show a GhostDialog if the current locale is translated', () => {
+    const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('en')});
+    resourceStore.data.concreteLanguages = ['en'];
+    const formStore = new FormStore(resourceStore);
+    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
+
+    expect(form.find('GhostDialog').prop('open')).toEqual(false);
+});
+
+test('Should not show a GhostDialog if the entity does not exist yet', () => {
+    const resourceStore = new ResourceStore('snippet', undefined, {locale: observable.box('en')});
+    resourceStore.data.concreteLanguages = ['en'];
+    const formStore = new FormStore(resourceStore);
+    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
+
+    expect(form.find('GhostDialog')).toHaveLength(0);
+});
+
+test('Should not show a GhostDialog if the entity is not translatable', () => {
+    const resourceStore = new ResourceStore('snippet', '1');
+    const formStore = new FormStore(resourceStore);
+    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
+
+    expect(form.find('GhostDialog')).toHaveLength(0);
+});
+
+test('Should show a GhostDialog and copy the content if the confirm button is clicked', () => {
+    const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
+    resourceStore.data.concreteLanguages = ['en'];
+    const formStore = new FormStore(resourceStore);
+    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
+
+    expect(form.find('GhostDialog').prop('open')).toEqual(true);
+    form.find('GhostDialog Button[skin="primary"]').simulate('click');
+    expect(form.find('GhostDialog').prop('open')).toEqual(false);
+
+    expect(formStore.copyFromLocale).toBeCalledWith('en');
+});
+
+test('Should show a GhostDialog and do nothing if the cancel button is clicked', () => {
+    const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
+    resourceStore.data.concreteLanguages = ['en'];
+    const formStore = new FormStore(resourceStore);
+    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
+
+    expect(form.find('GhostDialog').prop('open')).toEqual(true);
+    form.find('GhostDialog Button[skin="secondary"]').simulate('click');
+    expect(form.find('GhostDialog').prop('open')).toEqual(false);
+
+    expect(formStore.copyFromLocale).not.toBeCalled();
 });

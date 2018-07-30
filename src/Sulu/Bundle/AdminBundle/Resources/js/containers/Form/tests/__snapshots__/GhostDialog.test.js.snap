@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render a Dialog 1`] = `
+"<div>
+  <div class=\\"backdrop visible fixed\\"></div>
+</div>
+<div>
+  <div class=\\"dialogContainer\\">
+    <div class=\\"dialog\\">
+      <section class=\\"content\\">
+        <header></header>
+        <article>
+          <div class=\\"ghostDialog\\">
+            <p></p>
+            <label class=\\"label\\"></label>
+            <div class=\\"localeSelect\\">
+              <div class=\\"select\\">
+                <button class=\\"displayValue\\" type=\\"button\\">
+                  <div title=\\"en\\" aria-label=\\"en\\" class=\\"croppedText\\">
+                    <div class=\\"front\\" aria-hidden=\\"true\\">e</div>
+                    <div class=\\"back\\" aria-hidden=\\"true\\"><span>n</span></div>
+                    <div class=\\"whole\\">en</div>
+                  </div><span class=\\"toggle su-angle-down\\" aria-label=\\"su-angle-down\\"></span></button>
+              </div>
+            </div>
+          </div>
+        </article>
+        <footer>
+          <button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\"></span></button>
+          <button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\"></span></button>
+        </footer>
+      </section>
+    </div>
+  </div>
+</div>"
+`;

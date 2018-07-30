@@ -6,8 +6,8 @@ import type {FieldTypeProps} from '../../../types';
 
 const PART_TAG = 'sulu.rlp.part';
 
-export default class ResourceLocator extends React.Component<FieldTypeProps<string>> {
-    constructor(props: FieldTypeProps<string>) {
+export default class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
+    constructor(props: FieldTypeProps<?string>) {
         super(props);
 
         const {dataPath, onChange, fieldTypeOptions, formInspector, value} = this.props;
@@ -18,8 +18,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
         }
 
         formInspector.addFinishFieldHandler((finishedFieldDataPath, finishedFieldSchemaPath) => {
-            if (formInspector.id) {
-                // do not generate resource locator if on edit form
+            if (value !== undefined) {
                 return;
             }
 
@@ -50,10 +49,6 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
                 onChange(response.resourcelocator);
             });
         });
-
-        if (value === undefined || value === '') {
-            onChange('/');
-        }
     }
 
     handleBlur = () => {
@@ -74,10 +69,6 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<stri
 
         if (mode !== 'leaf' && mode !== 'full') {
             throw new Error('The "mode" schema option must be either "leaf" or "full"!');
-        }
-
-        if (!value) {
-            return null;
         }
 
         return (

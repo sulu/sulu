@@ -177,6 +177,27 @@ export default class ResourceStore {
             }));
     }
 
+    copyFromLocale(locale: string, options: Object = {}) {
+        if (!this.id) {
+            throw new Error('Copying from another locale does not work for new objects!');
+        }
+
+        if (!this.locale) {
+            throw new Error('Copying from another locale does only work for objects with locales!');
+        }
+
+        return ResourceRequester
+            .postWithId(
+                this.resourceKey,
+                this.id,
+                {},
+                {action: 'copy-locale', locale: locale, dest: this.locale.get(), ...options}
+            ).then(action((response) => {
+                this.data = response;
+                return response;
+            }));
+    }
+
     @action set(name: string, value: mixed) {
         if (name === 'id' && (typeof value === 'string' || typeof value === 'number')) {
             this.id = value;

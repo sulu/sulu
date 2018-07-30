@@ -7,6 +7,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
     get: jest.fn(),
     put: jest.fn(),
     post: jest.fn(),
+    postWithId: jest.fn(),
     delete: jest.fn(),
 }));
 
@@ -347,6 +348,35 @@ test('Saving should consider the passed idQueryParameter flag and reset it after
         expect(resourceStore.idQueryParameter).toEqual(undefined);
         expect(resourceStore.id).toEqual(3);
     });
+});
+
+test('Copy the content from different locale', () => {
+    const resourceStore = new ResourceStore('pages', 4, {locale: observable.box('en')}, {webspace: 'sulu_io'});
+    resourceStore.set('content', 'old content');
+    expect(resourceStore.data).toEqual({content: 'old content'});
+
+    const germanContent = {id: 3, content: 'new content'};
+    const promise = Promise.resolve(germanContent);
+    ResourceRequester.postWithId.mockReturnValue(promise);
+
+    resourceStore.copyFromLocale('de');
+
+    expect(ResourceRequester.postWithId)
+        .toBeCalledWith('pages', 4, {}, {action: 'copy-locale', locale: 'de', dest: 'en'});
+
+    return promise.then(() => {
+        expect(resourceStore.data).toEqual(germanContent);
+    });
+});
+
+test('Copying the content from different locale should fail if no id is given', () => {
+    const resourceStore = new ResourceStore('pages');
+    expect(() => resourceStore.copyFromLocale('de')).toThrow(/for new objects/);
+});
+
+test('Copying the content from different locale should fail if no locale is given', () => {
+    const resourceStore = new ResourceStore('pages', 4);
+    expect(() => resourceStore.copyFromLocale('de')).toThrow(/with locales/);
 });
 
 test('Calling setLocale on a non-localizable ResourceStore should throw an exception', () => {
