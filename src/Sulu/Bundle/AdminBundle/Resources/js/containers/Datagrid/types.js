@@ -63,6 +63,7 @@ export type ItemEnhancer = (item: Object) => Object;
 export interface LoadingStrategyInterface {
     constructor(): void,
     load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer): Promise<Object>,
+    setStructureStrategy(structureStrategy: StructureStrategyInterface): void,
 }
 
 export interface StructureStrategyInterface {

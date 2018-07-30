@@ -12,10 +12,11 @@ jest.mock('../registries/DatagridAdapterRegistry', () => ({
 }));
 
 class LoadingStrategy {
-    load = jest.fn();
     destroy = jest.fn();
     initialize = jest.fn();
+    load = jest.fn();
     reset = jest.fn();
+    setStructureStrategy = jest.fn();
 }
 
 class StructureStrategy {

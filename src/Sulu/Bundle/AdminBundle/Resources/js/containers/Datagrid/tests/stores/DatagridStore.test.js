@@ -14,14 +14,16 @@ jest.mock('../../../../services/ResourceRequester', () => ({
 }));
 
 function LoadingStrategy() {
-    this.load = jest.fn().mockReturnValue({then: jest.fn()});
-    this.initialize = jest.fn();
-    this.reset = jest.fn();
     this.destroy = jest.fn();
+    this.initialize = jest.fn();
+    this.load = jest.fn().mockReturnValue({then: jest.fn()});
+    this.reset = jest.fn();
+    this.setStructureStrategy = jest.fn();
 }
 
 function OtherLoadingStrategy() {
     this.load = jest.fn().mockReturnValue({then: jest.fn()});
+    this.setStructureStrategy = jest.fn();
 }
 
 class StructureStrategy {
@@ -34,6 +36,15 @@ class StructureStrategy {
     deactivate = jest.fn();
     remove = jest.fn();
 }
+
+test('The loading strategy should get passed the structure strategy', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+
+    const datagridStore = new DatagridStore('tests', {});
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    expect(loadingStrategy.setStructureStrategy).toBeCalledWith(structureStrategy);
+});
 
 test('The loading strategy should be called when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
