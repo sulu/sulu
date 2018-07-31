@@ -19,10 +19,9 @@ class StructureStrategy {
     data: Array<Object>;
     visibleItems: Array<Object>;
 
+    addItem = jest.fn();
     clear = jest.fn();
-    getData = jest.fn();
     findById = jest.fn();
-    enhanceItem = jest.fn();
     remove = jest.fn();
 }
 

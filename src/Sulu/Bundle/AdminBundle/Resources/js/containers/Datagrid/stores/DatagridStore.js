@@ -200,14 +200,15 @@ export default class DatagridStore {
 
         this.setDataLoading(true);
 
-        const data = this.structureStrategy.getData(this.active.get());
-        if (!data) {
+        const active = this.active.get();
+        if (active && !this.structureStrategy.findById(active)) {
+            // TODO reset datagrid completely and reload with new active item
             throw new Error('The active item does not exist in the Datagrid');
         }
 
         const options = {...observableOptions, ...this.options};
-        if (this.active.get()) {
-            options.parentId = this.active.get();
+        if (active) {
+            options.parentId = active;
         }
 
         options.sortBy = this.sortColumn.get();
@@ -219,12 +220,7 @@ export default class DatagridStore {
 
         log.info('Datagrid loads "' + this.resourceKey + '" data with the following options:', options);
 
-        this.loadingStrategy.load(
-            data,
-            this.resourceKey,
-            options,
-            this.structureStrategy.enhanceItem
-        ).then(action((response) => {
+        this.loadingStrategy.load(this.resourceKey, options, active).then(action((response) => {
             this.handleResponse(response);
         }));
     };

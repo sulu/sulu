@@ -2,7 +2,7 @@
 import {action, computed, observable} from 'mobx';
 import type {ColumnItem, StructureStrategyInterface} from '../types';
 
-function removeColumnsAfterIndex(parents, columnIndex, rawData) {
+function removeColumnsAfterIndex(parents, columnIndex: number, rawData) {
     parents.filter((parent, index) => index > columnIndex).forEach((parent) => rawData.delete(parent));
 }
 
@@ -29,10 +29,6 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
         const columnIndex = this.data.findIndex((column) => column.findIndex((item) => item.id === id) !== -1);
         removeColumnsAfterIndex(this.activeItems, columnIndex, this.rawData);
         this.rawData.set(id, []);
-    }
-
-    @action getData(parent: ?string | number) {
-        return this.rawData.get(parent);
     }
 
     @action remove(identifier: string | number) {
@@ -78,12 +74,35 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
         }
     }
 
-    @action clear() {
-        this.rawData.clear();
-        this.rawData.set(undefined, []);
+    @action clear(parent: ?string | number) {
+        removeColumnsAfterIndex(this.activeItems, this.activeItems.indexOf(parent), this.rawData);
+        const column = this.rawData.get(parent);
+        if (column && column.length > 0) {
+            column.splice(0, column.length);
+        }
     }
 
-    enhanceItem(item: ColumnItem): ColumnItem {
-        return item;
+    addItem(item: Object, parent: ?string | number) {
+        let column = this.rawData.get(parent);
+        if (!column) {
+            column = [];
+            this.rawData.set(parent, column);
+        }
+
+        column.push(item);
+
+        if (!item._embedded) {
+            return;
+        }
+
+        const resourceKey = Object.keys(item._embedded)[0];
+        const childItems = item._embedded[resourceKey];
+
+        if (childItems.length > 0 && !this.rawData.has(item.id)) {
+            this.rawData.set(item.id, []);
+            childItems.forEach((childItem) => {
+                this.addItem(childItem, item.id);
+            });
+        }
     }
 }

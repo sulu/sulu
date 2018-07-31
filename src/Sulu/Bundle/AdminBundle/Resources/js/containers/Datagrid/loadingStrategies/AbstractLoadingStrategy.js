@@ -1,5 +1,5 @@
 // @flow
-import type {LoadingStrategyInterface, LoadOptions, ItemEnhancer, StructureStrategyInterface} from '../types';
+import type {LoadingStrategyInterface, LoadOptions, StructureStrategyInterface} from '../types';
 
 export default class AbstractLoadingStrategy implements LoadingStrategyInterface {
     structureStrategy: StructureStrategyInterface;
@@ -9,7 +9,7 @@ export default class AbstractLoadingStrategy implements LoadingStrategyInterface
     }
 
     // eslint-disable-next-line no-unused-vars
-    load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer): Promise<Object> {
+    load(resourceKey: string, options: LoadOptions): Promise<Object> {
         throw new Error('Not implemented');
     }
 }

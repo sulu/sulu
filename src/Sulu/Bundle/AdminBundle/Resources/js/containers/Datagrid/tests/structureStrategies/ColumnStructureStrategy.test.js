@@ -39,18 +39,6 @@ test('Should return the visible data', () => {
     ]);
 });
 
-test('Should return the column for a given parent in getData', () => {
-    const columnStructureStrategy = new ColumnStructureStrategy();
-    const column1 = [{id: 1, hasChildren: true}];
-    columnStructureStrategy.rawData.set(undefined, column1);
-    const column2 = [{id: 2, hasChildren: true}];
-    columnStructureStrategy.rawData.set(1, column2);
-    const column3 = [{id: 3, hasChildren: true}];
-    columnStructureStrategy.rawData.set(2, column3);
-
-    expect(columnStructureStrategy.getData(1)).toEqual([{id: 2, hasChildren: true}]);
-});
-
 test('Should remove the columns after the activated item', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();
     const column1 = [{id: 1, hasChildren: true}];
@@ -102,7 +90,20 @@ test('Should return undefined if item with given id does not exist', () => {
     expect(columnStructureStrategy.findById(7)).toEqual(undefined);
 });
 
-test('Should be empty after clear was called', () => {
+test('Should be empty after clear witha parent was called', () => {
+    const columnStructureStrategy = new ColumnStructureStrategy();
+    columnStructureStrategy.rawData = new Map();
+    columnStructureStrategy.rawData.set(0, []);
+    columnStructureStrategy.rawData.set(1, []);
+    columnStructureStrategy.rawData.set(2, []);
+    columnStructureStrategy.rawData.set(3, []);
+
+    expect(columnStructureStrategy.data).toHaveLength(4);
+    columnStructureStrategy.clear(1);
+    expect(columnStructureStrategy.data).toHaveLength(2);
+});
+
+test('Should be empty after clear without a parent was called', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();
     columnStructureStrategy.rawData = new Map();
     columnStructureStrategy.rawData.set(0, []);
@@ -110,13 +111,70 @@ test('Should be empty after clear was called', () => {
 
     expect(columnStructureStrategy.data).toHaveLength(2);
     columnStructureStrategy.clear();
-    expect(columnStructureStrategy.data).toHaveLength(1);
-    expect(columnStructureStrategy.getData(undefined)).toEqual([]);
+    expect(columnStructureStrategy.data).toHaveLength(0);
 });
 
-test('Should not enhance the items', () => {
+test('Should add the items in a recursive way', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();
-    expect(columnStructureStrategy.enhanceItem({id: 1, hasChildren: true})).toEqual({id: 1, hasChildren: true});
+
+    const child4 = {id: 40, hasChildren: false};
+    const child5 = {id: 2, hasChildren: false};
+    const child2 = {id: 5, hasChildren: false};
+    const child3 = {
+        id: 2,
+        hasChildren: true,
+        _embedded: {
+            nodes: [
+                child4,
+                child5,
+            ],
+        },
+    };
+
+    const child1 = {
+        id: 25,
+        hasChildren: true,
+        _embedded: {
+            nodes: [
+                child2,
+                child3,
+            ],
+        },
+    };
+
+    columnStructureStrategy.addItem(child1);
+    expect(columnStructureStrategy.data).toEqual([
+        [child1],
+        [child2, child3],
+        [child4, child5],
+    ]);
+});
+
+test('Should add the items in a recursive way with a different resourceKey', () => {
+    const columnStructureStrategy = new ColumnStructureStrategy();
+
+    const child2 = {id: 5, hasChildren: false};
+    const child3 = {
+        id: 2,
+        hasChildren: true,
+    };
+
+    const child1 = {
+        id: 25,
+        hasChildren: true,
+        _embedded: {
+            categories: [
+                child2,
+                child3,
+            ],
+        },
+    };
+
+    columnStructureStrategy.addItem(child1);
+    expect(columnStructureStrategy.data).toEqual([
+        [child1],
+        [child2, child3],
+    ]);
 });
 
 test('Should remove an entry', () => {

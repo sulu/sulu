@@ -46,6 +46,10 @@ function removeRecursive(items: Array<TreeItem>, identifier: string | number): b
 }
 
 function findChildrenForParentId(tree: Array<TreeItem>, parent: ?string | number): ?Array<TreeItem> {
+    if (parent === undefined) {
+        return tree;
+    }
+
     for (let i = 0; i < tree.length; i++) {
         const item = tree[i];
         const {data, children} = item;
@@ -67,14 +71,6 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
         return flattenData(this.data);
     }
 
-    @action getData(parent: ?string | number) {
-        if (parent === undefined) {
-            return this.data;
-        }
-
-        return findChildrenForParentId(this.data, parent);
-    }
-
     remove(identifier: string | number) {
         removeRecursive(this.data, identifier);
     }
@@ -84,22 +80,39 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
     }
 
     deactivate(id: ?string | number) {
-        const data = this.getData(id);
-        if (data) {
-            data.splice(0, data.length);
+        const children = findChildrenForParentId(this.data, id);
+        if (children) {
+            children.splice(0, children.length);
         }
     }
 
-    enhanceItem(item: Object): TreeItem {
-        return {
+    addItem(item: Object, parent: ?string | number): void {
+        const children = findChildrenForParentId(this.data, parent);
+
+        if (!children) {
+            throw new Error('Cannot add items to non-existing parent "' + (parent ? parent : 'undefined') + '"!');
+        }
+
+        children.push({
             data: item,
             // TODO do not hardcode hasChildren but use metadata instead
             hasChildren: item.hasChildren,
             children: [],
-        };
+        });
+
+        if (item._embedded && Object.keys(item._embedded).length > 0) {
+            const resourceKey = Object.keys(item._embedded)[0];
+            const childItems = item._embedded[resourceKey];
+            childItems.forEach((childItem) => this.addItem(childItem, item.id));
+        }
     }
 
-    @action clear() {
-        this.data.splice(0, this.data.length);
+    @action clear(parent: ?string | number) {
+        const children = findChildrenForParentId(this.data, parent);
+        if (!children || children.length === 0) {
+            return;
+        }
+
+        children.splice(0, children.length);
     }
 }

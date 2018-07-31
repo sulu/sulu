@@ -7,12 +7,6 @@ test('Should be empty after intialization', () => {
     expect(toJS(flatStructureStrategy.data)).toEqual([]);
 });
 
-test('Should return the array on a getData call', () => {
-    const flatStructureStrategy = new FlatStructureStrategy();
-    flatStructureStrategy.data = [{id: 1}];
-    expect(flatStructureStrategy.getData()).toBe(flatStructureStrategy.data);
-});
-
 test('Should be empty after clear was called', () => {
     const flatStructureStrategy = new FlatStructureStrategy();
     flatStructureStrategy.data = [{id: 1}];
@@ -21,9 +15,14 @@ test('Should be empty after clear was called', () => {
     expect(toJS(flatStructureStrategy.data)).toEqual([]);
 });
 
-test('Should not enhance the items', () => {
+test('Should add an item to the structure', () => {
     const flatStructureStrategy = new FlatStructureStrategy();
-    expect(flatStructureStrategy.enhanceItem({id: 1})).toEqual({id: 1});
+    flatStructureStrategy.addItem({id: 1});
+    flatStructureStrategy.addItem({id: 2});
+
+    expect(flatStructureStrategy.data).toHaveLength(2);
+    expect(flatStructureStrategy.data[0]).toEqual({id: 1});
+    expect(flatStructureStrategy.data[1]).toEqual({id: 2});
 });
 
 test('Should return all current items as visible items', () => {

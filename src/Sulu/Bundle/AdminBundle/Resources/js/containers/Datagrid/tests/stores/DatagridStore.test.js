@@ -28,13 +28,13 @@ function OtherLoadingStrategy() {
 
 class StructureStrategy {
     @observable data = [];
+    addItem = jest.fn();
     clear = jest.fn();
     activeItems = [];
-    getData = jest.fn().mockReturnValue(this.data);
-    enhanceItem = jest.fn((item) => item);
     activate = jest.fn();
     deactivate = jest.fn();
     remove = jest.fn();
+    findById = jest.fn();
 }
 
 test('The loading strategy should get passed the structure strategy', () => {
@@ -64,11 +64,9 @@ test('The loading strategy should be called when a request is sent', () => {
         }
     );
 
-    structureStrategy.getData.mockReturnValue([]);
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
-        toJS(datagridStore.data),
         'tests',
         {
             additionalValue: 5,
@@ -76,7 +74,7 @@ test('The loading strategy should be called when a request is sent', () => {
             page: 1,
             test: 'value',
         },
-        structureStrategy.enhanceItem
+        undefined
     );
 
     datagridStore.destroy();
@@ -98,19 +96,16 @@ test('The loading strategy should be called with a different resourceKey when a 
         }
     );
 
-    const data = [{id: 1}];
-    structureStrategy.getData.mockReturnValue(data);
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
-        data,
         'snippets',
         {
             locale: undefined,
             page: 1,
             test: 'value',
         },
-        structureStrategy.enhanceItem
+        undefined
     );
 
     datagridStore.destroy();
@@ -132,31 +127,27 @@ test('The loading strategy should be called with a different page when a request
         }
     );
 
-    const data = [{id: 1}];
-    structureStrategy.getData.mockReturnValue(data);
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
-        data,
         'snippets',
         {
             locale: undefined,
             page: 1,
             test: 'value',
         },
-        structureStrategy.enhanceItem
+        undefined
     );
 
     page.set(3);
     expect(loadingStrategy.load).toBeCalledWith(
-        data,
         'snippets',
         {
             locale: undefined,
             page: 3,
             test: 'value',
         },
-        structureStrategy.enhanceItem
+        undefined
     );
 
     datagridStore.destroy();
@@ -178,30 +169,27 @@ test('The loading strategy should be called with a different locale when a reque
         }
     );
 
-    const data = [{id: 1}];
-    structureStrategy.getData.mockReturnValue(data);
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
-        data, 'snippets',
+        'snippets',
         {
             locale: 'en',
             page: 1,
             test: 'value',
         },
-        structureStrategy.enhanceItem
+        undefined
     );
 
     locale.set('de');
     expect(loadingStrategy.load).toBeCalledWith(
-        data,
         'snippets',
         {
             locale: 'de',
             page: 1,
             test: 'value',
         },
-        structureStrategy.enhanceItem
+        undefined
     );
 
     datagridStore.destroy();
@@ -218,20 +206,17 @@ test('The loading strategy should be called with the defined sortings', () => {
         }
     );
 
-    const data = [{id: 1}];
-    structureStrategy.getData.mockReturnValue(data);
     datagridStore.sort('title', 'desc');
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
-        data,
         'snippets',
         {
             page: 1,
             sortBy: 'title',
             sortOrder: 'desc',
         },
-        structureStrategy.enhanceItem
+        undefined
     );
 
     datagridStore.destroy();
@@ -248,21 +233,18 @@ test('The loading strategy should be called with the defined search', () => {
         }
     );
 
-    const data = [{id: 1}];
-    structureStrategy.getData.mockReturnValue(data);
     structureStrategy.clear = jest.fn();
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     datagridStore.search('search-value');
 
     expect(loadingStrategy.load).toBeCalledWith(
-        data,
         'snippets',
         {
             page: 1,
             search: 'search-value',
         },
-        structureStrategy.enhanceItem
+        undefined
     );
 
     expect(structureStrategy.clear).toBeCalled();
@@ -281,19 +263,18 @@ test('The loading strategy should be called with the active item as parentId', (
         }
     );
 
-    const data = [{id: 1}];
-    structureStrategy.getData.mockReturnValue(data);
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    structureStrategy.findById.mockReturnValue({});
     datagridStore.setActive('some-uuid');
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
+    expect(structureStrategy.findById).toBeCalledWith('some-uuid');
     expect(loadingStrategy.load).toBeCalledWith(
-        data,
         'snippets',
         {
             page: 1,
             parentId: 'some-uuid',
         },
-        structureStrategy.enhanceItem
+        'some-uuid'
     );
 
     datagridStore.destroy();
@@ -313,18 +294,15 @@ test('The active item should not be passed as parent if undefined', () => {
         }
     );
 
-    const data = [{id: 1}];
-    structureStrategy.getData.mockReturnValue(data);
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
-        data,
         'snippets',
         {
             page: 1,
             parent: 9,
         },
-        structureStrategy.enhanceItem
+        undefined
     );
 
     datagridStore.destroy();
@@ -540,7 +518,9 @@ test('Should reset the data array and set page to 1 when the reload method is ca
 
     locale.set('en');
     page.set(3);
+    structureStrategy.findById.mockReturnValue({});
     datagridStore.setActive(1);
+    expect(structureStrategy.findById).toBeCalledWith(1);
 
     when(
         () => !datagridStore.loading,
@@ -793,6 +773,8 @@ test('Should trigger a mobx autorun if activate is called with the same id', () 
     const datagridStore = new DatagridStore('snippets', {page});
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
+    structureStrategy.findById.mockReturnValue({});
+
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
     datagridStore.activate(3);
 
@@ -813,6 +795,7 @@ test('Should call the activate method of the structure strategy if an item gets 
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
+    structureStrategy.findById.mockReturnValue({});
     datagridStore.updateStrategies(loadingStrategy, structureStrategy);
 
     datagridStore.activate(3);
