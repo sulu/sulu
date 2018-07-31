@@ -280,6 +280,61 @@ test('The loading strategy should be called with the active item as parentId', (
     datagridStore.destroy();
 });
 
+test('The loading strategy should be called with expandedIds if the active item is not available', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore(
+        'snippets',
+        {
+            page,
+        }
+    );
+
+    datagridStore.setActive('some-uuid');
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    expect(structureStrategy.findById).toBeCalledWith('some-uuid');
+    expect(structureStrategy.clear).toBeCalledWith();
+    expect(loadingStrategy.load).toBeCalledWith(
+        'snippets',
+        {
+            expandedIds: [
+                'some-uuid',
+            ],
+            page: 1,
+            sortBy: undefined,
+            sortOrder: undefined,
+        },
+        undefined
+    );
+
+    datagridStore.destroy();
+});
+
+test('The loading strategy should be called only once even if the data changes afterwards for some reason', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore(
+        'snippets',
+        {
+            page,
+        }
+    );
+
+    datagridStore.setActive('some-uuid');
+    structureStrategy.findById.mockImplementation(() => Array.from(structureStrategy.data));
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    expect(structureStrategy.findById).toBeCalledWith('some-uuid');
+    expect(loadingStrategy.load).toHaveBeenCalledTimes(1);
+    structureStrategy.data.push({});
+    expect(loadingStrategy.load).toHaveBeenCalledTimes(1);
+
+    datagridStore.destroy();
+});
+
 test('The active item should not be passed as parent if undefined', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();

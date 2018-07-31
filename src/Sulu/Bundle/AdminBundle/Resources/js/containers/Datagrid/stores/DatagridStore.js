@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, intercept, observable} from 'mobx';
+import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
 import type {IObservableValue, IValueWillChange} from 'mobx';
 import log from 'loglevel';
 import ResourceRequester from '../../../services/ResourceRequester';
@@ -200,14 +200,15 @@ export default class DatagridStore {
 
         this.setDataLoading(true);
 
+        const options = {...observableOptions, ...this.options};
+
         const active = this.active.get();
-        if (active && !this.structureStrategy.findById(active)) {
-            // TODO reset datagrid completely and reload with new active item
-            throw new Error('The active item does not exist in the Datagrid');
+        if (active && untracked(() => !this.structureStrategy.findById(active))) {
+            this.structureStrategy.clear();
+            options.expandedIds = [active];
         }
 
-        const options = {...observableOptions, ...this.options};
-        if (active) {
+        if (!options.expandedIds && active) {
             options.parentId = active;
         }
 
@@ -220,7 +221,11 @@ export default class DatagridStore {
 
         log.info('Datagrid loads "' + this.resourceKey + '" data with the following options:', options);
 
-        this.loadingStrategy.load(this.resourceKey, options, active).then(action((response) => {
+        this.loadingStrategy.load(
+            this.resourceKey,
+            options,
+            options.expandedIds ? undefined : active
+        ).then(action((response) => {
             this.handleResponse(response);
         }));
     };
