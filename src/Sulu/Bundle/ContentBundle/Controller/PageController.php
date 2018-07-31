@@ -52,7 +52,7 @@ class PageController extends NodeController
 
     protected function cgetContent(Request $request)
     {
-        if (!$request->query->has('parent')) {
+        if (!$request->query->has('parentId')) {
             // If the content is loaded using the content mapper for a flat list (indicated by the flat flag in the
             // response) and there is no parent given, then webspaces have to be returned.
             if ($request->query->has('webspace')) {

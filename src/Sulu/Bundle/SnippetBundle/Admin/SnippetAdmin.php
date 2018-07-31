@@ -119,12 +119,6 @@ class SnippetAdmin extends Admin
                 ->addOption('tabTitle', 'sulu_snippet.details')
                 ->addOption('backRoute', 'sulu_snippet.datagrid')
                 ->setParent('sulu_snippet.edit_form'),
-            (new Route('sulu_snippet.edit_form.taxonomies', '/taxonomies', 'sulu_admin.datagrid'))
-                ->addOption('resourceKey', 'snippets')
-                ->addOption('tabTitle', 'sulu_snippet.taxonomies')
-                ->addOption('adapters', ['table'])
-                ->addOption('backRoute', 'sulu_snippet.datagrid')
-                ->setParent('sulu_snippet.edit_form'),
         ];
     }
 

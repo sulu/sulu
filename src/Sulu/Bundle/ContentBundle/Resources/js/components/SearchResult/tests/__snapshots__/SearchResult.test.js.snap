@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render a SearchResult with title, url and description 1`] = `
+<div
+  class="searchResult"
+>
+  <div
+    class="title"
+  >
+    Test SEO Title
+  </div>
+  <div
+    class="url"
+  >
+    http://www.sulu.io/test
+  </div>
+  <div
+    class="description"
+  >
+    Yay!
+  </div>
+</div>
+`;
+
+exports[`Should render a SearchResult without title, url and description 1`] = `
+<div
+  class="searchResult"
+>
+  <div
+    class="title"
+  />
+  <div
+    class="url"
+  />
+  <div
+    class="description"
+  />
+</div>
+`;

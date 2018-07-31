@@ -1,0 +1,14 @@
+@import '../../containers/Application/colors.scss';
+
+$characterCounterColor: $scorpion;
+$characterCounterExceededColor: $persianRed;
+
+.character-counter {
+    color: $characterCounterColor;
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.exceeded {
+    color: $characterCounterExceededColor;
+}

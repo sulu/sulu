@@ -1,9 +1,11 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import classNames from 'classnames';
+import CharacterCounter from '../CharacterCounter';
 import textAreaStyles from './textArea.scss';
 
 type Props = {|
+    maxCharacters?: number,
     name?: string,
     onBlur?: () => void,
     onChange: (string) => void,
@@ -31,6 +33,7 @@ export default class TextArea extends React.PureComponent<Props> {
 
     render() {
         const {
+            maxCharacters,
             name,
             placeholder,
             value,
@@ -45,14 +48,19 @@ export default class TextArea extends React.PureComponent<Props> {
         );
 
         return (
-            <textarea
-                name={name}
-                className={textareaClass}
-                value={value || ''}
-                placeholder={placeholder}
-                onBlur={this.handleBlur}
-                onChange={this.handleChange}
-            />
+            <Fragment>
+                <textarea
+                    name={name}
+                    className={textareaClass}
+                    value={value || ''}
+                    placeholder={placeholder}
+                    onBlur={this.handleBlur}
+                    onChange={this.handleChange}
+                />
+                {maxCharacters &&
+                    <CharacterCounter max={maxCharacters} value={value} />
+                }
+            </Fragment>
         );
     }
 }

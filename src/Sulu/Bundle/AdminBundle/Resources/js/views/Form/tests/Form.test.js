@@ -164,32 +164,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
     expect(resourceStore).not.toBe(formResourceStore);
     expect(resourceStore.resourceKey).toEqual('snippets');
     expect(formResourceStore.resourceKey).toEqual('pages');
-    expect(formResourceStore.locale.get()).toEqual('en');
-});
-
-test('Should create a new resourceStore if the passed resourceKey differs with own boolean locales', () => {
-    const Form = require('../Form').default;
-    const ResourceStore = require('../../../stores/ResourceStore').default;
-    const resourceStore = new ResourceStore('snippets', 10, {});
-    const route = {
-        options: {
-            resourceKey: 'pages',
-            locales: true,
-        },
-    };
-    const router = {
-        attributes: {},
-        bind: jest.fn(),
-        route,
-    };
-
-    const form = mount(<Form resourceStore={resourceStore} router={router} route={route} />);
-    const formResourceStore = form.instance().resourceStore;
-
-    expect(resourceStore).not.toBe(formResourceStore);
-    expect(resourceStore.resourceKey).toEqual('snippets');
-    expect(formResourceStore.resourceKey).toEqual('pages');
-    expect(formResourceStore.locale.get()).toEqual(undefined);
+    expect(formResourceStore.locale).toBe(locale);
 });
 
 test('Should instantiate the ResourceStore with the idQueryParameter if given', () => {
@@ -332,7 +307,32 @@ test('Should show locales from router options in toolbar', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    const form = mount(<Form locales={[]} router={router} route={route} resourceStore={resourceStore} />);
+
+    const toolbarConfig = toolbarFunction.call(form.instance());
+    expect(toolbarConfig.locale.options).toEqual([
+        {value: 'en', label: 'en'},
+        {value: 'de', label: 'de'},
+    ]);
+});
+
+test('Should show locales from props in toolbar if route has no locales', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+
+    const route = {
+        options: {},
+    };
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+    const form = mount(<Form locales={['en', 'de']} router={router} route={route} resourceStore={resourceStore} />);
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     expect(toolbarConfig.locale.options).toEqual([
@@ -640,7 +640,7 @@ test('Should save form when submitted', (done) => {
     jsonSchemaResolve({});
 });
 
-test('Should save form when submitted with parent', (done) => {
+test('Should save form when submitted with mapped router attributes', (done) => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
@@ -663,6 +663,7 @@ test('Should save form when submitted with parent', (done) => {
     const route = {
         options: {
             locales: [],
+            routerAttributesToFormStore: ['parentId', 'webspace'],
         },
     };
     const router = {
@@ -672,6 +673,7 @@ test('Should save form when submitted with parent', (done) => {
         attributes: {
             id: 8,
             parentId: 3,
+            webspace: 'sulu_io',
         },
     };
     const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
@@ -685,7 +687,8 @@ test('Should save form when submitted with parent', (done) => {
         jsonSchemaPromise.then(() => {
             form.find('Form').at(1).instance().submit();
             expect(resourceStore.destroy).not.toBeCalled();
-            expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en', parent: 3});
+            expect(ResourceRequester.put)
+                .toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en', parentId: 3, webspace: 'sulu_io'});
             done();
         });
     });

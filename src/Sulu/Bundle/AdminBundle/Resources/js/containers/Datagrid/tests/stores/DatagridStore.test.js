@@ -259,7 +259,7 @@ test('The loading strategy should be called with the defined search', () => {
     datagridStore.destroy();
 });
 
-test('The loading strategy should be called with the active item as parent', () => {
+test('The loading strategy should be called with the active item as parentId', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
     const page = observable.box(1);
@@ -280,7 +280,7 @@ test('The loading strategy should be called with the active item as parent', () 
         'snippets',
         {
             page: 1,
-            parent: 'some-uuid',
+            parentId: 'some-uuid',
         },
         structureStrategy.enhanceItem
     );

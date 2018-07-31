@@ -1,9 +1,11 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ElementRef} from 'react';
 import classNames from 'classnames';
+import CharacterCounter from '../CharacterCounter';
 import Icon from '../Icon';
 import Loader from '../Loader';
+import SegmentCounter from '../SegmentCounter';
 import inputStyles from './input.scss';
 import type {InputProps} from './types';
 
@@ -55,12 +57,15 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
             icon,
             loading,
             collapsed,
+            maxCharacters,
+            maxSegments,
             name,
             placeholder,
             onBlur,
             onIconClick,
             onClearClick,
             onKeyPress,
+            segmentDelimiter,
             type,
             value,
             iconStyle,
@@ -102,52 +107,64 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
         );
 
         return (
-            <label
-                className={labelClass}
-                ref={labelRef ? this.setLabelRef : undefined}
-            >
-                {!loading && icon &&
-                    <div className={prependContainerClass}>
-                        <Icon
-                            onClick={onIconClick ? onIconClick : undefined}
-                            className={iconClass}
-                            name={icon}
-                            style={iconStyle}
-                        />
-                    </div>
-                }
+            <Fragment>
+                <label
+                    className={labelClass}
+                    ref={labelRef ? this.setLabelRef : undefined}
+                >
+                    {!loading && icon &&
+                        <div className={prependContainerClass}>
+                            <Icon
+                                onClick={onIconClick ? onIconClick : undefined}
+                                className={iconClass}
+                                name={icon}
+                                style={iconStyle}
+                            />
+                        </div>
+                    }
 
-                {loading &&
-                    <div className={prependContainerClass}>
-                        <Loader size={LOADER_SIZE} />
-                    </div>
-                }
+                    {loading &&
+                        <div className={prependContainerClass}>
+                            <Loader size={LOADER_SIZE} />
+                        </div>
+                    }
 
-                <input
-                    ref={inputRef ? this.setInputRef : undefined}
-                    name={name}
-                    type={type}
-                    value={value == null ? '' : value}
-                    placeholder={placeholder}
-                    onBlur={onBlur}
-                    onChange={this.handleChange}
-                    onKeyPress={onKeyPress ? this.handleKeyPress : undefined}
-                    min={min}
-                    max={max}
-                    step={step}
-                />
+                    <input
+                        ref={inputRef ? this.setInputRef : undefined}
+                        name={name}
+                        type={type}
+                        value={value == null ? '' : value}
+                        placeholder={placeholder}
+                        onBlur={onBlur}
+                        onChange={this.handleChange}
+                        onKeyPress={onKeyPress ? this.handleKeyPress : undefined}
+                        min={min}
+                        max={max}
+                        step={step}
+                    />
 
-                {!collapsed && !!value && onClearClick &&
-                    <div className={inputStyles.appendContainer}>
-                        <Icon
-                            onClick={onClearClick ? onClearClick : undefined}
-                            className={iconClass}
-                            name="su-times"
-                            style={iconStyle}
-                        />
-                    </div>
+                    {!collapsed && !!value && onClearClick &&
+                        <div className={inputStyles.appendContainer}>
+                            <Icon
+                                onClick={onClearClick ? onClearClick : undefined}
+                                className={iconClass}
+                                name="su-times"
+                                style={iconStyle}
+                            />
+                        </div>
+                    }
+                </label>
+                {maxCharacters &&
+                    <CharacterCounter max={maxCharacters} value={value} />
                 }
-            </label>
+                {segmentDelimiter && maxSegments &&
+                    <SegmentCounter
+                        delimiter={segmentDelimiter}
+                        max={maxSegments}
+                        value={value ? value.toString() : undefined}
+                    />
+                }
+            </Fragment>
         );
     }
 }

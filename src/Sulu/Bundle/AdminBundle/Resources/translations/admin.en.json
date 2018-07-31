@@ -42,5 +42,7 @@
     "sulu_admin.delete_warning_text": "This operation deletes data and cannot be undone. Do you really wish to proceed?",
     "sulu_admin.ghost_dialog_title": "Copy language?",
     "sulu_admin.ghost_dialog_description": "This page does not exist in this language. Do you want to copy content from another language?",
-    "sulu_admin.choose_language": "Choose language"
+    "sulu_admin.choose_language": "Choose language",
+    "sulu_admin.characters_left": "characters left",
+    "sulu_admin.segments_left": "segments left"
 }

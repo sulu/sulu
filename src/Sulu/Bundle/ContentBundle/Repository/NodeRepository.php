@@ -171,7 +171,7 @@ class NodeRepository implements NodeRepositoryInterface
                     (null !== $extension ? '/' . $extension : ''),
             ],
             'children' => [
-                'href' => $this->apiBasePath . '?parent=' . $structure->getUuid() . '&depth=' . $depth .
+                'href' => $this->apiBasePath . '?parentId=' . $structure->getUuid() . '&depth=' . $depth .
                     '&webspace=' . $webspaceKey . '&language=' . $languageCode .
                     (true === $excludeGhosts ? '&exclude-ghosts=true' : ''),
             ],
@@ -681,6 +681,7 @@ class NodeRepository implements NodeRepositoryInterface
         // add uuid and path
         $data['id'] = $structure->getUuid();
         $data['path'] = $structure->getPath();
+        $data['url'] = $structure->getResourceLocator();
 
         // prepare data
         $data['_links'] = [
@@ -714,6 +715,7 @@ class NodeRepository implements NodeRepositoryInterface
         // add uuid and path
         $data['id'] = $structure->getUuid();
         $data['path'] = $structure->getPath();
+        $data['url'] = $structure->getResourceLocator();
 
         // prepare data
         $data['_links'] = [

@@ -672,7 +672,7 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories?locale=en&flat=true&parent=' . $this->category1->getId()
+            '/api/categories?locale=en&flat=true&parentId=' . $this->category1->getId()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -997,11 +997,10 @@ class CategoryControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/categories?locale=en',
+            '/api/categories?locale=en&parentId=' . $this->category1->getId(),
             [
                 'name' => 'New Category',
                 'key' => 'new-category-key',
-                'parent' => $this->category1->getId(),
             ]
         );
 
@@ -1232,66 +1231,6 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('first-category-key', $response->key);
     }
 
-    public function testPatchChangeParent()
-    {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'GET',
-            '/api/categories?locale=en'
-        );
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
-        $categories = $response->_embedded->categories;
-        usort(
-            $categories,
-            function ($cat1, $cat2) {
-                return $cat1->id > $cat2->id;
-            }
-        );
-
-        $this->assertCount(1, $categories[0]->children);
-        $this->assertCount(1, $categories[0]->children[0]->children);
-        $this->assertCount(0, $categories[0]->children[0]->children[0]->children);
-        $this->assertCount(0, $categories[1]->children);
-
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'PATCH',
-            '/api/categories/' . $this->category4->getId() . '?locale=en',
-            [
-                'parent' => $this->category2->getId(),
-            ]
-        );
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $client->request(
-            'GET',
-            '/api/categories/' . $this->category1->getId() . '?locale=en'
-        );
-
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'GET',
-            '/api/categories?locale=en'
-        );
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
-        $categories = $response->_embedded->categories;
-        usort(
-            $categories,
-            function ($cat1, $cat2) {
-                return $cat1->id > $cat2->id;
-            }
-        );
-
-        $this->assertCount(1, $categories[0]->children);
-        $this->assertCount(0, $categories[0]->children[0]->children);
-        $this->assertCount(1, $categories[1]->children);
-        $this->assertCount(0, $categories[0]->children[0]->children);
-    }
-
     public function testPatchWithExistingKey()
     {
         $client = $this->createAuthenticatedClient();
@@ -1387,7 +1326,7 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
-            '/api/categories/' . $this->category4->getId() . '?locale=en&action=move&parent=' . $parentId
+            '/api/categories/' . $this->category4->getId() . '?locale=en&action=move&parentId=' . $parentId
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -1409,7 +1348,7 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
-            '/api/categories/' . $this->category4->getId() . '?locale=en&action=move&parent=null'
+            '/api/categories/' . $this->category4->getId() . '?locale=en&action=move&parentId=null'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());

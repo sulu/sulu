@@ -198,11 +198,13 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
     expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
 });
 
-test('Should pass the ResourceStore to child components', () => {
+test('Should pass the ResourceStore and locales to child components', () => {
+    const locales = observable(['de', 'en']);
     const route = {
         children: [],
         options: {
             resourceKey: 'snippets',
+            locales,
         },
     };
     const router = {
@@ -214,8 +216,41 @@ test('Should pass the ResourceStore to child components', () => {
 
     const ChildComponent = jest.fn(() => null);
     const resourceTabs = mount(
-        <ResourceTabs router={router} route={route}>{(props) => (<ChildComponent {...props} />)}</ResourceTabs>
+        <ResourceTabs
+            locales={[]}
+            router={router}
+            route={route}
+        >
+            {(props) => (<ChildComponent {...props} />)}
+        </ResourceTabs>
     ).instance();
 
     expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
+    expect(ChildComponent.mock.calls[0][0].locales).toBe(locales);
+});
+
+test('Should pass locales from route options instead of props to child components', () => {
+    const route = {
+        children: [],
+        options: {
+            resourceKey: 'snippets',
+            locales: ['de', 'en'],
+        },
+    };
+    const router = {
+        route,
+        attributes: {
+            id: 5,
+        },
+    };
+
+    const ChildComponent = jest.fn(() => null);
+    const resourceTabs = mount(
+        <ResourceTabs locales={['fr', 'nl']} router={router} route={route}>
+            {(props) => (<ChildComponent {...props} />)}
+        </ResourceTabs>
+    ).instance();
+
+    expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
+    expect(ChildComponent.mock.calls[0][0].locales).toEqual(['de', 'en']);
 });

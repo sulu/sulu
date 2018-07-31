@@ -89,6 +89,22 @@ test('Render a field without a label', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a field with a description', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    expect(render(
+        <Field
+            dataPath=""
+            formInspector={formInspector}
+            name="test"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schema={{description: 'Small description describing the field', label: 'label1', type: 'text'}}
+            schemaPath=""
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render a field with an error', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 

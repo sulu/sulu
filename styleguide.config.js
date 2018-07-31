@@ -101,6 +101,7 @@ module.exports = { // eslint-disable-line
                 const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/views/*');
 
                 return folders
+                    .filter((folder) => path.basename(folder) !== 'index.js')
                     .map((folder) => {
                         const component = path.basename(folder);
                         return {name: component, content: folder + '/README.md'};

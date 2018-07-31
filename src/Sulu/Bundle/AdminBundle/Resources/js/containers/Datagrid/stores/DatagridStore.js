@@ -202,7 +202,7 @@ export default class DatagridStore {
 
         const options = {...observableOptions, ...this.options};
         if (this.active) {
-            options.parent = this.active;
+            options.parentId = this.active;
         }
 
         options.sortBy = this.sortColumn.get();

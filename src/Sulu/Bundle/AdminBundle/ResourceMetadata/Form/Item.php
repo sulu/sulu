@@ -30,6 +30,11 @@ abstract class Item
     /**
      * @var string
      */
+    protected $description;
+
+    /**
+     * @var string
+     */
     protected $type;
 
     /**
@@ -55,6 +60,16 @@ abstract class Item
     public function setLabel(?string $label): void
     {
         $this->label = $label;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
     }
 
     public function getSize(): ?int

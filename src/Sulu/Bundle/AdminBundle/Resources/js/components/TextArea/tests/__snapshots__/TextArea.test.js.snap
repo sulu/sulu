@@ -38,3 +38,18 @@ exports[`TextArea should render with value 1`] = `
   My value
 </textarea>
 `;
+
+exports[`TextArea should render with value and character counter 1`] = `
+Array [
+  <textarea
+    class="textArea"
+  >
+    My value
+  </textarea>,
+  <label
+    class="characterCounter"
+  >
+    2 sulu_admin.characters_left
+  </label>,
+]
+`;

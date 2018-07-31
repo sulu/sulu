@@ -97,19 +97,23 @@ class ContentAdmin extends Admin
                 ->addAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                 ->addRerenderAttribute('webspace'),
             // add form
-            (new Route('sulu_content.page_add_form', '/webspaces/:webspace/:locale/add/:parentId', 'sulu_admin.resource_tabs'))
-                ->addOption('locales', true)
+            (new Route('sulu_content.page_add_form', '/webspaces/:webspace/:locale/add/:parentId', 'sulu_content.page_tabs'))
                 ->addOption('resourceKey', 'pages'),
             (new Route('sulu_content.page_add_form.detail', '/details', 'sulu_content.page_form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_detail')
                 ->addOption('editRoute', 'sulu_content.page_edit_form.detail')
                 ->setParent('sulu_content.page_add_form'),
             // edit form
-            (new Route('sulu_content.page_edit_form', '/webspaces/:webspace/:locale/:id', 'sulu_admin.resource_tabs'))
-                ->addOption('locales', true)
-                ->addOption('resourceKey', 'pages'),
+            (new Route('sulu_content.page_edit_form', '/webspaces/:webspace/:locale/:id', 'sulu_content.page_tabs'))
+                ->addOption('resourceKey', 'pages')
+                ->addOption('routerAttributesToFormStore', ['webspace']),
             (new Route('sulu_content.page_edit_form.detail', '/details', 'sulu_content.page_form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_detail')
+                ->setParent('sulu_content.page_edit_form'),
+            (new Route('sulu_content.page_edit_form.seo', '/seo', 'sulu_admin.form'))
+                ->addOption('tabTitle', 'sulu_content.page_form_seo')
+                ->addOption('resourceKey', 'pages_seo')
+                ->addOption('backRoute', 'sulu_content.webspaces')
                 ->setParent('sulu_content.page_edit_form'),
         ];
     }

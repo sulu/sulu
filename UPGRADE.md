@@ -2,6 +2,12 @@
 
 ## dev-develop
 
+### Highlight section
+
+In previous versions of Sulu a section named `highlight` had a special design in the administratin interface. Its
+background was darker than the rest of the form. This was removed with the new design, and therefore a `highlight`
+section does not do anything special anymore, and therefore can be safely removed from your template XML files.
+
 ### Admin Navigation
 
 The admin navigation should not be built into the constructor anymore. Instead of `setNavigation` 

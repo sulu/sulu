@@ -107,7 +107,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $rootKey = $request->get('rootKey');
-        $parentId = $request->get('parent');
+        $parentId = $request->get('parentId');
 
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey)->getId() : null;
@@ -161,13 +161,13 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     private function move($id, Request $request)
     {
-        $parent = $this->getRequestParameter($request, 'parent', true);
-        if ('null' === $parent) {
-            $parent = null;
+        $parentId = $this->getRequestParameter($request, 'parentId', true);
+        if ('null' === $parentId) {
+            $parentId = null;
         }
 
         $categoryManager = $this->getCategoryManager();
-        $category = $categoryManager->move($id, $parent);
+        $category = $categoryManager->move($id, $parentId);
 
         return $this->handleView($this->view($categoryManager->getApiObject($category, $request->get('locale'))));
     }
@@ -261,7 +261,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             'medias' => $medias,
             'key' => (empty($request->get('key'))) ? null : $request->get('key'),
             'meta' => $request->get('meta'),
-            'parent' => $request->get('parent'),
+            'parent' => $request->get('parentId'),
         ];
         $entity = $this->getCategoryManager()->save($data, null, $locale, $patch);
         $category = $this->getCategoryManager()->getApiObject($entity, $locale);

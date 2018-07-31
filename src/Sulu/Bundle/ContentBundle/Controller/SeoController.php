@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
 use Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension;
@@ -18,9 +19,10 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * handles sub resource for seo.
+ * @RouteResource("page-seo")
  */
 class SeoController extends RestController implements ClassResourceInterface
 {
@@ -44,6 +46,12 @@ class SeoController extends RestController implements ClassResourceInterface
     protected function getRepository()
     {
         return $this->get('sulu_content.node_repository');
+    }
+
+    public function cgetAction()
+    {
+        // only necessary for route generation in AdminController::configAction, therefore will always only return a 404
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -86,7 +94,7 @@ class SeoController extends RestController implements ClassResourceInterface
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction(Request $request, $uuid)
+    public function putAction(Request $request, $uuid)
     {
         $language = $this->getLocale($request);
         $webspace = $this->getWebspace($request);
@@ -111,6 +119,6 @@ class SeoController extends RestController implements ClassResourceInterface
      */
     public function getLocale(Request $request)
     {
-        return $this->getRequestParameter($request, 'language', true);
+        return $this->getRequestParameter($request, 'locale', true);
     }
 }

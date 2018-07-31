@@ -54,6 +54,44 @@ test('Pass props correctly to Input component', () => {
         />
     );
 
+    expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(undefined);
+    expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
+});
+
+test('Pass props correctly including maxCharacters to Input component', () => {
+    const schemaOptions = {
+        max_characters: {
+            value: '70',
+        },
+        max_segments: {
+            value: '6',
+        },
+        segment_delimiter: {
+            value: ',',
+        },
+    };
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const inputValid = shallow(
+        <Input
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value="xyz"
+        />
+    );
+
+    expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(70);
+    expect(inputValid.find(InputComponent).prop('maxSegments')).toBe(6);
+    expect(inputValid.find(InputComponent).prop('segmentDelimiter')).toBe(',');
     expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
 });
 

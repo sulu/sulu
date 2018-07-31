@@ -19,3 +19,23 @@ const handleChange = (value) => {
     onFinish={() => alert('TextArea lost focus!')}
 />
 ```
+
+It is also possible to pass a `maxCharacters` prop to show a [`CharacterCounter`](#charactercounter).
+
+```javascript
+initialState = {
+    value: '',
+};
+
+const handleChange = (value) => {
+    setState({
+        value
+    });
+};
+
+<TextArea
+    maxCharacters={10}
+    onChange={handleChange}
+    value={state.value}
+/>
+```
