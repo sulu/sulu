@@ -272,14 +272,17 @@ test('Should destroy the store on unmount', () => {
     expect(datagrid.instance().sortColumnDisposer).toBeDefined();
     expect(datagrid.instance().sortOrderDisposer).toBeDefined();
 
+    const activeDisposerSpy = jest.fn();
     const sortColumnDisposerSpy = jest.fn();
     const sortOrderDisposerSpy = jest.fn();
+    datagrid.instance().activeDisposer = activeDisposerSpy;
     datagrid.instance().sortColumnDisposer = sortColumnDisposerSpy;
     datagrid.instance().sortOrderDisposer = sortOrderDisposerSpy;
 
     datagrid.unmount();
 
     expect(datagridStore.destroy).toBeCalled();
+    expect(activeDisposerSpy).toBeCalledWith();
     expect(sortColumnDisposerSpy).toBeCalledWith();
     expect(sortOrderDisposerSpy).toBeCalledWith();
 });
@@ -435,6 +438,8 @@ test('Should load the route attributes from the UserStore', () => {
 
     userStore.getPersistentSetting.mockImplementation((key) => {
         switch(key) {
+            case 'sulu_admin.datagrid.test.active':
+                return 'some-uuid';
             case 'sulu_admin.datagrid.test.sort_column':
                 return 'title';
             case 'sulu_admin.datagrid.test.sort_order':
@@ -447,6 +452,7 @@ test('Should load the route attributes from the UserStore', () => {
             resourceKey: 'test',
         },
     })).toEqual({
+        active: 'some-uuid',
         sortColumn: 'title',
         sortOrder: 'desc',
     });

@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable, computed} from 'mobx';
+import {action, computed, intercept, observable, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React from 'react';
@@ -12,7 +12,12 @@ import WebspaceStore from '../../stores/WebspaceStore';
 import type {Webspace, Localization} from '../../stores/WebspaceStore/types';
 import webspaceOverviewStyles from './webspaceOverview.scss';
 
-const USER_SETTING_WEBSPACE = 'sulu_content.webspace_overview.webspace';
+const USER_SETTING_PREFIX = 'sulu_content.webspace_overview';
+const USER_SETTING_WEBSPACE = [USER_SETTING_PREFIX, 'webspace'].join('.');
+
+function getWebspaceActiveKey(webspace) {
+    return [USER_SETTING_PREFIX, 'webspace', webspace, 'active'].join('.');
+}
 
 @observer
 class WebspaceOverview extends React.Component<ViewProps> {
@@ -21,11 +26,15 @@ class WebspaceOverview extends React.Component<ViewProps> {
     webspace: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
     @observable webspaces: Array<Webspace>;
+    activeDisposer: () => void;
     webspaceDisposer: () => void;
 
     static getDerivedRouteAttributes() {
+        const webspace = userStore.getPersistentSetting(USER_SETTING_WEBSPACE);
+
         return {
-            webspace: userStore.getPersistentSetting(USER_SETTING_WEBSPACE),
+            active: userStore.getPersistentSetting(getWebspaceActiveKey(webspace)),
+            webspace,
         };
     }
 
@@ -80,10 +89,6 @@ class WebspaceOverview extends React.Component<ViewProps> {
     }
 
     @action componentDidMount() {
-        this.webspaceDisposer = autorun(() => {
-            userStore.setPersistentSetting(USER_SETTING_WEBSPACE, this.webspace.get());
-        });
-
         const router = this.props.router;
         const observableOptions = {};
         const apiOptions = {};
@@ -100,6 +105,26 @@ class WebspaceOverview extends React.Component<ViewProps> {
         this.datagridStore = new DatagridStore('pages', observableOptions, apiOptions);
         router.bind('active', this.datagridStore.active);
 
+        this.webspaceDisposer = intercept(this.webspace, '', (change) => {
+            userStore.setPersistentSetting(USER_SETTING_WEBSPACE, change.newValue);
+            this.datagridStore.active.set(undefined);
+            return change;
+        });
+
+        this.activeDisposer = reaction(
+            () => this.datagridStore.active.get(),
+            (active) => {
+                if (!active) {
+                    return;
+                }
+
+                userStore.setPersistentSetting(
+                    getWebspaceActiveKey(this.webspace.get()),
+                    active
+                );
+            }
+        );
+
         WebspaceStore.loadWebspaces()
             .then(action((webspaces) => {
                 this.webspaces = webspaces;
@@ -108,6 +133,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
 
     componentWillUnmount() {
         this.datagridStore.destroy();
+        this.activeDisposer();
         this.webspaceDisposer();
     }
 
