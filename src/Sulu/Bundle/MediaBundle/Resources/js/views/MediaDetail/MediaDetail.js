@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
+import {when} from 'mobx';
 import {observer} from 'mobx-react';
-import {Grid} from 'sulu-admin-bundle/components';
+import {Grid, Loader} from 'sulu-admin-bundle/components';
 import {Form, FormStore, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
@@ -38,7 +39,13 @@ class MediaDetail extends React.Component<Props> {
         }
 
         router.bind('locale', locale);
-        this.mediaUploadStore = new MediaUploadStore(resourceStore.data, locale);
+
+        when(
+            () => !resourceStore.loading,
+            (): void => {
+                this.mediaUploadStore = new MediaUploadStore(resourceStore.data, locale);
+            }
+        );
     }
 
     componentWillUnmount() {
@@ -56,28 +63,31 @@ class MediaDetail extends React.Component<Props> {
     render() {
         return (
             <div className={mediaDetailStyles.mediaDetail}>
-                <Grid>
-                    <Grid.Section size={4} className={mediaDetailStyles.imageSection}>
-                        <Grid.Item>
-                            <SingleMediaUpload
-                                deletable={false}
-                                downloadable={false}
-                                imageSize="sulu-400x400-inset"
-                                mediaUploadStore={this.mediaUploadStore}
-                                uploadText={translate('sulu_media.upload_or_replace')}
-                            />
-                        </Grid.Item>
-                    </Grid.Section>
-                    <Grid.Section size={8}>
-                        <Grid.Item className={mediaDetailStyles.form}>
-                            <Form
-                                ref={this.setFormRef}
-                                store={this.formStore}
-                                onSubmit={this.handleSubmit}
-                            />
-                        </Grid.Item>
-                    </Grid.Section>
-                </Grid>
+                {this.formStore.loading
+                    ? <Loader />
+                    : <Grid>
+                        <Grid.Section size={4} className={mediaDetailStyles.imageSection}>
+                            <Grid.Item>
+                                <SingleMediaUpload
+                                    deletable={false}
+                                    downloadable={false}
+                                    imageSize="sulu-400x400-inset"
+                                    mediaUploadStore={this.mediaUploadStore}
+                                    uploadText={translate('sulu_media.upload_or_replace')}
+                                />
+                            </Grid.Item>
+                        </Grid.Section>
+                        <Grid.Section size={8}>
+                            <Grid.Item className={mediaDetailStyles.form}>
+                                <Form
+                                    ref={this.setFormRef}
+                                    store={this.formStore}
+                                    onSubmit={this.handleSubmit}
+                                />
+                            </Grid.Item>
+                        </Grid.Section>
+                    </Grid>
+                }
             </div>
         );
     }

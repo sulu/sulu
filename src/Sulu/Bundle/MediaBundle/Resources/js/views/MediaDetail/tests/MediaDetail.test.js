@@ -150,13 +150,26 @@ test('Should show locales from router options in toolbar', () => {
     ]);
 });
 
-test('Should call update method of MediaUploadStore if a file was dropped', () => {
+test('Should call update method of MediaUploadStore if a file was dropped', (done) => {
     const testId = 1;
     const testFile = {name: 'test.jpg'};
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
     resourceStore.set('id', testId);
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+
     const promise = Promise.resolve({name: 'test.jpg'});
 
     const router = {
@@ -171,9 +184,17 @@ test('Should call update method of MediaUploadStore if a file was dropped', () =
     };
     const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
 
-    mediaDetail.instance().mediaUploadStore.update.mockReturnValue(promise);
-    mediaDetail.find('SingleMediaDropzone').prop('onDrop')(testFile);
-    expect(mediaDetail.instance().mediaUploadStore.update).toHaveBeenCalledWith(testFile);
+    Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            mediaDetail.update();
+            mediaDetail.instance().mediaUploadStore.update.mockReturnValue(promise);
+            mediaDetail.find('SingleMediaDropzone').prop('onDrop')(testFile);
+            expect(mediaDetail.instance().mediaUploadStore.update).toHaveBeenCalledWith(testFile);
+            done();
+        });
+    });
+
+    jsonSchemaResolve({});
 });
 
 test('Should initialize the ResourceStore with a schema', () => {
@@ -279,6 +300,7 @@ test('Should save form when submitted', (done) => {
 
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
+            mediaDetail.update();
             mediaDetail.find('Form').instance().submit();
             expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
             done();
@@ -304,9 +326,6 @@ test('Should destroy the store on unmount', () => {
     };
 
     const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
-    const locale = mediaDetail.find('Form').prop('store').locale;
-
-    expect(router.bind).toBeCalledWith('locale', locale);
 
     const formStore = mediaDetail.instance().formStore;
     formStore.destroy = jest.fn();
