@@ -115,7 +115,7 @@ class ContentAdmin extends Admin
                 ->addOption('resourceKey', 'pages_seo')
                 ->addOption('backRoute', 'sulu_content.webspaces')
                 ->setParent('sulu_content.page_edit_form'),
-            (new Route('sulu_content.page_edit_form.excerpt', '/exerpt', 'sulu_admin.form'))
+            (new Route('sulu_content.page_edit_form.excerpt', '/excerpt', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_excerpt')
                 ->addOption('resourceKey', 'pages_excerpt')
                 ->addOption('backRoute', 'sulu_content.webspaces')
