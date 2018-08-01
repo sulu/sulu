@@ -2,6 +2,12 @@
 
 ## dev-develop
 
+### parent query parameter
+
+The `parent` query parameter, which is used in quite some controllers like for pages and categories, was renamed to
+`parentId`, because it only references the id, and not the entire reference. This is also the new convention within
+our new Admin, so if your API should work with it, you have to name the query paramter `parentId`.
+
 ### Highlight section
 
 In previous versions of Sulu a section named `highlight` had a special design in the administratin interface. Its

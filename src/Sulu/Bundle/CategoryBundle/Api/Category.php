@@ -360,7 +360,6 @@ class Category extends ApiEntityWrapper
      * This method is used to serialize the parent-id.
      *
      * @VirtualProperty
-     * @SerializedName("parent")
      * @Groups({"fullCategory","partialCategory"})
      *
      * @return null|Category
