@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import log from 'loglevel';
@@ -17,22 +17,29 @@ type Props = {
 @observer
 export default class Form extends React.Component<Props> {
     @observable showAllErrors = false;
-    @observable showGhostDialog = false;
+    @observable displayGhostDialog = false;
+    displayGhostDialogDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
 
-        const {store} = this.props;
-        const {
-            data: {
-                concreteLanguages,
-            },
-            locale,
-        } = store;
+        this.displayGhostDialogDisposer = autorun(() => {
+            const {store} = this.props;
+            const {
+                data: {
+                    concreteLanguages,
+                },
+                locale,
+            } = store;
 
-        if (concreteLanguages && locale && !concreteLanguages.includes(locale.get())) {
-            this.showGhostDialog = true;
-        }
+            if (concreteLanguages && locale && !concreteLanguages.includes(locale.get())) {
+                this.showGhostDialog();
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this.displayGhostDialogDisposer();
     }
 
     @computed get formInspector(): FormInspector {
@@ -49,13 +56,21 @@ export default class Form extends React.Component<Props> {
         this.props.store.change(name, value);
     };
 
+    @action showGhostDialog() {
+        this.displayGhostDialog = true;
+    }
+
+    @action hideGhostDialog() {
+        this.displayGhostDialog = false;
+    }
+
     @action handleGhostDialogCancel = () => {
-        this.showGhostDialog = false;
+        this.hideGhostDialog();
     };
 
     @action handleGhostDialogConfirm = (locale: string) => {
         this.props.store.copyFromLocale(locale);
-        this.showGhostDialog = false;
+        this.hideGhostDialog();
     };
 
     handleFieldFinish = (dataPath: string, schemaPath: string) => {
@@ -83,7 +98,7 @@ export default class Form extends React.Component<Props> {
                             locales={concreteLanguages}
                             onCancel={this.handleGhostDialogCancel}
                             onConfirm={this.handleGhostDialogConfirm}
-                            open={this.showGhostDialog}
+                            open={this.displayGhostDialog}
                         />
                     }
                     <form>

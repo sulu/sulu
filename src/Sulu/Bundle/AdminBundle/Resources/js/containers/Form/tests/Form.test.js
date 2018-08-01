@@ -42,6 +42,7 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(function (resourceKey, 
     this.id = id;
     this.data = {};
     this.locale = observableOptions.locale;
+    this.setLocale = jest.fn((locale) => this.locale.set(locale));
 }));
 
 jest.mock('../stores/MetadataStore', () => ({
@@ -266,6 +267,20 @@ test('Should not show a GhostDialog if the current locale is translated', () => 
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
     expect(form.find('GhostDialog').prop('open')).toEqual(false);
+});
+
+test('Should show a GhostDialog after the locale has been switched to a non-translated one', () => {
+    const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('en')});
+    resourceStore.data.concreteLanguages = ['en'];
+    const formStore = new FormStore(resourceStore);
+    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
+
+    expect(form.find('GhostDialog').prop('open')).toEqual(false);
+
+    resourceStore.setLocale('de');
+
+    form.update();
+    expect(form.find('GhostDialog').prop('open')).toEqual(true);
 });
 
 test('Should not show a GhostDialog if the entity does not exist yet', () => {
