@@ -208,7 +208,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         $result = $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
 
-        return $this->generateTreeByPath($result);
+        return $this->generateTreeByPath($result, $uuid);
     }
 
     /**
@@ -306,7 +306,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return Content[]
      */
-    private function generateTreeByPath(array $contents)
+    private function generateTreeByPath(array $contents, $uuid)
     {
         $childrenByPath = [];
 
@@ -326,10 +326,15 @@ class ContentRepository implements ContentRepositoryInterface
 
         foreach ($contents as $content) {
             if (!isset($childrenByPath[$content->getPath()])) {
+                if ($content->getId() === $uuid) {
+                    $content->setChildren([]);
+                }
+
                 continue;
             }
 
             ksort($childrenByPath[$content->getPath()]);
+
             $content->setChildren(array_values($childrenByPath[$content->getPath()]));
         }
 

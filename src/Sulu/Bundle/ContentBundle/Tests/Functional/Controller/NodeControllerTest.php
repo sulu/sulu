@@ -999,22 +999,22 @@ class NodeControllerTest extends SuluTestCase
         $node1 = $response->_embedded->nodes[0];
         $this->assertEquals($data[0]['path'], $node1->path);
         $this->assertFalse($node1->hasChildren);
-        $this->assertEmpty($node1->_embedded->nodes);
+        $this->assertEmpty($node1->_embedded->pages);
 
         $node2 = $response->_embedded->nodes[1];
         $this->assertEquals($data[1]['path'], $node2->path);
         $this->assertTrue($node2->hasChildren);
-        $this->assertCount(2, $node2->_embedded->nodes);
+        $this->assertCount(2, $node2->_embedded->pages);
 
-        $node3 = $node2->_embedded->nodes[0];
+        $node3 = $node2->_embedded->pages[0];
         $this->assertEquals($data[2]['path'], $node3->path);
         $this->assertFalse($node3->hasChildren);
-        $this->assertCount(0, $node3->_embedded->nodes);
+        $this->assertCount(0, $node3->_embedded->pages);
 
-        $node4 = $node2->_embedded->nodes[1];
+        $node4 = $node2->_embedded->pages[1];
         $this->assertEquals($data[3]['path'], $node4->path);
         $this->assertTrue($node4->hasChildren);
-        $this->assertCount(0, $node4->_embedded->nodes);
+        $this->assertNull($node4->_embedded->pages);
     }
 
     public function testGetFlat()

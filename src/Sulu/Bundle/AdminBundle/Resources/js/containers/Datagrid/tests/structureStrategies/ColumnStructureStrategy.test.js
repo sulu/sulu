@@ -153,10 +153,18 @@ test('Should add the items in a recursive way', () => {
 test('Should add the items in a recursive way with a different resourceKey', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();
 
-    const child2 = {id: 5, hasChildren: false};
+    const child2 = {id: 5,
+        hasChildren: false,
+        _embedded: {
+            categories: [],
+        },
+    };
     const child3 = {
         id: 2,
         hasChildren: true,
+        _embedded: {
+            categories: null,
+        },
     };
 
     const child1 = {
@@ -174,6 +182,7 @@ test('Should add the items in a recursive way with a different resourceKey', () 
     expect(columnStructureStrategy.data).toEqual([
         [child1],
         [child2, child3],
+        [],
     ]);
 });
 

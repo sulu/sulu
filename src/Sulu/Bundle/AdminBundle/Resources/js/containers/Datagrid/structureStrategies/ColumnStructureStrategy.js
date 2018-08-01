@@ -98,7 +98,7 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
         const resourceKey = Object.keys(item._embedded)[0];
         const childItems = item._embedded[resourceKey];
 
-        if (childItems.length > 0 && !this.rawData.has(item.id)) {
+        if (Array.isArray(childItems) && !this.rawData.has(item.id)) {
             this.rawData.set(item.id, []);
             childItems.forEach((childItem) => {
                 this.addItem(childItem, item.id);
