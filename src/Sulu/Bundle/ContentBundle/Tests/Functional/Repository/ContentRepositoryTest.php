@@ -745,7 +745,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]->getId());
         $this->assertTrue($layer[0]->hasChildren());
-        $this->assertCount(0, $layer[0]->getChildren());
+        $this->assertNull($layer[0]->getChildren());
         $this->assertEquals($page2->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
@@ -754,7 +754,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(2, $layer);
         $this->assertEquals($page5->getUuid(), $layer[0]->getId());
         $this->assertFalse($layer[0]->hasChildren());
-        $this->assertCount(0, $layer[0]->getChildren());
+        $this->assertNull($layer[0]->getChildren());
         $this->assertEquals($page6->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
@@ -763,7 +763,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(2, $layer);
         $this->assertEquals($page9->getUuid(), $layer[0]->getId());
         $this->assertFalse($layer[0]->hasChildren());
-        $this->assertCount(0, $layer[0]->getChildren());
+        $this->assertNull($layer[0]->getChildren());
         $this->assertEquals($page10->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
@@ -772,10 +772,10 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(2, $layer);
         $this->assertEquals($page11->getUuid(), $layer[0]->getId());
         $this->assertFalse($layer[0]->hasChildren());
-        $this->assertCount(0, $layer[0]->getChildren());
+        $this->assertNull($layer[0]->getChildren());
         $this->assertEquals($page12->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
-        $this->assertCount(0, $layer[1]->getChildren());
+        $this->assertNull($layer[1]->getChildren());
     }
 
     public function testFindParentsWithSiblingsByUuidWithoutWebspaceKey()

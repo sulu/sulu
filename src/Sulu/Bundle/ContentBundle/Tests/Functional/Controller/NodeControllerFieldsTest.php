@@ -211,7 +211,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $this->assertEquals($page1->getUuid(), $result['id']);
         $this->assertTrue($result['hasChildren']);
-        $this->assertEmpty($result['_embedded']['nodes']);
+        $this->assertEmpty($result['_embedded']['pages']);
     }
 
     public function testGetTree()
@@ -242,37 +242,37 @@ class NodeControllerFieldsTest extends SuluTestCase
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(0, $layer[0]['_embedded']['nodes']);
+        $this->assertNull($layer[0]['_embedded']['pages']);
         $this->assertEquals($page2->getUuid(), $layer[1]['id']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(2, $layer[1]['_embedded']['nodes']);
+        $this->assertCount(2, $layer[1]['_embedded']['pages']);
 
-        $layer = $layer[1]['_embedded']['nodes'];
+        $layer = $layer[1]['_embedded']['pages'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page5->getUuid(), $layer[0]['id']);
         $this->assertFalse($layer[0]['hasChildren']);
-        $this->assertCount(0, $layer[0]['_embedded']['nodes']);
+        $this->assertNull($layer[0]['_embedded']['pages']);
         $this->assertEquals($page6->getUuid(), $layer[1]['id']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(2, $layer[1]['_embedded']['nodes']);
+        $this->assertCount(2, $layer[1]['_embedded']['pages']);
 
-        $layer = $layer[1]['_embedded']['nodes'];
+        $layer = $layer[1]['_embedded']['pages'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page9->getUuid(), $layer[0]['id']);
         $this->assertFalse($layer[0]['hasChildren']);
-        $this->assertCount(0, $layer[0]['_embedded']['nodes']);
+        $this->assertNull($layer[0]['_embedded']['pages']);
         $this->assertEquals($page10->getUuid(), $layer[1]['id']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(2, $layer[1]['_embedded']['nodes']);
+        $this->assertCount(2, $layer[1]['_embedded']['pages']);
 
-        $layer = $layer[1]['_embedded']['nodes'];
+        $layer = $layer[1]['_embedded']['pages'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page11->getUuid(), $layer[0]['id']);
         $this->assertFalse($layer[0]['hasChildren']);
-        $this->assertCount(0, $layer[0]['_embedded']['nodes']);
+        $this->assertNull($layer[0]['_embedded']['pages']);
         $this->assertEquals($page12->getUuid(), $layer[1]['id']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(0, $layer[1]['_embedded']['nodes']);
+        $this->assertNull($layer[1]['_embedded']['pages']);
     }
 
     public function testLinkedInternal()
@@ -363,18 +363,18 @@ class NodeControllerFieldsTest extends SuluTestCase
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(2, $layer[0]['_embedded']['nodes']);
+        $this->assertCount(2, $layer[0]['_embedded']['pages']);
 
-        $layer = $layer[0]['_embedded']['nodes'];
+        $layer = $layer[0]['_embedded']['pages'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertEmpty($layer[0]['_embedded']['nodes']);
+        $this->assertEmpty($layer[0]['_embedded']['pages']);
         $this->assertEquals($page2->getUuid(), $layer[1]['id']);
         $this->assertEquals('test-2', $layer[1]['title']);
         $this->assertFalse($layer[1]['hasChildren']);
-        $this->assertEmpty($layer[1]['_embedded']['nodes']);
+        $this->assertEmpty($layer[1]['_embedded']['pages']);
     }
 
     public function testCGetActionAllWebspaceNodes()
@@ -402,22 +402,22 @@ class NodeControllerFieldsTest extends SuluTestCase
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[1]['id']);
         $this->assertEquals('Sulu CMF', $layer[1]['title']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(2, $layer[1]['_embedded']['nodes']);
+        $this->assertCount(2, $layer[1]['_embedded']['pages']);
         $this->assertEquals($this->sessionManager->getContentNode('test_io')->getIdentifier(), $layer[2]['id']);
         $this->assertEquals('Test CMF', $layer[2]['title']);
         $this->assertTrue($layer[2]['hasChildren']);
-        $this->assertCount(0, $layer[2]['_embedded']['nodes']);
+        $this->assertNull($layer[2]['_embedded']['pages']);
 
-        $layer = $layer[1]['_embedded']['nodes'];
+        $layer = $layer[1]['_embedded']['pages'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertEmpty($layer[0]['_embedded']['nodes']);
+        $this->assertEmpty($layer[0]['_embedded']['pages']);
         $this->assertEquals($page2->getUuid(), $layer[1]['id']);
         $this->assertEquals('test-2', $layer[1]['title']);
         $this->assertFalse($layer[1]['hasChildren']);
-        $this->assertEmpty($layer[1]['_embedded']['nodes']);
+        $this->assertEmpty($layer[1]['_embedded']['pages']);
     }
 
     public function testGetTreeActionSingleWebspaceNodes()
@@ -452,24 +452,24 @@ class NodeControllerFieldsTest extends SuluTestCase
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(2, $layer[0]['_embedded']['nodes']);
+        $this->assertCount(2, $layer[0]['_embedded']['pages']);
 
-        $layer = $layer[0]['_embedded']['nodes'];
+        $layer = $layer[0]['_embedded']['pages'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(1, $layer[0]['_embedded']['nodes']);
+        $this->assertCount(1, $layer[0]['_embedded']['pages']);
         $this->assertEquals($page2->getUuid(), $layer[1]['id']);
         $this->assertEquals('test-2', $layer[1]['title']);
         $this->assertFalse($layer[1]['hasChildren']);
-        $this->assertEmpty($layer[1]['_embedded']['nodes']);
+        $this->assertEmpty($layer[1]['_embedded']['pages']);
 
-        $layer = $layer[0]['_embedded']['nodes'];
+        $layer = $layer[0]['_embedded']['pages'];
         $this->assertEquals($page11->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertEmpty($layer[0]['_embedded']['nodes']);
+        $this->assertEmpty($layer[0]['_embedded']['pages']);
     }
 
     public function testGetTreeActionAllWebspaceNodes()
@@ -503,28 +503,28 @@ class NodeControllerFieldsTest extends SuluTestCase
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[1]['id']);
         $this->assertEquals('Sulu CMF', $layer[1]['title']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(2, $layer[1]['_embedded']['nodes']);
+        $this->assertCount(2, $layer[1]['_embedded']['pages']);
         $this->assertEquals($this->sessionManager->getContentNode('test_io')->getIdentifier(), $layer[2]['id']);
         $this->assertEquals('Test CMF', $layer[2]['title']);
         $this->assertTrue($layer[2]['hasChildren']);
-        $this->assertCount(0, $layer[2]['_embedded']['nodes']);
+        $this->assertNull($layer[2]['_embedded']['pages']);
 
-        $layer = $layer[1]['_embedded']['nodes'];
+        $layer = $layer[1]['_embedded']['pages'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(1, $layer[0]['_embedded']['nodes']);
+        $this->assertCount(1, $layer[0]['_embedded']['pages']);
         $this->assertEquals($page2->getUuid(), $layer[1]['id']);
         $this->assertEquals('test-2', $layer[1]['title']);
         $this->assertFalse($layer[1]['hasChildren']);
-        $this->assertEmpty($layer[1]['_embedded']['nodes']);
+        $this->assertEmpty($layer[1]['_embedded']['pages']);
 
-        $layer = $layer[0]['_embedded']['nodes'];
+        $layer = $layer[0]['_embedded']['pages'];
         $this->assertEquals($page11->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertEmpty($layer[0]['_embedded']['nodes']);
+        $this->assertEmpty($layer[0]['_embedded']['pages']);
     }
 
     /**
