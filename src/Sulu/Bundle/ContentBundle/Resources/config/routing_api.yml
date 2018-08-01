@@ -18,6 +18,10 @@ sulu_content.page_seo:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\SeoController
 
+sulu_content.page_excerpt:
+    type: rest
+    resource: Sulu\Bundle\ContentBundle\Controller\ExcerptController
+
 sulu_content.webspace.localization:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\WebspaceLocalizationController

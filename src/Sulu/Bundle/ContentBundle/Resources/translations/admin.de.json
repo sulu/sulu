@@ -1,7 +1,8 @@
 {
     "sulu_content.selection_label": "Seite(n) ausgewählt",
-    "sulu_content.selection_overlay_title": "Choose pages",
+    "sulu_content.selection_overlay_title": "Seiten auswählen",
     "sulu_content.page_form_detail": "Details",
     "sulu_content.page_form_seo": "SEO",
+    "sulu_content.page_form_excerpt": "Auszug & Taxonomien",
     "sulu_content.title": "Titel"
 }

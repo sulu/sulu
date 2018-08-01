@@ -111,6 +111,8 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
      */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
+        $this->setLanguageCode($languageCode, 'i18n', null);
+
         $excerptStructure = $this->getExcerptStructure($languageCode);
 
         foreach ($excerptStructure->getProperties() as $property) {
