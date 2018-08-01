@@ -221,7 +221,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('Third Category', $response->name);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals($this->category3->getId(), $response->id);
-        $this->assertEquals($this->category1->getId(), $response->parent);
+        $this->assertEquals($this->category1->getId(), $response->parentId);
     }
 
     public function testGetByIdWithNoLocale()
@@ -1010,7 +1010,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('New Category', $response->name);
         $this->assertEquals('new-category-key', $response->key);
         $this->assertEquals('en', $response->defaultLocale);
-        $this->assertEquals($this->category1->getId(), $response->parent);
+        $this->assertEquals($this->category1->getId(), $response->parentId);
 
         $client->request(
             'GET',
@@ -1331,7 +1331,7 @@ class CategoryControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals($parentId, $response['parent']);
+        $this->assertEquals($parentId, $response['parentId']);
 
         $client->request(
             'GET',
@@ -1340,7 +1340,7 @@ class CategoryControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals($parentId, $response['parent']);
+        $this->assertEquals($parentId, $response['parentId']);
     }
 
     public function testMoveRoot()
