@@ -54,20 +54,15 @@ The `LoadingStrategy` is only responsible for loading the data from the server. 
 following interface:
 
 ```javascript static
-load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer)
+load(resourceKey: string, options: LoadOptions, parent: ?string | number)
 ```
 
-This method gets the array into which the loaded data has to be written. The `resourceKey` defines for which entity
-the data is loaded, and is required because the `LoadingStrategies` make use of the
-[`ResourceRequester` service](#resourcerequester). The `options` can contain more parameters being added to the URL the
-request will be sent to, e.g. the currently active element will be added as `parent` automatically. Finally the
-`enhanceItem` function can be passed for modifying all the items before writing them into the `data` array. This
-function will be retrieved from the `StructureStrategy`, which will be explained in the next section.
-
-There are also the `initialize` and `reset` method on the interface. Both of them get the `datagridStore` as a
-paremeter and can modify it based on their needs. The `initialize` method will be called everytime the
-`LoadingStrategy` is initialized, whereby the `reset` method is only called when there was a previous adapter and the
-datagrid switches to a new adapter.
+The `LoadingStrategy` has a reference to the `StructureStrategy`, and therefore can use its methods like `clear` and
+`addItem` to alter its data. The `resourceKey` defines for which entity the data is loaded, and is required because
+the `LoadingStrategies` make use of the [`ResourceRequester` service](#resourcerequester). The `options` can contain
+more parameters being added to the URL the request will be sent to, e.g. the currently active element will be added as
+`parent` automatically. Finally the optional `parent` paramter will be passed if a nested hierarchy is supported by
+the underlying `StructureStrategy`.
 
 Sulu is delivered with a few `LoadingStrategy` implementations:
 
@@ -83,27 +78,25 @@ responsibility of the adapter to display a pagination component.
 
 #### StructureStrategies
 
-This strategy is responsible for defining how the data in the array has to be structured. Sulu comes with three different
-`StructureStrategy` implementations. The `FlatStructureStrategy` holds a simple array of objects containing the items.
-The `TreeStructureStrategy` is used when some kind of tree has to be built (e.g. when using the adapter for the
-`tree_table`. The `ColumnStructureStrategy` holds the data for the `ColumnListAdapter` in a nested array, whereby the
-first level describes the columns and the second level describes the items.
+This strategy is responsible for defining how the data in the array has to be structured. Sulu comes with three
+different `StructureStrategy` implementations. The `FlatStructureStrategy` holds a simple array of objects containing the items. The `TreeStructureStrategy` is used when some kind of tree has to be built (e.g. when using the adapter for
+the `tree_table`. The `ColumnStructureStrategy` holds the data for the `ColumnListAdapter` in a nested array, whereby
+the first level describes the columns and the second level describes the items.
 
-The `StructureStrategy`'s most important method is the `getData` method, which takes a parent as argument. Based on
-this it has to return flat array of objects. The implementation of the `FlatStructureStrategy` can therefore simply
-return its `data` array, but the `TreeStructureStrategy` has to return only the children of the given parent. This is
-also the `data` is passed to the `load` method of the `LoadingStrategy`.
+The `StructureStrategy`'s most important property is the `data` property, which returns the underlying data.
 
-The data has to be hold by a variable called `data`, because the data passed to the adapter is directly accessed this
-way.
+Furthermore the `StructureStrategy` has to define a parameterless `clear` method, which will be called e.g. when the
+adapter is changed and has to remove all items. It can also receive an argument describing its parent, which should
+make the `StructureStrategy` only remove items being children from this parent.
 
-Furthermore the `StructureStrategy` has to define a parameterless `clear` method, which will be called when the adapter
-is changed and has to remove all items. Last but not least there is the `enhanceItem` method, which will be passed to
-the already described `LoadingStrategy` to enable the `StructureStrategy` to modify the data returned from the server
-before being written in its `data` array. This is necessary to create the necessary envelope for the items in the
-`TreeStructureStrategy`. There are also the `activate` and `deactivate` functions, which gets an id when an item gets
-active, e.g. by expanding or collapsing it in the `tree_table` adapter. There are also a `findById` function which
-searches for a given id in the `StructureStrategy` and a `remove` function which deletes some item from the structure.
+In order to add items to the `StructureStrategy` there is a `addItem` method, which takes the item itself, and its
+parent. This method can add an envelope around the actual item before adding it to the data property if necessary.
+Mind that this method should also be called recursively, if the passed item has children. This ensures that the
+`Datagrid` can be loaded with a single request containing data from multiple levels of the passed hierarchy.
+
+There are also the `activate` and `deactivate` functions, which gets an id when an item gets active, e.g. by expanding
+or collapsing it in the `tree_table` adapter. There are also a `findById` function which searches for a given id in
+the `StructureStrategy` and a `remove` function which deletes some item from the structure.
 
 In addition to the `data` variable there are also the `visibleItems` and `activeItems` arrays. The `visibleItems` are
 a flat list of all visible items, which is used for the "Select all" functionality of the `Datagrid`. The

@@ -1,21 +1,18 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
 import {mount} from 'enzyme';
 import {findWithToolbarFunction} from 'sulu-admin-bundle/utils/TestHelper';
 import WebspaceStore from '../../../stores/WebspaceStore';
-
-let mockActive = {
-    get: jest.fn(),
-    set: jest.fn(),
-};
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
     Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
     DatagridStore: jest.fn(function() {
         this.activeItems = [];
-        this.active = mockActive;
+        this.active = {
+            get: jest.fn(),
+            set: jest.fn(),
+        };
         this.sortColumn = {
             get: jest.fn(),
         };
