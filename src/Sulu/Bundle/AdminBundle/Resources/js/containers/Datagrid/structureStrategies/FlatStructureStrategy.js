@@ -13,9 +13,11 @@ export default class FlatStructureStrategy implements StructureStrategyInterface
         this.data = [];
     }
 
-    @action clear(parent: ?string | number) {
-        if (parent !== undefined) {
-            throw new Error('This StructureStrategy does not support nesting, therefore the parent should not be set');
+    @action clear(parentId: ?string | number) {
+        if (parentId !== undefined) {
+            throw new Error(
+                'This StructureStrategy does not support nesting, therefore the parentId should not be set'
+            );
         }
 
         this.data.splice(0, this.data.length);
@@ -30,9 +32,11 @@ export default class FlatStructureStrategy implements StructureStrategyInterface
         return this.data.find((item) => item.id === identifier);
     }
 
-    addItem(item: Object, parent: ?string | number): void {
-        if (parent !== undefined) {
-            throw new Error('This StructureStrategy does not support nesting, therefore the parent should not be set');
+    addItem(item: Object, parentId: ?string | number): void {
+        if (parentId !== undefined) {
+            throw new Error(
+                'This StructureStrategy does not support nesting, therefore the parentId should not be set'
+            );
         }
 
         this.data.push(item);

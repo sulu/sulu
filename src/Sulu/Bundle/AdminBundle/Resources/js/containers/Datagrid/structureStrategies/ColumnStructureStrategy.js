@@ -2,8 +2,8 @@
 import {action, computed, observable} from 'mobx';
 import type {ColumnItem, StructureStrategyInterface} from '../types';
 
-function removeColumnsAfterIndex(parents, columnIndex: number, rawData) {
-    parents.filter((parent, index) => index > columnIndex).forEach((parent) => rawData.delete(parent));
+function removeColumnsAfterIndex(parentIds, columnIndex: number, rawData) {
+    parentIds.filter((parentId, index) => index > columnIndex).forEach((parentId) => rawData.delete(parentId));
 }
 
 export default class ColumnStructureStrategy implements StructureStrategyInterface {
@@ -74,19 +74,19 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
         }
     }
 
-    @action clear(parent: ?string | number) {
-        removeColumnsAfterIndex(this.activeItems, this.activeItems.indexOf(parent), this.rawData);
-        const column = this.rawData.get(parent);
+    @action clear(parentId: ?string | number) {
+        removeColumnsAfterIndex(this.activeItems, this.activeItems.indexOf(parentId), this.rawData);
+        const column = this.rawData.get(parentId);
         if (column && column.length > 0) {
             column.splice(0, column.length);
         }
     }
 
-    addItem(item: Object, parent: ?string | number) {
-        let column = this.rawData.get(parent);
+    addItem(item: Object, parentId: ?string | number) {
+        let column = this.rawData.get(parentId);
         if (!column) {
             column = [];
-            this.rawData.set(parent, column);
+            this.rawData.set(parentId, column);
         }
 
         column.push(item);

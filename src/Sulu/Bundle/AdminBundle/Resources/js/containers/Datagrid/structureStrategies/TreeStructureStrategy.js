@@ -45,19 +45,19 @@ function removeRecursive(items: Array<TreeItem>, identifier: string | number): b
     return false;
 }
 
-function findChildrenForParentId(tree: Array<TreeItem>, parent: ?string | number): ?Array<TreeItem> {
-    if (parent === undefined) {
+function findChildrenForParentId(tree: Array<TreeItem>, parentId: ?string | number): ?Array<TreeItem> {
+    if (parentId === undefined) {
         return tree;
     }
 
     for (let i = 0; i < tree.length; i++) {
         const item = tree[i];
         const {data, children} = item;
-        if (parent === data.id) {
+        if (parentId === data.id) {
             return children;
         }
 
-        const childResult = findChildrenForParentId(children, parent);
+        const childResult = findChildrenForParentId(children, parentId);
         if (childResult) {
             return childResult;
         }
@@ -86,11 +86,11 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
         }
     }
 
-    addItem(item: Object, parent: ?string | number): void {
-        const children = findChildrenForParentId(this.data, parent);
+    addItem(item: Object, parentId: ?string | number): void {
+        const children = findChildrenForParentId(this.data, parentId);
 
         if (!children) {
-            throw new Error('Cannot add items to non-existing parent "' + (parent ? parent : 'undefined') + '"!');
+            throw new Error('Cannot add items to non-existing parentId "' + (parentId ? parentId : 'undefined') + '"!');
         }
 
         children.push({
@@ -107,8 +107,8 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
         }
     }
 
-    @action clear(parent: ?string | number) {
-        const children = findChildrenForParentId(this.data, parent);
+    @action clear(parentId: ?string | number) {
+        const children = findChildrenForParentId(this.data, parentId);
         if (!children || children.length === 0) {
             return;
         }

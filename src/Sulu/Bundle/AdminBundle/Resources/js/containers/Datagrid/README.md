@@ -54,14 +54,14 @@ The `LoadingStrategy` is only responsible for loading the data from the server. 
 following interface:
 
 ```javascript static
-load(resourceKey: string, options: LoadOptions, parent: ?string | number)
+load(resourceKey: string, options: LoadOptions, parentId: ?string | number)
 ```
 
 The `LoadingStrategy` has a reference to the `StructureStrategy`, and therefore can use its methods like `clear` and
 `addItem` to alter its data. The `resourceKey` defines for which entity the data is loaded, and is required because
 the `LoadingStrategies` make use of the [`ResourceRequester` service](#resourcerequester). The `options` can contain
 more parameters being added to the URL the request will be sent to, e.g. the currently active element will be added as
-`parent` automatically. Finally the optional `parent` paramter will be passed if a nested hierarchy is supported by
+`parentId` automatically. Finally the optional `parentId` parameter will be passed if a nested hierarchy is supported by
 the underlying `StructureStrategy`.
 
 Sulu is delivered with a few `LoadingStrategy` implementations:
@@ -86,8 +86,8 @@ the first level describes the columns and the second level describes the items.
 The `StructureStrategy`'s most important property is the `data` property, which returns the underlying data.
 
 Furthermore the `StructureStrategy` has to define a parameterless `clear` method, which will be called e.g. when the
-adapter is changed and has to remove all items. It can also receive an argument describing its parent, which should
-make the `StructureStrategy` only remove items being children from this parent.
+adapter is changed and has to remove all items. It can also receive an argument describing the id of its parent, which
+should make the `StructureStrategy` only remove items being children from this parent.
 
 In order to add items to the `StructureStrategy` there is a `addItem` method, which takes the item itself, and its
 parent. This method can add an envelope around the actual item before adding it to the data property if necessary.

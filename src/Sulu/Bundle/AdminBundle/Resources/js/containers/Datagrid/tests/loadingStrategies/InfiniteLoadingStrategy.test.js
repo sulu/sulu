@@ -69,20 +69,20 @@ test('Should load items and add to existing entries in array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    const parent = 17;
+    const parentId = 17;
     infiniteLoadingStrategy.load(
         'snippets',
         {
             page: 1,
             locale: 'en',
         },
-        parent
+        parentId
     );
 
     return promise.then(() => {
         expect(structureStrategy.clear).not.toBeCalled();
-        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, parent);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, parent);
+        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, parentId);
+        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, parentId);
     });
 });
 

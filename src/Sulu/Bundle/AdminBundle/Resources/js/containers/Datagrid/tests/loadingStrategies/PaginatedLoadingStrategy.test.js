@@ -69,20 +69,20 @@ test('Should load items and replace existing entries in array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
-    const parent = 15;
+    const parentId = 15;
     paginatedLoadingStrategy.load(
         'snippets',
         {
             page: 1,
             locale: 'en',
         },
-        parent
+        parentId
     );
 
     return promise.then(() => {
-        expect(structureStrategy.clear).toBeCalledWith(parent);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, parent);
-        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, parent);
+        expect(structureStrategy.clear).toBeCalledWith(parentId);
+        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, parentId);
+        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, parentId);
     });
 });
 

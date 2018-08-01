@@ -60,7 +60,7 @@ export type LoadOptions = {
 
 export interface LoadingStrategyInterface {
     constructor(): void,
-    load(resourceKey: string, options: LoadOptions, parent: ?string | number): Promise<Object>,
+    load(resourceKey: string, options: LoadOptions, parentId: ?string | number): Promise<Object>,
     setStructureStrategy(structureStrategy: StructureStrategyInterface): void,
 }
 
@@ -71,10 +71,10 @@ export interface StructureStrategyInterface {
     +activeItems?: Array<*>,
     +activate?: (id: ?string | number) => void,
     +deactivate?: (id: ?string | number) => void,
-    addItem(item: Object, parent: ?string | number): void,
+    addItem(item: Object, parentId: ?string | number): void,
     remove(id: string | number): void,
     findById(identifier: string | number): ?Object,
-    clear(parent: ?string | number): void,
+    clear(parentId: ?string | number): void,
 }
 
 export type TreeItem = {
