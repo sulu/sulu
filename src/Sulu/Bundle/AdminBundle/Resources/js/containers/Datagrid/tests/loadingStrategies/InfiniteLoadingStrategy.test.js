@@ -15,10 +15,19 @@ jest.mock('../../../Datagrid/stores/MetadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve()),
 }));
 
+class StructureStrategy {
+    addItem = jest.fn();
+    clear = jest.fn();
+    data = [];
+    findById = jest.fn();
+    remove = jest.fn();
+    visibleItems = [];
+}
+
 test('Should load items and add to empty array', () => {
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
-    const enhanceItem = jest.fn((item) => item);
-    const data = [];
+    const structureStrategy = new StructureStrategy();
+    infiniteLoadingStrategy.setStructureStrategy(structureStrategy);
 
     const promise = Promise.resolve({
         _embedded: {
@@ -31,29 +40,24 @@ test('Should load items and add to empty array', () => {
 
     ResourceRequester.getList.mockReturnValue(promise);
     infiniteLoadingStrategy.load(
-        data,
         'snippets',
         {
             page: 2,
         },
-        enhanceItem
+        undefined
     );
 
     return promise.then(() => {
-        expect(data).toEqual([
-            {id: 1},
-            {id: 2},
-        ]);
+        expect(structureStrategy.clear).not.toBeCalled();
+        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, undefined);
+        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, undefined);
     });
 });
 
 test('Should load items and add to existing entries in array', () => {
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
-    const enhanceItem = jest.fn((item) => item);
-    const data = [
-        {id: 3},
-        {id: 5},
-    ];
+    const structureStrategy = new StructureStrategy();
+    infiniteLoadingStrategy.setStructureStrategy(structureStrategy);
 
     const promise = Promise.resolve({
         _embedded: {
@@ -65,42 +69,35 @@ test('Should load items and add to existing entries in array', () => {
     });
 
     ResourceRequester.getList.mockReturnValue(promise);
+    const parentId = 17;
     infiniteLoadingStrategy.load(
-        data,
         'snippets',
         {
             page: 1,
             locale: 'en',
         },
-        enhanceItem
+        parentId
     );
 
     return promise.then(() => {
-        expect(enhanceItem.mock.calls[0][0]).toEqual({id: 1});
-        expect(enhanceItem.mock.calls[1][0]).toEqual({id: 2});
-
-        expect(data).toEqual([
-            {id: 3},
-            {id: 5},
-            {id: 1},
-            {id: 2},
-        ]);
+        expect(structureStrategy.clear).not.toBeCalled();
+        expect(structureStrategy.addItem).toBeCalledWith({id: 1}, parentId);
+        expect(structureStrategy.addItem).toBeCalledWith({id: 2}, parentId);
     });
 });
 
 test('Should load items with correct options', () => {
     const infiniteLoadingStrategy = new InfiniteLoadingStrategy();
-    const enhanceItem = jest.fn();
-    const data = [];
+    const structureStrategy = new StructureStrategy();
+    infiniteLoadingStrategy.setStructureStrategy(structureStrategy);
 
     infiniteLoadingStrategy.load(
-        data,
         'snippets',
         {
             page: 2,
             locale: 'en',
         },
-        enhanceItem
+        undefined
     );
 
     expect(ResourceRequester.getList).toBeCalledWith('snippets', {limit: 50, page: 2, locale: 'en'});

@@ -18,6 +18,9 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setActive = jest.fn();
     this.activeItems = [];
     this.activate = jest.fn();
+    this.active = {
+        get: jest.fn(),
+    };
     this.deactivate = jest.fn();
     this.delete = jest.fn();
     this.sort = jest.fn();
@@ -81,20 +84,20 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 class LoadingStrategy {
-    load = jest.fn();
     destroy = jest.fn();
     initialize = jest.fn();
+    load = jest.fn();
     reset = jest.fn();
+    setStructureStrategy = jest.fn();
 }
 
 class StructureStrategy {
     data: Array<Object>;
     visibleItems: Array<Object>;
 
+    addItem = jest.fn();
     clear = jest.fn();
-    getData = jest.fn();
     findById = jest.fn();
-    enhanceItem = jest.fn();
     remove = jest.fn();
 }
 
@@ -130,7 +133,7 @@ test('Render TableAdapter with correct values', () => {
     ];
 
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
-    datagridStore.active = 3;
+    datagridStore.active.get.mockReturnValue(3);
     datagridStore.selectionIds.push(1, 3);
     const editClickSpy = jest.fn();
 
@@ -329,20 +332,19 @@ test('DatagridStore should be initialized correctly on init and update', () => {
 test('DatagridStore should be updated with current active element', () => {
     datagridAdapterRegistry.get.mockReturnValue(class TestAdapter extends AbstractAdapter {
         static LoadingStrategy = class {
-            paginationAdapter = undefined;
-            load = jest.fn();
             destroy = jest.fn();
             initialize = jest.fn();
+            load = jest.fn();
             reset = jest.fn();
+            setStructureStrategy = jest.fn();
         };
 
         static StructureStrategy = class {
             data = [];
             visibleItems = [];
+            addItem = jest.fn();
             clear = jest.fn();
-            getData = jest.fn();
             findById = jest.fn();
-            enhanceItem = jest.fn();
             remove = jest.fn();
         };
 
@@ -362,7 +364,7 @@ test('DatagridStore should be updated with current active element', () => {
         }
     });
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
-    expect(datagridStore.active).toBe(undefined);
+    expect(datagridStore.active.get()).toBe(undefined);
     mount(<Datagrid adapters={['test']} store={datagridStore} />);
 
     expect(datagridStore.activate).toBeCalledWith('some-uuid');

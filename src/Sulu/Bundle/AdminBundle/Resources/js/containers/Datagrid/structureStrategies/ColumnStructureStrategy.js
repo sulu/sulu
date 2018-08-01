@@ -2,8 +2,8 @@
 import {action, computed, observable} from 'mobx';
 import type {ColumnItem, StructureStrategyInterface} from '../types';
 
-function removeColumnsAfterIndex(parents, columnIndex, rawData) {
-    parents.filter((parent, index) => index > columnIndex).forEach((parent) => rawData.delete(parent));
+function removeColumnsAfterIndex(parentIds, columnIndex: number, rawData) {
+    parentIds.filter((parentId, index) => index > columnIndex).forEach((parentId) => rawData.delete(parentId));
 }
 
 export default class ColumnStructureStrategy implements StructureStrategyInterface {
@@ -29,10 +29,6 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
         const columnIndex = this.data.findIndex((column) => column.findIndex((item) => item.id === id) !== -1);
         removeColumnsAfterIndex(this.activeItems, columnIndex, this.rawData);
         this.rawData.set(id, []);
-    }
-
-    @action getData(parent: ?string | number) {
-        return this.rawData.get(parent);
     }
 
     @action remove(identifier: string | number) {
@@ -78,12 +74,35 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
         }
     }
 
-    @action clear() {
-        this.rawData.clear();
-        this.rawData.set(undefined, []);
+    @action clear(parentId: ?string | number) {
+        removeColumnsAfterIndex(this.activeItems, this.activeItems.indexOf(parentId), this.rawData);
+        const column = this.rawData.get(parentId);
+        if (column && column.length > 0) {
+            column.splice(0, column.length);
+        }
     }
 
-    enhanceItem(item: ColumnItem): ColumnItem {
-        return item;
+    addItem(item: Object, parentId: ?string | number) {
+        let column = this.rawData.get(parentId);
+        if (!column) {
+            column = [];
+            this.rawData.set(parentId, column);
+        }
+
+        column.push(item);
+
+        if (!item._embedded) {
+            return;
+        }
+
+        const resourceKey = Object.keys(item._embedded)[0];
+        const childItems = item._embedded[resourceKey];
+
+        if (Array.isArray(childItems) && !this.rawData.has(item.id)) {
+            this.rawData.set(item.id, []);
+            childItems.forEach((childItem) => {
+                this.addItem(childItem, item.id);
+            });
+        }
     }
 }

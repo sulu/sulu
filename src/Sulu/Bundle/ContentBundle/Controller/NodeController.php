@@ -169,7 +169,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
         $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
-        $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
         $locale = $this->getRequestParameter($request, 'language', true);
         $webspaceKey = $this->getRequestParameter($request, 'webspace');
 
@@ -181,16 +180,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
             ->setResolveConcreteLocales(true)
             ->addProperties($properties)
             ->getMapping();
-
-        try {
-            if ($tree) {
-                return $this->getTreeContent($uuid, $locale, $webspaceKey, $webspaceNodes, $mapping, $user);
-            }
-        } catch (EntityNotFoundException $e) {
-            $view = $this->view($e->toArray(), 404);
-
-            return $this->handleView($view);
-        }
 
         $data = $this->get('sulu_content.content_repository')->find($uuid, $locale, $webspaceKey, $mapping, $user);
         $view = $this->view($data);
@@ -471,6 +460,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $properties = array_filter(explode(',', $request->get('fields', '')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
+        $expandedIds = $this->getRequestParameter($request, 'expandedIds', false);
         $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
         $locale = $this->getLocale($request);
         $webspaceKey = $this->getRequestParameter($request, 'webspace', false);
@@ -497,6 +487,16 @@ class NodeController extends RestController implements ClassResourceInterface, S
             ->addProperties($properties)
             ->setResolveUrl(true)
             ->getMapping();
+
+        try {
+            if ($expandedIds) {
+                return $this->getTreeContent($expandedIds, $locale, $webspaceKey, $webspaceNodes, $mapping, $user);
+            }
+        } catch (EntityNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+
+            return $this->handleView($view);
+        }
 
         $contents = [];
 

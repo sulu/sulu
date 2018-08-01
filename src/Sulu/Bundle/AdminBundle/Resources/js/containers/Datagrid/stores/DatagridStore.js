@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, intercept, observable} from 'mobx';
+import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
 import type {IObservableValue, IValueWillChange} from 'mobx';
 import log from 'loglevel';
 import ResourceRequester from '../../../services/ResourceRequester';
@@ -14,13 +14,13 @@ import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
     @observable pageCount: number = 0;
-    @observable active: ?string | number = undefined;
     @observable selections: Array<Object> = [];
     @observable dataLoading: boolean = true;
     @observable schemaLoading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
     @observable options: Object;
+    active: IObservableValue<?string | number> = observable.box();
     sortColumn: IObservableValue<string> = observable.box();
     sortOrder: IObservableValue<SortOrder> = observable.box();
     searchTerm: IObservableValue<?string> = observable.box();
@@ -104,6 +104,7 @@ export default class DatagridStore {
         }
 
         if (this.structureStrategy) {
+            loadingStrategy.setStructureStrategy(this.structureStrategy);
             this.structureStrategy.clear();
         }
 
@@ -113,6 +114,10 @@ export default class DatagridStore {
     @action updateStructureStrategy = (structureStrategy: StructureStrategyInterface) => {
         if (this.structureStrategy === structureStrategy) {
             return;
+        }
+
+        if (this.loadingStrategy) {
+            this.loadingStrategy.setStructureStrategy(structureStrategy);
         }
 
         this.structureStrategy = structureStrategy;
@@ -195,14 +200,16 @@ export default class DatagridStore {
 
         this.setDataLoading(true);
 
-        const data = this.structureStrategy.getData(this.active);
-        if (!data) {
-            throw new Error('The active item does not exist in the Datagrid');
+        const options = {...observableOptions, ...this.options};
+
+        const active = this.active.get();
+        if (active && untracked(() => !this.structureStrategy.findById(active))) {
+            this.structureStrategy.clear();
+            options.expandedIds = [active];
         }
 
-        const options = {...observableOptions, ...this.options};
-        if (this.active) {
-            options.parentId = this.active;
+        if (!options.expandedIds && active) {
+            options.parentId = active;
         }
 
         options.sortBy = this.sortColumn.get();
@@ -215,10 +222,9 @@ export default class DatagridStore {
         log.info('Datagrid loads "' + this.resourceKey + '" data with the following options:', options);
 
         this.loadingStrategy.load(
-            data,
             this.resourceKey,
             options,
-            this.structureStrategy.enhanceItem
+            options.expandedIds ? undefined : active
         ).then(action((response) => {
             this.handleResponse(response);
         }));
@@ -242,7 +248,7 @@ export default class DatagridStore {
     }
 
     @action setActive(active: ?string | number) {
-        this.active = active;
+        this.active.set(active);
     }
 
     @action activate(id: ?string | number) {

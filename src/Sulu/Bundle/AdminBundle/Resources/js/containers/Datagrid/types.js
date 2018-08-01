@@ -58,11 +58,10 @@ export type LoadOptions = {
     sortOrder?: SortOrder,
 };
 
-export type ItemEnhancer = (item: Object) => Object;
-
 export interface LoadingStrategyInterface {
     constructor(): void,
-    load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer): Promise<Object>,
+    load(resourceKey: string, options: LoadOptions, parentId: ?string | number): Promise<Object>,
+    setStructureStrategy(structureStrategy: StructureStrategyInterface): void,
 }
 
 export interface StructureStrategyInterface {
@@ -72,11 +71,10 @@ export interface StructureStrategyInterface {
     +activeItems?: Array<*>,
     +activate?: (id: ?string | number) => void,
     +deactivate?: (id: ?string | number) => void,
+    addItem(item: Object, parentId: ?string | number): void,
     remove(id: string | number): void,
-    getData(parent: ?string | number): ?Array<*>,
-    enhanceItem(item: Object): Object,
     findById(identifier: string | number): ?Object,
-    clear(): void,
+    clear(parentId: ?string | number): void,
 }
 
 export type TreeItem = {

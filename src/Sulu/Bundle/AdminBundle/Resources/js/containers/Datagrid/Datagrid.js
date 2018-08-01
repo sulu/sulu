@@ -179,7 +179,7 @@ export default class Datagrid extends React.Component<Props> {
                 </div>
                 <div className={datagridStyles.datagrid}>
                     <Adapter
-                        active={store.active}
+                        active={store.active.get()}
                         activeItems={store.activeItems}
                         data={store.data}
                         disabledIds={disabledIds}

@@ -13,8 +13,13 @@ import {translate} from '../../utils/Translator';
 import datagridStyles from './datagrid.scss';
 
 const USER_SETTING_PREFIX = 'sulu_admin.datagrid';
+const USER_SETTING_ACTIVE = 'active';
 const USER_SETTING_SORT_COLUMN = 'sort_column';
 const USER_SETTING_SORT_ORDER = 'sort_order';
+
+function getActiveSettingKey(resourceKey): string {
+    return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_ACTIVE].join('.');
+}
 
 function getSortColumnSettingKey(resourceKey): string {
     return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_SORT_COLUMN].join('.');
@@ -30,6 +35,7 @@ class Datagrid extends React.Component<ViewProps> {
     locale: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
     @observable deleting = false;
+    activeDisposer: () => void;
     sortColumnDisposer: () => void;
     sortOrderDisposer: () => void;
 
@@ -41,6 +47,7 @@ class Datagrid extends React.Component<ViewProps> {
         } = route;
 
         return {
+            active: userStore.getPersistentSetting(getActiveSettingKey(resourceKey)),
             sortColumn: userStore.getPersistentSetting(getSortColumnSettingKey(resourceKey)),
             sortOrder: userStore.getPersistentSetting(getSortOrderSettingKey(resourceKey)),
         };
@@ -80,12 +87,14 @@ class Datagrid extends React.Component<ViewProps> {
         }
 
         this.datagridStore = new DatagridStore(resourceKey, observableOptions, apiOptions);
+        router.bind('active', this.datagridStore.active);
 
         router.bind('sortColumn', this.datagridStore.sortColumn);
         router.bind('sortOrder', this.datagridStore.sortOrder);
         router.bind('search', this.datagridStore.searchTerm);
 
         const {
+            active,
             sortColumn,
             sortOrder,
         } = this.datagridStore;
@@ -96,10 +105,19 @@ class Datagrid extends React.Component<ViewProps> {
         this.sortOrderDisposer = autorun(
             () => userStore.setPersistentSetting(getSortOrderSettingKey(resourceKey), sortOrder.get())
         );
+        this.activeDisposer = autorun(
+            () => {
+                const activeValue = active.get();
+                if (activeValue) {
+                    userStore.setPersistentSetting(getActiveSettingKey(resourceKey), activeValue);
+                }
+            }
+        );
     }
 
     componentWillUnmount() {
         this.datagridStore.destroy();
+        this.activeDisposer();
         this.sortColumnDisposer();
         this.sortOrderDisposer();
     }

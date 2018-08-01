@@ -25,6 +25,9 @@ jest.mock(
         this.options = options;
         this.loading = false;
         this.pageCount = 3;
+        this.active = {
+            get: jest.fn(),
+        };
         this.sortColumn = {
             get: jest.fn(),
         };
@@ -264,18 +267,22 @@ test('Should destroy the store on unmount', () => {
     expect(router.bind).toBeCalledWith('locale', locale);
     expect(router.bind).toBeCalledWith('sortColumn', datagridStore.sortColumn);
     expect(router.bind).toBeCalledWith('sortOrder', datagridStore.sortOrder);
+    expect(router.bind).toBeCalledWith('active', datagridStore.active);
 
     expect(datagrid.instance().sortColumnDisposer).toBeDefined();
     expect(datagrid.instance().sortOrderDisposer).toBeDefined();
 
+    const activeDisposerSpy = jest.fn();
     const sortColumnDisposerSpy = jest.fn();
     const sortOrderDisposerSpy = jest.fn();
+    datagrid.instance().activeDisposer = activeDisposerSpy;
     datagrid.instance().sortColumnDisposer = sortColumnDisposerSpy;
     datagrid.instance().sortOrderDisposer = sortOrderDisposerSpy;
 
     datagrid.unmount();
 
     expect(datagridStore.destroy).toBeCalled();
+    expect(activeDisposerSpy).toBeCalledWith();
     expect(sortColumnDisposerSpy).toBeCalledWith();
     expect(sortOrderDisposerSpy).toBeCalledWith();
 });
@@ -431,6 +438,8 @@ test('Should load the route attributes from the UserStore', () => {
 
     userStore.getPersistentSetting.mockImplementation((key) => {
         switch(key) {
+            case 'sulu_admin.datagrid.test.active':
+                return 'some-uuid';
             case 'sulu_admin.datagrid.test.sort_column':
                 return 'title';
             case 'sulu_admin.datagrid.test.sort_order':
@@ -443,6 +452,7 @@ test('Should load the route attributes from the UserStore', () => {
             resourceKey: 'test',
         },
     })).toEqual({
+        active: 'some-uuid',
         sortColumn: 'title',
         sortOrder: 'desc',
     });

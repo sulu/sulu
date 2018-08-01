@@ -45,15 +45,19 @@ function removeRecursive(items: Array<TreeItem>, identifier: string | number): b
     return false;
 }
 
-function findChildrenForParentId(tree: Array<TreeItem>, parent: ?string | number): ?Array<TreeItem> {
+function findChildrenForParentId(tree: Array<TreeItem>, parentId: ?string | number): ?Array<TreeItem> {
+    if (parentId === undefined) {
+        return tree;
+    }
+
     for (let i = 0; i < tree.length; i++) {
         const item = tree[i];
         const {data, children} = item;
-        if (parent === data.id) {
+        if (parentId === data.id) {
             return children;
         }
 
-        const childResult = findChildrenForParentId(children, parent);
+        const childResult = findChildrenForParentId(children, parentId);
         if (childResult) {
             return childResult;
         }
@@ -67,14 +71,6 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
         return flattenData(this.data);
     }
 
-    @action getData(parent: ?string | number) {
-        if (parent === undefined) {
-            return this.data;
-        }
-
-        return findChildrenForParentId(this.data, parent);
-    }
-
     remove(identifier: string | number) {
         removeRecursive(this.data, identifier);
     }
@@ -84,22 +80,39 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
     }
 
     deactivate(id: ?string | number) {
-        const data = this.getData(id);
-        if (data) {
-            data.splice(0, data.length);
+        const children = findChildrenForParentId(this.data, id);
+        if (children) {
+            children.splice(0, children.length);
         }
     }
 
-    enhanceItem(item: Object): TreeItem {
-        return {
+    addItem(item: Object, parentId: ?string | number): void {
+        const children = findChildrenForParentId(this.data, parentId);
+
+        if (!children) {
+            throw new Error('Cannot add items to non-existing parentId "' + (parentId ? parentId : 'undefined') + '"!');
+        }
+
+        children.push({
             data: item,
             // TODO do not hardcode hasChildren but use metadata instead
             hasChildren: item.hasChildren,
             children: [],
-        };
+        });
+
+        if (item._embedded && Object.keys(item._embedded).length > 0) {
+            const resourceKey = Object.keys(item._embedded)[0];
+            const childItems = item._embedded[resourceKey];
+            childItems.forEach((childItem) => this.addItem(childItem, item.id));
+        }
     }
 
-    @action clear() {
-        this.data.splice(0, this.data.length);
+    @action clear(parentId: ?string | number) {
+        const children = findChildrenForParentId(this.data, parentId);
+        if (!children || children.length === 0) {
+            return;
+        }
+
+        children.splice(0, children.length);
     }
 }

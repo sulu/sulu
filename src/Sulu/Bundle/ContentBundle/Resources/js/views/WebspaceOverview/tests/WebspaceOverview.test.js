@@ -9,6 +9,10 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
     DatagridStore: jest.fn(function() {
         this.activeItems = [];
+        this.active = {
+            get: jest.fn(),
+            set: jest.fn(),
+        };
         this.sortColumn = {
             get: jest.fn(),
         };
@@ -137,6 +141,8 @@ test('Should change webspace when value of webspace select is changed', () => {
 
         webspaceOverview.update();
         webspaceOverview.find('WebspaceSelect').prop('onChange')('sulu_blog');
+        expect(webspaceOverview.instance().datagridStore.destroy).toBeCalledWith();
+        expect(webspaceOverview.instance().datagridStore.active.set).toBeCalledWith(undefined);
         expect(webspaceOverview.instance().webspace.get()).toBe('sulu_blog');
         expect(webspaceOverview.instance().locale.get()).toBe('de');
         expect(userStore.setPersistentSetting).lastCalledWith('sulu_content.webspace_overview.webspace', 'sulu_blog');
@@ -153,7 +159,7 @@ test('Should change webspace when value of webspace select is changed', () => {
     });
 });
 
-test('Should load webspace route attribute from userStore', () => {
+test('Should load webspace and active route attribute from userStore', () => {
     const WebspaceOverview = require('../WebspaceOverview').default;
     const userStore = require('sulu-admin-bundle/stores').userStore;
 
@@ -161,10 +167,15 @@ test('Should load webspace route attribute from userStore', () => {
         if (key === 'sulu_content.webspace_overview.webspace') {
             return 'sulu';
         }
+
+        if (key === 'sulu_content.webspace_overview.webspace.sulu.active') {
+            return 'some-uuid';
+        }
     });
 
     // $FlowFixMe
     expect(WebspaceOverview.getDerivedRouteAttributes()).toEqual({
+        active: 'some-uuid',
         webspace: 'sulu',
     });
 });
@@ -185,4 +196,5 @@ test('Should bind router', () => {
     expect(router.bind).toBeCalledWith('page', page, '1');
     expect(router.bind).toBeCalledWith('locale', locale);
     expect(router.bind).toBeCalledWith('webspace', webspace);
+    expect(router.bind).toBeCalledWith('active', webspaceOverview.instance().datagridStore.active);
 });

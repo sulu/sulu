@@ -34,7 +34,7 @@ use Sulu\Exception\FeatureNotImplementedException;
  *      )
  * )
  * @Relation(
- *      "nodes",
+ *      "pages",
  *      embedded = @Embedded("expr(object.getChildren())")
  * )
  */
@@ -94,7 +94,7 @@ class Content implements \ArrayAccess
     /**
      * @var Content[]
      */
-    private $children = [];
+    private $children;
 
     /**
      * @var array

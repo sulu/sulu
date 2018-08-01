@@ -1,15 +1,15 @@
 // @flow
 import {action} from 'mobx';
 import ResourceRequester from '../../../services/ResourceRequester';
-import type {ItemEnhancer, LoadOptions} from '../types';
+import type {LoadOptions} from '../types';
 import AbstractLoadingStrategy from './AbstractLoadingStrategy';
 
 export default class PaginatedLoadingStrategy extends AbstractLoadingStrategy {
-    load(data: Array<Object>, resourceKey: string, options: LoadOptions, enhanceItem: ItemEnhancer) {
+    load(resourceKey: string, options: LoadOptions, parentId: ?string | number) {
         return ResourceRequester.getList(resourceKey, {...options, limit: 10}).then(action((response) => {
             const responseData = response._embedded[resourceKey];
-            data.splice(0, data.length);
-            data.push(...responseData.map(enhanceItem));
+            this.structureStrategy.clear(parentId);
+            responseData.forEach((item) => this.structureStrategy.addItem(item, parentId));
 
             return response;
         }));
