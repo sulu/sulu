@@ -48,7 +48,7 @@ export type DatagridAdapterProps = {
 
 export type ObservableOptions = {
     page: IObservableValue<number>,
-    locale?: IObservableValue<string>,
+    locale?: ?IObservableValue<string>,
 };
 
 export type LoadOptions = {
