@@ -111,8 +111,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey)->getId() : null;
-            $expandIds = array_filter(explode(',', $request->get('expandIds')));
-            $list = $this->getListRepresentation($request, $locale, $parentId ?? $rootId, $expandIds);
+            $expandedIds = array_filter(explode(',', $request->get('expandedIds')));
+            $list = $this->getListRepresentation($request, $locale, $parentId ?? $rootId, $expandedIds);
         } else {
             $entities = $this->getCategoryManager()->findChildrenByParentKey($rootKey);
             $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
@@ -274,16 +274,16 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * The category-list-representation contains only the root level of the category graph.
      *
      * If parentId is set, the root level of the sub-graph below the category with the given parentId is returned.
-     * If expandIds is set, the paths to the categories which are assigned to the ids are expanded.
+     * If expandedIds is set, the paths to the categories which are assigned to the ids are expanded.
      *
      * @param Request $request
      * @param $locale
      * @param null $parentId
-     * @param array $expandIds
+     * @param array $expandedIds
      *
      * @return CategoryListRepresentation
      */
-    protected function getListRepresentation(Request $request, $locale, $parentId = null, $expandIds = [])
+    protected function getListRepresentation(Request $request, $locale, $parentId = null, $expandedIds = [])
     {
         $listBuilder = $this->initializeListBuilder($locale);
 
@@ -291,22 +291,22 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $listBuilder->limit(null);
 
         // collect categories which children should get loaded
-        $parentIdsToExpand = [$parentId];
-        if ($expandIds) {
-            $pathIds = $this->get('sulu.repository.category')->findCategoryIdsBetween([$parentId], $expandIds);
-            $parentIdsToExpand = array_merge($parentIdsToExpand, $pathIds);
+        $idsToExpand = [$parentId];
+        if ($expandedIds) {
+            $pathIds = $this->get('sulu.repository.category')->findCategoryIdsBetween([$parentId], $expandedIds);
+            $idsToExpand = array_merge($idsToExpand, $pathIds);
         }
 
         if ('csv' === $request->getRequestFormat()) {
-            $parentIdsToExpand = array_filter($parentIdsToExpand);
+            $idsToExpand = array_filter($idsToExpand);
         }
 
         // generate expressions for collected parent-categories
         $parentExpressions = [];
-        foreach ($parentIdsToExpand as $parentId) {
+        foreach ($idsToExpand as $idToExpand) {
             $parentExpressions[] = $listBuilder->createWhereExpression(
                 $listBuilder->getFieldDescriptor('parent'),
-                $parentId,
+                $idToExpand,
                 ListBuilderInterface::WHERE_COMPARATOR_EQUAL
             );
         }
@@ -318,18 +318,43 @@ class CategoryController extends RestController implements ClassResourceInterfac
             } elseif (count($parentExpressions) >= 1) {
                 $listBuilder->addExpression($parentExpressions[0]);
             }
-        } elseif ($request->get('search') && $parentId && !$expandIds) {
+        } elseif ($request->get('search') && $parentId && !$expandedIds) {
             // filter for parentId when search is active and no expandedIds are set
             $listBuilder->addExpression($parentExpressions[0]);
         }
 
-        $results = $listBuilder->execute();
-        foreach ($results as &$result) {
-            $result['hasChildren'] = ($result['lft'] + 1) !== $result['rgt'];
+        $categories = $listBuilder->execute();
+
+        foreach ($categories as &$category) {
+            $category['hasChildren'] = ($category['lft'] + 1) !== $category['rgt'];
+        }
+
+        if (!empty($expandedIds)) {
+            // TODO rename parent to parentId
+            $categoriesByParentId = [];
+            foreach ($categories as &$category) {
+                $categoryParentId = $category['parent'];
+                if (!isset($categoriesByParentId[$categoryParentId])) {
+                    $categoriesByParentId[$categoryParentId] = [];
+                }
+                $categoriesByParentId[$categoryParentId][] = &$category;
+            }
+
+            foreach ($categories as &$category) {
+                if (!isset($categoriesByParentId[$category['id']])) {
+                    continue;
+                }
+
+                $category['_embedded'] = [
+                    'categories' => $categoriesByParentId[$category['id']],
+                ];
+            }
+
+            $categories = $categoriesByParentId[$parentId];
         }
 
         return new CategoryListRepresentation(
-            $results,
+            $categories,
             self::$entityKey,
             'get_categories',
             $request->query->all(),

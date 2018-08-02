@@ -2,6 +2,13 @@
 
 ## dev-develop
 
+### Category API
+
+The `/admin/api/categories` endpoint delivered a flat list of categories with a `parentId` attribute if the
+`expandedIds` query parameter was defined. This behavior changed, each category now has a `_embedded` field, which has
+a `categories` key, under which all sub categories are located. This way not every client using this API has to build
+a tree using the `parentId` on their own.
+
 ### parent query parameter
 
 The `parent` query parameter, which is used in quite some controllers like for pages and categories, was renamed to

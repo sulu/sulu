@@ -370,7 +370,7 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories?locale=en&flat=true&expandIds=' . $this->category4->getId()
+            '/api/categories?locale=en&flat=true&expandedIds=' . $this->category4->getId()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -385,23 +385,27 @@ class CategoryControllerTest extends SuluTestCase
             }
         );
 
-        $this->assertCount(4, $categories);
+        $this->assertCount(2, $categories);
         $this->assertEquals(4, $response->total);
 
-        $this->assertEquals('First Category', $categories[0]->name);
-        $this->assertEquals('en', $categories[0]->defaultLocale);
-        $this->assertEquals('en', $categories[0]->locale);
-        $this->assertEquals('first-category-key', $categories[0]->key);
-        $this->assertTrue($categories[0]->hasChildren);
+        $category1 = $categories[0];
+        $this->assertEquals('First Category', $category1->name);
+        $this->assertEquals('en', $category1->defaultLocale);
+        $this->assertEquals('en', $category1->locale);
+        $this->assertEquals('first-category-key', $category1->key);
+        $this->assertTrue($category1->hasChildren);
 
-        $this->assertEquals('second-category-key', $categories[1]->key);
-        $this->assertFalse($categories[1]->hasChildren);
+        $category2 = $categories[1];
+        $this->assertEquals('second-category-key', $category2->key);
+        $this->assertFalse($category2->hasChildren);
 
-        $this->assertEquals('Third Category', $categories[2]->name);
-        $this->assertTrue($categories[2]->hasChildren);
+        $category3 = $category1->_embedded->categories[0];
+        $this->assertEquals('Third Category', $category3->name);
+        $this->assertTrue($category3->hasChildren);
 
-        $this->assertEquals('Fourth Category', $categories[3]->name);
-        $this->assertFalse($categories[3]->hasChildren);
+        $category4 = $category3->_embedded->categories[0];
+        $this->assertEquals('Fourth Category', $category4->name);
+        $this->assertFalse($category4->hasChildren);
     }
 
     public function testCGetFlatWithExpandIdsSameLevel()
@@ -409,7 +413,7 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories?locale=en&flat=true&expandIds=' . $this->category1->getId()
+            '/api/categories?locale=en&flat=true&expandedIds=' . $this->category1->getId()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -595,7 +599,7 @@ class CategoryControllerTest extends SuluTestCase
         $client->request(
             'GET',
             '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey()
-            . '&expandIds=' . $this->category4->getId()
+            . '&expandedIds=' . $this->category4->getId()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -612,11 +616,13 @@ class CategoryControllerTest extends SuluTestCase
 
         $this->assertEquals(2, $response->total);
 
-        $this->assertEquals($this->category3->getId(), $categories[0]->id);
-        $this->assertTrue($categories[0]->hasChildren);
+        $category3 = $categories[0];
+        $this->assertEquals($this->category3->getId(), $category3->id);
+        $this->assertTrue($category3->hasChildren);
 
-        $this->assertEquals('Fourth Category', $categories[1]->name);
-        $this->assertFalse($categories[1]->hasChildren);
+        $category4 = $category3->_embedded->categories[0];
+        $this->assertEquals('Fourth Category', $category4->name);
+        $this->assertFalse($category4->hasChildren);
     }
 
     public function testCGetFlatWithRootAndWrongExpandIds()
@@ -625,7 +631,7 @@ class CategoryControllerTest extends SuluTestCase
         $client->request(
             'GET',
             '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey()
-            . '&expandIds=' . $this->category2->getId()
+            . '&expandedIds=' . $this->category2->getId()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
