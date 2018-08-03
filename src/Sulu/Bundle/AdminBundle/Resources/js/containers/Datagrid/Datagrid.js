@@ -16,6 +16,7 @@ import datagridStyles from './datagrid.scss';
 
 type Props = {|
     adapters: Array<string>,
+    deletable: boolean,
     disabledIds: Array<string | number>,
     header?: Node,
     onItemClick?: (itemId: string | number) => void,
@@ -28,6 +29,7 @@ type Props = {|
 @observer
 export default class Datagrid extends React.Component<Props> {
     static defaultProps = {
+        deletable: true,
         disabledIds: [],
         selectable: true,
         searchable: true,
@@ -152,6 +154,7 @@ export default class Datagrid extends React.Component<Props> {
     render() {
         const {
             adapters,
+            deletable,
             disabledIds,
             header,
             onItemClick,
@@ -188,7 +191,7 @@ export default class Datagrid extends React.Component<Props> {
                         loading={store.loading}
                         onAddClick={onAddClick}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
-                        onDeleteClick={this.handleDeleteClick}
+                        onDeleteClick={deletable ? this.handleDeleteClick : undefined}
                         onItemActivation={this.handleItemActivation}
                         onItemDeactivation={this.handleItemDeactivation}
                         onItemClick={onItemClick}

@@ -545,3 +545,32 @@ test('Disable delete button if no item in this column has been activated', () =>
     columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
     expect(columnListAdapter.find('Toolbar ToolbarDropdown button').at(0).prop('disabled')).toEqual(true);
 });
+
+test('Do not show settings if no options are available', () => {
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            active={3}
+            activeItems={[1]}
+            data={[]}
+            disabledIds={[]}
+            loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onDeleteClick={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
+            onPageChange={jest.fn()}
+            onSort={jest.fn()}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    expect(columnListAdapter.find('Toolbar ToolbarDropdown')).toHaveLength(0);
+});

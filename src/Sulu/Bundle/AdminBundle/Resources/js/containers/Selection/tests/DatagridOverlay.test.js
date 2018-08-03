@@ -70,6 +70,24 @@ test('Should pass disabledIds to the Datagrid', () => {
     expect(datagridOverlay.find(Datagrid).prop('disabledIds')).toBe(disabledIds);
 });
 
+test('Should pass deletable flag to the Datagrid', () => {
+    const disabledIds = [1, 2, 5];
+
+    const datagridOverlay = shallow(
+        <DatagridOverlay
+            adapter="table"
+            disabledIds={disabledIds}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(datagridOverlay.find(Datagrid).prop('deletable')).toEqual(false);
+});
+
 test('Should call onConfirm with the current selection', () => {
     const confirmSpy = jest.fn();
     const datagridOverlay = mount(

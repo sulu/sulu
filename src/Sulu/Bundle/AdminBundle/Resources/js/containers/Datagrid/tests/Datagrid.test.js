@@ -168,6 +168,13 @@ test('Render the adapter in non-selectable mode', () => {
     expect(datagrid.find('TestAdapter').prop('onAllSelectionChange')).toEqual(undefined);
 });
 
+test('Render the adapter in non-deletable mode', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(<Datagrid adapters={['test']} deletable={false} store={datagridStore} />);
+
+    expect(datagrid.find('TestAdapter').prop('onDeleteClick')).toEqual(undefined);
+});
+
 test('Render the adapter in non-searchable mode', () => {
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     expect(
