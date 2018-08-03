@@ -18,6 +18,7 @@ $emptyMessageColor: $silver;
 $rowHeight: 40px;
 $paddingCell: 4px;
 $borderWidth: 1px;
+$borderRadius: 3px;
 
 .table {
     border-collapse: separate;
@@ -36,19 +37,27 @@ $borderWidth: 1px;
     }
 }
 
+.header-cell,
+.cell,
+.button-cell {
+    &:first-child {
+        border-top-left-radius: $borderRadius;
+        border-bottom-left-radius: $borderRadius;
+        border-left-width: $borderWidth;
+    }
+
+    &:last-child {
+        border-top-right-radius: $borderRadius;
+        border-bottom-right-radius: $borderRadius;
+        border-right-width: $borderWidth;
+    }
+}
+
 .header-cell {
     padding: 20px;
     font-size: 12px;
     font-weight: normal;
     background-color: $headerCellBackgroundColor;
-
-    &:first-child {
-        border-radius: 3px 0 0 3px;
-    }
-
-    &:last-child {
-        border-radius: 0 3px 3px 0;
-    }
 
     > span {
         display: inline-flex;
@@ -143,16 +152,6 @@ $borderWidth: 1px;
     border-color: $cellBorderColor;
     color: $cellTextColor;
     background-color: $cellBackgroundColor;
-
-    &:first-child {
-        border-radius: 3px 0 0 3px;
-        border-left-width: $borderWidth;
-    }
-
-    &:last-child {
-        border-radius: 0 3px 3px 0;
-        border-right-width: $borderWidth;
-    }
 
     &.small {
         width: 1px;
