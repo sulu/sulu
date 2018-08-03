@@ -1,11 +1,26 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
-import {shallow} from 'enzyme';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import {mount, shallow} from 'enzyme';
+import Datagrid from '../../../Datagrid';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
+
+jest.mock('../../../Datagrid', () => jest.fn(() => null));
+
+jest.mock('../../../Datagrid/stores/DatagridStore',
+    () => function(resourceKey, observableOptions = {}, options, initialSelectionIds) {
+        this.resourceKey = resourceKey;
+        this.locale = observableOptions.locale;
+        this.initialSelectionIds = initialSelectionIds;
+
+        mockExtendObservable(this, {
+            selectionIds: [],
+        });
+    }
+);
 
 jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;
@@ -29,17 +44,22 @@ jest.mock('../../../../utils/Translator', () => ({
     }),
 }));
 
-test('Should pass props correctly to component', () => {
+test('Should pass props correctly to selection component', () => {
     const changeSpy = jest.fn();
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
-        adapter: 'table',
-        displayProperties: ['id', 'title'],
-        icon: '',
-        label: 'sulu_snippet.selection_label',
-        overlayTitle: 'sulu_snippet.selection_overlay_title',
-        resourceKey: 'snippets',
+        default_type: 'overlay',
+        resource_key: 'snippets',
+        types: {
+            overlay: {
+                adapter: 'table',
+                display_properties: ['id', 'title'],
+                icon: '',
+                label: 'sulu_snippet.selection_label',
+                overlay_title: 'sulu_snippet.selection_overlay_title',
+            },
+        },
     };
 
     const locale = observable.box('en');
@@ -79,10 +99,15 @@ test('Should pass props correctly to component', () => {
     }));
 });
 
-test('Should pass id of form as disabledId to avoid assigning something to itself', () => {
+test('Should pass id of form as disabledId to overlay type to avoid assigning something to itself', () => {
     const fieldTypeOptions = {
-        adapter: 'table',
-        resourceKey: 'pages',
+        default_type: 'overlay',
+        resource_key: 'pages',
+        types: {
+            overlay: {
+                adapter: 'table',
+            },
+        },
     };
 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('pages', 4)));
@@ -107,11 +132,16 @@ test('Should pass id of form as disabledId to avoid assigning something to itsel
     expect(selection.find('Selection').prop('disabledIds')).toEqual([4]);
 });
 
-test('Should pass empty array if value is not given', () => {
+test('Should pass empty array if value is not given to overlay type', () => {
     const changeSpy = jest.fn();
     const fieldOptions = {
-        adapter: 'column_list',
-        resourceKey: 'pages',
+        default_type: 'overlay',
+        resource_key: 'pages',
+        types: {
+            overlay: {
+                adapter: 'column_list',
+            },
+        },
     };
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
@@ -140,7 +170,7 @@ test('Should pass empty array if value is not given', () => {
     }));
 });
 
-test('Should throw an error if no resourceKey is passed in fieldOptions', () => {
+test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 
     expect(() => shallow(
@@ -148,7 +178,7 @@ test('Should throw an error if no resourceKey is passed in fieldOptions', () => 
             dataPath=""
             error={undefined}
             formInspector={formInspector}
-            fieldTypeOptions={{}}
+            fieldTypeOptions={{default_type: 'overlay'}}
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
@@ -158,11 +188,18 @@ test('Should throw an error if no resourceKey is passed in fieldOptions', () => 
             types={undefined}
             value={undefined}
         />
-    )).toThrowError(/"resourceKey"/);
+    )).toThrowError(/"resource_key"/);
 });
 
-test('Should throw an error if no adapter is passed in fieldTypeOptions', () => {
+test('Should throw an error if no "adapter" option is passed for overlay type in fieldTypeOptions', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const fieldTypeOptions = {
+        default_type: 'overlay',
+        resource_key: 'test',
+        types: {
+            overlay: {},
+        },
+    };
 
     expect(() => shallow(
         <Selection
@@ -173,11 +210,138 @@ test('Should throw an error if no adapter is passed in fieldTypeOptions', () => 
             minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            fieldTypeOptions={{resourceKey: 'test'}}
+            fieldTypeOptions={fieldTypeOptions}
             schemaPath=""
             showAllErrors={false}
             types={undefined}
             value={undefined}
         />
     )).toThrowError(/"adapter"/);
+});
+
+test('Should call the disposer for datagrid selections if unmounted', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const fieldTypeOptions = {
+        default_type: 'datagrid',
+        resource_key: 'test',
+        types: {
+            datagrid: {
+                adapter: 'tree_table',
+            },
+        },
+    };
+
+    const selection = mount(
+        <Selection
+            dataPath=""
+            error={undefined}
+            formInspector={formInspector}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            fieldTypeOptions={fieldTypeOptions}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={undefined}
+        />
+    );
+
+    const changeDatagridDisposerSpy = jest.fn();
+    selection.instance().changeDatagridDisposer = changeDatagridDisposerSpy;
+
+    selection.unmount();
+
+    expect(changeDatagridDisposerSpy).toBeCalledWith();
+});
+
+test('Should pass props correctly to datagrid component', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid',
+        resource_key: 'snippets',
+        types: {
+            datagrid: {
+                adapter: 'table',
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale})
+        )
+    );
+
+    const selection = shallow(
+        <Selection
+            dataPath=""
+            error={undefined}
+            formInspector={formInspector}
+            fieldTypeOptions={fieldTypeOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={value}
+        />
+    );
+
+    expect(selection.instance().datagridStore.resourceKey).toEqual('snippets');
+    expect(selection.instance().datagridStore.initialSelectionIds).toEqual(value);
+    expect(selection.find(Datagrid).props()).toEqual(expect.objectContaining({
+        adapters: ['table'],
+    }));
+});
+
+test('Should call onChange and onFinish prop when datagrid selection changes', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid',
+        resource_key: 'snippets',
+        types: {
+            datagrid: {
+                adapter: 'table',
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale})
+        )
+    );
+
+    const selection = shallow(
+        <Selection
+            dataPath=""
+            error={undefined}
+            formInspector={formInspector}
+            fieldTypeOptions={fieldTypeOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={undefined}
+        />
+    );
+
+    selection.instance().datagridStore.selectionIds = [1, 5, 7];
+
+    expect(changeSpy).toBeCalledWith([1, 5, 7]);
+    expect(finishSpy).toBeCalledWith();
 });

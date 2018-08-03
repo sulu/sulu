@@ -34,12 +34,17 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                     'field_type_options' => [
                         'selection' => [
                             'snippet' => [
-                                'adapter' => 'table',
-                                'displayProperties' => ['title'],
-                                'icon' => 'su-snippet',
-                                'label' => 'sulu_snippet.selection_label',
-                                'resourceKey' => 'snippets',
-                                'overlayTitle' => 'sulu_snippet.selection_overlay_title',
+                                'default_type' => 'overlay',
+                                'resource_key' => 'snippets',
+                                'types' => [
+                                    'overlay' => [
+                                        'adapter' => 'table',
+                                        'display_properties' => ['title'],
+                                        'icon' => 'su-snippet',
+                                        'label' => 'sulu_snippet.selection_label',
+                                        'overlay_title' => 'sulu_snippet.selection_overlay_title',
+                                    ],
+                                ],
                             ],
                         ],
                     ],

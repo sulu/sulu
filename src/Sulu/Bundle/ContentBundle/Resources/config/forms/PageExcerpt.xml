@@ -20,6 +20,12 @@
             <title lang="de">Beschreibung</title>
         </meta>
     </property>
+    <property name="categories" type="category_list">
+        <meta>
+            <title lang="de">Kategorien</title>
+            <title lang="en">Categories</title>
+        </meta>
+    </property>
     <property name="icon" type="media_selection">
         <meta>
             <title lang="en">Icons</title>
