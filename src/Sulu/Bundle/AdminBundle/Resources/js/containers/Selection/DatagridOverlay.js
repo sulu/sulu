@@ -48,16 +48,12 @@ export default class DatagridOverlay extends React.Component<Props> {
         });
     }
 
-    componentWillReceiveProps(nextProps: Props) {
+    componentDidUpdate() {
         this.datagridStore.clearSelection();
 
-        nextProps.preSelectedItems.forEach((preSelectedItem) => {
+        this.props.preSelectedItems.forEach((preSelectedItem) => {
             this.datagridStore.select(preSelectedItem);
         });
-
-        if (!this.props.open && nextProps.open) {
-            this.datagridStore.setActive(undefined); // TODO keep active and expand correctly
-        }
     }
 
     componentWillUnmount() {
