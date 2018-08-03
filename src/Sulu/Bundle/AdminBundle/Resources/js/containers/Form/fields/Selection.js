@@ -129,7 +129,7 @@ export default class Selection extends React.Component<Props> {
             throw new Error('The selection field needs a "adapter" option for the datagrid type to work properly');
         }
 
-        return <Datagrid adapters={[adapter]} store={this.datagridStore} />;
+        return <Datagrid adapters={[adapter]} searchable={false} store={this.datagridStore} />;
     }
 
     handleDatagridSelectionChange = () => {

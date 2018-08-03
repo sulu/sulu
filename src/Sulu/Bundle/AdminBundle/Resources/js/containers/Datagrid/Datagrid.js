@@ -164,19 +164,21 @@ export default class Datagrid extends React.Component<Props> {
 
         return (
             <Fragment>
-                <div className={datagridStyles.headerContainer}>
-                    {header}
-                    <div className={datagridStyles.toolbar}>
-                        {searchable &&
+                {(header || searchable || adapters.length > 1) &&
+                    <div className={datagridStyles.headerContainer}>
+                        {header}
+                        <div className={datagridStyles.toolbar}>
+                            {searchable &&
                             <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
-                        }
-                        <AdapterSwitch
-                            adapters={adapters}
-                            currentAdapter={this.currentAdapterKey}
-                            onAdapterChange={this.handleAdapterChange}
-                        />
+                            }
+                            <AdapterSwitch
+                                adapters={adapters}
+                                currentAdapter={this.currentAdapterKey}
+                                onAdapterChange={this.handleAdapterChange}
+                            />
+                        </div>
                     </div>
-                </div>
+                }
                 <div className={datagridStyles.datagrid}>
                     <Adapter
                         active={store.active.get()}

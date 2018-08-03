@@ -298,6 +298,7 @@ test('Should pass props correctly to datagrid component', () => {
     expect(selection.instance().datagridStore.initialSelectionIds).toEqual(value);
     expect(selection.find(Datagrid).props()).toEqual(expect.objectContaining({
         adapters: ['table'],
+        searchable: false,
     }));
 });
 

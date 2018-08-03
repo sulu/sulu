@@ -56,13 +56,6 @@ exports[`Render a simple MediaOverview 1`] = `
         </div>
       </div>
       <div
-        class="headerContainer"
-      >
-        <div
-          class="toolbar"
-        />
-      </div>
-      <div
         class="datagrid"
       >
         <section>
