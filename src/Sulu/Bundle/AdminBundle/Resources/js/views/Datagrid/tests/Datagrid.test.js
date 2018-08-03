@@ -78,6 +78,7 @@ jest.mock(
 jest.mock('../../../containers/Datagrid/registries/DatagridAdapterRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
+    getOptions: jest.fn().mockReturnValue({}),
     has: jest.fn(),
 }));
 

@@ -44,6 +44,10 @@ export default class Datagrid extends React.Component<Props> {
         return datagridAdapterRegistry.get(this.currentAdapterKey);
     }
 
+    @computed get currentAdapterOptions(): typeof AbstractAdapter {
+        return datagridAdapterRegistry.getOptions(this.currentAdapterKey);
+    }
+
     constructor(props: Props) {
         super(props);
 
@@ -198,6 +202,7 @@ export default class Datagrid extends React.Component<Props> {
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
                         onPageChange={this.handlePageChange}
                         onSort={this.handleSort}
+                        options={this.currentAdapterOptions}
                         page={store.getPage()}
                         pageCount={store.pageCount}
                         schema={store.schema}

@@ -38,6 +38,7 @@ export type DatagridAdapterProps = {
     onItemSelectionChange: ?(rowId: string | number, selected?: boolean) => void,
     onPageChange: (page: number) => void,
     onSort: (column: string, order: SortOrder) => void,
+    options: Object,
     page: ?number,
     pageCount: number,
     schema: Schema,

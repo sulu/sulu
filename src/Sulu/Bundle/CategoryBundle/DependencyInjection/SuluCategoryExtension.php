@@ -105,7 +105,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                                 'resource_key' => 'categories',
                                 'types' => [
                                     'datagrid' => [
-                                        'adapter' => 'tree_table',
+                                        'adapter' => 'tree_table_slim',
                                     ],
                                 ],
                             ],
