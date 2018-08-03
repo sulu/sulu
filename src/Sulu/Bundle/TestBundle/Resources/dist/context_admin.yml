@@ -16,6 +16,10 @@ security:
         test:
             http_basic:
 
+sulu_admin:
+    name: SULU 2.0
+    email: installation.email@sulu.test
+
 sulu_security:
     checker:
         enabled: true

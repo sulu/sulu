@@ -9,20 +9,3 @@ cmf_routing:
     dynamic:
         enabled: true
         route_provider_service_id: sulu_website.provider.content
-
-security:
-    access_decision_manager:
-        strategy: affirmative
-
-    encoders:
-        Sulu\Bundle\SecurityBundle\Entity\User: plaintext
-
-    providers:
-        testprovider:
-            id: test_user_provider
-
-    firewalls:
-        test:
-            anonymous: ~
-            stateless: true
-            http_basic:
