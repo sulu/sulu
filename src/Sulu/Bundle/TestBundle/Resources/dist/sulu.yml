@@ -41,10 +41,6 @@ sulu_core:
                      type: "page"
     webspace: ~
 
-sulu_admin:
-    name: SULU 2.0
-    email: installation.email@sulu.test
-
 doctrine:
     orm:
         auto_generate_proxy_classes: %kernel.debug%

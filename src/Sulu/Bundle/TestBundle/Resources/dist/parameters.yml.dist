@@ -6,7 +6,7 @@ parameters:
     database.name:     sulu_test
     database.port:     ~
     database.password: ~
-    database.version:  5.7
+    database.version:  '5.7'
 
     phpcr.transport:   doctrinedbal
     phpcr.backend_url: http://localhost:8080/server/
