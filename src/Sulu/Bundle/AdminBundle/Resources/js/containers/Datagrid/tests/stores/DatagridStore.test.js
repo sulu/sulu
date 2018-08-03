@@ -299,9 +299,7 @@ test('The loading strategy should be called with expandedIds if the active item 
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
-            expandedIds: [
-                'some-uuid',
-            ],
+            expandedIds: 'some-uuid',
             page: 1,
             sortBy: undefined,
             sortOrder: undefined,
@@ -310,6 +308,58 @@ test('The loading strategy should be called with expandedIds if the active item 
     );
 
     datagridStore.destroy();
+});
+
+test('The loading strategy should be called with expandedIds if some items are already selected', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+    const datagridStore = new DatagridStore(
+        'categories',
+        {
+            page,
+        },
+        {},
+        [1, 5, 10]
+    );
+
+    const promise = Promise.resolve({});
+    loadingStrategy.load.mockReturnValue(promise);
+
+    structureStrategy.findById.mockImplementation((id) => {
+        switch(id) {
+            case 1:
+                return {id: 1};
+            case 5:
+                return {id: 5};
+            case 10:
+                return {id: 10};
+        }
+    });
+
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    expect(loadingStrategy.load).toBeCalledWith(
+        'categories',
+        {
+            expandedIds: '1,5,10',
+            page: 1,
+            sortBy: undefined,
+            sortOrder: undefined,
+        },
+        undefined
+    );
+
+    return promise.then(() => {
+        expect(structureStrategy.findById).toBeCalledWith(1);
+        expect(structureStrategy.findById).toBeCalledWith(5);
+        expect(structureStrategy.findById).toBeCalledWith(10);
+
+        expect(datagridStore.selectionIds).toEqual([1, 5, 10]);
+        expect(datagridStore.initialSelectionIds).toEqual(undefined);
+
+        datagridStore.destroy();
+    });
 });
 
 test('The loading strategy should be called only once even if the data changes afterwards for some reason', () => {

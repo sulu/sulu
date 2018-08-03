@@ -32,15 +32,18 @@ export default class DatagridStore {
     sortColumnDisposer: () => void;
     sortOrderDisposer: () => void;
     sendRequestDisposer: () => void;
+    initialSelectionIds: ?Array<string | number>;
 
     constructor(
         resourceKey: string,
         observableOptions: ObservableOptions,
-        options: Object = {}
+        options: Object = {},
+        selectionIds: ?Array<string | number>
     ) {
         this.resourceKey = resourceKey;
         this.observableOptions = observableOptions;
         this.options = options;
+        this.initialSelectionIds = selectionIds;
         this.sendRequestDisposer = autorun(this.sendRequest);
 
         const callResetForChangedObservable = (change: IValueWillChange<*>) => {
@@ -202,10 +205,14 @@ export default class DatagridStore {
 
         const options = {...observableOptions, ...this.options};
 
+        if (this.initialSelectionIds) {
+            options.expandedIds = this.initialSelectionIds.join(',');
+        }
+
         const active = this.active.get();
-        if (active && untracked(() => !this.structureStrategy.findById(active))) {
+        if (!options.expandedIds && active && untracked(() => !this.structureStrategy.findById(active))) {
             this.structureStrategy.clear();
-            options.expandedIds = [active];
+            options.expandedIds = active;
         }
 
         if (!options.expandedIds && active) {
@@ -226,13 +233,22 @@ export default class DatagridStore {
             options,
             options.expandedIds ? undefined : active
         ).then(action((response) => {
-            this.handleResponse(response);
-        }));
-    };
+            this.pageCount = response.pages;
+            this.setDataLoading(false);
 
-    handleResponse = (response: Object) => {
-        this.pageCount = response.pages;
-        this.setDataLoading(false);
+            if (this.initialSelectionIds) {
+                this.initialSelectionIds
+                    .map((selectionId) => this.findById(selectionId))
+                    .forEach((selectionRow) => {
+                        if (!selectionRow) {
+                            return;
+                        }
+
+                        this.select(selectionRow);
+                    });
+                this.initialSelectionIds = undefined;
+            }
+        }));
     };
 
     @action setDataLoading(dataLoading: boolean) {
