@@ -365,12 +365,52 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertFalse($categories[1]->hasChildren);
     }
 
-    public function testCGetFlatWithExpandIds()
+    public function testCGetFlatWithSelectedIds()
     {
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories?locale=en&flat=true&expandedIds=' . $this->category4->getId()
+            '/api/categories?locale=en&flat=true&selectedIds=' . $this->category3->getId()
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $categories = $response->_embedded->categories;
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
+
+        $this->assertCount(2, $categories);
+        $this->assertEquals(3, $response->total);
+
+        $category1 = $categories[0];
+        $this->assertEquals('First Category', $category1->name);
+        $this->assertEquals('en', $category1->defaultLocale);
+        $this->assertEquals('en', $category1->locale);
+        $this->assertEquals('first-category-key', $category1->key);
+        $this->assertTrue($category1->hasChildren);
+
+        $category2 = $categories[1];
+        $this->assertEquals('second-category-key', $category2->key);
+        $this->assertFalse($category2->hasChildren);
+
+        $category3 = $category1->_embedded->categories[0];
+        $this->assertEquals('Third Category', $category3->name);
+        $this->assertTrue($category3->hasChildren);
+        $this->assertObjectNotHasAttribute('_embedded', $category3);
+    }
+
+    public function testCGetFlatWithExpandedIds()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories?locale=en&flat=true&expandedIds=' . $this->category3->getId()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -413,7 +453,7 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories?locale=en&flat=true&expandedIds=' . $this->category1->getId()
+            '/api/categories?locale=en&flat=true&expandedIds=' . $this->category2->getId()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());

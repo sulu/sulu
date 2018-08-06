@@ -111,8 +111,14 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey)->getId() : null;
-            $expandedIds = array_filter(explode(',', $request->get('expandedIds')));
-            $list = $this->getListRepresentation($request, $locale, $parentId ?? $rootId, $expandedIds);
+            $expandedIds = array_filter(explode(',', $request->get('expandedIds', $request->get('selectedIds'))));
+            $list = $this->getListRepresentation(
+                $request,
+                $locale,
+                $parentId ?? $rootId,
+                $expandedIds,
+                $request->query->has('expandedIds')
+            );
         } else {
             $entities = $this->getCategoryManager()->findChildrenByParentKey($rootKey);
             $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
@@ -283,8 +289,13 @@ class CategoryController extends RestController implements ClassResourceInterfac
      *
      * @return CategoryListRepresentation
      */
-    protected function getListRepresentation(Request $request, $locale, $parentId = null, $expandedIds = [])
-    {
+    protected function getListRepresentation(
+        Request $request,
+        $locale,
+        $parentId = null,
+        $expandedIds = [],
+        $expandSelf = false
+    ) {
         $listBuilder = $this->initializeListBuilder($locale);
 
         // disable pagination to simplify tree handling
@@ -295,6 +306,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
         if ($expandedIds) {
             $pathIds = $this->get('sulu.repository.category')->findCategoryIdsBetween([$parentId], $expandedIds);
             $idsToExpand = array_merge($idsToExpand, $pathIds);
+            if ($expandSelf) {
+                $idsToExpand = array_merge($idsToExpand, $expandedIds);
+            }
         }
 
         if ('csv' === $request->getRequestFormat()) {

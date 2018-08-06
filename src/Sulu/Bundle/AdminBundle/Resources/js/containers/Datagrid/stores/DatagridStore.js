@@ -203,20 +203,22 @@ export default class DatagridStore {
 
         this.setDataLoading(true);
 
+        const active = this.active.get();
         const options = {...observableOptions, ...this.options};
 
         if (this.initialSelectionIds) {
-            options.expandedIds = this.initialSelectionIds.join(',');
+            options.selectedIds = this.initialSelectionIds.join(',');
         }
 
-        const active = this.active.get();
-        if (!options.expandedIds && active && untracked(() => !this.structureStrategy.findById(active))) {
-            this.structureStrategy.clear();
-            options.expandedIds = active;
-        }
+        if (!options.selectedIds) {
+            if (active && untracked(() => !this.structureStrategy.findById(active))) {
+                this.structureStrategy.clear();
+                options.expandedIds = active;
+            }
 
-        if (!options.expandedIds && active) {
-            options.parentId = active;
+            if (!options.expandedIds && active) {
+                options.parentId = active;
+            }
         }
 
         options.sortBy = this.sortColumn.get();

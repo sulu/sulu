@@ -342,7 +342,7 @@ test('The loading strategy should be called with expandedIds if some items are a
     expect(loadingStrategy.load).toBeCalledWith(
         'categories',
         {
-            expandedIds: '1,5,10',
+            selectedIds: '1,5,10',
             page: 1,
             sortBy: undefined,
             sortOrder: undefined,
