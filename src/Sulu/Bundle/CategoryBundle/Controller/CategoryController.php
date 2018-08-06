@@ -330,7 +330,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         }
 
         if (!empty($expandedIds)) {
-            // TODO rename parent to parentId
             $categoriesByParentId = [];
             foreach ($categories as &$category) {
                 $categoryParentId = $category['parent'];
@@ -346,7 +345,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 }
 
                 $category['_embedded'] = [
-                    'categories' => $categoriesByParentId[$category['id']],
+                    self::$entityKey => $categoriesByParentId[$category['id']],
                 ];
             }
 
