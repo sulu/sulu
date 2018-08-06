@@ -2,12 +2,69 @@
 
 ## dev-develop
 
+### Configuration changes for Selection and SingleSelection field types
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The `sulu_admin.field_type_options` have changed. The allow to define different type of components to be used for a
+selection. But each of these types had to redefine the `resourceKey`. So the structure was slightly changed to allow
+defining the `resourceKey` only once. Also, since the naming convention in the Symfony configuration is to use snake
+case, we have adapted the options accordingly.
+
+The following example shows the changes:
+
+```yaml
+# old version
+sulu_admin:
+    field_type_options:
+        selection:
+            internal_links:
+                adapter: 'column_list'
+                displayProperties: 'title'
+                icon: 'su-document'
+                label: 'sulu_content.selection_label'
+                resourceKey: 'pages'
+                overlayTitle: 'sulu_content.selection_overlay_title'
+        single_selection:
+            single_account_selection:
+                auto_complete:
+                    displayProperty: 'name',
+                    searchProperties: ['number', 'name']
+                    resourceKey: 'accounts'
+
+# new version
+sulu_admin:
+    field_type_options:
+        selection:
+            internal_links:
+                default_type: 'overlay'
+                resource_key: 'pages'
+                types:
+                    overlay:
+                        adapter: 'column_list'
+                        displayProperties: 'title'
+                        icon: 'su-document'
+                        label: 'sulu_content.selection_label'
+                        resourceKey: 'pages'
+                        overlayTitle: 'sulu_content.selection_overlay_title'
+        single_selection:
+            single_account_selection:
+                default_type: 'auto_complete'
+                resource_key: 'accounts'
+                types:
+                    auto_complete:
+                        display_property: 'name'
+                        search_properties: ['number', 'name']
+```
+
 ### Category API
 
 The `/admin/api/categories` endpoint delivered a flat list of categories with a `parentId` attribute if the
 `expandedIds` query parameter was defined. This behavior changed, each category now has a `_embedded` field, which has
 a `categories` key, under which all sub categories are located. This way not every client using this API has to build
 a tree using the `parentId` on their own.
+
+## 2.0.0-alpha2
 
 ### parent query parameter
 
@@ -20,6 +77,127 @@ our new Admin, so if your API should work with it, you have to name the query pa
 In previous versions of Sulu a section named `highlight` had a special design in the administratin interface. Its
 background was darker than the rest of the form. This was removed with the new design, and therefore a `highlight`
 section does not do anything special anymore, and therefore can be safely removed from your template XML files.
+
+## 2.0.0-alpha1
+
+### Admin Navigation
+
+The admin navigation should not be built into the constructor anymore. Instead of `setNavigation` 
+create `getNavigation` function in the `Admin` class which should return a `Navigation` object.
+This makes it easier to override only this part of the Admin.
+
+### sulu.rlp tag deprecated
+
+The `sulu.rlp` tag, which can be added in the template XMLs, is not used anymore by the new UI. Instead the result of
+the URL generation will be simply put into the `resource_locator` field type.
+
+### Test Setup changed
+
+If you use the SuluTestBundle to test your custom sulu bundles you maybe need to change in your test config.yml
+the path to the gedmo extension:
+
+```yml
+doctrine:
+    orm:
+        mappings:
+            gedmo_tree:
+                type: xml
+                prefix: Gedmo\Tree\Entity
+                dir: "%kernel.root_dir%/../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                alias: GedmoTree
+                is_bundle: false
+```
+
+### Field Descriptor interface changed
+
+The field descriptor parameter `$default` and `$disabled` where combined into a new parameter `$visibility`:
+
+Use the following table for upgrading:
+
+| Disabled | Default  | Visiblity
+|----------|----------|--------------
+| false    | true     | FieldDescriptorInterface::VISIBILITY_ALWAYS (always)
+| false    | false    | FieldDescriptorInterface::VISIBILITY_YES (yes)
+| true     | false    | FieldDescriptorInterface::VISIBILITY_NO (no)
+| true     | true     | FieldDescriptorInterface::VISIBILITY_NEVER (never)
+
+We have also introduced a new parameter `$searchability` on the fourth position.
+
+The following table shows the values:
+
+| Value  | Description                 | Searchability
+|--------|-----------------------------|--------------
+| NEVER  | not searchable at all       | FieldDescriptorInterface::SEARCHABILITY_NEVER (never)
+| NO     | it's not used per default   | FieldDescriptorInterface::SEARCHABILITY_NO (no)
+| YES    | it's used per default       | FieldDescriptorInterface::SEARCHABILITY_YES (yes)
+
+This new property brings use the possibility to use our REST Api's without the parameter `searchFields`.
+Default behavior then is to use all fields with `searchability` set to `YES`.
+
+**Before**
+
+```php
+new FieldDescriptor(
+    'name',
+    'translation',
+    false, // Disabled
+    true, // Default
+    // ...
+);
+```
+
+**After**
+
+```php
+new FieldDescriptor(
+   'name',
+   'translation',
+   FieldDescriptorInterface::VISIBILITY_YES, // Visibility
+   FieldDescriptorInterface::SEARCHABILITY_NEVER, // Searchability
+   // ...
+);
+```
+
+The same is also for the `DoctrineFieldDescriptor`, `DoctrineJoinDescriptor`, ...:
+
+**Before**
+
+```php
+new DoctrineFieldDescriptor(
+    'fieldName',
+    'name',
+        single_selection:
+            single_account_selection:
+                default_type: 'auto_complete'
+                resource_key: 'accounts'
+                types:
+                    auto_complete:
+                        display_property: 'name'
+                        search_properties: ['number', 'name']
+```
+
+### Category API
+
+The `/admin/api/categories` endpoint delivered a flat list of categories with a `parentId` attribute if the
+`expandedIds` query parameter was defined. This behavior changed, each category now has a `_embedded` field, which has
+a `categories` key, under which all sub categories are located. This way not every client using this API has to build
+a tree using the `parentId` on their own.
+
+## 2.0.0-alpha2
+
+### parent query parameter
+
+The `parent` query parameter, which is used in quite some controllers like for pages and categories, was renamed to
+`parentId`, because it only references the id, and not the entire reference. This is also the new convention within
+our new Admin, so if your API should work with it, you have to name the query paramter `parentId`.
+
+### Highlight section
+
+In previous versions of Sulu a section named `highlight` had a special design in the administratin interface. Its
+background was darker than the rest of the form. This was removed with the new design, and therefore a `highlight`
+section does not do anything special anymore, and therefore can be safely removed from your template XML files.
+
+## 2.0.0-alpha1
 
 ### Admin Navigation
 
