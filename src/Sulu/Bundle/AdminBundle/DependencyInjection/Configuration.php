@@ -64,7 +64,6 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('resource_key')->isRequired()->end()
                                     ->arrayNode('types')
                                         ->children()
-                                            // TODO allow only "datagrid" or "overlay" or allow multiple to change using schemaOptions
                                             ->arrayNode('datagrid')
                                                 ->children()
                                                     ->scalarNode('adapter')->isRequired()->end()

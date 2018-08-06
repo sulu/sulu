@@ -7,6 +7,7 @@ import DatagridStore from '../../../containers/Datagrid/stores/DatagridStore';
 import {translate} from '../../../utils/Translator';
 import SelectionComponent from '../../Selection';
 import type {FieldTypeProps} from '../../../types';
+import selectionStyles from './selection.scss';
 
 type Props = FieldTypeProps<Array<string | number>>;
 
@@ -129,7 +130,11 @@ export default class Selection extends React.Component<Props> {
             throw new Error('The selection field needs a "adapter" option for the datagrid type to work properly');
         }
 
-        return <Datagrid adapters={[adapter]} searchable={false} store={this.datagridStore} />;
+        return (
+            <div className={selectionStyles.datagrid}>
+                <Datagrid adapters={[adapter]} searchable={false} store={this.datagridStore} />
+            </div>
+        );
     }
 
     handleDatagridSelectionChange = () => {
