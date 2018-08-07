@@ -216,28 +216,31 @@ test('Saving and dirty flag should be set to false when creating has failed', (d
     });
 });
 
-test('Saving flag should be set to true when deleting', () => {
+test('Deleting flag should be set to true when deleting', () => {
     ResourceRequester.delete.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.data = {id: 1};
-    resourceStore.saving = false;
+    resourceStore.deleting = false;
     resourceStore.setLocale('en');
 
     resourceStore.delete();
-    expect(resourceStore.saving).toBe(true);
+    expect(resourceStore.saving).toBe(false);
+    expect(resourceStore.deleting).toBe(true);
 });
 
-test('Saving flag and id should be reset to false when deleting has finished', () => {
+test('Deleting flag and id should be reset to false when deleting has finished', () => {
     const promise = Promise.resolve({});
     ResourceRequester.delete.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.data = {id: 1};
     resourceStore.setLocale('en');
-    resourceStore.saving = true;
+    resourceStore.deleting = false;
 
     resourceStore.delete();
+    expect(resourceStore.deleting).toBe(true);
+
     return promise.then(() => {
-        expect(resourceStore.saving).toBe(false);
+        expect(resourceStore.deleting).toBe(false);
         expect(resourceStore.id).toBe(undefined);
     });
 });

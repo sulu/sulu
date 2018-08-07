@@ -174,7 +174,7 @@ export default class CollectionSection extends React.Component<Props> {
                 <Dialog
                     title={translate('sulu_media.remove_collection')}
                     open={operationType === 'remove'}
-                    confirmLoading={resourceStore.saving}
+                    confirmLoading={resourceStore.deleting}
                     confirmText={translate('sulu_admin.ok')}
                     cancelText={translate('sulu_admin.cancel')}
                     onConfirm={this.handleRemoveCollectionConfirm}

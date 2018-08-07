@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {mount, render} from 'enzyme';
-import {observable} from 'mobx';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import ResourceMetadataStore from 'sulu-admin-bundle/stores/ResourceMetadataStore';
 import MediaCollection from '../MediaCollection';
 import MediaCardOverviewAdapter from '../../Datagrid/adapters/MediaCardOverviewAdapter';
@@ -152,6 +152,10 @@ jest.mock('sulu-admin-bundle/stores', () => {
         this.data = {
             id: 1,
         };
+
+        mockExtendObservable(this, {
+            deleting: false,
+        });
     });
 
     return {
@@ -398,15 +402,20 @@ test('Confirming the delete dialog should delete the item', () => {
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(true);
     expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
 
-    // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
-    document.querySelector('button.primary').click();
+    mediaCollection.find('Dialog Button[skin="primary"]').simulate('click');
+    collectionStore.resourceStore.deleting = true;
+    mediaCollection.update();
 
     expect(collectionStore.resourceStore.delete).toBeCalled();
+    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(true);
+    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('confirmLoading')).toEqual(true);
 
     return promise.then(() => {
+        collectionStore.resourceStore.deleting = false;
         expect(collectionNavigateSpy).toBeCalledWith(null);
         mediaCollection.update();
         expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
+        expect(mediaCollection.find('CollectionSection > div > Dialog').prop('confirmLoading')).toEqual(false);
     });
 });
 
