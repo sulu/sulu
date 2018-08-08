@@ -53,6 +53,7 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
             onItemSelectionChange={jest.fn()}
             onPageChange={jest.fn()}
             onSort={jest.fn()}
+            options={{}}
             page={2}
             pageCount={5}
             schema={{}}

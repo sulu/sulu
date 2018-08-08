@@ -69,6 +69,16 @@ test('Add adapter', () => {
     expect(datagridAdapterRegistry.get('test2')).toBe(TestAdapter2);
 });
 
+test('Add adapter with options', () => {
+    datagridAdapterRegistry.add('test1', TestAdapter, {option1: 'value1'});
+    datagridAdapterRegistry.add('test2', TestAdapter2, {option2: 'value2'});
+
+    expect(datagridAdapterRegistry.get('test1')).toEqual(TestAdapter);
+    expect(datagridAdapterRegistry.getOptions('test1')).toEqual({option1: 'value1'});
+    expect(datagridAdapterRegistry.get('test2')).toEqual(TestAdapter2);
+    expect(datagridAdapterRegistry.getOptions('test2')).toEqual({option2: 'value2'});
+});
+
 test('Add adapter with existing key should throw', () => {
     datagridAdapterRegistry.add('test1', TestAdapter);
     expect(() => datagridAdapterRegistry.add('test1', TestAdapter)).toThrow(/test1/);

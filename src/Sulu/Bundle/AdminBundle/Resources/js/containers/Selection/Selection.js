@@ -54,14 +54,14 @@ export default class Selection extends React.Component<Props> {
         });
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        const {value: newValue} = nextProps;
+    componentDidUpdate() {
+        const {value: newValue} = this.props;
 
         if (newValue.every((id) => this.selectionStore.items.some((item) => item.id === id))) {
             return;
         }
 
-        this.selectionStore.loadItems(nextProps.value);
+        this.selectionStore.loadItems(newValue);
     }
 
     componentWillUnmount() {

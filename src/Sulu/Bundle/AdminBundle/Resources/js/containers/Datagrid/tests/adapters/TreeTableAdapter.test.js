@@ -85,6 +85,75 @@ test('Render data with schema', () => {
             page={1}
             pageCount={2}
             onSort={jest.fn()}
+            options={{}}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    expect(treeListAdapter).toMatchSnapshot();
+});
+
+test('Render data without header', () => {
+    const test1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test2 = {
+        data: {
+            id: 3,
+            title: 'Test2',
+        },
+        children: [],
+        hasChildren: true,
+    };
+    const test3 = {
+        data: {
+            id: 6,
+            title: 'Test3',
+        },
+        children: [],
+        hasChildren: true,
+    };
+
+    const data = [
+        test1,
+        test2,
+        test3,
+    ];
+    const schema = {
+        title: {
+            label: 'Title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+    };
+    const treeListAdapter = render(
+        <TreeTableAdapter
+            active={undefined}
+            activeItems={[]}
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            schema={schema}
+            selections={[]}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onDeleteClick={jest.fn()}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
+            onPageChange={jest.fn()}
+            page={1}
+            pageCount={2}
+            onSort={jest.fn()}
+            options={{showHeader: false}}
             sortColumn={undefined}
             sortOrder={undefined}
         />
@@ -129,6 +198,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
             onSort={sortSpy}
+            options={{}}
             schema={schema}
             selections={[]}
             sortColumn={undefined}
@@ -205,6 +275,7 @@ test('Render data with two columns', () => {
             onItemDeactivation={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            options={{}}
             page={1}
             pageCount={2}
             onSort={jest.fn()}
@@ -272,6 +343,7 @@ test('Render data with schema and selections', () => {
             onItemDeactivation={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            options={{}}
             page={1}
             pageCount={2}
             onSort={jest.fn()}
@@ -362,6 +434,7 @@ test('Execute onItemActivation respectively onItemDeactivation callback when an 
             onPageChange={jest.fn()}
             page={1}
             pageCount={1}
+            options={{}}
             onItemActivation={onItemActivationSpy}
             onItemDeactivation={onItemDeactivationSpy}
             onSort={jest.fn()}
@@ -424,6 +497,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
             onPageChange={jest.fn()}
             page={1}
             pageCount={1}
+            options={{}}
             onItemClick={rowEditClickSpy}
             onSort={jest.fn()}
             sortColumn={undefined}
@@ -482,6 +556,7 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
             pageCount={1}
             onItemAdd={rowAddClickSpy}
             onSort={jest.fn()}
+            options={{}}
             sortColumn={undefined}
             sortOrder={undefined}
         />
@@ -537,6 +612,7 @@ test('Click on pencil should execute onItemClick callback', () => {
             pageCount={1}
             onItemClick={rowEditClickSpy}
             onSort={jest.fn()}
+            options={{}}
             sortColumn={undefined}
             sortOrder={undefined}
         />
@@ -596,6 +672,7 @@ test('Click on add should execute onAddClick callback', () => {
             pageCount={1}
             onAddClick={rowAddClickSpy}
             onSort={jest.fn()}
+            options={{}}
             sortColumn={undefined}
             sortOrder={undefined}
         />

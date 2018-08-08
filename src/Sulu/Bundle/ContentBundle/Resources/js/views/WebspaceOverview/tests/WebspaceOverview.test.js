@@ -37,6 +37,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
 jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => ({
     get: jest.fn().mockReturnValue(require('sulu-admin-bundle/containers/Datagrid/adapters/ColumnListAdapter').default),
     has: jest.fn().mockReturnValue(true),
+    getOptions: jest.fn().mockReturnValue({}),
 }));
 
 jest.mock('sulu-admin-bundle/stores', () => ({

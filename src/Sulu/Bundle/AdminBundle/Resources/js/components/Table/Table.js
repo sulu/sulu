@@ -14,7 +14,7 @@ import tableStyles from './table.scss';
 const PLACEHOLDER_ICON = 'su-battery-low';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Header | typeof Body>>,
+    children: ChildrenArray<?Element<typeof Header | typeof Body>>,
     /** List of buttons to apply action handlers to every row (e.g. edit row) */
     buttons?: Array<ButtonConfig>,
     /** Can be set to "single" or "multiple". Defaults is "none". */
@@ -152,21 +152,26 @@ export default class Table extends React.Component<Props> {
         let body;
         let header;
 
-        React.Children.forEach(children, (child: Element<typeof Header | typeof Body>) => {
-            switch (child.type) {
-                case Header:
-                    header = child;
-                    break;
-                case Body:
-                    body = child;
-                    break;
-                default:
-                    throw new Error(
-                        'The Table component only accepts the following children types: ' +
+        React.Children
+            .forEach(children, (child: ?Element<typeof Header | typeof Body>) => {
+                if (!child) {
+                    return;
+                }
+
+                switch (child.type) {
+                    case Header:
+                        header = child;
+                        break;
+                    case Body:
+                        body = child;
+                        break;
+                    default:
+                        throw new Error(
+                            'The Table component only accepts the following children types: ' +
                         [Header.name, Body.name].join(', ')
-                    );
-            }
-        });
+                        );
+                }
+            });
 
         const clonedBody = this.cloneBody(body);
         const emptyBody = (clonedBody && React.Children.count(clonedBody.props.children) === 0);

@@ -16,6 +16,7 @@ import datagridStyles from './datagrid.scss';
 
 type Props = {|
     adapters: Array<string>,
+    deletable: boolean,
     disabledIds: Array<string | number>,
     header?: Node,
     onItemClick?: (itemId: string | number) => void,
@@ -28,6 +29,7 @@ type Props = {|
 @observer
 export default class Datagrid extends React.Component<Props> {
     static defaultProps = {
+        deletable: true,
         disabledIds: [],
         selectable: true,
         searchable: true,
@@ -40,6 +42,10 @@ export default class Datagrid extends React.Component<Props> {
 
     @computed get currentAdapter(): typeof AbstractAdapter {
         return datagridAdapterRegistry.get(this.currentAdapterKey);
+    }
+
+    @computed get currentAdapterOptions(): typeof AbstractAdapter {
+        return datagridAdapterRegistry.getOptions(this.currentAdapterKey);
     }
 
     constructor(props: Props) {
@@ -152,6 +158,7 @@ export default class Datagrid extends React.Component<Props> {
     render() {
         const {
             adapters,
+            deletable,
             disabledIds,
             header,
             onItemClick,
@@ -164,19 +171,21 @@ export default class Datagrid extends React.Component<Props> {
 
         return (
             <Fragment>
-                <div className={datagridStyles.headerContainer}>
-                    {header}
-                    <div className={datagridStyles.toolbar}>
-                        {searchable &&
-                            <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
-                        }
-                        <AdapterSwitch
-                            adapters={adapters}
-                            currentAdapter={this.currentAdapterKey}
-                            onAdapterChange={this.handleAdapterChange}
-                        />
+                {(header || searchable || adapters.length > 1) &&
+                    <div className={datagridStyles.headerContainer}>
+                        {header}
+                        <div className={datagridStyles.toolbar}>
+                            {searchable &&
+                                <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
+                            }
+                            <AdapterSwitch
+                                adapters={adapters}
+                                currentAdapter={this.currentAdapterKey}
+                                onAdapterChange={this.handleAdapterChange}
+                            />
+                        </div>
                     </div>
-                </div>
+                }
                 <div className={datagridStyles.datagrid}>
                     <Adapter
                         active={store.active.get()}
@@ -186,13 +195,14 @@ export default class Datagrid extends React.Component<Props> {
                         loading={store.loading}
                         onAddClick={onAddClick}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
-                        onDeleteClick={this.handleDeleteClick}
+                        onDeleteClick={deletable ? this.handleDeleteClick : undefined}
                         onItemActivation={this.handleItemActivation}
                         onItemDeactivation={this.handleItemDeactivation}
                         onItemClick={onItemClick}
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
                         onPageChange={this.handlePageChange}
                         onSort={this.handleSort}
+                        options={this.currentAdapterOptions}
                         page={store.getPage()}
                         pageCount={store.pageCount}
                         schema={store.schema}

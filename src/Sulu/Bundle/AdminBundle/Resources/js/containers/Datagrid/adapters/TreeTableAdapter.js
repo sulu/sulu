@@ -62,6 +62,9 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
             onAddClick,
             onAllSelectionChange,
             onItemSelectionChange,
+            options: {
+                showHeader = true,
+            },
         } = this.props;
         const buttons = [];
 
@@ -93,9 +96,11 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
                 onRowSelectionChange={onItemSelectionChange}
                 onAllSelectionChange={onAllSelectionChange}
             >
-                <Table.Header>
-                    {this.renderHeaderCells()}
-                </Table.Header>
+                {showHeader &&
+                    <Table.Header>
+                        {this.renderHeaderCells()}
+                    </Table.Header>
+                }
                 <Table.Body>
                     {this.renderRows(data)}
                 </Table.Body>

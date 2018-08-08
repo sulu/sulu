@@ -62,6 +62,7 @@ function registerDatagridAdapters() {
     datagridAdapterRegistry.add('folder', FolderAdapter);
     datagridAdapterRegistry.add('table', TableAdapter);
     datagridAdapterRegistry.add('tree_table', TreeTableAdapter);
+    datagridAdapterRegistry.add('tree_table_slim', TreeTableAdapter, {showHeader: false});
 }
 
 function registerDatagridFieldTransformers() {

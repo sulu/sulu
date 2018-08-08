@@ -44,13 +44,6 @@ exports[`Render the MediaCollection 1`] = `
       </div>
     </div>
     <div
-      class="headerContainer"
-    >
-      <div
-        class="toolbar"
-      />
-    </div>
-    <div
       class="datagrid"
     >
       <section>

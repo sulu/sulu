@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
 import type {FieldTypeProps} from '../../../types';
 import AutoComplete from '../../../containers/AutoComplete';
 
@@ -12,21 +13,27 @@ export default class SingleSelection extends React.Component<FieldTypeProps<?Obj
         onFinish();
     };
 
+    @computed get type() {
+        return this.props.fieldTypeOptions.default_type;
+    }
+
     render() {
         const {
             fieldTypeOptions,
             value,
         } = this.props;
 
-        if (!fieldTypeOptions || !fieldTypeOptions.auto_complete) {
-            throw new Error('The single_selection field needs an "auto_complete" option if rendered as AutoComplete');
+        if (this.type === 'auto_complete' && !fieldTypeOptions.types.auto_complete) {
+            throw new Error('The single_selection field needs an "auto_complete" type if rendered as AutoComplete');
         }
 
         const {
-            auto_complete: {
-                displayProperty,
-                searchProperties,
-                resourceKey,
+            resource_key: resourceKey,
+            types: {
+                auto_complete: {
+                    display_property: displayProperty,
+                    search_properties: searchProperties,
+                },
             },
         } = fieldTypeOptions;
 

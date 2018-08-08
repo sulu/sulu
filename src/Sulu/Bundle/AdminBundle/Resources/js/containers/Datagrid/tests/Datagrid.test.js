@@ -63,6 +63,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
+    getOptions: jest.fn().mockReturnValue({}),
     has: jest.fn(),
 }));
 
@@ -168,6 +169,13 @@ test('Render the adapter in non-selectable mode', () => {
     expect(datagrid.find('TestAdapter').prop('onAllSelectionChange')).toEqual(undefined);
 });
 
+test('Render the adapter in non-deletable mode', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(<Datagrid adapters={['test']} deletable={false} store={datagridStore} />);
+
+    expect(datagrid.find('TestAdapter').prop('onDeleteClick')).toEqual(undefined);
+});
+
 test('Render the adapter in non-searchable mode', () => {
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     expect(
@@ -210,6 +218,19 @@ test('Pass sortColumn and sortOrder to adapter', () => {
     expect(datagrid.find('TestAdapter').props()).toEqual(expect.objectContaining({
         sortColumn: 'title',
         sortOrder: 'asc',
+    }));
+});
+
+test('Pass options to adapter', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+
+    const datagridAdapterOptions = {test: 'value'};
+    datagridAdapterRegistry.getOptions.mockReturnValue(datagridAdapterOptions);
+
+    const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
+
+    expect(datagrid.find('TestAdapter').props()).toEqual(expect.objectContaining({
+        options: datagridAdapterOptions,
     }));
 });
 

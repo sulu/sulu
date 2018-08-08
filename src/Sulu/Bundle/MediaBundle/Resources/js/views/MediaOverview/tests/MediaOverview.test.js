@@ -151,6 +151,7 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
         getAllAdaptersMock: getAllAdaptersMock,
         add: jest.fn(),
         get: jest.fn((key) => getAllAdaptersMock()[key]),
+        getOptions: jest.fn().mockReturnValue({}),
         has: jest.fn(),
     };
 });

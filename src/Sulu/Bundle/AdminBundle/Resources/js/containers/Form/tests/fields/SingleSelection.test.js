@@ -17,10 +17,13 @@ test('Pass correct props to AutoComplete', () => {
     };
 
     const fieldTypeOptions = {
-        auto_complete: {
-            displayProperty: 'name',
-            resourceKey: 'accounts',
-            searchProperties: ['name', 'number'],
+        default_type: 'auto_complete',
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
         },
     };
 
@@ -59,10 +62,13 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
     };
 
     const fieldTypeOptions = {
-        auto_complete: {
-            displayProperty: 'name',
-            resourceKey: 'accounts',
-            searchProperties: ['name', 'number'],
+        default_type: 'auto_complete',
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
         },
     };
 
@@ -91,7 +97,10 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
 
 test('Throw an error if the auto_complete configuration was omitted', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
-    const fieldTypeOptions = {};
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        types: {},
+    };
 
     expect(
         () => shallow(

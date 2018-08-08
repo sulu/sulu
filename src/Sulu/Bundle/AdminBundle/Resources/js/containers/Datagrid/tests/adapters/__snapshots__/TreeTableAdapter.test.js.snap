@@ -386,3 +386,75 @@ exports[`Render data with two columns 1`] = `
   </table>
 </div>
 `;
+
+exports[`Render data without header 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Test1
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            Test2
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            Test3
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

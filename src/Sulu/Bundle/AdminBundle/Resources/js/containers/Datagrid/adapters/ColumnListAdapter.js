@@ -100,21 +100,26 @@ export default class ColumnListAdapter extends AbstractAdapter {
             );
         }
 
-        toolbarItems.push({
-            icon: 'su-cog',
-            type: 'dropdown',
-            options: [
-                {
-                    isDisabled: (index) => {
-                        return activeItems[((index + 1: any): number)] === undefined;
-                    },
-                    label: translate('sulu_admin.delete'),
-                    onClick: (index) => {
-                        onDeleteClick(activeItems[((index + 1: any): number)]);
-                    },
+        const settingOptions = [];
+        if (onDeleteClick) {
+            settingOptions.push({
+                isDisabled: (index) => {
+                    return activeItems[((index + 1: any): number)] === undefined;
                 },
-            ],
-        });
+                label: translate('sulu_admin.delete'),
+                onClick: (index) => {
+                    onDeleteClick(activeItems[((index + 1: any): number)]);
+                },
+            });
+        }
+
+        if (settingOptions.length > 0) {
+            toolbarItems.push({
+                icon: 'su-cog',
+                type: 'dropdown',
+                options: settingOptions,
+            });
+        }
 
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
