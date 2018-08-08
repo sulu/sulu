@@ -24,6 +24,14 @@ export default class SaveToolbarAction extends AbstractToolbarAction {
                         this.form.submit('publish');
                     },
                 },
+                {
+                    label: translate('sulu_admin.publish'),
+                    // TODO do not hardcode "publishedState" but use metadata instead
+                    disabled: this.formStore.dirty || !!this.formStore.data.publishedState,
+                    onClick: () => {
+                        this.form.submit('publish');
+                    },
+                },
             ],
         };
     }

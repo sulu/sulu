@@ -8,7 +8,9 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {}));
+jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {
+    this.data = {};
+}));
 
 jest.mock('../../../../containers/Form', () => ({
     __esModule: true,
@@ -28,6 +30,10 @@ jest.mock('../../../../containers/Form', () => ({
         get saving() {
             return this.resourceStore.saving;
         }
+
+        get data() {
+            return this.resourceStore.data;
+        }
     },
 }));
 
@@ -46,6 +52,8 @@ function createPublishableSaveToolbarAction() {
 test('Return item config with correct disabled, loading, icon, type and value', () => {
     const publishableSaveToolbarAction = createPublishableSaveToolbarAction();
     publishableSaveToolbarAction.formStore.resourceStore.saving = false;
+    publishableSaveToolbarAction.formStore.resourceStore.dirty = false;
+    publishableSaveToolbarAction.formStore.resourceStore.data.publishedState = true;
 
     expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         label: 'sulu_admin.save',
@@ -59,13 +67,17 @@ test('Return item config with correct disabled, loading, icon, type and value', 
                 disabled: true,
                 label: 'sulu_admin.save_publish',
             }),
+            expect.objectContaining({
+                disabled: true,
+                label: 'sulu_admin.publish',
+            }),
         ],
         icon: 'su-save',
         type: 'dropdown',
     }));
 });
 
-test('Return item config with enabled button when dirty flag is set', () => {
+test('Return item config with enabled draft and save & publish option when dirty flag is set', () => {
     const publishableSaveToolbarAction = createPublishableSaveToolbarAction();
     publishableSaveToolbarAction.formStore.resourceStore.dirty = true;
 
@@ -78,6 +90,33 @@ test('Return item config with enabled button when dirty flag is set', () => {
             expect.objectContaining({
                 disabled: false,
                 label: 'sulu_admin.save_publish',
+            }),
+            expect.objectContaining({
+                disabled: true,
+                label: 'sulu_admin.publish',
+            }),
+        ],
+    }));
+});
+
+test('Return item config with publish option when not dirty but unpublished', () => {
+    const publishableSaveToolbarAction = createPublishableSaveToolbarAction();
+    publishableSaveToolbarAction.formStore.resourceStore.dirty = false;
+    publishableSaveToolbarAction.formStore.resourceStore.data.publishedState = false;
+
+    expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        options: [
+            expect.objectContaining({
+                disabled: true,
+                label: 'sulu_admin.save_draft',
+            }),
+            expect.objectContaining({
+                disabled: true,
+                label: 'sulu_admin.save_publish',
+            }),
+            expect.objectContaining({
+                disabled: false,
+                label: 'sulu_admin.publish',
             }),
         ],
     }));
