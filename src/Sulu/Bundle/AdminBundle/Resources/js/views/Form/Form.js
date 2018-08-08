@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, isObservableArray} from 'mobx';
 import {observer} from 'mobx-react';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
+import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import formStyles from './form.scss';
 
 type Props = ViewProps & {
@@ -21,6 +21,7 @@ class Form extends React.Component<Props> {
     form: ?FormContainer;
     @observable errors = [];
     showSuccess = observable.box(false);
+    @observable toolbarActions = [];
 
     @computed get hasOwnResourceStore() {
         const {
@@ -101,6 +102,32 @@ class Form extends React.Component<Props> {
         }
     }
 
+    @action componentDidMount() {
+        const form = this.form;
+        if (!form) {
+            throw new Error('The form ref has not been set! This should not happen and is likely a bug.');
+        }
+
+        const {router} = this.props;
+        const {
+            route: {
+                options: {
+                    toolbarActions,
+                },
+            },
+        } = router;
+
+        if (!Array.isArray(toolbarActions) && !isObservableArray(toolbarActions)) {
+            throw new Error('The view "Form" needs some defined toolbarActions to work properly!');
+        }
+
+        this.toolbarActions = toolbarActions.map((toolbarAction) => new (toolbarActionRegistry.get(toolbarAction))(
+            this.formStore,
+            form,
+            router
+        ));
+    }
+
     componentWillUnmount() {
         this.formStore.destroy();
 
@@ -157,6 +184,7 @@ class Form extends React.Component<Props> {
                     store={this.formStore}
                     onSubmit={this.handleSubmit}
                 />
+                {this.toolbarActions.map((toolbarAction) => toolbarAction.getElement())}
             </div>
         );
     }
@@ -165,7 +193,6 @@ class Form extends React.Component<Props> {
 export default withToolbar(Form, function() {
     const {router} = this.props;
     const {backRoute} = router.route.options;
-    const formTypes = this.formStore.types;
     const {errors, resourceStore, showSuccess} = this;
 
     const backButton = backRoute
@@ -192,34 +219,9 @@ export default withToolbar(Form, function() {
         }
         : undefined;
 
-    const items = [
-        {
-            type: 'button',
-            value: translate('sulu_admin.save'),
-            icon: 'su-save',
-            disabled: !resourceStore.dirty,
-            loading: resourceStore.saving,
-            onClick: () => {
-                this.form.submit();
-            },
-        },
-    ];
-
-    if (this.formStore.typesLoading || Object.keys(formTypes).length > 0) {
-        items.push({
-            type: 'select',
-            icon: 'fa-paint-brush',
-            onChange: (value) => {
-                this.formStore.changeType(value);
-            },
-            loading: this.formStore.typesLoading,
-            value: this.formStore.type,
-            options: Object.keys(formTypes).map((key) => ({
-                value: formTypes[key].key,
-                label: formTypes[key].title,
-            })),
-        });
-    }
+    const items = this.toolbarActions
+        .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
+        .filter((item) => item !== undefined);
 
     return {
         backButton,

@@ -16,3 +16,5 @@ should be shown in the toolbar and an instance of the `ResourceStore`, which all
 | routerAttributesToFormStore | Defines which attributes from the [`Router`](#router) are passed to the FormStore.    |
 |                             | They will be appended with the same name as in the router to the requests sent from   |
 |                             | the `FormStore`, e.g. for saving the form.                                            |
+| toolbarAction               | Defines which items registered in the `ToolbarActionRegistry` should be shown in this |
+|                             | specific Form.

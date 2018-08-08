@@ -51,6 +51,11 @@ class TagAdmin extends Admin
 
     public function getRoutes(): array
     {
+        $formToolbarActions = [
+            'sulu_admin.save',
+            'sulu_admin.delete',
+        ];
+
         return [
             (new Route('sulu_tag.datagrid', '/tags', 'sulu_admin.datagrid'))
                 ->addOption('title', 'sulu_tag.tags')
@@ -59,14 +64,16 @@ class TagAdmin extends Admin
                 ->addOption('addRoute', 'sulu_tag.add_form.detail')
                 ->addOption('editRoute', 'sulu_tag.edit_form.detail'),
             (new Route('sulu_tag.add_form', '/tags/add', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'tags'),
+                ->addOption('resourceKey', 'tags')
+                ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_tag.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_tag.details')
                 ->addOption('backRoute', 'sulu_tag.datagrid')
                 ->addOption('editRoute', 'sulu_tag.edit_form.detail')
                 ->setParent('sulu_tag.add_form'),
             (new Route('sulu_tag.edit_form', '/tags/:id', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'tags'),
+                ->addOption('resourceKey', 'tags')
+                ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_tag.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_tag.details')
                 ->addOption('backRoute', 'sulu_tag.datagrid')

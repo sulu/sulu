@@ -1,4 +1,5 @@
 // @flow
+import type {Node} from 'react';
 import type {IObservableValue} from 'mobx';
 import type {Button, Dropdown, Select} from '../../components/Toolbar/types';
 
@@ -28,3 +29,8 @@ export type ToolbarConfig = {
     locale?: Select,
     showSuccess?: IObservableValue<boolean>,
 };
+
+export interface ToolbarAction {
+    getElement(): Node,
+    getToolbarItemConfig(): ToolbarItem,
+}

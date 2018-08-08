@@ -95,6 +95,12 @@ class SnippetAdmin extends Admin
             )
         );
 
+        $formToolbarActions = [
+            'sulu_admin.save',
+            'sulu_admin.type',
+            'sulu_admin.delete',
+        ];
+
         return [
             (new Route('sulu_snippet.datagrid', '/snippets/:locale', 'sulu_admin.datagrid'))
                 ->addOption('title', 'sulu_snippet.snippets')
@@ -106,6 +112,7 @@ class SnippetAdmin extends Admin
                 ->addAttributeDefault('locale', $snippetLocales[0]),
             (new Route('sulu_snippet.add_form', '/snippets/:locale/add', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'snippets')
+                ->addOption('toolbarActions', $formToolbarActions)
                 ->addOption('locales', $snippetLocales),
             (new Route('sulu_snippet.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
@@ -114,6 +121,7 @@ class SnippetAdmin extends Admin
                 ->setParent('sulu_snippet.add_form'),
             (new Route('sulu_snippet.edit_form', '/snippets/:locale/:id', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'snippets')
+                ->addOption('toolbarActions', $formToolbarActions)
                 ->addOption('locales', $snippetLocales),
             (new Route('sulu_snippet.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')

@@ -8,6 +8,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.id = id;
     this.resourceKey = resourceKey;
     this.save = jest.fn().mockReturnValue(Promise.resolve());
+    this.delete = jest.fn().mockReturnValue(Promise.resolve());
     this.set = jest.fn();
     this.change = jest.fn();
     this.copyFromLocale = jest.fn();
@@ -78,6 +79,30 @@ test('Read id from ResourceStore', () => {
     const formStore = new FormStore(resourceStore);
 
     expect(formStore.id).toEqual('1');
+});
+
+test('Read saving flag from ResourceStore', () => {
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    resourceStore.saving = true;
+    const formStore = new FormStore(resourceStore);
+
+    expect(formStore.saving).toEqual(true);
+});
+
+test('Read deleting flag from ResourceStore', () => {
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    resourceStore.deleting = true;
+    const formStore = new FormStore(resourceStore);
+
+    expect(formStore.deleting).toEqual(true);
+});
+
+test('Read dirty flag from ResourceStore', () => {
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    resourceStore.dirty = true;
+    const formStore = new FormStore(resourceStore);
+
+    expect(formStore.dirty).toEqual(true);
 });
 
 test('Set template property of ResourceStore to first type be default', () => {
@@ -458,6 +483,18 @@ test('Save the store should validate the current data', (done) => {
             });
         }
     );
+});
+
+test('Delete should delegate the call to resourceStore', () => {
+    const deletePromise = Promise.resolve();
+    const resourceStore = new ResourceStore('snippets', 3);
+    resourceStore.delete.mockReturnValue(deletePromise);
+
+    const formStore = new FormStore(resourceStore);
+    const returnedDeletePromise = formStore.delete();
+
+    expect(resourceStore.delete).toBeCalledWith();
+    expect(returnedDeletePromise).toBe(deletePromise);
 });
 
 test('Data attribute should return the data from the resourceStore', () => {

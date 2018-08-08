@@ -243,6 +243,10 @@ export default class FormStore {
         });
     }
 
+    delete(): Promise<Object> {
+        return this.resourceStore.delete();
+    }
+
     copyFromLocale(locale: string) {
         return this.resourceStore.copyFromLocale(locale, this.options)
             .then((response) => {
@@ -274,12 +278,24 @@ export default class FormStore {
         return this.resourceStore.locale;
     }
 
-    get resourceKey(): string {
+    @computed get resourceKey(): string {
         return this.resourceStore.resourceKey;
     }
 
-    get id(): ?string | number {
+    @computed get id(): ?string | number {
         return this.resourceStore.id;
+    }
+
+    @computed get saving(): boolean {
+        return this.resourceStore.saving;
+    }
+
+    @computed get deleting(): boolean {
+        return this.resourceStore.deleting;
+    }
+
+    @computed get dirty(): boolean {
+        return this.resourceStore.dirty;
     }
 
     @action setType(type: string) {

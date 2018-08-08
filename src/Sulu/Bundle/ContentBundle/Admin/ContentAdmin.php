@@ -91,6 +91,12 @@ class ContentAdmin extends Admin
         /** @var Webspace $firstWebspace */
         $firstWebspace = current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
 
+        $formToolbarActions = [
+            'sulu_admin.save_publishable',
+            'sulu_admin.types',
+            'sulu_content.edit',
+        ];
+
         return [
             (new Route('sulu_content.webspaces', '/webspaces/:webspace/:locale', 'sulu_content.webspace_overview'))
                 ->addAttributeDefault('webspace', $firstWebspace->getKey())
@@ -98,7 +104,8 @@ class ContentAdmin extends Admin
                 ->addRerenderAttribute('webspace'),
             // add form
             (new Route('sulu_content.page_add_form', '/webspaces/:webspace/:locale/add/:parentId', 'sulu_content.page_tabs'))
-                ->addOption('resourceKey', 'pages'),
+                ->addOption('resourceKey', 'pages')
+                ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_content.page_add_form.detail', '/details', 'sulu_content.page_form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_detail')
                 ->addOption('editRoute', 'sulu_content.page_edit_form.detail')
@@ -106,6 +113,7 @@ class ContentAdmin extends Admin
             // edit form
             (new Route('sulu_content.page_edit_form', '/webspaces/:webspace/:locale/:id', 'sulu_content.page_tabs'))
                 ->addOption('resourceKey', 'pages')
+                ->addOption('toolbarActions', $formToolbarActions)
                 ->addOption('routerAttributesToFormStore', ['webspace']),
             (new Route('sulu_content.page_edit_form.detail', '/details', 'sulu_content.page_form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_detail')
