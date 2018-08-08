@@ -140,13 +140,15 @@ class Form extends React.Component<Props> {
         this.showSuccess.set(true);
     };
 
-    handleSubmit = () => {
+    handleSubmit = (actionParameter) => {
         const {resourceStore, router} = this.props;
 
         const {
+            attributes,
             route: {
                 options: {
                     editRoute,
+                    routerAttributesToEditRoute,
                 },
             },
         } = router;
@@ -155,12 +157,29 @@ class Form extends React.Component<Props> {
             resourceStore.destroy();
         }
 
-        return this.formStore.save()
+        const saveOptions = {
+            action: actionParameter,
+        };
+
+        const editRouteParameters = routerAttributesToEditRoute
+            ? routerAttributesToEditRoute.reduce(
+                (parameters: Object, routerAttribute: string) => {
+                    parameters[routerAttribute] = attributes[routerAttribute];
+                    return parameters;
+                },
+                {}
+            )
+            : {};
+
+        return this.formStore.save(saveOptions)
             .then((response) => {
                 this.showSuccessSnackbar();
 
                 if (editRoute) {
-                    router.navigate(editRoute, {id: resourceStore.id, locale: resourceStore.locale});
+                    router.navigate(
+                        editRoute,
+                        {id: resourceStore.id, locale: resourceStore.locale, ...editRouteParameters}
+                    );
                 }
 
                 return response;

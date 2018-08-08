@@ -50,6 +50,7 @@ import {viewRegistry} from '../../containers/ViewRenderer';
 import Form, {
     toolbarActionRegistry,
     DeleteToolbarAction,
+    PublishableSaveToolbarAction,
     SaveToolbarAction,
     TypeToolbarAction,
 } from '../../views/Form';
@@ -118,6 +119,7 @@ function registerTextEditors() {
 
 function registerToolbarActions() {
     toolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
+    toolbarActionRegistry.add('sulu_admin.publishable_save', PublishableSaveToolbarAction);
     toolbarActionRegistry.add('sulu_admin.save', SaveToolbarAction);
     toolbarActionRegistry.add('sulu_admin.type', TypeToolbarAction);
 }

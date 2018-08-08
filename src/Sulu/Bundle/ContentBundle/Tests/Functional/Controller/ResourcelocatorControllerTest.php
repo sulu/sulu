@@ -46,6 +46,30 @@ class ResourcelocatorControllerTest extends SuluTestCase
         $this->assertEquals('/test1-test2', $response->resourcelocator);
     }
 
+    public function testGenerateWithParent()
+    {
+        $this->client->request(
+            'POST',
+            '/api/nodes?webspace=sulu_io&language=en&action=publish',
+            [
+                'title' => 'Produkte',
+                'template' => 'default',
+                'url' => '/products',
+            ]
+        );
+        $parentPage = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->client->request('POST', '/api/resourcelocators?action=generate', [
+            'parentId' => $parentPage['id'],
+            'parts' => ['test1', 'test2'],
+            'locale' => 'en',
+            'webspace' => 'sulu_io',
+        ]);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals('/products/test1-test2', $response->resourcelocator);
+    }
+
     public function testGenerateWithConflict()
     {
         $this->client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', [

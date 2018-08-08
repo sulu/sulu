@@ -527,9 +527,14 @@ test('Should save form when submitted', (done) => {
 
     Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit();
+            form.find('Form').at(1).instance().submit('publish');
             expect(resourceStore.destroy).not.toBeCalled();
-            expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
+            expect(ResourceRequester.put).toBeCalledWith(
+                'snippets',
+                8,
+                {value: 'Value'},
+                {action: 'publish', locale: 'en'}
+            );
             done();
         });
     });
@@ -713,11 +718,15 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
         options: {
             editRoute: 'editRoute',
             locales: [],
+            routerAttributesToEditRoute: ['webspace'],
             toolbarActions: [],
         },
     };
     const router = {
-        attributes: {},
+        attributes: {
+            id: 8,
+            webspace: 'sulu_io',
+        },
         bind: jest.fn(),
         navigate: jest.fn(),
         route,
@@ -730,10 +739,13 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
 
     Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit();
-            expect(resourceStore.destroy).toBeCalled();
-            expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
-            done();
+            form.find('Form').at(1).instance().submit().then(() => {
+                expect(resourceStore.destroy).toBeCalled();
+                expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
+                expect(router.navigate)
+                    .toBeCalledWith('editRoute', {id: undefined, locale: undefined, webspace: 'sulu_io'});
+                done();
+            });
         });
     });
 

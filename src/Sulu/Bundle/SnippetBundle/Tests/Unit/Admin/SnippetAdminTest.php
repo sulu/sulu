@@ -80,6 +80,11 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals([
             'resourceKey' => 'snippets',
             'locales' => array_keys($locales),
+            'toolbarActions' => [
+                'sulu_admin.save',
+                'sulu_admin.type',
+                'sulu_admin.delete',
+            ],
         ], 'options', $addFormRoute);
         $this->assertAttributeEquals('sulu_snippet.add_form', 'parent', $addDetailRoute);
         $this->assertAttributeSame([
@@ -91,6 +96,11 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals([
             'resourceKey' => 'snippets',
             'locales' => array_keys($locales),
+            'toolbarActions' => [
+                'sulu_admin.save',
+                'sulu_admin.type',
+                'sulu_admin.delete',
+            ],
         ], 'options', $editFormRoute);
         $this->assertAttributeEquals('sulu_snippet.edit_form.detail', 'name', $editDetailRoute);
         $this->assertAttributeEquals('sulu_snippet.edit_form', 'parent', $editDetailRoute);
