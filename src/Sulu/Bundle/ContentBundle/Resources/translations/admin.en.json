@@ -7,5 +7,7 @@
     "sulu_content.title": "Title",
     "sulu_content.show_ghost_and_shadow": "Show ghost and shadow pages",
     "sulu_content.no_page_selected": "No page selected",
-    "sulu_content.single_selection_overlay_title": "Choose page"
+    "sulu_content.single_selection_overlay_title": "Choose page",
+    "sulu_content.page_form_settings": "Settings",
+    "sulu_content.show_ghost_and_shadow": "Show ghost and shadow pages"
 }
