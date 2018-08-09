@@ -98,8 +98,7 @@ class ContentAdmin extends Admin
         ];
 
         $formToolbarActionsWithoutType = [
-            // TODO use publishable_save and delete when APIs support that
-            'sulu_admin.save',
+            'sulu_admin.publishable_save',
         ];
 
         return [

@@ -39,11 +39,35 @@ class SeoControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('SEO Title', $response->title);
+        $this->assertEquals(false, $response->publishedState);
 
         $client->request('GET', '/api/page-seos/' . $webspaceUuid . '?locale=en&webspace=sulu_io');
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('SEO Title', $response->title);
+        $this->assertEquals(false, $response->publishedState);
+    }
+
+    public function testPutAndGetPublished()
+    {
+        $client = $this->createAuthenticatedClient();
+        $webspaceUuid = $this->session->getNode('/cmf/sulu_io/contents')->getIdentifier();
+
+        $client->request('PUT', '/api/page-seos/' . $webspaceUuid . '?locale=en&webspace=sulu_io&action=publish', [
+            'title' => 'SEO Title',
+        ]);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('SEO Title', $response->title);
+        $this->assertEquals(true, $response->publishedState);
+
+        $client->request('GET', '/api/page-seos/' . $webspaceUuid . '?locale=en&webspace=sulu_io');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('SEO Title', $response->title);
+        $this->assertEquals(true, $response->publishedState);
     }
 }

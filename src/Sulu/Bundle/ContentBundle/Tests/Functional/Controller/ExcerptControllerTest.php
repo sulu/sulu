@@ -39,11 +39,35 @@ class ExcerptControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Excerpt Title', $response->title);
+        $this->assertEquals(false, $response->publishedState);
 
         $client->request('GET', '/api/page-excerpts/' . $webspaceUuid . '?locale=en&webspace=sulu_io');
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Excerpt Title', $response->title);
+        $this->assertEquals(false, $response->publishedState);
+    }
+
+    public function testPutAndGetPublished()
+    {
+        $client = $this->createAuthenticatedClient();
+        $webspaceUuid = $this->session->getNode('/cmf/sulu_io/contents')->getIdentifier();
+
+        $client->request('PUT', '/api/page-excerpts/' . $webspaceUuid . '?action=publish&locale=en&webspace=sulu_io', [
+            'title' => 'Excerpt Title',
+        ]);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('Excerpt Title', $response->title);
+        $this->assertEquals(true, $response->publishedState);
+
+        $client->request('GET', '/api/page-excerpts/' . $webspaceUuid . '?locale=en&webspace=sulu_io');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('Excerpt Title', $response->title);
+        $this->assertEquals(true, $response->publishedState);
     }
 }
