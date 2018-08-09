@@ -217,7 +217,7 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
     }
 
     class DeleteToolbarAction extends AbstractToolbarAction {
-        getElement() {
+        getNode() {
             return <p key="delete">This is the delete button test!</p>;
         }
 

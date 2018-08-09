@@ -252,7 +252,17 @@ test('Calling the delete method should send a DELETE request', () => {
     resourceStore.dirty = false;
 
     resourceStore.delete();
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', 3);
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', 3, {});
+});
+
+test('Calling the delete method with options should send a DELETE request', () => {
+    ResourceRequester.delete.mockReturnValue(Promise.resolve({}));
+    const resourceStore = new ResourceStore('snippets', '3', {});
+    resourceStore.data = {id: 3, title: 'Title'};
+    resourceStore.dirty = false;
+
+    resourceStore.delete({test: 'value'});
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', 3, {test: 'value'});
 });
 
 test('Saving flag should be set to true when saving', () => {

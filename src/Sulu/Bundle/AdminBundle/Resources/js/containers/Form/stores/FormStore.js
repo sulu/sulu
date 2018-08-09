@@ -244,7 +244,7 @@ export default class FormStore {
     }
 
     delete(): Promise<Object> {
-        return this.resourceStore.delete();
+        return this.resourceStore.delete(this.options);
     }
 
     copyFromLocale(locale: string) {

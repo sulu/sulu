@@ -493,7 +493,19 @@ test('Delete should delegate the call to resourceStore', () => {
     const formStore = new FormStore(resourceStore);
     const returnedDeletePromise = formStore.delete();
 
-    expect(resourceStore.delete).toBeCalledWith();
+    expect(resourceStore.delete).toBeCalledWith({});
+    expect(returnedDeletePromise).toBe(deletePromise);
+});
+
+test('Delete should delegate the call to resourceStore with options', () => {
+    const deletePromise = Promise.resolve();
+    const resourceStore = new ResourceStore('snippets', 3);
+    resourceStore.delete.mockReturnValue(deletePromise);
+
+    const formStore = new FormStore(resourceStore, {webspace: 'sulu_io'});
+    const returnedDeletePromise = formStore.delete();
+
+    expect(resourceStore.delete).toBeCalledWith({webspace: 'sulu_io'});
     expect(returnedDeletePromise).toBe(deletePromise);
 });
 

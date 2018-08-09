@@ -157,14 +157,21 @@ export default class ResourceStore {
             }));
     }
 
-    @action delete(): Promise<*> {
+    @action delete(options: Object = {}): Promise<*> {
         if (!this.data.id) {
             throw new Error('Cannot delete resource with an undefined "id"');
         }
 
         this.deleting = true;
 
-        return ResourceRequester.delete(this.resourceKey, this.data.id)
+        const {locale} = this.observableOptions;
+
+        const requestOptions = options;
+        if (locale) {
+            requestOptions.locale = locale.get();
+        }
+
+        return ResourceRequester.delete(this.resourceKey, this.data.id, requestOptions)
             .then(action((response) => {
                 this.id = undefined;
                 this.data = response;
