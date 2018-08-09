@@ -1,9 +1,9 @@
 // @flow
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
-import type {ToolbarItem} from '../../../containers/Toolbar/types';
+import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 
 export default class TypeToolbarAction extends AbstractToolbarAction {
-    getToolbarItemConfig(): ToolbarItem {
+    getToolbarItemConfig(): ToolbarItemConfig {
         const formTypes = this.formStore.types;
 
         if (!this.formStore.typesLoading && Object.keys(formTypes).length === 0) {

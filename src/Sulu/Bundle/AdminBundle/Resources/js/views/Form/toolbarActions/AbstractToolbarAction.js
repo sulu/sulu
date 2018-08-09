@@ -1,7 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import Form, {FormStore} from '../../../containers/Form';
-import type {ToolbarAction, ToolbarItem} from '../../../containers/Toolbar/types';
+import type {ToolbarAction, ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import Router from '../../../services/Router';
 
 export default class AbstractFormToolbarAction implements ToolbarAction {
@@ -19,7 +19,7 @@ export default class AbstractFormToolbarAction implements ToolbarAction {
         return null;
     }
 
-    getToolbarItemConfig(): ToolbarItem {
+    getToolbarItemConfig(): ToolbarItemConfig {
         throw new Error('The getToolbarItemConfig method must be implemented by the sub class!');
     }
 }
