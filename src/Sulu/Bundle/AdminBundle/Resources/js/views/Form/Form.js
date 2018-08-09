@@ -203,7 +203,7 @@ class Form extends React.Component<Props> {
                     store={this.formStore}
                     onSubmit={this.handleSubmit}
                 />
-                {this.toolbarActions.map((toolbarAction) => toolbarAction.getElement())}
+                {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
             </div>
         );
     }

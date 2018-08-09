@@ -15,7 +15,7 @@ export default class AbstractFormToolbarAction implements ToolbarAction {
         this.router = router;
     }
 
-    getElement(): Node {
+    getNode(): Node {
         return null;
     }
 

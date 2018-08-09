@@ -71,7 +71,7 @@ test('Return item config with correct disabled, loading, icon, type and value an
         value: 'sulu_admin.delete',
     }));
 
-    const element = shallow(deleteToolbarAction.getElement());
+    const element = shallow(deleteToolbarAction.getNode());
     expect(element.instance().props).toEqual(expect.objectContaining({
         cancelText: 'sulu_admin.cancel',
         children: 'sulu_admin.delete_warning_text',
@@ -97,7 +97,7 @@ test('Open dialog on toolbar item click', () => {
     const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
 
-    const element = shallow(deleteToolbarAction.getElement());
+    const element = shallow(deleteToolbarAction.getNode());
     expect(element.instance().props).toEqual(expect.objectContaining({
         open: true,
     }));
@@ -110,13 +110,13 @@ test('Close dialog on cancel click', () => {
     const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
 
-    let element = shallow(deleteToolbarAction.getElement());
+    let element = shallow(deleteToolbarAction.getNode());
     expect(element.instance().props).toEqual(expect.objectContaining({
         open: true,
     }));
 
     element.find('Button[skin="secondary"]').simulate('click');
-    element = shallow(deleteToolbarAction.getElement());
+    element = shallow(deleteToolbarAction.getNode());
     expect(element.instance().props).toEqual(expect.objectContaining({
         open: false,
     }));
@@ -134,7 +134,7 @@ test('Call delete when dialog is confirmed', () => {
     const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
 
-    let element = shallow(deleteToolbarAction.getElement());
+    let element = shallow(deleteToolbarAction.getNode());
     expect(element.instance().props).toEqual(expect.objectContaining({
         open: true,
     }));
@@ -143,7 +143,7 @@ test('Call delete when dialog is confirmed', () => {
     expect(deleteToolbarAction.formStore.delete).toBeCalledWith();
 
     return deletePromise.then(() => {
-        element = shallow(deleteToolbarAction.getElement());
+        element = shallow(deleteToolbarAction.getNode());
         expect(deleteToolbarAction.router.navigate).toBeCalledWith('sulu_test.datagrid', {locale: 'en'});
         expect(element.instance().props).toEqual(expect.objectContaining({
             open: false,

@@ -8,7 +8,7 @@ import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 export default class DeleteToolbarAction extends AbstractToolbarAction {
     @observable showDialog = false;
 
-    getElement() {
+    getNode() {
         return (
             <Dialog
                 confirmLoading={this.formStore.deleting}
