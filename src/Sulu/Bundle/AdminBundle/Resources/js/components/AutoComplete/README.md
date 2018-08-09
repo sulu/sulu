@@ -17,28 +17,28 @@ initialState = {
 }
 
 const data = [
-    'Donald Duck',
-    'Mickey Mouse',
-    'Dagobert Duck',
-    'Tick Duck',
-    'Trick Duck',
-    'Track Duck',
-    'Minney Mouse',
-    'Goofey',
-    'Superman',
-    'Batman',
-    'Harry Potter',
-    'Lilly Potter',
-    'James Potter',
-    'Albus Dumbledore',
-    'Severus Snape',
-    'Ron Weasly',
-    'Hermoine Granger',
-    'Tom Riddle',
-    'Bathilda Bagshot',
-    'Susan Bones',
-    'Marvolo Gaunt',
-    'Godric Gryffindor',
+    {id: 1, name: 'Donald Duck'},
+    {id: 2, name: 'Mickey Mouse'},
+    {id: 3, name: 'Dagobert Duck'},
+    {id: 4, name: 'Tick Duck'},
+    {id: 5, name: 'Trick Duck'},
+    {id: 6, name: 'Track Duck'},
+    {id: 7, name: 'Minney Mouse'},
+    {id: 8, name: 'Goofey'},
+    {id: 9, name: 'Superman'},
+    {id: 10, name: 'Batman'},
+    {id: 11, name: 'Harry Potter'},
+    {id: 12, name: 'Lilly Potter'},
+    {id: 13, name: 'James Potter'},
+    {id: 14, name: 'Albus Dumbledore'},
+    {id: 15, name: 'Severus Snape'},
+    {id: 16, name: 'Ron Weasly'},
+    {id: 17, name: 'Hermoine Granger'},
+    {id: 18, name: 'Tom Riddle'},
+    {id: 19, name: 'Bathilda Bagshot'},
+    {id: 20, name: 'Susan Bones'},
+    {id: 21, name: 'Marvolo Gaunt'},
+    {id: 22, name: 'Godric Gryffindor'},
 ];
 
 const handleSearch = (value) => {
@@ -54,7 +54,7 @@ const handleSearch = (value) => {
         setTimeout(() => {
             setState(() => ({
                 loading: false,
-                suggestions: data.filter((suggestion) => suggestion.match(regexp))
+                suggestions: data.filter((suggestion) => suggestion.name.match(regexp))
             }));
         }, 500);
     }
@@ -68,26 +68,13 @@ const handleChange = (value) => {
 };
 
 <AutoComplete
-    value={state.value}
+    displayProperty="name"
+    loading={state.loading}
     onChange={handleChange}
     onSearch={handleSearch}
-    loading={state.loading}
     placeholder="Enter something fun..."
->
-    {
-        state.suggestions.map((suggestion, index) => {
-            return (
-                <Suggestion
-                    key={index}
-                    icon="fa-ticket"
-                    value={suggestion}
-                >
-                    {(highlight) => (
-                        <div>{highlight(suggestion)}</div>
-                    )}
-                </Suggestion>
-            );
-        })
-    }
-</AutoComplete>
+    searchProperties={['name']}
+    suggestions={state.suggestions}
+    value={state.value}
+/>
 ```

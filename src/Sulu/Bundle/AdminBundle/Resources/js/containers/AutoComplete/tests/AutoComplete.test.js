@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import {shallow, render} from 'enzyme';
+import {mount, shallow, render} from 'enzyme';
 import AutoComplete from '../AutoComplete';
+import AutoCompleteComponent from '../../../components/AutoComplete';
 import AutoCompleteStore from '../stores/AutoCompleteStore';
 
 jest.mock('../stores/AutoCompleteStore', () => jest.fn());
@@ -25,16 +26,18 @@ test('Render in loading state', () => {
 });
 
 test('Render with loaded suggestions', () => {
+    const suggestions = [
+        {id: 7, number: '007', name: 'James Bond'},
+        {id: 6, number: '006', name: 'John Doe'},
+    ];
+
     // $FlowFixMe
     AutoCompleteStore.mockImplementation(function() {
-        this.searchResults = [
-            {id: 7, number: '007', name: 'James Bond'},
-            {id: 6, number: '006', name: 'John Doe'},
-        ];
+        this.searchResults = suggestions;
         this.loading = false;
     });
 
-    const autoComplete = shallow(
+    const autoComplete = mount(
         <AutoComplete
             displayProperty="name"
             onChange={jest.fn()}
@@ -44,8 +47,11 @@ test('Render with loaded suggestions', () => {
         />
     );
 
-    expect(autoComplete.find('AutoComplete').find('Suggestion').at(0).prop('value')).toEqual(7);
-    expect(autoComplete.find('AutoComplete').find('Suggestion').at(1).prop('value')).toEqual(6);
+    autoComplete.find(AutoCompleteComponent).instance().inputValue = 'James';
+    autoComplete.update();
+
+    expect(autoComplete.find('AutoComplete').find('Suggestion').at(0).prop('value')).toEqual(suggestions[0]);
+    expect(autoComplete.find('AutoComplete').find('Suggestion').at(1).prop('value')).toEqual(suggestions[1]);
 });
 
 test('Render with given value', () => {
@@ -115,7 +121,7 @@ test('Call onChange and clear search result when chosen option has changed', () 
         />
     );
 
-    autoComplete.find('AutoComplete').simulate('change', 7);
+    autoComplete.find('AutoComplete').simulate('change', data);
 
     expect(changeSpy).toBeCalledWith(data);
     expect(autoComplete.instance().autoCompleteStore.clearSearchResults).toBeCalledWith();

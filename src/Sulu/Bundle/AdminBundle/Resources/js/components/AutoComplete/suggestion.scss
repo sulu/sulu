@@ -4,6 +4,10 @@ $suggestionTextColor: $blueZodiac;
 $suggestionTextColorActive: $shakespeare;
 $suggestionTextColorDisabled: rgba($suggestionTextColor, .3);
 
+.suggestion-item {
+    display: block;
+}
+
 .suggestion {
     display: flex;
     cursor: pointer;

@@ -7,7 +7,8 @@ test('Suggestion should render', () => {
     expect(render(
         <Suggestion
             icon="fa-ticket"
-            value="suggestion-1"
+            onSelect={jest.fn()}
+            value={{name: 'suggestion-1'}}
         >
             Suggestion 1
         </Suggestion>
@@ -19,7 +20,8 @@ test('Suggestion should render strong-tags around found chars', () => {
         <Suggestion
             query="sug"
             icon="fa-ticket"
-            value="suggestion-1"
+            onSelect={jest.fn()}
+            value={{name: 'suggestion-1'}}
         >
             Suggestion 2
         </Suggestion>
@@ -27,13 +29,13 @@ test('Suggestion should render strong-tags around found chars', () => {
 });
 
 test('Clicking on a suggestion should call the onClick handler', () => {
-    const onClickSpy = jest.fn();
+    const selectSpy = jest.fn();
     const suggestion = shallow(
         <Suggestion
             query="sug"
             icon="fa-ticket"
-            value="suggestion-1"
-            onSelection={onClickSpy}
+            value={{name: 'suggestion-1'}}
+            onSelect={selectSpy}
         >
             {() => (
                 <div>Suggestion 3</div>
@@ -41,18 +43,17 @@ test('Clicking on a suggestion should call the onClick handler', () => {
         </Suggestion>
     );
 
-    suggestion.simulate('click');
-    expect(onClickSpy).toHaveBeenCalledTimes(1);
+    suggestion.find('button').simulate('click');
+    expect(selectSpy).toHaveBeenCalledTimes(1);
 });
 
 test('Should highlight the part of the suggestion text which matches the query prop', () => {
-    const onClickSpy = jest.fn();
     const suggestion = shallow(
         <Suggestion
             query="sug"
             icon="fa-ticket"
-            value="suggestion-1"
-            onSelection={onClickSpy}
+            onSelect={jest.fn()}
+            value={{name: 'suggestion-1'}}
         >
             {(highlight) => (
                 <div>{highlight('Suggestion 3')}</div>

@@ -4,13 +4,13 @@ import type {Node} from 'react';
 import Icon from '../Icon';
 import suggestionStyles from './suggestion.scss';
 
-type Props = {
-    value: string | number,
+type Props = {|
+    value: Object,
     query: ?string,
     icon?: string,
     children: string | (highlight: (text: string) => Node) => Node,
-    onSelection?: (value: string | number) => void,
-};
+    onSelect: (value: Object) => void,
+|};
 
 export default class Suggestion extends React.PureComponent<Props> {
     static defaultProps = {
@@ -43,11 +43,11 @@ export default class Suggestion extends React.PureComponent<Props> {
     handleClick = () => {
         const {
             value,
-            onSelection,
+            onSelect,
         } = this.props;
 
-        if (onSelection) {
-            onSelection(value);
+        if (onSelect) {
+            onSelect(value);
         }
     };
 
@@ -58,23 +58,27 @@ export default class Suggestion extends React.PureComponent<Props> {
         } = this.props;
 
         return (
-            <button
-                className={suggestionStyles.suggestion}
-                onClick={this.handleClick}
+            <li
+                className={suggestionStyles.suggestionItem}
             >
-                {icon &&
-                    <Icon
-                        name={icon}
-                        className={suggestionStyles.icon}
-                    />
-                }
-                {typeof children === 'string' &&
-                    this.highlightMatchingTextPart(children)
-                }
-                {typeof children === 'function' &&
-                    children(this.highlightMatchingTextPart)
-                }
-            </button>
+                <button
+                    className={suggestionStyles.suggestion}
+                    onClick={this.handleClick}
+                >
+                    {icon &&
+                        <Icon
+                            name={icon}
+                            className={suggestionStyles.icon}
+                        />
+                    }
+                    {typeof children === 'string' &&
+                        this.highlightMatchingTextPart(children)
+                    }
+                    {typeof children === 'function' &&
+                        children(this.highlightMatchingTextPart)
+                    }
+                </button>
+            </li>
         );
     }
 }

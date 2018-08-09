@@ -3,75 +3,44 @@ import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import pretty from 'pretty';
 import AutoComplete from '../AutoComplete';
-import Suggestion from '../Suggestion';
-
-afterEach(() => {
-    if (document.body) {
-        document.body.innerHTML = '';
-    }
-});
 
 test('AutoComplete should render', () => {
-    const changeSpy = jest.fn();
-    const searchSpy = jest.fn();
+    const suggestions = [
+        {name: 'Suggestion 1'},
+        {name: 'Suggestion 2'},
+        {name: 'Suggestion 3'},
+    ];
+
     expect(render(
         <AutoComplete
-            value="Test"
-            onChange={changeSpy}
+            displayProperty="name"
+            onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSearch={searchSpy}
-        >
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-1"
-            >
-                Suggestion 1
-            </Suggestion>
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-2"
-            >
-                Suggestion 2
-            </Suggestion>
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-3"
-            >
-                Suggestion 3
-            </Suggestion>
-        </AutoComplete>
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={{name: 'Test'}}
+        />
     )).toMatchSnapshot();
 });
 
 test('Render the AutoComplete with open suggestions list', () => {
-    const searchSpy = jest.fn();
-    const changeSpy = jest.fn();
+    const suggestions = [
+        {id: 1, name: 'Suggestion 1'},
+        {id: 2, name: 'Suggestion 2'},
+        {id: 3, name: 'Suggestion 3'},
+    ];
+
     const autoComplete = mount(
         <AutoComplete
-            value="Test"
-            onChange={changeSpy}
+            displayProperty="name"
+            onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSearch={searchSpy}
-        >
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-1"
-            >
-                Suggestion 1
-            </Suggestion>
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-2"
-            >
-                Suggestion 2
-            </Suggestion>
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-3"
-            >
-                Suggestion 3
-            </Suggestion>
-        </AutoComplete>
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={{name: 'Test'}}
+        />
     );
 
     expect(autoComplete.render()).toMatchSnapshot();
@@ -80,73 +49,48 @@ test('Render the AutoComplete with open suggestions list', () => {
 
 test('Clicking on a suggestion should call the onChange handler with the value of the selected Suggestion', () => {
     const changeSpy = jest.fn();
-    const searchSpy = jest.fn();
-    const testValue = 'suggestion-1';
-    mount(
+
+    const suggestions = [
+        {id: 1, name: 'Suggestion 1'},
+        {id: 2, name: 'Suggestion 2'},
+        {id: 3, name: 'Suggestion 3'},
+    ];
+
+    const autoComplete = mount(
         <AutoComplete
-            value="Test"
+            displayProperty="name"
             onChange={changeSpy}
             onFinish={jest.fn()}
-            onSearch={searchSpy}
-        >
-            <Suggestion
-                icon="fa-ticket"
-                value={testValue}
-            >
-                Suggestion 1
-            </Suggestion>
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-2"
-            >
-                Suggestion 2
-            </Suggestion>
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-3"
-            >
-                Suggestion 3
-            </Suggestion>
-        </AutoComplete>
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={{name: 'Test'}}
+        />
     );
 
-    const suggestion = document.body ? document.body.querySelector('.suggestion:first-child') : null;
+    autoComplete.find('Suggestion button').at(0).simulate('click');
 
-    if (suggestion) {
-        suggestion.click();
-    }
-
-    expect(changeSpy).toHaveBeenCalledWith(testValue);
+    expect(changeSpy).toHaveBeenCalledWith(suggestions[0]);
 });
 
 test('Should call onChange with undefined if all characters are removed from input', () => {
     const changeSpy = jest.fn();
+    const suggestions = [
+        {id: 1, name: 'Suggestion 1'},
+        {id: 2, name: 'Suggestion 2'},
+        {id: 3, name: 'Suggestion 3'},
+    ];
+
     const autoComplete = shallow(
         <AutoComplete
-            value="Test"
+            displayProperty="name"
             onChange={changeSpy}
             onFinish={jest.fn()}
             onSearch={jest.fn()}
-        >
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-1"
-            >
-                Suggestion 1
-            </Suggestion>
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-2"
-            >
-                Suggestion 2
-            </Suggestion>
-            <Suggestion
-                icon="fa-ticket"
-                value="suggestion-3"
-            >
-                Suggestion 3
-            </Suggestion>
-        </AutoComplete>
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={{name: 'Test'}}
+        />
     );
 
     expect(autoComplete.find('Input').prop('value')).toEqual('Test');
@@ -156,17 +100,20 @@ test('Should call onChange with undefined if all characters are removed from inp
 
 test('Should call the onFinish callback when the Input lost focus', () => {
     const finishSpy = jest.fn();
+    const suggestions = [
+        {id: 1, name: 'Suggestion 1'},
+    ];
+
     const autoComplete = shallow(
         <AutoComplete
-            value="Test"
+            displayProperty="name"
             onChange={jest.fn()}
             onFinish={finishSpy}
             onSearch={jest.fn()}
-        >
-            <Suggestion value="suggestion-1">
-                Suggestion 1
-            </Suggestion>
-        </AutoComplete>
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={{name: 'Test'}}
+        />
     );
 
     autoComplete.find('Input').simulate('blur');
