@@ -71,6 +71,10 @@ class ContactAdmin extends Admin
     {
         $formToolbarActions = [
             'sulu_admin.save',
+        ];
+
+        $formToolbarActionsWithDelete = [
+            'sulu_admin.save',
             'sulu_admin.delete',
         ];
 
@@ -88,6 +92,7 @@ class ContactAdmin extends Admin
                 ->addOption('tabTitle', 'sulu_contact.details')
                 ->addOption('backRoute', 'sulu_contact.contacts_datagrid')
                 ->addOption('editRoute', 'sulu_contact.contact_edit_form.detail')
+                ->addOption('toolbarActions', $formToolbarActionsWithDelete)
                 ->setParent('sulu_contact.contact_add_form'),
             (new Route('sulu_contact.contact_edit_form', '/contacts/:id', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'contacts')
@@ -95,6 +100,7 @@ class ContactAdmin extends Admin
             (new Route('sulu_contact.contact_edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_contact.details')
                 ->addOption('backRoute', 'sulu_contact.contacts_datagrid')
+                ->addOption('toolbarActions', $formToolbarActionsWithDelete)
                 ->setParent('sulu_contact.contact_edit_form'),
             (new Route('sulu_contact.accounts_datagrid', '/accounts', 'sulu_admin.datagrid'))
                 ->addOption('title', 'sulu_contact.organizations')
@@ -109,6 +115,7 @@ class ContactAdmin extends Admin
                 ->addOption('tabTitle', 'sulu_contact.details')
                 ->addOption('backRoute', 'sulu_contact.accounts_datagrid')
                 ->addOption('editRoute', 'sulu_contact.account_edit_form.detail')
+                ->addOption('toolbarActions', $formToolbarActionsWithDelete)
                 ->setParent('sulu_contact.account_add_form'),
             (new Route('sulu_contact.account_edit_form', '/accounts/:id', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'accounts')
@@ -116,6 +123,7 @@ class ContactAdmin extends Admin
             (new Route('sulu_contact.account_edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_contact.details')
                 ->addOption('backRoute', 'sulu_contact.accounts_datagrid')
+                ->addOption('toolbarActions', $formToolbarActionsWithDelete)
                 ->setParent('sulu_contact.account_edit_form'),
         ];
     }
