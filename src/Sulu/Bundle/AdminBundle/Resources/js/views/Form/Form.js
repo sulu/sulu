@@ -182,6 +182,11 @@ class Form extends React.Component<Props> {
                     );
                 }
 
+                if (this.hasOwnResourceStore) {
+                    // Reload parent ResourceStore, since its data might have changed due to changes in this Form
+                    resourceStore.load();
+                }
+
                 return response;
             })
             .catch((errorResponse) => {
