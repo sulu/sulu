@@ -122,6 +122,29 @@ test('Return item config with publish option when not dirty but unpublished', ()
     }));
 });
 
+test('Return item config with all options disabled when not dirty and data was not loaded yet', () => {
+    const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
+    publishableSaveToolbarAction.formStore.resourceStore.dirty = false;
+    publishableSaveToolbarAction.formStore.resourceStore.data = {};
+
+    expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        options: [
+            expect.objectContaining({
+                disabled: true,
+                label: 'sulu_admin.save_draft',
+            }),
+            expect.objectContaining({
+                disabled: true,
+                label: 'sulu_admin.save_publish',
+            }),
+            expect.objectContaining({
+                disabled: true,
+                label: 'sulu_admin.publish',
+            }),
+        ],
+    }));
+});
+
 test('Return item config with loading button when saving flag is set', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     publishableSaveToolbarAction.formStore.resourceStore.saving = true;
