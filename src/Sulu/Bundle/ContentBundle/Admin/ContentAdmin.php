@@ -92,13 +92,13 @@ class ContentAdmin extends Admin
         $firstWebspace = current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
 
         $formToolbarActionsWithType = [
-            'sulu_admin.publishable_save',
+            'sulu_admin.save_with_publishing',
             'sulu_admin.type',
             'sulu_admin.delete',
         ];
 
         $formToolbarActionsWithoutType = [
-            'sulu_admin.publishable_save',
+            'sulu_admin.save_with_publishing',
         ];
 
         return [

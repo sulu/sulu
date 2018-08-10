@@ -2,7 +2,7 @@
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 import {translate} from '../../../utils/Translator';
 
-export default class SaveToolbarAction extends AbstractToolbarAction {
+export default class SaveWithPublishingToolbarAction extends AbstractToolbarAction {
     getToolbarItemConfig() {
         return {
             type: 'dropdown',

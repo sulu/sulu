@@ -3,7 +3,7 @@ import Form from './Form';
 import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import AbstractToolbarAction from './toolbarActions/AbstractToolbarAction';
 import DeleteToolbarAction from './toolbarActions/DeleteToolbarAction';
-import PublishableSaveToolbarAction from './toolbarActions/PublishableSaveToolbarAction';
+import SaveWithPublishingToolbarAction from './toolbarActions/SaveWithPublishingToolbarAction';
 import SaveToolbarAction from './toolbarActions/SaveToolbarAction';
 import TypeToolbarAction from './toolbarActions/TypeToolbarAction';
 
@@ -13,7 +13,7 @@ export {
     toolbarActionRegistry,
     AbstractToolbarAction,
     DeleteToolbarAction,
-    PublishableSaveToolbarAction,
+    SaveWithPublishingToolbarAction,
     SaveToolbarAction,
     TypeToolbarAction,
 };

@@ -1,5 +1,5 @@
 // @flow
-import PublishableSaveToolbarAction from '../../toolbarActions/PublishableSaveToolbarAction';
+import SaveWithPublishingToolbarAction from '../../toolbarActions/SaveWithPublishingToolbarAction';
 import Form, {FormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
@@ -39,18 +39,18 @@ jest.mock('../../../../containers/Form', () => ({
 
 jest.mock('../../../../services/Router', () => jest.fn(function() {}));
 
-function createPublishableSaveToolbarAction() {
+function createSaveWithPublishingToolbarAction() {
     const formStore = new FormStore(new ResourceStore('test'));
     const form = new Form({
         onSubmit: jest.fn(),
         store: formStore,
     });
     const router = new Router({});
-    return new PublishableSaveToolbarAction(formStore, form, router);
+    return new SaveWithPublishingToolbarAction(formStore, form, router);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {
-    const publishableSaveToolbarAction = createPublishableSaveToolbarAction();
+    const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     publishableSaveToolbarAction.formStore.resourceStore.saving = false;
     publishableSaveToolbarAction.formStore.resourceStore.dirty = false;
     publishableSaveToolbarAction.formStore.resourceStore.data.publishedState = true;
@@ -78,7 +78,7 @@ test('Return item config with correct disabled, loading, icon, type and value', 
 });
 
 test('Return item config with enabled draft and save & publish option when dirty flag is set', () => {
-    const publishableSaveToolbarAction = createPublishableSaveToolbarAction();
+    const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     publishableSaveToolbarAction.formStore.resourceStore.dirty = true;
 
     expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
@@ -100,7 +100,7 @@ test('Return item config with enabled draft and save & publish option when dirty
 });
 
 test('Return item config with publish option when not dirty but unpublished', () => {
-    const publishableSaveToolbarAction = createPublishableSaveToolbarAction();
+    const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     publishableSaveToolbarAction.formStore.resourceStore.dirty = false;
     publishableSaveToolbarAction.formStore.resourceStore.data.publishedState = false;
 
@@ -123,7 +123,7 @@ test('Return item config with publish option when not dirty but unpublished', ()
 });
 
 test('Return item config with loading button when saving flag is set', () => {
-    const publishableSaveToolbarAction = createPublishableSaveToolbarAction();
+    const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     publishableSaveToolbarAction.formStore.resourceStore.saving = true;
 
     expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
@@ -132,7 +132,7 @@ test('Return item config with loading button when saving flag is set', () => {
 });
 
 test('Submit form with draft action when draft option is clicked', () => {
-    const publishableSaveToolbarAction = createPublishableSaveToolbarAction();
+    const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     const toolbarItemConfig = publishableSaveToolbarAction.getToolbarItemConfig();
 
     if (!toolbarItemConfig.options[0].onClick) {
@@ -145,7 +145,7 @@ test('Submit form with draft action when draft option is clicked', () => {
 });
 
 test('Submit form with publish action when draft option is clicked', () => {
-    const publishableSaveToolbarAction = createPublishableSaveToolbarAction();
+    const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     const toolbarItemConfig = publishableSaveToolbarAction.getToolbarItemConfig();
 
     if (!toolbarItemConfig.options[1].onClick) {
