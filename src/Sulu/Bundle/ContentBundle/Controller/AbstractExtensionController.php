@@ -11,12 +11,9 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
-use Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
-use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -30,7 +27,7 @@ abstract class AbstractExtensionController extends RestController implements Cla
 {
     use RequestParametersTrait;
 
-    protected abstract function getExtensionName();
+    abstract protected function getExtensionName();
 
     /**
      * returns webspace key from request.
@@ -119,7 +116,8 @@ abstract class AbstractExtensionController extends RestController implements Cla
         return $this->getRequestParameter($request, 'locale', true);
     }
 
-    public function getSecurityContext() {
+    public function getSecurityContext()
+    {
         $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
         $webspace = $requestAnalyzer->getWebspace();
 
@@ -128,11 +126,13 @@ abstract class AbstractExtensionController extends RestController implements Cla
         }
     }
 
-    public function getSecuredClass() {
+    public function getSecuredClass()
+    {
         return SecurityBehavior::class;
     }
 
-    public function getSecuredObjectId(Request $request) {
+    public function getSecuredObjectId(Request $request)
+    {
         return $request->get('uuid');
     }
 

@@ -19,7 +19,8 @@ use Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension;
  */
 class ExcerptController extends AbstractExtensionController
 {
-    protected function getExtensionName() {
+    protected function getExtensionName()
+    {
         return ExcerptStructureExtension::EXCERPT_EXTENSION_NAME;
     }
 }
