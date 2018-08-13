@@ -5,7 +5,6 @@ because they can differ from `Item` to `Item`.
 
 ```
 const Icon = require('../Icon').default;
-console.log(Icon);
 
 const buttons = [
     {

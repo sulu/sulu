@@ -1,49 +1,57 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {mount, render} from 'enzyme';
 import pretty from 'pretty';
-import SingleAutoComplete from '../SingleAutoComplete';
+import MultiAutoComplete from '../MultiAutoComplete';
 
-test('SingleAutoComplete should render', () => {
+test('MultiAutoComplete should render', () => {
     const suggestions = [
         {name: 'Suggestion 1'},
         {name: 'Suggestion 2'},
         {name: 'Suggestion 3'},
     ];
 
+    const value = [
+        {id: 1, name: 'Test'},
+        {id: 2, name: 'Test 2'},
+    ];
+
     expect(render(
-        <SingleAutoComplete
+        <MultiAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
             onFinish={jest.fn()}
             onSearch={jest.fn()}
             searchProperties={['name']}
             suggestions={suggestions}
-            value={{name: 'Test'}}
+            value={value}
         />
     )).toMatchSnapshot();
 });
 
-test('Render the SingleAutoComplete with open suggestions list', () => {
+test('Render the MultiAutoComplete with open suggestions list', () => {
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
         {id: 2, name: 'Suggestion 2'},
         {id: 3, name: 'Suggestion 3'},
     ];
 
-    const singleAutoComplete = mount(
-        <SingleAutoComplete
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
             onFinish={jest.fn()}
             onSearch={jest.fn()}
             searchProperties={['name']}
             suggestions={suggestions}
-            value={{name: 'Test'}}
+            value={[{id: 4, name: 'Test'}]}
         />
     );
 
-    expect(singleAutoComplete.render()).toMatchSnapshot();
+    multiAutoComplete.instance().inputValue = 'test';
+    multiAutoComplete.update();
+
+    expect(multiAutoComplete.render()).toMatchSnapshot();
     expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -56,67 +64,79 @@ test('Clicking on a suggestion should call the onChange handler with the value o
         {id: 3, name: 'Suggestion 3'},
     ];
 
-    const singleAutoComplete = mount(
-        <SingleAutoComplete
-            displayProperty="name"
-            onChange={changeSpy}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={{name: 'Test'}}
-        />
-    );
-
-    singleAutoComplete.find('Suggestion button').at(0).simulate('click');
-
-    expect(changeSpy).toHaveBeenCalledWith(suggestions[0]);
-});
-
-test('Should call onChange with undefined if all characters are removed from input', () => {
-    const changeSpy = jest.fn();
-    const suggestions = [
-        {id: 1, name: 'Suggestion 1'},
-        {id: 2, name: 'Suggestion 2'},
-        {id: 3, name: 'Suggestion 3'},
+    const value = [
+        {id: 5, name: 'Test'},
     ];
 
-    const singleAutoComplete = shallow(
-        <SingleAutoComplete
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
             displayProperty="name"
             onChange={changeSpy}
             onFinish={jest.fn()}
             onSearch={jest.fn()}
             searchProperties={['name']}
             suggestions={suggestions}
-            value={{name: 'Test'}}
+            value={value}
         />
     );
 
-    expect(singleAutoComplete.find('Input').prop('value')).toEqual('Test');
-    singleAutoComplete.find('Input').simulate('change', '');
-    expect(changeSpy).toBeCalledWith(undefined);
+    multiAutoComplete.instance().inputValue = 'test';
+    multiAutoComplete.update();
+
+    multiAutoComplete.find('Suggestion button').at(0).simulate('click');
+
+    expect(changeSpy).toHaveBeenCalledWith([...value, suggestions[0]]);
 });
 
-test('Should call the onFinish callback when the Input lost focus', () => {
+test('Clicking on delete icon of a suggestion should call the onChange callback without the deleted Suggestion', () => {
+    const changeSpy = jest.fn();
+
+    const suggestions = [];
+
+    const value = [
+        {id: 5, name: 'Test'},
+        {id: 6, name: 'Test'},
+    ];
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            displayProperty="name"
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={value}
+        />
+    );
+
+    multiAutoComplete.find('Item').at(1).find('Icon').simulate('click');
+
+    expect(changeSpy).toHaveBeenCalledWith([value[0]]);
+});
+
+test('Should call the onFinish callback when an item is added', () => {
     const finishSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
     ];
 
-    const singleAutoComplete = shallow(
-        <SingleAutoComplete
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
             onFinish={finishSpy}
             onSearch={jest.fn()}
             searchProperties={['name']}
             suggestions={suggestions}
-            value={{name: 'Test'}}
+            value={[]}
         />
     );
 
-    singleAutoComplete.find('Input').simulate('blur');
+    multiAutoComplete.instance().inputValue = 'test';
+    multiAutoComplete.update();
+
+    multiAutoComplete.find('Suggestion button').at(0).simulate('click');
 
     expect(finishSpy).toBeCalledWith();
 });

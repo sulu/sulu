@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MultiAutoComplete should render 1`] = `
+<label
+  class="multiAutoComplete"
+>
+  <div
+    class="icon"
+  >
+    <span
+      aria-label="su-search"
+      class="su-search"
+    />
+  </div>
+  <div
+    class="items"
+  >
+    <div
+      class="item"
+    >
+      Test
+      <span
+        aria-label="su-times"
+        class="icon su-times clickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+    <div
+      class="item"
+    >
+      Test 2
+      <span
+        aria-label="su-times"
+        class="icon su-times clickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+    <input
+      class="input"
+      value=""
+    />
+  </div>
+</label>
+`;
+
+exports[`Render the MultiAutoComplete with open suggestions list 1`] = `
+<label
+  class="multiAutoComplete"
+>
+  <div
+    class="icon"
+  >
+    <span
+      aria-label="su-search"
+      class="su-search"
+    />
+  </div>
+  <div
+    class="items"
+  >
+    <div
+      class="item"
+    >
+      Test
+      <span
+        aria-label="su-times"
+        class="icon su-times clickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+    <input
+      class="input"
+      value="test"
+    />
+  </div>
+</label>
+`;
+
+exports[`Render the MultiAutoComplete with open suggestions list 2`] = `
+"<div>
+  <div class=\\"backdrop fixed\\"></div>
+</div>
+<div>
+  <div class=\\"container\\">
+    <ul style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\" class=\\"menu\\">
+      <li class=\\"suggestionItem\\">
+        <button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 1</span></button>
+      </li>
+      <li class=\\"suggestionItem\\">
+        <button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 2</span></button>
+      </li>
+      <li class=\\"suggestionItem\\">
+        <button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 3</span></button>
+      </li>
+    </ul>
+  </div>
+</div>"
+`;

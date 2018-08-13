@@ -1,0 +1,37 @@
+@import '../../containers/Application/colors.scss';
+
+$multiAutoCompleteBackgroundColor: $white;
+$multiAutoCompleteBorderColor: $silver;
+$multiAutoCompleteIconColor: $dustyGray;
+
+.multi-auto-complete {
+    background-color: $multiAutoCompleteBackgroundColor;
+    border: 1px solid $multiAutoCompleteBorderColor;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+}
+
+.input {
+    border: none;
+    font-size: 12px;
+    flex-grow: 1;
+    height: 30px;
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 10px);
+    flex: 0 0 32px;
+    margin-right: 10px;
+    font-size: 16px;
+    color: $multiAutoCompleteIconColor;
+    border-right: 1px solid $multiAutoCompleteBorderColor;
+}
+
+.items {
+    display: flex;
+    flex-wrap: wrap;
+}
