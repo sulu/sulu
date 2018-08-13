@@ -3,13 +3,13 @@ import React from 'react';
 import {mount, shallow, render} from 'enzyme';
 import SingleAutoComplete from '../SingleAutoComplete';
 import SingleAutoCompleteComponent from '../../../components/SingleAutoComplete';
-import AutoCompleteStore from '../stores/AutoCompleteStore';
+import SearchStore from '../../../stores/SearchStore';
 
-jest.mock('../stores/AutoCompleteStore', () => jest.fn());
+jest.mock('../../../stores/SearchStore', () => jest.fn());
 
 test('Render in loading state', () => {
     // $FlowFixMe
-    AutoCompleteStore.mockImplementation(function() {
+    SearchStore.mockImplementation(function() {
         this.searchResults = [];
         this.loading = true;
     });
@@ -32,12 +32,12 @@ test('Render with loaded suggestions', () => {
     ];
 
     // $FlowFixMe
-    AutoCompleteStore.mockImplementation(function() {
+    SearchStore.mockImplementation(function() {
         this.searchResults = suggestions;
         this.loading = false;
     });
 
-    const autoComplete = mount(
+    const singleAutoComplete = mount(
         <SingleAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
@@ -47,16 +47,18 @@ test('Render with loaded suggestions', () => {
         />
     );
 
-    autoComplete.find(SingleAutoCompleteComponent).instance().inputValue = 'James';
-    autoComplete.update();
+    singleAutoComplete.find(SingleAutoCompleteComponent).instance().inputValue = 'James';
+    singleAutoComplete.update();
 
-    expect(autoComplete.find('SingleAutoComplete').find('Suggestion').at(0).prop('value')).toEqual(suggestions[0]);
-    expect(autoComplete.find('SingleAutoComplete').find('Suggestion').at(1).prop('value')).toEqual(suggestions[1]);
+    expect(singleAutoComplete.find('SingleAutoComplete').find('Suggestion').at(0).prop('value'))
+        .toEqual(suggestions[0]);
+    expect(singleAutoComplete.find('SingleAutoComplete').find('Suggestion').at(1).prop('value'))
+        .toEqual(suggestions[1]);
 });
 
 test('Render with given value', () => {
     // $FlowFixMe
-    AutoCompleteStore.mockImplementation(function() {
+    SearchStore.mockImplementation(function() {
         this.searchResults = [];
         this.loading = true;
     });
@@ -74,13 +76,13 @@ test('Render with given value', () => {
 
 test('Search using store when new search value is retrieved from SingleAutoComplete component', () => {
     // $FlowFixMe
-    AutoCompleteStore.mockImplementation(function() {
+    SearchStore.mockImplementation(function() {
         this.searchResults = [];
         this.loading = false;
         this.search = jest.fn();
     });
 
-    const autoComplete = shallow(
+    const singleAutoComplete = shallow(
         <SingleAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
@@ -90,14 +92,14 @@ test('Search using store when new search value is retrieved from SingleAutoCompl
         />
     );
 
-    autoComplete.find('SingleAutoComplete').simulate('search', 'James');
+    singleAutoComplete.find('SingleAutoComplete').simulate('search', 'James');
 
-    expect(autoComplete.instance().autoCompleteStore.search).toBeCalledWith('James');
+    expect(singleAutoComplete.instance().searchStore.search).toBeCalledWith('James');
 });
 
 test('Call onChange and clear search result when chosen option has changed', () => {
     // $FlowFixMe
-    AutoCompleteStore.mockImplementation(function() {
+    SearchStore.mockImplementation(function() {
         this.searchResults = [data];
         this.loading = false;
         this.clearSearchResults = jest.fn();
@@ -111,7 +113,7 @@ test('Call onChange and clear search result when chosen option has changed', () 
         number: '007',
     };
 
-    const autoComplete = shallow(
+    const singleAutoComplete = shallow(
         <SingleAutoComplete
             displayProperty="name"
             onChange={changeSpy}
@@ -121,8 +123,8 @@ test('Call onChange and clear search result when chosen option has changed', () 
         />
     );
 
-    autoComplete.find('SingleAutoComplete').simulate('change', data);
+    singleAutoComplete.find('SingleAutoComplete').simulate('change', data);
 
     expect(changeSpy).toBeCalledWith(data);
-    expect(autoComplete.instance().autoCompleteStore.clearSearchResults).toBeCalledWith();
+    expect(singleAutoComplete.instance().searchStore.clearSearchResults).toBeCalledWith();
 });

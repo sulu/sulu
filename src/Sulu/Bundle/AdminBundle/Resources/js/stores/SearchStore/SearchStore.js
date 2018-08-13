@@ -1,9 +1,9 @@
 // @flow
 import 'core-js/library/fn/promise';
 import {action, observable} from 'mobx';
-import ResourceRequester from '../../../services/ResourceRequester';
+import ResourceRequester from '../../services/ResourceRequester';
 
-export default class AutoCompleteStore {
+export default class SearchStore {
     resourceKey: string;
     searchProperties: Array<string>;
     @observable searchResults: Array<Object> = [];

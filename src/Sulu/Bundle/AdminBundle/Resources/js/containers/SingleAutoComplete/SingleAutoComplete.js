@@ -2,7 +2,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import SingleAutoCompleteComponent from '../../components/SingleAutoComplete';
-import AutoCompleteStore from './stores/AutoCompleteStore';
+import SearchStore from '../../stores/SearchStore';
 
 type Props = {|
     displayProperty: string,
@@ -14,23 +14,23 @@ type Props = {|
 
 @observer
 export default class SingleAutoComplete extends React.Component<Props> {
-    autoCompleteStore: AutoCompleteStore;
+    searchStore: SearchStore;
 
     constructor(props: Props) {
         super(props);
 
         const {resourceKey, searchProperties} = this.props;
 
-        this.autoCompleteStore = new AutoCompleteStore(resourceKey, searchProperties);
+        this.searchStore = new SearchStore(resourceKey, searchProperties);
     }
 
     handleChange = (value: ?Object) => {
         this.props.onChange(value);
-        this.autoCompleteStore.clearSearchResults();
+        this.searchStore.clearSearchResults();
     };
 
     handleSearch = (query: string) => {
-        this.autoCompleteStore.search(query);
+        this.searchStore.search(query);
     };
 
     render() {
@@ -45,11 +45,11 @@ export default class SingleAutoComplete extends React.Component<Props> {
         return (
             <SingleAutoCompleteComponent
                 displayProperty={displayProperty}
-                loading={this.autoCompleteStore.loading}
+                loading={this.searchStore.loading}
                 onChange={this.handleChange}
                 onSearch={this.handleSearch}
                 searchProperties={searchProperties}
-                suggestions={this.autoCompleteStore.searchResults}
+                suggestions={this.searchStore.searchResults}
                 value={value}
             />
         );
