@@ -6,6 +6,7 @@ exports[`Render with highlighted suggestions 1`] = `
 >
   <li
     class="suggestionItem"
+    style="min-width:0px"
   >
     <button
       class="suggestion"
@@ -24,6 +25,7 @@ exports[`Render with highlighted suggestions 1`] = `
   </li>
   <li
     class="suggestionItem"
+    style="min-width:0px"
   >
     <button
       class="suggestion"

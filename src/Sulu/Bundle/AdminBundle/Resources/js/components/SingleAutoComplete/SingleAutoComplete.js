@@ -2,7 +2,7 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import debounce from 'debounce';
 import Input from '../Input';
 import AutoCompletePopover from '../AutoCompletePopover';
@@ -57,6 +57,10 @@ export default class SingleAutoComplete extends React.Component<Props> {
         }
     };
 
+    @computed get popoverMinWidth() {
+        return this.labelRef ? this.labelRef.scrollWidth - 10 : 0;
+    }
+
     debouncedSearch = debounce((query: string) => {
         this.props.onSearch(query);
     }, DEBOUNCE_TIME);
@@ -99,6 +103,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
                 />
                 <AutoCompletePopover
                     anchorElement={this.labelRef}
+                    minWidth={this.popoverMinWidth}
                     open={showSuggestionList}
                     onSelect={this.handleSelect}
                     query={inputValue}

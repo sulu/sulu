@@ -8,6 +8,7 @@ import autoCompletePopoverStyles from './autoCompletePopover.scss';
 
 type Props = {
     anchorElement: ElementRef<*>,
+    minWidth: number,
     onSelect: (suggestion: Object) => void,
     open: boolean,
     query: ?string,
@@ -16,6 +17,10 @@ type Props = {
 };
 
 export default class AutoCompletePopover extends React.Component<Props> {
+    static defaultProps = {
+        minWidth: 0,
+    };
+
     handlePopoverClose = () => {
         const {onSelect, suggestions} = this.props;
         if (suggestions.length > 0) {
@@ -26,6 +31,7 @@ export default class AutoCompletePopover extends React.Component<Props> {
     render() {
         const {
             anchorElement,
+            minWidth,
             onSelect,
             open,
             query,
@@ -50,6 +56,7 @@ export default class AutoCompletePopover extends React.Component<Props> {
                             {suggestions.map((searchResult) => (
                                 <Suggestion
                                     key={searchResult.id}
+                                    minWidth={minWidth}
                                     onSelect={onSelect}
                                     query={query}
                                     value={searchResult}

@@ -3,6 +3,7 @@
 exports[`Should highlight the part of the suggestion text which matches the query prop 1`] = `
 <li
   class="suggestionItem"
+  style="min-width:0px"
 >
   <button
     class="suggestion"
@@ -26,6 +27,7 @@ exports[`Should highlight the part of the suggestion text which matches the quer
 exports[`Suggestion should render 1`] = `
 <li
   class="suggestionItem"
+  style="min-width:0px"
 >
   <button
     class="suggestion"
@@ -42,6 +44,7 @@ exports[`Suggestion should render 1`] = `
 exports[`Suggestion should render strong-tags around found chars 1`] = `
 <li
   class="suggestionItem"
+  style="min-width:0px"
 >
   <button
     class="suggestion"

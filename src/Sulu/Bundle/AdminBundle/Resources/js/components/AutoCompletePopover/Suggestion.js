@@ -5,15 +5,17 @@ import Icon from '../Icon';
 import suggestionStyles from './suggestion.scss';
 
 type Props = {|
-    value: Object,
-    query: ?string,
-    icon?: string,
     children: string | (highlight: (text: string) => Node) => Node,
+    icon?: string,
+    minWidth: number,
     onSelect: (value: Object) => void,
+    query: ?string,
+    value: Object,
 |};
 
 export default class Suggestion extends React.PureComponent<Props> {
     static defaultProps = {
+        minWidth: 0,
         query: '',
     };
 
@@ -53,6 +55,7 @@ export default class Suggestion extends React.PureComponent<Props> {
 
     render() {
         const {
+            minWidth,
             icon,
             children,
         } = this.props;
@@ -60,6 +63,7 @@ export default class Suggestion extends React.PureComponent<Props> {
         return (
             <li
                 className={suggestionStyles.suggestionItem}
+                style={{minWidth: minWidth + 'px'}}
             >
                 <button
                     className={suggestionStyles.suggestion}
