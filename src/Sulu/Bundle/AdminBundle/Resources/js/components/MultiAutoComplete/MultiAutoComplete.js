@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import type {ElementRef} from 'react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import Icon from '../Icon';
@@ -37,6 +37,10 @@ export default class MultiAutoComplete extends React.Component<Props> {
             this.labelRef = labelRef;
         }
     };
+
+    @computed get popoverMinWidth() {
+        return this.labelRef ? this.labelRef.scrollWidth - 10 : 0;
+    }
 
     @action handleDelete = (value: Object) => {
         this.props.onChange(this.props.value.filter((item) => item != value));
@@ -106,6 +110,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
                 </label>
                 <AutoCompletePopover
                     anchorElement={this.labelRef}
+                    minWidth={this.popoverMinWidth}
                     onSelect={this.handleSelect}
                     open={showSuggestionList}
                     query={this.inputValue}
