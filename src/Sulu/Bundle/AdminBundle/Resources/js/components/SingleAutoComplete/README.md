@@ -1,11 +1,11 @@
-The AutoComplete is an input-field with auto-completion feature. The AutoComplete has no filter logic. That has to be 
-done inside another component which afterwards will adjust the list of suggestions based on the entered input. 
+The SingleAutoComplete is an input-field with auto-completion feature. The AutoComplete has no filter logic. That has to
+be done inside another component which afterwards will adjust the list of suggestions based on the entered input. 
 To display the suggestions you pass the data as the `suggestions` props to the component. 
 
 Here a basic example (Pssh, look for your favourite Harry Potter character):
 
 ```javascript
-const AutoComplete = require('./AutoComplete').default;
+const SingleAutoComplete = require('./SingleAutoComplete').default;
 
 initialState = {
     value: '',
@@ -64,7 +64,7 @@ const handleChange = (value) => {
     }));
 };
 
-<AutoComplete
+<SingleAutoComplete
     displayProperty="name"
     loading={state.loading}
     onChange={handleChange}

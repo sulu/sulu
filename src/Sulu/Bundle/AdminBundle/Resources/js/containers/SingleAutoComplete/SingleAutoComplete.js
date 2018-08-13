@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import AutoCompleteComponent from '../../components/AutoComplete';
+import SingleAutoCompleteComponent from '../../components/SingleAutoComplete';
 import AutoCompleteStore from './stores/AutoCompleteStore';
 
 type Props = {|
@@ -13,7 +13,7 @@ type Props = {|
 |};
 
 @observer
-export default class AutoComplete extends React.Component<Props> {
+export default class SingleAutoComplete extends React.Component<Props> {
     autoCompleteStore: AutoCompleteStore;
 
     constructor(props: Props) {
@@ -43,7 +43,7 @@ export default class AutoComplete extends React.Component<Props> {
         } = this;
 
         return (
-            <AutoCompleteComponent
+            <SingleAutoCompleteComponent
                 displayProperty={displayProperty}
                 loading={this.autoCompleteStore.loading}
                 onChange={this.handleChange}

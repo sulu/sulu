@@ -2,7 +2,7 @@
 
 exports[`Render in loading state 1`] = `
 <div
-  class="autoComplete"
+  class="singleAutoComplete"
 >
   <label
     class="input default"
@@ -32,7 +32,7 @@ exports[`Render in loading state 1`] = `
 
 exports[`Render with given value 1`] = `
 <div
-  class="autoComplete"
+  class="singleAutoComplete"
 >
   <label
     class="input default"

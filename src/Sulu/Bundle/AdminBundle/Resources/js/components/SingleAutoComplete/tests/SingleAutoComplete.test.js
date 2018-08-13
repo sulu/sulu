@@ -2,9 +2,9 @@
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import pretty from 'pretty';
-import AutoComplete from '../AutoComplete';
+import SingleAutoComplete from '../SingleAutoComplete';
 
-test('AutoComplete should render', () => {
+test('SingleAutoComplete should render', () => {
     const suggestions = [
         {name: 'Suggestion 1'},
         {name: 'Suggestion 2'},
@@ -12,7 +12,7 @@ test('AutoComplete should render', () => {
     ];
 
     expect(render(
-        <AutoComplete
+        <SingleAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -24,7 +24,7 @@ test('AutoComplete should render', () => {
     )).toMatchSnapshot();
 });
 
-test('Render the AutoComplete with open suggestions list', () => {
+test('Render the SingleAutoComplete with open suggestions list', () => {
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
         {id: 2, name: 'Suggestion 2'},
@@ -32,7 +32,7 @@ test('Render the AutoComplete with open suggestions list', () => {
     ];
 
     const autoComplete = mount(
-        <AutoComplete
+        <SingleAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
             onFinish={jest.fn()}
@@ -57,7 +57,7 @@ test('Clicking on a suggestion should call the onChange handler with the value o
     ];
 
     const autoComplete = mount(
-        <AutoComplete
+        <SingleAutoComplete
             displayProperty="name"
             onChange={changeSpy}
             onFinish={jest.fn()}
@@ -82,7 +82,7 @@ test('Should call onChange with undefined if all characters are removed from inp
     ];
 
     const autoComplete = shallow(
-        <AutoComplete
+        <SingleAutoComplete
             displayProperty="name"
             onChange={changeSpy}
             onFinish={jest.fn()}
@@ -105,7 +105,7 @@ test('Should call the onFinish callback when the Input lost focus', () => {
     ];
 
     const autoComplete = shallow(
-        <AutoComplete
+        <SingleAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
             onFinish={finishSpy}

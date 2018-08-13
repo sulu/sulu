@@ -10,17 +10,17 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
-test('Pass correct props to AutoComplete', () => {
+test('Pass correct props to SingleAutoComplete', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const value = {
         test: 'value',
     };
 
     const fieldTypeOptions = {
-        default_type: 'auto_complete',
+        default_type: 'single_auto_complete',
         resource_key: 'accounts',
         types: {
-            auto_complete: {
+            single_auto_complete: {
                 display_property: 'name',
                 search_properties: ['name', 'number'],
             },
@@ -44,7 +44,7 @@ test('Pass correct props to AutoComplete', () => {
         />
     );
 
-    expect(singleSelection.find('AutoComplete').props()).toEqual(expect.objectContaining({
+    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
         displayProperty: 'name',
         resourceKey: 'accounts',
         searchProperties: ['name', 'number'],
@@ -52,7 +52,7 @@ test('Pass correct props to AutoComplete', () => {
     }));
 });
 
-test('Call onChange and onFinish when AutoComplete changes', () => {
+test('Call onChange and onFinish when SingleAutoComplete changes', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
@@ -62,10 +62,10 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
     };
 
     const fieldTypeOptions = {
-        default_type: 'auto_complete',
+        default_type: 'single_auto_complete',
         resource_key: 'accounts',
         types: {
-            auto_complete: {
+            single_auto_complete: {
                 display_property: 'name',
                 search_properties: ['name', 'number'],
             },
@@ -89,16 +89,16 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
         />
     );
 
-    singleSelection.find('AutoComplete').simulate('change', undefined);
+    singleSelection.find('SingleAutoComplete').simulate('change', undefined);
 
     expect(changeSpy).toBeCalledWith(undefined);
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Throw an error if the auto_complete configuration was omitted', () => {
+test('Throw an error if the single_auto_complete configuration was omitted', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const fieldTypeOptions = {
-        default_type: 'auto_complete',
+        default_type: 'single_auto_complete',
         types: {},
     };
 
@@ -119,5 +119,5 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
                 value={undefined}
             />
         )
-    ).toThrow(/"auto_complete"/);
+    ).toThrow(/"single_auto_complete"/);
 });

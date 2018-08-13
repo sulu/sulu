@@ -6,7 +6,7 @@ import {action, observable} from 'mobx';
 import debounce from 'debounce';
 import Input from '../Input';
 import AutoCompletePopover from '../AutoCompletePopover';
-import autoCompleteStyles from './autoComplete.scss';
+import singleAutoCompleteStyles from './singleAutoComplete.scss';
 
 const LENS_ICON = 'su-search';
 const DEBOUNCE_TIME = 300;
@@ -25,7 +25,7 @@ type Props = {|
 |};
 
 @observer
-export default class AutoComplete extends React.Component<Props> {
+export default class SingleAutoComplete extends React.Component<Props> {
     @observable labelRef: ElementRef<'label'>;
 
     @observable inputValue: ?string = this.props.value ? this.props.value[this.props.displayProperty] : undefined;
@@ -87,7 +87,7 @@ export default class AutoComplete extends React.Component<Props> {
         const showSuggestionList = (!!inputValue && inputValue.length > 0) && suggestions.length > 0;
 
         return (
-            <div className={autoCompleteStyles.autoComplete}>
+            <div className={singleAutoCompleteStyles.singleAutoComplete}>
                 <Input
                     icon={LENS_ICON}
                     value={inputValue}

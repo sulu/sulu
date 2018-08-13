@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import {mount, shallow, render} from 'enzyme';
-import AutoComplete from '../AutoComplete';
-import AutoCompleteComponent from '../../../components/AutoComplete';
+import SingleAutoComplete from '../SingleAutoComplete';
+import SingleAutoCompleteComponent from '../../../components/SingleAutoComplete';
 import AutoCompleteStore from '../stores/AutoCompleteStore';
 
 jest.mock('../stores/AutoCompleteStore', () => jest.fn());
@@ -15,7 +15,7 @@ test('Render in loading state', () => {
     });
 
     expect(render(
-        <AutoComplete
+        <SingleAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="test"
@@ -38,7 +38,7 @@ test('Render with loaded suggestions', () => {
     });
 
     const autoComplete = mount(
-        <AutoComplete
+        <SingleAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="contact"
@@ -47,11 +47,11 @@ test('Render with loaded suggestions', () => {
         />
     );
 
-    autoComplete.find(AutoCompleteComponent).instance().inputValue = 'James';
+    autoComplete.find(SingleAutoCompleteComponent).instance().inputValue = 'James';
     autoComplete.update();
 
-    expect(autoComplete.find('AutoComplete').find('Suggestion').at(0).prop('value')).toEqual(suggestions[0]);
-    expect(autoComplete.find('AutoComplete').find('Suggestion').at(1).prop('value')).toEqual(suggestions[1]);
+    expect(autoComplete.find('SingleAutoComplete').find('Suggestion').at(0).prop('value')).toEqual(suggestions[0]);
+    expect(autoComplete.find('SingleAutoComplete').find('Suggestion').at(1).prop('value')).toEqual(suggestions[1]);
 });
 
 test('Render with given value', () => {
@@ -62,7 +62,7 @@ test('Render with given value', () => {
     });
 
     expect(render(
-        <AutoComplete
+        <SingleAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="test"
@@ -72,7 +72,7 @@ test('Render with given value', () => {
     )).toMatchSnapshot();
 });
 
-test('Search using store when new search value is retrieved from AutoComplete component', () => {
+test('Search using store when new search value is retrieved from SingleAutoComplete component', () => {
     // $FlowFixMe
     AutoCompleteStore.mockImplementation(function() {
         this.searchResults = [];
@@ -81,7 +81,7 @@ test('Search using store when new search value is retrieved from AutoComplete co
     });
 
     const autoComplete = shallow(
-        <AutoComplete
+        <SingleAutoComplete
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="contact"
@@ -90,7 +90,7 @@ test('Search using store when new search value is retrieved from AutoComplete co
         />
     );
 
-    autoComplete.find('AutoComplete').simulate('search', 'James');
+    autoComplete.find('SingleAutoComplete').simulate('search', 'James');
 
     expect(autoComplete.instance().autoCompleteStore.search).toBeCalledWith('James');
 });
@@ -112,7 +112,7 @@ test('Call onChange and clear search result when chosen option has changed', () 
     };
 
     const autoComplete = shallow(
-        <AutoComplete
+        <SingleAutoComplete
             displayProperty="name"
             onChange={changeSpy}
             resourceKey="contact"
@@ -121,7 +121,7 @@ test('Call onChange and clear search result when chosen option has changed', () 
         />
     );
 
-    autoComplete.find('AutoComplete').simulate('change', data);
+    autoComplete.find('SingleAutoComplete').simulate('change', data);
 
     expect(changeSpy).toBeCalledWith(data);
     expect(autoComplete.instance().autoCompleteStore.clearSearchResults).toBeCalledWith();
