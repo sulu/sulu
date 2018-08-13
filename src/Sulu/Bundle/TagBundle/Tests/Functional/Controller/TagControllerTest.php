@@ -93,6 +93,21 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('tag2', $response->_embedded->tags[1]->name);
     }
 
+    public function testListFilteredByNames()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/tags?flat=true&names=tag1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals('tag1', $response->_embedded->tags[0]->name);
+    }
+
     public function testListSearch()
     {
         $client = $this->createAuthenticatedClient();

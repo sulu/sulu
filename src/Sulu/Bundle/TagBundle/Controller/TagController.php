@@ -101,6 +101,11 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 $listBuilder->in($fieldDescriptors['id'], $ids);
             }
 
+            $names = array_filter(explode(',', $request->get('names', '')));
+            if (count($names) > 0) {
+                $listBuilder->in($fieldDescriptors['name'], $names);
+            }
+
             $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
             $list = new ListRepresentation(
