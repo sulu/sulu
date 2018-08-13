@@ -1,8 +1,8 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line
-import {arrayMove} from '../../../components';
-import {ResourceRequester} from '../../../services';
+import type {IObservableValue} from 'mobx';
+import {arrayMove} from '../../components';
+import {ResourceRequester} from '../../services';
 
 export default class SelectionStore {
     @observable items: Array<Object> = [];

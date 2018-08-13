@@ -1,9 +1,9 @@
 // @flow
 import {observable, toJS} from 'mobx';
-import SelectionStore from '../../stores/SelectionStore';
-import ResourceRequester from '../../../../services/ResourceRequester';
+import SelectionStore from '../SelectionStore';
+import ResourceRequester from '../../../services/ResourceRequester';
 
-jest.mock('../../../../services/ResourceRequester', () => ({
+jest.mock('../../../services/ResourceRequester', () => ({
     getList: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 

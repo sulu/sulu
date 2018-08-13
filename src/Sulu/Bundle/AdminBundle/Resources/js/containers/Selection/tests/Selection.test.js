@@ -4,7 +4,7 @@ import {mount, render, shallow} from 'enzyme';
 import {observable} from 'mobx';
 import pretty from 'pretty';
 import Selection from '../Selection';
-import SelectionStore from '../stores/SelectionStore';
+import SelectionStore from '../../../stores/SelectionStore';
 
 jest.mock('../../../utils', () => ({
     translate: jest.fn((key) => key),
@@ -22,7 +22,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.setActive = jest.fn();
 }));
 
-jest.mock('../stores/SelectionStore', () => jest.fn(function() {
+jest.mock('../../../stores/SelectionStore', () => jest.fn(function() {
     this.items = [];
     this.set = jest.fn();
     this.move = jest.fn();
