@@ -35,6 +35,7 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.finishField = jest.fn();
     this.isFieldModified = jest.fn();
     this.copyFromLocale = jest.fn();
+    this.getValueByPath = jest.fn();
 }));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function (resourceKey, id, observableOptions = {}) {

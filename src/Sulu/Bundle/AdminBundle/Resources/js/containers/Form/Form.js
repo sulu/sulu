@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, observable} from 'mobx';
+import {action, autorun, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import log from 'loglevel';
@@ -74,7 +74,10 @@ export default class Form extends React.Component<Props> {
     };
 
     handleFieldFinish = (dataPath: string, schemaPath: string) => {
-        log.debug('Finished editing field with dataPath "' + dataPath + '" and schemaPath "' + schemaPath + '"');
+        log.debug(
+            'Finished editing field with dataPath "' + dataPath + '" and schemaPath "' + schemaPath + '"',
+            toJS(this.formInspector.getValueByPath(dataPath))
+        );
         const {store} = this.props;
 
         store.validate();
