@@ -31,6 +31,22 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'field_type_options' => [
+                        'selection' => [
+                            'tag_list' => [
+                                'default_type' => 'auto_complete',
+                                'resource_key' => 'tags',
+                                'types' => [
+                                    'auto_complete' => [
+                                        'display_property' => 'name',
+                                        'id_property' => 'name',
+                                        'filter_parameter' => 'names',
+                                        'search_properties' => ['name'],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                     'resources' => [
                         'tags' => [
                             'form' => ['@SuluTagBundle/Resources/config/forms/Tag.xml'],
