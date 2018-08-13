@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import debounce from 'debounce';
 import Input from '../Input';
-import AutoCompletePopover from './AutoCompletePopover';
+import AutoCompletePopover from '../AutoCompletePopover';
 import autoCompleteStyles from './autoComplete.scss';
 
 const LENS_ICON = 'su-search';

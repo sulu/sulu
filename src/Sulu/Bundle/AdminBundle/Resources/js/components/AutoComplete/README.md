@@ -1,14 +1,11 @@
 The AutoComplete is an input-field with auto-completion feature. The AutoComplete has no filter logic. That has to be 
 done inside another component which afterwards will adjust the list of suggestions based on the entered input. 
-To display the suggestions you can use the `Suggestion` component. The displayed value of a `Suggestion` can be a 
-simple text or if you need further customization you can wrap HTML markup into a function and place that as the child 
-of the `Suggestion`. In that case you have to use the `highlight` function to highlight the matched suggestion text.
+To display the suggestions you pass the data as the `suggestions` props to the component. 
 
 Here a basic example (Pssh, look for your favourite Harry Potter character):
 
 ```javascript
 const AutoComplete = require('./AutoComplete').default;
-const Suggestion = AutoComplete.Suggestion;
 
 initialState = {
     value: '',
