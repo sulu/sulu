@@ -155,7 +155,34 @@ test('Search using store when new search value is retrieved from MultiAutoComple
 
     multiAutoComplete.find('MultiAutoComplete').simulate('search', 'James');
 
-    expect(multiAutoComplete.instance().searchStore.search).toBeCalledWith('James');
+    expect(multiAutoComplete.instance().searchStore.search).toBeCalledWith('James', []);
+});
+
+test('Search using store with excluded ids when new search value is retrieved from MultiAutoComplete component', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {
+        this.searchResults = [];
+        this.loading = false;
+        this.search = jest.fn();
+    });
+
+    const multiAutoComplete = shallow(
+        <MultiAutoComplete
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="contact"
+            searchProperties={[]}
+            value={undefined}
+        />
+    );
+
+    multiAutoComplete.instance().selectionStore.items = [
+        {id: 1},
+        {id: 3},
+    ];
+    multiAutoComplete.find('MultiAutoComplete').simulate('search', 'James');
+
+    expect(multiAutoComplete.instance().searchStore.search).toBeCalledWith('James', [1, 3]);
 });
 
 test('Call onChange and clear search result when chosen option has been selected', () => {

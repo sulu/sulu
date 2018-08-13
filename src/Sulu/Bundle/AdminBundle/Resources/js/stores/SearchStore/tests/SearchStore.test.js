@@ -41,6 +41,33 @@ test('Send a request using the ResourceRequester when something is being searche
     });
 });
 
+test('Send a request using the ResourceRequester with excludedIds when something is being searched', () => {
+    const searchStore = new SearchStore('accounts', ['name', 'number']);
+    const searchResults = [{id: 1, name: 'Sulu'}];
+    const searchPromise = Promise.resolve({
+        _embedded: {
+            accounts: searchResults,
+        },
+    });
+
+    ResourceRequester.getList.mockReturnValue(searchPromise);
+
+    const autoCompletePromise = searchStore.search('Sulu', [1, 4]);
+    expect(searchStore.loading).toEqual(true);
+
+    return autoCompletePromise.then(() => {
+        expect(ResourceRequester.getList).toBeCalledWith('accounts', {
+            excludedIds: [1, 4],
+            limit: 10,
+            page: 1,
+            search: 'Sulu',
+            searchFields: ['name', 'number'],
+        });
+        expect(searchStore.searchResults).toEqual(searchResults);
+        expect(searchStore.loading).toEqual(false);
+    });
+});
+
 test('Reset loading flag in case the request errors', () => {
     const searchStore = new SearchStore('accounts', ['name', 'number']);
     const searchPromise = Promise.reject();

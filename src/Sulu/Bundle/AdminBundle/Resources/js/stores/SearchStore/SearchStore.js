@@ -18,7 +18,7 @@ export default class SearchStore {
         this.searchResults.splice(0, this.searchResults.length);
     };
 
-    @action search = (query: string): Promise<Array<Object>> => {
+    @action search = (query: string, excludedIds: ?Array<string | number> = undefined): Promise<Array<Object>> => {
         const {resourceKey, searchProperties} = this;
 
         if (!query) {
@@ -29,8 +29,9 @@ export default class SearchStore {
         this.loading = true;
 
         return ResourceRequester.getList(resourceKey, {
-            page: 1,
+            excludedIds,
             limit: 10,
+            page: 1,
             searchFields: searchProperties,
             search: query,
         }).then(action((response) => {

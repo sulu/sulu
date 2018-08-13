@@ -33,7 +33,15 @@ export default class MultiAutoComplete extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {filterParameter, idProperty, locale, onChange, resourceKey, searchProperties, value} = this.props;
+        const {
+            filterParameter,
+            idProperty,
+            locale,
+            onChange,
+            resourceKey,
+            searchProperties,
+            value,
+        } = this.props;
 
         this.searchStore = new SearchStore(resourceKey, searchProperties);
         this.selectionStore = new SelectionStore(resourceKey, value || [], locale, filterParameter);
@@ -64,7 +72,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
     };
 
     handleSearch = (query: string) => {
-        this.searchStore.search(query);
+        this.searchStore.search(query, this.selectionStore.items.map((item) => item.id));
     };
 
     render() {
