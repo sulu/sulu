@@ -9,10 +9,17 @@ export default class SelectionStore {
     @observable loading: boolean = false;
     resourceKey: string;
     locale: ?IObservableValue<string>;
+    idFilterParameter: string;
 
-    constructor(resourceKey: string, selectedItemIds: Array<string | number>, locale: ?IObservableValue<string>) {
+    constructor(
+        resourceKey: string,
+        selectedItemIds: Array<string | number>,
+        locale: ?IObservableValue<string>,
+        idFilterParameter: string = 'ids'
+    ) {
         this.resourceKey = resourceKey;
         this.locale = locale;
+        this.idFilterParameter = idFilterParameter;
         if (selectedItemIds.length) {
             this.loadItems(selectedItemIds);
         }
@@ -39,7 +46,7 @@ export default class SelectionStore {
         this.setLoading(true);
         return ResourceRequester.getList(this.resourceKey, {
             locale: this.locale ? this.locale.get() : undefined,
-            ids: itemIds.join(','),
+            [this.idFilterParameter]: itemIds.join(','),
             limit: undefined,
             page: 1,
         }).then(action((data) => {

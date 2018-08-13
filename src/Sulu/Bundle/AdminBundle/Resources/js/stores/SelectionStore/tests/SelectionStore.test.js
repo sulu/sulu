@@ -37,6 +37,36 @@ test('Should load items when being constructed', () => {
     });
 });
 
+test('Should load items with different filterParameter when being constructed', () => {
+    const listPromise = Promise.resolve({
+        _embedded: {
+            snippets: [
+                {id: 1},
+            ],
+        },
+    });
+
+    ResourceRequester.getList.mockReturnValue(listPromise);
+
+    const selectionStore = new SelectionStore('snippets', [1, 3, 4], observable.box('en'), 'names');
+
+    expect(ResourceRequester.getList).toBeCalledWith(
+        'snippets',
+        {
+            names: '1,3,4',
+            limit: undefined,
+            locale: 'en',
+            page: 1,
+        }
+    );
+
+    return listPromise.then(() => {
+        expect(toJS(selectionStore.items)).toEqual([
+            {id: 1},
+        ]);
+    });
+});
+
 test('Should load items when being constructed in the given locale', () => {
     const listPromise = Promise.resolve({
         _embedded: {

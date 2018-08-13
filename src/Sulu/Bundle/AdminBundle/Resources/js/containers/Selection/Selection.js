@@ -105,7 +105,7 @@ export default class Selection extends React.Component<Props> {
         return (
             <Fragment>
                 <MultiItemSelection
-                    label={label && this.selectionStore.items.length + ' ' + label}
+                    label={label && items.length + ' ' + label}
                     leftButton={{
                         icon,
                         onClick: this.handleOverlayOpen,

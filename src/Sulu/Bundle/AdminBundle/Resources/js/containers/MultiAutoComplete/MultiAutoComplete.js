@@ -1,31 +1,65 @@
 // @flow
 import React from 'react';
+import {autorun} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import MultiAutoCompleteComponent from '../../components/MultiAutoComplete';
 import SearchStore from '../../stores/SearchStore';
+import SelectionStore from '../../stores/SelectionStore';
 
 type Props = {|
     displayProperty: string,
-    searchProperties: Array<string>,
-    onChange: (value: Array<Object>) => void,
+    filterParameter: string,
+    idProperty: string,
+    locale?: ?IObservableValue<string>,
+    onChange: (value: Array<string | number>) => void,
     resourceKey: string,
-    value: ?Array<Object>,
+    searchProperties: Array<string>,
+    value: ?Array<string | number>,
 |};
 
 @observer
 export default class MultiAutoComplete extends React.Component<Props> {
+    static defaultProps = {
+        filterParameter: 'ids',
+        idProperty: 'id',
+    };
+
     searchStore: SearchStore;
+    selectionStore: SelectionStore;
+    changeDisposer: () => void;
+    changeAutorunInitialized: boolean = false;
 
     constructor(props: Props) {
         super(props);
 
-        const {resourceKey, searchProperties} = this.props;
+        const {filterParameter, idProperty, locale, onChange, resourceKey, searchProperties, value} = this.props;
 
         this.searchStore = new SearchStore(resourceKey, searchProperties);
+        this.selectionStore = new SelectionStore(resourceKey, value || [], locale, filterParameter);
+
+        this.changeDisposer = autorun(() => {
+            const itemIds = this.selectionStore.items.map((item) => item[idProperty]);
+
+            if (this.selectionStore.loading) {
+                return;
+            }
+
+            if (!this.changeAutorunInitialized) {
+                this.changeAutorunInitialized = true;
+                return;
+            }
+
+            onChange(itemIds);
+        });
+    }
+
+    componentWillUnmount() {
+        this.changeDisposer();
     }
 
     handleChange = (value: Array<Object>) => {
-        this.props.onChange(value);
+        this.selectionStore.set(value);
         this.searchStore.clearSearchResults();
     };
 
@@ -38,7 +72,6 @@ export default class MultiAutoComplete extends React.Component<Props> {
             props: {
                 displayProperty,
                 searchProperties,
-                value,
             },
         } = this;
 
@@ -50,7 +83,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
                 onSearch={this.handleSearch}
                 searchProperties={searchProperties}
                 suggestions={this.searchStore.searchResults}
-                value={value || []}
+                value={this.selectionStore.items || []}
             />
         );
     }
