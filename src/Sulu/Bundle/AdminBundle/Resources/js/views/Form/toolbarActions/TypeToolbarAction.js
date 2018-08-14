@@ -12,7 +12,7 @@ export default class TypeToolbarAction extends AbstractToolbarAction {
 
         return {
             type: 'select',
-            icon: 'fa-paint-brush',
+            icon: 'su-brush',
             onChange: (value: string | number) => {
                 if (typeof value !== 'string') {
                     throw new Error('Only strings are valid as a form type!');

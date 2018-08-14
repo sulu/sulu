@@ -56,7 +56,7 @@ test('Return item config with correct disabled, loading, options, icon, type and
     };
 
     expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
-        icon: 'fa-paint-brush',
+        icon: 'su-brush',
         loading: false,
         options: [
             {
