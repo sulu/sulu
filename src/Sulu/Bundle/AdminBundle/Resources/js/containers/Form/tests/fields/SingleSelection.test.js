@@ -17,10 +17,10 @@ test('Pass correct props to SingleAutoComplete', () => {
     };
 
     const fieldTypeOptions = {
-        default_type: 'single_auto_complete',
+        default_type: 'auto_complete',
         resource_key: 'accounts',
         types: {
-            single_auto_complete: {
+            auto_complete: {
                 display_property: 'name',
                 search_properties: ['name', 'number'],
             },
@@ -62,10 +62,10 @@ test('Call onChange and onFinish when SingleAutoComplete changes', () => {
     };
 
     const fieldTypeOptions = {
-        default_type: 'single_auto_complete',
+        default_type: 'auto_complete',
         resource_key: 'accounts',
         types: {
-            single_auto_complete: {
+            auto_complete: {
                 display_property: 'name',
                 search_properties: ['name', 'number'],
             },
@@ -95,10 +95,10 @@ test('Call onChange and onFinish when SingleAutoComplete changes', () => {
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Throw an error if the single_auto_complete configuration was omitted', () => {
+test('Throw an error if the auto_complete configuration was omitted', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const fieldTypeOptions = {
-        default_type: 'single_auto_complete',
+        default_type: 'auto_complete',
         types: {},
     };
 
@@ -119,5 +119,5 @@ test('Throw an error if the single_auto_complete configuration was omitted', () 
                 value={undefined}
             />
         )
-    ).toThrow(/"single_auto_complete"/);
+    ).toThrow(/"auto_complete"/);
 });
