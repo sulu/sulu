@@ -1,0 +1,33 @@
+@import '../../containers/Application/colors.scss';
+
+$suggestionTextColor: $blueZodiac;
+$suggestionTextColorActive: $shakespeare;
+$suggestionTextColorDisabled: rgba($suggestionTextColor, .3);
+
+.suggestion-item {
+    display: block;
+}
+
+.suggestion {
+    display: flex;
+    cursor: pointer;
+    padding: 5px 20px 5px 40px;
+    width: 100%;
+    color: $suggestionTextColor;
+    border: none;
+    background: transparent;
+    text-align: left;
+
+    &:not(:disabled):hover {
+        color: $suggestionTextColorActive;
+    }
+
+    &:disabled {
+        color: $suggestionTextColorDisabled;
+        cursor: default;
+    }
+}
+
+.icon {
+    margin-right: 15px;
+}

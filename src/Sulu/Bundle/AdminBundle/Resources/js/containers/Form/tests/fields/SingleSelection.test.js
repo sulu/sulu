@@ -10,7 +10,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
-test('Pass correct props to AutoComplete', () => {
+test('Pass correct props to SingleAutoComplete', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const value = {
         test: 'value',
@@ -44,7 +44,7 @@ test('Pass correct props to AutoComplete', () => {
         />
     );
 
-    expect(singleSelection.find('AutoComplete').props()).toEqual(expect.objectContaining({
+    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
         displayProperty: 'name',
         resourceKey: 'accounts',
         searchProperties: ['name', 'number'],
@@ -52,7 +52,7 @@ test('Pass correct props to AutoComplete', () => {
     }));
 });
 
-test('Call onChange and onFinish when AutoComplete changes', () => {
+test('Call onChange and onFinish when SingleAutoComplete changes', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
@@ -89,7 +89,7 @@ test('Call onChange and onFinish when AutoComplete changes', () => {
         />
     );
 
-    singleSelection.find('AutoComplete').simulate('change', undefined);
+    singleSelection.find('SingleAutoComplete').simulate('change', undefined);
 
     expect(changeSpy).toBeCalledWith(undefined);
     expect(finishSpy).toBeCalledWith();

@@ -4,7 +4,7 @@ import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {MultiItemSelection} from '../../components';
-import SelectionStore from './stores/SelectionStore';
+import SelectionStore from '../../stores/SelectionStore';
 import DatagridOverlay from './DatagridOverlay';
 import selectionStyles from './selection.scss';
 
@@ -105,7 +105,7 @@ export default class Selection extends React.Component<Props> {
         return (
             <Fragment>
                 <MultiItemSelection
-                    label={label && this.selectionStore.items.length + ' ' + label}
+                    label={label && items.length + ' ' + label}
                     leftButton={{
                         icon,
                         onClick: this.handleOverlayOpen,

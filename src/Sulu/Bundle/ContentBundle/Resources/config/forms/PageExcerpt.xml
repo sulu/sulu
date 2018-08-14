@@ -26,6 +26,12 @@
             <title lang="en">Categories</title>
         </meta>
     </property>
+    <property name="tags" type="tag_list">
+        <meta>
+            <title lang="de">Tags</title>
+            <title lang="en">Tags</title>
+        </meta>
+    </property>
     <property name="icon" type="media_selection">
         <meta>
             <title lang="en">Icons</title>

@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should highlight the part of the suggestion text which matches the query prop 1`] = `
+<li
+  class="suggestionItem"
+  style="min-width:0px"
+>
+  <button
+    class="suggestion"
+  >
+    <span
+      aria-label="fa-ticket"
+      class="icon fa fa-ticket"
+    />
+    <div>
+      <span>
+        <strong>
+          Sug
+        </strong>
+        gestion 3
+      </span>
+    </div>
+  </button>
+</li>
+`;
+
+exports[`Suggestion should render 1`] = `
+<li
+  class="suggestionItem"
+  style="min-width:0px"
+>
+  <button
+    class="suggestion"
+  >
+    <span
+      aria-label="fa-ticket"
+      class="icon fa fa-ticket"
+    />
+    Suggestion 1
+  </button>
+</li>
+`;
+
+exports[`Suggestion should render strong-tags around found chars 1`] = `
+<li
+  class="suggestionItem"
+  style="min-width:0px"
+>
+  <button
+    class="suggestion"
+  >
+    <span
+      aria-label="fa-ticket"
+      class="icon fa fa-ticket"
+    />
+    <span>
+      <strong>
+        Sug
+      </strong>
+      gestion 2
+    </span>
+  </button>
+</li>
+`;

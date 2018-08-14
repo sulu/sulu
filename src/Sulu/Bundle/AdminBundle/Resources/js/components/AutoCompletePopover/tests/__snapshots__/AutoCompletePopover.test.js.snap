@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with highlighted suggestions 1`] = `
+<ul
+  class="menu"
+>
+  <li
+    class="suggestionItem"
+    style="min-width:0px"
+  >
+    <button
+      class="suggestion"
+    >
+      <span
+        class="column"
+      >
+        <span>
+          <strong>
+            Test
+          </strong>
+           1
+        </span>
+      </span>
+    </button>
+  </li>
+  <li
+    class="suggestionItem"
+    style="min-width:0px"
+  >
+    <button
+      class="suggestion"
+    >
+      <span
+        class="column"
+      >
+        <span>
+          <strong>
+            Test
+          </strong>
+           2
+        </span>
+      </span>
+    </button>
+  </li>
+</ul>
+`;

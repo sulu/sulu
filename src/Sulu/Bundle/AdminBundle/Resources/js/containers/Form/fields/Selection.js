@@ -4,6 +4,7 @@ import {autorun, computed, observable, toJS} from 'mobx';
 import equal from 'fast-deep-equal';
 import Datagrid from '../../../containers/Datagrid';
 import DatagridStore from '../../../containers/Datagrid/stores/DatagridStore';
+import MultiAutoComplete from '../../../containers/MultiAutoComplete';
 import {translate} from '../../../utils/Translator';
 import SelectionComponent from '../../Selection';
 import type {FieldTypeProps} from '../../../types';
@@ -18,9 +19,9 @@ export default class Selection extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        if (this.type !== 'overlay' && this.type !== 'datagrid') {
+        if (this.type !== 'overlay' && this.type !== 'datagrid' && this.type !== 'auto_complete') {
             throw new Error(
-                'The Selection field must either be declared as "overlay" or as "datagrid", '
+                'The Selection field must either be declared as "overlay", "datagrid" or as "auto_complete", '
                 + 'received type was "' + this.type + '"!'
             );
         }
@@ -67,6 +68,10 @@ export default class Selection extends React.Component<Props> {
             return this.renderOverlay();
         }
 
+        if (this.type === 'auto_complete') {
+            return this.renderAutoComplete();
+        }
+
         if (this.type === 'datagrid') {
             return this.renderDatagrid();
         }
@@ -111,6 +116,51 @@ export default class Selection extends React.Component<Props> {
         );
     }
 
+    renderAutoComplete() {
+        const {
+            fieldTypeOptions: {
+                resource_key: resourceKey,
+                types: {
+                    auto_complete: {
+                        display_property: displayProperty,
+                        filter_parameter: filterParameter,
+                        id_property: idProperty,
+                        search_properties: searchProperties,
+                    },
+                },
+            },
+            formInspector,
+            value,
+        } = this.props;
+
+        if (!displayProperty) {
+            throw new Error('The selection field needs a "display_property" option to work properly!');
+        }
+
+        if (!searchProperties) {
+            throw new Error('The selection field needs a "search_properties" option to work properly!');
+        }
+
+        return (
+            <MultiAutoComplete
+                displayProperty={displayProperty}
+                filterParameter={filterParameter}
+                idProperty={idProperty}
+                locale={formInspector.locale}
+                onChange={this.handleAutoCompleteChange}
+                resourceKey={resourceKey}
+                searchProperties={searchProperties}
+                value={value}
+            />
+        );
+    }
+
+    handleAutoCompleteChange = (value: Array<string | number>) => {
+        const {onChange, onFinish} = this.props;
+        onChange(value);
+        onFinish();
+    };
+
     renderDatagrid() {
         if (!this.datagridStore) {
             throw new Error('The DatagridStore has not been initialized! This should not happen and is likely a bug.');
@@ -154,6 +204,10 @@ export default class Selection extends React.Component<Props> {
         }
 
         if (equal(toJS(value), datagridStore.selectionIds) || datagridStore.dataLoading) {
+            return;
+        }
+
+        if (datagridStore.loading) {
             return;
         }
 

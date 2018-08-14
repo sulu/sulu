@@ -2,6 +2,13 @@
 
 ## dev-develop
 
+### AutoComplete
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+There is no `AutoComplete` component anymore, instead this component was split into a `SingleAutoComplete` and
+`MultiAutoComplete` component. This way we can distinguish selecting multiple and only single values.
+
 ### Configuration changes for Selection and SingleSelection field types
 
 **This change only affects you if you have used a 2.0.0 alpha release before**
