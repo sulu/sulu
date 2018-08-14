@@ -3,10 +3,10 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import PublishIndicator from '../PublishIndicator';
 
-test('Do not show anything if only the published icon would be shown', () => {
+test('Show only the publish icon', () => {
     const publishIndicator = shallow(<PublishIndicator published={true} />);
 
-    expect(publishIndicator.find('.published')).toHaveLength(0);
+    expect(publishIndicator.find('.published')).toHaveLength(1);
     expect(publishIndicator.find('.draft')).toHaveLength(0);
 });
 

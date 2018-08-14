@@ -4,7 +4,6 @@ import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import {findWithToolbarFunction} from '../../../utils/TestHelper';
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
-import PublishIndicator from '../../../components/PublishIndicator';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
