@@ -1,5 +1,5 @@
-This component is the counterpart of the [`AutoComplete`](#autocomplete) component, but it
-supports assigning multiple items to it.
+This component is the counterpart of the [`SingleAutoComplete`](#singleautocomplete) component, but it supports
+assigning multiple items to it.
 
 ```javascript
 initialState = {
