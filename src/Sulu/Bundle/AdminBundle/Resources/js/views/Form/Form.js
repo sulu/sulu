@@ -2,6 +2,7 @@
 import React from 'react';
 import {action, computed, observable, isObservableArray} from 'mobx';
 import {observer} from 'mobx-react';
+import equals from 'fast-deep-equal';
 import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
@@ -116,7 +117,7 @@ class Form extends React.Component<Props> {
             throw new Error('The form ref has not been set! This should not happen and is likely a bug.');
         }
 
-        const {router} = this.props;
+        const {locales, router} = this.props;
         const {
             route: {
                 options: {
@@ -132,8 +133,17 @@ class Form extends React.Component<Props> {
         this.toolbarActions = toolbarActions.map((toolbarAction) => new (toolbarActionRegistry.get(toolbarAction))(
             this.formStore,
             form,
-            router
+            router,
+            locales
         ));
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (!equals(this.props.locales, prevProps.locales)) {
+            this.toolbarActions.forEach((toolbarAction) => {
+                toolbarAction.setLocales(this.locales);
+            });
+        }
     }
 
     componentWillUnmount() {

@@ -419,6 +419,46 @@ test('Should add PublishIndicator if publish status is available showing publish
     }));
 });
 
+test('Should set and update locales defined in ToolbarActions', () => {
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    class SaveToolbarAction extends AbstractToolbarAction {
+        getToolbarItemConfig() {
+            return {
+                type: 'button',
+                value: 'save',
+            };
+        }
+    }
+
+    toolbarActionRegistry.get.mockImplementation((name) => {
+        switch(name) {
+            case 'save':
+                return SaveToolbarAction;
+        }
+    });
+
+    const route = {
+        options: {
+            toolbarActions: ['save'],
+        },
+    };
+    const router = {
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+
+    const form = mount(<Form locales={[]} router={router} route={route} resourceStore={resourceStore} />);
+    expect(form.instance().toolbarActions[0].locales).toEqual([]);
+
+    form.setProps({locales: ['en', 'de']});
+    expect(form.instance().toolbarActions[0].locales).toEqual(['en', 'de']);
+});
+
 test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
