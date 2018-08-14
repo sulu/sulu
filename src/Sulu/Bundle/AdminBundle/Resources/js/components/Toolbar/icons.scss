@@ -1,8 +1,9 @@
 @import './toolbar.scss';
 
 .icons {
+    display: flex;
+    align-items: center;
     padding: 0 20px;
-    line-height: $toolbarHeight;
     vertical-align: top;
 }
 
