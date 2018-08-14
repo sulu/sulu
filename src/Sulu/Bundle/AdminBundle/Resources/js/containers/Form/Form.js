@@ -29,8 +29,14 @@ export default class Form extends React.Component<Props> {
                 data: {
                     concreteLanguages,
                 },
+                loading,
                 locale,
             } = store;
+
+            if (loading) {
+                this.hideGhostDialog();
+                return;
+            }
 
             if (concreteLanguages && locale && !concreteLanguages.includes(locale.get())) {
                 this.showGhostDialog();
