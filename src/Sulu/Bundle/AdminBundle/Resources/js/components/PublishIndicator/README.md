@@ -1,7 +1,6 @@
 The `PublishIndicator` is a simple component, which can be used to show the draft/publish state of an entity.
 
-It doesn't show anything if only `published` is set to `true`, because this is considered the default, to have less
-visual clutter in the UI.
+The `published` state is represented by a green circle.
 
 ```
 <PublishIndicator published={true} />
