@@ -2,6 +2,7 @@
 import React from 'react';
 import {action, computed, observable, isObservableArray} from 'mobx';
 import {observer} from 'mobx-react';
+import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -249,11 +250,26 @@ export default withToolbar(Form, function() {
         .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
         .filter((item) => item !== undefined);
 
+    const icons = [];
+    const formData = this.formStore.data;
+
+    if (formData.hasOwnProperty('publishedState') || formData.hasOwnProperty('published')) {
+        const {publishedState, published} = formData;
+        icons.push(
+            <PublishIndicator
+                key={'publish'}
+                draft={publishedState === undefined ? false : !publishedState}
+                published={published === undefined ? false : !!published}
+            />
+        );
+    }
+
     return {
         backButton,
         errors,
         locale,
         items,
+        icons,
         showSuccess,
     };
 });

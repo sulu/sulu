@@ -145,7 +145,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
                                             <PublishIndicator
                                                 key={'publish'}
                                                 draft={item.publishedState === undefined ? false : !item.publishedState}
-                                                published={item.published === undefined ? false : item.published}
+                                                published={item.published === undefined ? false : !!item.published}
                                             />,
                                         ]
                                     }

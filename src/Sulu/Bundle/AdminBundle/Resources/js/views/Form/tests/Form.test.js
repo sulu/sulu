@@ -4,6 +4,7 @@ import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import {findWithToolbarFunction} from '../../../utils/TestHelper';
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
+import PublishIndicator from '../../../components/PublishIndicator';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
@@ -279,6 +280,144 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
         {type: 'button', value: 'save'},
         {type: 'button', value: 'delete'},
     ]);
+});
+
+test('Should not add PublishIndicator if no publish status is available', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+
+    const route = {
+        options: {
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    resourceStore.setLocale('de');
+
+    const toolbarConfig = toolbarFunction.call(form.instance());
+
+    expect(toolbarConfig.icons).toHaveLength(0);
+});
+
+test('Should add PublishIndicator if publish status is available showing draft', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+    resourceStore.data = {
+        publishedState: false,
+        published: false,
+    };
+
+    const route = {
+        options: {
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    resourceStore.setLocale('de');
+
+    const toolbarConfig = toolbarFunction.call(form.instance());
+
+    expect(toolbarConfig.icons).toHaveLength(1);
+    const publishIndicator = shallow(toolbarConfig.icons[0]);
+
+    expect(publishIndicator.instance().props).toEqual(expect.objectContaining({
+        draft: true,
+        published: false,
+    }));
+});
+
+test('Should add PublishIndicator if publish status is available showing published', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+    resourceStore.data = {
+        publishedState: true,
+        published: '2018-07-05',
+    };
+
+    const route = {
+        options: {
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    resourceStore.setLocale('de');
+
+    const toolbarConfig = toolbarFunction.call(form.instance());
+
+    expect(toolbarConfig.icons).toHaveLength(1);
+    const publishIndicator = shallow(toolbarConfig.icons[0]);
+
+    expect(publishIndicator.instance().props).toEqual(expect.objectContaining({
+        draft: false,
+        published: true,
+    }));
+});
+
+test('Should add PublishIndicator if publish status is available showing published and draft', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+    resourceStore.data = {
+        publishedState: false,
+        published: '2018-07-05',
+    };
+
+    const route = {
+        options: {
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+    const form = mount(<Form router={router} route={route} resourceStore={resourceStore} />);
+    resourceStore.setLocale('de');
+
+    const toolbarConfig = toolbarFunction.call(form.instance());
+
+    expect(toolbarConfig.icons).toHaveLength(1);
+    const publishIndicator = shallow(toolbarConfig.icons[0]);
+
+    expect(publishIndicator.instance().props).toEqual(expect.objectContaining({
+        draft: true,
+        published: true,
+    }));
 });
 
 test('Should navigate to defined route on back button click', () => {
