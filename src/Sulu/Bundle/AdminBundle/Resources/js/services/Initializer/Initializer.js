@@ -47,7 +47,13 @@ import {setTranslations} from '../../utils/Translator';
 import Requester from '../Requester';
 import {bundlesReadyPromise} from '../../services/Bundles';
 import {viewRegistry} from '../../containers/ViewRenderer';
-import Form from '../../views/Form';
+import Form, {
+    toolbarActionRegistry,
+    DeleteToolbarAction,
+    SaveWithPublishingToolbarAction,
+    SaveToolbarAction,
+    TypeToolbarAction,
+} from '../../views/Form';
 import ResourceTabs from '../../views/ResourceTabs';
 import Datagrid from '../../views/Datagrid';
 
@@ -109,6 +115,13 @@ function registerFieldTypesWithOptions(fieldTypeOptions, Component) {
 
 function registerTextEditors() {
     textEditorRegistry.add('ckeditor5', CKEditor5);
+}
+
+function registerToolbarActions() {
+    toolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
+    toolbarActionRegistry.add('sulu_admin.save_with_publishing', SaveWithPublishingToolbarAction);
+    toolbarActionRegistry.add('sulu_admin.save', SaveToolbarAction);
+    toolbarActionRegistry.add('sulu_admin.type', TypeToolbarAction);
 }
 
 function processConfig(config: Object) {
@@ -192,6 +205,7 @@ class Initializer {
                     registerDatagridFieldTransformers();
                     registerFieldTypes(config['sulu_admin'].fieldTypeOptions);
                     registerTextEditors();
+                    registerToolbarActions();
                     setMomentLocale();
                 }
 

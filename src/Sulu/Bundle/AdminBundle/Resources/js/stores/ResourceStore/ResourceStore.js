@@ -11,6 +11,7 @@ export default class ResourceStore {
     disposer: () => void;
     @observable loading: boolean = false;
     @observable saving: boolean = false;
+    @observable deleting: boolean = false;
     @observable data: Object = {};
     @observable dirty: boolean = false;
     loadOptions: Object = {};
@@ -156,24 +157,31 @@ export default class ResourceStore {
             }));
     }
 
-    @action delete(): Promise<*> {
+    @action delete(options: Object = {}): Promise<*> {
         if (!this.data.id) {
             throw new Error('Cannot delete resource with an undefined "id"');
         }
 
-        this.saving = true;
+        this.deleting = true;
 
-        return ResourceRequester.delete(this.resourceKey, this.data.id)
+        const {locale} = this.observableOptions;
+
+        const requestOptions = options;
+        if (locale) {
+            requestOptions.locale = locale.get();
+        }
+
+        return ResourceRequester.delete(this.resourceKey, this.data.id, requestOptions)
             .then(action((response) => {
                 this.id = undefined;
                 this.data = response;
-                this.saving = false;
+                this.deleting = false;
                 this.dirty = false;
 
                 this.destroy();
             }))
             .catch(action(() => {
-                this.saving = false;
+                this.deleting = false;
             }));
     }
 

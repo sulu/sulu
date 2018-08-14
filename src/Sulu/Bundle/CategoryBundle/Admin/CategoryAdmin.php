@@ -73,6 +73,11 @@ class CategoryAdmin extends Admin
             )
         );
 
+        $formToolbarActions = [
+            'sulu_admin.save',
+            'sulu_admin.delete',
+        ];
+
         return [
             (new Route('sulu_category.datagrid', '/categories/:locale', 'sulu_admin.datagrid'))
                 ->addOption('locales', $locales)
@@ -85,6 +90,7 @@ class CategoryAdmin extends Admin
                 ->addOption('searchable', false),
             (new Route('sulu_category.add_form', '/categories/:locale/add', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'categories')
+                ->addOption('toolbarActions', $formToolbarActions)
                 ->addOption('routerAttributesToFormStore', ['parentId'])
                 ->addOption('locales', $locales),
             (new Route('sulu_category.add_form.detail', '/details', 'sulu_admin.form'))
@@ -94,6 +100,7 @@ class CategoryAdmin extends Admin
                 ->setParent('sulu_category.add_form'),
             (new Route('sulu_category.edit_form', '/categories/:locale/:id', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'categories')
+                ->addOption('toolbarActions', $formToolbarActions)
                 ->addOption('locales', $locales),
             (new Route('sulu_category.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_category.details')

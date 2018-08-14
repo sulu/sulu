@@ -15,6 +15,7 @@ jest.mock('../../../Datagrid/stores/DatagridStore',
         this.resourceKey = resourceKey;
         this.locale = observableOptions.locale;
         this.initialSelectionIds = initialSelectionIds;
+        this.dataLoading = true;
 
         mockExtendObservable(this, {
             selectionIds: [],
@@ -341,8 +342,54 @@ test('Should call onChange and onFinish prop when datagrid selection changes', (
         />
     );
 
+    selection.instance().datagridStore.dataLoading = false;
     selection.instance().datagridStore.selectionIds = [1, 5, 7];
 
     expect(changeSpy).toBeCalledWith([1, 5, 7]);
     expect(finishSpy).toBeCalledWith();
+});
+
+test('Should not call onChange and onFinish prop while datagrid is still loading', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid',
+        resource_key: 'snippets',
+        types: {
+            datagrid: {
+                adapter: 'table',
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale})
+        )
+    );
+
+    const selection = shallow(
+        <Selection
+            dataPath=""
+            error={undefined}
+            formInspector={formInspector}
+            fieldTypeOptions={fieldTypeOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={undefined}
+        />
+    );
+
+    selection.instance().datagridStore.selectionIds = [1, 5, 7];
+
+    expect(changeSpy).not.toBeCalled();
+    expect(finishSpy).not.toBeCalled();
 });

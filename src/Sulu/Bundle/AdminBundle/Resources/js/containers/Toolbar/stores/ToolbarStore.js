@@ -1,6 +1,6 @@
 // @flow
 import {action, autorun, computed, observable} from 'mobx';
-import type {Button, Select, ToolbarConfig, ToolbarItem} from '../types';
+import type {Button, Select, ToolbarConfig, ToolbarItemConfig} from '../types';
 
 const SHOW_SUCCESS_DURATION = 1500;
 
@@ -64,7 +64,7 @@ export default class ToolbarStore {
         return !!this.config.items && !!this.config.items.length;
     }
 
-    getItemsConfig(): Array<ToolbarItem> {
+    getItemsConfig(): Array<ToolbarItemConfig> {
         return this.config.items || [];
     }
 

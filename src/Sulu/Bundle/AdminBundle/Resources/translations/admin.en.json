@@ -7,6 +7,7 @@
     "sulu_admin.save": "Save",
     "sulu_admin.save_draft": "Save as draft",
     "sulu_admin.save_publish": "Save and publish",
+    "sulu_admin.publish": "Publish",
     "sulu_admin.object": "Object",
     "sulu_admin.objects": "Objects",
     "sulu_admin.reached_end_of_list": "You reached the end of the list",
