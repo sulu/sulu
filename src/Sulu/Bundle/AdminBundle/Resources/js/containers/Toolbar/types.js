@@ -24,7 +24,7 @@ export type ToolbarConfig = {
     backButton?: Button,
     disableAll?: boolean,
     errors?: Array<Error>,
-    icons?: Array<string>,
+    icons?: Array<Node>,
     items?: Array<ToolbarItemConfig>,
     locale?: Select,
     showSuccess?: IObservableValue<boolean>,

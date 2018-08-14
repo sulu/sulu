@@ -1,4 +1,5 @@
 // @flow
+import type {Node} from 'react';
 import {action, autorun, computed, observable} from 'mobx';
 import type {Button, Select, ToolbarConfig, ToolbarItemConfig} from '../types';
 
@@ -72,7 +73,7 @@ export default class ToolbarStore {
         return !!this.config.icons && !!this.config.icons.length;
     }
 
-    getIconsConfig(): Array<string> {
+    getIconsConfig(): Array<Node> {
         return this.config.icons || [];
     }
 
