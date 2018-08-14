@@ -74,6 +74,28 @@ test('Should reuse the passed resourceStore if the passed resourceKey is the sam
     expect(resourceStore).toBe(form.instance().resourceStore);
 });
 
+test('Should reload the passed resourceStore if some data has been there before showing the form', () => {
+    const Form = require('../Form').default;
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 10);
+    const route = {
+        options: {
+            resourceKey: 'snippets',
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        attributes: {},
+        route,
+    };
+
+    resourceStore.data = {value: 'something'};
+    mount(<Form resourceStore={resourceStore} router={router} route={route} />);
+
+    expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
+});
+
 test('Should create a new resourceStore if the passed resourceKey differs', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
@@ -482,60 +504,6 @@ test('Should initialize the ResourceStore with a schema', () => {
             slogan: undefined,
         });
     });
-});
-
-test('Should save form and reload parent form if available when submitted', (done) => {
-    const ResourceRequester = require('../../../services/ResourceRequester');
-    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
-    const Form = require('../Form').default;
-    const ResourceStore = require('../../../stores/ResourceStore').default;
-    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
-    const parentResourceStore = new ResourceStore('pages', 8);
-
-    const schemaTypesPromise = Promise.resolve({});
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
-    const schemaPromise = Promise.resolve({});
-    metadataStore.getSchema.mockReturnValue(schemaPromise);
-
-    let jsonSchemaResolve;
-    const jsonSchemaPromise = new Promise((resolve) => {
-        jsonSchemaResolve = resolve;
-    });
-    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
-
-    const route = {
-        options: {
-            resourceKey: 'page-seos',
-            toolbarActions: [],
-        },
-    };
-    const router = {
-        bind: jest.fn(),
-        navigate: jest.fn(),
-        route,
-        attributes: {
-            id: 8,
-        },
-    };
-    const form = mount(<Form router={router} route={route} resourceStore={parentResourceStore} />);
-
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit('publish').then(() => {
-                expect(ResourceRequester.get).toHaveBeenLastCalledWith('pages', 8, {});
-                expect(ResourceRequester.put).toBeCalledWith(
-                    'page-seos',
-                    8,
-                    {},
-                    {action: 'publish'}
-                );
-                done();
-            });
-        });
-    });
-
-    jsonSchemaResolve({});
 });
 
 test('Should save form when submitted', (done) => {

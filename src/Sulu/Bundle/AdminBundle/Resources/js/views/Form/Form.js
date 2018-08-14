@@ -93,6 +93,13 @@ class Form extends React.Component<Props> {
                 : new ResourceStore(resourceKey, id, {locale}, formStoreOptions);
         } else {
             this.resourceStore = resourceStore;
+
+            if (Object.keys(this.resourceStore.data).length > 0) {
+                // data should be reloaded if ResourceTabs ResourceStore is used and user comes back from another tab
+                // the above check assumes that loading the data from the backend takes longer than calling this method
+                // the very unlikely worst case scenario if this assumption is not met, is that the data is loaded twice
+                this.resourceStore.load();
+            }
         }
 
         this.formStore = new FormStore(this.resourceStore, formStoreOptions);
@@ -180,11 +187,6 @@ class Form extends React.Component<Props> {
                         editRoute,
                         {id: resourceStore.id, locale: resourceStore.locale, ...editRouteParameters}
                     );
-                }
-
-                if (this.hasOwnResourceStore) {
-                    // Reload parent ResourceStore, since its data might have changed due to changes in this Form
-                    resourceStore.load();
                 }
 
                 return response;
