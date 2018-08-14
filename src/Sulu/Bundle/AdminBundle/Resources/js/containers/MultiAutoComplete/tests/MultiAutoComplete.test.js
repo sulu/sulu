@@ -8,19 +8,22 @@ import SearchStore from '../../../stores/SearchStore';
 import SelectionStore from '../../../stores/SelectionStore';
 
 jest.mock('../../../stores/SearchStore', () => jest.fn());
-jest.mock('../../../stores/SelectionStore', () => jest.fn(function() {
-    this.set = jest.fn();
-    this.loading = false;
-    mockExtendObservable(this, {
-        items: [],
-    });
-}));
+jest.mock('../../../stores/SelectionStore', () => jest.fn());
 
 test('Render in loading state', () => {
     // $FlowFixMe
     SearchStore.mockImplementation(function() {
         this.searchResults = [];
         this.loading = true;
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = true;
+        mockExtendObservable(this, {
+            items: [],
+        });
     });
 
     expect(render(
@@ -34,6 +37,93 @@ test('Render in loading state', () => {
     )).toMatchSnapshot();
 });
 
+test('Pass loading flag if SelectionStore and SearchStore is loading', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {
+        this.searchResults = [];
+        this.loading = true;
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = true;
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
+    const multiAutoComplete = shallow(
+        <MultiAutoComplete
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            searchProperties={[]}
+            value={undefined}
+        />
+    );
+
+    expect(multiAutoComplete.find('MultiAutoComplete').prop('loading')).toEqual(true);
+});
+
+test('Pass loading flag if only SearchStore is loading', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {
+        this.searchResults = [];
+        this.loading = true;
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
+    const multiAutoComplete = shallow(
+        <MultiAutoComplete
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            searchProperties={[]}
+            value={undefined}
+        />
+    );
+
+    expect(multiAutoComplete.find('MultiAutoComplete').prop('loading')).toEqual(true);
+});
+
+test('Pass loading flag if only SelectionStore is loading', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {
+        this.searchResults = [];
+        this.loading = false;
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = true;
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
+    const multiAutoComplete = shallow(
+        <MultiAutoComplete
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            searchProperties={[]}
+            value={undefined}
+        />
+    );
+
+    expect(multiAutoComplete.find('MultiAutoComplete').prop('loading')).toEqual(true);
+});
+
 test('Render with loaded suggestions', () => {
     const suggestions = [
         {id: 7, number: '007', name: 'James Bond'},
@@ -44,6 +134,15 @@ test('Render with loaded suggestions', () => {
     SearchStore.mockImplementation(function() {
         this.searchResults = suggestions;
         this.loading = false;
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
     });
 
     const multiAutoComplete = mount(
@@ -72,6 +171,15 @@ test('Render with given value', () => {
         this.loading = false;
     });
 
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
     const multiAutoComplete = mount(
         <MultiAutoComplete
             displayProperty="name"
@@ -98,6 +206,15 @@ test('Pass filterParameter to SelectionStore', () => {
         this.loading = false;
     });
 
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
     mount(
         <MultiAutoComplete
             displayProperty="name"
@@ -118,6 +235,15 @@ test('Pass locale to SelectionStore', () => {
     SearchStore.mockImplementation(function() {
         this.searchResults = [];
         this.loading = false;
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
     });
 
     mount(
@@ -143,6 +269,15 @@ test('Search using store when new search value is retrieved from MultiAutoComple
         this.search = jest.fn();
     });
 
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
     const multiAutoComplete = shallow(
         <MultiAutoComplete
             displayProperty="name"
@@ -164,6 +299,15 @@ test('Search using store with excluded ids when new search value is retrieved fr
         this.searchResults = [];
         this.loading = false;
         this.search = jest.fn();
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
     });
 
     const multiAutoComplete = shallow(
@@ -191,6 +335,15 @@ test('Call onChange and clear search result when chosen option has been selected
         this.searchResults = [data];
         this.loading = false;
         this.clearSearchResults = jest.fn();
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
     });
 
     const changeSpy = jest.fn();
@@ -225,6 +378,15 @@ test('Call onChange and clear search result when chosen option has been selected
         this.searchResults = [data];
         this.loading = false;
         this.clearSearchResults = jest.fn();
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
     });
 
     const changeSpy = jest.fn();
@@ -264,6 +426,15 @@ test('Should call disposer when component unmounts', () => {
     SearchStore.mockImplementation(function() {
         this.searchResults = suggestions;
         this.loading = false;
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
     });
 
     const multiAutoComplete = mount(

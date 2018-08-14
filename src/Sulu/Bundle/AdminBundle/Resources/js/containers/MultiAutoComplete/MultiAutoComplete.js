@@ -86,7 +86,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
         return (
             <MultiAutoCompleteComponent
                 displayProperty={displayProperty}
-                loading={this.searchStore.loading}
+                loading={this.searchStore.loading || this.selectionStore.loading}
                 onChange={this.handleChange}
                 onSearch={this.handleSearch}
                 searchProperties={searchProperties}
