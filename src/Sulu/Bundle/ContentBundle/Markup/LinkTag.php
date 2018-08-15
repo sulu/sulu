@@ -62,7 +62,7 @@ class LinkTag implements TagInterface
 
             $htmlAttributes = array_map(
                 function ($value, $name) {
-                    if (in_array($name, ['provider', 'content']) || empty($value)) {
+                    if (in_array($name, ['provider', 'content', 'validation-state']) || empty($value)) {
                         return;
                     }
 

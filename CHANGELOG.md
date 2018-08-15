@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #4109 [ContentBundle]         Remove validation-state from rendered link
+
 * 1.6.21 (2018-07-18)
     * HOTFIX      #4063 [ContentComponent]      Fixed copy language function, which didn't copy the extension data
     * HOTFIX      #4056 [MediaBundle]           Added security-check for collection permission to media-controller
