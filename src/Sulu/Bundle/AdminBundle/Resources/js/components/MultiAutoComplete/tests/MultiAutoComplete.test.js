@@ -300,6 +300,40 @@ test('Should trigger callbacks when input does not match a suggestion and allowA
     expect(finishSpy).toBeCalledWith();
 });
 
+test('Should not trigger callbacks when input does not match a suggestion but an already allowed value', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+    const suggestions = [
+        {id: 1, name: 'Suggestion 1'},
+    ];
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            allowAdd={true}
+            displayProperty="name"
+            idProperty="name"
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={[{name: 'Suggestion'}]}
+        />
+    );
+
+    multiAutoComplete.instance().inputValue = 'Suggestion';
+    multiAutoComplete.update();
+    multiAutoComplete.find('input').prop('onFocus')();
+
+    Mousetrap.trigger('enter');
+    Mousetrap.trigger(',');
+
+    expect(multiAutoComplete.instance().inputValue).toEqual('Suggestion');
+
+    expect(changeSpy).not.toBeCalled();
+    expect(finishSpy).not.toBeCalled();
+});
+
 test('Should delete last value item if backspace is pressed in empty focused input field', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();

@@ -87,6 +87,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
             displayProperty,
             idProperty,
             suggestions,
+            value,
         } = this.props;
 
         if (this.inputValue.length === 0) {
@@ -99,7 +100,8 @@ export default class MultiAutoComplete extends React.Component<Props> {
             return false;
         }
 
-        if (allowAdd) {
+        const item = value.find((item) => item[displayProperty] === this.inputValue);
+        if (allowAdd && !item) {
             this.handleSelect({[idProperty]: this.inputValue});
             return false;
         }
