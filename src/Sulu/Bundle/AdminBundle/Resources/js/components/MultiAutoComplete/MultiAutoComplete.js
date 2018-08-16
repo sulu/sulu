@@ -48,8 +48,13 @@ export default class MultiAutoComplete extends React.Component<Props> {
         return this.labelRef ? this.labelRef.scrollWidth - 10 : 0;
     }
 
-    @action handleDelete = (value: Object) => {
-        this.props.onChange(this.props.value.filter((item) => item != value));
+    @action handleDelete = (newValue: Object) => {
+        const {onChange, onFinish, value} = this.props;
+        onChange(value.filter((item) => item != newValue));
+
+        if (onFinish) {
+            onFinish();
+        }
     };
 
     @action handleInputChange = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -60,11 +65,13 @@ export default class MultiAutoComplete extends React.Component<Props> {
     @action handleInputFocus = () => {
         Mousetrap.bind('enter', this.handleEnterAndComma);
         Mousetrap.bind(',', this.handleEnterAndComma);
+        Mousetrap.bind('backspace', this.handleBackspace);
     };
 
     @action handleInputBlur = () => {
         Mousetrap.unbind('enter');
         Mousetrap.unbind(',');
+        Mousetrap.unbind('backspace');
     };
 
     handleEnterAndComma = () => {
@@ -91,6 +98,19 @@ export default class MultiAutoComplete extends React.Component<Props> {
         }
 
         return false;
+    };
+
+    handleBackspace = () => {
+        const {value} = this.props;
+        if (this.inputValue.length > 0) {
+            return true;
+        }
+
+        if (value.length === 0) {
+            return false;
+        }
+
+        this.handleDelete(value[value.length - 1]);
     };
 
     @action handleSelect = (newValue: Object) => {

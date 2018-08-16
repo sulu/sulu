@@ -297,3 +297,81 @@ test('Should trigger callbacks when input does not match a suggestion and allowA
     expect(changeSpy).toBeCalledWith([{name: 'Suggestion'}]);
     expect(finishSpy).toBeCalledWith();
 });
+
+test('Should delete last value item if backspace is pressed in empty focused input field', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            allowAdd={true}
+            displayProperty="name"
+            idProperty="name"
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={[]}
+            value={[{name: 'Tag1'}, {name: 'Tag2'}]}
+        />
+    );
+
+    multiAutoComplete.find('input').prop('onFocus')();
+
+    Mousetrap.trigger('backspace');
+
+    expect(changeSpy).toBeCalledWith([{name: 'Tag1'}]);
+    expect(finishSpy).toBeCalledWith();
+});
+
+test('Should not delete last value item if backspace is pressed in filled focused input field', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            allowAdd={true}
+            displayProperty="name"
+            idProperty="name"
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={[]}
+            value={[{name: 'Tag1'}, {name: 'Tag2'}]}
+        />
+    );
+
+    multiAutoComplete.instance().inputValue = 'Suggestion';
+    multiAutoComplete.update();
+    multiAutoComplete.find('input').prop('onFocus')();
+
+    Mousetrap.trigger('backspace');
+
+    expect(changeSpy).not.toBeCalled();
+    expect(finishSpy).not.toBeCalled();
+});
+
+test('Should not delete last value item if backspace is pressed in empty non-focused input field', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    mount(
+        <MultiAutoComplete
+            allowAdd={true}
+            displayProperty="name"
+            idProperty="name"
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={[]}
+            value={[{name: 'Tag1'}, {name: 'Tag2'}]}
+        />
+    );
+
+    Mousetrap.trigger('backspace');
+
+    expect(changeSpy).not.toBeCalled();
+    expect(finishSpy).not.toBeCalled();
+});
