@@ -37,7 +37,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
 
     @observable labelRef: ElementRef<'label'>;
     @observable inputRef: ElementRef<'input'>;
-    @observable inputValue = '';
+    @observable inputValue: string = '';
 
     @action setLabelRef = (labelRef: ?ElementRef<'label'>) => {
         if (labelRef) {
@@ -100,7 +100,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
             return false;
         }
 
-        const item = value.find((item) => item[displayProperty] === this.inputValue);
+        const item = value.find((item) => item[displayProperty].toLowerCase() === this.inputValue.toLowerCase());
         if (allowAdd && !item) {
             this.handleSelect({[idProperty]: this.inputValue});
             return false;
