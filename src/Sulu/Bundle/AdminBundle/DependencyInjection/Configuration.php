@@ -67,6 +67,7 @@ class Configuration implements ConfigurationInterface
                                         ->children()
                                             ->arrayNode('auto_complete')
                                                 ->children()
+                                                    ->booleanNode('allow_add')->defaultFalse()->end()
                                                     ->scalarNode('id_property')->defaultValue('id')->end()
                                                     ->scalarNode('display_property')->isRequired()->end()
                                                     ->scalarNode('filter_parameter')->end()

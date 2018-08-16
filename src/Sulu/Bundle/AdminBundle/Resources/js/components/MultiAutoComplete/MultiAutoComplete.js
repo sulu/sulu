@@ -4,6 +4,8 @@ import type {ElementRef} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
+import Mousetrap from 'mousetrap';
+import classNames from 'classnames';
 import Icon from '../Icon';
 import Loader from '../Loader';
 import AutoCompletePopover from '../AutoCompletePopover';
@@ -11,7 +13,9 @@ import Item from './Item';
 import multiAutoCompleteStyles from './multiAutoComplete.scss';
 
 type Props = {
+    allowAdd: boolean,
     displayProperty: string,
+    idProperty: string,
     loading: boolean,
     onChange: (value: Array<Object>) => void,
     onFinish?: () => void,
@@ -26,6 +30,8 @@ const DEBOUNCE_TIME = 300;
 @observer
 export default class MultiAutoComplete extends React.Component<Props> {
     static defaultProps = {
+        allowAdd: false,
+        idProperty: 'id',
         loading: false,
     };
 
@@ -51,6 +57,42 @@ export default class MultiAutoComplete extends React.Component<Props> {
         this.debouncedSearch(this.inputValue);
     };
 
+    @action handleInputFocus = () => {
+        Mousetrap.bind('enter', this.handleEnterAndComma);
+        Mousetrap.bind(',', this.handleEnterAndComma);
+    };
+
+    @action handleInputBlur = () => {
+        Mousetrap.unbind('enter');
+        Mousetrap.unbind(',');
+    };
+
+    handleEnterAndComma = () => {
+        const {
+            allowAdd,
+            displayProperty,
+            idProperty,
+            suggestions,
+        } = this.props;
+
+        if (this.inputValue.length === 0) {
+            return false;
+        }
+
+        const suggestion = suggestions.find((suggestion) => suggestion[displayProperty] === this.inputValue);
+        if (suggestion) {
+            this.handleSelect(suggestion);
+            return false;
+        }
+
+        if (allowAdd) {
+            this.handleSelect({[idProperty]: this.inputValue});
+            return false;
+        }
+
+        return false;
+    };
+
     @action handleSelect = (newValue: Object) => {
         const {
             onChange,
@@ -73,14 +115,19 @@ export default class MultiAutoComplete extends React.Component<Props> {
     render() {
         const {
             displayProperty,
+            idProperty,
             loading,
             searchProperties,
             suggestions,
             value,
         } = this.props;
 
-        // TODO can be move to AutoCompletePopover?
         const showSuggestionList = (!!this.inputValue && this.inputValue.length > 0) && suggestions.length > 0;
+
+        const inputClass = classNames(
+            multiAutoCompleteStyles.input,
+            'mousetrap' // required to allow mousetrap to catch key binding within input
+        );
 
         return (
             <Fragment>
@@ -95,21 +142,24 @@ export default class MultiAutoComplete extends React.Component<Props> {
                         {value.map((item) => (
                             <Item
                                 onDelete={this.handleDelete}
-                                key={item.id}
+                                key={item[idProperty]}
                                 value={item}
                             >
                                 {item[displayProperty]}
                             </Item>
                         ))}
                         <input
-                            className={multiAutoCompleteStyles.input}
+                            className={inputClass}
+                            onBlur={this.handleInputBlur}
                             onChange={this.handleInputChange}
+                            onFocus={this.handleInputFocus}
                             value={this.inputValue}
                         />
                     </div>
                 </label>
                 <AutoCompletePopover
                     anchorElement={this.labelRef}
+                    idProperty={idProperty}
                     minWidth={this.popoverMinWidth}
                     onSelect={this.handleSelect}
                     open={showSuggestionList}

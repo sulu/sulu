@@ -38,7 +38,7 @@ exports[`MultiAutoComplete should render 1`] = `
       />
     </div>
     <input
-      class="input"
+      class="input mousetrap"
       value=""
     />
   </div>
@@ -72,7 +72,7 @@ exports[`Render the MultiAutoComplete with open suggestions list 1`] = `
       />
     </div>
     <input
-      class="input"
+      class="input mousetrap"
       value="test"
     />
   </div>
