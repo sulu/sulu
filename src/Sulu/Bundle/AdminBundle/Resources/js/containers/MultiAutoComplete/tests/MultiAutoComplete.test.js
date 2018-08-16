@@ -124,6 +124,35 @@ test('Pass loading flag if only SelectionStore is loading', () => {
     expect(multiAutoComplete.find('MultiAutoComplete').prop('loading')).toEqual(true);
 });
 
+test('Pass allowAdd and idProperty prop to component', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {});
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
+    const multiAutoComplete = shallow(
+        <MultiAutoComplete
+            allowAdd={true}
+            displayProperty="name"
+            idProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            searchProperties={[]}
+            value={undefined}
+        />
+    );
+
+    expect(multiAutoComplete.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+        allowAdd: true,
+        idProperty: 'name',
+    }));
+});
+
 test('Render with loaded suggestions', () => {
     const suggestions = [
         {id: 7, number: '007', name: 'James Bond'},

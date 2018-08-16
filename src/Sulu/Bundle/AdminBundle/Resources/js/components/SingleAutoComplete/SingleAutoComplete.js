@@ -90,10 +90,12 @@ export default class SingleAutoComplete extends React.Component<Props> {
         const {inputValue} = this;
         const showSuggestionList = (!!inputValue && inputValue.length > 0) && suggestions.length > 0;
 
+        // The mousetrap class is required to allow mousetrap catch key bindings for up and down keys
         return (
             <div className={singleAutoCompleteStyles.singleAutoComplete}>
                 <Input
                     icon={LENS_ICON}
+                    inputClass="mousetrap"
                     value={inputValue}
                     loading={loading}
                     labelRef={this.setLabelRef}

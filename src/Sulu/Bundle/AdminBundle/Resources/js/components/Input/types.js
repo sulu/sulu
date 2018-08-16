@@ -2,6 +2,7 @@
 import type {ElementRef} from 'react';
 
 export type InputProps<T: ?string | ?number> = {|
+    inputClass?: string,
     collapsed?: boolean,
     name?: string,
     icon?: string,

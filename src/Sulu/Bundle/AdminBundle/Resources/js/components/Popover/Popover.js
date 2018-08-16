@@ -11,19 +11,20 @@ import PopoverPositioner from './PopoverPositioner';
 import popoverStyles from './popover.scss';
 
 type Props = {
-    open: boolean,
+    /** This element will be used to position the popover */
+    anchorElement: ElementRef<*>,
+    backdrop: boolean,
+    centerChildElement?: ElementRef<*>,
     children?: (
         setPopoverElementRef: (ref: ElementRef<*>) => void,
         style: Object,
         verticalPosition: string,
     ) => Node,
-    onClose?: () => void,
-    /** This element will be used to position the popover */
-    anchorElement: ElementRef<*>,
-    centerChildElement?: ElementRef<*>,
     horizontalOffset: number,
+    onClose?: () => void,
+    open: boolean,
+    popoverChildRef?: (ref: ?ElementRef<*>) => void,
     verticalOffset: number,
-    backdrop: boolean,
 };
 
 @observer
@@ -128,9 +129,14 @@ export default class Popover extends React.Component<Props> {
 
     handleBackdropClick = this.close;
 
-    @action setPopoverChildRef = (popoverChildRef: ElementRef<*>) => {
+    @action setPopoverChildRef = (ref: ElementRef<*>) => {
+        if (ref) {
+            this.popoverChildRef = ref;
+        }
+
+        const {popoverChildRef} = this.props;
         if (popoverChildRef) {
-            this.popoverChildRef = popoverChildRef;
+            popoverChildRef(ref);
         }
     };
 

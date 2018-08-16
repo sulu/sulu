@@ -38,6 +38,7 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                                 'resource_key' => 'tags',
                                 'types' => [
                                     'auto_complete' => [
+                                        'allow_add' => true,
                                         'display_property' => 'name',
                                         'id_property' => 'name',
                                         'filter_parameter' => 'names',

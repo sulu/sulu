@@ -8,6 +8,7 @@ import SearchStore from '../../stores/SearchStore';
 import SelectionStore from '../../stores/SelectionStore';
 
 type Props = {|
+    allowAdd: boolean,
     displayProperty: string,
     filterParameter: string,
     idProperty: string,
@@ -21,6 +22,7 @@ type Props = {|
 @observer
 export default class MultiAutoComplete extends React.Component<Props> {
     static defaultProps = {
+        allowAdd: false,
         filterParameter: 'ids',
         idProperty: 'id',
     };
@@ -78,14 +80,18 @@ export default class MultiAutoComplete extends React.Component<Props> {
     render() {
         const {
             props: {
+                allowAdd,
                 displayProperty,
+                idProperty,
                 searchProperties,
             },
         } = this;
 
         return (
             <MultiAutoCompleteComponent
+                allowAdd={allowAdd}
                 displayProperty={displayProperty}
+                idProperty={idProperty}
                 loading={this.searchStore.loading || this.selectionStore.loading}
                 onChange={this.handleChange}
                 onSearch={this.handleSearch}

@@ -2,6 +2,8 @@ This component is the counterpart of the [`SingleAutoComplete`](#singleautocompl
 assigning multiple items to it.
 
 ```javascript
+const MultiAutoComplete = require('./MultiAutoComplete').default;
+
 initialState = {
     value: [],
     loading: false,
@@ -40,7 +42,7 @@ const handleSearch = (value) => {
         loading: !!value,
         suggestions: [],
     }));
-    
+
     if (value) {
         // Fake Request
         setTimeout(() => {
@@ -61,6 +63,72 @@ const handleChange = (value) => {
 
 <MultiAutoComplete
     displayProperty="name"
+    loading={state.loading}
+    onChange={handleChange}
+    onSearch={handleSearch}
+    placeholder="Enter something fun..."
+    searchProperties={['name']}
+    suggestions={state.suggestions}
+    value={state.value}
+/>
+```
+
+If the `allowAdd` prop is set to true, then the user can also add new items on its own.
+
+```javascript
+const MultiAutoComplete = require('./MultiAutoComplete').default;
+
+initialState = {
+    value: [],
+    loading: false,
+    suggestions: [],
+}
+
+const data = [
+    {name: 'Harry Potter'},
+    {name: 'Lilly Potter'},
+    {name: 'James Potter'},
+    {name: 'Albus Dumbledore'},
+    {name: 'Severus Snape'},
+    {name: 'Ron Weasly'},
+    {name: 'Hermoine Granger'},
+    {name: 'Tom Riddle'},
+    {name: 'Bathilda Bagshot'},
+    {name: 'Susan Bones'},
+    {name: 'Marvolo Gaunt'},
+    {name: 'Godric Gryffindor'},
+];
+
+const handleSearch = (value) => {
+    const regexp = new RegExp(value, 'gi');
+
+    setState(() => ({
+        loading: !!value,
+        suggestions: [],
+    }));
+
+    if (value) {
+        // Fake Request
+        setTimeout(() => {
+            setState(() => ({
+                loading: false,
+                suggestions: data.filter((suggestion) => suggestion.name.match(regexp))
+            }));
+        }, 500);
+    }
+};
+
+const handleChange = (value) => {
+    setState(() => ({
+        value: value,
+        suggestions: [],
+    }));
+};
+
+<MultiAutoComplete
+    allowAdd={true}
+    displayProperty="name"
+    idProperty="name"
     loading={state.loading}
     onChange={handleChange}
     onSearch={handleSearch}

@@ -122,6 +122,7 @@ export default class Selection extends React.Component<Props> {
                 resource_key: resourceKey,
                 types: {
                     auto_complete: {
+                        allow_add: allowAdd,
                         display_property: displayProperty,
                         filter_parameter: filterParameter,
                         id_property: idProperty,
@@ -143,6 +144,7 @@ export default class Selection extends React.Component<Props> {
 
         return (
             <MultiAutoComplete
+                allowAdd={allowAdd}
                 displayProperty={displayProperty}
                 filterParameter={filterParameter}
                 idProperty={idProperty}

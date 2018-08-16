@@ -47,7 +47,7 @@ export default class Overlay extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        Mousetrap.unbind('esc', this.close);
+        Mousetrap.unbind('esc');
     }
 
     componentDidMount() {

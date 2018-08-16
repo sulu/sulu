@@ -436,6 +436,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
     );
 
     expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+        allowAdd: false,
         displayProperty: 'name',
         filterParameter: 'names',
         idProperty: 'uuid',
@@ -443,5 +444,52 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         resourceKey: 'snippets',
         searchProperties: ['name'],
         value,
+    }));
+});
+
+test('Should pass allowAdd prop to MultiAutoComplete component', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'snippets',
+        types: {
+            auto_complete: {
+                allow_add: true,
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale})
+        )
+    );
+
+    const selection = shallow(
+        <Selection
+            dataPath=""
+            error={undefined}
+            formInspector={formInspector}
+            fieldTypeOptions={fieldTypeOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={value}
+        />
+    );
+
+    expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+        allowAdd: true,
     }));
 });
