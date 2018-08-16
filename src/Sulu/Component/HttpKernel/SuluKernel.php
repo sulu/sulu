@@ -26,6 +26,7 @@ abstract class SuluKernel extends Kernel
     use MicroKernelTrait;
 
     const CONTEXT_ADMIN = 'admin';
+
     const CONTEXT_WEBSITE = 'website';
 
     /**
@@ -51,7 +52,7 @@ abstract class SuluKernel extends Kernel
     public function __construct($environment, $debug, $suluContext)
     {
         $this->context = $suluContext;
-        $this->reversedContext = $this->context === self::CONTEXT_ADMIN ? self::CONTEXT_WEBSITE : self::CONTEXT_ADMIN;
+        $this->reversedContext = self::CONTEXT_ADMIN === $this->context ? self::CONTEXT_WEBSITE : self::CONTEXT_ADMIN;
         parent::__construct($environment, $debug);
     }
 
@@ -60,7 +61,7 @@ abstract class SuluKernel extends Kernel
      */
     public function registerBundles()
     {
-        $contents = require $this->getProjectDir().'/config/bundles.php';
+        $contents = require $this->getProjectDir() . '/config/bundles.php';
         foreach ($contents as $class => $envs) {
             if (
                 // if is all or current environment
@@ -78,13 +79,13 @@ abstract class SuluKernel extends Kernel
      */
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
     {
-        $container->addResource(new FileResource($this->getProjectDir().'/config/bundles.php'));
-        $confDir = $this->getProjectDir().'/config';
+        $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
+        $confDir = $this->getProjectDir() . '/config';
 
-        $this->load($loader, $confDir.'/{packages}/*');
-        $this->load($loader, $confDir.'/{packages}/'.$this->environment.'/**/*');
-        $this->load($loader, $confDir.'/{services}');
-        $this->load($loader, $confDir.'/{services}_'.$this->environment);
+        $this->load($loader, $confDir . '/{packages}/*');
+        $this->load($loader, $confDir . '/{packages}/' . $this->environment . '/**/*');
+        $this->load($loader, $confDir . '/{services}');
+        $this->load($loader, $confDir . '/{services}_' . $this->environment);
     }
 
     /**
@@ -103,8 +104,8 @@ abstract class SuluKernel extends Kernel
     {
         $configExtensions = $this->getConfigExtensions();
         $notReversedContext = $this->getNotReversedContext();
-        $configFiles = glob($glob.$configExtensions, GLOB_BRACE);
-        $excludedConfigFiles = glob($glob.$notReversedContext, GLOB_BRACE);
+        $configFiles = glob($glob . $configExtensions, GLOB_BRACE);
+        $excludedConfigFiles = glob($glob . $notReversedContext, GLOB_BRACE);
 
         foreach ($configFiles as $resource) {
             if (!in_array($resource, $excludedConfigFiles)) {
@@ -118,8 +119,8 @@ abstract class SuluKernel extends Kernel
         $configExtensions = $this->getConfigExtensions();
         $notReversedContext = $this->getNotReversedContext();
 
-        $configFiles = glob($glob.$configExtensions, GLOB_BRACE);
-        $excludedConfigFiles = glob($glob.$notReversedContext, GLOB_BRACE);
+        $configFiles = glob($glob . $configExtensions, GLOB_BRACE);
+        $excludedConfigFiles = glob($glob . $notReversedContext, GLOB_BRACE);
 
         foreach ($configFiles as $resource) {
             if (!in_array($resource, $excludedConfigFiles)) {
@@ -155,7 +156,7 @@ abstract class SuluKernel extends Kernel
     {
         $configExtensions = $this->getConfigExtensions();
 
-        return '_'.$this->reversedContext.$configExtensions;
+        return '_' . $this->reversedContext . $configExtensions;
     }
 
     protected function getConfigExtensions(): string
