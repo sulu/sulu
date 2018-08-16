@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {observable, isObservable, when} from 'mobx';
 import ToolbarStore from '../../stores/ToolbarStore';
 
@@ -11,7 +11,11 @@ beforeEach(() => {
 });
 
 test('Set toolbar items and let mobx react', () => {
-    const errors = [{}];
+    const errors = [{
+        code: 100,
+        message: 'You failed!',
+    }];
+
     toolbarStore.setConfig({
         items: [
             {
@@ -24,10 +28,20 @@ test('Set toolbar items and let mobx react', () => {
         errors,
     });
 
+    const toolbarConfigItems = toolbarStore.config.items;
+    if (!toolbarConfigItems) {
+        throw new Error('The items should be set now!');
+    }
+
+    const buttonConfig = toolbarConfigItems[0];
+    if (buttonConfig.type !== 'button') {
+        throw new Error('The type should be set now to "button"!');
+    }
+
     expect(isObservable(toolbarStore.config.items)).toBe(true);
-    expect(toolbarStore.config.items).toHaveLength(1);
-    expect(toolbarStore.config.items[0].value).toBe('Test');
-    expect(toolbarStore.config.items[0].icon).toBe('test');
+    expect(toolbarConfigItems).toHaveLength(1);
+    expect(buttonConfig.value).toBe('Test');
+    expect(buttonConfig.icon).toBe('test');
     expect(toolbarStore.errors).toEqual(errors);
 });
 
@@ -40,12 +54,20 @@ test('Reset showSuccess after 1500ms', () => {
         showSuccess: observable.box(true),
     });
 
-    expect(toolbarStore.config.showSuccess.get()).toEqual(true);
+    const toolbarConfig = toolbarStore.config;
+    if (!toolbarConfig.showSuccess) {
+        throw new Error('The showSuccess flag should be set now!');
+    }
+
+    expect(toolbarConfig.showSuccess.get()).toEqual(true);
 
     when(
-        () => toolbarStore.config.showSuccess.get() === false,
-        () => {
-            expect(toolbarStore.config.showSuccess.get()).toEqual(false);
+        () => !!toolbarConfig.showSuccess && toolbarConfig.showSuccess.get() === false,
+        (): void => {
+            if (!toolbarConfig.showSuccess) {
+                throw new Error('The showSuccess flag should be set now!');
+            }
+            expect(toolbarConfig.showSuccess.get()).toEqual(false);
         }
     );
 });

@@ -2,7 +2,6 @@
 import {observer} from 'mobx-react';
 import {action} from 'mobx';
 import React from 'react';
-import Icon from '../../components/Icon';
 import ToolbarComponent from '../../components/Toolbar';
 import ToolbarStore from './stores/ToolbarStore';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
@@ -120,12 +119,7 @@ export default class Toolbar extends React.Component<*> {
                 <ToolbarComponent.Controls>
                     {this.toolbarStore.hasIconsConfig() &&
                     <ToolbarComponent.Icons>
-                        {this.toolbarStore.getIconsConfig().map((icon) => (
-                            <Icon
-                                key={icon}
-                                name={icon}
-                            />
-                        ))}
+                        {this.toolbarStore.getIconsConfig().map((icon) => icon)}
                     </ToolbarComponent.Icons>
                     }
                     {this.toolbarStore.hasLocaleConfig() &&

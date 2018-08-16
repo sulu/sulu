@@ -1,13 +1,12 @@
 // @flow
-import type {ChildrenArray, Element} from 'react';
 import React from 'react';
+import type {ChildrenArray, Node} from 'react';
 import classNames from 'classnames';
-import Icon from '../Icon';
 import type {Skin} from './types';
 import iconsStyles from './icons.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Icon>>,
+    children: ChildrenArray<Node>,
     skin?: Skin,
 };
 
@@ -15,18 +14,6 @@ export default class Icons extends React.PureComponent<Props> {
     static defaultProps = {
         skin: 'light',
     };
-
-    static createChildren(children: ChildrenArray<Element<typeof Icon>>) {
-        return React.Children.map(children, (child) => {
-            return React.cloneElement(
-                child,
-                {
-                    ...child.props,
-                    className: iconsStyles.icon,
-                }
-            );
-        });
-    }
 
     render() {
         const {
@@ -41,7 +28,11 @@ export default class Icons extends React.PureComponent<Props> {
 
         return (
             <div className={iconsClass}>
-                {Icons.createChildren(children)}
+                {React.Children.map(children, (child) => (
+                    <div className={iconsStyles.icon}>
+                        {child}
+                    </div>
+                ))}
             </div>
         );
     }

@@ -31,15 +31,22 @@ beforeEach(() => {
     };
 });
 
-test('Render the items from the ToolbarStore', () => {
+test('Render the items and icons from the ToolbarStore', () => {
     const storeKey = 'testStore';
 
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
     toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(true);
     toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
     toolbarStoreMock.hasBackButtonConfig.mockReturnValue(false);
+
+    toolbarStoreMock.getIconsConfig.mockReturnValue(
+        [
+            <p key={1}>Test1</p>,
+            <p key={2}>Test2</p>,
+        ]
+    );
 
     toolbarStoreMock.getItemsConfig.mockReturnValue(
         [

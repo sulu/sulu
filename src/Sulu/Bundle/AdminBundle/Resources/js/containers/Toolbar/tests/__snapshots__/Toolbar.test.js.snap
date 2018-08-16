@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render the items from the ToolbarStore 1`] = `
+exports[`Render the items and icons from the ToolbarStore 1`] = `
 <nav
   class="toolbar light"
 >
@@ -81,6 +81,25 @@ exports[`Render the items from the ToolbarStore 1`] = `
   </div>
   <div
     class="controls light"
-  />
+  >
+    <div
+      class="icons light"
+    >
+      <div
+        class="icon"
+      >
+        <p>
+          Test1
+        </p>
+      </div>
+      <div
+        class="icon"
+      >
+        <p>
+          Test2
+        </p>
+      </div>
+    </div>
+  </div>
 </nav>
 `;

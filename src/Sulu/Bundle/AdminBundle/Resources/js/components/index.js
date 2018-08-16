@@ -18,6 +18,7 @@ import Masonry from './Masonry';
 import MultiItemSelection from './MultiItemSelection';
 import Overlay from './Overlay';
 import Popover from './Popover';
+import PublishIndicator from './PublishIndicator';
 import Navigation from './Navigation';
 import Backdrop from './Backdrop';
 import withContainerSize from './withContainerSize';
@@ -44,5 +45,6 @@ export {
     Navigation,
     Overlay,
     Popover,
+    PublishIndicator,
     withContainerSize,
 };

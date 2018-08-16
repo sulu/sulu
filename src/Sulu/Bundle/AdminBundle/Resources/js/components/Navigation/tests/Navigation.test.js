@@ -123,7 +123,7 @@ test('The expanded prop should be set correct automatically', () => {
     expect(navigation.find('Item[value="contact"]').instance().props.expanded).toBe(true);
     expect(navigation.find('Item[value="settings"]').instance().props.expanded).toBe(false);
 
-    navigation.find('Item[value="settings"] Item .title').simulate('click');
+    navigation.find('Item[value="settings"] .title').simulate('click');
     expect(navigation.find('Item[value="contact"]').instance().props.expanded).toBe(false);
     expect(navigation.find('Item[value="settings"]').instance().props.expanded).toBe(true);
 });

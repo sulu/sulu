@@ -40,6 +40,7 @@ class SeoControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('SEO Title', $response->title);
         $this->assertEquals(false, $response->publishedState);
+        $this->assertObjectHasAttribute('published', $response);
 
         $client->request('GET', '/api/page-seos/' . $webspaceUuid . '?locale=en&webspace=sulu_io');
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -47,6 +48,7 @@ class SeoControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('SEO Title', $response->title);
         $this->assertEquals(false, $response->publishedState);
+        $this->assertObjectHasAttribute('published', $response);
     }
 
     public function testPutAndGetPublished()
@@ -62,6 +64,7 @@ class SeoControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('SEO Title', $response->title);
         $this->assertEquals(true, $response->publishedState);
+        $this->assertObjectHasAttribute('published', $response);
 
         $client->request('GET', '/api/page-seos/' . $webspaceUuid . '?locale=en&webspace=sulu_io');
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -69,5 +72,6 @@ class SeoControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('SEO Title', $response->title);
         $this->assertEquals(true, $response->publishedState);
+        $this->assertObjectHasAttribute('published', $response);
     }
 }
