@@ -53,6 +53,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
 
     render() {
         const {
+            inputClass,
             valid,
             icon,
             loading,
@@ -130,6 +131,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                     }
 
                     <input
+                        className={inputClass}
                         ref={inputRef ? this.setInputRef : undefined}
                         name={name}
                         type={type}

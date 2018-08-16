@@ -16,6 +16,7 @@ exports[`Render the SingleAutoComplete with open suggestions list 1`] = `
       />
     </div>
     <input
+      class="mousetrap"
       type="text"
       value="Test"
     />
@@ -60,6 +61,7 @@ exports[`SingleAutoComplete should render 1`] = `
       />
     </div>
     <input
+      class="mousetrap"
       type="text"
       value="Test"
     />

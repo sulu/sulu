@@ -147,7 +147,7 @@ test('The popover should take its dimensions from the positioner', () => {
 
 test('The popover should pass its child ref to the parent', () => {
     const popoverChildRefSpy = jest.fn();
-    const popover = mount(
+    mount(
         <Popover open={true} anchorElement={getMockedAnchorEl()} popoverChildRef={popoverChildRefSpy}>
             {
                 (setPopoverRef, styles) => (
