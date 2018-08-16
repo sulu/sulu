@@ -102,6 +102,7 @@ module.exports = { // eslint-disable-line
 
                 return folders
                     .filter((folder) => path.basename(folder) !== 'index.js')
+                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
                     .map((folder) => {
                         const component = path.basename(folder);
                         return {name: component, content: folder + '/README.md'};
