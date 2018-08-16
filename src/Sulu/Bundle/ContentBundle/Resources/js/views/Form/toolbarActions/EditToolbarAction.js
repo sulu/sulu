@@ -68,7 +68,11 @@ export default class EditToolbarAction extends AbstractToolbarAction {
         };
     }
 
-    @action handleCopyLocaleDialogClose = () => {
+    @action handleCopyLocaleDialogClose = (copied: boolean) => {
+        if (copied) {
+            this.form.showSuccessSnackbar();
+        }
+
         this.showCopyLocaleDialog = false;
     };
 }

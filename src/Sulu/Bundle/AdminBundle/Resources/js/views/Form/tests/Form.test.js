@@ -6,6 +6,10 @@ import {findWithToolbarFunction} from '../../../utils/TestHelper';
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
+jest.mock('../toolbarActions/DeleteToolbarAction', () => jest.fn());
+jest.mock('../toolbarActions/SaveWithPublishingToolbarAction', () => jest.fn());
+jest.mock('../toolbarActions/SaveToolbarAction', () => jest.fn());
+jest.mock('../toolbarActions/TypeToolbarAction', () => jest.fn());
 
 jest.mock('../../../utils/Translator', () => ({
     translate: function(key) {

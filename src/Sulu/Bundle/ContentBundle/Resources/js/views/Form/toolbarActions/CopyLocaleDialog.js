@@ -12,7 +12,7 @@ type Props = {
     id: string | number,
     locale: string,
     locales: Array<string>,
-    onClose: () => void,
+    onClose: (copied: boolean) => void,
     open: boolean,
     webspace: string,
 };
@@ -49,8 +49,12 @@ export default class CopyLocaleDialog extends React.Component<Props> {
             }
         ).then(action(() => {
             this.copying = false;
-            this.props.onClose();
+            this.props.onClose(true);
         }));
+    };
+
+    handleClose = () => {
+        this.props.onClose(false);
     };
 
     @action handleCheckboxChange = (checked: boolean, value?: string | number) => {
@@ -62,14 +66,14 @@ export default class CopyLocaleDialog extends React.Component<Props> {
     };
 
     render() {
-        const {concreteLocales, locales, onClose, open} = this.props;
+        const {concreteLocales, locales, open} = this.props;
 
         return (
             <Dialog
                 confirmLoading={this.copying}
                 cancelText={translate('sulu_admin.cancel')}
                 confirmText={translate('sulu_admin.ok')}
-                onCancel={onClose}
+                onCancel={this.handleClose}
                 onConfirm={this.handleConfirm}
                 open={open}
                 title={translate('sulu_admin.copy_locale')}

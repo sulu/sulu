@@ -47,7 +47,7 @@ test('Call onClose callback if cancel is clicked', () => {
 
     copyLocaleDialog.find('Button[skin="secondary"]').simulate('click');
 
-    expect(closeSpy).toBeCalled();
+    expect(closeSpy).toBeCalledWith(false);
 });
 
 test('Copy locales and call onClose callback if confirm is clicked', () => {
@@ -82,7 +82,7 @@ test('Copy locales and call onClose callback if confirm is clicked', () => {
     return postWithIdPromise.then(() => {
         copyLocaleDialog.update();
         expect(copyLocaleDialog.find('Dialog').prop('confirmLoading')).toEqual(false);
-        expect(closeSpy).toBeCalled();
+        expect(closeSpy).toBeCalledWith(true);
     });
 });
 

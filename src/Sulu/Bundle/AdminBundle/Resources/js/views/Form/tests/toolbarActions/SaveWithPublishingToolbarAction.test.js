@@ -1,8 +1,9 @@
 // @flow
 import SaveWithPublishingToolbarAction from '../../toolbarActions/SaveWithPublishingToolbarAction';
-import Form, {FormStore} from '../../../../containers/Form';
+import {FormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
+import Form from '../../../../views/Form';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -13,10 +14,6 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {
 }));
 
 jest.mock('../../../../containers/Form', () => ({
-    __esModule: true,
-    default: jest.fn(function() {
-        this.submit = jest.fn();
-    }),
     FormStore: class {
         resourceStore;
         constructor(resourceStore) {
@@ -39,13 +36,21 @@ jest.mock('../../../../containers/Form', () => ({
 
 jest.mock('../../../../services/Router', () => jest.fn(function() {}));
 
+jest.mock('../../../../views/Form', () => jest.fn(function() {
+    this.submit = jest.fn();
+}));
+
 function createSaveWithPublishingToolbarAction() {
-    const formStore = new FormStore(new ResourceStore('test'));
-    const form = new Form({
-        onSubmit: jest.fn(),
-        store: formStore,
-    });
+    const resourceStore = new ResourceStore('test');
+    const formStore = new FormStore(resourceStore);
     const router = new Router({});
+    const form = new Form({
+        locales: [],
+        resourceStore,
+        route: router.route,
+        router,
+    });
+
     return new SaveWithPublishingToolbarAction(formStore, form, router);
 }
 

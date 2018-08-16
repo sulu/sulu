@@ -1,8 +1,9 @@
 // @flow
 import {shallow} from 'enzyme';
-import {Form, FormStore} from 'sulu-admin-bundle/containers';
+import {FormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {Router} from 'sulu-admin-bundle/services';
+import Form from 'sulu-admin-bundle/views/Form/Form';
 import EditToolbarAction from '../../toolbarActions/EditToolbarAction';
 
 jest.mock('sulu-admin-bundle/stores', () => ({
@@ -16,7 +17,6 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/containers', () => ({
-    Form: jest.fn(),
     FormStore: class {
         resourceStore;
         options = {};
@@ -47,13 +47,20 @@ jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('sulu-admin-bundle/views/Form/Form', () => jest.fn(function() {
+    this.showSuccessSnackbar = jest.fn();
+}));
+
 function createEditToolbarAction(locales) {
-    const formStore = new FormStore(new ResourceStore('test'));
-    const form = new Form({
-        onSubmit: jest.fn(),
-        store: formStore,
-    });
+    const resourceStore = new ResourceStore('test');
+    const formStore = new FormStore(resourceStore);
     const router = new Router({});
+    const form = new Form({
+        locales: [],
+        resourceStore,
+        route: router.route,
+        router,
+    });
 
     return new EditToolbarAction(formStore, form, router, locales);
 }
@@ -175,7 +182,40 @@ test('Close dialog when onClose from CopyLocaleDialog is called', () => {
         open: true,
     }));
 
-    element.instance().props.onClose();
+    element.instance().props.onClose(false);
+    expect(editToolbarAction.form.showSuccessSnackbar).not.toBeCalledWith();
+    element = shallow(editToolbarAction.getNode());
+    expect(element.instance().props).toEqual(expect.objectContaining({
+        open: false,
+    }));
+});
+
+test('Close dialog and show success message when onClose from CopyLocaleDialog is called with true', () => {
+    const editToolbarAction = createEditToolbarAction(['en', 'de']);
+    editToolbarAction.formStore.resourceStore.id = 3;
+    // $FlowFixMe
+    editToolbarAction.formStore.resourceStore.locale.get.mockReturnValue('en');
+    editToolbarAction.formStore.options.webspace = 'sulu_io';
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    const clickHandler = toolbarItemConfig.options[0].onClick;
+    if (!clickHandler) {
+        throw new Error('A onClick callback should be registered on the copy locale option');
+    }
+
+    let element = shallow(editToolbarAction.getNode());
+    expect(element.instance().props).toEqual(expect.objectContaining({
+        open: false,
+    }));
+
+    clickHandler();
+    element = shallow(editToolbarAction.getNode());
+    expect(element.instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    element.instance().props.onClose(true);
+    expect(editToolbarAction.form.showSuccessSnackbar).toBeCalledWith();
     element = shallow(editToolbarAction.getNode());
     expect(element.instance().props).toEqual(expect.objectContaining({
         open: false,
