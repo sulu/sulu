@@ -98,11 +98,11 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                                     'type' => 'page',
                                 ],
                                 'home' => [
-                                    'path' => '%kernel.project_dir%/config/sulu/templates/pages',
+                                    'path' => '%kernel.project_dir%/config/templates/pages',
                                     'type' => 'home',
                                 ],
                                 'page' => [
-                                    'path' => '%kernel.project_dir%/config/sulu/templates/pages',
+                                    'path' => '%kernel.project_dir%/config/templates/pages',
                                     'type' => 'page',
                                 ],
                             ],
