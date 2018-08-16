@@ -683,6 +683,7 @@ class NodeRepository implements NodeRepositoryInterface
         $data['path'] = $structure->getPath();
         $data['url'] = $structure->getResourceLocator();
         $data['publishedState'] = $structure->getPublishedState();
+        $data['published'] = $structure->getPublished();
 
         // prepare data
         $data['_links'] = [
