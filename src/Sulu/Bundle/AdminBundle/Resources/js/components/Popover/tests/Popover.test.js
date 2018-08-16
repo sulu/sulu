@@ -144,3 +144,20 @@ test('The popover should take its dimensions from the positioner', () => {
     expect(pretty(body.innerHTML)).toMatchSnapshot();
     expect(popover.instance().dimensions.scrollTop).toBe(4);
 });
+
+test('The popover should pass its child ref to the parent', () => {
+    const popoverChildRefSpy = jest.fn();
+    const popover = mount(
+        <Popover open={true} anchorElement={getMockedAnchorEl()} popoverChildRef={popoverChildRefSpy}>
+            {
+                (setPopoverRef, styles) => (
+                    <div ref={setPopoverRef} style={styles}>
+                        <div>My item 1</div>
+                    </div>
+                )
+            }
+        </Popover>
+    );
+
+    expect(popoverChildRefSpy.mock.calls[0][0].innerHTML).toEqual('<div>My item 1</div>');
+});

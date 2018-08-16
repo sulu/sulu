@@ -60,7 +60,7 @@ test('Render the MultiAutoComplete with open suggestions list', () => {
     expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
 
-test('Clicking on a suggestion should call the onChange handler with the value of the selected Suggestion', () => {
+test('Clicking a suggestion should call onChange with value of the Suggestion and focus input afterwards', () => {
     const changeSpy = jest.fn();
 
     const suggestions = [
@@ -88,9 +88,11 @@ test('Clicking on a suggestion should call the onChange handler with the value o
     multiAutoComplete.instance().inputValue = 'test';
     multiAutoComplete.update();
 
+    multiAutoComplete.instance().inputRef = {focus: jest.fn()};
     multiAutoComplete.find('Suggestion button').at(0).simulate('click');
 
     expect(changeSpy).toHaveBeenCalledWith([...value, suggestions[0]]);
+    expect(multiAutoComplete.instance().inputRef.focus).toBeCalledWith();
 });
 
 test('Clicking on delete icon of a suggestion should call the onChange callback without the deleted Suggestion', () => {

@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
+import Mousetrap from 'mousetrap';
+import {computed, observable} from 'mobx';
 import Menu from '../Menu';
 import Popover from '../Popover';
 import Suggestion from './Suggestion';
@@ -23,12 +25,56 @@ export default class AutoCompletePopover extends React.Component<Props> {
         minWidth: 0,
     };
 
+    @observable suggestionsRef: ElementRef<*>;
+
+    @computed get buttons() {
+        if (!this.suggestionsRef) {
+            return [];
+        }
+
+        return Array.from(this.suggestionsRef.getElementsByTagName('button'));
+    }
+
+    @computed get activeButtonIndex() {
+        return this.buttons.findIndex((button) => button === document.activeElement);
+    }
+
+    setSuggestionsRef = (suggestionsRef: ElementRef<*>) => {
+        this.suggestionsRef = suggestionsRef;
+    };
+
     handlePopoverClose = () => {
         const {onSelect, suggestions} = this.props;
         if (suggestions.length > 0) {
             onSelect(suggestions[0]);
         }
     };
+
+    handleUp = () => {
+        const previousButton = this.buttons[this.activeButtonIndex - 1];
+        if (previousButton) {
+            previousButton.focus();
+        }
+    };
+
+    handleDown = () => {
+        const nextButton = this.buttons[this.activeButtonIndex + 1];
+        if (nextButton) {
+            nextButton.focus();
+        }
+    };
+
+    componentDidUpdate(prevProps: Props) {
+        if (this.props.open === true && prevProps.open === false) {
+            Mousetrap.bind('up', this.handleUp);
+            Mousetrap.bind('down', this.handleDown);
+        }
+
+        if (this.props.open === false && prevProps.open === true) {
+            Mousetrap.unbind('up');
+            Mousetrap.unbind('down');
+        }
+    }
 
     render() {
         const {
@@ -44,11 +90,12 @@ export default class AutoCompletePopover extends React.Component<Props> {
 
         return (
             <Popover
-                open={open}
-                onClose={this.handlePopoverClose}
                 anchorElement={anchorElement}
-                verticalOffset={-2}
+                onClose={this.handlePopoverClose}
+                open={open}
+                popoverChildRef={this.setSuggestionsRef}
                 horizontalOffset={5}
+                verticalOffset={-2}
             >
                 {
                     (setPopoverElementRef, popoverStyle) => (

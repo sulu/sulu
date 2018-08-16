@@ -36,11 +36,18 @@ export default class MultiAutoComplete extends React.Component<Props> {
     };
 
     @observable labelRef: ElementRef<'label'>;
+    @observable inputRef: ElementRef<'input'>;
     @observable inputValue = '';
 
     @action setLabelRef = (labelRef: ?ElementRef<'label'>) => {
         if (labelRef) {
             this.labelRef = labelRef;
+        }
+    };
+
+    @action setInputRef = (inputRef: ?ElementRef<'input'>) => {
+        if (inputRef) {
+            this.inputRef = inputRef;
         }
     };
 
@@ -122,6 +129,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
 
         onChange([...value, newValue]);
         this.inputValue = '';
+        this.inputRef.focus();
 
         if (onFinish) {
             onFinish();
@@ -170,6 +178,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
                         ))}
                         <input
                             className={inputClass}
+                            ref={this.setInputRef}
                             onBlur={this.handleInputBlur}
                             onChange={this.handleInputChange}
                             onFocus={this.handleInputFocus}

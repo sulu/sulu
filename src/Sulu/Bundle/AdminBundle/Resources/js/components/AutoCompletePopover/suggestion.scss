@@ -18,7 +18,8 @@ $suggestionTextColorDisabled: rgba($suggestionTextColor, .3);
     background: transparent;
     text-align: left;
 
-    &:not(:disabled):hover {
+    &:not(:disabled):hover,
+    &:not(:disabled):focus {
         color: $suggestionTextColorActive;
     }
 
