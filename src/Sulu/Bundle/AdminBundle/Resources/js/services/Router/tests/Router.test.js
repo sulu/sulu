@@ -220,6 +220,32 @@ test('Update observable attribute on route change', () => {
     expect(history.location.pathname).toBe('/list/de');
 });
 
+test('Update boolean observable attribute on route change', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+            attributeDefaults: {
+                exclude: true,
+            },
+        },
+    });
+
+    const exclude = observable.box();
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bind('exclude', exclude);
+
+    router.navigate('list');
+    expect(router.attributes.exclude).toBe(true);
+
+    history.push('/list?exclude=false');
+    expect(router.attributes.exclude).toBe(false);
+});
+
 test('Navigate to route using URL', () => {
     routeRegistry.getAll.mockReturnValue({
         page: {
