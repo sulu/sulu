@@ -28,6 +28,7 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.resourceKey = resourceStore.resourceKey;
     this.data = resourceStore.data;
     this.locale = resourceStore.locale;
+    this.loading = resourceStore.loading;
     this.validate = jest.fn();
     this.schema = {};
     this.set = jest.fn();
@@ -44,6 +45,7 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(function (resourceKey, 
     this.data = {};
     this.locale = observableOptions.locale;
     this.setLocale = jest.fn((locale) => this.locale.set(locale));
+    this.loading = false;
 }));
 
 jest.mock('../stores/MetadataStore', () => ({
@@ -325,4 +327,14 @@ test('Should show a GhostDialog and do nothing if the cancel button is clicked',
     expect(form.find('GhostDialog').prop('open')).toEqual(false);
 
     expect(formStore.copyFromLocale).not.toBeCalled();
+});
+
+test('Should not show a GhostDialog if the resourceStore is currently loading', () => {
+    const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
+    resourceStore.data.concreteLanguages = ['en'];
+    resourceStore.loading = true;
+    const formStore = new FormStore(resourceStore);
+    const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
+
+    expect(form.instance().displayGhostDialog).toEqual(false);
 });

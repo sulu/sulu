@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import {action, computed, observable, isObservableArray} from 'mobx';
 import {observer} from 'mobx-react';
+import equals from 'fast-deep-equal';
 import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
@@ -19,7 +21,7 @@ type Props = ViewProps & {
 class Form extends React.Component<Props> {
     resourceStore: ResourceStore;
     formStore: FormStore;
-    form: ?FormContainer;
+    form: ?ElementRef<typeof FormContainer>;
     @observable errors = [];
     showSuccess = observable.box(false);
     @observable toolbarActions = [];
@@ -111,12 +113,7 @@ class Form extends React.Component<Props> {
     }
 
     @action componentDidMount() {
-        const form = this.form;
-        if (!form) {
-            throw new Error('The form ref has not been set! This should not happen and is likely a bug.');
-        }
-
-        const {router} = this.props;
+        const {locales, router} = this.props;
         const {
             route: {
                 options: {
@@ -131,9 +128,18 @@ class Form extends React.Component<Props> {
 
         this.toolbarActions = toolbarActions.map((toolbarAction) => new (toolbarActionRegistry.get(toolbarAction))(
             this.formStore,
-            form,
-            router
+            this,
+            router,
+            locales
         ));
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (!equals(this.props.locales, prevProps.locales)) {
+            this.toolbarActions.forEach((toolbarAction) => {
+                toolbarAction.setLocales(this.locales);
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -146,6 +152,13 @@ class Form extends React.Component<Props> {
 
     @action showSuccessSnackbar = () => {
         this.showSuccess.set(true);
+    };
+
+    @action submit = (action: ?string) => {
+        if (!this.form) {
+            throw new Error('The form ref has not been set! This should not happen and is likely a bug.');
+        }
+        this.form.submit(action);
     };
 
     handleSubmit = (actionParameter) => {

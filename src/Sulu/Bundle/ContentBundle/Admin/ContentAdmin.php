@@ -95,6 +95,7 @@ class ContentAdmin extends Admin
             'sulu_admin.save_with_publishing',
             'sulu_admin.type',
             'sulu_admin.delete',
+            'sulu_content.edit',
         ];
 
         $formToolbarActionsWithoutType = [

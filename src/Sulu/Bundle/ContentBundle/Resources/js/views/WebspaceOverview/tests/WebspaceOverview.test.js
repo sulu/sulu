@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
+import Router from 'sulu-admin-bundle/services/Router';
 import {findWithToolbarFunction} from 'sulu-admin-bundle/utils/TestHelper';
 import WebspaceStore from '../../../stores/WebspaceStore';
 
@@ -51,6 +52,10 @@ jest.mock('../../../stores/WebspaceStore', () => ({
     loadWebspaces: jest.fn(() => Promise.resolve()),
 }));
 
+jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+    this.bind = jest.fn();
+}));
+
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
@@ -71,12 +76,9 @@ test('Render WebspaceOverview', () => {
     webspaceStore.loadWebspaces.mockReturnValue(promise);
 
     const WebspaceOverview = require('../WebspaceOverview').default;
-    const router = {
-        bind: jest.fn(),
-        attributes: {},
-    };
+    const router = new Router({});
 
-    const webspaceOverview = mount(<WebspaceOverview router={router} />);
+    const webspaceOverview = mount(<WebspaceOverview route={router.route} router={router} />);
     webspaceOverview.instance().datagridStore.data = [
         [
             {id: 1},
@@ -115,12 +117,9 @@ test('Should change webspace when value of webspace select is changed', () => {
 
     webspaceStore.loadWebspaces.mockReturnValue(promise);
 
-    const router = {
-        bind: jest.fn(),
-        attributes: {},
-    };
+    const router = new Router({});
 
-    const webspaceOverview = mount(<WebspaceOverview router={router} />);
+    const webspaceOverview = mount(<WebspaceOverview route={router.route} router={router} />);
 
     return promise.then(() => {
         webspaceOverview.update();
@@ -183,12 +182,9 @@ test('Should load webspace and active route attribute from userStore', () => {
 
 test('Should bind router', () => {
     const WebspaceOverview = require('../WebspaceOverview').default;
-    const router = {
-        bind: jest.fn(),
-        attributes: {},
-    };
+    const router = new Router({});
 
-    const webspaceOverview = mount(<WebspaceOverview router={router} />);
+    const webspaceOverview = mount(<WebspaceOverview route={router.route} router={router} />);
     webspaceOverview.instance().webspace.set('sulu');
     const page = webspaceOverview.instance().page;
     const locale = webspaceOverview.instance().locale;

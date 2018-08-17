@@ -5,15 +5,15 @@ import {buildHocDisplayName} from '../../services/react';
 import type {ToolbarConfig} from './types';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 
-export default function withToolbar(
-    Component: Class<Component<*, *>>,
+export default function withToolbar<P, C: Class<Component<P>>>(
+    Component: C,
     toolbar: () => ToolbarConfig,
     toolbarStoreKey: string = DEFAULT_STORE_KEY
-) {
+): C {
     const WithToolbarComponent = class extends Component {
         toolbarDisposer: Function;
 
-        constructor(props: *) {
+        constructor(props: P) {
             super(props);
 
             if (super.hasOwnProperty('toolbarDisposer')) {
@@ -36,5 +36,6 @@ export default function withToolbar(
 
     WithToolbarComponent.displayName = buildHocDisplayName('withToolbar', Component);
 
+    // $FlowFixMe
     return WithToolbarComponent;
 }

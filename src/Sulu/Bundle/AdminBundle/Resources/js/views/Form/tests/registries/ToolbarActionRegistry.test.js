@@ -2,6 +2,11 @@
 import toolbarActionRegistry from '../../registries/ToolbarActionRegistry';
 import AbstractToolbarAction from '../../toolbarActions/AbstractToolbarAction';
 
+jest.mock('../../toolbarActions/DeleteToolbarAction', () => jest.fn());
+jest.mock('../../toolbarActions/SaveWithPublishingToolbarAction', () => jest.fn());
+jest.mock('../../toolbarActions/SaveToolbarAction', () => jest.fn());
+jest.mock('../../toolbarActions/TypeToolbarAction', () => jest.fn());
+
 beforeEach(() => {
     toolbarActionRegistry.clear();
 });

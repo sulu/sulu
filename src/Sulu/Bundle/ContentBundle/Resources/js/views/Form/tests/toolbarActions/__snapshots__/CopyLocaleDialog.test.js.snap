@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render the dialog with given props 1`] = `
+<div
+  class="dialogContainer"
+>
+  <div
+    class="dialog"
+  >
+    <section
+      class="content"
+    >
+      <header>
+        sulu_admin.copy_locale
+      </header>
+      <article>
+        <div
+          class="dialog"
+        >
+          <p>
+            sulu_admin.choose_target_locale:
+          </p>
+          <label
+            class="label"
+          >
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+                value="en"
+              />
+              <span />
+            </span>
+            <div>
+              en*
+            </div>
+          </label>
+          <p>
+            sulu_admin.copy_locale_dialog_description
+          </p>
+        </div>
+      </article>
+      <footer>
+        <button
+          class="button secondary"
+          type="button"
+        >
+          <span
+            class="text"
+          >
+            sulu_admin.cancel
+          </span>
+        </button>
+        <button
+          class="button primary"
+          type="button"
+        >
+          <span
+            class="text"
+          >
+            sulu_admin.ok
+          </span>
+        </button>
+      </footer>
+    </section>
+  </div>
+</div>
+`;
