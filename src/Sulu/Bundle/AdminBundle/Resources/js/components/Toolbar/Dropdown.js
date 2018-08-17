@@ -20,13 +20,13 @@ export default class Dropdown extends React.Component<DropdownProps> {
         this.open = !this.open;
     };
 
-    componentWillReceiveProps = (nextProps: DropdownProps) => {
-        const {disabled} = nextProps;
+    componentDidUpdate() {
+        const {disabled} = this.props;
 
         if (disabled) {
             this.close();
         }
-    };
+    }
 
     handleButtonClick = () => {
         this.toggle();
