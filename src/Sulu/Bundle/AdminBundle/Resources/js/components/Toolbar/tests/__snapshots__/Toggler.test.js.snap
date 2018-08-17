@@ -27,6 +27,43 @@ exports[`Render disabled toggler 1`] = `
 </button>
 `;
 
+exports[`Render loading toggler 1`] = `
+<button
+  class="button"
+>
+  <div
+    class="spinner loader"
+    style="width:20px;height:20px"
+  >
+    <div
+      class="doubleBounce1"
+    />
+    <div
+      class="doubleBounce2"
+    />
+  </div>
+  <span
+    class="label"
+  >
+    <label
+      class="label"
+    >
+      <span
+        class="switch toggler"
+      >
+        <input
+          type="checkbox"
+        />
+        <span />
+      </span>
+      <div>
+        Disabled Toggler
+      </div>
+    </label>
+  </span>
+</button>
+`;
+
 exports[`Render toggler with skin 1`] = `
 <button
   class="button dark"

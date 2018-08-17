@@ -212,11 +212,12 @@ export default withToolbar(WebspaceOverview, function() {
     return {
         items: [
             {
-                value: translate('sulu_content.show_ghost_and_shadow'),
-                type: 'button',
+                label: translate('sulu_content.show_ghost_and_shadow'),
                 onClick: action(() => {
                     this.excludeGhostsAndShadows.set(!this.excludeGhostsAndShadows.get());
                 }),
+                type: 'toggler',
+                value: !this.excludeGhostsAndShadows.get(),
             },
         ],
         locale: {

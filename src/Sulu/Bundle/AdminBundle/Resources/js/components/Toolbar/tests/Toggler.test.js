@@ -9,6 +9,12 @@ test('Render disabled toggler', () => {
     )).toMatchSnapshot();
 });
 
+test('Render loading toggler', () => {
+    expect(render(
+        <Toggler label="Disabled Toggler" loading={true} onClick={jest.fn()} value={false} />
+    )).toMatchSnapshot();
+});
+
 test('Render toggler with skin', () => {
     expect(render(
         <Toggler label="Dark Toggler" onClick={jest.fn()} skin="dark" value={false} />
@@ -26,6 +32,15 @@ test('Call onClick handler when item was clicked', () => {
     const toggler = shallow(<Toggler label="Click Toggler" onClick={clickSpy} value={false} />);
 
     toggler.find('Button').simulate('click');
+
+    expect(clickSpy).toBeCalledWith();
+});
+
+test('Call onClick handler when toggler was changed', () => {
+    const clickSpy = jest.fn();
+    const toggler = shallow(<Toggler label="Click Toggler" onClick={clickSpy} value={false} />);
+
+    toggler.find('Toggler').simulate('change');
 
     expect(clickSpy).toBeCalledWith();
 });

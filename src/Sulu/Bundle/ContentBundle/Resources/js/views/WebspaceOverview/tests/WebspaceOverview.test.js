@@ -189,6 +189,7 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
     return promise.then(() => {
         webspaceOverview.instance().webspace.set('sulu');
         webspaceOverview.update();
+
         const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
         expect(excludeGhostsAndShadows.get()).toEqual(false);
         expect(webspaceOverview.instance().datagridStore.observableOptions).toEqual(expect.objectContaining({
@@ -196,12 +197,18 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
             'exclude-shadows': excludeGhostsAndShadows,
         }));
 
-        const toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+        let toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+        expect(toolbarConfig.items[0].value).toEqual(true);
+
         toolbarConfig.items[0].onClick();
+        toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+        expect(toolbarConfig.items[0].value).toEqual(false);
         expect(webspaceOverview.instance().datagridStore.clear).toBeCalledWith();
         expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(true);
 
         toolbarConfig.items[0].onClick();
+        toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+        expect(toolbarConfig.items[0].value).toEqual(true);
         expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(false);
     });
 });

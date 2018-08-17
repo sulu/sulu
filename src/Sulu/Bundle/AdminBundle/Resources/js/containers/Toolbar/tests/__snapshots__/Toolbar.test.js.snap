@@ -77,6 +77,32 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
           </button>
         </div>
       </li>
+      <li>
+        <button
+          class="button light"
+        >
+          <span
+            class="label"
+          >
+            <label
+              class="label"
+            >
+              <span
+                class="switch toggler"
+              >
+                <input
+                  checked=""
+                  type="checkbox"
+                />
+                <span />
+              </span>
+              <div>
+                Toggler
+              </div>
+            </label>
+          </span>
+        </button>
+      </li>
     </ul>
   </div>
   <div

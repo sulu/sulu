@@ -1,13 +1,14 @@
 // @flow
 import type {Node} from 'react';
 import type {IObservableValue} from 'mobx';
-import type {Button, Dropdown, Select} from '../../components/Toolbar/types';
+import type {Button, Dropdown, Select, Toggler} from '../../components/Toolbar/types';
 
-export type {Button, Dropdown, Select};
+export type {Button, Dropdown, Select, Toggler};
 export type ButtonItemConfig = Button & { type: 'button' };
 export type DropdownItemConfig = Dropdown & { type: 'dropdown' };
 export type SelectItemConfig = Select & { type: 'select' };
-export type ToolbarItemConfig = ButtonItemConfig | DropdownItemConfig | SelectItemConfig;
+export type TogglerItemConfig = Toggler & { type: 'toggler'};
+export type ToolbarItemConfig = ButtonItemConfig | DropdownItemConfig | SelectItemConfig | TogglerItemConfig;
 
 export type ToolbarProps = {
     storeKey?: string,

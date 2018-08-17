@@ -5,11 +5,13 @@ import IconsComponent from './Icons';
 import ButtonComponent from './Button';
 import DropdownComponent from './Dropdown';
 import SelectComponent from './Select';
+import TogglerComponent from './Toggler';
 
 export type Item =
     Element<typeof ButtonComponent>
     | Element<typeof DropdownComponent>
-    | Element<typeof SelectComponent>;
+    | Element<typeof SelectComponent>
+    | Element<typeof TogglerComponent>;
 export type Group = Element<typeof ItemsComponent> | Element<typeof IconsComponent>;
 
 export type Skin = 'light' | 'dark';
@@ -17,7 +19,6 @@ export type Skin = 'light' | 'dark';
 export type Button = {
     children?: Node,
     onClick: () => ?Promise<*>,
-    // TODO rename to label?
     value?: string | number,
     icon?: string,
     size?: string,
@@ -32,6 +33,7 @@ export type Button = {
 export type Toggler = {
     disabled?: boolean,
     label: string,
+    loading?: boolean,
     onClick: () => void,
     skin?: Skin,
     value: boolean,
