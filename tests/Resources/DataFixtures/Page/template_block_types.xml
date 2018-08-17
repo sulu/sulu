@@ -14,9 +14,7 @@
         <property name="title" type="text_line" mandatory="true">
             <tag name="sulu.node.title" priority="10"/>
         </property>
-        <property name="url" type="resource_locator" mandatory="true">
-            <tag name="sulu.rlp" priority="1"/>
-        </property>
+        <property name="url" type="resource_locator" mandatory="true"/>
         <block name="block1" default-type="default" minOccurs="2" maxOccurs="10" mandatory="true">
             <meta>
                 <title lang="de">Block1 DE</title>

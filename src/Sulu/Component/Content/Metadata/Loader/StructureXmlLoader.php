@@ -35,8 +35,8 @@ class StructureXmlLoader extends AbstractLoader
      * @var array
      */
     private $requiredTagNames = [
-        'page' => ['sulu.rlp'],
-        'home' => ['sulu.rlp'],
+        'page' => [],
+        'home' => [],
         'snippet' => [],
     ];
 

@@ -23,8 +23,6 @@
             </params>
         </property>
 
-        <property name="url" type="resource_locator" mandatory="true">
-            <tag name="sulu.rlp" priority="1"/>
-        </property>
+        <property name="url" type="resource_locator" mandatory="true"/>
     </properties>
 </template>

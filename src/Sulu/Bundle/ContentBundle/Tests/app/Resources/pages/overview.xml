@@ -16,9 +16,7 @@
         <property name="subtitle" type="text_line">
             <tag name="sulu.rlp.part"/>
         </property>
-        <property name="url" type="resource_locator">
-            <tag name="sulu.rlp"/>
-        </property>
+        <property name="url" type="resource_locator"/>
         <property name="tags" type="text_line" minOccurs="2" maxOccurs="10"/>
         <property name="article" type="text_line" minOccurs="1" maxOccurs="10"/>
         <property name="external_url" type="url" />

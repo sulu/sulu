@@ -17,8 +17,6 @@
     <properties>
         <property name="title" type="text_line" mandatory="true"/>
 
-        <property name="url" type="resource_locator" mandatory="true">
-            <tag name="sulu.rlp"/>
-        </property>
+        <property name="url" type="resource_locator" mandatory="true"/>
     </properties>
 </template>

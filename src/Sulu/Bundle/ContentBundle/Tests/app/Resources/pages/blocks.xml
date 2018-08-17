@@ -32,8 +32,6 @@
             </meta>
 
             <indexField />
-
-            <tag name="sulu.rlp"/>
         </property>
 
         <block name="block"

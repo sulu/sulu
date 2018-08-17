@@ -13,9 +13,7 @@
         <property name="title" type="text_line" mandatory="true">
             <tag name="sulu.rlp.part" priority="1"/>
         </property>
-        <property name="url" type="resource_locator" mandatory="false">
-            <tag name="sulu.rlp"/>
-        </property>
+        <property name="url" type="resource_locator" mandatory="false"/>
         <property name="smart_content" type="smart_content">
             <meta>
                 <title lang="en">Smart Content</title>

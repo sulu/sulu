@@ -11,9 +11,7 @@
 
     <properties>
         <property name="title" type="text_line"/>
-        <property name="url" type="resource_locator">
-            <tag name="sulu.rlp"/>
-        </property>
+        <property name="url" type="resource_locator"/>
         <property name="singleInternalLink" type="single_internal_link"/>
     </properties>
 </template>

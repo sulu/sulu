@@ -18,9 +18,7 @@
             <tag name="sulu.rlp.part" priority="1"/>
         </property>
         <property name="tags" type="tag_list"/>
-        <property name="url" type="resource_locator" mandatory="false">
-            <tag name="sulu.rlp"/>
-        </property>
+        <property name="url" type="resource_locator" mandatory="false"/>
         <property name="article" type="text_area" mandatory="false"/>
         <property name="blog" type="text_area" multilingual="false" mandatory="false"/>
         <property name="localized_blog" type="text_area" mandatory="false" />

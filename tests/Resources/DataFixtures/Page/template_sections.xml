@@ -34,9 +34,7 @@
             </meta>
             <properties>
                 <property name="url" type="resource_locator" mandatory="true" cssClass="test"
-                          colspan="6">
-                    <tag name="sulu.rlp" priority="1"/>
-                </property>
+                          colspan="6"/>
                 <property name="article" type="text_area" mandatory="false" colspan="6">
                     <tag name="sulu.node.title" priority="5"/>
                 </property>
