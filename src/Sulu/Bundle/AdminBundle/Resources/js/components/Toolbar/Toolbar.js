@@ -8,6 +8,7 @@ import Dropdown from './Dropdown';
 import Snackbar from './Snackbar';
 import Items from './Items';
 import Icons from './Icons';
+import Toggler from './Toggler';
 import Select from './Select';
 import type {Skin} from './types';
 import toolbarStyles from './toolbar.scss';
@@ -23,17 +24,12 @@ export default class Toolbar extends React.PureComponent<Props> {
     };
 
     static Button = Button;
-
     static Controls = Controls;
-
     static Dropdown = Dropdown;
-
     static Items = Items;
-
     static Icons = Icons;
-
     static Select = Select;
-
+    static Toggler = Toggler;
     static Snackbar = Snackbar;
 
     static createChildren(children: ChildrenArray<*>, skin?: Skin) {

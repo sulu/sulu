@@ -126,12 +126,16 @@ export default class DatagridStore {
         this.structureStrategy = structureStrategy;
     };
 
-    @action reset = () => {
-        const page = this.getPage();
-
+    @action clear = () => {
         if (this.structureStrategy) {
             this.structureStrategy.clear();
         }
+    };
+
+    @action reset = () => {
+        const page = this.getPage();
+
+        this.clear();
 
         this.setActive(undefined);
         this.pageCount = 0;

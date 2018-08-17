@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
 import Toolbar from '../Toolbar';
@@ -34,6 +34,7 @@ beforeEach(() => {
 test('Render the items and icons from the ToolbarStore', () => {
     const storeKey = 'testStore';
 
+    // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
     toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
@@ -75,6 +76,12 @@ test('Render the items and icons from the ToolbarStore', () => {
                     },
                 ],
             },
+            {
+                type: 'toggler',
+                label: 'Toggler',
+                onClick: () => {},
+                value: true,
+            },
         ]
     );
 
@@ -85,6 +92,7 @@ test('Render the items and icons from the ToolbarStore', () => {
 test('Render the items as disabled if one is loading', () => {
     const storeKey = 'testStore';
 
+    // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
     toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
@@ -122,6 +130,7 @@ test('Render the items as disabled if one is loading', () => {
 test('Show success message for some time', () => {
     const storeKey = 'testStore';
 
+    // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
     toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
@@ -142,6 +151,7 @@ test('Click on the success message should open the navigation', () => {
     const storeKey = 'testStore';
     const navigationButtonClickSpy = jest.fn();
 
+    // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
     toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
@@ -162,6 +172,7 @@ test('Click on the success message should open the navigation', () => {
 test('Remove last error if close button on snackbar is clicked', () => {
     const storeKey = 'testStore';
 
+    // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
     toolbarStoreMock.hasItemsConfig.mockReturnValue(true);

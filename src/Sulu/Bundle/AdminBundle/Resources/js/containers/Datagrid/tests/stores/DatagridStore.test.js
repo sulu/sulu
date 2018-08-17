@@ -873,6 +873,19 @@ test('Should reset page count and page when loading strategy changes', () => {
     datagridStore.destroy();
 });
 
+test('Should clear the StructureStrategy when the clear method is called', () => {
+    const datagridStore = new DatagridStore('snippets', {});
+
+    const structureStrategy = new StructureStrategy();
+    datagridStore.clear();
+    expect(structureStrategy.clear).not.toBeCalledWith();
+
+    datagridStore.updateStructureStrategy(structureStrategy);
+    datagridStore.clear();
+
+    expect(structureStrategy.clear).toBeCalledWith();
+});
+
 test('Should trigger a mobx autorun if activate is called with the same id', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});

@@ -7,6 +7,7 @@ import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers
 import {Loader} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
+import {translate} from 'sulu-admin-bundle/utils';
 import WebspaceSelect from '../../components/WebspaceSelect';
 import WebspaceStore from '../../stores/WebspaceStore';
 import type {Webspace, Localization} from '../../stores/WebspaceStore/types';
@@ -24,9 +25,11 @@ class WebspaceOverview extends React.Component<ViewProps> {
     page: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
     webspace: IObservableValue<string> = observable.box();
+    excludeGhostsAndShadows: IObservableValue<boolean> = observable.box(false);
     datagridStore: DatagridStore;
     @observable webspaces: Array<Webspace>;
     activeDisposer: () => void;
+    excludeGhostsAndShadowsDisposer: () => void;
     webspaceDisposer: () => void;
 
     static getDerivedRouteAttributes() {
@@ -93,8 +96,12 @@ class WebspaceOverview extends React.Component<ViewProps> {
         const observableOptions = {};
         const apiOptions = {};
 
-        router.bind('page', this.page, '1');
+        router.bind('page', this.page, 1);
         observableOptions.page = this.page;
+
+        router.bind('excludeGhostsAndShadows', this.excludeGhostsAndShadows, false);
+        observableOptions['exclude-ghosts'] = this.excludeGhostsAndShadows;
+        observableOptions['exclude-shadows'] = this.excludeGhostsAndShadows;
 
         router.bind('locale', this.locale);
         observableOptions.locale = this.locale;
@@ -104,6 +111,11 @@ class WebspaceOverview extends React.Component<ViewProps> {
 
         this.datagridStore = new DatagridStore('pages', observableOptions, apiOptions);
         router.bind('active', this.datagridStore.active);
+
+        this.excludeGhostsAndShadowsDisposer = intercept(this.excludeGhostsAndShadows, '', (change) => {
+            this.datagridStore.clear();
+            return change;
+        });
 
         this.webspaceDisposer = intercept(this.webspace, '', (change) => {
             userStore.setPersistentSetting(USER_SETTING_WEBSPACE, change.newValue);
@@ -134,6 +146,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
     componentWillUnmount() {
         this.datagridStore.destroy();
         this.activeDisposer();
+        this.excludeGhostsAndShadowsDisposer();
         this.webspaceDisposer();
     }
 
@@ -196,20 +209,26 @@ export default withToolbar(WebspaceOverview, function() {
         return {};
     }
 
-    const options = this.selectedWebspace.allLocalizations.map((localization) => ({
-        value: localization.localization,
-        label: localization.name,
-    }));
-
-    const locale = {
-        value: this.locale.get(),
-        onChange: action((locale) => {
-            this.locale.set(locale);
-        }),
-        options,
-    };
-
     return {
-        locale,
+        items: [
+            {
+                label: translate('sulu_content.show_ghost_and_shadow'),
+                onClick: action(() => {
+                    this.excludeGhostsAndShadows.set(!this.excludeGhostsAndShadows.get());
+                }),
+                type: 'toggler',
+                value: !this.excludeGhostsAndShadows.get(),
+            },
+        ],
+        locale: {
+            value: this.locale.get(),
+            onChange: action((locale) => {
+                this.locale.set(locale);
+            }),
+            options: this.selectedWebspace.allLocalizations.map((localization) => ({
+                value: localization.localization,
+                label: localization.name,
+            })),
+        },
     };
 });

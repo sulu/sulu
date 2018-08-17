@@ -21,6 +21,12 @@ const Toolbar = require('./Toolbar').default;
 <Toolbar>
     <Toolbar.Controls>
         <Toolbar.Button onClick={() => null}>Test 1</Toolbar.Button>
+        <Toolbar.Toggler
+            disabled={true}
+            onClick={() => null}
+            label="Toggler"
+            value={true}
+        />
         <Toolbar.Items>
             <Toolbar.Button onClick={() => null}>Test 2</Toolbar.Button>
             <Toolbar.Dropdown
@@ -57,6 +63,11 @@ const Toolbar = require('./Toolbar').default;
 
 <Toolbar skin="dark">
     <Toolbar.Controls>
+        <Toolbar.Toggler
+            onClick={() => null}
+            label="Toggler"
+            value={false}
+        />
         <Toolbar.Button onClick={() => null}>Test 1</Toolbar.Button>
         <Toolbar.Items>
             <Toolbar.Button onClick={() => null}>Test 2</Toolbar.Button>

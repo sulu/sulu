@@ -12,7 +12,7 @@ export default class Router {
     @observable route: Route;
     @observable attributes: Object = {};
     @observable bindings: Map<string, IObservableValue<*>> = new Map();
-    bindingDefaults: Map<string, ?string | number> = new Map();
+    bindingDefaults: Map<string, ?string | number | boolean> = new Map();
     attributesHistory: {[string]: Array<AttributeMap>} = {};
     updateAttributesHooks: Array<UpdateAttributesHook> = [];
 
@@ -41,7 +41,7 @@ export default class Router {
         this.updateAttributesHooks.push(hook);
     }
 
-    @action bind(key: string, value: IObservableValue<*>, defaultValue: ?string | number = undefined) {
+    @action bind(key: string, value: IObservableValue<*>, defaultValue: ?string | number | boolean = undefined) {
         if (key in this.attributes) {
             // when the bound parameter is bound set the state of the passed observable to the current value once
             // required because otherwise the parameter will be overridden on the initial start of the application
@@ -78,12 +78,12 @@ export default class Router {
 
             const attributes = {};
             for (let i = 1; i < match.length; i++) {
-                attributes[names[i - 1].name] = Router.tryParseNumber(match[i]);
+                attributes[names[i - 1].name] = Router.tryParse(match[i]);
             }
 
             const search = new URLSearchParams(queryString);
             search.forEach((value, key) => {
-                attributes[key] = Router.tryParseNumber(value);
+                attributes[key] = Router.tryParse(value);
             });
 
             this.handleNavigation(name, attributes);
@@ -208,7 +208,15 @@ export default class Router {
         );
     }
 
-    static tryParseNumber(value: string) {
+    static tryParse(value: string) {
+        if (value === 'true') {
+            return true;
+        }
+
+        if (value === 'false') {
+            return false;
+        }
+
         if (isNaN(value)) {
             return value;
         }

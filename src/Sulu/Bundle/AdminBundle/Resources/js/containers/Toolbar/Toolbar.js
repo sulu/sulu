@@ -12,25 +12,22 @@ const LOCALE_SELECT_SIZE = 'small';
 
 const ToolbarItemTypes = {
     Button: 'button',
-    Select: 'select',
     Dropdown: 'dropdown',
+    Select: 'select',
+    Toggler: 'toggler',
 };
 
 function getItemComponentByType(itemConfig, key) {
-    let item;
-
     switch (itemConfig.type) {
         case ToolbarItemTypes.Select:
-            item = (<ToolbarComponent.Select {...itemConfig} key={key} />);
-            break;
+            return <ToolbarComponent.Select {...itemConfig} key={key} />;
         case ToolbarItemTypes.Dropdown:
-            item = (<ToolbarComponent.Dropdown {...itemConfig} key={key} />);
-            break;
+            return <ToolbarComponent.Dropdown {...itemConfig} key={key} />;
+        case ToolbarItemTypes.Toggler:
+            return <ToolbarComponent.Toggler {...itemConfig} key={key} />;
         default:
-            item = (<ToolbarComponent.Button {...itemConfig} key={key} />);
+            return <ToolbarComponent.Button {...itemConfig} key={key} />;
     }
-
-    return item;
 }
 
 @observer
