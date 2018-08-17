@@ -1,6 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
-import {action} from 'mobx';
+import {action, computed} from 'mobx';
 import React from 'react';
 import ToolbarComponent from '../../components/Toolbar';
 import ToolbarStore from './stores/ToolbarStore';
@@ -67,22 +67,39 @@ export default class Toolbar extends React.Component<*> {
         this.toolbarStore.errors.pop();
     };
 
-    render() {
-        const {onNavigationButtonClick, navigationOpen} = this.props;
+    @computed get disableAllButtons() {
         const loadingItems = this.toolbarStore.getItemsConfig().filter((item) => item.loading);
-        const disableAllButtons = this.toolbarStore.disableAll || loadingItems.length > 0;
+        return this.toolbarStore.disableAll || loadingItems.length > 0;
+    }
+
+    @computed get backButtonConfig() {
         const backButtonConfig = this.toolbarStore.getBackButtonConfig();
+
+        if (!backButtonConfig) {
+            return;
+        }
+
+        if (this.disableAllButtons) {
+            backButtonConfig.disabled = true;
+        }
+
+        return backButtonConfig;
+    }
+
+    @computed get itemsConfig() {
         const itemsConfig = this.toolbarStore.getItemsConfig();
 
-        if (disableAllButtons) {
-            if (backButtonConfig) {
-                backButtonConfig.disabled = true;
-            }
-
+        if (this.disableAllButtons) {
             itemsConfig.forEach((item) => {
                 item.disabled = true;
             });
         }
+
+        return itemsConfig;
+    }
+
+    render() {
+        const {onNavigationButtonClick, navigationOpen} = this.props;
 
         return (
             <ToolbarComponent>
@@ -106,13 +123,13 @@ export default class Toolbar extends React.Component<*> {
                     }
                     {this.toolbarStore.hasBackButtonConfig() &&
                     <ToolbarComponent.Button
-                        {...backButtonConfig}
+                        {...this.backButtonConfig}
                         icon="su-angle-left"
                     />
                     }
                     {this.toolbarStore.hasItemsConfig() &&
                     <ToolbarComponent.Items>
-                        {itemsConfig.map((itemConfig, index) => getItemComponentByType(itemConfig, index))}
+                        {this.itemsConfig.map((itemConfig, index) => getItemComponentByType(itemConfig, index))}
                     </ToolbarComponent.Items>
                     }
                 </ToolbarComponent.Controls>
