@@ -130,6 +130,9 @@ test('Should recursively add the items with data and children', () => {
     const child2 = {
         id: 2,
         hasChildren: false,
+        _embedded: {
+            nodes: null,
+        },
     };
     const child3 = {
         id: 3,

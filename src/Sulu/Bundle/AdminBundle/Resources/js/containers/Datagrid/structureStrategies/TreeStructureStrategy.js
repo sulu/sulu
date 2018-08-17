@@ -103,7 +103,9 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
         if (item._embedded && Object.keys(item._embedded).length > 0) {
             const resourceKey = Object.keys(item._embedded)[0];
             const childItems = item._embedded[resourceKey];
-            childItems.forEach((childItem) => this.addItem(childItem, item.id));
+            if (childItems) {
+                childItems.forEach((childItem) => this.addItem(childItem, item.id));
+            }
         }
     }
 
