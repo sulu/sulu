@@ -17,6 +17,7 @@ export type Skin = 'light' | 'dark';
 export type Button = {
     children?: Node,
     onClick: () => ?Promise<*>,
+    // TODO rename to label?
     value?: string | number,
     icon?: string,
     size?: string,
@@ -26,6 +27,14 @@ export type Button = {
     loading?: boolean,
     primary?: boolean,
     skin?: Skin,
+};
+
+export type Toggler = {
+    disabled?: boolean,
+    label: string,
+    onClick: () => void,
+    skin?: Skin,
+    value: boolean,
 };
 
 export type DropdownOption = {
