@@ -1,3 +1,4 @@
 $overlayHeaderHeight: 82px;
 $overlayFooterHeight: 90px;
 $overlayMarginBottom: 100px;
+$overlayContentMaxHeight: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom);

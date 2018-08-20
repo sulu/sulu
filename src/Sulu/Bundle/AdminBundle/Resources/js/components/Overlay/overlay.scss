@@ -80,7 +80,7 @@ $transitionDuration: 300ms;
     }
 
     article {
-        max-height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom);
+        max-height: $overlayContentMaxHeight;
         overflow: auto;
         background: $primaryBackground;
     }
