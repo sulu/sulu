@@ -10,10 +10,12 @@ import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
 import FolderAdapter from '../adapters/FolderAdapter';
 import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer';
+import MoveOverlay from '../MoveOverlay';
 
 let mockStructureStrategyData;
 
-jest.mock('../stores/DatagridStore', () => jest.fn(function() {
+jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, observableOptions = {}) {
+    this.observableOptions = observableOptions;
     this.setPage = jest.fn();
     this.setActive = jest.fn();
     this.activeItems = [];
@@ -58,6 +60,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     };
     this.data = this.structureStrategy.data;
     this.search = jest.fn();
+    this.move = jest.fn();
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
@@ -83,6 +86,10 @@ jest.mock('../../../utils/Translator', () => ({
         }
     },
 }));
+
+jest.mock('../MoveOverlay', () => function() {
+    return null;
+});
 
 class LoadingStrategy {
     destroy = jest.fn();
@@ -174,6 +181,13 @@ test('Render the adapter in non-deletable mode', () => {
     const datagrid = shallow(<Datagrid adapters={['test']} deletable={false} store={datagridStore} />);
 
     expect(datagrid.find('TestAdapter').prop('onDeleteClick')).toEqual(undefined);
+});
+
+test('Render the adapter in non-movable mode', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(<Datagrid adapters={['test']} movable={false} store={datagridStore} />);
+
+    expect(datagrid.find('TestAdapter').prop('onMoveClick')).toEqual(undefined);
 });
 
 test('Render the adapter in non-searchable mode', () => {
@@ -391,6 +405,56 @@ test('DatagridStore should be updated with current active element', () => {
     expect(datagridStore.activate).toBeCalledWith('some-uuid');
 });
 
+test('MoveOverlay should just disappear when onMoveClick callback is called and overlay is closed', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} />);
+
+    datagrid.find('TableAdapter').prop('onMoveClick')(5);
+    datagrid.update();
+    expect(datagrid.find(MoveOverlay).prop('open')).toEqual(true);
+
+    datagrid.find(MoveOverlay).prop('onClose')();
+    datagrid.update();
+    expect(datagrid.find(MoveOverlay).prop('open')).toEqual(false);
+
+    expect(datagridStore.move).not.toBeCalled();
+});
+
+test('DatagridStore should move item when onMoveClick callback is called and overlay is confirmed', () => {
+    const movePromise = Promise.resolve();
+
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    // $FlowFixMe
+    datagridStore.move.mockReturnValue(movePromise);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
+
+    datagrid.find('TableAdapter').prop('onMoveClick')(5);
+    datagrid.update();
+    expect(datagrid.find(MoveOverlay).prop('open')).toEqual(true);
+
+    datagrid.find(MoveOverlay).prop('onConfirm')(8);
+    expect(datagrid.instance().moving).toEqual(true);
+    expect(datagridStore.move).toBeCalledWith(5, 8);
+
+    return movePromise.then(() => {
+        datagrid.update();
+        expect(datagrid.instance().moving).toEqual(false);
+        expect(datagrid.find(MoveOverlay).prop('open')).toEqual(false);
+    });
+});
+
 test('Delete warning should just disappear when onDeleteClick callback is called and overlay is cancelled', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
@@ -399,7 +463,7 @@ test('Delete warning should just disappear when onDeleteClick callback is called
         {id: 2},
         {id: 3},
     ];
-    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
+    const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} />);
 
     datagrid.find('TableAdapter').prop('onDeleteClick')(5);
     datagrid.update();

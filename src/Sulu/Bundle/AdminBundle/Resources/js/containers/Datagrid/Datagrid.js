@@ -11,6 +11,7 @@ import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
 import AdapterSwitch from './AdapterSwitch';
+import MoveOverlay from './MoveOverlay';
 import Search from './Search';
 import datagridStyles from './datagrid.scss';
 
@@ -19,6 +20,7 @@ type Props = {|
     deletable: boolean,
     disabledIds: Array<string | number>,
     header?: Node,
+    movable: boolean,
     onItemClick?: (itemId: string | number) => void,
     onAddClick?: (id: string | number) => void,
     selectable: boolean,
@@ -31,14 +33,19 @@ export default class Datagrid extends React.Component<Props> {
     static defaultProps = {
         deletable: true,
         disabledIds: [],
+        movable: true,
         selectable: true,
         searchable: true,
     };
 
     @observable currentAdapterKey: string;
-    @observable showDeleteDialog: boolean = false;
     @observable deleting: boolean = false;
+    @observable moving: boolean = false;
+    @observable showDeleteDialog: boolean = false;
+    @observable showMoveOverlay: boolean = false;
     deleteId: ?string | number;
+    moveId: ?string | number;
+    moveOverlayDatagridStore: DatagridStore;
 
     @computed get currentAdapter(): typeof AbstractAdapter {
         return datagridAdapterRegistry.get(this.currentAdapterKey);
@@ -52,6 +59,15 @@ export default class Datagrid extends React.Component<Props> {
         super(props);
 
         this.validateAdapters();
+
+        const {movable, store} = this.props;
+        if (movable) {
+            this.moveOverlayDatagridStore = new DatagridStore(
+                store.resourceKey,
+                {locale: store.observableOptions.locale, page: observable.box()},
+                store.options
+            );
+        }
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -104,15 +120,45 @@ export default class Datagrid extends React.Component<Props> {
 
         this.deleting = true;
         this.props.store.delete(this.deleteId).then(action(() => {
-            this.deleteId = undefined;
+            this.hideDeleteDialog();
             this.deleting = false;
-            this.showDeleteDialog = false;
         }));
     };
 
     @action handleDeleteDialogCancelClick = () => {
-        this.showDeleteDialog = false;
+        this.hideDeleteDialog();
     };
+
+    @action hideDeleteDialog() {
+        this.deleteId = undefined;
+        this.showDeleteDialog = false;
+    }
+
+    @action handleMoveClick = (id: string | number) => {
+        this.moveId = id;
+        this.showMoveOverlay = true;
+    };
+
+    @action handleMoveOverlayConfirmClick = (parentId: string | number) => {
+        if (!this.moveId) {
+            throw new Error('The id for moving was not set. This should not happen, and is like caused by a bug.');
+        }
+
+        this.moving = true;
+        this.props.store.move(this.moveId, parentId).then(action(() => {
+            this.moving = false;
+            this.hideMoveOverlay();
+        }));
+    };
+
+    @action handleMoveOverlayClose = () => {
+        this.hideMoveOverlay();
+    };
+
+    @action hideMoveOverlay() {
+        this.showMoveOverlay = false;
+        this.moveId = undefined;
+    }
 
     handlePageChange = (page: number) => {
         this.props.store.setPage(page);
@@ -161,6 +207,7 @@ export default class Datagrid extends React.Component<Props> {
             deletable,
             disabledIds,
             header,
+            movable,
             onItemClick,
             onAddClick,
             searchable,
@@ -200,6 +247,7 @@ export default class Datagrid extends React.Component<Props> {
                         onItemDeactivation={this.handleItemDeactivation}
                         onItemClick={onItemClick}
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
+                        onMoveClick={movable ? this.handleMoveClick : undefined}
                         onPageChange={this.handlePageChange}
                         onSort={this.handleSort}
                         options={this.currentAdapterOptions}
@@ -222,6 +270,15 @@ export default class Datagrid extends React.Component<Props> {
                 >
                     {translate('sulu_admin.delete_warning_text')}
                 </Dialog>
+                <MoveOverlay
+                    adapters={adapters}
+                    disabledId={this.moveId}
+                    onConfirm={this.handleMoveOverlayConfirmClick}
+                    onClose={this.handleMoveOverlayClose}
+                    loading={this.moving}
+                    open={this.showMoveOverlay}
+                    store={this.moveOverlayDatagridStore}
+                />
             </Fragment>
         );
     }

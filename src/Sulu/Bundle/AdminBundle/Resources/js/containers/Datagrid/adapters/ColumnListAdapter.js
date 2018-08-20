@@ -57,6 +57,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
             onDeleteClick,
             onItemClick,
             onItemSelectionChange,
+            onMoveClick,
             selections,
         } = this.props;
 
@@ -100,15 +101,27 @@ export default class ColumnListAdapter extends AbstractAdapter {
             );
         }
 
+        const isDisabled = (index) => {
+            return activeItems[((index + 1: any): number)] === undefined;
+        };
+
         const settingOptions = [];
         if (onDeleteClick) {
             settingOptions.push({
-                isDisabled: (index) => {
-                    return activeItems[((index + 1: any): number)] === undefined;
-                },
+                isDisabled,
                 label: translate('sulu_admin.delete'),
                 onClick: (index) => {
-                    onDeleteClick(activeItems[((index + 1: any): number)]);
+                    onDeleteClick(activeItems[index + 1]);
+                },
+            });
+        }
+
+        if (onMoveClick) {
+            settingOptions.push({
+                isDisabled,
+                label: translate('sulu_admin.move'),
+                onClick: (index) => {
+                    onMoveClick(activeItems[index + 1]);
                 },
             });
         }

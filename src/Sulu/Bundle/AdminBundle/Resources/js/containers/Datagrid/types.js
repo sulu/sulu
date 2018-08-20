@@ -36,6 +36,7 @@ export type DatagridAdapterProps = {
     onItemActivation: (itemId: string | number) => void,
     onItemDeactivation: (itemId: string | number) => void,
     onItemSelectionChange: ?(rowId: string | number, selected?: boolean) => void,
+    onMoveClick: ?(id: string | number) => void,
     onPageChange: (page: number) => void,
     onSort: (column: string, order: SortOrder) => void,
     options: Object,

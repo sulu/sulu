@@ -11,7 +11,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
         FormStore: jest.fn(),
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
-        DatagridStore: jest.fn(function(resourceKey) {
+        DatagridStore: jest.fn(function(resourceKey, observableOptions) {
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
             const collectionData = [
@@ -53,6 +53,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                 },
             ];
 
+            this.observableOptions = observableOptions;
             this.loading = false;
             this.pageCount = 3;
             this.active = {
@@ -155,6 +156,8 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
         has: jest.fn(),
     };
 });
+
+jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => jest.fn());
 
 beforeEach(() => {
     jest.resetModules();

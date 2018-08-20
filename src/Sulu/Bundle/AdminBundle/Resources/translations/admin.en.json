@@ -2,6 +2,7 @@
     "sulu_admin.add": "Add",
     "sulu_admin.add_block": "Add block",
     "sulu_admin.delete": "Delete",
+    "sulu_admin.move": "Verschieben",
     "sulu_admin.of": "of",
     "sulu_admin.page": "Page",
     "sulu_admin.save": "Save",
@@ -49,5 +50,6 @@
     "sulu_admin.segments_left": "segments left",
     "sulu_admin.copy_locale": "Copy locale",
     "sulu_admin.choose_target_locale": "Choose target locales",
-    "sulu_admin.copy_locale_dialog_description": "* New locale will be created"
+    "sulu_admin.copy_locale_dialog_description": "* New locale will be created",
+    "sulu_admin.move_overlay_title": "Choose parent-page"
 }
