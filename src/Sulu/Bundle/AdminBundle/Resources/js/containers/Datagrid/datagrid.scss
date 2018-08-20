@@ -1,12 +1,15 @@
+$datagridToolbarHeight: 30px;
+$datagridHeaderMarginBottom: 40px;
+
 .datagrid {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: calc(100% - $datagridToolbarHeight - $datagridHeaderMarginBottom);
 }
 
 .header-container {
     display: flex;
-    margin-bottom: 40px;
+    margin-bottom: $datagridHeaderMarginBottom;
     align-items: center;
 
     .toolbar {
@@ -20,7 +23,7 @@
     align-items: center;
 
     & > * {
-        height: 30px;
+        height: $datagridToolbarHeight;
         margin-right: 10px;
         width: auto;
 
