@@ -252,7 +252,6 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     expect(datagridStore.select).toBeCalledWith({id: 8});
 
     selection.setProps({value: [1, 3]});
-    expect(datagridStore.clearSelection).toBeCalled();
     const loadItemsCall = selection.instance().selectionStore.loadItems.mock.calls[0];
     expect(loadItemsCall[0]).toEqual([1, 3]);
 });
@@ -285,7 +284,6 @@ test('Should not reload items if all new ids have already been loaded', () => {
     expect(datagridStore.select).toBeCalledWith({id: 8});
 
     selection.setProps({value: [1, 5]});
-    expect(datagridStore.clearSelection).toBeCalled();
     expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
 });
 
@@ -311,10 +309,7 @@ test('Should not reinstantiate the DatagridStore with the preselected ids when n
 
     selection.find('Button[icon="su-plus"]').simulate('click');
 
-    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
-
     selection.setProps({value: [1, 5, 8]});
-    expect(datagridStore.clearSelection).toBeCalled();
     expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
 });
 

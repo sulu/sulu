@@ -21,6 +21,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(
         this.observableOptions = observableOptions;
         this.select = jest.fn();
         this.setActive = jest.fn();
+        this.selections = [];
     }
 ));
 
@@ -99,7 +100,7 @@ test('Should pass allowDisabledActivation to the Datagrid', () => {
     expect(datagridOverlay.find(Datagrid).prop('allowDisabledActivation')).toEqual(false);
 });
 
-test('Should pass copyable, deletable, movable and confirmLoading flag to the Datagrid', () => {
+test('Should pass copyable, deletable, movable, confirmDisabled and confirmLoading flag to the Datagrid', () => {
     const disabledIds = [1, 2, 5];
 
     const datagridOverlay = shallow(
@@ -119,27 +120,10 @@ test('Should pass copyable, deletable, movable and confirmLoading flag to the Da
     expect(datagridOverlay.find(Datagrid).prop('movable')).toEqual(false);
 });
 
-test('Should pass positive confirmLoading flag to the Overlay', () => {
+test('Should pass confirmLoading and confirmDisabled flag to the Overlay', () => {
     const datagridOverlay = shallow(
         <DatagridOverlay
             adapter="table"
-            confirmLoading={true}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            resourceKey="snippets"
-            title="Test"
-        />
-    );
-
-    expect(datagridOverlay.find(Overlay).prop('confirmLoading')).toEqual(true);
-});
-
-test('Should pass negative confirmLoading flag to the Overlay', () => {
-    const datagridOverlay = shallow(
-        <DatagridOverlay
-            adapter="table"
-            confirmLoading={false}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -149,6 +133,25 @@ test('Should pass negative confirmLoading flag to the Overlay', () => {
     );
 
     expect(datagridOverlay.find(Overlay).prop('confirmLoading')).toEqual(false);
+    expect(datagridOverlay.find(Overlay).prop('confirmDisabled')).toEqual(true);
+});
+
+test('Should pass confirmLoading and negative confirmDisabled flag to the Overlay', () => {
+    const datagridOverlay = shallow(
+        <DatagridOverlay
+            adapter="table"
+            confirmLoading={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            preSelectedItems={[{}]}
+            resourceKey="snippets"
+            title="Test"
+        />
+    );
+
+    expect(datagridOverlay.find(Overlay).prop('confirmLoading')).toEqual(true);
+    expect(datagridOverlay.find(Overlay).prop('confirmDisabled')).toEqual(false);
 });
 
 test('Should call onConfirm with the current selection', () => {
@@ -237,4 +240,35 @@ test('Should instantiate the datagrid with the passed adapter', () => {
         />
     );
     expect(datagridOverlay2.find(Datagrid).prop('adapters')).toEqual(['column_list']);
+});
+
+test('Should update selection if passed preSelectdItem prop changes', () => {
+    const datagridOverlay = mount(
+        <DatagridOverlay
+            adapter="table"
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            preSelectedItems={[{id: 1}]}
+            resourceKey="snippets"
+            title="test"
+        />
+    );
+
+    datagridOverlay.instance().datagridStore.clearSelection.mockClear();
+    datagridOverlay.instance().datagridStore.select.mockClear();
+
+    datagridOverlay.setProps({
+        preSelectedItems: [{id: 1}],
+    });
+
+    expect(datagridOverlay.instance().datagridStore.clearSelection).not.toBeCalled();
+    expect(datagridOverlay.instance().datagridStore.select).not.toBeCalled();
+
+    datagridOverlay.setProps({
+        preSelectedItems: [{id: 2}],
+    });
+
+    expect(datagridOverlay.instance().datagridStore.clearSelection).toBeCalledWith();
+    expect(datagridOverlay.instance().datagridStore.select).toBeCalledWith({id: 2});
 });

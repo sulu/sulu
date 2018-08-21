@@ -1,8 +1,10 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import {observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
+import {observer} from 'mobx-react';
 import classNames from 'classnames';
+import equals from 'fast-deep-equal';
 import Overlay from '../../components/Overlay';
 import Datagrid from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
@@ -24,6 +26,7 @@ type Props = {|
     title: string,
 |};
 
+@observer
 export default class DatagridOverlay extends React.Component<Props> {
     datagridStore: DatagridStore;
     page: IObservableValue<number> = observable.box(1);
@@ -52,12 +55,17 @@ export default class DatagridOverlay extends React.Component<Props> {
         });
     }
 
-    componentDidUpdate() {
-        this.datagridStore.clearSelection();
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.open === true && this.props.open === false) {
+            this.datagridStore.clearSelection();
+        }
 
-        this.props.preSelectedItems.forEach((preSelectedItem) => {
-            this.datagridStore.select(preSelectedItem);
-        });
+        if (!equals(toJS(prevProps.preSelectedItems), toJS(this.props.preSelectedItems))) {
+            this.datagridStore.clearSelection();
+            this.props.preSelectedItems.forEach((preSelectedItem) => {
+                this.datagridStore.select(preSelectedItem);
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -69,7 +77,16 @@ export default class DatagridOverlay extends React.Component<Props> {
     };
 
     render() {
-        const {adapter, allowDisabledActivation, confirmLoading, disabledIds, onClose, open, title} = this.props;
+        const {
+            adapter,
+            allowDisabledActivation,
+            confirmLoading,
+            disabledIds,
+            onClose,
+            open,
+            preSelectedItems,
+            title,
+        } = this.props;
 
         const datagridContainerClass = classNames(
             datagridOverlayStyles['adapter-container'],
@@ -84,6 +101,7 @@ export default class DatagridOverlay extends React.Component<Props> {
 
         return (
             <Overlay
+                confirmDisabled={equals(toJS(preSelectedItems), toJS(this.datagridStore.selections))}
                 confirmLoading={confirmLoading}
                 confirmText={translate('sulu_admin.confirm')}
                 onClose={onClose}

@@ -73,3 +73,26 @@ exports[`The component should render in body with loader instead of confirm butt
   </div>
 </div>"
 `;
+
+exports[`The component should render with a disabled confirm button 1`] = `<div />`;
+
+exports[`The component should render with a disabled confirm button 2`] = `
+"<div>
+  <div class=\\"backdrop visible fixed\\"></div>
+</div>
+<div>
+  <div class=\\"container\\">
+    <div class=\\"overlay\\">
+      <section class=\\"content\\">
+        <header>My overlay title<span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <article>
+          <p>My overlay content</p>
+        </article>
+        <footer>
+          <button class=\\"button primary\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Apply</span></button>
+        </footer>
+      </section>
+    </div>
+  </div>
+</div>"
+`;
