@@ -157,7 +157,7 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
     };
 });
 
-jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/containers/DatagridOverlay', () => jest.fn(() => null));
 
 beforeEach(() => {
     jest.resetModules();

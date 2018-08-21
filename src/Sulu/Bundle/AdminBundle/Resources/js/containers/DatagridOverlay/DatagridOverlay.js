@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {IObservableValue} from 'mobx';
 import classNames from 'classnames';
 import Overlay from '../../components/Overlay';
 import Datagrid from '../../containers/Datagrid';
@@ -11,11 +11,13 @@ import datagridOverlayStyles from './datagridOverlay.scss';
 
 type Props = {|
     adapter: string,
+    confirmLoading?: boolean,
     disabledIds: Array<string | number>,
     locale?: ?IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedItems: Array<Object>) => void,
     open: boolean,
+    options?: Object,
     resourceKey: string,
     preSelectedItems: Array<Object>,
     title: string,
@@ -33,7 +35,7 @@ export default class DatagridOverlay extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {locale, preSelectedItems, resourceKey} = this.props;
+        const {locale, options, preSelectedItems, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
 
@@ -41,7 +43,7 @@ export default class DatagridOverlay extends React.Component<Props> {
             observableOptions.locale = locale;
         }
 
-        this.datagridStore = new DatagridStore(resourceKey, observableOptions);
+        this.datagridStore = new DatagridStore(resourceKey, observableOptions, options);
 
         preSelectedItems.forEach((preSelectedItem) => {
             this.datagridStore.select(preSelectedItem);
@@ -65,7 +67,7 @@ export default class DatagridOverlay extends React.Component<Props> {
     };
 
     render() {
-        const {adapter, disabledIds, onClose, open, title} = this.props;
+        const {adapter, confirmLoading, disabledIds, onClose, open, title} = this.props;
 
         const datagridContainerClass = classNames(
             datagridOverlayStyles['adapter-container'],
@@ -80,6 +82,7 @@ export default class DatagridOverlay extends React.Component<Props> {
 
         return (
             <Overlay
+                confirmLoading={confirmLoading}
                 confirmText={translate('sulu_admin.confirm')}
                 onClose={onClose}
                 onConfirm={this.handleConfirm}
@@ -93,6 +96,7 @@ export default class DatagridOverlay extends React.Component<Props> {
                             adapters={[adapter]}
                             deletable={false}
                             disabledIds={disabledIds}
+                            movable={false}
                             searchable={false}
                             store={this.datagridStore}
                         />

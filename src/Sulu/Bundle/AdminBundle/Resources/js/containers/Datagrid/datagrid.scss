@@ -4,7 +4,7 @@ $datagridHeaderMarginBottom: 40px;
 .datagrid {
     display: flex;
     flex-direction: column;
-    height: calc(100% - $datagridToolbarHeight - $datagridHeaderMarginBottom);
+    height: 100%;
 }
 
 .header-container {

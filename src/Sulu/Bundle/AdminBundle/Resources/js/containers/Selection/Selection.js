@@ -5,7 +5,7 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {MultiItemSelection} from '../../components';
 import SelectionStore from '../../stores/SelectionStore';
-import DatagridOverlay from './DatagridOverlay';
+import DatagridOverlay from '../DatagridOverlay';
 import selectionStyles from './selection.scss';
 
 type Props = {|

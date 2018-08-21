@@ -5,13 +5,13 @@ import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
 import Dialog from '../../components/Dialog';
+import DatagridOverlay from '../DatagridOverlay';
 import {translate} from '../../utils/Translator';
 import type {SortOrder} from './types';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
 import AdapterSwitch from './AdapterSwitch';
-import MoveOverlay from './MoveOverlay';
 import Search from './Search';
 import datagridStyles from './datagrid.scss';
 
@@ -59,15 +59,6 @@ export default class Datagrid extends React.Component<Props> {
         super(props);
 
         this.validateAdapters();
-
-        const {movable, store} = this.props;
-        if (movable) {
-            this.moveOverlayDatagridStore = new DatagridStore(
-                store.resourceKey,
-                {locale: store.observableOptions.locale, page: observable.box()},
-                store.options
-            );
-        }
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -139,13 +130,18 @@ export default class Datagrid extends React.Component<Props> {
         this.showMoveOverlay = true;
     };
 
-    @action handleMoveOverlayConfirmClick = (parentId: string | number) => {
+    @action handleMoveOverlayConfirmClick = (parents: Array<Object>) => {
         if (!this.moveId) {
-            throw new Error('The id for moving was not set. This should not happen, and is like caused by a bug.');
+            throw new Error('The id for moving was not set. This should not happen and is likely a bug.');
+        }
+
+        if (parents.length !== 1) {
+            throw new Error('There should be exactly one parentId given. This should not happen and is likely a bug.');
         }
 
         this.moving = true;
-        this.props.store.move(this.moveId, parentId).then(action(() => {
+        // TODO do not hardcode "id", but use some kind of metadata instead
+        this.props.store.move(this.moveId, parents[0].id).then(action(() => {
             this.moving = false;
             this.hideMoveOverlay();
         }));
@@ -270,15 +266,20 @@ export default class Datagrid extends React.Component<Props> {
                 >
                     {translate('sulu_admin.delete_warning_text')}
                 </Dialog>
-                <MoveOverlay
-                    adapters={adapters}
-                    disabledId={this.moveId}
-                    onConfirm={this.handleMoveOverlayConfirmClick}
-                    onClose={this.handleMoveOverlayClose}
-                    loading={this.moving}
-                    open={this.showMoveOverlay}
-                    store={this.moveOverlayDatagridStore}
-                />
+                {movable &&
+                    <DatagridOverlay
+                        adapter={adapters[0]}
+                        confirmLoading={this.moving}
+                        disabledIds={this.moveId ? [this.moveId] : []}
+                        locale={store.observableOptions.locale}
+                        onClose={this.handleMoveOverlayClose}
+                        onConfirm={this.handleMoveOverlayConfirmClick}
+                        open={this.showMoveOverlay}
+                        options={store.options}
+                        resourceKey={store.resourceKey}
+                        title={translate('sulu_admin.move_overlay_title')}
+                    />
+                }
             </Fragment>
         );
     }

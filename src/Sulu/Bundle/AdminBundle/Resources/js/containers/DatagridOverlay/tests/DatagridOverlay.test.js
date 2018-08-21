@@ -2,6 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import Overlay from '../../../components/Overlay';
 import Datagrid from '../../../containers/Datagrid';
 import DatagridOverlay from '../DatagridOverlay';
 
@@ -13,15 +14,20 @@ jest.mock('../../../containers/Datagrid', () => jest.fn(function Datagrid(props)
     return <div className="datagrid" adapter={props.adapter} />;
 }));
 
-jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey, observableOptions) {
-    this.clearSelection = jest.fn();
-    this.observableOptions = observableOptions;
-    this.select = jest.fn();
-    this.setActive = jest.fn();
-}));
+jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(
+    function(resourceKey, observableOptions, options) {
+        this.options = options;
+        this.clearSelection = jest.fn();
+        this.observableOptions = observableOptions;
+        this.select = jest.fn();
+        this.setActive = jest.fn();
+    }
+));
 
-test('Should instantiate the DatagridStore with locale', () => {
+test('Should instantiate the DatagridStore with locale and options', () => {
     const locale = observable.box('en');
+    const options = {};
+
     const datagridOverlay = shallow(
         <DatagridOverlay
             adapter="table"
@@ -29,15 +35,17 @@ test('Should instantiate the DatagridStore with locale', () => {
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
+            options={options}
             resourceKey="snippets"
             title="Selection"
         />
     );
 
     expect(datagridOverlay.instance().datagridStore.observableOptions.locale.get()).toEqual('en');
+    expect(datagridOverlay.instance().datagridStore.options).toBe(options);
 });
 
-test('Should instantiate the DatagridStore without locale', () => {
+test('Should instantiate the DatagridStore without locale and options', () => {
     const datagridOverlay = shallow(
         <DatagridOverlay
             adapter="table"
@@ -70,7 +78,7 @@ test('Should pass disabledIds to the Datagrid', () => {
     expect(datagridOverlay.find(Datagrid).prop('disabledIds')).toBe(disabledIds);
 });
 
-test('Should pass deletable flag to the Datagrid', () => {
+test('Should pass deletable, movable and confirmLoading flag to the Datagrid', () => {
     const disabledIds = [1, 2, 5];
 
     const datagridOverlay = shallow(
@@ -86,6 +94,39 @@ test('Should pass deletable flag to the Datagrid', () => {
     );
 
     expect(datagridOverlay.find(Datagrid).prop('deletable')).toEqual(false);
+    expect(datagridOverlay.find(Datagrid).prop('movable')).toEqual(false);
+});
+
+test('Should pass positive confirmLoading flag to the Overlay', () => {
+    const datagridOverlay = shallow(
+        <DatagridOverlay
+            adapter="table"
+            confirmLoading={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            resourceKey="snippets"
+            title="Test"
+        />
+    );
+
+    expect(datagridOverlay.find(Overlay).prop('confirmLoading')).toEqual(true);
+});
+
+test('Should pass negative confirmLoading flag to the Overlay', () => {
+    const datagridOverlay = shallow(
+        <DatagridOverlay
+            adapter="table"
+            confirmLoading={false}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            resourceKey="snippets"
+            title="Test"
+        />
+    );
+
+    expect(datagridOverlay.find(Overlay).prop('confirmLoading')).toEqual(false);
 });
 
 test('Should call onConfirm with the current selection', () => {
