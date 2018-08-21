@@ -222,6 +222,19 @@ test('Call activate on store if item is activated', () => {
     expect(datagridStore.activate).toBeCalledWith(5);
 });
 
+test('Do not call activate on store if item is activated but disabled and allowDisabledActivation is false', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(
+        <Datagrid adapters={['test']} allowDisabledActivation={false} disabledIds={[5]} store={datagridStore} />
+    );
+
+    datagrid.find('TestAdapter').prop('onItemActivation')(5);
+    datagrid.find('TestAdapter').prop('onItemActivation')(7);
+
+    expect(datagridStore.activate).not.toBeCalledWith(5);
+    expect(datagridStore.activate).toBeCalledWith(7);
+});
+
 test('Call deactivate on store if item is deactivated', () => {
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);

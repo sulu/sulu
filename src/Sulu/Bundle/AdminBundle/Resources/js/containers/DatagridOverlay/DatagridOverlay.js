@@ -11,6 +11,7 @@ import datagridOverlayStyles from './datagridOverlay.scss';
 
 type Props = {|
     adapter: string,
+    allowDisabledActivation: boolean,
     confirmLoading?: boolean,
     disabledIds: Array<string | number>,
     locale?: ?IObservableValue<string>,
@@ -28,6 +29,7 @@ export default class DatagridOverlay extends React.Component<Props> {
     page: IObservableValue<number> = observable.box(1);
 
     static defaultProps = {
+        allowDisabledActivation: true,
         disabledIds: [],
         preSelectedItems: [],
     };
@@ -67,7 +69,7 @@ export default class DatagridOverlay extends React.Component<Props> {
     };
 
     render() {
-        const {adapter, confirmLoading, disabledIds, onClose, open, title} = this.props;
+        const {adapter, allowDisabledActivation, confirmLoading, disabledIds, onClose, open, title} = this.props;
 
         const datagridContainerClass = classNames(
             datagridOverlayStyles['adapter-container'],
@@ -94,6 +96,7 @@ export default class DatagridOverlay extends React.Component<Props> {
                     <div className={datagridClass}>
                         <Datagrid
                             adapters={[adapter]}
+                            allowDisabledActivation={allowDisabledActivation}
                             copyable={false}
                             deletable={false}
                             disabledIds={disabledIds}

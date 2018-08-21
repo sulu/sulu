@@ -17,6 +17,7 @@ import datagridStyles from './datagrid.scss';
 
 type Props = {|
     adapters: Array<string>,
+    allowDisabledActivation: boolean,
     copyable: boolean,
     deletable: boolean,
     disabledIds: Array<string | number>,
@@ -32,6 +33,7 @@ type Props = {|
 @observer
 export default class Datagrid extends React.Component<Props> {
     static defaultProps = {
+        allowDisabledActivation: true,
         copyable: true,
         deletable: true,
         disabledIds: [],
@@ -225,7 +227,13 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     handleItemActivation = (id: string | number) => {
-        this.props.store.activate(id);
+        const {allowDisabledActivation, disabledIds, store} = this.props;
+
+        if (!allowDisabledActivation && disabledIds.includes(id)) {
+            return;
+        }
+
+        store.activate(id);
     };
 
     handleItemDeactivation = (id: string | number) => {
@@ -306,6 +314,7 @@ export default class Datagrid extends React.Component<Props> {
                 {movable &&
                     <DatagridOverlay
                         adapter={adapters[0]}
+                        allowDisabledActivation={false}
                         confirmLoading={this.moving}
                         disabledIds={this.moveId ? [this.moveId] : []}
                         locale={store.observableOptions.locale}

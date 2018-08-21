@@ -76,6 +76,27 @@ test('Should pass disabledIds to the Datagrid', () => {
     );
 
     expect(datagridOverlay.find(Datagrid).prop('disabledIds')).toBe(disabledIds);
+    expect(datagridOverlay.find(Datagrid).prop('allowDisabledActivation')).toEqual(true);
+});
+
+test('Should pass allowDisabledActivation to the Datagrid', () => {
+    const disabledIds = [1, 2, 5];
+
+    const datagridOverlay = shallow(
+        <DatagridOverlay
+            adapter="table"
+            allowDisabledActivation={false}
+            disabledIds={disabledIds}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(datagridOverlay.find(Datagrid).prop('disabledIds')).toBe(disabledIds);
+    expect(datagridOverlay.find(Datagrid).prop('allowDisabledActivation')).toEqual(false);
 });
 
 test('Should pass copyable, deletable, movable and confirmLoading flag to the Datagrid', () => {
