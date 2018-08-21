@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 return [
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
     Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
@@ -44,9 +53,9 @@ return [
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],
     // Admin
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true, 'admin' => true],
-    Sulu\Bundle\AdminBundle\SuluAdminBundle::class => ['all' => true,'admin' => true],
-    Sulu\Bundle\CollaborationBundle\SuluCollaborationBundle::class => ['all' => true,'admin' => true],
-    Sulu\Bundle\PreviewBundle\SuluPreviewBundle::class => ['all' => true,'admin' => true],
+    Sulu\Bundle\AdminBundle\SuluAdminBundle::class => ['all' => true, 'admin' => true],
+    Sulu\Bundle\CollaborationBundle\SuluCollaborationBundle::class => ['all' => true, 'admin' => true],
+    Sulu\Bundle\PreviewBundle\SuluPreviewBundle::class => ['all' => true, 'admin' => true],
     // Website
-    Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle::class => ['all' => true,'website' => true],
+    Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle::class => ['all' => true, 'website' => true],
 ];
