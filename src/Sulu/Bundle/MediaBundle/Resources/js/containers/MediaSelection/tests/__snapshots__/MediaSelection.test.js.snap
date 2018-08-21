@@ -50,6 +50,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                 <div></div>
                 <div></div>
                 <div></div>
+                <div></div>
               </div>
               <div class=\\"divider\\"></div>
               <div>
@@ -127,6 +128,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                     <div class=\\"indicator\\"></div>
                   </section>
                 </div>
+                <div></div>
                 <div></div>
                 <div></div>
               </div><input type=\\"file\\" style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.00001; pointer-events: none;\\" multiple=\\"\\" autocomplete=\\"off\\">

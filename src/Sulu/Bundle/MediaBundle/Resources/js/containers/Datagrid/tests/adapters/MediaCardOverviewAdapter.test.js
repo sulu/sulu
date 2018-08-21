@@ -48,6 +48,7 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={undefined}

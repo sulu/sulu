@@ -30,6 +30,7 @@ export type DatagridAdapterProps = {
     disabledIds: Array<string | number>,
     loading: boolean,
     onAddClick: ?(id: string | number) => void,
+    onCopyClick: ?(id: string | number) => void,
     onDeleteClick: ?(id: string | number) => void,
     onAllSelectionChange: ?(selected?: boolean) => void,
     onItemClick: ?(itemId: string | number) => void,

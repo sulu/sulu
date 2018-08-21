@@ -54,6 +54,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
             disabledIds,
             loading,
             onAddClick,
+            onCopyClick,
             onDeleteClick,
             onItemClick,
             onItemSelectionChange,
@@ -122,6 +123,16 @@ export default class ColumnListAdapter extends AbstractAdapter {
                 label: translate('sulu_admin.move'),
                 onClick: (index) => {
                     onMoveClick(activeItems[index + 1]);
+                },
+            });
+        }
+
+        if (onCopyClick) {
+            settingOptions.push({
+                isDisabled,
+                label: translate('sulu_admin.copy'),
+                onClick: (index) => {
+                    onCopyClick(activeItems[index + 1]);
                 },
             });
         }

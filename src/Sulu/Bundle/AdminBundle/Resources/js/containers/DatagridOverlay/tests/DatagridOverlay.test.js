@@ -78,7 +78,7 @@ test('Should pass disabledIds to the Datagrid', () => {
     expect(datagridOverlay.find(Datagrid).prop('disabledIds')).toBe(disabledIds);
 });
 
-test('Should pass deletable, movable and confirmLoading flag to the Datagrid', () => {
+test('Should pass copyable, deletable, movable and confirmLoading flag to the Datagrid', () => {
     const disabledIds = [1, 2, 5];
 
     const datagridOverlay = shallow(
@@ -93,6 +93,7 @@ test('Should pass deletable, movable and confirmLoading flag to the Datagrid', (
         />
     );
 
+    expect(datagridOverlay.find(Datagrid).prop('copyable')).toEqual(false);
     expect(datagridOverlay.find(Datagrid).prop('deletable')).toEqual(false);
     expect(datagridOverlay.find(Datagrid).prop('movable')).toEqual(false);
 });

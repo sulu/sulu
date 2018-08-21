@@ -58,6 +58,7 @@ test('Render different kind of data with edit button', () => {
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={jest.fn()}
@@ -99,6 +100,7 @@ test('Render data without edit button', () => {
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
@@ -140,6 +142,7 @@ test('Render data with selection', () => {
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
@@ -189,6 +192,7 @@ test('Render data with disabled items', () => {
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
@@ -224,6 +228,7 @@ test('Render with add button in toolbar when onAddClick callback is given', () =
             loading={false}
             onAddClick={jest.fn()}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
@@ -271,6 +276,7 @@ test('Render data with loading column', () => {
             loading={true}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
@@ -326,6 +332,7 @@ test('Execute onItemActivation callback when an item is clicked with the correct
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={onItemActivationSpy}
             onItemClick={undefined}
@@ -375,6 +382,7 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
@@ -398,6 +406,65 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
 
     columnListAdapter.find('Item').at(0).find('.su-check').simulate('click');
     expect(itemSelectionChangeSpy).toHaveBeenLastCalledWith(1, true);
+});
+
+test('Execute onCopyClick callback when an item is moved with the correct id', () => {
+    const copyClickSpy = jest.fn();
+
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+            },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: false,
+            },
+        ],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            active={3}
+            activeItems={[1, 3]}
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            onAddClick={undefined}
+            onAllSelectionChange={undefined}
+            onCopyClick={copyClickSpy}
+            onDeleteClick={undefined}
+            onItemActivation={jest.fn()}
+            onItemClick={undefined}
+            onItemDeactivation={jest.fn()}
+            onItemSelectionChange={undefined}
+            onMoveClick={undefined}
+            onPageChange={jest.fn()}
+            onSort={jest.fn()}
+            options={{}}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    columnListAdapter.find('ToolbarDropdown').simulate('click');
+    columnListAdapter.find('ToolbarDropdown').find('ToolbarDropdownListOption button').at(0).simulate('click');
+
+    expect(copyClickSpy).toBeCalledWith(3);
 });
 
 test('Execute onMoveClick callback when an item is moved with the correct id', () => {
@@ -434,6 +501,7 @@ test('Execute onMoveClick callback when an item is moved with the correct id', (
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={undefined}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
@@ -492,6 +560,7 @@ test('Execute onDeleteClick callback when an item is deleted with the correct id
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={deleteClickSpy}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
@@ -549,6 +618,7 @@ test('Enable delete and move button if an item in this column has been activated
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
@@ -605,6 +675,7 @@ test('Disable delete and move button if no item in this column has been activate
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={jest.fn()}
             onItemActivation={jest.fn()}
             onItemClick={undefined}
@@ -638,6 +709,7 @@ test('Do not show settings if no options are available', () => {
             loading={false}
             onAddClick={undefined}
             onAllSelectionChange={undefined}
+            onCopyClick={undefined}
             onDeleteClick={undefined}
             onItemActivation={jest.fn()}
             onItemClick={undefined}

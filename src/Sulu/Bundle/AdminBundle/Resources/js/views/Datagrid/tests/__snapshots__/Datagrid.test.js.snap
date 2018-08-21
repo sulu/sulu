@@ -180,6 +180,7 @@ exports[`Should render the datagrid with a title 1`] = `
   </div>
   <div />
   <div />
+  <div />
 </div>
 `;
 
@@ -356,6 +357,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
       </nav>
     </section>
   </div>
+  <div />
   <div />
   <div />
 </div>

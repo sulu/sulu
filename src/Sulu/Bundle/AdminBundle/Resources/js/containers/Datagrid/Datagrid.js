@@ -17,6 +17,7 @@ import datagridStyles from './datagrid.scss';
 
 type Props = {|
     adapters: Array<string>,
+    copyable: boolean,
     deletable: boolean,
     disabledIds: Array<string | number>,
     header?: Node,
@@ -31,6 +32,7 @@ type Props = {|
 @observer
 export default class Datagrid extends React.Component<Props> {
     static defaultProps = {
+        copyable: true,
         deletable: true,
         disabledIds: [],
         movable: true,
@@ -39,13 +41,15 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     @observable currentAdapterKey: string;
+    @observable copying: boolean = false;
     @observable deleting: boolean = false;
     @observable moving: boolean = false;
+    @observable showCopyOverlay: boolean = false;
     @observable showDeleteDialog: boolean = false;
     @observable showMoveOverlay: boolean = false;
+    copyId: ?string | number;
     deleteId: ?string | number;
     moveId: ?string | number;
-    moveOverlayDatagridStore: DatagridStore;
 
     @computed get currentAdapter(): typeof AbstractAdapter {
         return datagridAdapterRegistry.get(this.currentAdapterKey);
@@ -156,6 +160,37 @@ export default class Datagrid extends React.Component<Props> {
         this.moveId = undefined;
     }
 
+    @action handleCopyClick = (id: string | number) => {
+        this.copyId = id;
+        this.showCopyOverlay = true;
+    };
+
+    @action handleCopyOverlayConfirmClick = (parents: Array<Object>) => {
+        if (!this.copyId) {
+            throw new Error('The id for moving was not set. This should not happen and is likely a bug.');
+        }
+
+        if (parents.length !== 1) {
+            throw new Error('There should be exactly one parentId given. This should not happen and is likely a bug.');
+        }
+
+        this.copying = true;
+        // TODO do not hardcode "id", but use some kind of metadata instead
+        this.props.store.copy(this.copyId, parents[0].id).then(action(() => {
+            this.copying = false;
+            this.hideCopyOverlay();
+        }));
+    };
+
+    @action handleCopyOverlayClose = () => {
+        this.hideCopyOverlay();
+    };
+
+    @action hideCopyOverlay() {
+        this.showCopyOverlay = false;
+        this.copyId = undefined;
+    }
+
     handlePageChange = (page: number) => {
         this.props.store.setPage(page);
     };
@@ -200,6 +235,7 @@ export default class Datagrid extends React.Component<Props> {
     render() {
         const {
             adapters,
+            copyable,
             deletable,
             disabledIds,
             header,
@@ -238,6 +274,7 @@ export default class Datagrid extends React.Component<Props> {
                         loading={store.loading}
                         onAddClick={onAddClick}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
+                        onCopyClick={copyable ? this.handleCopyClick : undefined}
                         onDeleteClick={deletable ? this.handleDeleteClick : undefined}
                         onItemActivation={this.handleItemActivation}
                         onItemDeactivation={this.handleItemDeactivation}
@@ -277,7 +314,20 @@ export default class Datagrid extends React.Component<Props> {
                         open={this.showMoveOverlay}
                         options={store.options}
                         resourceKey={store.resourceKey}
-                        title={translate('sulu_admin.move_overlay_title')}
+                        title={translate('sulu_admin.move_copy_overlay_title')}
+                    />
+                }
+                {copyable &&
+                    <DatagridOverlay
+                        adapter={adapters[0]}
+                        confirmLoading={this.copying}
+                        locale={store.observableOptions.locale}
+                        onClose={this.handleCopyOverlayClose}
+                        onConfirm={this.handleCopyOverlayConfirmClick}
+                        open={this.showCopyOverlay}
+                        options={store.options}
+                        resourceKey={store.resourceKey}
+                        title={translate('sulu_admin.move_copy_overlay_title')}
                     />
                 }
             </Fragment>

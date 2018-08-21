@@ -94,6 +94,7 @@ export default class DatagridOverlay extends React.Component<Props> {
                     <div className={datagridClass}>
                         <Datagrid
                             adapters={[adapter]}
+                            copyable={false}
                             deletable={false}
                             disabledIds={disabledIds}
                             movable={false}

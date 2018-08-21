@@ -193,6 +193,26 @@ export default class DatagridStore {
             }));
     };
 
+    copy = (id: string | number, parentId: string | number) => {
+        const queryOptions = {
+            ...this.options,
+            action: 'copy',
+            destination: parentId,
+        };
+
+        const {locale} = this.observableOptions;
+        if (locale) {
+            queryOptions.locale = locale.get();
+        }
+
+        return ResourceRequester.postWithId(this.resourceKey, id, queryOptions)
+            .then(action((response) => {
+                // TODO do not hardcode "id", but use some metadata instead
+                this.activate(response.id);
+                this.clear();
+            }));
+    };
+
     @action deleteSelection = () => {
         const deletePromises = [];
         this.selectionIds.forEach((id) => {
