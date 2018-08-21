@@ -1,0 +1,4 @@
+sulu_http_cache:
+    proxy_client:
+        symfony:
+            enabled: true

@@ -17,6 +17,8 @@ README.md export-ignore
 UPGRADE.md export-ignore
 /src/Sulu/Bundle/*/Tests export-ignore
 /src/Sulu/Component/*/Tests export-ignore
-/tests export-ignore
+/config export-ignore
 /bin export-ignore
 /public export-ignore
+/tests export-ignore
+/templates export-ignore

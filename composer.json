@@ -94,11 +94,14 @@
         "phpspec/prophecy": "^1.7",
         "phpunit/phpunit": "^6.5",
         "pulse00/ffmpeg-bundle": "^0.6",
+        "sensio/generator-bundle": "^2.8 || ^3.0",
         "symfony/browser-kit": "^3.4",
         "symfony/css-selector": "^3.4",
         "symfony/debug": "^3.4",
         "symfony/debug-bundle": "^3.4",
         "symfony/dom-crawler": "^3.4",
+        "symfony/dotenv": "^3.4",
+        "symfony/flex": "^1.0",
         "symfony/monolog-bundle": "^3.1",
         "symfony/phpunit-bridge": "^3.4.8",
         "symfony/process": "^3.4",
@@ -154,40 +157,35 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\": "tests/src/"
-        },
-        "classmap": [
-            "tests/AppKernel.php"
-        ]
+            "App\\": "tests/"
+        }
     },
     "scripts": {
-        "sulu-scripts": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "auto-sulu-scripts": [
+            "Sulu\\Bundle\\MediaBundle\\Composer\\MediaScriptHandler::initBundle",
+            "Massive\\Bundle\\SearchBundle\\Composer\\SearchScriptHandler::initBundle"
         ],
         "post-install-cmd": [
-            "@sulu-scripts"
+            "@auto-scripts",
+            "@auto-sulu-scripts"
         ],
         "post-update-cmd": [
-            "@sulu-scripts"
+            "@auto-scripts",
+            "@auto-sulu-scripts"
+        ],
+        "post-create-project-cmd": [
+            "Sulu\\Bundle\\CoreBundle\\Composer\\ScriptHandler::removeComposerLockFromGitIgnore",
+            "Sulu\\Bundle\\CoreBundle\\Composer\\ScriptHandler::removePackageLockJsonFromGitIgnore"
         ]
     },
     "config": {
-        "bin-dir": "bin"
-    },
-    "extra": {
-        "public-dir": "tests/public",
-        "symfony-app-dir": "tests/config",
-        "symfony-bin-dir": "bin",
-        "symfony-var-dir": "tests/var",
-        "symfony-web-dir": "tests/public",
-        "symfony-tests-dir": "tests",
-        "symfony-assets-install": "relative",
-        "incenteev-parameters": {
-            "file": "tests/config/parameters.yml"
+        "preferred-install": {
+            "*": "dist"
         },
-        "branch-alias": {
-            "dev-develop": "2.0-dev"
-        }
+        "sort-packages": true
     }
 }

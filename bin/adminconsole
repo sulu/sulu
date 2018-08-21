@@ -1,0 +1,7 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/../vendor/autoload.php';
+
+$suluContext = \Sulu\Component\HttpKernel\SuluKernel::CONTEXT_ADMIN;
+include __DIR__ . DIRECTORY_SEPARATOR. 'console.php';
