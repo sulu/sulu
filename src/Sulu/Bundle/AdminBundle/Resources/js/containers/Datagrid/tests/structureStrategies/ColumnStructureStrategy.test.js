@@ -111,7 +111,8 @@ test('Should be empty after clear without a parent was called', () => {
 
     expect(columnStructureStrategy.data).toHaveLength(2);
     columnStructureStrategy.clear();
-    expect(columnStructureStrategy.data).toHaveLength(0);
+    expect(columnStructureStrategy.data).toHaveLength(1);
+    expect(columnStructureStrategy.data[0]).toEqual([]);
 });
 
 test('Should add the items in a recursive way', () => {
