@@ -124,7 +124,7 @@ export default class Overlay extends React.Component<Props> {
                             <div className={overlayClass}>
                                 <section className={overlayStyles.content}>
                                     <header>
-                                        {title}
+                                        <h2>{title}</h2>
                                         <Icon
                                             name={CLOSE_ICON}
                                             className={overlayStyles.icon}
