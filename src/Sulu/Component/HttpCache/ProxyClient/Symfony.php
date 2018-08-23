@@ -124,7 +124,12 @@ class Symfony implements ProxyClientInterface, PurgeInterface
         $promises = [];
         $collection = new ExceptionCollection();
         foreach ($requests as $request) {
-            $promises[] = $promise = $this->client->sendAsync($request);
+            $promises[] = $promise = $this->client->sendAsync(
+                $request,
+                [
+                    'connect_timeout' => 5,
+                ]
+            );
             $promise->then(
                 function (ResponseInterface $res) {
                 },

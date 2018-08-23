@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * BUGFIX      #4121 [HttpCache]             Set a timeout when purging caches
     * BUGFIX      #4109 [ContentBundle]         Remove validation-state from rendered link
 
 * 1.6.21 (2018-07-18)
