@@ -16,6 +16,7 @@ import Phone from './fields/Phone';
 import SingleSelect from './fields/SingleSelect';
 import ResourceLocator from './fields/ResourceLocator';
 import Renderer from './Renderer';
+import SmartContent from './fields/SmartContent';
 import TextArea from './fields/TextArea';
 import TextEditor from './fields/TextEditor';
 import Time from './fields/Time';
@@ -36,6 +37,7 @@ export {
     Phone,
     Renderer,
     ResourceLocator,
+    SmartContent,
     SingleSelect,
     SingleSelection,
     TextArea,

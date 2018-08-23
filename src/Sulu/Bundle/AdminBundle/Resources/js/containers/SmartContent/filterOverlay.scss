@@ -1,0 +1,77 @@
+@import '../Application/colors.scss';
+
+$filterOverlaySectionBorderColor: $silver;
+$filterOverlayDescriptionColor: $scorpion;
+
+.content {
+    margin: 0 60px 30px;
+}
+
+.section {
+    border-bottom: 1px solid $filterOverlaySectionBorderColor;
+    padding: 30px 0;
+
+    &:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .source {
+        display: flex;
+    }
+
+    .source-button {
+        margin-right: 20px;
+    }
+
+    .description {
+        color: $filterOverlayDescriptionColor;
+        display: block;
+        font-size: 10px;
+        margin-top: 10px;
+    }
+
+    .categories {
+        display: flex;
+
+        .categories-select {
+            width: calc(50% - 20px);
+            margin-left: 20px;
+        }
+    }
+
+    .tags {
+        display: flex;
+
+        .tags-auto-complete {
+            margin-left: 0;
+            width: 50%;
+        }
+
+        .tags-select {
+            width: calc(50% - 20px);
+            margin-left: 20px;
+        }
+    }
+
+    .sorting {
+        display: flex;
+
+        .sort-column,
+        .sort-order {
+            width: calc(50% - 10px);
+        }
+
+        .sort-column {
+            margin-right: 10px;
+        }
+
+        .sort-order {
+            margin-left: 10px;
+        }
+    }
+
+    .limit {
+        width: 50%;
+    }
+}

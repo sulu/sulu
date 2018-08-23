@@ -30,6 +30,7 @@ import {
     PasswordConfirmation,
     Phone,
     ResourceLocator,
+    SmartContent,
     SingleSelect,
     SingleSelection,
     TextArea,
@@ -95,6 +96,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('password_confirmation', PasswordConfirmation);
     fieldRegistry.add('phone', Phone);
     fieldRegistry.add('resource_locator', ResourceLocator, {generationUrl: Config.endpoints.generateUrl});
+    fieldRegistry.add('smart_content', SmartContent);
     fieldRegistry.add('single_select', SingleSelect);
     fieldRegistry.add('text_line', Input);
     fieldRegistry.add('text_area', TextArea);
