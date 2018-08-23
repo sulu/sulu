@@ -36,18 +36,20 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
     protected $cache;
 
     /**
-     * @param \Twig_Environment $twig
-     * @param StructureManagerInterface $structureManager
-     * @param Cache $cache
+     * @var string
      */
+    protected $defaultFormat;
+
     public function __construct(
         \Twig_Environment $twig,
         StructureManagerInterface $structureManager,
-        Cache $cache
+        Cache $cache,
+        $defaultFormat = 'html'
     ) {
         $this->twig = $twig;
         $this->structureManager = $structureManager;
         $this->cache = $cache;
+        $this->defaultFormat = $defaultFormat;
     }
 
     /**
@@ -82,7 +84,7 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
         $keys = [];
         foreach ($this->structureManager->getStructures() as $page) {
             /* @var PageBridge $page */
-            $template = sprintf('%s.html.twig', $page->getView());
+            $template = sprintf('%s.' . $this->defaultFormat . '.twig', $page->getView());
             if ($this->templateExists($template)) {
                 $keys[] = $page->getKey();
                 $structures[] = $page;
