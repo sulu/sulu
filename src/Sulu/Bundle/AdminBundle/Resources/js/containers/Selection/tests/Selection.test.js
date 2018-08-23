@@ -27,6 +27,7 @@ jest.mock('../../../stores/SelectionStore', () => jest.fn(function() {
     this.set = jest.fn();
     this.move = jest.fn();
     this.removeById = jest.fn();
+    this.loadItems = jest.fn();
 }));
 
 beforeEach(() => {
@@ -184,6 +185,29 @@ test('Should call the onChange callback when clicking the confirm button', () =>
     }
 
     expect(selection.instance().selectionStore.set).toBeCalledWith([3, 7, 2]);
+});
+
+test('Should not call the onChange callback when items have not changed', () => {
+    const changeSpy = jest.fn();
+    const selection = mount(
+        <Selection adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Selection" value={[1]} />
+    );
+
+    expect(changeSpy).not.toBeCalled();
+
+    selection.instance().selectionStore.items = [{id: 1}];
+    selection.setProps({value: [1]});
+    expect(changeSpy).not.toBeCalled();
+});
+
+test('Should load the items if value prop changes', () => {
+    const changeSpy = jest.fn();
+    const selection = mount(
+        <Selection adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Selection" value={[1]} />
+    );
+
+    selection.setProps({value: [1, 3]});
+    expect(selection.instance().selectionStore.loadItems).toBeCalledWith([1, 3]);
 });
 
 test('Should instantiate the DatagridStore with the correct resourceKey and destroy it on unmount', () => {
