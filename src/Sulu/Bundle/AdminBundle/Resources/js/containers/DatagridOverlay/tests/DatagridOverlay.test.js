@@ -179,7 +179,7 @@ test('Should instantiate the datagrid with the passed adapter', () => {
     expect(datagridOverlay2.find(Datagrid).prop('adapters')).toEqual(['column_list']);
 });
 
-test('Should update selection if passed preSelectdItem prop changes', () => {
+test('Should update selection if passed preSelectedItems prop changes', () => {
     const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
 
     const datagridOverlay = mount(
@@ -194,8 +194,11 @@ test('Should update selection if passed preSelectdItem prop changes', () => {
         />
     );
 
+    datagridStore.clearSelection.mockReset();
+    datagridStore.select.mockReset();
+
     datagridOverlay.setProps({
-        preSelectedItems: [{id: 1}],
+        title: 'bla',
     });
 
     expect(datagridStore.clearSelection).not.toBeCalled();

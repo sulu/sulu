@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {toJS} from 'mobx';
+import {autorun, computed, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import equals from 'fast-deep-equal';
@@ -31,19 +31,38 @@ export default class DatagridOverlay extends React.Component<Props> {
         preSelectedItems: [],
     };
 
-    componentDidUpdate(prevProps: Props) {
-        const {datagridStore, open, preSelectedItems} = this.props;
-        if (prevProps.open === true && open === false) {
-            datagridStore.clearSelection();
-        }
+    updateSelectionDisposer: () => void;
 
-        if (!equals(toJS(prevProps.preSelectedItems), toJS(preSelectedItems))) {
-            datagridStore.clearSelection();
-            preSelectedItems.forEach((preSelectedItem) => {
-                datagridStore.select(preSelectedItem);
-            });
+    @computed get preSelectedItems() {
+        return this.props.preSelectedItems;
+    }
+
+    @computed get datagridStore() {
+        return this.props.datagridStore;
+    }
+
+    constructor(props: Props) {
+        super(props);
+
+        this.updateSelectionDisposer = autorun(this.updateSelection);
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.open === true && this.props.open === false) {
+            this.datagridStore.clearSelection();
         }
     }
+
+    componentWillUnmount() {
+        this.updateSelectionDisposer();
+    }
+
+    updateSelection = () => {
+        this.datagridStore.clearSelection();
+        this.preSelectedItems.forEach((preSelectedItem) => {
+            this.datagridStore.select(preSelectedItem);
+        });
+    };
 
     handleConfirm = () => {
         this.props.onConfirm();
@@ -58,7 +77,6 @@ export default class DatagridOverlay extends React.Component<Props> {
             onClose,
             open,
             preSelectedItems,
-            datagridStore,
             title,
         } = this.props;
 
@@ -75,7 +93,7 @@ export default class DatagridOverlay extends React.Component<Props> {
 
         return (
             <Overlay
-                confirmDisabled={equals(toJS(preSelectedItems), toJS(datagridStore.selections))}
+                confirmDisabled={equals(toJS(preSelectedItems), toJS(this.datagridStore.selections))}
                 confirmLoading={confirmLoading}
                 confirmText={translate('sulu_admin.confirm')}
                 onClose={onClose}
@@ -94,7 +112,7 @@ export default class DatagridOverlay extends React.Component<Props> {
                             disabledIds={disabledIds}
                             movable={false}
                             searchable={false}
-                            store={datagridStore}
+                            store={this.datagridStore}
                         />
                     </div>
                 </div>

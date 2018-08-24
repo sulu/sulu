@@ -256,7 +256,7 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     expect(loadItemsCall[0]).toEqual([1, 3]);
 });
 
-test('Should not reload items if all new ids have already been loaded', () => {
+test('Should not reload items if none of the items changed', () => {
     const locale = observable.box('en');
 
     // $FlowFixMe
@@ -283,7 +283,7 @@ test('Should not reload items if all new ids have already been loaded', () => {
     expect(datagridStore.select).toBeCalledWith({id: 5});
     expect(datagridStore.select).toBeCalledWith({id: 8});
 
-    selection.setProps({value: [1, 5]});
+    selection.setProps({value: [1, 5, 8]});
     expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
 });
 
