@@ -66,7 +66,7 @@ test('Show with passed icon', () => {
     )).toMatchSnapshot();
 });
 
-test('Pass locale to DatagridOverlay', () => {
+test('Pass locale to MultiDatagridOverlay', () => {
     const locale = observable.box('de');
     const selection = mount(
         <Selection
@@ -78,10 +78,10 @@ test('Pass locale to DatagridOverlay', () => {
         />
     );
 
-    expect(selection.find('DatagridOverlay').prop('locale').get()).toEqual('de');
+    expect(selection.find('MultiDatagridOverlay').prop('locale').get()).toEqual('de');
 });
 
-test('Pass disabledIds to DatagridOverlay', () => {
+test('Pass disabledIds to MultiDatagridOverlay', () => {
     const disabledIds = [1, 2, 4];
 
     const selection = mount(
@@ -94,7 +94,7 @@ test('Pass disabledIds to DatagridOverlay', () => {
         />
     );
 
-    expect(selection.find('DatagridOverlay').prop('disabledIds')).toEqual(disabledIds);
+    expect(selection.find('MultiDatagridOverlay').prop('disabledIds')).toEqual(disabledIds);
 });
 
 test('Show with passed values as items in right locale', () => {
@@ -149,7 +149,7 @@ test('Should close an overlay using the close button', () => {
     }
 
     selection.update();
-    expect(selection.find('DatagridOverlay').prop('open')).toEqual(false);
+    expect(selection.find('MultiDatagridOverlay').prop('open')).toEqual(false);
 });
 
 test('Should close an overlay using the confirm button', () => {
@@ -165,7 +165,7 @@ test('Should close an overlay using the confirm button', () => {
     }
 
     selection.update();
-    expect(selection.find('DatagridOverlay').prop('open')).toEqual(false);
+    expect(selection.find('MultiDatagridOverlay').prop('open')).toEqual(false);
 });
 
 test('Should call the onChange callback when clicking the confirm button', () => {
@@ -175,7 +175,7 @@ test('Should call the onChange callback when clicking the confirm button', () =>
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
-    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
+    const datagridStore = selection.find('MultiDatagridOverlay').instance().datagridStore;
     datagridStore.selections = [3, 7, 2];
 
     const confirmButton = document.querySelector('button.primary');
@@ -193,7 +193,7 @@ test('Should instantiate the DatagridStore with the correct resourceKey and dest
 
     selection.find('Button[icon="su-plus"]').simulate('click');
 
-    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
+    const datagridStore = selection.find('MultiDatagridOverlay').instance().datagridStore;
     expect(datagridStore.resourceKey).toEqual('pages');
 
     selection.unmount();
@@ -218,7 +218,7 @@ test('Should instantiate the DatagridStore with the preselected ids', () => {
 
     selection.find('Button[icon="su-plus"]').simulate('click');
 
-    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
+    const datagridStore = selection.find('MultiDatagridOverlay').instance().datagridStore;
     expect(datagridStore.select).toBeCalledWith({id: 1});
     expect(datagridStore.select).toBeCalledWith({id: 5});
     expect(datagridStore.select).toBeCalledWith({id: 8});
@@ -246,7 +246,7 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
 
     selection.find('Button[icon="su-plus"]').simulate('click');
 
-    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
+    const datagridStore = selection.find('MultiDatagridOverlay').instance().datagridStore;
     expect(datagridStore.select).toBeCalledWith({id: 1});
     expect(datagridStore.select).toBeCalledWith({id: 5});
     expect(datagridStore.select).toBeCalledWith({id: 8});
@@ -278,7 +278,7 @@ test('Should not reload items if all new ids have already been loaded', () => {
 
     selection.find('Button[icon="su-plus"]').simulate('click');
 
-    const datagridStore = selection.find('DatagridOverlay').instance().datagridStore;
+    const datagridStore = selection.find('MultiDatagridOverlay').instance().datagridStore;
     expect(datagridStore.select).toBeCalledWith({id: 1});
     expect(datagridStore.select).toBeCalledWith({id: 5});
     expect(datagridStore.select).toBeCalledWith({id: 8});

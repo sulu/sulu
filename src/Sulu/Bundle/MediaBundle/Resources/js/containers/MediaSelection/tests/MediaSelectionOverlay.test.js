@@ -153,7 +153,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
     },
 }));
 
-jest.mock('sulu-admin-bundle/containers/DatagridOverlay', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/containers/MultiDatagridOverlay', () => jest.fn(() => null));
 
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);

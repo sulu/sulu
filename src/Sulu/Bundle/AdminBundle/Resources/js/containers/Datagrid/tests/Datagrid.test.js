@@ -2,7 +2,7 @@
 import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import {observable} from 'mobx';
-import DatagridOverlay from '../../DatagridOverlay';
+import MultiDatagridOverlay from '../../MultiDatagridOverlay';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
 import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
@@ -88,7 +88,7 @@ jest.mock('../../../utils/Translator', () => ({
     },
 }));
 
-jest.mock('../../DatagridOverlay', () => function() {
+jest.mock('../../MultiDatagridOverlay', () => function() {
     return null;
 });
 
@@ -426,7 +426,7 @@ test('DatagridStore should be updated with current active element', () => {
     expect(datagridStore.activate).toBeCalledWith('some-uuid');
 });
 
-test('DatagridOverlay should just disappear when onCopyClick callback is called and overlay is closed', () => {
+test('MultiDatagridOverlay should just disappear when onCopyClick callback is called and overlay is closed', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     mockStructureStrategyData = [
@@ -438,12 +438,12 @@ test('DatagridOverlay should just disappear when onCopyClick callback is called 
 
     datagrid.find('TableAdapter').prop('onCopyClick')(5);
     datagrid.update();
-    expect(datagrid.find(DatagridOverlay).at(1).prop('open')).toEqual(true);
-    expect(datagrid.find(DatagridOverlay).at(1).prop('disabledIds')).toEqual(undefined);
+    expect(datagrid.find(MultiDatagridOverlay).at(1).prop('open')).toEqual(true);
+    expect(datagrid.find(MultiDatagridOverlay).at(1).prop('disabledIds')).toEqual(undefined);
 
-    datagrid.find(DatagridOverlay).at(1).prop('onClose')();
+    datagrid.find(MultiDatagridOverlay).at(1).prop('onClose')();
     datagrid.update();
-    expect(datagrid.find(DatagridOverlay).at(1).prop('open')).toEqual(false);
+    expect(datagrid.find(MultiDatagridOverlay).at(1).prop('open')).toEqual(false);
 
     expect(datagridStore.copy).not.toBeCalled();
 });
@@ -464,20 +464,20 @@ test('DatagridStore should copy item when onCopyClick callback is called and ove
 
     datagrid.find('TableAdapter').prop('onCopyClick')(5);
     datagrid.update();
-    expect(datagrid.find(DatagridOverlay).at(1).prop('open')).toEqual(true);
+    expect(datagrid.find(MultiDatagridOverlay).at(1).prop('open')).toEqual(true);
 
-    datagrid.find(DatagridOverlay).at(1).prop('onConfirm')([{id: 8}]);
+    datagrid.find(MultiDatagridOverlay).at(1).prop('onConfirm')([{id: 8}]);
     expect(datagrid.instance().copying).toEqual(true);
     expect(datagridStore.copy).toBeCalledWith(5, 8);
 
     return copyPromise.then(() => {
         datagrid.update();
         expect(datagrid.instance().copying).toEqual(false);
-        expect(datagrid.find(DatagridOverlay).at(1).prop('open')).toEqual(false);
+        expect(datagrid.find(MultiDatagridOverlay).at(1).prop('open')).toEqual(false);
     });
 });
 
-test('DatagridOverlay should just disappear when onMoveClick callback is called and overlay is closed', () => {
+test('MultiDatagridOverlay should just disappear when onMoveClick callback is called and overlay is closed', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     mockStructureStrategyData = [
@@ -489,12 +489,12 @@ test('DatagridOverlay should just disappear when onMoveClick callback is called 
 
     datagrid.find('TableAdapter').prop('onMoveClick')(5);
     datagrid.update();
-    expect(datagrid.find(DatagridOverlay).at(0).prop('open')).toEqual(true);
-    expect(datagrid.find(DatagridOverlay).at(0).prop('disabledIds')).toEqual([5]);
+    expect(datagrid.find(MultiDatagridOverlay).at(0).prop('open')).toEqual(true);
+    expect(datagrid.find(MultiDatagridOverlay).at(0).prop('disabledIds')).toEqual([5]);
 
-    datagrid.find(DatagridOverlay).at(0).prop('onClose')();
+    datagrid.find(MultiDatagridOverlay).at(0).prop('onClose')();
     datagrid.update();
-    expect(datagrid.find(DatagridOverlay).at(0).prop('open')).toEqual(false);
+    expect(datagrid.find(MultiDatagridOverlay).at(0).prop('open')).toEqual(false);
 
     expect(datagridStore.move).not.toBeCalled();
 });
@@ -515,16 +515,16 @@ test('DatagridStore should move item when onMoveClick callback is called and ove
 
     datagrid.find('TableAdapter').prop('onMoveClick')(5);
     datagrid.update();
-    expect(datagrid.find(DatagridOverlay).at(0).prop('open')).toEqual(true);
+    expect(datagrid.find(MultiDatagridOverlay).at(0).prop('open')).toEqual(true);
 
-    datagrid.find(DatagridOverlay).at(0).prop('onConfirm')([{id: 8}]);
+    datagrid.find(MultiDatagridOverlay).at(0).prop('onConfirm')([{id: 8}]);
     expect(datagrid.instance().moving).toEqual(true);
     expect(datagridStore.move).toBeCalledWith(5, 8);
 
     return movePromise.then(() => {
         datagrid.update();
         expect(datagrid.instance().moving).toEqual(false);
-        expect(datagrid.find(DatagridOverlay).at(0).prop('open')).toEqual(false);
+        expect(datagrid.find(MultiDatagridOverlay).at(0).prop('open')).toEqual(false);
     });
 });
 

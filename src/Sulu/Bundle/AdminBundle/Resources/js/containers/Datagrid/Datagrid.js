@@ -5,7 +5,7 @@ import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
 import Dialog from '../../components/Dialog';
-import DatagridOverlay from '../DatagridOverlay';
+import MultiDatagridOverlay from '../MultiDatagridOverlay';
 import {translate} from '../../utils/Translator';
 import type {SortOrder} from './types';
 import DatagridStore from './stores/DatagridStore';
@@ -312,7 +312,7 @@ export default class Datagrid extends React.Component<Props> {
                     {translate('sulu_admin.delete_warning_text')}
                 </Dialog>
                 {movable &&
-                    <DatagridOverlay
+                    <MultiDatagridOverlay
                         adapter={adapters[0]}
                         allowDisabledActivation={false}
                         confirmLoading={this.moving}
@@ -327,7 +327,7 @@ export default class Datagrid extends React.Component<Props> {
                     />
                 }
                 {copyable &&
-                    <DatagridOverlay
+                    <MultiDatagridOverlay
                         adapter={adapters[0]}
                         confirmLoading={this.copying}
                         locale={store.observableOptions.locale}

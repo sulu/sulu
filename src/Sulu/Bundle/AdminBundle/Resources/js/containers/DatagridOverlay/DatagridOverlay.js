@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
-import {observable, toJS} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import equals from 'fast-deep-equal';
@@ -15,65 +14,39 @@ type Props = {|
     adapter: string,
     allowDisabledActivation: boolean,
     confirmLoading?: boolean,
+    datagridStore: DatagridStore,
     disabledIds: Array<string | number>,
-    locale?: ?IObservableValue<string>,
     onClose: () => void,
-    onConfirm: (selectedItems: Array<Object>) => void,
+    onConfirm: () => void,
     open: boolean,
-    options?: Object,
-    resourceKey: string,
     preSelectedItems: Array<Object>,
     title: string,
 |};
 
 @observer
 export default class DatagridOverlay extends React.Component<Props> {
-    datagridStore: DatagridStore;
-    page: IObservableValue<number> = observable.box(1);
-
     static defaultProps = {
         allowDisabledActivation: true,
         disabledIds: [],
         preSelectedItems: [],
     };
 
-    constructor(props: Props) {
-        super(props);
-
-        const {locale, options, preSelectedItems, resourceKey} = this.props;
-        const observableOptions = {};
-        observableOptions.page = this.page;
-
-        if (locale) {
-            observableOptions.locale = locale;
-        }
-
-        this.datagridStore = new DatagridStore(resourceKey, observableOptions, options);
-
-        preSelectedItems.forEach((preSelectedItem) => {
-            this.datagridStore.select(preSelectedItem);
-        });
-    }
-
     componentDidUpdate(prevProps: Props) {
-        if (prevProps.open === true && this.props.open === false) {
-            this.datagridStore.clearSelection();
+        const {datagridStore, open, preSelectedItems} = this.props;
+        if (prevProps.open === true && open === false) {
+            datagridStore.clearSelection();
         }
 
-        if (!equals(toJS(prevProps.preSelectedItems), toJS(this.props.preSelectedItems))) {
-            this.datagridStore.clearSelection();
-            this.props.preSelectedItems.forEach((preSelectedItem) => {
-                this.datagridStore.select(preSelectedItem);
+        if (!equals(toJS(prevProps.preSelectedItems), toJS(preSelectedItems))) {
+            datagridStore.clearSelection();
+            preSelectedItems.forEach((preSelectedItem) => {
+                datagridStore.select(preSelectedItem);
             });
         }
     }
 
-    componentWillUnmount() {
-        this.datagridStore.destroy();
-    }
-
     handleConfirm = () => {
-        this.props.onConfirm(this.datagridStore.selections);
+        this.props.onConfirm();
     };
 
     render() {
@@ -85,6 +58,7 @@ export default class DatagridOverlay extends React.Component<Props> {
             onClose,
             open,
             preSelectedItems,
+            datagridStore,
             title,
         } = this.props;
 
@@ -101,7 +75,7 @@ export default class DatagridOverlay extends React.Component<Props> {
 
         return (
             <Overlay
-                confirmDisabled={equals(toJS(preSelectedItems), toJS(this.datagridStore.selections))}
+                confirmDisabled={equals(toJS(preSelectedItems), toJS(datagridStore.selections))}
                 confirmLoading={confirmLoading}
                 confirmText={translate('sulu_admin.confirm')}
                 onClose={onClose}
@@ -120,7 +94,7 @@ export default class DatagridOverlay extends React.Component<Props> {
                             disabledIds={disabledIds}
                             movable={false}
                             searchable={false}
-                            store={this.datagridStore}
+                            store={datagridStore}
                         />
                     </div>
                 </div>

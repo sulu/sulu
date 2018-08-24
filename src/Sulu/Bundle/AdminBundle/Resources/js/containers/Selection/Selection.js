@@ -5,7 +5,7 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {MultiItemSelection} from '../../components';
 import SelectionStore from '../../stores/SelectionStore';
-import DatagridOverlay from '../DatagridOverlay';
+import MultiDatagridOverlay from '../MultiDatagridOverlay';
 import selectionStyles from './selection.scss';
 
 type Props = {|
@@ -130,7 +130,7 @@ export default class Selection extends React.Component<Props> {
                         </MultiItemSelection.Item>
                     ))}
                 </MultiItemSelection>
-                <DatagridOverlay
+                <MultiDatagridOverlay
                     adapter={adapter}
                     disabledIds={disabledIds}
                     locale={locale}
