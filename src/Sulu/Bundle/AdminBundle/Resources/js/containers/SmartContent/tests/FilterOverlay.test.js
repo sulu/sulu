@@ -30,6 +30,8 @@ test('Do not display if open is set to false', () => {
     );
 
     expect(filterOverlay.find('Overlay').prop('open')).toEqual(false);
+
+    smartContentStore.destroy();
 });
 
 test('Fill all fields using and update SmartContentStore on confirm', () => {
@@ -138,6 +140,8 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(smartContentStore.limit).toEqual(7);
 
     expect(closeSpy).toBeCalledWith();
+
+    smartContentStore.destroy();
 });
 
 test('Prefill all fields with correct values', () => {
@@ -194,6 +198,8 @@ test('Prefill all fields with correct values', () => {
 
     expect(filterOverlay.find('div[className="presentation"]').find('SingleSelect').prop('value')).toEqual('small');
     expect(filterOverlay.find('div[className="limit"] Number').prop('value')).toEqual(8);
+
+    smartContentStore.destroy();
 });
 
 test('Reset all fields when reset action is clicked', () => {
@@ -242,4 +248,6 @@ test('Reset all fields when reset action is clicked', () => {
     expect(filterOverlay.instance().sortOrder).toEqual(undefined);
     expect(filterOverlay.instance().presentation).toEqual(undefined);
     expect(filterOverlay.instance().limit).toEqual(undefined);
+
+    smartContentStore.destroy();
 });

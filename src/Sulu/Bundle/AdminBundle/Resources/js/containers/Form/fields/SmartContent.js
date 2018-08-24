@@ -34,6 +34,10 @@ export default class SmartContent extends React.Component<Props> {
         autorun(this.handleFilterCriteriaChange);
     }
 
+    componentWillUnmount() {
+        this.smartContentStore.destroy();
+    }
+
     handleFilterCriteriaChange = () => {
         const {onChange, onFinish, value} = this.props;
 

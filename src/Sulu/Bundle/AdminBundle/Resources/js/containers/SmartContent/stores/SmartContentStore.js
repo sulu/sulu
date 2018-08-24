@@ -7,6 +7,8 @@ import type {Conjunction, FilterCriteria, SortOrder} from '../types';
 export default class SmartContentStore {
     locale: ?IObservableValue<string>;
     dataSourceResourceKey: ?string;
+    @observable items: Array<Object>;
+    @observable itemsLoading: boolean;
     @observable categoriesLoading: boolean;
     @observable dataSourceLoading: boolean;
     @observable dataSource: ?Object;
@@ -64,6 +66,10 @@ export default class SmartContentStore {
                 }));
             }
         }
+    }
+
+    destroy() {
+
     }
 
     @computed get loading() {

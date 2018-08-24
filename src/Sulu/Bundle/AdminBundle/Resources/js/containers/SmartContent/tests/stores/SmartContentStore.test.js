@@ -57,6 +57,8 @@ test('Load categories and datasource when constructed', () => {
         expect(smartContentStore.loading).toEqual(false);
         expect(smartContentStore.dataSource).toEqual(dataSource);
         expect(smartContentStore.categories).toEqual(categories);
+
+        smartContentStore.destroy();
     });
 });
 
@@ -87,4 +89,6 @@ test('Generate filterCriteria from current state', () => {
         tagOperator: 'or',
         tags: ['Test1', 'Test3'],
     });
+
+    smartContentStore.destroy();
 });

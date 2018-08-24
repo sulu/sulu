@@ -392,7 +392,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
-            '&provider=content&excluded=' . $this->team->getUuid() . '&limitResult=2&tags[]=' . $this->tag1->getName()
+            '&provider=content&excluded=' . $this->team->getUuid() . '&limitResult=2&tags=' . $this->tag1->getName()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());

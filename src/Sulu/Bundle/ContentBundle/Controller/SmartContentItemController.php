@@ -40,6 +40,12 @@ class SmartContentItemController extends RestController
         $providerAlias = $this->getRequestParameter($request, 'provider', true);
         $filters = $request->query->all();
         $filters['excluded'] = array_filter(explode(',', $this->getRequestParameter($request, 'excluded', true)));
+        if (isset($filters['categories'])) {
+            $filters['categories'] = explode(',', $this->getRequestParameter($request, 'categories', ''));
+        }
+        if (isset($filters['tags'])) {
+            $filters['tags'] = explode(',', $this->getRequestParameter($request, 'tags', ''));
+        }
         $filters = array_filter($filters);
         $options = [
             'webspaceKey' => $this->getRequestParameter($request, 'webspace'),

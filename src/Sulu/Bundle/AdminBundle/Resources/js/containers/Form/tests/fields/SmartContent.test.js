@@ -11,6 +11,7 @@ jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 jest.mock('../../../SmartContent/stores/SmartContentStore', () => jest.fn(function() {
     this.loading = false;
+    this.destroy = jest.fn();
 }));
 
 test('Should not call the onChange and onFinish callbacks if SmartContentStore is still loading', () => {
@@ -125,4 +126,29 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
+});
+
+test('Should call destroy on SmartContentStore when unmounted', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+
+    const smartContent = shallow(
+        <SmartContent
+            dataPath="/"
+            error={{}}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            maxOccurs={0}
+            minOccurs={0}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath="/"
+            showAllErrors={false}
+            types={undefined}
+            value={undefined}
+        />
+    );
+
+    const smartContentStore = smartContent.instance().smartContentStore;
+    smartContent.unmount();
+    expect(smartContentStore.destroy).toBeCalledWith();
 });
