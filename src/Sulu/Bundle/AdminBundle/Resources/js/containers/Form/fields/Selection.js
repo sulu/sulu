@@ -106,7 +106,7 @@ export default class Selection extends React.Component<Props> {
                 displayProperties={displayProperties}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 icon={icon}
-                label={translate(label)}
+                label={translate(label, {count: value ? value.length : 0})}
                 locale={formInspector.locale}
                 onChange={onChange}
                 resourceKey={resourceKey}
