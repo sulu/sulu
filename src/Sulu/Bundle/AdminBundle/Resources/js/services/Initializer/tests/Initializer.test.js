@@ -5,7 +5,7 @@ import initializer from '../Initializer';
 import Requester from '../../Requester';
 import {Selection, fieldRegistry, SingleSelection} from '../../../containers/Form';
 import {textEditorRegistry} from '../../../containers/TextEditor';
-import {setTranslations} from '../../../utils/Translator';
+import {setLocale, setTranslations} from '../../../utils/Translator';
 import routeRegistry from '../../Router/registries/RouteRegistry';
 import navigationRegistry from '../../../containers/Navigation/registries/NavigationRegistry';
 import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
@@ -27,6 +27,7 @@ jest.mock('../../Bundles', () => ({
 }));
 
 jest.mock('../../../utils/Translator', () => ({
+    setLocale: jest.fn(),
     setTranslations: jest.fn(),
 }));
 
@@ -133,6 +134,7 @@ test('Should initialize when everything works', () => {
 
     return initPromise
         .then(() => {
+            expect(setLocale).toBeCalledWith('en');
             expect(setTranslations).toBeCalledWith(translationData);
             expect(initializer.initializedTranslationsLocale).toBe('en');
             expect(moment.locale).toBeCalledWith('en-US');

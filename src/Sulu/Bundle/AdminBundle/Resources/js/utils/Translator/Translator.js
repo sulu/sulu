@@ -4,11 +4,16 @@ import IntlMessageFormat from 'intl-messageformat';
 import type {TranslationMap} from './types';
 
 let translationMap;
+let currentLocale;
+
+function setLocale(locale: string) {
+    currentLocale = locale;
+}
 
 function setTranslations(translations: TranslationMap) {
     translationMap = Object.keys(translations).reduce((messages, translationKey) => {
         // TODO add locale for correct translation of numbers, dates, ...
-        messages[translationKey] = new IntlMessageFormat(translations[translationKey]);
+        messages[translationKey] = new IntlMessageFormat(translations[translationKey], currentLocale);
         return messages;
     }, {});
 }
@@ -27,7 +32,8 @@ function translate(key: string, parameters: ?Object) {
 }
 
 export {
-    translate,
-    setTranslations,
     clearTranslations,
+    setLocale,
+    setTranslations,
+    translate,
 };

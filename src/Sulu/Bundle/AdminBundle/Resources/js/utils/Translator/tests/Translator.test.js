@@ -1,6 +1,6 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import log from 'loglevel';
-import {clearTranslations, setTranslations, translate} from '../Translator';
+import {clearTranslations, setLocale, setTranslations, translate} from '../Translator';
 
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
@@ -24,6 +24,23 @@ test('Translator should use the IntlMessageFormat for translation', () => {
     expect(translate('apple_count', {numApples: 0})).toEqual('You have no apples.');
     expect(translate('apple_count', {numApples: 1})).toEqual('You have one apple.');
     expect(translate('apple_count', {numApples: 4})).toEqual('You have 4 apples.');
+});
+
+test('Translator should use the english language for translating dates', () => {
+    setTranslations({
+        'date': '{date, date}',
+    });
+
+    expect(translate('date', {date: new Date('1995-12-17')})).toEqual('12/17/1995');
+});
+
+test('Translator should use the german language for translating dates', () => {
+    setLocale('de');
+    setTranslations({
+        'date': '{date, date}',
+    });
+
+    expect(translate('date', {date: new Date('1995-12-17')})).toEqual('17.12.1995');
 });
 
 test('Translator should return key when translating non-existing keys and log a warning', () => {

@@ -1,4 +1,4 @@
 // @flow
-import {clearTranslations, setTranslations, translate} from './Translator';
+import {clearTranslations, setLocale, setTranslations, translate} from './Translator';
 
-export {setTranslations, clearTranslations, translate};
+export {setLocale, setTranslations, clearTranslations, translate};
