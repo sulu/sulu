@@ -26,6 +26,7 @@ test('Do not display if open is set to false', () => {
             presentations={{}}
             sortings={{}}
             smartContentStore={smartContentStore}
+            title="Test"
         />
     );
 
@@ -53,6 +54,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
                 changed: 'Changed',
             }}
             smartContentStore={smartContentStore}
+            title="Test"
         />
     );
 
@@ -173,6 +175,7 @@ test('Prefill all fields with correct values', () => {
                 created: 'Created',
             }}
             smartContentStore={smartContentStore}
+            title="Test"
         />
     );
 
@@ -231,6 +234,7 @@ test('Reset all fields when reset action is clicked', () => {
                 created: 'Created',
             }}
             smartContentStore={smartContentStore}
+            title="Test"
         />
     );
 

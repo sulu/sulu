@@ -14,6 +14,30 @@ jest.mock('../../../SmartContent/stores/SmartContentStore', () => jest.fn(functi
     this.destroy = jest.fn();
 }));
 
+test('Pass correct props to SmartContent component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+
+    const smartContent = shallow(
+        <SmartContent
+            dataPath="/"
+            error={{}}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={0}
+            minOccurs={0}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaPath="/"
+            showAllErrors={false}
+            types={undefined}
+            value={undefined}
+        />
+    );
+
+    expect(smartContent.find('SmartContent').prop('fieldLabel')).toEqual('Test');
+});
+
 test('Should not call the onChange and onFinish callbacks if SmartContentStore is still loading', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
@@ -25,6 +49,7 @@ test('Should not call the onChange and onFinish callbacks if SmartContentStore i
             error={{}}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={0}
             minOccurs={0}
             onChange={changeSpy}
@@ -57,6 +82,7 @@ test('Should call the onChange and onFinish callbacks if SmartContentStore chang
             error={{}}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={0}
             minOccurs={0}
             onChange={changeSpy}
@@ -103,6 +129,7 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
             error={{}}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={0}
             minOccurs={0}
             onChange={changeSpy}
@@ -137,6 +164,7 @@ test('Should call destroy on SmartContentStore when unmounted', () => {
             error={{}}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={0}
             minOccurs={0}
             onChange={jest.fn()}

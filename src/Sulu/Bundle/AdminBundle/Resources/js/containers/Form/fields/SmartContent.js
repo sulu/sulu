@@ -61,6 +61,13 @@ export default class SmartContent extends React.Component<Props> {
     };
 
     render() {
-        return <SmartContentComponent store={this.smartContentStore} />;
+        const {label} = this.props;
+
+        return (
+            <SmartContentComponent
+                fieldLabel={label}
+                store={this.smartContentStore}
+            />
+        );
     }
 }

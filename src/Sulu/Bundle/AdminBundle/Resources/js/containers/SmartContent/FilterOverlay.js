@@ -23,6 +23,7 @@ type Props = {
     presentations: {[key: string]: string},
     smartContentStore: SmartContentStore,
     sortings: {[key: string]: string},
+    title: string,
 };
 
 @observer
@@ -207,6 +208,7 @@ export default class FilterOverlay extends React.Component<Props> {
             presentations,
             smartContentStore,
             sortings,
+            title,
         } = this.props;
 
         return (
@@ -222,7 +224,7 @@ export default class FilterOverlay extends React.Component<Props> {
                     onClose={onClose}
                     onConfirm={this.handleConfirm}
                     open={open}
-                    title="Test"
+                    title={title}
                     size="small"
                 >
                     <div className={filterOverlayStyles.content}>

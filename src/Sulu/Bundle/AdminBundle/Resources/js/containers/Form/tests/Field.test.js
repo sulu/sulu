@@ -186,6 +186,7 @@ test('Pass correct props to FieldType', () => {
     expect(field.find('Text').props()).toEqual(expect.objectContaining({
         dataPath: '/block/0/text',
         formInspector,
+        label: 'Text',
         maxOccurs: 4,
         minOccurs: 2,
         schemaPath: '/text',

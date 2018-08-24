@@ -3,10 +3,12 @@ import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import MultiItemSelection from '../../components/MultiItemSelection';
+import {translate} from '../../utils/Translator';
 import SmartContentStore from './stores/SmartContentStore';
 import FilterOverlay from './FilterOverlay';
 
 type Props = {
+    fieldLabel: string,
     store: SmartContentStore,
 };
 
@@ -23,7 +25,7 @@ export default class SmartContent extends React.Component<Props> {
     };
 
     render() {
-        const {store} = this.props;
+        const {fieldLabel, store} = this.props;
 
         return (
             <Fragment>
@@ -48,6 +50,7 @@ export default class SmartContent extends React.Component<Props> {
                         admin: 'Admin-Reihenfolge',
                     }}
                     smartContentStore={store}
+                    title={translate('sulu_admin.filter_overlay_title', {fieldLabel})}
                 />
             </Fragment>
         );

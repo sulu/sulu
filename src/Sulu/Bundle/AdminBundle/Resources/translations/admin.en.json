@@ -53,6 +53,7 @@
     "sulu_admin.choose_target_locale": "Choose target locales",
     "sulu_admin.copy_locale_dialog_description": "* New locale will be created",
     "sulu_admin.move_copy_overlay_title": "Choose parent-page",
+    "sulu_admin.filter_overlay_title": "Configure {fieldLabel}",
     "sulu_admin.data_source": "Select source",
     "sulu_admin.choose_data_source": "Choose source",
     "sulu_admin.include_sub_elements": "Include sub elements",
