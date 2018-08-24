@@ -15,6 +15,7 @@ const filterCriteriaDefaults = {
     dataSource: undefined,
     includeSubFolders: undefined,
     limitResult: undefined,
+    presentAs: undefined,
     sortBy: undefined,
     sortMethod: undefined,
     tagOperator: undefined,
@@ -44,12 +45,24 @@ export default class SmartContent extends React.Component<Props> {
         const currentValue = {...filterCriteriaDefaults, ...toJS(value)};
         const newValue = {...filterCriteriaDefaults, ...toJS(this.smartContentStore.filterCriteria)};
 
-        if (currentValue && currentValue.categories) {
-            currentValue.categories.sort();
+        if (currentValue) {
+            if (currentValue.categories) {
+                currentValue.categories.sort();
+            }
+
+            if (currentValue.tags) {
+                currentValue.tags.sort();
+            }
         }
 
-        if (newValue && newValue.categories) {
-            newValue.categories.sort();
+        if (newValue) {
+            if (newValue.categories) {
+                newValue.categories.sort();
+            }
+
+            if (newValue.tags) {
+                newValue.tags.sort();
+            }
         }
 
         if (this.smartContentStore.loading || equals(currentValue, newValue)) {

@@ -155,6 +155,57 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
     expect(finishSpy).not.toBeCalled();
 });
 
+test('Should not call the onChange and onFinish callbacks if tags only differ in order', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+
+    const value = {
+        audienceTargeting: undefined,
+        categoryOperator: undefined,
+        categories: undefined,
+        dataSource: undefined,
+        includeSubFolders: undefined,
+        limitResult: undefined,
+        presentAs: 'large',
+        sortBy: undefined,
+        sortMethod: undefined,
+        tagOperator: undefined,
+        tags: ['Design', 'Programming'],
+    };
+
+    const smartContent = shallow(
+        <SmartContent
+            dataPath="/"
+            error={{}}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={0}
+            minOccurs={0}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaPath="/"
+            showAllErrors={false}
+            types={undefined}
+            value={value}
+        />
+    );
+
+    changeSpy.mockReset();
+    finishSpy.mockReset();
+
+    smartContent.instance().smartContentStore.loading = false;
+    smartContent.instance().smartContentStore.filterCriteria = {
+        ...value,
+        tags: ['Programming', 'Design'],
+    };
+    smartContent.instance().handleFilterCriteriaChange();
+
+    expect(changeSpy).not.toBeCalled();
+    expect(finishSpy).not.toBeCalled();
+});
+
 test('Should call destroy on SmartContentStore when unmounted', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
 
