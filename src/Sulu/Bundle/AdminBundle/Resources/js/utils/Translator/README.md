@@ -12,3 +12,17 @@ setTranslations({
 translate('title');    // returns Title
 translate('test');     // returns test and logs a warning 
 ```
+
+It is also possible to use the [`IntlMessageFormat`](http://userguide.icu-project.org/formatparse/messages) to write
+translation messages. This allows to use placeholders, differ between different count and all the other features this
+format supports.
+
+```javascript static
+import {setTranslations, translate} from './Translator';
+setTranslations({
+    'apple_count': 'You have {numApples, plural, =0 {no apples} =1 {one apple} other {# apples}}.',
+});
+
+translate('apple_count', {numApples: 1});    // returns "You have one apple."
+translate('apple_count', {numApples: 3});    // returns "You have 3 apple."
+```
