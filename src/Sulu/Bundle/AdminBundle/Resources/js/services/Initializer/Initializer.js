@@ -43,7 +43,7 @@ import {navigationRegistry} from '../../containers/Navigation';
 import resourceMetadataStore from '../../stores/ResourceMetadataStore';
 import {routeRegistry} from '../Router';
 import Config from '../Config';
-import {setLocale, setTranslations} from '../../utils/Translator';
+import {setTranslations} from '../../utils/Translator';
 import Requester from '../Requester';
 import {bundlesReadyPromise} from '../../services/Bundles';
 import {viewRegistry} from '../../containers/ViewRenderer';
@@ -186,8 +186,7 @@ class Initializer {
         const promise = this.initializedTranslationsLocale === locale
             ? Promise.resolve()
             : Requester.get(Config.endpoints.translations + '?locale=' + locale).then((translations) => {
-                setLocale(locale);
-                setTranslations(translations);
+                setTranslations(translations, locale);
                 this.setInitializedTranslationsLocale(locale);
             });
 
