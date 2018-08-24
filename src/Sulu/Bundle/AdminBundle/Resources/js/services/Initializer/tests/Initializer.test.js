@@ -133,7 +133,7 @@ test('Should initialize when everything works', () => {
 
     return initPromise
         .then(() => {
-            expect(setTranslations).toBeCalledWith(translationData);
+            expect(setTranslations).toBeCalledWith(translationData, 'en');
             expect(initializer.initializedTranslationsLocale).toBe('en');
             expect(moment.locale).toBeCalledWith('en-US');
 

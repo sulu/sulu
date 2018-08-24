@@ -2,11 +2,12 @@
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import {translate} from '../../../../utils/Translator';
+import ResourceStore from '../../../../stores/ResourceStore';
 import Datagrid from '../../../Datagrid';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
-import ResourceStore from '../../../../stores/ResourceStore';
 
 jest.mock('../../../Datagrid', () => jest.fn(() => null));
 
@@ -40,9 +41,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
 }));
 
 jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn(function(key) {
-        return key;
-    }),
+    translate: jest.fn((key) => key),
 }));
 
 test('Should pass props correctly to selection component', () => {
@@ -87,6 +86,8 @@ test('Should pass props correctly to selection component', () => {
             value={value}
         />
     );
+
+    expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
 
     expect(selection.find('Selection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
@@ -141,6 +142,7 @@ test('Should pass empty array if value is not given to overlay type', () => {
         types: {
             overlay: {
                 adapter: 'column_list',
+                label: 'sulu_content.selection_label',
             },
         },
     };
@@ -163,6 +165,7 @@ test('Should pass empty array if value is not given to overlay type', () => {
         />
     );
 
+    expect(translate).toBeCalledWith('sulu_content.selection_label', {count: 0});
     expect(selection.find('Selection').props()).toEqual(expect.objectContaining({
         adapter: 'column_list',
         onChange: changeSpy,

@@ -186,7 +186,7 @@ class Initializer {
         const promise = this.initializedTranslationsLocale === locale
             ? Promise.resolve()
             : Requester.get(Config.endpoints.translations + '?locale=' + locale).then((translations) => {
-                setTranslations(translations);
+                setTranslations(translations, locale);
                 this.setInitializedTranslationsLocale(locale);
             });
 
