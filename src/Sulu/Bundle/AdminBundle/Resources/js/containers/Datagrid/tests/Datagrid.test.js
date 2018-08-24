@@ -439,6 +439,7 @@ test('MultiDatagridOverlay should just disappear when onCopyClick callback is ca
     datagrid.find('TableAdapter').prop('onCopyClick')(5);
     datagrid.update();
     expect(datagrid.find(MultiDatagridOverlay).at(1).prop('open')).toEqual(true);
+    expect(datagrid.find(MultiDatagridOverlay).at(1).prop('clearSelectionOnClose')).toEqual(true);
     expect(datagrid.find(MultiDatagridOverlay).at(1).prop('disabledIds')).toEqual(undefined);
 
     datagrid.find(MultiDatagridOverlay).at(1).prop('onClose')();
@@ -465,6 +466,7 @@ test('DatagridStore should copy item when onCopyClick callback is called and ove
     datagrid.find('TableAdapter').prop('onCopyClick')(5);
     datagrid.update();
     expect(datagrid.find(MultiDatagridOverlay).at(1).prop('open')).toEqual(true);
+    expect(datagrid.find(MultiDatagridOverlay).at(1).prop('clearSelectionOnClose')).toEqual(true);
 
     datagrid.find(MultiDatagridOverlay).at(1).prop('onConfirm')([{id: 8}]);
     expect(datagrid.instance().copying).toEqual(true);

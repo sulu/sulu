@@ -8,6 +8,7 @@ import DatagridOverlay from '../DatagridOverlay';
 type Props = {|
     adapter: string,
     allowDisabledActivation?: boolean,
+    clearSelectionOnClose: boolean,
     confirmLoading?: boolean,
     disabledIds?: Array<string | number>,
     locale?: ?IObservableValue<string>,
@@ -25,6 +26,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
     page: IObservableValue<number> = observable.box(1);
 
     static defaultProps = {
+        clearSelectionOnClose: false,
         preSelectedItems: [],
     };
 
@@ -58,6 +60,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
         const {
             adapter,
             allowDisabledActivation,
+            clearSelectionOnClose,
             confirmLoading,
             disabledIds,
             onClose,
@@ -70,6 +73,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
             <DatagridOverlay
                 adapter={adapter}
                 allowDisabledActivation={allowDisabledActivation}
+                clearSelectionOnClose={clearSelectionOnClose}
                 confirmLoading={confirmLoading}
                 datagridStore={this.datagridStore}
                 disabledIds={disabledIds}

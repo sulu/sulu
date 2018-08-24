@@ -170,7 +170,9 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     },
 }));
 
-jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => jest.fn(function() {
+    this.clearSelection = jest.fn();
+}));
 
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);

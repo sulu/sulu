@@ -14,6 +14,7 @@ type Props = {|
     adapter: string,
     allowDisabledActivation: boolean,
     confirmLoading?: boolean,
+    clearSelectionOnClose: boolean,
     datagridStore: DatagridStore,
     disabledIds: Array<string | number>,
     onClose: () => void,
@@ -27,6 +28,7 @@ type Props = {|
 export default class DatagridOverlay extends React.Component<Props> {
     static defaultProps = {
         allowDisabledActivation: true,
+        clearSelectionOnClose: false,
         disabledIds: [],
         preSelectedItems: [],
     };
@@ -48,7 +50,8 @@ export default class DatagridOverlay extends React.Component<Props> {
     }
 
     componentDidUpdate(prevProps: Props) {
-        if (prevProps.open === true && this.props.open === false) {
+        const {clearSelectionOnClose, open} = this.props;
+        if (clearSelectionOnClose && prevProps.open === true && open === false) {
             this.datagridStore.clearSelection();
         }
     }

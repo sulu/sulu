@@ -179,6 +179,64 @@ test('Should instantiate the datagrid with the passed adapter', () => {
     expect(datagridOverlay2.find(Datagrid).prop('adapters')).toEqual(['column_list']);
 });
 
+test('Should not clear selection on close if clearSelectionOnClose prop is not set', () => {
+    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+
+    const datagridOverlay = mount(
+        <DatagridOverlay
+            adapter="table"
+            clearSelectionOnClose={false}
+            datagridStore={datagridStore}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            preSelectedItems={[{id: 1}]}
+            title="test"
+        />
+    );
+
+    datagridStore.clearSelection.mockReset();
+    datagridStore.select.mockReset();
+
+    expect(datagridStore.clearSelection).not.toBeCalled();
+    expect(datagridStore.select).not.toBeCalled();
+
+    datagridOverlay.setProps({
+        open: false,
+    });
+
+    expect(datagridStore.clearSelection).not.toBeCalled();
+});
+
+test('Should clear selection on close if clearSelectionOnClose prop is set', () => {
+    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+
+    const datagridOverlay = mount(
+        <DatagridOverlay
+            adapter="table"
+            clearSelectionOnClose={true}
+            datagridStore={datagridStore}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            preSelectedItems={[{id: 1}]}
+            title="test"
+        />
+    );
+
+    datagridStore.clearSelection.mockReset();
+    datagridStore.select.mockReset();
+
+    expect(datagridStore.clearSelection).not.toBeCalled();
+    expect(datagridStore.select).not.toBeCalled();
+
+    datagridOverlay.setProps({
+        open: false,
+    });
+
+    expect(datagridStore.clearSelection).toBeCalledWith();
+});
+
 test('Should update selection if passed preSelectedItems prop changes', () => {
     const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
 

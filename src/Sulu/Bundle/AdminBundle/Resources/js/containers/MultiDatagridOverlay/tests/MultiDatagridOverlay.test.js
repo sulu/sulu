@@ -78,6 +78,23 @@ test('Should pass disabledIds to the DatagridOverlay', () => {
     expect(multiDatagridOverlay.find(DatagridOverlay).prop('allowDisabledActivation')).toEqual(true);
 });
 
+test('Should pass clearSelectionOnClose to the Datagrid', () => {
+    const multiDatagridOverlay = shallow(
+        <MultiDatagridOverlay
+            adapter="table"
+            allowDisabledActivation={false}
+            clearSelectionOnClose={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(multiDatagridOverlay.find(DatagridOverlay).prop('clearSelectionOnClose')).toEqual(true);
+});
+
 test('Should pass allowDisabledActivation to the Datagrid', () => {
     const disabledIds = [1, 2, 5];
 

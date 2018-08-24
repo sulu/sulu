@@ -315,6 +315,7 @@ export default class Datagrid extends React.Component<Props> {
                     <MultiDatagridOverlay
                         adapter={adapters[0]}
                         allowDisabledActivation={false}
+                        clearSelectionOnClose={true}
                         confirmLoading={this.moving}
                         disabledIds={this.moveId ? [this.moveId] : []}
                         locale={store.observableOptions.locale}
@@ -329,6 +330,7 @@ export default class Datagrid extends React.Component<Props> {
                 {copyable &&
                     <MultiDatagridOverlay
                         adapter={adapters[0]}
+                        clearSelectionOnClose={true}
                         confirmLoading={this.copying}
                         locale={store.observableOptions.locale}
                         onClose={this.handleCopyOverlayClose}
