@@ -23,6 +23,7 @@ test('Do not display if open is set to false', () => {
             dataSourceResourceKey={undefined}
             onClose={jest.fn()}
             open={false}
+            presentations={{}}
             sortings={{}}
             smartContentStore={smartContentStore}
         />
@@ -41,6 +42,10 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
             dataSourceResourceKey="pages"
             onClose={closeSpy}
             open={true}
+            presentations={{
+                small: 'Small',
+                large: 'Large',
+            }}
             sortings={{
                 title: 'Title',
                 changed: 'Changed',
@@ -98,6 +103,10 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     filterOverlay.update();
     expect(filterOverlay.find('div[className="sortOrder"]').find('SingleSelect').prop('value')).toEqual('asc');
 
+    filterOverlay.find('div[className="presentation"]').find('SingleSelect').prop('onChange')('large');
+    filterOverlay.update();
+    expect(filterOverlay.find('div[className="presentation"]').find('SingleSelect').prop('value')).toEqual('large');
+
     filterOverlay.find('div[className="limit"] Number').prop('onChange')(7);
     filterOverlay.update();
     expect(filterOverlay.find('div[className="limit"] Number').prop('value')).toEqual(7);
@@ -111,6 +120,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(smartContentStore.audienceTargeting).toEqual(undefined);
     expect(smartContentStore.sortBy).toEqual(undefined);
     expect(smartContentStore.sortOrder).toEqual(undefined);
+    expect(smartContentStore.presentation).toEqual(undefined);
     expect(smartContentStore.limit).toEqual(undefined);
 
     filterOverlay.find('Overlay').prop('onConfirm')();
@@ -124,6 +134,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(smartContentStore.audienceTargeting).toEqual(false);
     expect(smartContentStore.sortBy).toEqual('changed');
     expect(smartContentStore.sortOrder).toEqual('asc');
+    expect(smartContentStore.presentation).toEqual('large');
     expect(smartContentStore.limit).toEqual(7);
 
     expect(closeSpy).toBeCalledWith();
@@ -140,6 +151,7 @@ test('Prefill all fields with correct values', () => {
     smartContentStore.audienceTargeting = true;
     smartContentStore.sortBy = 'created';
     smartContentStore.sortOrder = 'desc';
+    smartContentStore.presentation = 'small';
     smartContentStore.limit = 8;
 
     const filterOverlay = mount(
@@ -148,6 +160,10 @@ test('Prefill all fields with correct values', () => {
             dataSourceResourceKey="pages"
             onClose={jest.fn()}
             open={true}
+            presentations={{
+                small: 'Small',
+                large: 'Large',
+            }}
             sortings={{
                 title: 'Title',
                 created: 'Created',
@@ -176,6 +192,7 @@ test('Prefill all fields with correct values', () => {
     expect(filterOverlay.find('div[className="sortColumn"]').find('SingleSelect').prop('value')).toEqual('created');
     expect(filterOverlay.find('div[className="sortOrder"]').find('SingleSelect').prop('value')).toEqual('desc');
 
+    expect(filterOverlay.find('div[className="presentation"]').find('SingleSelect').prop('value')).toEqual('small');
     expect(filterOverlay.find('div[className="limit"] Number').prop('value')).toEqual(8);
 });
 
@@ -190,6 +207,8 @@ test('Reset all fields when reset action is clicked', () => {
     smartContentStore.audienceTargeting = true;
     smartContentStore.sortBy = 'created';
     smartContentStore.sortOrder = 'desc';
+    smartContentStore.presentation = 'large';
+    smartContentStore.limit = 5;
 
     const filterOverlay = mount(
         <FilterOverlay
@@ -197,6 +216,10 @@ test('Reset all fields when reset action is clicked', () => {
             dataSourceResourceKey="pages"
             onClose={jest.fn()}
             open={true}
+            presentations={{
+                small: 'Small',
+                large: 'Large',
+            }}
             sortings={{
                 title: 'Title',
                 created: 'Created',
@@ -217,5 +240,6 @@ test('Reset all fields when reset action is clicked', () => {
     expect(filterOverlay.instance().audienceTargeting).toEqual(undefined);
     expect(filterOverlay.instance().sortBy).toEqual(undefined);
     expect(filterOverlay.instance().sortOrder).toEqual(undefined);
+    expect(filterOverlay.instance().presentation).toEqual(undefined);
     expect(filterOverlay.instance().limit).toEqual(undefined);
 });

@@ -11,6 +11,8 @@ export type FilterCriteria = {|
     includeSubFolders: ?boolean,
     // TODO rename to limit
     limitResult: ?number,
+    // TODO rename to presentation
+    presentAs: ?string,
     sortBy: ?string,
     // TODO rename to sortOrder
     sortMethod: ?SortOrder,

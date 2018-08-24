@@ -68,5 +68,6 @@
     "sulu_admin.sort_by": "Sort by",
     "sulu_admin.ascending": "Ascending",
     "sulu_admin.descending": "Descending",
+    "sulu_admin.present_as": "Present as",
     "sulu_admin.limit_result_to": "Limit result to"
 }

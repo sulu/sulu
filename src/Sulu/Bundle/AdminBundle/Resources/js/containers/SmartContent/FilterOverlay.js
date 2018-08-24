@@ -20,6 +20,7 @@ type Props = {
     dataSourceResourceKey: ?string,
     onClose: () => void,
     open: boolean,
+    presentations: {[key: string]: string},
     smartContentStore: SmartContentStore,
     sortings: {[key: string]: string},
 };
@@ -36,6 +37,7 @@ export default class FilterOverlay extends React.Component<Props> {
     @observable sortBy: ?string;
     @observable sortOrder: ?SortOrder;
     @observable limit: ?number;
+    @observable presentation: ?string;
     @observable showDataSourceDialog: boolean = false;
     @observable showCategoryDialog: boolean = false;
     updateFilterCriteriaDisposer: () => void;
@@ -60,6 +62,7 @@ export default class FilterOverlay extends React.Component<Props> {
         this.audienceTargeting = smartContentStore.audienceTargeting;
         this.sortBy = smartContentStore.sortBy;
         this.sortOrder = smartContentStore.sortOrder;
+        this.presentation = smartContentStore.presentation;
         this.limit = smartContentStore.limit;
     };
 
@@ -76,6 +79,7 @@ export default class FilterOverlay extends React.Component<Props> {
         smartContentStore.sortOrder = this.sortOrder;
         smartContentStore.tagOperator = this.tagOperator;
         smartContentStore.tags = this.tags;
+        smartContentStore.presentation = this.presentation;
 
         onClose();
     };
@@ -90,6 +94,7 @@ export default class FilterOverlay extends React.Component<Props> {
         this.audienceTargeting = undefined;
         this.sortBy = undefined;
         this.sortOrder = undefined;
+        this.presentation = undefined;
         this.limit = undefined;
     };
 
@@ -178,12 +183,31 @@ export default class FilterOverlay extends React.Component<Props> {
         this.sortOrder = sortOrder;
     };
 
+    @action handlePresentationChange = (presentation: string | number) => {
+        if (typeof presentation !== 'string') {
+            throw new Error(
+                'The presentation must be represented as a string, but "' + presentation + '" was given.'
+                + ' This should not happen and is likely a bug.'
+            );
+        }
+
+        this.presentation = presentation;
+    };
+
     @action handleLimitChange = (limit: ?number) => {
         this.limit = limit;
     };
 
     render() {
-        const {dataSourceAdapter, dataSourceResourceKey, onClose, open, smartContentStore, sortings} = this.props;
+        const {
+            dataSourceAdapter,
+            dataSourceResourceKey,
+            onClose,
+            open,
+            presentations,
+            smartContentStore,
+            sortings,
+        } = this.props;
 
         return (
             <Fragment>
@@ -309,6 +333,19 @@ export default class FilterOverlay extends React.Component<Props> {
                                         </SingleSelect.Option>
                                     </SingleSelect>
                                 </div>
+                            </div>
+                        </section>
+
+                        <section className={filterOverlayStyles.section}>
+                            <h3>{translate('sulu_admin.present_as')}</h3>
+                            <div className={filterOverlayStyles.presentation}>
+                                <SingleSelect onChange={this.handlePresentationChange} value={this.presentation}>
+                                    {Object.keys(presentations).map((presentationKey) => (
+                                        <SingleSelect.Option key={presentationKey} value={presentationKey}>
+                                            {presentations[presentationKey]}
+                                        </SingleSelect.Option>
+                                    ))}
+                                </SingleSelect>
                             </div>
                         </section>
 

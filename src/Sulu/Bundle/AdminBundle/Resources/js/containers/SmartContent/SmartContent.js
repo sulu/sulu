@@ -38,7 +38,11 @@ export default class SmartContent extends React.Component<Props> {
                     dataSourceResourceKey={store.dataSourceResourceKey}
                     onClose={this.handleFilterOverlayClose}
                     open={this.showFilterOverlay}
-                    // TODO use correct sortings
+                    // TODO use correct presentations and sortings
+                    presentations={{
+                        small: 'Klein',
+                        large: 'Groß',
+                    }}
                     sortings={{
                         title: 'Titel',
                         admin: 'Admin-Reihenfolge',

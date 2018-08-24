@@ -43,6 +43,7 @@ test('Load categories and datasource when constructed', () => {
             sortMethod: undefined,
             tagOperator: undefined,
             tags: undefined,
+            presentAs: undefined,
         },
         locale,
         'pages'
@@ -70,6 +71,7 @@ test('Generate filterCriteria from current state', () => {
     smartContentStore.audienceTargeting = true;
     smartContentStore.sortBy = 'changed';
     smartContentStore.sortOrder = 'asc';
+    smartContentStore.presentation = 'large';
     smartContentStore.limit = 9;
 
     expect(smartContentStore.filterCriteria).toEqual({
@@ -79,6 +81,7 @@ test('Generate filterCriteria from current state', () => {
         dataSource: 6,
         includeSubFolders: true,
         limitResult: 9,
+        presentAs: 'large',
         sortBy: 'changed',
         sortMethod: 'asc',
         tagOperator: 'or',

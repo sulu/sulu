@@ -18,6 +18,7 @@ export default class SmartContentStore {
     @observable audienceTargeting: ?boolean;
     @observable sortBy: ?string;
     @observable sortOrder: ?SortOrder;
+    @observable presentation: ?string;
     @observable limit: ?number;
 
     constructor(filterCriteria: ?FilterCriteria, locale?: ?IObservableValue<string>, dataSourceResourceKey: ?string) {
@@ -33,6 +34,7 @@ export default class SmartContentStore {
             this.sortOrder = filterCriteria.sortMethod;
             this.tagOperator = filterCriteria.tagOperator;
             this.tags = filterCriteria.tags;
+            this.presentation = filterCriteria.presentAs;
 
             if (filterCriteria.categories) {
                 this.categoriesLoading = true;
@@ -80,6 +82,7 @@ export default class SmartContentStore {
             sortMethod: this.sortOrder,
             tagOperator: this.tagOperator,
             tags: toJS(this.tags),
+            presentAs: this.presentation,
         };
     }
 }

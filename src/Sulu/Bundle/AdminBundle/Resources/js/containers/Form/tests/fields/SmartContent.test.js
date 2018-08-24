@@ -89,6 +89,7 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
         dataSource: undefined,
         includeSubFolders: undefined,
         limitResult: undefined,
+        presentAs: 'large',
         sortBy: undefined,
         sortMethod: undefined,
         tagOperator: undefined,
