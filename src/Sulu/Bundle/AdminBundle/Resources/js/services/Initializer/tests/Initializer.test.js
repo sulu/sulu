@@ -8,6 +8,7 @@ import {textEditorRegistry} from '../../../containers/TextEditor';
 import {setTranslations} from '../../../utils/Translator';
 import routeRegistry from '../../Router/registries/RouteRegistry';
 import navigationRegistry from '../../../containers/Navigation/registries/NavigationRegistry';
+import smartContentConfigStore from '../../../containers/SmartContent/stores/SmartContentConfigStore';
 import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
 import userStore from '../../../stores/UserStore';
 import viewRegistry from '../../../containers/ViewRenderer/registries/ViewRegistry';
@@ -54,6 +55,10 @@ jest.mock('../../../containers/Datagrid/registries/DatagridAdapterRegistry', () 
 
 jest.mock('../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry', () => ({
     add: jest.fn(),
+}));
+
+jest.mock('../../../containers/SmartContent/stores/SmartContentConfigStore', () => ({
+    setConfig: jest.fn(),
 }));
 
 jest.mock('../../Router/registries/RouteRegistry', () => ({
@@ -109,6 +114,11 @@ test('Should initialize when everything works', () => {
             resourceMetadataEndpoints: 'top_endpoints',
             user: 'the_logged_in_user',
             contact: 'contact_of_the_user',
+            smartContent: {
+                content: {
+                    datasourceResourceKey: 'pages',
+                },
+            },
         },
     };
 
@@ -153,6 +163,7 @@ test('Should initialize when everything works', () => {
             expect(routeRegistry.clear).toBeCalled();
             expect(navigationRegistry.clear).toBeCalled();
             expect(resourceMetadataStore.clear).toBeCalled();
+            expect(smartContentConfigStore.setConfig).toBeCalledWith(configData.sulu_admin.smartContent);
 
             expect(routeRegistry.addCollection).toBeCalledWith('crazy_routes');
             expect(navigationRegistry.set).toBeCalledWith('nice_navigation');

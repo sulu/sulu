@@ -23,3 +23,16 @@ export type FilterCriteria = {|
 export type SortOrder = 'asc' | 'desc';
 
 export type Conjunction = 'or' | 'and';
+
+export type SmartContentConfig = {
+    datasourceAdapter?: string,
+    datasourceResourceKey?: string,
+    audienceTargeting: boolean,
+    categories: boolean,
+    limit: boolean,
+    presentAs: boolean,
+    sorting: Array<string>,
+    tags: boolean,
+};
+
+export type SmartContentConfigs = {[key: string]: SmartContentConfig};

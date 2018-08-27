@@ -38,6 +38,7 @@ import {
     Time,
 } from '../../containers/Form';
 import FieldBlocks from '../../containers/FieldBlocks';
+import {smartContentConfigStore} from '../../containers/SmartContent';
 import {textEditorRegistry} from '../../containers/TextEditor';
 import userStore from '../../stores/UserStore';
 import {navigationRegistry} from '../../containers/Navigation';
@@ -134,6 +135,7 @@ function processConfig(config: Object) {
     routeRegistry.addCollection(config['sulu_admin'].routes);
     navigationRegistry.set(config['sulu_admin'].navigation);
     resourceMetadataStore.setEndpoints(config['sulu_admin'].resourceMetadataEndpoints);
+    smartContentConfigStore.setConfig(config['sulu_admin'].smartContent);
 }
 
 function getBrowserLanguage() {

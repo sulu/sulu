@@ -22,6 +22,7 @@ type Props = {
     open: boolean,
     presentations: {[key: string]: string},
     smartContentStore: SmartContentStore,
+    sections: Array<string>,
     sortings: {[key: string]: string},
     title: string,
 };
@@ -206,6 +207,7 @@ export default class FilterOverlay extends React.Component<Props> {
             onClose,
             open,
             presentations,
+            sections,
             smartContentStore,
             sortings,
             title,
@@ -228,135 +230,150 @@ export default class FilterOverlay extends React.Component<Props> {
                     size="small"
                 >
                     <div className={filterOverlayStyles.content}>
-                        <section className={filterOverlayStyles.section}>
-                            <h3>{translate('sulu_admin.data_source')}</h3>
-                            <div className={filterOverlayStyles.source}>
-                                <Button
-                                    className={filterOverlayStyles.sourceButton}
-                                    onClick={this.handleDataSourceButtonClick}
-                                >
-                                    {translate('sulu_admin.choose_data_source')}
-                                </Button>
-                                <Checkbox
-                                    checked={this.includeSubElements || false}
-                                    onChange={this.handleIncludeSubElementsChange}
-                                >
-                                    {translate('sulu_admin.include_sub_elements')}
-                                </Checkbox>
-                            </div>
-                            <label className={filterOverlayStyles.description}>
-                                {translate('sulu_admin.data_source')}: {this.dataSource && this.dataSource.url}
-                            </label>
-                        </section>
-
-                        <section className={filterOverlayStyles.section}>
-                            <h3>{translate('sulu_admin.filter_by_categories')}</h3>
-                            <div className={filterOverlayStyles.categories}>
-                                <Button onClick={this.handleCategoryButtonClick}>
-                                    {translate('sulu_admin.choose_categories')}
-                                </Button>
-                                <div className={filterOverlayStyles.categoriesSelect}>
-                                    <SingleSelect
-                                        onChange={this.handleCategoryOperatorChange}
-                                        value={this.categoryOperator}
+                        {sections.includes('datasource') &&
+                            <section className={filterOverlayStyles.section}>
+                                <h3>{translate('sulu_admin.data_source')}</h3>
+                                <div className={filterOverlayStyles.source}>
+                                    <Button
+                                        className={filterOverlayStyles.sourceButton}
+                                        onClick={this.handleDataSourceButtonClick}
                                     >
-                                        <SingleSelect.Option value="or">
-                                            {translate('sulu_admin.any_category_description')}
-                                        </SingleSelect.Option>
-                                        <SingleSelect.Option value="and">
-                                            {translate('sulu_admin.all_categories_description')}
-                                        </SingleSelect.Option>
-                                    </SingleSelect>
+                                        {translate('sulu_admin.choose_data_source')}
+                                    </Button>
+                                    <Checkbox
+                                        checked={this.includeSubElements || false}
+                                        onChange={this.handleIncludeSubElementsChange}
+                                    >
+                                        {translate('sulu_admin.include_sub_elements')}
+                                    </Checkbox>
                                 </div>
-                            </div>
-                            <label className={filterOverlayStyles.description}>
-                                {translate('sulu_category.categories')}: {this.categories &&
-                                    this.categories.map((category) => category.name).join(', ')
-                                }
-                            </label>
-                        </section>
+                                <label className={filterOverlayStyles.description}>
+                                    {/* TODO do not hardcode "title" */}
+                                    {translate('sulu_admin.data_source')}: {this.dataSource && this.dataSource.title}
+                                </label>
+                            </section>
+                        }
 
-                        <section className={filterOverlayStyles.section}>
-                            <h3>{translate('sulu_admin.filter_by_tags')}</h3>
-                            <div className={filterOverlayStyles.tags}>
-                                <div className={filterOverlayStyles.tagsAutoComplete}>
-                                    <MultiAutoComplete
-                                        displayProperty="name"
-                                        filterParameter="names"
-                                        idProperty="name"
-                                        onChange={this.handleTagsChange}
-                                        resourceKey="tags"
-                                        searchProperties={['name']}
-                                        value={this.tags}
-                                    />
+                        {sections.includes('categories') &&
+                            <section className={filterOverlayStyles.section}>
+                                <h3>{translate('sulu_admin.filter_by_categories')}</h3>
+                                <div className={filterOverlayStyles.categories}>
+                                    <Button onClick={this.handleCategoryButtonClick}>
+                                        {translate('sulu_admin.choose_categories')}
+                                    </Button>
+                                    <div className={filterOverlayStyles.categoriesSelect}>
+                                        <SingleSelect
+                                            onChange={this.handleCategoryOperatorChange}
+                                            value={this.categoryOperator}
+                                        >
+                                            <SingleSelect.Option value="or">
+                                                {translate('sulu_admin.any_category_description')}
+                                            </SingleSelect.Option>
+                                            <SingleSelect.Option value="and">
+                                                {translate('sulu_admin.all_categories_description')}
+                                            </SingleSelect.Option>
+                                        </SingleSelect>
+                                    </div>
                                 </div>
-                                <div className={filterOverlayStyles.tagsSelect}>
-                                    <SingleSelect onChange={this.handleTagOperatorChange} value={this.tagOperator}>
-                                        <SingleSelect.Option value="or">
-                                            {translate('sulu_admin.any_tag_description')}
-                                        </SingleSelect.Option>
-                                        <SingleSelect.Option value="and">
-                                            {translate('sulu_admin.all_tags_description')}
-                                        </SingleSelect.Option>
-                                    </SingleSelect>
+                                <label className={filterOverlayStyles.description}>
+                                    {translate('sulu_category.categories')}: {this.categories &&
+                                        this.categories.map((category) => category.name).join(', ')
+                                    }
+                                </label>
+                            </section>
+                        }
+
+                        {sections.includes('tags') &&
+                            <section className={filterOverlayStyles.section}>
+                                <h3>{translate('sulu_admin.filter_by_tags')}</h3>
+                                <div className={filterOverlayStyles.tags}>
+                                    <div className={filterOverlayStyles.tagsAutoComplete}>
+                                        <MultiAutoComplete
+                                            displayProperty="name"
+                                            filterParameter="names"
+                                            idProperty="name"
+                                            onChange={this.handleTagsChange}
+                                            resourceKey="tags"
+                                            searchProperties={['name']}
+                                            value={this.tags}
+                                        />
+                                    </div>
+                                    <div className={filterOverlayStyles.tagsSelect}>
+                                        <SingleSelect onChange={this.handleTagOperatorChange} value={this.tagOperator}>
+                                            <SingleSelect.Option value="or">
+                                                {translate('sulu_admin.any_tag_description')}
+                                            </SingleSelect.Option>
+                                            <SingleSelect.Option value="and">
+                                                {translate('sulu_admin.all_tags_description')}
+                                            </SingleSelect.Option>
+                                        </SingleSelect>
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
+                            </section>
+                        }
 
-                        <section className={filterOverlayStyles.section}>
-                            <h3>{translate('sulu_admin.target_groups')}</h3>
-                            <Checkbox
-                                checked={this.audienceTargeting || false}
-                                onChange={this.handleAudienceTargetingChange}
-                            >
-                                {translate('sulu_admin.use_target_groups')}
-                            </Checkbox>
-                        </section>
+                        {sections.includes('audienceTargeting') &&
+                            <section className={filterOverlayStyles.section}>
+                                <h3>{translate('sulu_admin.target_groups')}</h3>
+                                <Checkbox
+                                    checked={this.audienceTargeting || false}
+                                    onChange={this.handleAudienceTargetingChange}
+                                >
+                                    {translate('sulu_admin.use_target_groups')}
+                                </Checkbox>
+                            </section>
+                        }
 
-                        <section className={filterOverlayStyles.section}>
-                            <h3>{translate('sulu_admin.sort_by')}</h3>
-                            <div className={filterOverlayStyles.sorting}>
-                                <div className={filterOverlayStyles.sortColumn}>
-                                    <SingleSelect onChange={this.handleSortByChange} value={this.sortBy}>
-                                        {Object.keys(sortings).map((sortKey) => (
-                                            <SingleSelect.Option key={sortKey} value={sortKey}>
-                                                {sortings[sortKey]}
+                        {sections.includes('sorting') &&
+                            <section className={filterOverlayStyles.section}>
+                                <h3>{translate('sulu_admin.sort_by')}</h3>
+                                <div className={filterOverlayStyles.sorting}>
+                                    <div className={filterOverlayStyles.sortColumn}>
+                                        <SingleSelect onChange={this.handleSortByChange} value={this.sortBy}>
+                                            {Object.keys(sortings).map((sortKey) => (
+                                                <SingleSelect.Option key={sortKey} value={sortKey}>
+                                                    {sortings[sortKey]}
+                                                </SingleSelect.Option>
+                                            ))}
+                                        </SingleSelect>
+                                    </div>
+                                    <div className={filterOverlayStyles.sortOrder}>
+                                        <SingleSelect onChange={this.handleSortOrderChange} value={this.sortOrder}>
+                                            <SingleSelect.Option value="asc">
+                                                {translate('sulu_admin.ascending')}
+                                            </SingleSelect.Option>
+                                            <SingleSelect.Option value="desc">
+                                                {translate('sulu_admin.descending')}
+                                            </SingleSelect.Option>
+                                        </SingleSelect>
+                                    </div>
+                                </div>
+                            </section>
+                        }
+
+                        {sections.includes('presentation') &&
+                            <section className={filterOverlayStyles.section}>
+                                <h3>{translate('sulu_admin.present_as')}</h3>
+                                <div className={filterOverlayStyles.presentation}>
+                                    <SingleSelect onChange={this.handlePresentationChange} value={this.presentation}>
+                                        {Object.keys(presentations).map((presentationKey) => (
+                                            <SingleSelect.Option key={presentationKey} value={presentationKey}>
+                                                {presentations[presentationKey]}
                                             </SingleSelect.Option>
                                         ))}
                                     </SingleSelect>
                                 </div>
-                                <div className={filterOverlayStyles.sortOrder}>
-                                    <SingleSelect onChange={this.handleSortOrderChange} value={this.sortOrder}>
-                                        <SingleSelect.Option value="asc">
-                                            {translate('sulu_admin.ascending')}
-                                        </SingleSelect.Option>
-                                        <SingleSelect.Option value="desc">
-                                            {translate('sulu_admin.descending')}
-                                        </SingleSelect.Option>
-                                    </SingleSelect>
+                            </section>
+                        }
+
+                        {sections.includes('limit') &&
+                            <section className={filterOverlayStyles.section}>
+                                <h3>{translate('sulu_admin.limit_result_to')}</h3>
+                                <div className={filterOverlayStyles.limit}>
+                                    <Number onChange={this.handleLimitChange} value={this.limit} />
                                 </div>
-                            </div>
-                        </section>
-
-                        <section className={filterOverlayStyles.section}>
-                            <h3>{translate('sulu_admin.present_as')}</h3>
-                            <div className={filterOverlayStyles.presentation}>
-                                <SingleSelect onChange={this.handlePresentationChange} value={this.presentation}>
-                                    {Object.keys(presentations).map((presentationKey) => (
-                                        <SingleSelect.Option key={presentationKey} value={presentationKey}>
-                                            {presentations[presentationKey]}
-                                        </SingleSelect.Option>
-                                    ))}
-                                </SingleSelect>
-                            </div>
-                        </section>
-
-                        <section className={filterOverlayStyles.section}>
-                            <h3>{translate('sulu_admin.limit_result_to')}</h3>
-                            <div className={filterOverlayStyles.limit}>
-                                <Number onChange={this.handleLimitChange} value={this.limit} />
-                            </div>
-                        </section>
+                            </section>
+                        }
                     </div>
                 </Overlay>
                 {dataSourceAdapter && dataSourceResourceKey &&

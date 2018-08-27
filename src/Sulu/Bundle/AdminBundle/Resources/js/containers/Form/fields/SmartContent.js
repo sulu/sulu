@@ -3,7 +3,7 @@ import React from 'react';
 import {autorun, toJS} from 'mobx';
 import equals from 'fast-deep-equal';
 import type {FieldTypeProps} from '../../../types';
-import SmartContentComponent, {SmartContentStore} from '../../SmartContent';
+import SmartContentComponent, {smartContentConfigStore, SmartContentStore} from '../../SmartContent';
 import type {FilterCriteria} from '../../SmartContent/types';
 
 type Props = FieldTypeProps<?FilterCriteria>;
@@ -28,9 +28,26 @@ export default class SmartContent extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {formInspector, value} = this.props;
+        const {
+            formInspector,
+            schemaOptions: {
+                provider: {
+                    value: provider,
+                },
+            } = {},
+            value,
+        } = this.props;
+
+        if (typeof provider !== 'string') {
+            throw new Error('The "provider" schemaOption must be a string, but received ' + typeof provider + '!');
+        }
+
         // TODO replace with "page" with correct value
-        this.smartContentStore = new SmartContentStore(value, formInspector.locale, 'pages');
+        this.smartContentStore = new SmartContentStore(
+            value,
+            formInspector.locale,
+            smartContentConfigStore.getConfig(provider).datasourceResourceKey
+        );
 
         autorun(this.handleFilterCriteriaChange);
     }
@@ -74,11 +91,23 @@ export default class SmartContent extends React.Component<Props> {
     };
 
     render() {
-        const {label} = this.props;
+        const {
+            label,
+            schemaOptions: {
+                provider: {
+                    value: provider,
+                },
+            } = {},
+        } = this.props;
+
+        if (typeof provider !== 'string') {
+            throw new Error('The "provider" schemaOption must be a string, but received ' + typeof provider + '!');
+        }
 
         return (
             <SmartContentComponent
                 fieldLabel={label}
+                provider={provider}
                 store={this.smartContentStore}
             />
         );

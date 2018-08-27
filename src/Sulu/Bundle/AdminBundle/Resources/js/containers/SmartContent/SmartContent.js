@@ -4,11 +4,13 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import MultiItemSelection from '../../components/MultiItemSelection';
 import {translate} from '../../utils/Translator';
+import smartContentConfigStore from './stores/SmartContentConfigStore';
 import SmartContentStore from './stores/SmartContentStore';
 import FilterOverlay from './FilterOverlay';
 
 type Props = {
     fieldLabel: string,
+    provider: string,
     store: SmartContentStore,
 };
 
@@ -25,7 +27,31 @@ export default class SmartContent extends React.Component<Props> {
     };
 
     render() {
-        const {fieldLabel, store} = this.props;
+        const {fieldLabel, provider, store} = this.props;
+        const smartContentConfig = smartContentConfigStore.getConfig(provider);
+
+        const sections = [];
+        if (smartContentConfig.datasourceResourceKey && smartContentConfig.datasourceAdapter) {
+            sections.push('datasource');
+        }
+        if (smartContentConfig.categories) {
+            sections.push('categories');
+        }
+        if (smartContentConfig.tags) {
+            sections.push('tags');
+        }
+        if (smartContentConfig.audienceTargeting) {
+            sections.push('audienceTargeting');
+        }
+        if (smartContentConfig.sorting) {
+            sections.push('sorting');
+        }
+        if (smartContentConfig.presentAs) {
+            sections.push('presentation');
+        }
+        if (smartContentConfig.limit) {
+            sections.push('limit');
+        }
 
         return (
             <Fragment>
@@ -36,8 +62,8 @@ export default class SmartContent extends React.Component<Props> {
                     }}
                 />
                 <FilterOverlay
-                    dataSourceAdapter="column_list"
-                    dataSourceResourceKey={store.dataSourceResourceKey}
+                    dataSourceAdapter={smartContentConfig.datasourceAdapter}
+                    dataSourceResourceKey={smartContentConfig.datasourceResourceKey}
                     onClose={this.handleFilterOverlayClose}
                     open={this.showFilterOverlay}
                     // TODO use correct presentations and sortings
@@ -45,6 +71,7 @@ export default class SmartContent extends React.Component<Props> {
                         small: 'Klein',
                         large: 'Groß',
                     }}
+                    sections={sections}
                     sortings={{
                         title: 'Titel',
                         admin: 'Admin-Reihenfolge',

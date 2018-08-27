@@ -25,12 +25,53 @@ test('Do not display if open is set to false', () => {
             open={false}
             presentations={{}}
             sortings={{}}
+            sections={[]}
             smartContentStore={smartContentStore}
             title="Test"
         />
     );
 
     expect(filterOverlay.find('Overlay').prop('open')).toEqual(false);
+
+    smartContentStore.destroy();
+});
+
+test('Render with all fields', () => {
+    const smartContentStore = new SmartContentStore();
+    const filterOverlay = mount(
+        <FilterOverlay
+            dataSourceAdapter={undefined}
+            dataSourceResourceKey={undefined}
+            onClose={jest.fn()}
+            open={true}
+            presentations={{}}
+            sortings={{}}
+            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
+            smartContentStore={smartContentStore}
+            title="Test"
+        />
+    );
+    expect(filterOverlay.find('Portal').at(2).render()).toMatchSnapshot();
+
+    smartContentStore.destroy();
+});
+
+test('Render with no fields', () => {
+    const smartContentStore = new SmartContentStore();
+    const filterOverlay = mount(
+        <FilterOverlay
+            dataSourceAdapter={undefined}
+            dataSourceResourceKey={undefined}
+            onClose={jest.fn()}
+            open={true}
+            presentations={{}}
+            sortings={{}}
+            sections={[]}
+            smartContentStore={smartContentStore}
+            title="Test"
+        />
+    );
+    expect(filterOverlay.find('Portal').at(2).render()).toMatchSnapshot();
 
     smartContentStore.destroy();
 });
@@ -49,6 +90,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
                 small: 'Small',
                 large: 'Large',
             }}
+            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             sortings={{
                 title: 'Title',
                 changed: 'Changed',
@@ -61,11 +103,11 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     filterOverlay.find('Button[children="sulu_admin.choose_data_source"]').prop('onClick')();
     filterOverlay.update();
     expect(filterOverlay.find(DatagridOverlay).find({resourceKey: 'pages'}).prop('open')).toEqual(true);
-    filterOverlay.find(DatagridOverlay).find({resourceKey: 'pages'}).prop('onConfirm')([{id: 2, url: '/test'}]);
+    filterOverlay.find(DatagridOverlay).find({resourceKey: 'pages'}).prop('onConfirm')([{id: 2, title: 'Test'}]);
     filterOverlay.update();
     expect(filterOverlay.find(DatagridOverlay).find({resourceKey: 'pages'}).prop('open')).toEqual(false);
     expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
-        .toEqual('sulu_admin.data_source: /test');
+        .toEqual('sulu_admin.data_source: Test');
 
     filterOverlay.find('Checkbox[children="sulu_admin.include_sub_elements"]').prop('onChange')(true);
     filterOverlay.update();
@@ -129,7 +171,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
 
     filterOverlay.find('Overlay').prop('onConfirm')();
 
-    expect(smartContentStore.dataSource).toEqual({id: 2, url: '/test'});
+    expect(smartContentStore.dataSource).toEqual({id: 2, title: 'Test'});
     expect(smartContentStore.includeSubElements).toEqual(true);
     expect(smartContentStore.categories).toEqual([{id: 1, name: 'Test1'}, {id: 3, name: 'Test2'}]);
     expect(smartContentStore.categoryOperator).toEqual('and');
@@ -148,7 +190,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
 
 test('Prefill all fields with correct values', () => {
     const smartContentStore = new SmartContentStore();
-    smartContentStore.dataSource = {id: 4, url: '/home'};
+    smartContentStore.dataSource = {id: 4, title: 'Homepage'};
     smartContentStore.includeSubElements = true;
     smartContentStore.categories = [{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}];
     smartContentStore.categoryOperator = 'or';
@@ -174,15 +216,16 @@ test('Prefill all fields with correct values', () => {
                 title: 'Title',
                 created: 'Created',
             }}
+            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             smartContentStore={smartContentStore}
             title="Test"
         />
     );
 
     expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
-        .toEqual('sulu_admin.data_source: /home');
+        .toEqual('sulu_admin.data_source: Homepage');
     expect(filterOverlay.find(DatagridOverlay).find({resourceKey: 'pages'}).prop('preSelectedItems'))
-        .toEqual([{id: 4, url: '/home'}]);
+        .toEqual([{id: 4, title: 'Homepage'}]);
     expect(filterOverlay.find('Checkbox[children="sulu_admin.include_sub_elements"]').prop('checked')).toEqual(true);
 
     expect(filterOverlay.find('section').at(2).find('label[className="description"]').text())
@@ -229,6 +272,7 @@ test('Reset all fields when reset action is clicked', () => {
                 small: 'Small',
                 large: 'Large',
             }}
+            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             sortings={{
                 title: 'Title',
                 created: 'Created',

@@ -5,17 +5,76 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
 import SmartContent from '../../fields/SmartContent';
+import SmartContentStore from '../../../SmartContent/stores/SmartContentStore';
+import smartContentConfigStore from '../../../SmartContent/stores/SmartContentConfigStore';
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
+
 jest.mock('../../../SmartContent/stores/SmartContentStore', () => jest.fn(function() {
     this.loading = false;
     this.destroy = jest.fn();
 }));
+jest.mock('../../../SmartContent/stores/SmartContentConfigStore', () => ({
+    getConfig: jest.fn().mockReturnValue({}),
+}));
+
+test('Should correctly initialize SmartContentStore', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'collections'});
+
+    const value = {
+        audienceTargeting: undefined,
+        categoryOperator: undefined,
+        categories: [1, 2],
+        dataSource: undefined,
+        includeSubFolders: undefined,
+        limitResult: undefined,
+        presentAs: 'large',
+        sortBy: undefined,
+        sortMethod: undefined,
+        tagOperator: undefined,
+        tags: undefined,
+    };
+
+    const schemaOptions = {
+        provider: {
+            value: 'media',
+        },
+    };
+
+    shallow(
+        <SmartContent
+            dataPath="/"
+            error={{}}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={0}
+            minOccurs={0}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            schemaPath="/"
+            showAllErrors={false}
+            types={undefined}
+            value={value}
+        />
+    );
+
+    expect(smartContentConfigStore.getConfig).toBeCalledWith('media');
+    expect(SmartContentStore).toBeCalledWith(value, undefined, 'collections');
+});
 
 test('Pass correct props to SmartContent component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+
+    const schemaOptions = {
+        provider: {
+            value: 'media',
+        },
+    };
 
     const smartContent = shallow(
         <SmartContent
@@ -28,6 +87,7 @@ test('Pass correct props to SmartContent component', () => {
             minOccurs={0}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
             schemaPath="/"
             showAllErrors={false}
             types={undefined}
@@ -43,6 +103,12 @@ test('Should not call the onChange and onFinish callbacks if SmartContentStore i
     const finishSpy = jest.fn();
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
 
+    const schemaOptions = {
+        provider: {
+            value: 'media',
+        },
+    };
+
     const smartContent = shallow(
         <SmartContent
             dataPath="/"
@@ -54,6 +120,7 @@ test('Should not call the onChange and onFinish callbacks if SmartContentStore i
             minOccurs={0}
             onChange={changeSpy}
             onFinish={finishSpy}
+            schemaOptions={schemaOptions}
             schemaPath="/"
             showAllErrors={false}
             types={undefined}
@@ -76,6 +143,12 @@ test('Should call the onChange and onFinish callbacks if SmartContentStore chang
     const finishSpy = jest.fn();
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
 
+    const schemaOptions = {
+        provider: {
+            value: 'media',
+        },
+    };
+
     const smartContent = shallow(
         <SmartContent
             dataPath="/"
@@ -87,6 +160,7 @@ test('Should call the onChange and onFinish callbacks if SmartContentStore chang
             minOccurs={0}
             onChange={changeSpy}
             onFinish={finishSpy}
+            schemaOptions={schemaOptions}
             schemaPath="/"
             showAllErrors={false}
             types={undefined}
@@ -123,6 +197,12 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
         tags: undefined,
     };
 
+    const schemaOptions = {
+        provider: {
+            value: 'media',
+        },
+    };
+
     const smartContent = shallow(
         <SmartContent
             dataPath="/"
@@ -134,6 +214,7 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
             minOccurs={0}
             onChange={changeSpy}
             onFinish={finishSpy}
+            schemaOptions={schemaOptions}
             schemaPath="/"
             showAllErrors={false}
             types={undefined}
@@ -174,6 +255,12 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
         tags: ['Design', 'Programming'],
     };
 
+    const schemaOptions = {
+        provider: {
+            value: 'media',
+        },
+    };
+
     const smartContent = shallow(
         <SmartContent
             dataPath="/"
@@ -185,6 +272,7 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
             minOccurs={0}
             onChange={changeSpy}
             onFinish={finishSpy}
+            schemaOptions={schemaOptions}
             schemaPath="/"
             showAllErrors={false}
             types={undefined}
@@ -209,6 +297,12 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
 test('Should call destroy on SmartContentStore when unmounted', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
 
+    const schemaOptions = {
+        provider: {
+            value: 'media',
+        },
+    };
+
     const smartContent = shallow(
         <SmartContent
             dataPath="/"
@@ -220,6 +314,7 @@ test('Should call destroy on SmartContentStore when unmounted', () => {
             minOccurs={0}
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
             schemaPath="/"
             showAllErrors={false}
             types={undefined}
