@@ -214,7 +214,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     },
 }));
 
-jest.mock('sulu-admin-bundle/containers/MultiDatagridOverlay', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/containers/SingleDatagridOverlay', () => jest.fn(() => null));
 
 beforeEach(() => {
     const datagridAdapterRegistry = require('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry');

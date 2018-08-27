@@ -63,7 +63,9 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => jest.fn(function() {
+    this.selections = [];
+}));
 jest.mock('sulu-admin-bundle/containers/DatagridOverlay', () => jest.fn().mockReturnValue(null));
 
 beforeEach(() => {

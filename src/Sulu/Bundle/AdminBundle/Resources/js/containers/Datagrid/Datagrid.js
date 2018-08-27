@@ -5,7 +5,7 @@ import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
 import Dialog from '../../components/Dialog';
-import MultiDatagridOverlay from '../MultiDatagridOverlay';
+import SingleDatagridOverlay from '../SingleDatagridOverlay';
 import {translate} from '../../utils/Translator';
 import type {SortOrder} from './types';
 import DatagridStore from './stores/DatagridStore';
@@ -136,18 +136,14 @@ export default class Datagrid extends React.Component<Props> {
         this.showMoveOverlay = true;
     };
 
-    @action handleMoveOverlayConfirmClick = (parents: Array<Object>) => {
+    @action handleMoveOverlayConfirmClick = (parent: Object) => {
         if (!this.moveId) {
             throw new Error('The id for moving was not set. This should not happen and is likely a bug.');
         }
 
-        if (parents.length !== 1) {
-            throw new Error('There should be exactly one parentId given. This should not happen and is likely a bug.');
-        }
-
         this.moving = true;
         // TODO do not hardcode "id", but use some kind of metadata instead
-        this.props.store.move(this.moveId, parents[0].id).then(action(() => {
+        this.props.store.move(this.moveId, parent.id).then(action(() => {
             this.moving = false;
             this.hideMoveOverlay();
         }));
@@ -167,18 +163,14 @@ export default class Datagrid extends React.Component<Props> {
         this.showCopyOverlay = true;
     };
 
-    @action handleCopyOverlayConfirmClick = (parents: Array<Object>) => {
+    @action handleCopyOverlayConfirmClick = (parent: Object) => {
         if (!this.copyId) {
             throw new Error('The id for moving was not set. This should not happen and is likely a bug.');
         }
 
-        if (parents.length !== 1) {
-            throw new Error('There should be exactly one parentId given. This should not happen and is likely a bug.');
-        }
-
         this.copying = true;
         // TODO do not hardcode "id", but use some kind of metadata instead
-        this.props.store.copy(this.copyId, parents[0].id).then(action(() => {
+        this.props.store.copy(this.copyId, parent.id).then(action(() => {
             this.copying = false;
             this.hideCopyOverlay();
         }));
@@ -312,7 +304,7 @@ export default class Datagrid extends React.Component<Props> {
                     {translate('sulu_admin.delete_warning_text')}
                 </Dialog>
                 {movable &&
-                    <MultiDatagridOverlay
+                    <SingleDatagridOverlay
                         adapter={adapters[0]}
                         allowDisabledActivation={false}
                         clearSelectionOnClose={true}
@@ -328,7 +320,7 @@ export default class Datagrid extends React.Component<Props> {
                     />
                 }
                 {copyable &&
-                    <MultiDatagridOverlay
+                    <SingleDatagridOverlay
                         adapter={adapters[0]}
                         clearSelectionOnClose={true}
                         confirmLoading={this.copying}
