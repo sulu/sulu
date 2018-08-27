@@ -80,7 +80,6 @@ export default class Selection extends React.Component<Props> {
     renderOverlay() {
         const {
             formInspector,
-            onChange,
             fieldTypeOptions: {
                 resource_key: resourceKey,
                 types: {
@@ -108,13 +107,20 @@ export default class Selection extends React.Component<Props> {
                 icon={icon}
                 label={translate(label, {count: value ? value.length : 0})}
                 locale={formInspector.locale}
-                onChange={onChange}
+                onChange={this.handleSelectionChange}
                 resourceKey={resourceKey}
                 overlayTitle={translate(overlayTitle)}
                 value={value || []}
             />
         );
     }
+
+    handleSelectionChange = (selectedIds: Array<string | number>) => {
+        const {onChange, onFinish} = this.props;
+
+        onChange(selectedIds);
+        onFinish();
+    };
 
     renderAutoComplete() {
         const {
