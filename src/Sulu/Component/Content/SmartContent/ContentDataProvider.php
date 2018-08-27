@@ -118,14 +118,7 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
             ->enablePagination()
             ->enablePresentAs()
             ->enableAudienceTargeting()
-            ->enableDatasource(
-                'content-datasource@sulucontent',
-                [
-                    'rootUrl' => '/admin/api/nodes?language={locale}&fields=title,order,published&webspace-nodes=all',
-                    'selectedUrl' => '/admin/api/nodes/{datasource}?tree=true&language={locale}&fields=title,order,published&webspace-nodes=all',
-                    'resultKey' => 'nodes',
-                ]
-            )
+            ->enableDatasource('pages', 'column_list')
             ->enableSorting(
                 [
                     ['column' => 'title', 'title' => 'smart-content.title'],
@@ -135,7 +128,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
                     ['column' => 'authored', 'title' => 'smart-content.authored'],
                 ]
             )
-            ->setDeepLink('content/contents/{webspace}/{locale}/edit:{id}/details')
             ->getConfiguration();
 
         return $this->configuration;

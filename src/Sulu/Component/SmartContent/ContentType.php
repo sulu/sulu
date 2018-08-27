@@ -207,8 +207,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 'presentAs' => $configuration->hasPresentAs(),
                 'audienceTargeting' => $configuration->hasAudienceTargeting(),
             ],
-            'datasource' => $configuration->getDatasource(),
-            'deep_link' => new PropertyParameter('deep_link', $configuration->getDeepLink()),
+            'datasourceResourceKey' => $configuration->getDatasourceResourceKey(),
+            'datasourceAdapter' => $configuration->getDatasourceAdapter(),
             'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
         ];
 

@@ -41,7 +41,7 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function enableTags($enable = true)
+    public function enableTags(bool $enable = true)
     {
         $this->configuration->setTags($enable);
 
@@ -51,7 +51,7 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function enableCategories($enable = true)
+    public function enableCategories(bool $enable = true)
     {
         $this->configuration->setCategories($enable);
 
@@ -61,7 +61,7 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function enableLimit($enable = true)
+    public function enableLimit(bool $enable = true)
     {
         $this->configuration->setLimit($enable);
 
@@ -71,7 +71,7 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function enablePagination($enable = true)
+    public function enablePagination(bool $enable = true)
     {
         $this->configuration->setPaginated($enable);
 
@@ -81,7 +81,7 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function enablePresentAs($enable = true)
+    public function enablePresentAs(bool $enable = true)
     {
         $this->configuration->setPresentAs($enable);
 
@@ -91,9 +91,10 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function enableDatasource($component, array $options = [])
+    public function enableDatasource(string $resourceKey, string $datagridAdapter)
     {
-        $this->configuration->setDatasource(new ComponentConfiguration($component, $options));
+        $this->configuration->setDatasourceResourceKey($resourceKey);
+        $this->configuration->setDatasourceAdapter($datagridAdapter);
 
         return $this;
     }
@@ -101,7 +102,7 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function enableAudienceTargeting($enable = true)
+    public function enableAudienceTargeting(bool $enable = true)
     {
         $this->configuration->setAudienceTargeting($enable);
 
@@ -128,17 +129,7 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setDeepLink($deepLink)
-    {
-        $this->configuration->setDeepLink($deepLink);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfiguration()
+    public function getConfiguration(): ProviderConfigurationInterface
     {
         return $this->configuration;
     }

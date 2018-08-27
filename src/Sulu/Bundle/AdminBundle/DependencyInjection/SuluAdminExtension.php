@@ -47,6 +47,23 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                 ]
             );
         }
+
+        if ($container->hasExtension('jms_serializer')) {
+            $container->prependExtensionConfig(
+                'jms_serializer',
+                [
+                    'metadata' => [
+                        'directories' => [
+                            [
+                                'name' => 'sulu_admin',
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\SmartContent\Configuration',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
     }
 
     /**

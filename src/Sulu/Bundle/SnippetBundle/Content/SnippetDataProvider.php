@@ -102,7 +102,6 @@ class SnippetDataProvider implements DataProviderInterface
                         ['column' => 'changed', 'title' => 'smart-content.changed'],
                     ]
                 )
-                ->setDeepLink('snippet/snippets/{locale}/edit:{id}/details')
                 ->getConfiguration();
         }
 

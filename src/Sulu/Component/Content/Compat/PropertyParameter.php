@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Compat;
 
+use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Type;
 
 /**
@@ -21,12 +22,13 @@ class PropertyParameter implements \JsonSerializable
     /**
      * @var string
      * @Type("string")
+     * @Groups({"frontend"})
      */
     private $name;
 
     /**
      * @var string|bool|array
-     * @Type("array<string,Sulu\Component\Content\Compat\PropertyParameter>")
+     * @Groups({"frontend"})
      */
     private $value;
 

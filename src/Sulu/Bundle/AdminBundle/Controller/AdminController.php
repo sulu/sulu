@@ -28,6 +28,8 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\SmartContent\DataProviderInterface;
+use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -107,6 +109,11 @@ class AdminController
     private $contactManager;
 
     /**
+     * @var DataProviderPoolInterface
+     */
+    private $dataProviderPool;
+
+    /**
      * @var string
      */
     private $environment;
@@ -140,6 +147,7 @@ class AdminController
         RouterInterface $router,
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         ContactManagerInterface $contactManager,
+        DataProviderPoolInterface $dataProviderPool,
         $environment,
         array $locales,
         $translations,
@@ -158,6 +166,7 @@ class AdminController
         $this->router = $router;
         $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
         $this->contactManager = $contactManager;
+        $this->dataProviderPool = $dataProviderPool;
         $this->environment = $environment;
         $this->locales = $locales;
         $this->translations = $translations;
@@ -208,6 +217,9 @@ class AdminController
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
                 'resourceMetadataEndpoints' => $resourceMetadataEndpoints,
+                'smartContent' => array_map(function(DataProviderInterface $dataProvider) {
+                    return $dataProvider->getConfiguration();
+                }, $this->dataProviderPool->getAll()),
                 'user' => $user,
                 'contact' => $contact,
             ],

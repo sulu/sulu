@@ -21,79 +21,59 @@ interface ProviderConfigurationInterface
     /**
      * Returns TRUE if datasource should be displayed.
      * Configuration will be returned from 'getDatasource()'.
-     *
-     * @return bool
      */
-    public function hasDatasource();
+    public function hasDatasource(): bool;
 
     /**
-     * Returns configuration for datasource.
+     * Returns resourceKey for datasource.
      * If NULL no datasource will be displayed.
-     *
-     * @return null|ComponentConfigurationInterface
      */
-    public function getDatasource();
+    public function getDatasourceResourceKey(): ?string;
+
+    /**
+     * Returns the adapter to be used for the datasource.
+     */
+    public function getDatasourceAdapter(): ?string;
 
     /**
      * Returns true if the provider can handle audience targeting.
-     *
-     * @return bool
      */
-    public function hasAudienceTargeting();
+    public function hasAudienceTargeting(): bool;
 
     /**
      * Returns TRUE if tags should be displayed.
-     *
-     * @return bool
      */
-    public function hasTags();
+    public function hasTags(): bool;
 
     /**
      * Returns TRUE if categories should be displayed.
-     *
-     * @return bool
      */
-    public function hasCategories();
+    public function hasCategories(): bool;
 
     /**
      * Returns TRUE if sorting should be displayed.
-     *
-     * @return bool
      */
-    public function hasSorting();
+    public function hasSorting(): bool;
 
     /**
      * Returns items for sorting select.
      *
      * @return PropertyParameter[]
      */
-    public function getSorting();
+    public function getSorting(): ?array;
 
     /**
      * Returns TRUE if limit should be displayed.
-     *
-     * @return bool
      */
-    public function hasLimit();
+    public function hasLimit(): bool;
 
     /**
      * Returns TRUE if present as should be displayed.
-     *
-     * @return bool
      */
-    public function hasPresentAs();
+    public function hasPresentAs(): bool;
 
     /**
      * Indicates pagination is possible.
-     *
-     * @return bool
      */
-    public function hasPagination();
-
-    /**
-     * Returns deep-link template.
-     *
-     * @return string
-     */
-    public function getDeepLink();
+    public function hasPagination(): bool;
 }

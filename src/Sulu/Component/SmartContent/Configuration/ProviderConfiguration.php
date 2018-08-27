@@ -19,9 +19,14 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 class ProviderConfiguration implements ProviderConfigurationInterface
 {
     /**
-     * @var ComponentConfigurationInterface
+     * @var string
      */
-    private $datasource;
+    private $datasourceResourceKey;
+
+    /**
+     * @var string
+     */
+    private $datasourceAdapter;
 
     /**
      * @var bool
@@ -58,168 +63,103 @@ class ProviderConfiguration implements ProviderConfigurationInterface
      */
     private $paginated = false;
 
-    /**
-     * @var string
-     */
-    private $deepLink;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasDatasource()
+    public function hasDatasource(): bool
     {
-        return null !== $this->datasource && false !== $this->datasource;
+        return null !== $this->datasourceResourceKey && false !== $this->datasourceResourceKey;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDatasource()
+    public function getDatasourceResourceKey(): ?string
     {
-        return $this->datasource;
+        return $this->datasourceResourceKey;
     }
 
-    /**
-     * @param ComponentConfigurationInterface $datasource
-     */
-    public function setDatasource($datasource)
+    public function setDatasourceResourceKey(string $datasourceResourceKey)
     {
-        $this->datasource = $datasource;
+        $this->datasourceResourceKey = $datasourceResourceKey;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasAudienceTargeting()
+    public function getDatasourceAdapter(): ?string
+    {
+        return $this->datasourceAdapter;
+    }
+
+    public function setDatasourceAdapter(string $datasourceAdapter)
+    {
+        $this->datasourceAdapter = $datasourceAdapter;
+    }
+
+    public function hasAudienceTargeting(): bool
     {
         return $this->audienceTargeting;
     }
 
-    /**
-     * @param string $audienceTargeting
-     */
-    public function setAudienceTargeting($audienceTargeting)
+    public function setAudienceTargeting(bool $audienceTargeting)
     {
         $this->audienceTargeting = $audienceTargeting;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasTags()
+    public function hasTags(): bool
     {
         return $this->tags;
     }
 
-    /**
-     * @param bool $tags
-     */
-    public function setTags($tags)
+    public function setTags(bool $tags)
     {
         $this->tags = $tags;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasCategories()
+    public function hasCategories(): bool
     {
         return $this->categories;
     }
 
-    /**
-     * @param bool $categories
-     */
-    public function setCategories($categories)
+    public function setCategories(bool $categories)
     {
         $this->categories = $categories;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSorting()
+    public function getSorting(): ?array
     {
         return $this->sorting;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasSorting()
+    public function hasSorting(): bool
     {
         return count($this->sorting) > 0;
     }
 
-    /**
-     * @param PropertyParameter[] $sorting
-     */
-    public function setSorting($sorting)
+    public function setSorting(array $sorting)
     {
         $this->sorting = $sorting;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasLimit()
+    public function hasLimit(): bool
     {
         return $this->limit;
     }
 
-    /**
-     * @param bool $limit
-     */
-    public function setLimit($limit)
+    public function setLimit(bool $limit)
     {
         $this->limit = $limit;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasPresentAs()
+    public function hasPresentAs(): bool
     {
         return $this->presentAs;
     }
 
-    /**
-     * @param bool $presentAs
-     */
-    public function setPresentAs($presentAs)
+    public function setPresentAs(bool $presentAs)
     {
         $this->presentAs = $presentAs;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasPagination()
+    public function hasPagination(): bool
     {
         return $this->paginated;
     }
 
-    /**
-     * @param bool $paginated
-     */
-    public function setPaginated($paginated)
+    public function setPaginated(bool $paginated)
     {
         $this->paginated = $paginated;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDeepLink()
-    {
-        return $this->deepLink;
-    }
-
-    /**
-     * @param string $deepLink
-     */
-    public function setDeepLink($deepLink)
-    {
-        $this->deepLink = $deepLink;
     }
 }

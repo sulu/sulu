@@ -28,6 +28,7 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -116,6 +117,11 @@ class AdminControllerTest extends TestCase
     private $contactManager;
 
     /**
+     * @var DataProviderPoolInterface
+     */
+    private $dataProviderPool;
+
+    /**
      * @var string
      */
     private $environment = 'prod';
@@ -159,6 +165,7 @@ class AdminControllerTest extends TestCase
         $this->router = $this->prophesize(RouterInterface::class);
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
+        $this->dataProviderPool = $this->prophesize(DataProviderPoolInterface::class);
 
         $this->adminController = new AdminController(
             $this->urlGenerator->reveal(),
@@ -174,6 +181,7 @@ class AdminControllerTest extends TestCase
             $this->router->reveal(),
             $this->fieldTypeOptionRegistry->reveal(),
             $this->contactManager->reveal(),
+            $this->dataProviderPool->reveal(),
             $this->environment,
             $this->locales,
             $this->translations,
@@ -218,11 +226,15 @@ class AdminControllerTest extends TestCase
         $fieldTypeOptions = ['selection' => []];
         $this->fieldTypeOptionRegistry->toArray()->willReturn($fieldTypeOptions);
 
-        $this->viewHandler->handle(Argument::that(function(View $view) use ($fieldTypeOptions, $routes) {
+        $dataProviders = [];
+        $this->dataProviderPool->getAll()->willReturn($dataProviders);
+
+        $this->viewHandler->handle(Argument::that(function(View $view) use ($dataProviders, $fieldTypeOptions, $routes) {
             $data = $view->getData()['sulu_admin'];
 
             return 'json' === $view->getFormat()
                 && $data['fieldTypeOptions'] === $fieldTypeOptions
+                && $data['smartContent'] === $dataProviders
                 && $data['routes'] === $routes
                 && $data['navigation'] === ['navigation_item1', 'navigation_item2']
                 && $data['resourceMetadataEndpoints'] === [
