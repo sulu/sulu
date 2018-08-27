@@ -236,14 +236,16 @@ class CollectionControllerTest extends SuluTestCase
     private function mapCollections($collections)
     {
         $result = [];
-        foreach ($collections as $collection) {
-            $result[$collection->title] = [
-                'title' => $collection->title,
-                'parent' => $collection->_embedded->parent ? $collection->_embedded->parent->title : null,
-                'collections' => $this->mapCollections($collection->_embedded->collections),
-            ];
+        if (null !== $collections) {
+            foreach ($collections as $collection) {
+                $result[$collection->title] = [
+                    'title' => $collection->title,
+                    'parent' => $collection->_embedded->parent ? $collection->_embedded->parent->title : null,
+                    'collections' => $this->mapCollections($collection->_embedded->collections),
+                ];
+            }
+            ksort($result);
         }
-        ksort($result);
 
         return array_values($result);
     }
@@ -302,7 +304,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($style, $response->style);
         $this->assertEquals('This Description is only for testing', $response->description);
         $this->assertNotNull($response->id);
-        $this->assertCount(0, $response->_embedded->collections);
+        $this->assertNull($response->_embedded->collections);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Test Collection', $response->title);
         $this->assertNotNull($response->type->id);
@@ -364,7 +366,7 @@ class CollectionControllerTest extends SuluTestCase
             '/api/collections',
             [
                 'locale' => 'en-gb',
-                'parent' => $collection->getId(),
+                'parentId' => $collection->getId(),
                 'flat' => true,
             ]
         );
