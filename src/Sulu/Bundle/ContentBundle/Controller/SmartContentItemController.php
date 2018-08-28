@@ -46,6 +46,9 @@ class SmartContentItemController extends RestController
         if (isset($filters['tags'])) {
             $filters['tags'] = explode(',', $this->getRequestParameter($request, 'tags'));
         }
+        if (isset($filters['sortBy'])) {
+            $filters['sortBy'] = explode(',', $this->getRequestParameter($request, 'sortBy'));
+        }
         $filters = array_filter($filters);
         $options = [
             'webspaceKey' => $this->getRequestParameter($request, 'webspace'),

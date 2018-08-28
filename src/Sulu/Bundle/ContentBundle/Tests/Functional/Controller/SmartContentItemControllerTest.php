@@ -271,6 +271,33 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
     }
 
+    public function testGetItemsSorted()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
+            '&sortBy=title&sortMethod=asc&provider=content&excluded=' . $this->team->getUuid()
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(
+            ['id' => $this->team->getUuid(), 'title' => 'Team', 'path' => '/team'],
+            $result['datasource']
+        );
+        $this->assertEquals(
+            [
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false, 'url' => '/team/daniel'],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'publishedState' => false, 'url' => '/team/johannes'],
+                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'publishedState' => false, 'url' => '/team/thomas'],
+            ],
+            $result['_embedded']['items']
+        );
+    }
+
     public function testGetItemsExcluded()
     {
         $client = $this->createAuthenticatedClient();
