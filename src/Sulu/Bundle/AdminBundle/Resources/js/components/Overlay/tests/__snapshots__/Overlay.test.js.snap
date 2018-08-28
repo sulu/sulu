@@ -88,9 +88,7 @@ exports[`The component should render with a disabled confirm button 2`] = `
         <article>
           <p>My overlay content</p>
         </article>
-        <footer>
-          <button class=\\"button primary\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Apply</span></button>
-        </footer>
+        <footer><button class=\\"button primary\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Apply</span></button></footer>
       </section>
     </div>
   </div>
