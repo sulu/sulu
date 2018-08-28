@@ -3,6 +3,7 @@ import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {ResourceMetadataStore} from 'sulu-admin-bundle/stores';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
+import {buildQueryString} from 'sulu-admin-bundle/utils';
 import type {Media} from '../../types';
 
 const RESOURCE_KEY = 'media';
@@ -93,7 +94,7 @@ export default class MediaUploadStore {
         }
 
         const endpoint = ResourceMetadataStore.getEndpoint(RESOURCE_KEY);
-        const queryString = ResourceRequester.buildQueryString({
+        const queryString = buildQueryString({
             action: 'new-version',
             locale: this.locale.get(),
         });
@@ -107,7 +108,7 @@ export default class MediaUploadStore {
 
     create(collectionId: string | number, file: File): Promise<*> {
         const endpoint = ResourceMetadataStore.getEndpoint(RESOURCE_KEY);
-        const queryString = ResourceRequester.buildQueryString({
+        const queryString = buildQueryString({
             locale: this.locale.get(),
             collection: collectionId,
         });
