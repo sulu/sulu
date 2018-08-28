@@ -7,6 +7,8 @@ import DatagridOverlay from '../../../containers/Selection/DatagridOverlay';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
 import FilterOverlay from '../FilterOverlay';
 
+jest.mock('../stores/SmartContentStore', () => jest.fn());
+
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
@@ -32,8 +34,6 @@ test('Do not display if open is set to false', () => {
     );
 
     expect(filterOverlay.find('Overlay').prop('open')).toEqual(false);
-
-    smartContentStore.destroy();
 });
 
 test('Render with all fields', () => {
@@ -52,8 +52,6 @@ test('Render with all fields', () => {
         />
     );
     expect(filterOverlay.find('Portal').at(2).render()).toMatchSnapshot();
-
-    smartContentStore.destroy();
 });
 
 test('Render with no fields', () => {
@@ -72,8 +70,6 @@ test('Render with no fields', () => {
         />
     );
     expect(filterOverlay.find('Portal').at(2).render()).toMatchSnapshot();
-
-    smartContentStore.destroy();
 });
 
 test('Fill all fields using and update SmartContentStore on confirm', () => {
@@ -184,8 +180,6 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(smartContentStore.limit).toEqual(7);
 
     expect(closeSpy).toBeCalledWith();
-
-    smartContentStore.destroy();
 });
 
 test('Prefill all fields with correct values', () => {
@@ -244,8 +238,6 @@ test('Prefill all fields with correct values', () => {
 
     expect(filterOverlay.find('div[className="presentation"]').find('SingleSelect').prop('value')).toEqual('small');
     expect(filterOverlay.find('div[className="limit"] Number').prop('value')).toEqual(8);
-
-    smartContentStore.destroy();
 });
 
 test('Reset all fields when reset action is clicked', () => {
@@ -296,6 +288,4 @@ test('Reset all fields when reset action is clicked', () => {
     expect(filterOverlay.instance().sortOrder).toEqual(undefined);
     expect(filterOverlay.instance().presentation).toEqual(undefined);
     expect(filterOverlay.instance().limit).toEqual(undefined);
-
-    smartContentStore.destroy();
 });

@@ -46,11 +46,21 @@ test('Pass correct sections prop with other values', () => {
         limit: false,
     });
 
+    const presentations = [
+        {name: 'one', value: 'One column'},
+    ];
+
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+    const smartContent = shallow(
+        <SmartContent fieldLabel="Test" presentations={presentations} provider="content" store={smartContentStore} />
+    );
 
     expect(smartContent.find('FilterOverlay').prop('sections'))
         .toEqual(['datasource', 'categories', 'sorting', 'presentation']);
+    expect(smartContent.find('FilterOverlay').prop('presentations'))
+        .toEqual({
+            one: 'One column',
+        });
 });
 
 test('Open and closes the FilterOverlay when the icon is clicked', () => {

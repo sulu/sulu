@@ -7,15 +7,21 @@ import {translate} from '../../utils/Translator';
 import smartContentConfigStore from './stores/SmartContentConfigStore';
 import SmartContentStore from './stores/SmartContentStore';
 import FilterOverlay from './FilterOverlay';
+import type {Presentation} from './types';
 
 type Props = {
     fieldLabel: string,
+    presentations: Array<Presentation>,
     provider: string,
     store: SmartContentStore,
 };
 
 @observer
 export default class SmartContent extends React.Component<Props> {
+    static defaultProps = {
+        presentations: [],
+    };
+
     @observable showFilterOverlay = false;
 
     @action handleFilterClick = () => {
@@ -46,7 +52,7 @@ export default class SmartContent extends React.Component<Props> {
         if (smartContentConfig.sorting.length > 0) {
             sections.push('sorting');
         }
-        if (smartContentConfig.presentAs) {
+        if (smartContentConfig.presentAs && this.props.presentations.length > 0) {
             sections.push('presentation');
         }
         if (smartContentConfig.limit) {
@@ -56,6 +62,11 @@ export default class SmartContent extends React.Component<Props> {
         const sortings = smartContentConfig.sorting.reduce((sortings, sorting) => {
             sortings[sorting.name] = translate(sorting.value);
             return sortings;
+        }, {});
+
+        const presentations = this.props.presentations.reduce((presentations, presentation) => {
+            presentations[presentation.name] = presentation.value;
+            return presentations;
         }, {});
 
         return (
@@ -79,10 +90,7 @@ export default class SmartContent extends React.Component<Props> {
                     onClose={this.handleFilterOverlayClose}
                     open={this.showFilterOverlay}
                     // TODO use correct presentations and sortings
-                    presentations={{
-                        small: 'Klein',
-                        large: 'Groß',
-                    }}
+                    presentations={presentations}
                     sections={sections}
                     sortings={sortings}
                     smartContentStore={store}

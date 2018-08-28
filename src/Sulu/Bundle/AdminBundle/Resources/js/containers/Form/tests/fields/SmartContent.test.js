@@ -132,6 +132,12 @@ test('Pass correct props to SmartContent component', () => {
         provider: {
             value: 'media',
         },
+        present_as: {
+            value: [
+                {name: 'one', title: 'One column'},
+                {name: 'two', title: 'Two column'},
+            ],
+        },
     };
 
     const smartContent = shallow(
@@ -153,6 +159,10 @@ test('Pass correct props to SmartContent component', () => {
         />
     );
 
+    expect(smartContent.find('SmartContent').prop('presentations')).toEqual([
+        {name: 'one', value: 'One column'},
+        {name: 'two', value: 'Two column'},
+    ]);
     expect(smartContent.find('SmartContent').prop('fieldLabel')).toEqual('Test');
 });
 

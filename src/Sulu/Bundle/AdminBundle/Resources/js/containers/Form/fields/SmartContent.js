@@ -101,6 +101,9 @@ export default class SmartContent extends React.Component<Props> {
                 provider: {
                     value: provider,
                 },
+                present_as: {
+                    value: schemaPresentations = [],
+                } = {},
             } = {},
         } = this.props;
 
@@ -108,9 +111,29 @@ export default class SmartContent extends React.Component<Props> {
             throw new Error('The "provider" schemaOption must be a string, but received ' + typeof provider + '!');
         }
 
+        if (!Array.isArray(schemaPresentations)) {
+            throw new Error(
+                'The "present_as" schemaOption must be a string, but received ' + typeof schemaPresentations + '!'
+            );
+        }
+
+        const presentations = schemaPresentations.map((presentation) => {
+            if (typeof presentation.name !== 'string' || typeof presentation.title !== 'string') {
+                throw new Error(
+                    'Every presentation in the "present_as" schemaOption must contain a string name and a string title'
+                );
+            }
+
+            return {
+                name: presentation.name,
+                value: presentation.title,
+            };
+        });
+
         return (
             <SmartContentComponent
                 fieldLabel={label}
+                presentations={presentations}
                 provider={provider}
                 store={this.smartContentStore}
             />

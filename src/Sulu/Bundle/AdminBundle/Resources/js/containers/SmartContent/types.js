@@ -29,6 +29,11 @@ export type Sorting = {
     value: string,
 };
 
+export type Presentation = {
+    name: string,
+    value: string,
+};
+
 export type SmartContentConfig = {
     datasourceAdapter?: string,
     datasourceResourceKey?: string,
