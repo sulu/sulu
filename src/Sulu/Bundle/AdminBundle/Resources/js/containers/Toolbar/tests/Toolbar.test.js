@@ -16,6 +16,10 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('../../../services/Initializer', () => ({
+    initializedTranslationsLocale: true,
+}));
+
 beforeEach(() => {
     toolbarStoreMock = {
         errors: [],

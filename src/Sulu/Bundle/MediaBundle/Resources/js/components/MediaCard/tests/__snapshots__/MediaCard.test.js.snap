@@ -197,23 +197,11 @@ exports[`Render a MediaCard with download list 1`] = `
 <div>
   <div class=\\"container\\">
     <ul style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\" class=\\"menu\\">
-      <li class=\\"item\\">
-        <button><span class=\\"content\\">Direct download<span class=\\"copyText\\"></span></span>
-        </button>
-      </li>
+      <li class=\\"item\\"><button><span class=\\"content\\">Direct download<span class=\\"copyText\\"></span></span></button></li>
       <li class=\\"divider\\"></li>
-      <li class=\\"item\\">
-        <button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/300/200\\"><span class=\\"content\\">300/200<span class=\\"copyText\\">Copy URL</span></span>
-        </button>
-      </li>
-      <li class=\\"item\\">
-        <button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/600/300\\"><span class=\\"content\\">600/300<span class=\\"copyText\\">Copy URL</span></span>
-        </button>
-      </li>
-      <li class=\\"item\\">
-        <button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/150/200\\"><span class=\\"content\\">150/200<span class=\\"copyText\\">Copy URL</span></span>
-        </button>
-      </li>
+      <li class=\\"item\\"><button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/300/200\\"><span class=\\"content\\">300/200<span class=\\"copyText\\">Copy URL</span></span></button></li>
+      <li class=\\"item\\"><button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/600/300\\"><span class=\\"content\\">600/300<span class=\\"copyText\\">Copy URL</span></span></button></li>
+      <li class=\\"item\\"><button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/150/200\\"><span class=\\"content\\">150/200<span class=\\"copyText\\">Copy URL</span></span></button></li>
     </ul>
   </div>
 </div>"

@@ -16,9 +16,7 @@ exports[`Should open an overlay 1`] = `
             </div>
           </div>
         </article>
-        <footer>
-          <button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">sulu_admin.confirm</span></button>
-        </footer>
+        <footer><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">sulu_admin.confirm</span></button></footer>
       </section>
     </div>
   </div>

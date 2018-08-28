@@ -32,12 +32,8 @@ exports[`Should render with active 2`] = `
     <div style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\">
       <div class=\\"listContainer\\">
         <ul class=\\"list primary\\">
-          <li>
-            <button class=\\"option\\">Option1</button>
-          </li>
-          <li>
-            <button class=\\"option\\" disabled=\\"\\">Option1</button>
-          </li>
+          <li><button class=\\"option\\">Option1</button></li>
+          <li><button class=\\"option\\" disabled=\\"\\">Option1</button></li>
         </ul>
       </div>
     </div>

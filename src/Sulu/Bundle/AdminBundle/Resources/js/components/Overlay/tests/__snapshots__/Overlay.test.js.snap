@@ -16,9 +16,7 @@ exports[`The component should render in body when open 2`] = `
         <article>
           <p>My overlay content</p>
         </article>
-        <footer>
-          <button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">Apply</span></button>
-        </footer>
+        <footer><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">Apply</span></button></footer>
       </section>
     </div>
   </div>
@@ -40,11 +38,7 @@ exports[`The component should render in body with actions when open 2`] = `
           <p>My overlay content</p>
         </article>
         <footer>
-          <div class=\\"actions\\">
-            <button class=\\"button link\\" type=\\"button\\"><span class=\\"text\\">Action 1</span></button>
-            <button class=\\"button link\\" type=\\"button\\"><span class=\\"text\\">Action 2</span></button>
-          </div>
-          <button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">Apply</span></button>
+          <div class=\\"actions\\"><button class=\\"button link\\" type=\\"button\\"><span class=\\"text\\">Action 1</span></button><button class=\\"button link\\" type=\\"button\\"><span class=\\"text\\">Action 2</span></button></div><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">Apply</span></button>
         </footer>
       </section>
     </div>
@@ -66,16 +60,14 @@ exports[`The component should render in body with loader instead of confirm butt
         <article>
           <p>My overlay content</p>
         </article>
-        <footer>
-          <button class=\\"button primary loading\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Apply</span>
+        <footer><button class=\\"button primary loading\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Apply</span>
             <div class=\\"loader\\">
               <div style=\\"width: 25px; height: 25px;\\" class=\\"spinner\\">
                 <div class=\\"doubleBounce1\\"></div>
                 <div class=\\"doubleBounce2\\"></div>
               </div>
             </div>
-          </button>
-        </footer>
+          </button></footer>
       </section>
     </div>
   </div>
