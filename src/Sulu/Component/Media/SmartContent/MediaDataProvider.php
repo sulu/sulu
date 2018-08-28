@@ -54,7 +54,7 @@ class MediaDataProvider extends BaseDataProvider
             ->enableDatasource('collections', 'column_list')
             ->enableSorting(
                 [
-                    ['column' => 'fileVersionMeta.title', 'title' => 'public.title'],
+                    ['column' => 'fileVersionMeta.title', 'title' => 'sulu_admin.title'],
                 ]
             )
             ->getConfiguration();

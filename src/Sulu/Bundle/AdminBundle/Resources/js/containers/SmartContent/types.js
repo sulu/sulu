@@ -24,6 +24,11 @@ export type SortOrder = 'asc' | 'desc';
 
 export type Conjunction = 'or' | 'and';
 
+export type Sorting = {
+    name: string,
+    value: string,
+};
+
 export type SmartContentConfig = {
     datasourceAdapter?: string,
     datasourceResourceKey?: string,
@@ -31,7 +36,7 @@ export type SmartContentConfig = {
     categories: boolean,
     limit: boolean,
     presentAs: boolean,
-    sorting: Array<string>,
+    sorting: Array<Sorting>,
     tags: boolean,
 };
 

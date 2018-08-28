@@ -22,7 +22,7 @@ test('Pass correct sections prop', () => {
         tags: true,
         categories: false,
         audienceTargeting: true,
-        sorting: false,
+        sorting: [],
         presentAs: false,
         limit: true,
     });
@@ -41,7 +41,7 @@ test('Pass correct sections prop with other values', () => {
         tags: false,
         categories: true,
         audienceTargeting: false,
-        sorting: true,
+        sorting: [{name: 'title', value: 'Title'}],
         presentAs: true,
         limit: false,
     });
@@ -55,6 +55,16 @@ test('Pass correct sections prop with other values', () => {
 
 test('Open and closes the FilterOverlay when the icon is clicked', () => {
     const smartContentStore = new SmartContentStore('content');
+    smartContentConfigStore.getConfig.mockReturnValue({
+        datasourceResourceKey: 'pages',
+        datasourceAdapter: 'table',
+        tags: false,
+        categories: true,
+        audienceTargeting: false,
+        sorting: [{name: 'title', value: 'Title'}],
+        presentAs: true,
+        limit: false,
+    });
     const smartContent = shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
 
     expect(smartContent.find('FilterOverlay').prop('open')).toEqual(false);
@@ -65,6 +75,7 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
     smartContent.find('FilterOverlay').prop('onClose')();
     expect(smartContent.find('FilterOverlay').prop('open')).toEqual(false);
     expect(smartContent.find('FilterOverlay').prop('title')).toEqual('sulu_admin.filter_overlay_title');
+    expect(smartContent.find('FilterOverlay').prop('sortings')).toEqual({title: 'Title'});
     expect(translate).toBeCalledWith('sulu_admin.filter_overlay_title', {fieldLabel: 'Test'});
 });
 

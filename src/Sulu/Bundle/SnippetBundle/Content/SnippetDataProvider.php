@@ -97,9 +97,9 @@ class SnippetDataProvider implements DataProviderInterface
                 ->enableAudienceTargeting()
                 ->enableSorting(
                     [
-                        ['column' => 'title', 'title' => 'smart-content.title'],
-                        ['column' => 'created', 'title' => 'smart-content.created'],
-                        ['column' => 'changed', 'title' => 'smart-content.changed'],
+                        ['column' => 'title', 'title' => 'sulu_admin.title'],
+                        ['column' => 'created', 'title' => 'sulu_admin.created'],
+                        ['column' => 'changed', 'title' => 'sulu_admin.changed'],
                     ]
                 )
                 ->getConfiguration();

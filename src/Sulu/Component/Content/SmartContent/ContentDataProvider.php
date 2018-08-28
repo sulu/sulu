@@ -121,11 +121,11 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
             ->enableDatasource('pages', 'column_list')
             ->enableSorting(
                 [
-                    ['column' => 'title', 'title' => 'smart-content.title'],
-                    ['column' => 'published', 'title' => 'smart-content.published'],
-                    ['column' => 'created', 'title' => 'smart-content.created'],
-                    ['column' => 'changed', 'title' => 'smart-content.changed'],
-                    ['column' => 'authored', 'title' => 'smart-content.authored'],
+                    ['column' => 'title', 'title' => 'sulu_admin.title'],
+                    ['column' => 'published', 'title' => 'sulu_admin.published'],
+                    ['column' => 'created', 'title' => 'sulu_admin.created'],
+                    ['column' => 'changed', 'title' => 'sulu_admin.changed'],
+                    ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                 ]
             )
             ->getConfiguration();

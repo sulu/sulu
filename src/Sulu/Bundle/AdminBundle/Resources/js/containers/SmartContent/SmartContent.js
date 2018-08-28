@@ -43,7 +43,7 @@ export default class SmartContent extends React.Component<Props> {
         if (smartContentConfig.audienceTargeting) {
             sections.push('audienceTargeting');
         }
-        if (smartContentConfig.sorting) {
+        if (smartContentConfig.sorting.length > 0) {
             sections.push('sorting');
         }
         if (smartContentConfig.presentAs) {
@@ -52,6 +52,11 @@ export default class SmartContent extends React.Component<Props> {
         if (smartContentConfig.limit) {
             sections.push('limit');
         }
+
+        const sortings = smartContentConfig.sorting.reduce((sortings, sorting) => {
+            sortings[sorting.name] = translate(sorting.value);
+            return sortings;
+        }, {});
 
         return (
             <Fragment>
@@ -79,10 +84,7 @@ export default class SmartContent extends React.Component<Props> {
                         large: 'Groß',
                     }}
                     sections={sections}
-                    sortings={{
-                        title: 'Titel',
-                        admin: 'Admin-Reihenfolge',
-                    }}
+                    sortings={sortings}
                     smartContentStore={store}
                     title={translate('sulu_admin.filter_overlay_title', {fieldLabel})}
                 />
