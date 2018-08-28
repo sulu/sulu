@@ -24,6 +24,10 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
     getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve([])),
 }));
 
+jest.mock('sulu-admin-bundle/services/Initializer', () => ({
+    initializedTranslationsLocale: true,
+}));
+
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: function(key) {
         switch (key) {

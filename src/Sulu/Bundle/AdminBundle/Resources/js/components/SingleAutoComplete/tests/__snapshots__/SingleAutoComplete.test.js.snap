@@ -31,15 +31,9 @@ exports[`Render the SingleAutoComplete with open suggestions list 2`] = `
 <div>
   <div class=\\"container\\">
     <ul style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\" class=\\"menu\\">
-      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\">
-        <button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 1</span></button>
-      </li>
-      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\">
-        <button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 2</span></button>
-      </li>
-      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\">
-        <button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 3</span></button>
-      </li>
+      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 1</span></button></li>
+      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 2</span></button></li>
+      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 3</span></button></li>
     </ul>
   </div>
 </div>"

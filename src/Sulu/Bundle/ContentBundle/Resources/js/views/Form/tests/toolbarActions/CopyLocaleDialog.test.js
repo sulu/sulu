@@ -27,7 +27,7 @@ test('Render the dialog with given props', () => {
         />
     );
 
-    expect(copyLocaleDialog.find('Portal').at(1).render()).toMatchSnapshot();
+    expect(copyLocaleDialog.find('Portal').at(2).render()).toMatchSnapshot();
 });
 
 test('Call onClose callback if cancel is clicked', () => {

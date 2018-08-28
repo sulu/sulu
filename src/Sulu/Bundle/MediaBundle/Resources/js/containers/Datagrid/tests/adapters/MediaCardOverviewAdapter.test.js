@@ -3,6 +3,8 @@ import {render} from 'enzyme';
 import React from 'react';
 import MediaCardOverviewAdapter from '../../adapters/MediaCardOverviewAdapter';
 
+jest.mock('sulu-admin-bundle/services/Initializer', () => jest.fn());
+
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: function(key) {
         switch (key) {

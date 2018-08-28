@@ -25,9 +25,7 @@ exports[`Render ArrowMenu open 2`] = `
       <div class=\\"arrowMenu\\">
         <div class=\\"section\\">
           <div class=\\"title\\">Search Section</div>
-          <div class=\\"children\\">
-            <input type=\\"text\\">
-          </div>
+          <div class=\\"children\\"><input type=\\"text\\"></div>
         </div>
         <div class=\\"section\\">
           <div class=\\"title\\">Webspaces</div>

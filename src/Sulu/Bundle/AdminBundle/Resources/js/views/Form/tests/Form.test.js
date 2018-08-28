@@ -5,6 +5,7 @@ import {mount, shallow} from 'enzyme';
 import {findWithToolbarFunction} from '../../../utils/TestHelper';
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 
+jest.mock('../../../services/Initializer', () => jest.fn());
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 jest.mock('../toolbarActions/DeleteToolbarAction', () => jest.fn());
 jest.mock('../toolbarActions/SaveWithPublishingToolbarAction', () => jest.fn());

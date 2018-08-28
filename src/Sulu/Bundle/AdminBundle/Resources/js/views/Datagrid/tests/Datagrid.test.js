@@ -105,6 +105,10 @@ jest.mock('../../../utils/Translator', () => ({
     },
 }));
 
+jest.mock('../../../services/Initializer', () => ({
+    initializedTranslationsLocale: true,
+}));
+
 beforeEach(() => {
     jest.resetModules();
 

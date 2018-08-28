@@ -147,8 +147,10 @@ exports[`ColorPicker should render with open overlay 1`] = `
                     }
 
                     .hue-vertical {
-                      background: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
-                      background: -webkit-linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+                      background: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%,
+                        #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+                      background: -webkit-linear-gradient(to top, #f00 0%, #ff0 17%,
+                        #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
                     }
                   </style>
                   <div style=\\"position: absolute; left: 69.44444444444443%;\\">
@@ -178,24 +180,19 @@ exports[`ColorPicker should render with open overlay 1`] = `
         </div>
         <div style=\\"display: flex; padding-top: 4px;\\" class=\\"flexbox-fix\\">
           <div>
-            <div style=\\"position: relative;\\">
-              <input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"22194D\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize;\\">hex</span></div>
+            <div style=\\"position: relative;\\"><input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"22194D\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize;\\">hex</span></div>
           </div>
           <div style=\\"padding-left: 6px;\\">
-            <div style=\\"position: relative;\\">
-              <input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"34\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">r</span></div>
+            <div style=\\"position: relative;\\"><input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"34\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">r</span></div>
           </div>
           <div style=\\"padding-left: 6px;\\">
-            <div style=\\"position: relative;\\">
-              <input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"25\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">g</span></div>
+            <div style=\\"position: relative;\\"><input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"25\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">g</span></div>
           </div>
           <div style=\\"padding-left: 6px;\\">
-            <div style=\\"position: relative;\\">
-              <input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"77\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">b</span></div>
+            <div style=\\"position: relative;\\"><input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"77\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">b</span></div>
           </div>
           <div style=\\"padding-left: 6px; display: none;\\">
-            <div style=\\"position: relative;\\">
-              <input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"100\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">a</span></div>
+            <div style=\\"position: relative;\\"><input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"100\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">a</span></div>
           </div>
         </div>
         <div style=\\"margin: 0px -10px; padding: 10px 0px 0px 10px; border-top: 1px solid #eee; display: none; flex-wrap: wrap; position: relative;\\" class=\\"flexbox-fix\\"></div>
