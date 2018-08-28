@@ -60,7 +60,14 @@ export default class SmartContent extends React.Component<Props> {
                         icon: 'fa-filter',
                         onClick: this.handleFilterClick,
                     }}
-                />
+                    loading={store.itemsLoading || store.loading}
+                >
+                    {store.items.map((item, index) => (
+                        <MultiItemSelection.Item key={index} id={item.id} index={index + 1}>
+                            {item.title /* TODO Define field via props to read from item */}
+                        </MultiItemSelection.Item>
+                    ))}
+                </MultiItemSelection>
                 <FilterOverlay
                     dataSourceAdapter={smartContentConfig.datasourceAdapter}
                     dataSourceResourceKey={smartContentConfig.datasourceResourceKey}

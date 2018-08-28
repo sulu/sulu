@@ -177,6 +177,7 @@ class AdminController
     {
         $endpoints = [
             'config' => $this->router->generate('sulu_admin.config'),
+            'items' => $this->router->generate('get_items'),
             'loginCheck' => $this->router->generate('sulu_admin.login_check'),
             'logout' => $this->router->generate('sulu_admin.logout'),
             'reset' => $this->router->generate('sulu_security.reset_password.email'),

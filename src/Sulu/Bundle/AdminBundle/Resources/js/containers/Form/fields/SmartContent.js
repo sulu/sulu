@@ -42,11 +42,15 @@ export default class SmartContent extends React.Component<Props> {
             throw new Error('The "provider" schemaOption must be a string, but received ' + typeof provider + '!');
         }
 
-        // TODO replace with "page" with correct value
+        const datasourceResourceKey = smartContentConfigStore.getConfig(provider).datasourceResourceKey;
+
         this.smartContentStore = new SmartContentStore(
+            provider,
             value,
             formInspector.locale,
-            smartContentConfigStore.getConfig(provider).datasourceResourceKey
+            datasourceResourceKey,
+            // TODO Not completely correct because of media/collections... maybe rename provider to match resourceKey?
+            formInspector.resourceKey === datasourceResourceKey ? formInspector.id : undefined
         );
 
         autorun(this.handleFilterCriteriaChange);

@@ -16,7 +16,7 @@ jest.mock('../../../containers/MultiAutoComplete', () => jest.fn(() => null));
 jest.mock('../../../containers/Selection/DatagridOverlay', () => jest.fn(() => null));
 
 test('Do not display if open is set to false', () => {
-    const smartContentStore = new SmartContentStore();
+    const smartContentStore = new SmartContentStore('content');
     const filterOverlay = shallow(
         <FilterOverlay
             dataSourceAdapter={undefined}
@@ -37,7 +37,7 @@ test('Do not display if open is set to false', () => {
 });
 
 test('Render with all fields', () => {
-    const smartContentStore = new SmartContentStore();
+    const smartContentStore = new SmartContentStore('content');
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter={undefined}
@@ -57,7 +57,7 @@ test('Render with all fields', () => {
 });
 
 test('Render with no fields', () => {
-    const smartContentStore = new SmartContentStore();
+    const smartContentStore = new SmartContentStore('content');
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter={undefined}
@@ -77,7 +77,7 @@ test('Render with no fields', () => {
 });
 
 test('Fill all fields using and update SmartContentStore on confirm', () => {
-    const smartContentStore = new SmartContentStore();
+    const smartContentStore = new SmartContentStore('content');
     const closeSpy = jest.fn();
 
     const filterOverlay = mount(
@@ -189,7 +189,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
 });
 
 test('Prefill all fields with correct values', () => {
-    const smartContentStore = new SmartContentStore();
+    const smartContentStore = new SmartContentStore('content');
     smartContentStore.dataSource = {id: 4, title: 'Homepage'};
     smartContentStore.includeSubElements = true;
     smartContentStore.categories = [{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}];
@@ -249,7 +249,7 @@ test('Prefill all fields with correct values', () => {
 });
 
 test('Reset all fields when reset action is clicked', () => {
-    const smartContentStore = new SmartContentStore();
+    const smartContentStore = new SmartContentStore('content');
     smartContentStore.dataSource = {id: 4, url: '/home'};
     smartContentStore.includeSubElements = true;
     smartContentStore.categories = [{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}];

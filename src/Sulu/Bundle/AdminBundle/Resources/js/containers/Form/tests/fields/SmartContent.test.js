@@ -8,9 +8,20 @@ import SmartContent from '../../fields/SmartContent';
 import SmartContentStore from '../../../SmartContent/stores/SmartContentStore';
 import smartContentConfigStore from '../../../SmartContent/stores/SmartContentConfigStore';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/FormStore', () => jest.fn());
-jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id) {
+    this.resourceKey = resourceKey;
+    this.id = id;
+}));
+
+jest.mock('../../stores/FormStore', () => jest.fn(function(resourceStore) {
+    this.resourceKey = resourceStore.resourceKey;
+    this.id = resourceStore.id;
+}));
+
+jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
+    this.resourceKey = formStore.resourceKey;
+    this.id = formStore.id;
+}));
 
 jest.mock('../../../SmartContent/stores/SmartContentStore', () => jest.fn(function() {
     this.loading = false;
@@ -21,7 +32,7 @@ jest.mock('../../../SmartContent/stores/SmartContentConfigStore', () => ({
 }));
 
 test('Should correctly initialize SmartContentStore', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 1)));
     smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'collections'});
 
     const value = {
@@ -64,7 +75,54 @@ test('Should correctly initialize SmartContentStore', () => {
     );
 
     expect(smartContentConfigStore.getConfig).toBeCalledWith('media');
-    expect(SmartContentStore).toBeCalledWith(value, undefined, 'collections');
+    expect(SmartContentStore).toBeCalledWith('media', value, undefined, 'collections', undefined);
+});
+
+test('Should pass id to SmartContentStore if resourceKeys match', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('pages', 4)));
+    smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'pages'});
+
+    const value = {
+        audienceTargeting: undefined,
+        categoryOperator: undefined,
+        categories: [1, 2],
+        dataSource: undefined,
+        includeSubFolders: undefined,
+        limitResult: undefined,
+        presentAs: 'large',
+        sortBy: undefined,
+        sortMethod: undefined,
+        tagOperator: undefined,
+        tags: undefined,
+    };
+
+    const schemaOptions = {
+        provider: {
+            value: 'pages',
+        },
+    };
+
+    shallow(
+        <SmartContent
+            dataPath="/"
+            error={{}}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={0}
+            minOccurs={0}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            schemaPath="/"
+            showAllErrors={false}
+            types={undefined}
+            value={value}
+        />
+    );
+
+    expect(smartContentConfigStore.getConfig).toBeCalledWith('pages');
+    expect(SmartContentStore).toBeCalledWith('pages', value, undefined, 'pages', 4);
 });
 
 test('Pass correct props to SmartContent component', () => {
