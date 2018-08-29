@@ -89,7 +89,7 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
     expect(translate).toBeCalledWith('sulu_admin.filter_overlay_title', {fieldLabel: 'Test'});
 });
 
-test('Show items with their title', () => {
+test('Show items in a SmartContentItem', () => {
     const smartContentStore = new SmartContentStore('content');
     smartContentStore.items = [
         {title: 'Homepage'},
@@ -98,9 +98,9 @@ test('Show items with their title', () => {
 
     const smartContent = shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
 
-    expect(smartContent.find('Item')).toHaveLength(2);
-    expect(smartContent.find('Item').at(0).prop('children')).toEqual('Homepage');
-    expect(smartContent.find('Item').at(1).prop('children')).toEqual('About us');
+    expect(smartContent.find('SmartContentItem')).toHaveLength(2);
+    expect(smartContent.find('SmartContentItem').at(0).prop('item')).toEqual({title: 'Homepage'});
+    expect(smartContent.find('SmartContentItem').at(1).prop('item')).toEqual({title: 'About us'});
 });
 
 test('Pass the loading prop to the MultiItemSelection if items are still loading', () => {

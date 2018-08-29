@@ -119,7 +119,9 @@ export default class SmartContentStore {
     @computed get filterCriteria(): FilterCriteria {
         return {
             audienceTargeting: this.audienceTargeting,
-            categories: this.categories ? this.categories.map((category) => category.id) : undefined,
+            categories: this.categories && this.categories.length > 0
+                ? this.categories.map((category) => category.id)
+                : undefined,
             categoryOperator: this.categoryOperator,
             dataSource: this.dataSource ? this.dataSource.id : undefined,
             includeSubFolders: this.includeSubElements,
@@ -127,7 +129,7 @@ export default class SmartContentStore {
             sortBy: this.sortBy,
             sortMethod: this.sortOrder,
             tagOperator: this.tagOperator,
-            tags: toJS(this.tags),
+            tags: this.tags && this.tags.length > 0 ? toJS(this.tags) : undefined,
             presentAs: this.presentation,
         };
     }

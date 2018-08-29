@@ -292,6 +292,37 @@ test('Generate filterCriteria from current state', () => {
     smartContentStore.destroy();
 });
 
+test('Generate filterCriteria from current state with empty arrays', () => {
+    const smartContentStore = new SmartContentStore('content');
+    smartContentStore.dataSource = {id: 6};
+    smartContentStore.includeSubElements = true;
+    smartContentStore.categories = [];
+    smartContentStore.categoryOperator = 'and';
+    smartContentStore.tags = [];
+    smartContentStore.tagOperator = 'or';
+    smartContentStore.audienceTargeting = true;
+    smartContentStore.sortBy = 'changed';
+    smartContentStore.sortOrder = 'asc';
+    smartContentStore.presentation = 'large';
+    smartContentStore.limit = 9;
+
+    expect(smartContentStore.filterCriteria).toEqual({
+        audienceTargeting: true,
+        categories: undefined,
+        categoryOperator: 'and',
+        dataSource: 6,
+        includeSubFolders: true,
+        limitResult: 9,
+        presentAs: 'large',
+        sortBy: 'changed',
+        sortMethod: 'asc',
+        tagOperator: 'or',
+        tags: undefined,
+    });
+
+    smartContentStore.destroy();
+});
+
 test('Dispose autorun on unmount', () => {
     const smartContentStore = new SmartContentStore('content');
     const itemDisposerSpy = jest.fn();

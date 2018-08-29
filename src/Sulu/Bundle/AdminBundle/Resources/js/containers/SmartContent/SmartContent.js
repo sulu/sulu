@@ -7,6 +7,7 @@ import {translate} from '../../utils/Translator';
 import smartContentConfigStore from './stores/SmartContentConfigStore';
 import SmartContentStore from './stores/SmartContentStore';
 import FilterOverlay from './FilterOverlay';
+import SmartContentItem from './SmartContentItem';
 import type {Presentation, SmartContentConfig} from './types';
 
 type Props = {
@@ -120,7 +121,7 @@ export default class SmartContent extends React.Component<Props> {
                 >
                     {store.items.map((item, index) => (
                         <MultiItemSelection.Item key={index} id={item.id} index={index + 1}>
-                            {item.title /* TODO Define field via props to read from item */}
+                            <SmartContentItem item={item} />
                         </MultiItemSelection.Item>
                     ))}
                 </MultiItemSelection>
