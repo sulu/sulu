@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\HttpKernel;
 
+use FOS\HttpCache\SymfonyCache\HttpCacheAware;
+use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -21,9 +23,10 @@ use Symfony\Component\Routing\RouteCollectionBuilder;
 /**
  * Base class for all Sulu kernels.
  */
-abstract class SuluKernel extends Kernel
+abstract class SuluKernel extends Kernel implements HttpCacheProvider
 {
     use MicroKernelTrait;
+    use HttpCacheAware;
 
     const CONTEXT_ADMIN = 'admin';
 
