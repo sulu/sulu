@@ -37,6 +37,17 @@ test('Should load items when being constructed', () => {
     });
 });
 
+test('Should not load items but replace current selection with empty array when no itemIds are given', () => {
+    const selectionStore = new SelectionStore('snippets', [], observable.box('en'));
+    selectionStore.items = [{id: 1}];
+
+    selectionStore.loadItems(undefined);
+
+    expect(ResourceRequester.getList).not.toBeCalled();
+
+    expect(toJS(selectionStore.items)).toEqual([]);
+});
+
 test('Should load items with different filterParameter when being constructed', () => {
     const listPromise = Promise.resolve({
         _embedded: {

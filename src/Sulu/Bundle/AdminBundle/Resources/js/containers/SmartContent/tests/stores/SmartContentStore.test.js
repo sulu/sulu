@@ -178,6 +178,27 @@ test('Load items if FilterCriteria is given with tags', () => {
     expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4&locale=en&tags=Tag2');
 });
 
+test('Do not load items if FilterCriteria is given with empty categories and tags arrays', () => {
+    const locale = observable.box('en');
+    const filterCriteria = {
+        dataSource: undefined,
+        includeSubFolders: undefined,
+        categories: [],
+        categoryOperator: undefined,
+        tags: [],
+        tagOperator: undefined,
+        audienceTargeting: undefined,
+        sortBy: undefined,
+        sortMethod: undefined,
+        presentAs: undefined,
+        limitResult: undefined,
+    };
+
+    new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+
+    expect(Requester.get).not.toBeCalled();
+});
+
 test('Load items and store them in the items variable', () => {
     const locale = observable.box('en');
     const filterCriteria = {

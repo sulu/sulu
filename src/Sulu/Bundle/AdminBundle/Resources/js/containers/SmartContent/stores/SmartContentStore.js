@@ -133,8 +133,10 @@ export default class SmartContentStore {
     }
 
     @computed get hasFilterCriteria(): boolean {
-        return this.filterCriteria.dataSource !== undefined
-            || this.filterCriteria.categories !== undefined
-            || this.filterCriteria.tags !== undefined;
+        const {dataSource, categories, tags} = this.filterCriteria;
+
+        return dataSource !== undefined
+            || (!!categories && categories.length > 0)
+            || (!!tags && tags.length > 0);
     }
 }

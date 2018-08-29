@@ -42,7 +42,12 @@ export default class SelectionStore {
         this.loading = loading;
     }
 
-    loadItems = (itemIds: Array<string | number>) => {
+    @action loadItems = (itemIds: ?Array<string | number>) => {
+        if (!itemIds || itemIds.length === 0) {
+            this.items = [];
+            return;
+        }
+
         this.setLoading(true);
         return ResourceRequester.getList(this.resourceKey, {
             locale: this.locale ? this.locale.get() : undefined,

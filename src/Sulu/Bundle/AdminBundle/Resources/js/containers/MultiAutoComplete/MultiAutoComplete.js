@@ -3,6 +3,7 @@ import React from 'react';
 import {autorun} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
+import equals from 'fast-deep-equal';
 import MultiAutoCompleteComponent from '../../components/MultiAutoComplete';
 import SearchStore from '../../stores/SearchStore';
 import SelectionStore from '../../stores/SelectionStore';
@@ -66,6 +67,14 @@ export default class MultiAutoComplete extends React.Component<Props> {
 
     componentWillUnmount() {
         this.changeDisposer();
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        const {value} = this.props;
+
+        if (!equals(prevProps.value, value)) {
+            this.selectionStore.loadItems(value);
+        }
     }
 
     handleChange = (value: Array<Object>) => {

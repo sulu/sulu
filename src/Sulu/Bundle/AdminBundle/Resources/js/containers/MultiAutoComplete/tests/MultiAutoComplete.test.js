@@ -228,6 +228,62 @@ test('Render with given value', () => {
     expect(multiAutoComplete.render()).toMatchSnapshot();
 });
 
+test('Do not load items if passed value has not changed', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {
+        this.searchResults = [];
+        this.loading = false;
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.items = [];
+        this.loadItems = jest.fn();
+    });
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            searchProperties={[]}
+            value={[1, 2]}
+        />
+    );
+
+    multiAutoComplete.setProps({displayProperty: 'title'});
+
+    expect(multiAutoComplete.instance().selectionStore.loadItems).not.toBeCalled();
+});
+
+test('Load items if passed value has changed', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {
+        this.searchResults = [];
+        this.loading = false;
+    });
+
+    // $FlowFixMe
+    SelectionStore.mockImplementation(function() {
+        this.items = [];
+        this.loadItems = jest.fn();
+    });
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            searchProperties={[]}
+            value={[1, 2]}
+        />
+    );
+
+    multiAutoComplete.setProps({value: undefined});
+
+    expect(multiAutoComplete.instance().selectionStore.loadItems).toBeCalledWith(undefined);
+});
+
 test('Pass filterParameter to SelectionStore', () => {
     // $FlowFixMe
     SearchStore.mockImplementation(function() {
