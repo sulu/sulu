@@ -254,7 +254,7 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
         $properties = array_key_exists('properties', $propertyParameter) ?
             $propertyParameter['properties']->getValue() : [];
 
-        $excluded = $filters['excluded'];
+        $excluded = isset($filters['excluded']) ? $filters['excluded'] : [];
         if (array_key_exists('exclude_duplicates', $propertyParameter)
             && $propertyParameter['exclude_duplicates']->getValue()
         ) {
