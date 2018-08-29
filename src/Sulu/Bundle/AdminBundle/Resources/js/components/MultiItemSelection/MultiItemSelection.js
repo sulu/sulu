@@ -9,47 +9,53 @@ import multiItemSelectionStyles from './multiItemSelection.scss';
 
 type Props = {
     children?: ChildrenArray<Element<typeof Item>>,
-    /** The text inside the header bar of the `MultiItemSelection` */
     label?: string,
-    /** Called when the remove button is clicked on an item */
     onItemRemove?: (itemid: string | number) => void,
-    /** Called after a drag and drop action was executed */
     onItemsSorted?: (oldIndex: number, newIndex: number) => void,
-    /** The config of the button placed left side of the header */
     leftButton?: Button,
-    /** The config of the button placed right side of the header */
     rightButton?: Button,
-    /** Show loading indicator or not */
     loading: boolean,
+    sortable: boolean,
 };
 
 export default class MultiItemSelection extends React.PureComponent<Props> {
     static defaultProps = {
         loading: false,
+        sortable: true,
     };
 
     static Item = Item;
 
-    createItem(originalItem: Element<typeof Item>) {
-        return (
+    createItem() {
+        const {sortable} = this.props;
+
+        const Item = ({children}: Object) => (
             <li className={multiItemSelectionStyles.listElement}>
                 {
                     React.cloneElement(
-                        originalItem,
+                        children,
                         {
-                            ...originalItem.props,
+                            ...children.props,
                             onRemove: this.props.onItemRemove && this.handleItemRemove,
+                            sortable,
                         }
                     )
                 }
             </li>
         );
+
+        if (!sortable) {
+            return Item;
+        }
+
+        return SortableElement(Item);
     }
 
-    createSortableList() {
-        const SortableItem = this.createSortableItem();
+    createList() {
+        const SortableItem = this.createItem();
+        const {sortable} = this.props;
 
-        return SortableContainer(({children}) => (
+        const container = ({children}: Object) => (
             <ul className={multiItemSelectionStyles.list}>
                 {React.Children.map(children, (item, index) => (
                     <SortableItem index={index}>
@@ -57,13 +63,13 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
                     </SortableItem>
                 ))}
             </ul>
-        ));
-    }
+        );
 
-    createSortableItem() {
-        return SortableElement(({children}) => {
-            return this.createItem(children);
-        });
+        if (!sortable) {
+            return container;
+        }
+
+        return SortableContainer(container);
     }
 
     handleItemRemove = (itemId: string | number) => {
@@ -89,7 +95,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
             rightButton,
         } = this.props;
         const emptyList = !React.Children.count(children);
-        const SortableList = this.createSortableList();
+        const List = this.createList();
 
         return (
             <div>
@@ -100,7 +106,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
                     leftButton={leftButton}
                     rightButton={rightButton}
                 />
-                <SortableList
+                <List
                     axis="y"
                     lockAxis="y"
                     useDragHandle={true}
@@ -108,7 +114,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
                     helperClass={multiItemSelectionStyles.dragging}
                 >
                     {children}
-                </SortableList>
+                </List>
             </div>
         );
     }

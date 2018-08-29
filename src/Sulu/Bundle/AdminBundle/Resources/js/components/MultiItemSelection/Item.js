@@ -2,6 +2,7 @@
 import React from 'react';
 import type {Node} from 'react';
 import {SortableHandle} from 'react-sortable-hoc';
+import classNames from 'classnames';
 import Icon from '../Icon';
 import itemStyles from './item.scss';
 
@@ -13,13 +14,26 @@ type Props = {
     index: number,
     children: Node,
     onRemove?: (id: string | number) => void,
+    sortable: boolean,
 };
 
 export default class Item extends React.PureComponent<Props> {
+    static defaultProps = {
+        sortable: true,
+    };
+
     createDragHandle() {
-        return SortableHandle(({children, className}) => (
+        const {sortable} = this.props;
+
+        const handle = ({className, children}: Object) => (
             <span className={className}>{children}</span>
-        ));
+        );
+
+        if (!sortable) {
+            return handle;
+        }
+
+        return SortableHandle(handle);
     }
 
     handleRemove = () => {
@@ -30,16 +44,25 @@ export default class Item extends React.PureComponent<Props> {
 
     render() {
         const {
+            children,
             index,
             onRemove,
-            children,
+            sortable,
         } = this.props;
+
         const DragHandle = this.createDragHandle();
+
+        const dragHandleClass = classNames(
+            itemStyles.dragHandle,
+            {
+                [itemStyles.sortable]: sortable,
+            }
+        );
 
         return (
             <div className={itemStyles.item}>
-                <DragHandle className={itemStyles.dragHandle}>
-                    <Icon name={DRAG_ICON} />
+                <DragHandle className={dragHandleClass}>
+                    {sortable && <Icon name={DRAG_ICON} />}
                     <span className={itemStyles.index}>{index}</span>
                 </DragHandle>
                 <div className={itemStyles.content}>

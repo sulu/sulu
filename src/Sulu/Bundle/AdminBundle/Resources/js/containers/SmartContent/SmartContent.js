@@ -118,6 +118,7 @@ export default class SmartContent extends React.Component<Props> {
                         onClick: this.handleFilterClick,
                     }}
                     loading={store.itemsLoading || store.loading}
+                    sortable={false}
                 >
                     {store.items.map((item, index) => (
                         <MultiItemSelection.Item key={index} id={item.id} index={index + 1}>

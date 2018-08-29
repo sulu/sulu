@@ -34,6 +34,22 @@ test('Pass correct sections prop', () => {
         .toEqual(['tags', 'audienceTargeting', 'limit']);
 });
 
+test('Disable sorting on MultiItemSelection', () => {
+    smartContentConfigStore.getConfig.mockReturnValue({
+        tags: true,
+        categories: false,
+        audienceTargeting: true,
+        sorting: [],
+        presentAs: false,
+        limit: true,
+    });
+
+    const smartContentStore = new SmartContentStore('content');
+    const smartContent = shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+
+    expect(smartContent.find('MultiItemSelection').prop('sortable')).toEqual(false);
+});
+
 test('Pass correct sections prop with other values', () => {
     smartContentConfigStore.getConfig.mockReturnValue({
         datasourceResourceKey: 'pages',

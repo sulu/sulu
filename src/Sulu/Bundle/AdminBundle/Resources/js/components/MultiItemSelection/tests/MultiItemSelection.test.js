@@ -32,6 +32,31 @@ test('Render an MultiItemSelection with children', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a not sortable MultiItemSelection with children', () => {
+    expect(render(
+        <MultiItemSelection label="I have children" sortable={false}>
+            <MultiItemSelection.Item
+                id="1"
+                index={1}
+            >
+                Child 1
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id="2"
+                index={2}
+            >
+                Child 2
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id="3"
+                index={3}
+            >
+                Child 3
+            </MultiItemSelection.Item>
+        </MultiItemSelection>
+    )).toMatchSnapshot();
+});
+
 test('Render an MultiItemSelection while loading', () => {
     expect(render(<MultiItemSelection label="I have children" loading={true} />)).toMatchSnapshot();
 });
