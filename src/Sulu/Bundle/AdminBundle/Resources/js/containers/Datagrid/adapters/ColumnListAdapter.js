@@ -48,6 +48,21 @@ export default class ColumnListAdapter extends AbstractAdapter {
         }
     };
 
+    getIndicators = (item: Object) => {
+        if (item.type && item.type.name === 'ghost') {
+            return [<GhostIndicator key={'ghost'} locale={item.type.value} />];
+        }
+
+        const draft = item.publishedState === undefined ? false : !item.publishedState;
+        const published = item.published === undefined ? false : !!item.published;
+
+        if (draft || !published) {
+            return [<PublishIndicator key={'publish'} draft={draft} published={published} />];
+        }
+
+        return [];
+    };
+
     render() {
         const {
             activeItems,
@@ -153,37 +168,21 @@ export default class ColumnListAdapter extends AbstractAdapter {
                             key={index}
                             loading={index >= this.props.data.length - 1 && loading}
                         >
-                            {items.map((item: Object) => {
-                                const draft = item.publishedState === undefined ? false : !item.publishedState;
-                                const published = item.published === undefined ? false : !!item.published;
-
-                                return (
-                                    // TODO: Don't access hasChildren, published, publishedState, title or type directly
-                                    <ColumnList.Item
-                                        active={activeItems ? activeItems.includes(item.id) : undefined}
-                                        buttons={item.type && item.type.name === 'ghost' ? ghostButtons : buttons}
-                                        disabled={disabledIds.includes(item.id)}
-                                        hasChildren={item.hasChildren}
-                                        id={item.id}
-                                        indicators={item.type && item.type.name === 'ghost'
-                                            ? [
-                                                <GhostIndicator key={'ghost'} locale={item.type.value} />,
-                                            ]
-                                            : [
-                                                (draft || !published) && <PublishIndicator
-                                                    key={'publish'}
-                                                    draft={draft}
-                                                    published={published}
-                                                />,
-                                            ]
-                                        }
-                                        key={item.id}
-                                        selected={selections.includes(item.id)}
-                                    >
-                                        {item.title}
-                                    </ColumnList.Item>
-                                );})
-                            }
+                            {items.map((item: Object) => (
+                                // TODO: Don't access hasChildren, published, publishedState, title or type directly
+                                <ColumnList.Item
+                                    active={activeItems ? activeItems.includes(item.id) : undefined}
+                                    buttons={item.type && item.type.name === 'ghost' ? ghostButtons : buttons}
+                                    disabled={disabledIds.includes(item.id)}
+                                    hasChildren={item.hasChildren}
+                                    id={item.id}
+                                    indicators={this.getIndicators(item)}
+                                    key={item.id}
+                                    selected={selections.includes(item.id)}
+                                >
+                                    {item.title}
+                                </ColumnList.Item>
+                            ))}
                         </ColumnList.Column>
                     ))}
                 </ColumnList>
