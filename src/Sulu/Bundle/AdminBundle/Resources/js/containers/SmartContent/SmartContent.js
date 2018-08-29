@@ -7,7 +7,7 @@ import {translate} from '../../utils/Translator';
 import smartContentConfigStore from './stores/SmartContentConfigStore';
 import SmartContentStore from './stores/SmartContentStore';
 import FilterOverlay from './FilterOverlay';
-import type {Presentation} from './types';
+import type {Presentation, SmartContentConfig} from './types';
 
 type Props = {
     fieldLabel: string,
@@ -22,7 +22,76 @@ export default class SmartContent extends React.Component<Props> {
         presentations: [],
     };
 
+    config: SmartContentConfig;
+    sections: Array<string> = [];
+    sortings: {[key: string]: string};
+
     @observable showFilterOverlay = false;
+
+    constructor(props: Props) {
+        super(props);
+        this.initialize();
+    }
+
+    @action initialize() {
+        const {provider, store} = this.props;
+
+        this.config = smartContentConfigStore.getConfig(provider);
+
+        if (this.config.datasourceResourceKey && this.config.datasourceAdapter) {
+            this.sections.push('datasource');
+            if (store.includeSubElements === undefined) {
+                store.includeSubElements = false;
+            }
+        }
+
+        if (this.config.categories) {
+            this.sections.push('categories');
+            if (store.categories === undefined) {
+                store.categoryOperator = 'or';
+            }
+        }
+
+        if (this.config.tags) {
+            this.sections.push('tags');
+            if (store.tags === undefined) {
+                store.tagOperator = 'or';
+            }
+        }
+
+        if (this.config.audienceTargeting) {
+            this.sections.push('audienceTargeting');
+            if (store.audienceTargeting === undefined) {
+                store.audienceTargeting = false;
+            }
+        }
+
+        if (this.config.sorting.length > 0) {
+            this.sections.push('sorting');
+            if (store.sortBy === undefined) {
+                store.sortBy = this.config.sorting[0].name;
+            }
+            if (store.sortOrder === undefined) {
+                store.sortOrder = 'asc';
+            }
+        }
+
+        if (this.config.presentAs && this.props.presentations.length > 0) {
+            this.sections.push('presentation');
+            if (store.presentation === undefined) {
+                store.presentation = this.props.presentations[0].name;
+            }
+        }
+
+        if (this.config.limit) {
+            this.sections.push('limit');
+        }
+
+        this.sortings = this.config.sorting.reduce((sortings, sorting) => {
+            sortings[sorting.name] = translate(sorting.value);
+            return sortings;
+        }, {});
+    }
 
     @action handleFilterClick = () => {
         this.showFilterOverlay = true;
@@ -33,36 +102,7 @@ export default class SmartContent extends React.Component<Props> {
     };
 
     render() {
-        const {fieldLabel, provider, store} = this.props;
-        const smartContentConfig = smartContentConfigStore.getConfig(provider);
-
-        const sections = [];
-        if (smartContentConfig.datasourceResourceKey && smartContentConfig.datasourceAdapter) {
-            sections.push('datasource');
-        }
-        if (smartContentConfig.categories) {
-            sections.push('categories');
-        }
-        if (smartContentConfig.tags) {
-            sections.push('tags');
-        }
-        if (smartContentConfig.audienceTargeting) {
-            sections.push('audienceTargeting');
-        }
-        if (smartContentConfig.sorting.length > 0) {
-            sections.push('sorting');
-        }
-        if (smartContentConfig.presentAs && this.props.presentations.length > 0) {
-            sections.push('presentation');
-        }
-        if (smartContentConfig.limit) {
-            sections.push('limit');
-        }
-
-        const sortings = smartContentConfig.sorting.reduce((sortings, sorting) => {
-            sortings[sorting.name] = translate(sorting.value);
-            return sortings;
-        }, {});
+        const {fieldLabel, store} = this.props;
 
         const presentations = this.props.presentations.reduce((presentations, presentation) => {
             presentations[presentation.name] = presentation.value;
@@ -85,14 +125,14 @@ export default class SmartContent extends React.Component<Props> {
                     ))}
                 </MultiItemSelection>
                 <FilterOverlay
-                    dataSourceAdapter={smartContentConfig.datasourceAdapter}
-                    dataSourceResourceKey={smartContentConfig.datasourceResourceKey}
+                    dataSourceAdapter={this.config.datasourceAdapter}
+                    dataSourceResourceKey={this.config.datasourceResourceKey}
                     onClose={this.handleFilterOverlayClose}
                     open={this.showFilterOverlay}
                     // TODO use correct presentations and sortings
                     presentations={presentations}
-                    sections={sections}
-                    sortings={sortings}
+                    sections={this.sections}
+                    sortings={this.sortings}
                     smartContentStore={store}
                     title={translate('sulu_admin.filter_overlay_title', {fieldLabel})}
                 />

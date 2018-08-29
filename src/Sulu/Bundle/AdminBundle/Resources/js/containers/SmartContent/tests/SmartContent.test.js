@@ -121,3 +121,59 @@ test('Pass the loading prop to the MultiItemSelection if datagrid or categories 
 
     expect(smartContent.find('MultiItemSelection').prop('loading')).toEqual(true);
 });
+
+test('Set all defaults on the SmartContentStore', () => {
+    smartContentConfigStore.getConfig.mockReturnValue({
+        datasourceResourceKey: 'pages',
+        datasourceAdapter: 'table',
+        tags: true,
+        categories: true,
+        audienceTargeting: true,
+        sorting: [{name: 'title', value: 'Title'}],
+        presentAs: true,
+        limit: true,
+    });
+
+    const smartContentStore = new SmartContentStore('content');
+    shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+
+    expect(smartContentStore.dataSource).toEqual(undefined);
+    expect(smartContentStore.includeSubElements).toEqual(false);
+    expect(smartContentStore.categories).toEqual(undefined);
+    expect(smartContentStore.categoryOperator).toEqual('or');
+    expect(smartContentStore.tags).toEqual(undefined);
+    expect(smartContentStore.tagOperator).toEqual('or');
+    expect(smartContentStore.audienceTargeting).toEqual(false);
+    expect(smartContentStore.sortBy).toEqual('title');
+    expect(smartContentStore.sortOrder).toEqual('asc');
+    expect(smartContentStore.presentation).toEqual(undefined);
+    expect(smartContentStore.limit).toEqual(undefined);
+});
+
+test('Set no defaults on the SmartContentStore', () => {
+    smartContentConfigStore.getConfig.mockReturnValue({
+        datasourceResourceKey: undefined,
+        datasourceAdapter: undefined,
+        tags: false,
+        categories: false,
+        audienceTargeting: false,
+        sorting: [],
+        presentAs: false,
+        limit: false,
+    });
+
+    const smartContentStore = new SmartContentStore('content');
+    shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+
+    expect(smartContentStore.dataSource).toEqual(undefined);
+    expect(smartContentStore.includeSubElements).toEqual(undefined);
+    expect(smartContentStore.categories).toEqual(undefined);
+    expect(smartContentStore.categoryOperator).toEqual(undefined);
+    expect(smartContentStore.tags).toEqual(undefined);
+    expect(smartContentStore.tagOperator).toEqual(undefined);
+    expect(smartContentStore.audienceTargeting).toEqual(undefined);
+    expect(smartContentStore.sortBy).toEqual(undefined);
+    expect(smartContentStore.sortOrder).toEqual(undefined);
+    expect(smartContentStore.presentation).toEqual(undefined);
+    expect(smartContentStore.limit).toEqual(undefined);
+});

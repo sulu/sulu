@@ -81,6 +81,103 @@ test('Do not load items if not FilterCriteria is given', () => {
     expect(Requester.get).not.toBeCalled();
 });
 
+test('Do not load items if FilterCriteria is given without datasource, categories and tags', () => {
+    const locale = observable.box('en');
+    const filterCriteria = {
+        dataSource: undefined,
+        includeSubFolders: false,
+        categories: undefined,
+        categoryOperator: 'and',
+        tags: undefined,
+        tagOperator: 'or',
+        audienceTargeting: true,
+        sortBy: 'changed',
+        sortMethod: 'asc',
+        presentAs: 'large',
+        limitResult: 9,
+    };
+
+    new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    expect(Requester.get).not.toBeCalled();
+});
+
+test('Load items if FilterCriteria is given with datasource', () => {
+    const locale = observable.box('en');
+    const filterCriteria = {
+        dataSource: 3,
+        includeSubFolders: undefined,
+        categories: undefined,
+        categoryOperator: undefined,
+        tags: undefined,
+        tagOperator: undefined,
+        audienceTargeting: undefined,
+        sortBy: undefined,
+        sortMethod: undefined,
+        presentAs: undefined,
+        limitResult: undefined,
+    };
+
+    const datasourcePromise = Promise.resolve({id: 3});
+    ResourceRequester.get.mockReturnValue(datasourcePromise);
+
+    new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+
+    return datasourcePromise.then(() => {
+        expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4&locale=en&dataSource=3');
+    });
+});
+
+test('Load items if FilterCriteria is given with categories', () => {
+    const locale = observable.box('en');
+    const filterCriteria = {
+        dataSource: undefined,
+        includeSubFolders: undefined,
+        categories: [1, 5],
+        categoryOperator: undefined,
+        tags: undefined,
+        tagOperator: undefined,
+        audienceTargeting: undefined,
+        sortBy: undefined,
+        sortMethod: undefined,
+        presentAs: undefined,
+        limitResult: undefined,
+    };
+
+    const categoriesPromise = Promise.resolve({
+        _embedded: {
+            categories: [{id: 1}, {id: 5}],
+        },
+    });
+    ResourceRequester.get.mockReturnValue(categoriesPromise);
+
+    new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+
+    return categoriesPromise.then(() => {
+        expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4&locale=en&categories=1,5');
+    });
+});
+
+test('Load items if FilterCriteria is given with tags', () => {
+    const locale = observable.box('en');
+    const filterCriteria = {
+        dataSource: undefined,
+        includeSubFolders: undefined,
+        categories: undefined,
+        categoryOperator: undefined,
+        tags: ['Tag2'],
+        tagOperator: undefined,
+        audienceTargeting: undefined,
+        sortBy: undefined,
+        sortMethod: undefined,
+        presentAs: undefined,
+        limitResult: undefined,
+    };
+
+    new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+
+    expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4&locale=en&tags=Tag2');
+});
+
 test('Load items and store them in the items variable', () => {
     const locale = observable.box('en');
     const filterCriteria = {
