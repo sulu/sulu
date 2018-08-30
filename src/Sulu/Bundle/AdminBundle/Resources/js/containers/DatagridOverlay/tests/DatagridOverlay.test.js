@@ -43,17 +43,17 @@ test('Should pass disabledIds to the Datagrid', () => {
     );
 
     expect(datagridOverlay.find(Datagrid).prop('disabledIds')).toBe(disabledIds);
-    expect(datagridOverlay.find(Datagrid).prop('allowDisabledActivation')).toEqual(true);
+    expect(datagridOverlay.find(Datagrid).prop('allowActivateForDisabledItems')).toEqual(true);
 });
 
-test('Should pass allowDisabledActivation to the Datagrid', () => {
+test('Should pass allowActivateForDisabledItems to the Datagrid', () => {
     const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
     const disabledIds = [1, 2, 5];
 
     const datagridOverlay = shallow(
         <DatagridOverlay
             adapter="table"
-            allowDisabledActivation={false}
+            allowActivateForDisabledItems={false}
             datagridStore={datagridStore}
             disabledIds={disabledIds}
             onClose={jest.fn()}
@@ -64,7 +64,7 @@ test('Should pass allowDisabledActivation to the Datagrid', () => {
     );
 
     expect(datagridOverlay.find(Datagrid).prop('disabledIds')).toBe(disabledIds);
-    expect(datagridOverlay.find(Datagrid).prop('allowDisabledActivation')).toEqual(false);
+    expect(datagridOverlay.find(Datagrid).prop('allowActivateForDisabledItems')).toEqual(false);
 });
 
 test('Should pass copyable, deletable, movable, confirmDisabled and confirmLoading flag to the Datagrid', () => {

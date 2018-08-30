@@ -7,7 +7,7 @@ import DatagridOverlay from '../DatagridOverlay';
 
 type Props = {|
     adapter: string,
-    allowDisabledActivation?: boolean,
+    allowActivateForDisabledItems?: boolean,
     clearSelectionOnClose: boolean,
     confirmLoading?: boolean,
     disabledIds?: Array<string | number>,
@@ -59,7 +59,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
     render() {
         const {
             adapter,
-            allowDisabledActivation,
+            allowActivateForDisabledItems,
             clearSelectionOnClose,
             confirmLoading,
             disabledIds,
@@ -72,7 +72,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
         return (
             <DatagridOverlay
                 adapter={adapter}
-                allowDisabledActivation={allowDisabledActivation}
+                allowActivateForDisabledItems={allowActivateForDisabledItems}
                 clearSelectionOnClose={clearSelectionOnClose}
                 confirmLoading={confirmLoading}
                 datagridStore={this.datagridStore}

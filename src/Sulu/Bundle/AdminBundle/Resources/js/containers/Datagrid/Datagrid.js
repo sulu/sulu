@@ -17,7 +17,7 @@ import datagridStyles from './datagrid.scss';
 
 type Props = {|
     adapters: Array<string>,
-    allowDisabledActivation: boolean,
+    allowActivateForDisabledItems: boolean,
     copyable: boolean,
     deletable: boolean,
     disabledIds: Array<string | number>,
@@ -33,7 +33,7 @@ type Props = {|
 @observer
 export default class Datagrid extends React.Component<Props> {
     static defaultProps = {
-        allowDisabledActivation: true,
+        allowActivateForDisabledItems: true,
         copyable: true,
         deletable: true,
         disabledIds: [],
@@ -219,9 +219,9 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     handleItemActivate = (id: string | number) => {
-        const {allowDisabledActivation, disabledIds, store} = this.props;
+        const {allowActivateForDisabledItems, disabledIds, store} = this.props;
 
-        if (!allowDisabledActivation && disabledIds.includes(id)) {
+        if (!allowActivateForDisabledItems && disabledIds.includes(id)) {
             return;
         }
 
@@ -306,7 +306,7 @@ export default class Datagrid extends React.Component<Props> {
                 {movable &&
                     <SingleDatagridOverlay
                         adapter={adapters[0]}
-                        allowDisabledActivation={false}
+                        allowActivateForDisabledItems={false}
                         clearSelectionOnClose={true}
                         confirmLoading={this.moving}
                         disabledIds={this.moveId ? [this.moveId] : []}

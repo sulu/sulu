@@ -7,13 +7,13 @@ import DatagridOverlay from '../DatagridOverlay';
 
 type Props = {|
     adapter: string,
-    allowDisabledActivation?: boolean,
+    allowActivateForDisabledItems?: boolean,
     clearSelectionOnClose: boolean,
     confirmLoading?: boolean,
     disabledIds?: Array<string | number>,
     locale?: ?IObservableValue<string>,
     onClose: () => void,
-    onConfirm: (selectedItems: Object) => void,
+    onConfirm: (selectedItem: Object) => void,
     open: boolean,
     options?: Object,
     resourceKey: string,
@@ -83,7 +83,7 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
     render() {
         const {
             adapter,
-            allowDisabledActivation,
+            allowActivateForDisabledItems,
             clearSelectionOnClose,
             confirmLoading,
             disabledIds,
@@ -96,7 +96,7 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
         return (
             <DatagridOverlay
                 adapter={adapter}
-                allowDisabledActivation={allowDisabledActivation}
+                allowActivateForDisabledItems={allowActivateForDisabledItems}
                 clearSelectionOnClose={clearSelectionOnClose}
                 confirmLoading={confirmLoading}
                 datagridStore={this.datagridStore}

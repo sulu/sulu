@@ -70,7 +70,7 @@ test('Should pass disabledIds to the DatagridOverlay', () => {
     const singleDatagridOverlay = shallow(
         <SingleDatagridOverlay
             adapter="table"
-            allowDisabledActivation={true}
+            allowActivateForDisabledItems={true}
             disabledIds={disabledIds}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -81,14 +81,14 @@ test('Should pass disabledIds to the DatagridOverlay', () => {
     );
 
     expect(singleDatagridOverlay.find(DatagridOverlay).prop('disabledIds')).toBe(disabledIds);
-    expect(singleDatagridOverlay.find(DatagridOverlay).prop('allowDisabledActivation')).toEqual(true);
+    expect(singleDatagridOverlay.find(DatagridOverlay).prop('allowActivateForDisabledItems')).toEqual(true);
 });
 
 test('Should pass clearSelectionOnClose to the Datagrid', () => {
     const singleDatagridOverlay = shallow(
         <SingleDatagridOverlay
             adapter="table"
-            allowDisabledActivation={false}
+            allowActivateForDisabledItems={false}
             clearSelectionOnClose={true}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -101,13 +101,13 @@ test('Should pass clearSelectionOnClose to the Datagrid', () => {
     expect(singleDatagridOverlay.find(DatagridOverlay).prop('clearSelectionOnClose')).toEqual(true);
 });
 
-test('Should pass allowDisabledActivation to the Datagrid', () => {
+test('Should pass allowActivateForDisabledItems to the Datagrid', () => {
     const disabledIds = [1, 2, 5];
 
     const singleDatagridOverlay = shallow(
         <SingleDatagridOverlay
             adapter="table"
-            allowDisabledActivation={false}
+            allowActivateForDisabledItems={false}
             disabledIds={disabledIds}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -118,7 +118,7 @@ test('Should pass allowDisabledActivation to the Datagrid', () => {
     );
 
     expect(singleDatagridOverlay.find(DatagridOverlay).prop('disabledIds')).toBe(disabledIds);
-    expect(singleDatagridOverlay.find(DatagridOverlay).prop('allowDisabledActivation')).toEqual(false);
+    expect(singleDatagridOverlay.find(DatagridOverlay).prop('allowActivateForDisabledItems')).toEqual(false);
 });
 
 test('Should pass confirmLoading flag to the Overlay', () => {
