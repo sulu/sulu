@@ -63,32 +63,23 @@ export default class ColumnListAdapter extends AbstractAdapter {
         return [];
     };
 
-    render() {
-        const {
-            activeItems,
-            disabledIds,
-            loading,
-            onItemAdd,
-            onRequestItemCopy,
-            onRequestItemDelete,
-            onItemClick,
-            onItemSelectionChange,
-            onRequestItemMove,
-            selections,
-        } = this.props;
+    getButtons = (item: Object) => {
+        const {onItemClick, onItemSelectionChange} = this.props;
+        const isGhost = item.type && item.type.name === 'ghost';
 
         const buttons = [];
-        const ghostButtons = [];
-
         if (onItemClick) {
-            buttons.push({
-                icon: 'su-pen',
-                onClick: onItemClick,
-            });
-            ghostButtons.push({
-                icon: 'su-plus-circle',
-                onClick: onItemClick,
-            });
+            if (isGhost) {
+                buttons.push({
+                    icon: 'su-plus-circle',
+                    onClick: onItemClick,
+                });
+            } else {
+                buttons.push({
+                    icon: 'su-pen',
+                    onClick: onItemClick,
+                });
+            }
         }
 
         if (onItemSelectionChange) {
@@ -97,8 +88,22 @@ export default class ColumnListAdapter extends AbstractAdapter {
                 onClick: this.handleItemSelectionChange,
             };
             buttons.push(checkButton);
-            ghostButtons.push(checkButton);
         }
+
+        return buttons;
+    };
+
+    render() {
+        const {
+            activeItems,
+            disabledIds,
+            loading,
+            onItemAdd,
+            onRequestItemCopy,
+            onRequestItemDelete,
+            onRequestItemMove,
+            selections,
+        } = this.props;
 
         const toolbarItems = [];
 
@@ -172,7 +177,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
                                 // TODO: Don't access hasChildren, published, publishedState, title or type directly
                                 <ColumnList.Item
                                     active={activeItems ? activeItems.includes(item.id) : undefined}
-                                    buttons={item.type && item.type.name === 'ghost' ? ghostButtons : buttons}
+                                    buttons={this.getButtons(item)}
                                     disabled={disabledIds.includes(item.id)}
                                     hasChildren={item.hasChildren}
                                     id={item.id}
