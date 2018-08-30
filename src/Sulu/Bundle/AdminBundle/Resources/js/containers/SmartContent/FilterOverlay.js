@@ -7,8 +7,8 @@ import Checkbox from '../../components/Checkbox';
 import Number from '../../components/Number';
 import SingleSelect from '../../components/SingleSelect';
 import Overlay from '../../components/Overlay';
-// TODO update path when component is extracted
-import DatagridOverlay from '../../containers/Selection/DatagridOverlay';
+import MultiDatagridOverlay from '../../containers/MultiDatagridOverlay';
+import SingleDatagridOverlay from '../../containers/SingleDatagridOverlay';
 import MultiAutoComplete from '../../containers/MultiAutoComplete';
 import {translate} from '../../utils/Translator';
 import SmartContentStore from './stores/SmartContentStore';
@@ -100,12 +100,8 @@ export default class FilterOverlay extends React.Component<Props> {
         this.limit = undefined;
     };
 
-    @action handleConfirmDataSourceDialog = (dataSources: Array<Object>) => {
-        if (dataSources.length !== 1) {
-            throw new Error('There should be exactly one dataSource given. This should not happen and is likely a bug');
-        }
-
-        this.dataSource = dataSources[0];
+    @action handleConfirmDataSourceDialog = (dataSource: Object) => {
+        this.dataSource = dataSource;
         this.showDataSourceDialog = false;
     };
 
@@ -377,18 +373,18 @@ export default class FilterOverlay extends React.Component<Props> {
                     </div>
                 </Overlay>
                 {dataSourceAdapter && dataSourceResourceKey &&
-                    <DatagridOverlay
+                    <SingleDatagridOverlay
                         adapter={dataSourceAdapter}
                         locale={smartContentStore.locale}
                         onClose={this.handleCloseDataSourceDialog}
                         onConfirm={this.handleConfirmDataSourceDialog}
                         open={this.showDataSourceDialog}
-                        preSelectedItems={this.dataSource ? [this.dataSource] : []}
+                        preSelectedItem={this.dataSource}
                         resourceKey={dataSourceResourceKey}
                         title={translate('sulu_admin.choose_data_source')}
                     />
                 }
-                <DatagridOverlay
+                <MultiDatagridOverlay
                     adapter="tree_table"
                     locale={smartContentStore.locale}
                     onClose={this.handleCloseCategoryDialog}

@@ -2,9 +2,9 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import SmartContentStore from '../stores/SmartContentStore';
-// TODO update path when component is extracted
-import DatagridOverlay from '../../../containers/Selection/DatagridOverlay';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
+import MultiDatagridOverlay from '../../../containers/MultiDatagridOverlay';
+import SingleDatagridOverlay from '../../../containers/SingleDatagridOverlay';
 import FilterOverlay from '../FilterOverlay';
 
 jest.mock('../stores/SmartContentStore', () => jest.fn());
@@ -14,8 +14,8 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 jest.mock('../../../containers/MultiAutoComplete', () => jest.fn(() => null));
-// TODO update path when component is extracted
-jest.mock('../../../containers/Selection/DatagridOverlay', () => jest.fn(() => null));
+jest.mock('../../../containers/MultiDatagridOverlay', () => jest.fn(() => null));
+jest.mock('../../../containers/SingleDatagridOverlay', () => jest.fn(() => null));
 
 test('Do not display if open is set to false', () => {
     const smartContentStore = new SmartContentStore('content');
@@ -98,10 +98,10 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
 
     filterOverlay.find('Button[children="sulu_admin.choose_data_source"]').prop('onClick')();
     filterOverlay.update();
-    expect(filterOverlay.find(DatagridOverlay).find({resourceKey: 'pages'}).prop('open')).toEqual(true);
-    filterOverlay.find(DatagridOverlay).find({resourceKey: 'pages'}).prop('onConfirm')([{id: 2, title: 'Test'}]);
+    expect(filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('open')).toEqual(true);
+    filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('onConfirm')({id: 2, title: 'Test'});
     filterOverlay.update();
-    expect(filterOverlay.find(DatagridOverlay).find({resourceKey: 'pages'}).prop('open')).toEqual(false);
+    expect(filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('open')).toEqual(false);
     expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
         .toEqual('sulu_admin.data_source: Test');
 
@@ -111,13 +111,13 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
 
     filterOverlay.find('Button[children="sulu_admin.choose_categories"]').prop('onClick')();
     filterOverlay.update();
-    expect(filterOverlay.find(DatagridOverlay).find({resourceKey: 'categories'}).prop('open')).toEqual(true);
-    filterOverlay.find(DatagridOverlay).find({resourceKey: 'categories'}).prop('onConfirm')([
+    expect(filterOverlay.find(MultiDatagridOverlay).find({resourceKey: 'categories'}).prop('open')).toEqual(true);
+    filterOverlay.find(MultiDatagridOverlay).find({resourceKey: 'categories'}).prop('onConfirm')([
         {id: 1, name: 'Test1'},
         {id: 3, name: 'Test2'},
     ]);
     filterOverlay.update();
-    expect(filterOverlay.find(DatagridOverlay).find({resourceKey: 'categories'}).prop('open')).toEqual(false);
+    expect(filterOverlay.find(MultiDatagridOverlay).find({resourceKey: 'categories'}).prop('open')).toEqual(false);
     expect(filterOverlay.find('section').at(2).find('label[className="description"]').text())
         .toEqual('sulu_category.categories: Test1, Test2');
 
@@ -218,13 +218,13 @@ test('Prefill all fields with correct values', () => {
 
     expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
         .toEqual('sulu_admin.data_source: Homepage');
-    expect(filterOverlay.find(DatagridOverlay).find({resourceKey: 'pages'}).prop('preSelectedItems'))
-        .toEqual([{id: 4, title: 'Homepage'}]);
+    expect(filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('preSelectedItem'))
+        .toEqual({id: 4, title: 'Homepage'});
     expect(filterOverlay.find('Checkbox[children="sulu_admin.include_sub_elements"]').prop('checked')).toEqual(true);
 
     expect(filterOverlay.find('section').at(2).find('label[className="description"]').text())
         .toEqual('sulu_category.categories: Test1, Test3');
-    expect(filterOverlay.find(DatagridOverlay).find({resourceKey: 'categories'}).prop('preSelectedItems'))
+    expect(filterOverlay.find(MultiDatagridOverlay).find({resourceKey: 'categories'}).prop('preSelectedItems'))
         .toEqual([{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}]);
     expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('or');
 

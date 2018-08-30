@@ -177,7 +177,7 @@ Array [
           class="item"
         >
           <span
-            class="dragHandle"
+            class="dragHandle sortable"
           >
             <span
               aria-label="su-more"
@@ -224,7 +224,7 @@ Array [
           class="item"
         >
           <span
-            class="dragHandle"
+            class="dragHandle sortable"
           >
             <span
               aria-label="su-more"
@@ -271,7 +271,7 @@ Array [
           class="item"
         >
           <span
-            class="dragHandle"
+            class="dragHandle sortable"
           >
             <span
               aria-label="su-more"

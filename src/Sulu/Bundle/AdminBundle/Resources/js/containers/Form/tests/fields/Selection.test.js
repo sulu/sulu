@@ -197,6 +197,7 @@ test('Should call onChange and onFinish callback when selection overlay is confi
             error={undefined}
             formInspector={formInspector}
             fieldTypeOptions={fieldOptions}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={changeSpy}
