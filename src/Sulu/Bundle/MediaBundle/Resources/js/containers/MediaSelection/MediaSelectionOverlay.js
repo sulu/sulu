@@ -50,10 +50,10 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         this.destroy();
     }
 
-    componentWillReceiveProps(nextProps: Props) {
+    componentDidUpdate(prevProps: Props) {
         const {open} = this.props;
 
-        if (!open && nextProps.open) {
+        if (!prevProps.open && open) {
             this.initialize();
         }
     }
