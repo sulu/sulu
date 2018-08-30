@@ -335,17 +335,19 @@ export default class Datagrid extends React.Component<Props> {
                         selections={store.selectionIds}
                     />
                 </div>
-                <Dialog
-                    confirmLoading={this.deleting}
-                    cancelText={translate('sulu_admin.cancel')}
-                    confirmText={translate('sulu_admin.ok')}
-                    onCancel={this.handleDeleteDialogCancelClick}
-                    onConfirm={this.handleDeleteDialogConfirmClick}
-                    open={this.showDeleteDialog}
-                    title={translate('sulu_admin.delete_warning_title')}
-                >
-                    {translate('sulu_admin.delete_warning_text')}
-                </Dialog>
+                {deletable &&
+                    <Dialog
+                        confirmLoading={this.deleting}
+                        cancelText={translate('sulu_admin.cancel')}
+                        confirmText={translate('sulu_admin.ok')}
+                        onCancel={this.handleDeleteDialogCancelClick}
+                        onConfirm={this.handleDeleteDialogConfirmClick}
+                        open={this.showDeleteDialog}
+                        title={translate('sulu_admin.delete_warning_title')}
+                    >
+                        {translate('sulu_admin.delete_warning_text')}
+                    </Dialog>
+                }
                 {movable &&
                     <SingleDatagridOverlay
                         adapter={adapters[0]}
