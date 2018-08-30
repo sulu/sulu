@@ -45,6 +45,23 @@ test('Should call onOrderChange callback when order has changed', () => {
     expect(orderChangeSpy).toBeCalledWith(2, 5);
 });
 
+test('Should call onOrderChange callback when order has changed after pressing enter', () => {
+    const inputSpy = {
+        currentTarget: {
+            blur: jest.fn(),
+        },
+    };
+
+    const orderChangeSpy = jest.fn();
+    const item = shallow(
+        <Item id={2} onOrderChange={orderChangeSpy} order={4} showOrderField={true}>Test with indicators</Item>
+    );
+
+    item.find('Input').prop('onKeyPress')('Enter', inputSpy);
+
+    expect(inputSpy.currentTarget.blur).toBeCalledWith();
+});
+
 test('Should change order when item receives new props', () => {
     const item = shallow(
         <Item id={2} order={4} showOrderField={true}>Test with indicators</Item>

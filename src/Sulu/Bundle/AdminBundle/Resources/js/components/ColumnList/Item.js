@@ -77,6 +77,12 @@ export default class Item extends React.Component<Props> {
         }
     };
 
+    handleOrderKeyPress = (key: ?string, event: SyntheticKeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            event.currentTarget.blur();
+        }
+    };
+
     renderButtons = () => {
         const {buttons, id} = this.props;
 
@@ -114,7 +120,12 @@ export default class Item extends React.Component<Props> {
                 }
                 {showOrderField &&
                     <div className={itemStyles.orderInput}>
-                        <Input onBlur={this.handleOrderBlur} onChange={this.handleOrderChange} value={this.order} />
+                        <Input
+                            onBlur={this.handleOrderBlur}
+                            onChange={this.handleOrderChange}
+                            onKeyPress={this.handleOrderKeyPress}
+                            value={this.order}
+                        />
                     </div>
                 }
                 <span className={itemStyles.text}>
