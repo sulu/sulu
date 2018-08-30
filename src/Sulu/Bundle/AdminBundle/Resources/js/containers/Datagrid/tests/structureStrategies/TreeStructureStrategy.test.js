@@ -417,3 +417,74 @@ test('Should remove items and set hasChildren to false if it was the last child'
     treeStructureStrategy.remove(3);
     expect(treeStructureStrategy.data).toMatchSnapshot();
 });
+
+test('Should order item to given position', () => {
+    const treeStructureStrategy = new TreeStructureStrategy();
+
+    const item1 = {
+        data: {
+            id: 4,
+            title: 'Subtest 1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+
+    const item2 = {
+        data: {
+            id: 5,
+            title: 'Subtest 2',
+        },
+        children: [],
+        hasChildren: false,
+    };
+
+    const data = [
+        {
+            data: {
+                id: 1,
+                title: 'Test 1',
+            },
+            children: [
+                item1,
+                item2,
+            ],
+            hasChildren: true,
+        },
+    ];
+
+    treeStructureStrategy.data = data;
+    treeStructureStrategy.order(5, 1);
+    expect(toJS(treeStructureStrategy.data[0].children)).toEqual([item2, item1]);
+});
+
+test('Should order item to given position on first level', () => {
+    const treeStructureStrategy = new TreeStructureStrategy();
+
+    const item1 = {
+        data: {
+            id: 4,
+            title: 'Subtest 1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+
+    const item2 = {
+        data: {
+            id: 5,
+            title: 'Subtest 2',
+        },
+        children: [],
+        hasChildren: false,
+    };
+
+    const data = [
+        item1,
+        item2,
+    ];
+
+    treeStructureStrategy.data = data;
+    treeStructureStrategy.order(5, 1);
+    expect(toJS(treeStructureStrategy.data)).toEqual([item2, item1]);
+});

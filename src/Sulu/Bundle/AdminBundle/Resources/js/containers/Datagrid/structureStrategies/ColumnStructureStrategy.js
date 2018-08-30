@@ -1,5 +1,6 @@
 // @flow
 import {action, computed, observable} from 'mobx';
+import {arrayMove} from '../../../components';
 import type {ColumnItem, StructureStrategyInterface} from '../types';
 
 function removeColumnsAfterIndex(parentIds, columnIndex: number, rawData) {
@@ -72,6 +73,25 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
                 }
             }
         }
+    }
+
+    @action order(id: string | number, position: number) {
+        for (const parentId of this.rawData.keys()) {
+            const column = this.rawData.get(parentId);
+            if (!column) {
+                continue;
+            }
+
+            const oldIndex = column.findIndex((item) => item.id === id);
+            if (oldIndex === -1) {
+                continue;
+            }
+
+            this.rawData.set(parentId, arrayMove(column, oldIndex, position - 1));
+            return;
+        }
+
+        throw new Error('The id "' + id + '" was tried to be ordered to a different position, but it does not exist!');
     }
 
     @action clear(parentId: ?string | number) {

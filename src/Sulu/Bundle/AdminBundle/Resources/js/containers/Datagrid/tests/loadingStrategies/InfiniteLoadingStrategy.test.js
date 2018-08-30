@@ -21,6 +21,7 @@ class StructureStrategy {
     data = [];
     findById = jest.fn();
     remove = jest.fn();
+    order = jest.fn();
     visibleItems = [];
 }
 

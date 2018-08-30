@@ -110,6 +110,7 @@ export default class DatagridOverlay extends React.Component<Props> {
                         deletable={false}
                         disabledIds={disabledIds}
                         movable={false}
+                        orderable={false}
                         searchable={false}
                         store={this.datagridStore}
                     />

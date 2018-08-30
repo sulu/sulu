@@ -1,7 +1,10 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
+import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import classNames from 'classnames';
+import Input from '../Input';
 import CroppedText from '../CroppedText';
 import Icon from '../Icon';
 import ItemButton from './ItemButton';
@@ -17,20 +20,60 @@ type Props = {|
     id: string | number,
     indicators?: Array<Node>,
     onClick?: (id: string | number) => void,
+    onOrderChange?: (id: string | number, order: number) => void,
+    order?: number,
+    showOrderField: boolean,
     selected: boolean,
 |};
 
+@observer
 export default class Item extends React.Component<Props> {
     static defaultProps = {
         active: false,
         disabled: false,
         hasChildren: false,
         selected: false,
+        showOrderField: false,
     };
+
+    @observable order: ?number;
+
+    constructor(props: Props) {
+        super(props);
+        this.order = this.props.order;
+    }
+
+    @action componentDidUpdate(prevProps: Props) {
+        const {order} = this.props;
+        if (prevProps.order !== order) {
+            this.order = order;
+        }
+    }
 
     handleClick = () => {
         if (this.props.onClick) {
             this.props.onClick(this.props.id);
+        }
+    };
+
+    @action handleOrderChange = (order: ?string) => {
+        if (!order) {
+            this.order = undefined;
+        }
+
+        const numericOrder = parseInt(order);
+        if (isNaN(numericOrder)) {
+            return;
+        }
+
+        this.order = numericOrder;
+    };
+
+    handleOrderBlur = () => {
+        const {id, onOrderChange, order} = this.props;
+
+        if (onOrderChange && this.order && order !== this.order) {
+            onOrderChange(id, this.order);
         }
     };
 
@@ -51,7 +94,7 @@ export default class Item extends React.Component<Props> {
     };
 
     render() {
-        const {active, children, disabled, hasChildren, indicators, selected} = this.props;
+        const {active, children, disabled, hasChildren, indicators, showOrderField, selected} = this.props;
 
         const itemClass = classNames(
             itemStyles.item,
@@ -64,9 +107,16 @@ export default class Item extends React.Component<Props> {
 
         return (
             <div onClick={this.handleClick} className={itemClass} role="button">
-                <span className={itemStyles.buttons}>
-                    {this.renderButtons()}
-                </span>
+                {!showOrderField &&
+                    <span className={itemStyles.buttons}>
+                        {this.renderButtons()}
+                    </span>
+                }
+                {showOrderField &&
+                    <div className={itemStyles.orderInput}>
+                        <Input onBlur={this.handleOrderBlur} onChange={this.handleOrderChange} value={this.order} />
+                    </div>
+                }
                 <span className={itemStyles.text}>
                     <CroppedText>{children}</CroppedText>
                 </span>

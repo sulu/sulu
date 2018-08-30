@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import ColumnList from '../../../components/ColumnList';
 import GhostIndicator from '../../../components/GhostIndicator';
@@ -22,10 +23,23 @@ export default class ColumnListAdapter extends AbstractAdapter {
         data: [],
     };
 
-    handleItemClick = (id: string | number) => {
-        const {onItemActivate} = this.props;
+    @observable orderColumn: ?number = undefined;
+
+    @action handleItemClick = (id: string | number) => {
+        const {data, onItemActivate} = this.props;
+
+        // TODO: Don't access id directly but use some kind of metadata instead
+        if (
+            this.orderColumn !== undefined
+            && this.orderColumn !== null
+            && data[this.orderColumn].some((item) => item.id === id)
+        ) {
+            return;
+        }
+
         if (onItemActivate) {
             onItemActivate(id);
+            this.orderColumn = undefined;
         }
     };
 
@@ -46,6 +60,32 @@ export default class ColumnListAdapter extends AbstractAdapter {
         if (onItemAdd && activeItems && activeItems[index]) {
             onItemAdd(activeItems[index]);
         }
+    };
+
+    handleOrderChange = (id: string | number, order: number) => {
+        const {data, onRequestItemOrder} = this.props;
+
+        if (!onRequestItemOrder) {
+            throw new Error(
+                'Items were tried to order although there is no onRequestItemOrder callback available.'
+                + ' This should not happen and is likely a bug.'
+            );
+        }
+
+        if (this.orderColumn === undefined || this.orderColumn === null) {
+            throw new Error(
+                'Ordering can only be changed if a column has been selected to be ordered.'
+                + ' This should not happen and is likely a bug.'
+            );
+        }
+
+        const column = data[this.orderColumn];
+        const itemsCount = column.length;
+        if (order > itemsCount) {
+            order = itemsCount;
+        }
+
+        onRequestItemOrder(id, order);
     };
 
     getIndicators = (item: Object) => {
@@ -102,6 +142,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
             onRequestItemCopy,
             onRequestItemDelete,
             onRequestItemMove,
+            onRequestItemOrder,
             selections,
         } = this.props;
 
@@ -157,6 +198,15 @@ export default class ColumnListAdapter extends AbstractAdapter {
             });
         }
 
+        if (onRequestItemOrder) {
+            settingOptions.push({
+                label: translate('sulu_admin.order'),
+                onClick: action((index) => {
+                    this.orderColumn = index;
+                }),
+            });
+        }
+
         if (settingOptions.length > 0) {
             toolbarItems.push({
                 icon: 'su-cog',
@@ -173,7 +223,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
                             key={index}
                             loading={index >= this.props.data.length - 1 && loading}
                         >
-                            {items.map((item: Object) => (
+                            {items.map((item: Object, itemIndex: number) => (
                                 // TODO: Don't access hasChildren, published, publishedState, title or type directly
                                 <ColumnList.Item
                                     active={activeItems ? activeItems.includes(item.id) : undefined}
@@ -183,6 +233,9 @@ export default class ColumnListAdapter extends AbstractAdapter {
                                     id={item.id}
                                     indicators={this.getIndicators(item)}
                                     key={item.id}
+                                    onOrderChange={this.handleOrderChange}
+                                    order={itemIndex + 1}
+                                    showOrderField={this.orderColumn === index}
                                     selected={selections.includes(item.id)}
                                 >
                                     {item.title}

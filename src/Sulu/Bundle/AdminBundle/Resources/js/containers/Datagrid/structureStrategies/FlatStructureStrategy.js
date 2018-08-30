@@ -1,5 +1,6 @@
 // @flow
 import {action, computed, observable} from 'mobx';
+import {arrayMove} from '../../../components';
 import type {StructureStrategyInterface} from '../types';
 
 export default class FlatStructureStrategy implements StructureStrategyInterface {
@@ -21,6 +22,17 @@ export default class FlatStructureStrategy implements StructureStrategyInterface
         }
 
         this.data.splice(0, this.data.length);
+    }
+
+    @action order(id: string | number, position: number) {
+        const oldIndex = this.data.findIndex((item) => item.id === id);
+        if (oldIndex === -1) {
+            throw new Error(
+                'The id "' + id + '" was tried to be ordered to a different position, but it does not exist!'
+            );
+        }
+
+        this.data = arrayMove(this.data, oldIndex, position - 1);
     }
 
     remove(identifier: string | number) {

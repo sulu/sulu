@@ -25,6 +25,7 @@ type Props = {|
     movable: boolean,
     onItemClick?: (itemId: string | number) => void,
     onItemAdd?: (id: string | number) => void,
+    orderable: boolean,
     selectable: boolean,
     searchable: boolean,
     store: DatagridStore,
@@ -38,6 +39,7 @@ export default class Datagrid extends React.Component<Props> {
         deletable: true,
         disabledIds: [],
         movable: true,
+        orderable: true,
         selectable: true,
         searchable: true,
     };
@@ -49,9 +51,14 @@ export default class Datagrid extends React.Component<Props> {
     @observable showCopyOverlay: boolean = false;
     @observable showDeleteDialog: boolean = false;
     @observable showMoveOverlay: boolean = false;
+    @observable showOrderDialog: boolean = false;
+    @observable ordering: boolean = false;
     copyId: ?string | number;
     deleteId: ?string | number;
     moveId: ?string | number;
+    deleteId: ?string | number;
+    orderId: ?string | number;
+    orderPosition: ?number;
 
     @computed get currentAdapter(): typeof AbstractAdapter {
         return datagridAdapterRegistry.get(this.currentAdapterKey);
@@ -115,7 +122,7 @@ export default class Datagrid extends React.Component<Props> {
 
     @action handleDeleteDialogConfirmClick = () => {
         if (!this.deleteId) {
-            throw new Error('The id for deletion was not set. This should not happen, and is like caused by a bug.');
+            throw new Error('The id for deletion was not set. This should not happen, and is likely a bug.');
         }
 
         this.deleting = true;
@@ -188,6 +195,38 @@ export default class Datagrid extends React.Component<Props> {
         this.copyId = undefined;
     }
 
+    @action handleRequestItemOrder = (id: string | number, position: number) => {
+        this.orderId = id;
+        this.orderPosition = position;
+        this.showOrderDialog = true;
+    };
+
+    @action handleOrderDialogConfirmClick = () => {
+        if (!this.orderId) {
+            throw new Error('The id for ordering was not set. This should not happen, and is likely a bug.');
+        }
+
+        if (!this.orderPosition) {
+            throw new Error('The position for ordering was not set. This should not happen, and is likely a bug.');
+        }
+
+        this.ordering = true;
+        this.props.store.order(this.orderId, this.orderPosition).then(action(() => {
+            this.hideOrderDialog();
+            this.ordering = false;
+        }));
+    };
+
+    @action handleOrderDialogCancelClick = () => {
+        this.hideOrderDialog();
+    };
+
+    @action hideOrderDialog() {
+        this.orderId = undefined;
+        this.orderPosition = undefined;
+        this.showOrderDialog = false;
+    }
+
     handlePageChange = (page: number) => {
         this.props.store.setPage(page);
     };
@@ -244,6 +283,7 @@ export default class Datagrid extends React.Component<Props> {
             movable,
             onItemClick,
             onItemAdd,
+            orderable,
             searchable,
             selectable,
             store,
@@ -284,6 +324,7 @@ export default class Datagrid extends React.Component<Props> {
                         onRequestItemCopy={copyable ? this.handleRequestItemCopy : undefined}
                         onRequestItemDelete={deletable ? this.handleRequestItemDelete : undefined}
                         onRequestItemMove={movable ? this.handleRequestItemMove : undefined}
+                        onRequestItemOrder={orderable ? this.handleRequestItemOrder : undefined}
                         onSort={this.handleSort}
                         options={this.currentAdapterOptions}
                         page={store.getPage()}
@@ -334,6 +375,19 @@ export default class Datagrid extends React.Component<Props> {
                         resourceKey={store.resourceKey}
                         title={translate('sulu_admin.move_copy_overlay_title')}
                     />
+                }
+                {orderable &&
+                    <Dialog
+                        confirmLoading={this.ordering}
+                        cancelText={translate('sulu_admin.cancel')}
+                        confirmText={translate('sulu_admin.ok')}
+                        onCancel={this.handleOrderDialogCancelClick}
+                        onConfirm={this.handleOrderDialogConfirmClick}
+                        open={this.showOrderDialog}
+                        title={translate('sulu_admin.order_warning_title')}
+                    >
+                        {translate('sulu_admin.order_warning_text')}
+                    </Dialog>
                 }
             </Fragment>
         );

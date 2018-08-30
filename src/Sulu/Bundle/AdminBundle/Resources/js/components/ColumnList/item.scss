@@ -67,3 +67,13 @@ $itemHeight: 40px;
 .indicator {
     margin-right: 10px;
 }
+
+.order-input {
+    margin-left: 10px;
+    width: 30px;
+
+    input {
+        padding-left: 0;
+        text-align: center;
+    }
+}

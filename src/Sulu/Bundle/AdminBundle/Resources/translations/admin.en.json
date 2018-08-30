@@ -4,6 +4,7 @@
     "sulu_admin.delete": "Delete",
     "sulu_admin.move": "Move",
     "sulu_admin.copy": "Copy",
+    "sulu_admin.order": "Order",
     "sulu_admin.of": "of",
     "sulu_admin.page": "Page",
     "sulu_admin.save": "Save",
@@ -74,5 +75,7 @@
     "sulu_admin.descending": "Descending",
     "sulu_admin.present_as": "Present as",
     "sulu_admin.limit_result_to": "Limit result to",
-    "sulu_admin.smart_content_label": "{count} {count, plural, =1 {element} other {elements}} selected"
+    "sulu_admin.smart_content_label": "{count} {count, plural, =1 {element} other {elements}} selected",
+    "sulu_admin.order_warning_title": "Rearrange items",
+    "sulu_admin.order_warning_text": "The operation you are about to do will rearrange items."
 }

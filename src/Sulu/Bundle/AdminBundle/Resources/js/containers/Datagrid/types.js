@@ -39,6 +39,7 @@ export type DatagridAdapterProps = {
     onRequestItemCopy: ?(id: string | number) => void,
     onRequestItemDelete: ?(id: string | number) => void,
     onRequestItemMove: ?(id: string | number) => void,
+    onRequestItemOrder: ?(id: string | number, position: number) => void,
     onSort: (column: string, order: SortOrder) => void,
     options: Object,
     page: ?number,
@@ -76,6 +77,7 @@ export interface StructureStrategyInterface {
     +deactivate?: (id: ?string | number) => void,
     addItem(item: Object, parentId: ?string | number): void,
     remove(id: string | number): void,
+    order(id: string | number, position: number): void,
     findById(identifier: string | number): ?Object,
     clear(parentId: ?string | number): void,
 }

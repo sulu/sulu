@@ -185,3 +185,69 @@ exports[`Should render item with indicators 1`] = `
   />
 </div>
 `;
+
+exports[`Should render item with order input 1`] = `
+<div
+  class="item"
+  role="button"
+>
+  <div
+    class="orderInput"
+  >
+    <label
+      class="input default"
+    >
+      <input
+        type="text"
+        value="4"
+      />
+    </label>
+  </div>
+  <span
+    class="text"
+  >
+    <div
+      aria-label="Test with indicators"
+      class="croppedText"
+      title="Test with indicators"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Test with 
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          indicators
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Test with indicators
+      </div>
+    </div>
+  </span>
+  <span
+    class="indicator"
+  >
+    <span>
+      ghost
+    </span>
+  </span>
+  <span
+    class="indicator"
+  >
+    <span>
+      shadow
+    </span>
+  </span>
+  <span
+    class="children"
+  />
+</div>
+`;

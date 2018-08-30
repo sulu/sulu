@@ -25,6 +25,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, observa
     };
     this.deactivate = jest.fn();
     this.delete = jest.fn();
+    this.order = jest.fn();
     this.sort = jest.fn();
     this.sortColumn = {
         get: jest.fn(),
@@ -108,6 +109,7 @@ class StructureStrategy {
     addItem = jest.fn();
     clear = jest.fn();
     findById = jest.fn();
+    order = jest.fn();
     remove = jest.fn();
 }
 
@@ -197,6 +199,13 @@ test('Render the adapter in non-copyable mode', () => {
     const datagrid = shallow(<Datagrid adapters={['test']} copyable={false} store={datagridStore} />);
 
     expect(datagrid.find('TestAdapter').prop('onRequestItemCopy')).toEqual(undefined);
+});
+
+test('Render the adapter in non-orderable mode', () => {
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    const datagrid = shallow(<Datagrid adapters={['test']} orderable={false} store={datagridStore} />);
+
+    expect(datagrid.find('TestAdapter').prop('onRequestOrderItem')).toEqual(undefined);
 });
 
 test('Render the adapter in non-searchable mode', () => {
@@ -402,6 +411,7 @@ test('DatagridStore should be updated with current active element', () => {
             clear = jest.fn();
             findById = jest.fn();
             remove = jest.fn();
+            order = jest.fn();
         };
 
         static icon = 'su-th-large';
@@ -542,11 +552,11 @@ test('Delete warning should disappear when onRequestItemDelete callback is calle
 
     datagrid.find('TableAdapter').prop('onRequestItemDelete')(5);
     datagrid.update();
-    expect(datagrid.find('Dialog').prop('open')).toEqual(true);
+    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(true);
 
-    datagrid.find('Dialog').prop('onCancel')();
+    datagrid.find('Dialog').at(0).prop('onCancel')();
     datagrid.update();
-    expect(datagrid.find('Dialog').prop('open')).toEqual(false);
+    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
 
     expect(datagridStore.delete).not.toBeCalled();
 });
@@ -567,15 +577,65 @@ test('DatagridStore should delete item when onRequestItemDelete callback is call
 
     datagrid.find('TableAdapter').prop('onRequestItemDelete')(5);
     datagrid.update();
-    expect(datagrid.find('Dialog').prop('open')).toEqual(true);
+    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(true);
 
-    datagrid.find('Dialog').prop('onConfirm')();
+    datagrid.find('Dialog').at(0).prop('onConfirm')();
     expect(datagrid.instance().deleting).toEqual(true);
     expect(datagridStore.delete).toBeCalledWith(5);
 
     return deletePromise.then(() => {
         datagrid.update();
         expect(datagrid.instance().deleting).toEqual(false);
-        expect(datagrid.find('Dialog').prop('open')).toEqual(false);
+        expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
+    });
+});
+
+test('Order warning should just disappear when onRequestItemOrder callback is called and overlay is cancelled', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
+
+    datagrid.find('TableAdapter').prop('onRequestItemOrder')(5);
+    datagrid.update();
+    expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(true);
+
+    datagrid.find('Dialog').at(1).prop('onCancel')();
+    datagrid.update();
+    expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
+
+    expect(datagridStore.order).not.toBeCalled();
+});
+
+test('DatagridStore should order item when onRequestItemOrder callback is called and overlay is confirmed', () => {
+    const orderPromise = Promise.resolve();
+
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagridStore = new DatagridStore('test', {page: observable.box(1)});
+    // $FlowFixMe
+    datagridStore.order.mockReturnValue(orderPromise);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
+
+    datagrid.find('TableAdapter').prop('onRequestItemOrder')(5, 8);
+    datagrid.update();
+    expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(true);
+
+    datagrid.find('Dialog').at(1).prop('onConfirm')();
+    expect(datagrid.instance().ordering).toEqual(true);
+    expect(datagridStore.order).toBeCalledWith(5, 8);
+
+    return orderPromise.then(() => {
+        datagrid.update();
+        expect(datagrid.instance().ordering).toEqual(false);
+        expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
     });
 });

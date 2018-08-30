@@ -53,6 +53,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                 <div></div>
                 <div></div>
                 <div></div>
+                <div></div>
               </div>
               <div class=\\"divider\\"></div>
               <div>
@@ -130,6 +131,7 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
                     <div class=\\"indicator\\"></div>
                   </section>
                 </div>
+                <div></div>
                 <div></div>
                 <div></div>
                 <div></div>

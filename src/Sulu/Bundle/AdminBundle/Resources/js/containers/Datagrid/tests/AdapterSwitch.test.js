@@ -26,6 +26,7 @@ class StructureStrategy {
     addItem = jest.fn();
     clear = jest.fn();
     findById = jest.fn();
+    order = jest.fn();
     remove = jest.fn();
 }
 

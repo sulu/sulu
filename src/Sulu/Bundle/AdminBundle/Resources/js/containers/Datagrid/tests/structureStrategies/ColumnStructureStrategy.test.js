@@ -58,6 +58,50 @@ test('Should remove the columns after the activated item', () => {
     ]);
 });
 
+test('Should order item to the new given position', () => {
+    const columnStructureStrategy = new ColumnStructureStrategy();
+    columnStructureStrategy.rawData.set(undefined, [{id: 1, hasChildren: true}]);
+    columnStructureStrategy.rawData.set(1, [
+        {id: 3, hasChildren: true},
+        {id: 4, hasChildren: true},
+    ]);
+    columnStructureStrategy.rawData.set(2, [
+        {id: 5, hasChildren: true},
+        {id: 6, hasChildren: true},
+    ]);
+
+    columnStructureStrategy.order(4, 1);
+
+    expect(columnStructureStrategy.data).toEqual(
+        [
+            [{id: 1, hasChildren: true}],
+            [
+                {id: 4, hasChildren: true},
+                {id: 3, hasChildren: true},
+            ],
+            [
+                {id: 5, hasChildren: true},
+                {id: 6, hasChildren: true},
+            ],
+        ]
+    );
+});
+
+test('Should throw error if non-existing item is tried to be ordered', () => {
+    const columnStructureStrategy = new ColumnStructureStrategy();
+    columnStructureStrategy.rawData.set(undefined, [{id: 1, hasChildren: true}]);
+    columnStructureStrategy.rawData.set(1, [
+        {id: 3, hasChildren: true},
+        {id: 4, hasChildren: true},
+    ]);
+    columnStructureStrategy.rawData.set(2, [
+        {id: 5, hasChildren: true},
+        {id: 6, hasChildren: true},
+    ]);
+
+    expect(() => columnStructureStrategy.order(7, 1)).toThrow(/7/);
+});
+
 test('Should return a item by id', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();
     columnStructureStrategy.rawData.set(undefined, [{id: 1, hasChildren: true}]);

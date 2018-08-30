@@ -1,5 +1,6 @@
 // @flow
 import {action, computed, observable} from 'mobx';
+import {arrayMove} from '../../../components';
 import type {StructureStrategyInterface, TreeItem} from '../types';
 
 function flattenData(items: Array<TreeItem>, data: Array<Object> = []) {
@@ -12,14 +13,28 @@ function flattenData(items: Array<TreeItem>, data: Array<Object> = []) {
     return data;
 }
 
-function findRecursive(items: Array<Object>, identifier: string | number): ?Object {
+function findRecursive(items: Array<Object>, id: string | number): ?Object {
     for (const item of items) {
         // TODO do not hardcode id but use metdata instead
-        if (item.data.id === identifier) {
+        if (item.data.id === id) {
             return item.data;
         }
 
-        const data = findRecursive(item.children, identifier);
+        const data = findRecursive(item.children, id);
+        if (data) {
+            return data;
+        }
+    }
+}
+
+function findSubTreeWithItemId(items: Array<Object>, id: string | number): ?Array<Object> {
+    // TODO do not hardcode id but use metdata instead
+    if (items.some((item) => item.data.id === id)) {
+        return items;
+    }
+
+    for (const item of items) {
+        const data = findSubTreeWithItemId(item.children, id);
         if (data) {
             return data;
         }
@@ -69,6 +84,20 @@ export default class TreeStructureStrategy implements StructureStrategyInterface
 
     @computed get visibleItems(): Array<Object> {
         return flattenData(this.data);
+    }
+
+    @action order(id: string | number, position: number) {
+        const subTree = findSubTreeWithItemId(this.data, id);
+
+        if (!subTree) {
+            throw new Error(
+                'The id "' + id + '" was tried to be ordered to a different position, but it does not exist!'
+            );
+        }
+
+        const oldIndex = subTree.findIndex((item) => item.data.id === id);
+
+        subTree.splice(0, subTree.length, ...arrayMove(subTree, oldIndex, position - 1));
     }
 
     remove(identifier: string | number) {
