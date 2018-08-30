@@ -181,21 +181,21 @@ test('Render the adapter in non-deletable mode', () => {
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} deletable={false} store={datagridStore} />);
 
-    expect(datagrid.find('TestAdapter').prop('onDeleteClick')).toEqual(undefined);
+    expect(datagrid.find('TestAdapter').prop('onRequestItemDelete')).toEqual(undefined);
 });
 
 test('Render the adapter in non-movable mode', () => {
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} movable={false} store={datagridStore} />);
 
-    expect(datagrid.find('TestAdapter').prop('onMoveClick')).toEqual(undefined);
+    expect(datagrid.find('TestAdapter').prop('onRequestItemMove')).toEqual(undefined);
 });
 
 test('Render the adapter in non-copyable mode', () => {
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} copyable={false} store={datagridStore} />);
 
-    expect(datagrid.find('TestAdapter').prop('onCopyClick')).toEqual(undefined);
+    expect(datagrid.find('TestAdapter').prop('onRequestItemCopy')).toEqual(undefined);
 });
 
 test('Render the adapter in non-searchable mode', () => {
@@ -217,7 +217,7 @@ test('Call activate on store if item is activated', () => {
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
 
-    datagrid.find('TestAdapter').prop('onItemActivation')(5);
+    datagrid.find('TestAdapter').prop('onItemActivate')(5);
 
     expect(datagridStore.activate).toBeCalledWith(5);
 });
@@ -228,8 +228,8 @@ test('Do not call activate on store if item is activated but disabled and allowD
         <Datagrid adapters={['test']} allowDisabledActivation={false} disabledIds={[5]} store={datagridStore} />
     );
 
-    datagrid.find('TestAdapter').prop('onItemActivation')(5);
-    datagrid.find('TestAdapter').prop('onItemActivation')(7);
+    datagrid.find('TestAdapter').prop('onItemActivate')(5);
+    datagrid.find('TestAdapter').prop('onItemActivate')(7);
 
     expect(datagridStore.activate).not.toBeCalledWith(5);
     expect(datagridStore.activate).toBeCalledWith(7);
@@ -239,7 +239,7 @@ test('Call deactivate on store if item is deactivated', () => {
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
 
-    datagrid.find('TestAdapter').prop('onItemDeactivation')(5);
+    datagrid.find('TestAdapter').prop('onItemDeactivate')(5);
 
     expect(datagridStore.deactivate).toBeCalledWith(5);
 });
@@ -409,9 +409,9 @@ test('DatagridStore should be updated with current active element', () => {
         constructor(props: *) {
             super(props);
 
-            const {onItemActivation} = this.props;
-            if (onItemActivation) {
-                onItemActivation('some-uuid');
+            const {onItemActivate} = this.props;
+            if (onItemActivate) {
+                onItemActivate('some-uuid');
             }
         }
 
@@ -426,7 +426,7 @@ test('DatagridStore should be updated with current active element', () => {
     expect(datagridStore.activate).toBeCalledWith('some-uuid');
 });
 
-test('SingleDatagridOverlay should just disappear when onCopyClick callback is called and overlay is closed', () => {
+test('SingleDatagridOverlay should disappear when onRequestItemCopy callback is called and overlay is closed', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     mockStructureStrategyData = [
@@ -436,7 +436,7 @@ test('SingleDatagridOverlay should just disappear when onCopyClick callback is c
     ];
     const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onCopyClick')(5);
+    datagrid.find('TableAdapter').prop('onRequestItemCopy')(5);
     datagrid.update();
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('clearSelectionOnClose')).toEqual(true);
@@ -449,7 +449,7 @@ test('SingleDatagridOverlay should just disappear when onCopyClick callback is c
     expect(datagridStore.copy).not.toBeCalled();
 });
 
-test('DatagridStore should copy item when onCopyClick callback is called and overlay is confirmed', () => {
+test('DatagridStore should copy item when onRequestItemCopy callback is called and overlay is confirmed', () => {
     const copyPromise = Promise.resolve({id: 9});
 
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
@@ -463,7 +463,7 @@ test('DatagridStore should copy item when onCopyClick callback is called and ove
     ];
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onCopyClick')(5);
+    datagrid.find('TableAdapter').prop('onRequestItemCopy')(5);
     datagrid.update();
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('clearSelectionOnClose')).toEqual(true);
@@ -479,7 +479,7 @@ test('DatagridStore should copy item when onCopyClick callback is called and ove
     });
 });
 
-test('SingleDatagridOverlay should just disappear when onMoveClick callback is called and overlay is closed', () => {
+test('SingleDatagridOverlay should disappear when onRequestItemMove callback is called and overlay is closed', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     mockStructureStrategyData = [
@@ -489,7 +489,7 @@ test('SingleDatagridOverlay should just disappear when onMoveClick callback is c
     ];
     const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onMoveClick')(5);
+    datagrid.find('TableAdapter').prop('onRequestItemMove')(5);
     datagrid.update();
     expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(0).prop('disabledIds')).toEqual([5]);
@@ -501,7 +501,7 @@ test('SingleDatagridOverlay should just disappear when onMoveClick callback is c
     expect(datagridStore.move).not.toBeCalled();
 });
 
-test('DatagridStore should move item when onMoveClick callback is called and overlay is confirmed', () => {
+test('DatagridStore should move item when onRequestItemMove callback is called and overlay is confirmed', () => {
     const movePromise = Promise.resolve();
 
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
@@ -515,7 +515,7 @@ test('DatagridStore should move item when onMoveClick callback is called and ove
     ];
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onMoveClick')(5);
+    datagrid.find('TableAdapter').prop('onRequestItemMove')(5);
     datagrid.update();
     expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(true);
 
@@ -530,7 +530,7 @@ test('DatagridStore should move item when onMoveClick callback is called and ove
     });
 });
 
-test('Delete warning should just disappear when onDeleteClick callback is called and overlay is cancelled', () => {
+test('Delete warning should disappear when onRequestItemDelete callback is called and overlay is cancelled', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
     mockStructureStrategyData = [
@@ -540,7 +540,7 @@ test('Delete warning should just disappear when onDeleteClick callback is called
     ];
     const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onDeleteClick')(5);
+    datagrid.find('TableAdapter').prop('onRequestItemDelete')(5);
     datagrid.update();
     expect(datagrid.find('Dialog').prop('open')).toEqual(true);
 
@@ -551,7 +551,7 @@ test('Delete warning should just disappear when onDeleteClick callback is called
     expect(datagridStore.delete).not.toBeCalled();
 });
 
-test('DatagridStore should delete item when onDeleteClick callback is called and overlay is confirmed', () => {
+test('DatagridStore should delete item when onRequestItemDelete callback is called and overlay is confirmed', () => {
     const deletePromise = Promise.resolve();
 
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
@@ -565,7 +565,7 @@ test('DatagridStore should delete item when onDeleteClick callback is called and
     ];
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onDeleteClick')(5);
+    datagrid.find('TableAdapter').prop('onRequestItemDelete')(5);
     datagrid.update();
     expect(datagrid.find('Dialog').prop('open')).toEqual(true);
 

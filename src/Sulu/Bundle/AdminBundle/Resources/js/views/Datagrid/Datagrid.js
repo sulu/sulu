@@ -122,7 +122,7 @@ class Datagrid extends React.Component<ViewProps> {
         this.sortOrderDisposer();
     }
 
-    handleAddClick = (rowId) => {
+    handleItemAdd = (rowId) => {
         const {router} = this.props;
         const {
             route: {
@@ -158,7 +158,7 @@ class Datagrid extends React.Component<ViewProps> {
                 <DatagridContainer
                     adapters={adapters}
                     header={title && <h1 className={datagridStyles.header}>{translate(title)}</h1>}
-                    onAddClick={addRoute && this.handleAddClick}
+                    onItemAdd={addRoute && this.handleItemAdd}
                     onItemClick={editRoute && this.handleEditClick}
                     searchable={searchable}
                     store={this.datagridStore}
@@ -200,7 +200,7 @@ export default withToolbar(Datagrid, function() {
             type: 'button',
             value: translate('sulu_admin.add'),
             icon: 'su-plus-circle',
-            onClick: this.handleAddClick,
+            onClick: this.handleItemAdd,
         });
     }
 

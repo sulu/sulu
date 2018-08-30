@@ -200,7 +200,7 @@ test('Should render the datagrid with the add icon if a addRoute has been passed
     };
 
     const datagrid = shallow(<Datagrid router={router} />);
-    expect(datagrid.find('Datagrid').prop('onAddClick')).toBeInstanceOf(Function);
+    expect(datagrid.find('Datagrid').prop('onItemAdd')).toBeInstanceOf(Function);
 });
 
 test('Should render the datagrid without the add icon if a addRoute has been passed', () => {
@@ -216,7 +216,7 @@ test('Should render the datagrid without the add icon if a addRoute has been pas
     };
 
     const datagrid = shallow(<Datagrid router={router} />);
-    expect(datagrid.find('Datagrid').prop('onAddClick')).not.toBeInstanceOf(Function);
+    expect(datagrid.find('Datagrid').prop('onItemAdd')).not.toBeInstanceOf(Function);
 });
 
 test('Should render the datagrid non-searchable if the searchable option has been passed as false', () => {

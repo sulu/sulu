@@ -24,7 +24,7 @@ type Props = {|
     header?: Node,
     movable: boolean,
     onItemClick?: (itemId: string | number) => void,
-    onAddClick?: (id: string | number) => void,
+    onItemAdd?: (id: string | number) => void,
     selectable: boolean,
     searchable: boolean,
     store: DatagridStore,
@@ -105,7 +105,7 @@ export default class Datagrid extends React.Component<Props> {
         );
     };
 
-    @action handleDeleteClick = (id: string | number) => {
+    @action handleRequestItemDelete = (id: string | number) => {
         this.deleteId = id;
         this.showDeleteDialog = true;
     };
@@ -131,7 +131,7 @@ export default class Datagrid extends React.Component<Props> {
         this.showDeleteDialog = false;
     }
 
-    @action handleMoveClick = (id: string | number) => {
+    @action handleRequestItemMove = (id: string | number) => {
         this.moveId = id;
         this.showMoveOverlay = true;
     };
@@ -158,7 +158,7 @@ export default class Datagrid extends React.Component<Props> {
         this.moveId = undefined;
     }
 
-    @action handleCopyClick = (id: string | number) => {
+    @action handleRequestItemCopy = (id: string | number) => {
         this.copyId = id;
         this.showCopyOverlay = true;
     };
@@ -218,7 +218,7 @@ export default class Datagrid extends React.Component<Props> {
         this.setCurrentAdapterKey(adapter);
     };
 
-    handleItemActivation = (id: string | number) => {
+    handleItemActivate = (id: string | number) => {
         const {allowDisabledActivation, disabledIds, store} = this.props;
 
         if (!allowDisabledActivation && disabledIds.includes(id)) {
@@ -228,7 +228,7 @@ export default class Datagrid extends React.Component<Props> {
         store.activate(id);
     };
 
-    handleItemDeactivation = (id: string | number) => {
+    handleItemDeactivate = (id: string | number) => {
         this.props.store.deactivate(id);
     };
 
@@ -241,7 +241,7 @@ export default class Datagrid extends React.Component<Props> {
             header,
             movable,
             onItemClick,
-            onAddClick,
+            onItemAdd,
             searchable,
             selectable,
             store,
@@ -272,16 +272,16 @@ export default class Datagrid extends React.Component<Props> {
                         data={store.data}
                         disabledIds={disabledIds}
                         loading={store.loading}
-                        onAddClick={onAddClick}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
-                        onCopyClick={copyable ? this.handleCopyClick : undefined}
-                        onDeleteClick={deletable ? this.handleDeleteClick : undefined}
-                        onItemActivation={this.handleItemActivation}
-                        onItemDeactivation={this.handleItemDeactivation}
+                        onItemActivate={this.handleItemActivate}
+                        onItemAdd={onItemAdd}
+                        onItemDeactivate={this.handleItemDeactivate}
                         onItemClick={onItemClick}
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
-                        onMoveClick={movable ? this.handleMoveClick : undefined}
                         onPageChange={this.handlePageChange}
+                        onRequestItemCopy={copyable ? this.handleRequestItemCopy : undefined}
+                        onRequestItemDelete={deletable ? this.handleRequestItemDelete : undefined}
+                        onRequestItemMove={movable ? this.handleRequestItemMove : undefined}
                         onSort={this.handleSort}
                         options={this.currentAdapterOptions}
                         page={store.getPage()}

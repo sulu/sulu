@@ -17,11 +17,11 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
     static icon = 'su-tree-list';
 
     @action handleRowCollapse = (rowId: string | number) => {
-        this.props.onItemDeactivation(rowId);
+        this.props.onItemDeactivate(rowId);
     };
 
     @action handleRowExpand = (rowId: string | number) => {
-        this.props.onItemActivation(rowId);
+        this.props.onItemActivate(rowId);
     };
 
     renderRows(items: Array<*>, depth: number = 0) {
@@ -59,7 +59,7 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
             data,
             loading,
             onItemClick,
-            onAddClick,
+            onItemAdd,
             onAllSelectionChange,
             onItemSelectionChange,
             options: {
@@ -79,10 +79,10 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
             });
         }
 
-        if (onAddClick) {
+        if (onItemAdd) {
             buttons.push({
                 icon: 'su-plus-circle',
-                onClick: onAddClick,
+                onClick: onItemAdd,
             });
         }
 

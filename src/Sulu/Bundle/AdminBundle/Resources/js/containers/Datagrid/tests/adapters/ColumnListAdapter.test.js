@@ -56,16 +56,16 @@ test('Render different kind of data with edit button', () => {
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={jest.fn()}
             onItemClick={jest.fn()}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -98,16 +98,16 @@ test('Render data without edit button', () => {
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -140,16 +140,16 @@ test('Render data with selection', () => {
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemAdd={undefined}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={jest.fn()}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -190,16 +190,16 @@ test('Render data with disabled items', () => {
             data={data}
             disabledIds={[3]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemAdd={undefined}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={jest.fn()}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -214,7 +214,7 @@ test('Render data with disabled items', () => {
     expect(columnListAdapter).toMatchSnapshot();
 });
 
-test('Render with add button in toolbar when onAddClick callback is given', () => {
+test('Render with add button in toolbar when onItemAdd callback is given', () => {
     const data = [
         [],
     ];
@@ -226,16 +226,16 @@ test('Render with add button in toolbar when onAddClick callback is given', () =
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={jest.fn()}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={jest.fn()}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -274,16 +274,16 @@ test('Render data with loading column', () => {
             data={data}
             disabledIds={[]}
             loading={true}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -298,8 +298,8 @@ test('Render data with loading column', () => {
     expect(columnListAdapter).toMatchSnapshot();
 });
 
-test('Execute onItemActivation callback when an item is clicked with the correct parameter', () => {
-    const onItemActivationSpy = jest.fn();
+test('Execute onItemActivate callback when an item is clicked with the correct parameter', () => {
+    const onItemActivateSpy = jest.fn();
 
     const data = [
         [
@@ -330,16 +330,16 @@ test('Execute onItemActivation callback when an item is clicked with the correct
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={onItemActivationSpy}
+            onItemActivate={onItemActivateSpy}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -353,7 +353,7 @@ test('Execute onItemActivation callback when an item is clicked with the correct
 
     columnListAdapter.find('Item').at(1).simulate('click');
 
-    expect(onItemActivationSpy).toBeCalledWith(2);
+    expect(onItemActivateSpy).toBeCalledWith(2);
 });
 
 test('Execute onItemSelectionChange callback when an item is selected', () => {
@@ -380,16 +380,16 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={itemSelectionChangeSpy}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -408,7 +408,7 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
     expect(itemSelectionChangeSpy).toHaveBeenLastCalledWith(1, true);
 });
 
-test('Execute onCopyClick callback when an item is moved with the correct id', () => {
+test('Execute onRequestItemCopy callback when an item is moved with the correct id', () => {
     const copyClickSpy = jest.fn();
 
     const data = [
@@ -440,16 +440,16 @@ test('Execute onCopyClick callback when an item is moved with the correct id', (
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={copyClickSpy}
-            onDeleteClick={undefined}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={copyClickSpy}
+            onRequestItemDelete={undefined}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -467,7 +467,7 @@ test('Execute onCopyClick callback when an item is moved with the correct id', (
     expect(copyClickSpy).toBeCalledWith(3);
 });
 
-test('Execute onMoveClick callback when an item is moved with the correct id', () => {
+test('Execute onRequestItemMove callback when an item is moved with the correct id', () => {
     const moveClickSpy = jest.fn();
 
     const data = [
@@ -499,16 +499,16 @@ test('Execute onMoveClick callback when an item is moved with the correct id', (
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={undefined}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={moveClickSpy}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={undefined}
+            onRequestItemMove={moveClickSpy}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -526,7 +526,7 @@ test('Execute onMoveClick callback when an item is moved with the correct id', (
     expect(moveClickSpy).toBeCalledWith(3);
 });
 
-test('Execute onDeleteClick callback when an item is deleted with the correct id', () => {
+test('Execute onRequestItemDelete callback when an item is deleted with the correct id', () => {
     const deleteClickSpy = jest.fn();
 
     const data = [
@@ -558,16 +558,16 @@ test('Execute onDeleteClick callback when an item is deleted with the correct id
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={deleteClickSpy}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={deleteClickSpy}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -616,16 +616,16 @@ test('Enable delete and move button if an item in this column has been activated
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={jest.fn()}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={jest.fn()}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -673,16 +673,16 @@ test('Disable delete and move button if no item in this column has been activate
             data={data}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={jest.fn()}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={jest.fn()}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -707,16 +707,16 @@ test('Do not show settings if no options are available', () => {
             data={[]}
             disabledIds={[]}
             loading={false}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onCopyClick={undefined}
-            onDeleteClick={undefined}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
-            onMoveClick={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={undefined}
+            onRequestItemMove={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
