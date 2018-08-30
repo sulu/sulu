@@ -2,6 +2,7 @@
 import {mount, render, shallow} from 'enzyme';
 import pretty from 'pretty';
 import React from 'react';
+import {observable} from 'mobx';
 import datagridAdapterRegistry from 'sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry';
 import MediaSelection from '../MediaSelection';
 import MediaCardSelectionAdapter from '../../Datagrid/adapters/MediaCardSelectionAdapter';
@@ -15,7 +16,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
         FormStore: jest.fn(),
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
-        DatagridStore: jest.fn(function(resourceKey) {
+        DatagridStore: jest.fn(function(resourceKey, observableOptions) {
             const {extendObservable} = require.requireActual('mobx');
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
@@ -61,6 +62,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                 selections: [],
                 selectionIds: [],
             });
+            this.observableOptions = observableOptions;
             this.loading = false;
             this.pageCount = 3;
             this.active = {
@@ -168,6 +170,11 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     },
 }));
 
+jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => jest.fn(function() {
+    this.clearSelection = jest.fn();
+    this.selections = [];
+}));
+
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
@@ -247,7 +254,7 @@ test('Clicking on the "add media" button should open up an overlay', () => {
     });
 
     const formInspector = {
-        locale: 'de',
+        locale: observable.box('de'),
     };
 
     const body = document.body;

@@ -73,6 +73,16 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
     >
       <tr>
         <th
+          class="headerButtonCell headerCell"
+        >
+          <span>
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </span>
+        </th>
+        <th
           class="headerCell clickable"
         >
           <button>
@@ -85,6 +95,20 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
       <tr
         class="row"
       >
+        <td
+          class="buttonCell cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <button>
+              <span
+                aria-label="su-plus-circle"
+                class="su-plus-circle"
+              />
+            </button>
+          </div>
+        </td>
         <td
           class="cell"
         >

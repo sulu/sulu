@@ -503,6 +503,14 @@ exports[`Render different kind of data with edit button 1`] = `
           class="item primary"
         >
           <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item primary"
+        >
+          <span
             aria-label="su-cog"
             class="su-cog"
           />
@@ -770,7 +778,7 @@ exports[`Render different kind of data with edit button 1`] = `
 </div>
 `;
 
-exports[`Render with add button in toolbar when onAddClick callback is given 1`] = `
+exports[`Render with add button in toolbar when onItemAdd callback is given 1`] = `
 <div
   class="columnListAdapter"
 >

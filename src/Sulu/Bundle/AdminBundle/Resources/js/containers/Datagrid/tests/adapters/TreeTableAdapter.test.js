@@ -74,14 +74,16 @@ test('Render data with schema', () => {
             loading={false}
             schema={schema}
             selections={[]}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             page={1}
             pageCount={2}
             onSort={jest.fn()}
@@ -142,14 +144,16 @@ test('Render data without header', () => {
             loading={false}
             schema={schema}
             selections={[]}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             page={1}
             pageCount={2}
             onSort={jest.fn()}
@@ -189,14 +193,16 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
             loading={false}
             page={2}
             pageCount={5}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             onSort={sortSpy}
             options={{}}
             schema={schema}
@@ -267,14 +273,16 @@ test('Render data with two columns', () => {
             loading={false}
             schema={schema}
             selections={[]}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             options={{}}
             page={1}
             pageCount={2}
@@ -335,14 +343,16 @@ test('Render data with schema and selections', () => {
             loading={false}
             schema={schema}
             selections={[1, 3]}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
             options={{}}
             page={1}
             pageCount={2}
@@ -355,7 +365,7 @@ test('Render data with schema and selections', () => {
     expect(treeListAdapter).toMatchSnapshot();
 });
 
-test('Execute onItemActivation respectively onItemDeactivation callback when an item is clicked', () => {
+test('Execute onItemActivate respectively onItemDeactivate callback when an item is clicked', () => {
     const test1 = {
         data: {
             id: 2,
@@ -414,8 +424,8 @@ test('Execute onItemActivation respectively onItemDeactivation callback when an 
         },
     };
 
-    const onItemActivationSpy = jest.fn();
-    const onItemDeactivationSpy = jest.fn();
+    const onItemActivateSpy = jest.fn();
+    const onItemDeactivateSpy = jest.fn();
 
     const treeListAdapter = mount(
         <TreeTableAdapter
@@ -424,20 +434,22 @@ test('Execute onItemActivation respectively onItemDeactivation callback when an 
             data={data}
             disabledIds={[]}
             loading={false}
-            schema={schema}
-            selections={[]}
-            onAddClick={undefined}
-            onDeleteClick={jest.fn()}
             onAllSelectionChange={undefined}
+            onItemActivate={onItemActivateSpy}
+            onItemAdd={undefined}
             onItemClick={undefined}
+            onItemDeactivate={onItemDeactivateSpy}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
+            onSort={jest.fn()}
             page={1}
             pageCount={1}
             options={{}}
-            onItemActivation={onItemActivationSpy}
-            onItemDeactivation={onItemDeactivationSpy}
-            onSort={jest.fn()}
+            schema={schema}
+            selections={[]}
             sortColumn={undefined}
             sortOrder={undefined}
         />
@@ -445,11 +457,11 @@ test('Execute onItemActivation respectively onItemDeactivation callback when an 
 
     // expand the row
     treeListAdapter.find('Row[id=6]').find('span.toggleIcon Icon').simulate('click');
-    expect(onItemActivationSpy).toBeCalledWith(6);
+    expect(onItemActivateSpy).toBeCalledWith(6);
 
     // close the row
     treeListAdapter.find('Row[id=3]').find('span.toggleIcon Icon').simulate('click');
-    expect(onItemDeactivationSpy).toBeCalledWith(3);
+    expect(onItemDeactivateSpy).toBeCalledWith(3);
 });
 
 test('Render data with pencil button when onItemEdit callback is passed', () => {
@@ -486,20 +498,22 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
             data={data}
             disabledIds={[]}
             loading={false}
-            schema={schema}
-            selections={[]}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
-            onItemDeactivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
+            onItemClick={rowEditClickSpy}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
+            onSort={jest.fn()}
             page={1}
             pageCount={1}
             options={{}}
-            onItemClick={rowEditClickSpy}
-            onSort={jest.fn()}
+            schema={schema}
+            selections={[]}
             sortColumn={undefined}
             sortOrder={undefined}
         />
@@ -542,21 +556,22 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
             data={data}
             disabledIds={[]}
             loading={false}
-            schema={schema}
-            selections={[]}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={rowAddClickSpy}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
+            onSort={jest.fn()}
             page={1}
             pageCount={1}
-            onItemAdd={rowAddClickSpy}
-            onSort={jest.fn()}
             options={{}}
+            schema={schema}
+            selections={[]}
             sortColumn={undefined}
             sortOrder={undefined}
         />
@@ -599,20 +614,22 @@ test('Click on pencil should execute onItemClick callback', () => {
             data={data}
             disabledIds={[]}
             loading={false}
-            schema={schema}
-            selections={[]}
-            onAddClick={undefined}
             onAllSelectionChange={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
-            onItemDeactivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
+            onItemClick={rowEditClickSpy}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
+            onSort={jest.fn()}
             page={1}
             pageCount={1}
-            onItemClick={rowEditClickSpy}
-            onSort={jest.fn()}
             options={{}}
+            schema={schema}
+            selections={[]}
             sortColumn={undefined}
             sortOrder={undefined}
         />
@@ -625,7 +642,7 @@ test('Click on pencil should execute onItemClick callback', () => {
     expect(rowEditClickSpy).toBeCalledWith(1);
 });
 
-test('Click on add should execute onAddClick callback', () => {
+test('Click on add should execute onItemAdd callback', () => {
     const test1 = {
         data: {
             id: 2,
@@ -659,20 +676,22 @@ test('Click on add should execute onAddClick callback', () => {
             data={data}
             disabledIds={[]}
             loading={false}
-            schema={schema}
-            selections={[]}
             onAllSelectionChange={undefined}
-            onDeleteClick={jest.fn()}
-            onItemActivation={jest.fn()}
+            onItemActivate={jest.fn()}
+            onItemAdd={rowAddClickSpy}
             onItemClick={undefined}
-            onItemDeactivation={jest.fn()}
+            onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
             onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
+            onSort={jest.fn()}
             page={1}
             pageCount={1}
-            onAddClick={rowAddClickSpy}
-            onSort={jest.fn()}
             options={{}}
+            schema={schema}
+            selections={[]}
             sortColumn={undefined}
             sortOrder={undefined}
         />

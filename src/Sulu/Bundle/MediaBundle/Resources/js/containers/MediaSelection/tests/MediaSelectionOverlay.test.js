@@ -14,7 +14,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
         FormStore: jest.fn(),
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
-        DatagridStore: jest.fn(function(resourceKey) {
+        DatagridStore: jest.fn(function(resourceKey, observableOptions) {
             const {extendObservable} = require.requireActual('mobx');
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
@@ -60,6 +60,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                 selections: [],
                 selectionIds: [],
             });
+            this.observableOptions = observableOptions;
             this.loading = false;
             this.pageCount = 3;
             this.active = {
@@ -151,6 +152,8 @@ jest.mock('sulu-admin-bundle/utils', () => ({
         }
     },
 }));
+
+jest.mock('sulu-admin-bundle/containers/SingleDatagridOverlay', () => jest.fn(() => null));
 
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);

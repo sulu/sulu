@@ -18,8 +18,9 @@ type Props = {
     title: string,
     children: Node,
     actions: Array<Action>,
-    confirmText: string,
+    confirmDisabled: boolean,
     confirmLoading: boolean,
+    confirmText: string,
     onConfirm: () => void,
     open: boolean,
     size?: Size,
@@ -31,9 +32,10 @@ const CLOSE_ICON = 'su-times';
 @observer
 export default class Overlay extends React.Component<Props> {
     static defaultProps = {
-        open: false,
         actions: [],
+        confirmDisabled: false,
         confirmLoading: false,
+        open: false,
     };
 
     @observable visible: boolean = false;
@@ -54,11 +56,8 @@ export default class Overlay extends React.Component<Props> {
         this.toggle();
     }
 
-    @action componentWillReceiveProps(newProps: Props) {
-        this.openHasChanged = newProps.open !== this.props.open;
-    }
-
-    componentDidUpdate() {
+    @action componentDidUpdate(prevProps: Props) {
+        this.openHasChanged = prevProps.open !== this.props.open;
         this.toggle();
     }
 
@@ -88,6 +87,7 @@ export default class Overlay extends React.Component<Props> {
         const {
             actions,
             children,
+            confirmDisabled,
             confirmLoading,
             confirmText,
             onClose,
@@ -134,7 +134,12 @@ export default class Overlay extends React.Component<Props> {
                                     <article>{children}</article>
                                     <footer>
                                         <Actions actions={actions} />
-                                        <Button skin="primary" onClick={onConfirm} loading={confirmLoading}>
+                                        <Button
+                                            disabled={confirmDisabled}
+                                            loading={confirmLoading}
+                                            onClick={onConfirm}
+                                            skin="primary"
+                                        >
                                             {confirmText}
                                         </Button>
                                     </footer>

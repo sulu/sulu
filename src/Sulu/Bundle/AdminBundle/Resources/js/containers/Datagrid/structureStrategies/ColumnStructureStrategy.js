@@ -75,6 +75,11 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
     }
 
     @action clear(parentId: ?string | number) {
+        if (!parentId) {
+            this.rawData.clear();
+            this.rawData.set(parentId, []);
+        }
+
         removeColumnsAfterIndex(this.activeItems, this.activeItems.indexOf(parentId), this.rawData);
         const column = this.rawData.get(parentId);
         if (column && column.length > 0) {

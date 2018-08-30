@@ -23,9 +23,9 @@ export default class ColumnListAdapter extends AbstractAdapter {
     };
 
     handleItemClick = (id: string | number) => {
-        const {onItemActivation} = this.props;
-        if (onItemActivation) {
-            onItemActivation(id);
+        const {onItemActivate} = this.props;
+        if (onItemActivate) {
+            onItemActivate(id);
         }
     };
 
@@ -41,10 +41,10 @@ export default class ColumnListAdapter extends AbstractAdapter {
             return;
         }
 
-        const {activeItems, onAddClick} = this.props;
+        const {activeItems, onItemAdd} = this.props;
 
-        if (onAddClick && activeItems && activeItems[index]) {
-            onAddClick(activeItems[index]);
+        if (onItemAdd && activeItems && activeItems[index]) {
+            onItemAdd(activeItems[index]);
         }
     };
 
@@ -53,10 +53,12 @@ export default class ColumnListAdapter extends AbstractAdapter {
             activeItems,
             disabledIds,
             loading,
-            onAddClick,
-            onDeleteClick,
+            onItemAdd,
+            onRequestItemCopy,
+            onRequestItemDelete,
             onItemClick,
             onItemSelectionChange,
+            onRequestItemMove,
             selections,
         } = this.props;
 
@@ -85,7 +87,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
         const toolbarItems = [];
 
-        if (onAddClick) {
+        if (onItemAdd) {
             toolbarItems.push({
                 icon: 'su-plus-circle',
                 type: 'button',
@@ -100,15 +102,37 @@ export default class ColumnListAdapter extends AbstractAdapter {
             );
         }
 
+        const isDisabled = (index) => {
+            return activeItems[((index + 1: any): number)] === undefined;
+        };
+
         const settingOptions = [];
-        if (onDeleteClick) {
+        if (onRequestItemDelete) {
             settingOptions.push({
-                isDisabled: (index) => {
-                    return activeItems[((index + 1: any): number)] === undefined;
-                },
+                isDisabled,
                 label: translate('sulu_admin.delete'),
                 onClick: (index) => {
-                    onDeleteClick(activeItems[((index + 1: any): number)]);
+                    onRequestItemDelete(activeItems[index + 1]);
+                },
+            });
+        }
+
+        if (onRequestItemMove) {
+            settingOptions.push({
+                isDisabled,
+                label: translate('sulu_admin.move'),
+                onClick: (index) => {
+                    onRequestItemMove(activeItems[index + 1]);
+                },
+            });
+        }
+
+        if (onRequestItemCopy) {
+            settingOptions.push({
+                isDisabled,
+                label: translate('sulu_admin.copy'),
+                onClick: (index) => {
+                    onRequestItemCopy(activeItems[index + 1]);
                 },
             });
         }

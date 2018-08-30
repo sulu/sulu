@@ -162,7 +162,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
         );
     };
 
-    handleAddClick = (id: ?string | number) => {
+    handleItemAdd = (id: ?string | number) => {
         const {router} = this.props;
         router.navigate(
             'sulu_content.page_add_form.detail',
@@ -180,7 +180,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
                 {this.webspaces
                     ? <Datagrid
                         adapters={['column_list', 'tree_table']}
-                        onAddClick={this.handleAddClick}
+                        onItemAdd={this.handleItemAdd}
                         onItemClick={this.handleEditClick}
                         header={this.webspace &&
                             <WebspaceSelect value={this.webspace.get()} onChange={this.handleWebspaceChange}>

@@ -1,11 +1,12 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import {action, autorun, observable, toJS} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
+import equals from 'fast-deep-equal';
 import {MultiItemSelection} from '../../components';
 import SelectionStore from '../../stores/SelectionStore';
-import DatagridOverlay from './DatagridOverlay';
+import MultiDatagridOverlay from '../MultiDatagridOverlay';
 import selectionStyles from './selection.scss';
 
 type Props = {|
@@ -55,13 +56,14 @@ export default class Selection extends React.Component<Props> {
     }
 
     componentDidUpdate() {
-        const {value: newValue} = this.props;
+        const newValue = toJS(this.props.value);
+        const oldValue = toJS(this.selectionStore.items.map((item) => item.id));
 
-        if (newValue.every((id) => this.selectionStore.items.some((item) => item.id === id))) {
-            return;
+        newValue.sort();
+        oldValue.sort();
+        if (!equals(newValue, oldValue) && !this.selectionStore.loading) {
+            this.selectionStore.loadItems(newValue);
         }
-
-        this.selectionStore.loadItems(newValue);
     }
 
     componentWillUnmount() {
@@ -130,7 +132,7 @@ export default class Selection extends React.Component<Props> {
                         </MultiItemSelection.Item>
                     ))}
                 </MultiItemSelection>
-                <DatagridOverlay
+                <MultiDatagridOverlay
                     adapter={adapter}
                     disabledIds={disabledIds}
                     locale={locale}

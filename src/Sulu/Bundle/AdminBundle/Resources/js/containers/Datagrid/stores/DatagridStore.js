@@ -155,11 +155,11 @@ export default class DatagridStore {
         }
     }
 
-    findById(identifier: string | number): ?Object {
-        return this.structureStrategy.findById(identifier);
+    findById(id: string | number): ?Object {
+        return this.structureStrategy.findById(id);
     }
 
-    delete = (identifier: string | number): Promise<void> => {
+    delete = (id: string | number): Promise<void> => {
         const queryOptions = {...this.options};
 
         const {locale} = this.observableOptions;
@@ -167,10 +167,49 @@ export default class DatagridStore {
             queryOptions.locale = locale.get();
         }
 
-        return ResourceRequester.delete(this.resourceKey, identifier, queryOptions)
+        return ResourceRequester.delete(this.resourceKey, id, queryOptions)
             .then(action(() => {
-                this.deselectById(identifier);
-                this.remove(identifier);
+                this.deselectById(id);
+                this.remove(id);
+            }));
+    };
+
+    move = (id: string | number, parentId: string | number) => {
+        const queryOptions = {
+            ...this.options,
+            action: 'move',
+            destination: parentId,
+        };
+
+        const {locale} = this.observableOptions;
+        if (locale) {
+            queryOptions.locale = locale.get();
+        }
+
+        return ResourceRequester.postWithId(this.resourceKey, id, queryOptions)
+            .then(action(() => {
+                this.activate(id);
+                this.clear();
+            }));
+    };
+
+    copy = (id: string | number, parentId: string | number) => {
+        const queryOptions = {
+            ...this.options,
+            action: 'copy',
+            destination: parentId,
+        };
+
+        const {locale} = this.observableOptions;
+        if (locale) {
+            queryOptions.locale = locale.get();
+        }
+
+        return ResourceRequester.postWithId(this.resourceKey, id, queryOptions)
+            .then(action((response) => {
+                // TODO do not hardcode "id", but use some metadata instead
+                this.activate(response.id);
+                this.clear();
             }));
     };
 

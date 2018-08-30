@@ -5,6 +5,7 @@ import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
 import Dialog from '../../components/Dialog';
+import SingleDatagridOverlay from '../SingleDatagridOverlay';
 import {translate} from '../../utils/Translator';
 import type {SortOrder} from './types';
 import DatagridStore from './stores/DatagridStore';
@@ -16,11 +17,14 @@ import datagridStyles from './datagrid.scss';
 
 type Props = {|
     adapters: Array<string>,
+    allowActivateForDisabledItems: boolean,
+    copyable: boolean,
     deletable: boolean,
     disabledIds: Array<string | number>,
     header?: Node,
+    movable: boolean,
     onItemClick?: (itemId: string | number) => void,
-    onAddClick?: (id: string | number) => void,
+    onItemAdd?: (id: string | number) => void,
     selectable: boolean,
     searchable: boolean,
     store: DatagridStore,
@@ -29,16 +33,25 @@ type Props = {|
 @observer
 export default class Datagrid extends React.Component<Props> {
     static defaultProps = {
+        allowActivateForDisabledItems: true,
+        copyable: true,
         deletable: true,
         disabledIds: [],
+        movable: true,
         selectable: true,
         searchable: true,
     };
 
     @observable currentAdapterKey: string;
-    @observable showDeleteDialog: boolean = false;
+    @observable copying: boolean = false;
     @observable deleting: boolean = false;
+    @observable moving: boolean = false;
+    @observable showCopyOverlay: boolean = false;
+    @observable showDeleteDialog: boolean = false;
+    @observable showMoveOverlay: boolean = false;
+    copyId: ?string | number;
     deleteId: ?string | number;
+    moveId: ?string | number;
 
     @computed get currentAdapter(): typeof AbstractAdapter {
         return datagridAdapterRegistry.get(this.currentAdapterKey);
@@ -92,7 +105,7 @@ export default class Datagrid extends React.Component<Props> {
         );
     };
 
-    @action handleDeleteClick = (id: string | number) => {
+    @action handleRequestItemDelete = (id: string | number) => {
         this.deleteId = id;
         this.showDeleteDialog = true;
     };
@@ -104,15 +117,73 @@ export default class Datagrid extends React.Component<Props> {
 
         this.deleting = true;
         this.props.store.delete(this.deleteId).then(action(() => {
-            this.deleteId = undefined;
+            this.hideDeleteDialog();
             this.deleting = false;
-            this.showDeleteDialog = false;
         }));
     };
 
     @action handleDeleteDialogCancelClick = () => {
-        this.showDeleteDialog = false;
+        this.hideDeleteDialog();
     };
+
+    @action hideDeleteDialog() {
+        this.deleteId = undefined;
+        this.showDeleteDialog = false;
+    }
+
+    @action handleRequestItemMove = (id: string | number) => {
+        this.moveId = id;
+        this.showMoveOverlay = true;
+    };
+
+    @action handleMoveOverlayConfirmClick = (parent: Object) => {
+        if (!this.moveId) {
+            throw new Error('The id for moving was not set. This should not happen and is likely a bug.');
+        }
+
+        this.moving = true;
+        // TODO do not hardcode "id", but use some kind of metadata instead
+        this.props.store.move(this.moveId, parent.id).then(action(() => {
+            this.moving = false;
+            this.hideMoveOverlay();
+        }));
+    };
+
+    @action handleMoveOverlayClose = () => {
+        this.hideMoveOverlay();
+    };
+
+    @action hideMoveOverlay() {
+        this.showMoveOverlay = false;
+        this.moveId = undefined;
+    }
+
+    @action handleRequestItemCopy = (id: string | number) => {
+        this.copyId = id;
+        this.showCopyOverlay = true;
+    };
+
+    @action handleCopyOverlayConfirmClick = (parent: Object) => {
+        if (!this.copyId) {
+            throw new Error('The id for moving was not set. This should not happen and is likely a bug.');
+        }
+
+        this.copying = true;
+        // TODO do not hardcode "id", but use some kind of metadata instead
+        this.props.store.copy(this.copyId, parent.id).then(action(() => {
+            this.copying = false;
+            this.hideCopyOverlay();
+        }));
+    };
+
+    @action handleCopyOverlayClose = () => {
+        this.hideCopyOverlay();
+    };
+
+    @action hideCopyOverlay() {
+        this.showCopyOverlay = false;
+        this.copyId = undefined;
+    }
 
     handlePageChange = (page: number) => {
         this.props.store.setPage(page);
@@ -147,22 +218,30 @@ export default class Datagrid extends React.Component<Props> {
         this.setCurrentAdapterKey(adapter);
     };
 
-    handleItemActivation = (id: string | number) => {
-        this.props.store.activate(id);
+    handleItemActivate = (id: string | number) => {
+        const {allowActivateForDisabledItems, disabledIds, store} = this.props;
+
+        if (!allowActivateForDisabledItems && disabledIds.includes(id)) {
+            return;
+        }
+
+        store.activate(id);
     };
 
-    handleItemDeactivation = (id: string | number) => {
+    handleItemDeactivate = (id: string | number) => {
         this.props.store.deactivate(id);
     };
 
     render() {
         const {
             adapters,
+            copyable,
             deletable,
             disabledIds,
             header,
+            movable,
             onItemClick,
-            onAddClick,
+            onItemAdd,
             searchable,
             selectable,
             store,
@@ -193,14 +272,16 @@ export default class Datagrid extends React.Component<Props> {
                         data={store.data}
                         disabledIds={disabledIds}
                         loading={store.loading}
-                        onAddClick={onAddClick}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
-                        onDeleteClick={deletable ? this.handleDeleteClick : undefined}
-                        onItemActivation={this.handleItemActivation}
-                        onItemDeactivation={this.handleItemDeactivation}
+                        onItemActivate={this.handleItemActivate}
+                        onItemAdd={onItemAdd}
+                        onItemDeactivate={this.handleItemDeactivate}
                         onItemClick={onItemClick}
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
                         onPageChange={this.handlePageChange}
+                        onRequestItemCopy={copyable ? this.handleRequestItemCopy : undefined}
+                        onRequestItemDelete={deletable ? this.handleRequestItemDelete : undefined}
+                        onRequestItemMove={movable ? this.handleRequestItemMove : undefined}
                         onSort={this.handleSort}
                         options={this.currentAdapterOptions}
                         page={store.getPage()}
@@ -222,6 +303,36 @@ export default class Datagrid extends React.Component<Props> {
                 >
                     {translate('sulu_admin.delete_warning_text')}
                 </Dialog>
+                {movable &&
+                    <SingleDatagridOverlay
+                        adapter={adapters[0]}
+                        allowActivateForDisabledItems={false}
+                        clearSelectionOnClose={true}
+                        confirmLoading={this.moving}
+                        disabledIds={this.moveId ? [this.moveId] : []}
+                        locale={store.observableOptions.locale}
+                        onClose={this.handleMoveOverlayClose}
+                        onConfirm={this.handleMoveOverlayConfirmClick}
+                        open={this.showMoveOverlay}
+                        options={store.options}
+                        resourceKey={store.resourceKey}
+                        title={translate('sulu_admin.move_copy_overlay_title')}
+                    />
+                }
+                {copyable &&
+                    <SingleDatagridOverlay
+                        adapter={adapters[0]}
+                        clearSelectionOnClose={true}
+                        confirmLoading={this.copying}
+                        locale={store.observableOptions.locale}
+                        onClose={this.handleCopyOverlayClose}
+                        onConfirm={this.handleCopyOverlayConfirmClick}
+                        open={this.showCopyOverlay}
+                        options={store.options}
+                        resourceKey={store.resourceKey}
+                        title={translate('sulu_admin.move_copy_overlay_title')}
+                    />
+                }
             </Fragment>
         );
     }

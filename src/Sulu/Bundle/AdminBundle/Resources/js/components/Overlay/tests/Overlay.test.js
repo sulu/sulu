@@ -31,6 +31,26 @@ test('The component should render in body when open', () => {
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
+test('The component should render with a disabled confirm button', () => {
+    const body = document.body;
+    const onClose = jest.fn();
+    const view = mount(
+        <Overlay
+            title="My overlay title"
+            onClose={onClose}
+            onConfirm={jest.fn()}
+            confirmText="Apply"
+            confirmDisabled={true}
+            open={true}
+        >
+            <p>My overlay content</p>
+        </Overlay>
+    ).render();
+
+    expect(view).toMatchSnapshot();
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+});
+
 test('The component should render in body with loader instead of confirm button', () => {
     const body = document.body;
     const onClose = jest.fn();

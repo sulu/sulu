@@ -11,6 +11,7 @@ jest.mock('../../stores/MetadataStore', () => ({
 
 jest.mock('../../../../services/ResourceRequester', () => ({
     delete: jest.fn(),
+    postWithId: jest.fn(),
 }));
 
 function LoadingStrategy() {
@@ -945,6 +946,56 @@ test('Should call the remove method of the structure strategy if an item gets re
     datagridStore.remove(2);
 
     expect(structureStrategy.remove).toBeCalledWith(2);
+});
+
+test('Should move the item with the given ID to the new given parent and reload the datagrid', () => {
+    const locale = observable.box('de');
+    const datagridStore = new DatagridStore('snippets', {locale}, {webspace: 'sulu'});
+    const postWithIdPromise = Promise.resolve();
+    ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.move(3, 8);
+
+    expect(ResourceRequester.postWithId)
+        .toBeCalledWith('snippets', 3, {action: 'move', destination: 8, locale: 'de', webspace: 'sulu'});
+
+    return postWithIdPromise.then(() => {
+        expect(structureStrategy.clear).toBeCalledWith();
+        expect(loadingStrategy.load).toHaveBeenLastCalledWith(
+            'snippets',
+            {expandedIds: 3, locale: 'de', sortBy: undefined, sortOrder: undefined, webspace: 'sulu'},
+            undefined
+        );
+    });
+});
+
+test('Should copy the item with the given ID to the new given parent and reload the datagrid', () => {
+    const locale = observable.box('de');
+    const datagridStore = new DatagridStore('snippets', {locale}, {webspace: 'sulu'});
+    const postWithIdPromise = Promise.resolve({id: 9});
+    ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+
+    datagridStore.copy(3, 8);
+
+    expect(ResourceRequester.postWithId)
+        .toBeCalledWith('snippets', 3, {action: 'copy', destination: 8, locale: 'de', webspace: 'sulu'});
+
+    return postWithIdPromise.then(() => {
+        expect(structureStrategy.clear).toBeCalledWith();
+        expect(loadingStrategy.load).toHaveBeenLastCalledWith(
+            'snippets',
+            {expandedIds: 9, locale: 'de', sortBy: undefined, sortOrder: undefined, webspace: 'sulu'},
+            undefined
+        );
+    });
 });
 
 test('Should delete the item with the given ID', () => {

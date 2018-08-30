@@ -1,5 +1,28 @@
 # Upgrade
 
+## dev-develop
+
+### Datagrid
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+Some props of the `Datagrid` and its adapters have been renamed. See the following two tables to identify which ones:
+
+`Datagrid`:
+
+Old prop   | New prop
+-----------|----------
+onAddClick | onItemAdd
+
+`DatagridOverlay`:
+
+Old prop           | New prop
+-------------------|--------------------
+onAddClick         | onItemAdd
+onDeleteClick      | onRequestItemDelete
+onItemActivation   | onItemActivate
+onItemDeactivation | onItemDeactivate
+
 ## 2.0.0-alpha3
 
 ### AutoComplete

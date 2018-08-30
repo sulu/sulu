@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import {autorun, computed, toJS} from 'mobx';
+import {observer} from 'mobx-react';
 import classNames from 'classnames';
+import equals from 'fast-deep-equal';
 import Overlay from '../../components/Overlay';
 import Datagrid from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
@@ -11,61 +12,76 @@ import datagridOverlayStyles from './datagridOverlay.scss';
 
 type Props = {|
     adapter: string,
+    allowActivateForDisabledItems: boolean,
+    confirmLoading?: boolean,
+    clearSelectionOnClose: boolean,
+    datagridStore: DatagridStore,
     disabledIds: Array<string | number>,
-    locale?: ?IObservableValue<string>,
     onClose: () => void,
-    onConfirm: (selectedItems: Array<Object>) => void,
+    onConfirm: () => void,
     open: boolean,
-    resourceKey: string,
     preSelectedItems: Array<Object>,
     title: string,
 |};
 
+@observer
 export default class DatagridOverlay extends React.Component<Props> {
-    datagridStore: DatagridStore;
-    page: IObservableValue<number> = observable.box(1);
-
     static defaultProps = {
+        allowActivateForDisabledItems: true,
+        clearSelectionOnClose: false,
         disabledIds: [],
         preSelectedItems: [],
     };
 
+    updateSelectionDisposer: () => void;
+
+    @computed get preSelectedItems() {
+        return this.props.preSelectedItems;
+    }
+
+    @computed get datagridStore() {
+        return this.props.datagridStore;
+    }
+
     constructor(props: Props) {
         super(props);
 
-        const {locale, preSelectedItems, resourceKey} = this.props;
-        const observableOptions = {};
-        observableOptions.page = this.page;
-
-        if (locale) {
-            observableOptions.locale = locale;
-        }
-
-        this.datagridStore = new DatagridStore(resourceKey, observableOptions);
-
-        preSelectedItems.forEach((preSelectedItem) => {
-            this.datagridStore.select(preSelectedItem);
-        });
+        this.updateSelectionDisposer = autorun(this.updateSelection);
     }
 
-    componentDidUpdate() {
-        this.datagridStore.clearSelection();
-
-        this.props.preSelectedItems.forEach((preSelectedItem) => {
-            this.datagridStore.select(preSelectedItem);
-        });
+    componentDidUpdate(prevProps: Props) {
+        const {clearSelectionOnClose, open} = this.props;
+        if (clearSelectionOnClose && prevProps.open === true && open === false) {
+            this.datagridStore.clearSelection();
+        }
     }
 
     componentWillUnmount() {
-        this.datagridStore.destroy();
+        this.updateSelectionDisposer();
     }
 
+    updateSelection = () => {
+        this.datagridStore.clearSelection();
+        this.preSelectedItems.forEach((preSelectedItem) => {
+            this.datagridStore.select(preSelectedItem);
+        });
+    };
+
     handleConfirm = () => {
-        this.props.onConfirm(this.datagridStore.selections);
+        this.props.onConfirm();
     };
 
     render() {
-        const {adapter, disabledIds, onClose, open, title} = this.props;
+        const {
+            adapter,
+            allowActivateForDisabledItems,
+            confirmLoading,
+            disabledIds,
+            onClose,
+            open,
+            preSelectedItems,
+            title,
+        } = this.props;
 
         const datagridContainerClass = classNames(
             datagridOverlayStyles['adapter-container'],
@@ -80,6 +96,8 @@ export default class DatagridOverlay extends React.Component<Props> {
 
         return (
             <Overlay
+                confirmDisabled={equals(toJS(preSelectedItems), toJS(this.datagridStore.selections))}
+                confirmLoading={confirmLoading}
                 confirmText={translate('sulu_admin.confirm')}
                 onClose={onClose}
                 onConfirm={this.handleConfirm}
@@ -91,8 +109,11 @@ export default class DatagridOverlay extends React.Component<Props> {
                     <div className={datagridClass}>
                         <Datagrid
                             adapters={[adapter]}
+                            allowActivateForDisabledItems={allowActivateForDisabledItems}
+                            copyable={false}
                             deletable={false}
                             disabledIds={disabledIds}
+                            movable={false}
                             searchable={false}
                             store={this.datagridStore}
                         />

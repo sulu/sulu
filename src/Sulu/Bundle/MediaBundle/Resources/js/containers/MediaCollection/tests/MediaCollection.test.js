@@ -33,7 +33,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
         }),
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
-        DatagridStore: jest.fn(function(resourceKey) {
+        DatagridStore: jest.fn(function(resourceKey, observableOptions) {
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
             const collectionData = [
@@ -75,6 +75,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                 },
             ];
 
+            this.observableOptions = observableOptions;
             this.loading = false;
             this.pageCount = 3;
             this.active = {
@@ -213,6 +214,8 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     },
 }));
 
+jest.mock('sulu-admin-bundle/containers/SingleDatagridOverlay', () => jest.fn(() => null));
+
 beforeEach(() => {
     const datagridAdapterRegistry = require('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry');
 
@@ -295,7 +298,7 @@ test('Should send a request to add a new collection via the overlay', () => {
     expect(field.mock.calls[0][0].value).toEqual(undefined);
 
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
-    expect(mediaCollection.find('Overlay').prop('open')).toEqual(true);
+    expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(true);
     expect(document.querySelector('.content header').outerHTML).toEqual(expect.stringContaining('Add collection'));
 
     const newResourceStore = mediaCollection.find('CollectionSection').instance().resourceStoreByOperationType;
@@ -306,7 +309,7 @@ test('Should send a request to add a new collection via the overlay', () => {
 
     return promise.then(() => {
         mediaCollection.update();
-        expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
+        expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
         expect(newResourceStore.save).toBeCalled();
     });
 });
@@ -355,7 +358,7 @@ test('Should send a request to update the collection via the overlay', () => {
     expect(field.mock.calls[0][0].value).toEqual('Title');
 
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
-    expect(mediaCollection.find('Overlay').prop('open')).toEqual(true);
+    expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(true);
     expect(document.querySelector('.content header').outerHTML).toEqual(expect.stringContaining('Edit collection'));
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
@@ -363,7 +366,7 @@ test('Should send a request to update the collection via the overlay', () => {
 
     return promise.then(() => {
         mediaCollection.update();
-        expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
+        expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
         expect(newResourceStore.save).toBeCalledWith({breadcrumb: true});
     });
 });
@@ -400,7 +403,7 @@ test('Confirming the delete dialog should delete the item', () => {
     mediaCollection.find('Icon[name="su-trash-alt"]').simulate('click');
 
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(true);
-    expect(mediaCollection.find('Overlay').prop('open')).toEqual(false);
+    expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
 
     mediaCollection.find('Dialog Button[skin="primary"]').simulate('click');
     collectionStore.resourceStore.deleting = true;

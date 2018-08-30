@@ -94,7 +94,6 @@ test('Should pass props correctly to selection component', () => {
         displayProperties: ['id', 'title'],
         label: 'sulu_snippet.selection_label',
         locale,
-        onChange: changeSpy,
         resourceKey: 'snippets',
         overlayTitle: 'sulu_snippet.selection_overlay_title',
         value,
@@ -168,10 +167,48 @@ test('Should pass empty array if value is not given to overlay type', () => {
     expect(translate).toBeCalledWith('sulu_content.selection_label', {count: 0});
     expect(selection.find('Selection').props()).toEqual(expect.objectContaining({
         adapter: 'column_list',
-        onChange: changeSpy,
         resourceKey: 'pages',
         value: [],
     }));
+});
+
+test('Should call onChange and onFinish callback when selection overlay is confirmed', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldOptions = {
+        default_type: 'overlay',
+        resource_key: 'pages',
+        types: {
+            overlay: {
+                adapter: 'column_list',
+                label: 'sulu_content.selection_label',
+            },
+        },
+    };
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    const selection = shallow(
+        <Selection
+            dataPath=""
+            error={undefined}
+            formInspector={formInspector}
+            fieldTypeOptions={fieldOptions}
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={undefined}
+        />
+    );
+
+    selection.find('Selection').prop('onChange')([1, 2, 3]);
+
+    expect(changeSpy).toBeCalledWith([1, 2, 3]);
+    expect(finishSpy).toBeCalledWith();
 });
 
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
