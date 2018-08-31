@@ -460,7 +460,12 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $properties = array_filter(explode(',', $request->get('fields', '')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
-        $expandedIds = $this->getRequestParameter($request, 'expandedIds', false);
+        $expandedIds = $this->getRequestParameter(
+            $request,
+            'expandedIds',
+            false,
+            $this->getRequestParameter($request, 'selectedIds', false, null)
+        );
         $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
         $locale = $this->getLocale($request);
         $webspaceKey = $this->getRequestParameter($request, 'webspace', false);
