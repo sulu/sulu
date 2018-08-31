@@ -133,18 +133,27 @@ export default class ColumnListAdapter extends AbstractAdapter {
         return buttons;
     };
 
-    render() {
+    getToolbarItems = (index: number) => {
         const {
             activeItems,
-            disabledIds,
-            loading,
             onItemAdd,
             onRequestItemCopy,
             onRequestItemDelete,
             onRequestItemMove,
             onRequestItemOrder,
-            selections,
         } = this.props;
+
+        if (this.orderColumn === index) {
+            return [
+                {
+                    icon: 'su-times',
+                    type: 'button',
+                    onClick: action(() => {
+                        this.orderColumn = undefined;
+                    }),
+                },
+            ];
+        }
 
         const toolbarItems = [];
 
@@ -163,16 +172,15 @@ export default class ColumnListAdapter extends AbstractAdapter {
             );
         }
 
-        const isDisabled = (index) => {
-            return activeItems[((index + 1: any): number)] === undefined;
-        };
+        // TODO use simple variable instead of function
+        const hasActiveItem = activeItems[index + 1] === undefined;
 
         const settingOptions = [];
         if (onRequestItemDelete) {
             settingOptions.push({
-                isDisabled,
+                disabled: hasActiveItem,
                 label: translate('sulu_admin.delete'),
-                onClick: (index) => {
+                onClick: () => {
                     onRequestItemDelete(activeItems[index + 1]);
                 },
             });
@@ -180,9 +188,9 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
         if (onRequestItemMove) {
             settingOptions.push({
-                isDisabled,
+                disabled: hasActiveItem,
                 label: translate('sulu_admin.move'),
-                onClick: (index) => {
+                onClick: () => {
                     onRequestItemMove(activeItems[index + 1]);
                 },
             });
@@ -190,9 +198,9 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
         if (onRequestItemCopy) {
             settingOptions.push({
-                isDisabled,
+                disabled: hasActiveItem,
                 label: translate('sulu_admin.copy'),
-                onClick: (index) => {
+                onClick: () => {
                     onRequestItemCopy(activeItems[index + 1]);
                 },
             });
@@ -201,7 +209,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
         if (onRequestItemOrder) {
             settingOptions.push({
                 label: translate('sulu_admin.order'),
-                onClick: action((index) => {
+                onClick: action(() => {
                     this.orderColumn = index;
                 }),
             });
@@ -215,9 +223,20 @@ export default class ColumnListAdapter extends AbstractAdapter {
             });
         }
 
+        return toolbarItems;
+    };
+
+    render() {
+        const {
+            activeItems,
+            disabledIds,
+            loading,
+            selections,
+        } = this.props;
+
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
-                <ColumnList onItemClick={this.handleItemClick} toolbarItems={toolbarItems}>
+                <ColumnList onItemClick={this.handleItemClick} toolbarItems={this.getToolbarItems}>
                     {this.props.data.map((items, index) => (
                         <ColumnList.Column
                             key={index}

@@ -27,7 +27,7 @@ test('Should render with active', () => {
                     onClick: jest.fn(),
                 },
                 {
-                    isDisabled: () => true,
+                    disabled: true,
                     label: 'Option1',
                     onClick: jest.fn(),
                 },
@@ -35,13 +35,13 @@ test('Should render with active', () => {
         },
     ];
 
-    const toolbar = mount(<Toolbar columnIndex={0} toolbarItems={toolbarItems} />);
+    const toolbar = mount(<Toolbar toolbarItems={toolbarItems} />);
 
     expect(toolbar.render()).toMatchSnapshot();
     expect(toolbar.find(ToolbarDropdown).length).toBe(1);
 
     toolbar.find('.fa-plus').simulate('click');
-    expect(toolbarItems[0].onClick).toBeCalledWith(0);
+    expect(toolbarItems[0].onClick).toBeCalledWith();
 
     // check for opened dropdown in body
     expect(body.innerHTML).toBe('');
@@ -67,7 +67,7 @@ test('Should close dropdown when item is clicked', () => {
         },
     ];
 
-    const toolbar = mount(<Toolbar columnIndex={0} toolbarItems={toolbarItems} />);
+    const toolbar = mount(<Toolbar toolbarItems={toolbarItems} />);
 
     expect(toolbar.find(ToolbarDropdownListOption)).toHaveLength(0);
     toolbar.find(ToolbarDropdown).simulate('click');

@@ -12,7 +12,7 @@ import columnListStyles from './columnList.scss';
 
 type Props = {|
     children: ChildrenArray<Element<typeof Column>>,
-    toolbarItems: Array<ToolbarItemConfig>,
+    toolbarItems: (index: number) => Array<ToolbarItemConfig>,
     onItemClick: (id: string | number) => void,
 |};
 
@@ -127,7 +127,7 @@ export default class ColumnList extends React.Component<Props> {
     };
 
     render() {
-        const {children, toolbarItems} = this.props;
+        const {children} = this.props;
         const toolbarPosition = -this.scrollPosition + this.activeColumnIndex * this.columnWidth;
 
         const columnListContainerClass = classNames(
@@ -138,12 +138,13 @@ export default class ColumnList extends React.Component<Props> {
             }
         );
 
+        const toolbarItems = this.props.toolbarItems(this.activeColumnIndex);
+
         return (
             <div className={columnListStyles.columnListToolbarContainer}>
                 {!!toolbarItems.length &&
                     <div className={columnListStyles.toolbarContainer} style={{marginLeft: toolbarPosition}}>
                         <Toolbar
-                            columnIndex={this.activeColumnIndex}
                             toolbarItems={toolbarItems}
                             toolbarRef={this.setToolbarRef}
                         />

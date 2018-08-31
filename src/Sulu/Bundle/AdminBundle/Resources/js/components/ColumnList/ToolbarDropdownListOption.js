@@ -3,17 +3,16 @@ import React from 'react';
 import toolbarDropdownOptionStyles from './toolbarDropdownOption.scss';
 
 type Props = {
-    columnIndex?: number,
     children: string,
     disabled?: boolean,
-    onClick: (columnIndex?: number) => void,
+    onClick: () => void,
 };
 
 export default class ToolbarDropdownListOption extends React.Component<Props> {
     handleClick = () => {
-        const {columnIndex, onClick} = this.props;
+        const {onClick} = this.props;
 
-        onClick(columnIndex);
+        onClick();
     };
 
     render() {

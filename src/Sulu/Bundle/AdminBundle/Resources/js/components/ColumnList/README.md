@@ -1,7 +1,7 @@
 The `ColumnList` component consists out of three parts: `ColumnList`, `Column` and `Item`. The `toolbarItems` prop
-can be used to configure the toolbar above every column. There is also a `indicators` prop on the `Item`, which
-contains an array of JSX, that will be displayed on the right side of the item. `buttons` are also added on the `Item`,
-because they can differ from `Item` to `Item`.
+can be used to configure the toolbar above every column using a function which gets the currently active column index.
+There is also a `indicators` prop on the `Item`, which contains an array of JSX, that will be displayed on the right
+side of the item. `buttons` are also added on the `Item`, because they can differ from `Item` to `Item`.
 
 ```
 const Icon = require('../Icon').default;
@@ -25,7 +25,7 @@ const handleItemClick = (id) => {
     alert('Item with id: ' + id + ' clicked');
 };
 
-const toolbarItems = [
+const toolbarItems = () => [
     {
         icon: 'fa-plus',
         type: 'button',
@@ -93,11 +93,14 @@ const indicators = [
 </div>
 ```
 
-The `toolbarItems` prop is optional, and the component can also be used without a toolbar.
+The `toolbarItems` prop is not optional, but it is possible to return an empty array to use the `ColumnList` with an
+no toolbar.
 
 ```
+const toolbarItems = () => [];
+
 <div style={{height: '60vh'}}>
-    <ColumnList>
+    <ColumnList toolbarItems={toolbarItems}>
         <ColumnList.Column>
             <ColumnList.Item id="1">Google 1</ColumnList.Item>
             <ColumnList.Item id="2" hasChildren="true">Apple 1</ColumnList.Item>
