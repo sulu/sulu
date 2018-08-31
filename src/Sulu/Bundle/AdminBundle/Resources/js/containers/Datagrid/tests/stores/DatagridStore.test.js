@@ -945,6 +945,23 @@ test('Should trigger a mobx autorun if activate is called with the same id', () 
     autorunDisposer();
 });
 
+test('Should activate the current item if structure strategy is changed to trigger a reload', () => {
+    const page = observable.box();
+    const datagridStore = new DatagridStore('snippets', {page});
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const otherStructureStrategy = new StructureStrategy();
+    structureStrategy.findById.mockReturnValue({});
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    datagridStore.activate(3);
+
+    datagridStore.updateStructureStrategy(otherStructureStrategy);
+    expect(otherStructureStrategy.activate).toBeCalledWith(3);
+});
+
 test('Should call the activate method of the structure strategy if an item gets activated', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});

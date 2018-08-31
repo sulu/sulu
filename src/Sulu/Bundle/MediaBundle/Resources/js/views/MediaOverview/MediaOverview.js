@@ -68,7 +68,7 @@ class MediaOverview extends React.Component<ViewProps> {
             {
                 page: this.collectionPage,
                 locale: this.locale,
-                parent: this.collectionId,
+                parentId: this.collectionId,
             }
         );
     };

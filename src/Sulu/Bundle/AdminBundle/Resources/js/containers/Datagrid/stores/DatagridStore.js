@@ -117,7 +117,8 @@ export default class DatagridStore {
 
         this.structureStrategy = structureStrategy;
 
-        this.sendRequest();
+        // force a reload with the currently active item to match new structure
+        this.activate(this.active.get());
     };
 
     @action clear = () => {
