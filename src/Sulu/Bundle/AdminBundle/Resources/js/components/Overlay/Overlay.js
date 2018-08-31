@@ -56,8 +56,11 @@ export default class Overlay extends React.Component<Props> {
         this.toggle();
     }
 
-    @action componentDidUpdate(prevProps: Props) {
-        this.openHasChanged = prevProps.open !== this.props.open;
+    @action componentWillReceiveProps(nextProps: Props) {
+        this.openHasChanged = nextProps.open !== this.props.open;
+    }
+
+    @action componentDidUpdate() {
         this.toggle();
     }
 
