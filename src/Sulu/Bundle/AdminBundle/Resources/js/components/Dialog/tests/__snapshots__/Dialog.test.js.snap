@@ -23,6 +23,48 @@ exports[`The component should render in body when open 2`] = `
 </div>"
 `;
 
+exports[`The component should render in body with a large class 1`] = `<div />`;
+
+exports[`The component should render in body with a large class 2`] = `
+"<div>
+  <div class=\\"backdrop visible fixed\\"></div>
+</div>
+<div>
+  <div class=\\"dialogContainer\\">
+    <div class=\\"dialog large\\">
+      <section class=\\"content\\">
+        <header>My dialog title</header>
+        <article>
+          <div>My dialog content</div>
+        </article>
+        <footer><button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\">Cancel</span></button><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">Confirm</span></button></footer>
+      </section>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`The component should render in body with disabled confirm button 1`] = `<div />`;
+
+exports[`The component should render in body with disabled confirm button 2`] = `
+"<div>
+  <div class=\\"backdrop visible fixed\\"></div>
+</div>
+<div>
+  <div class=\\"dialogContainer\\">
+    <div class=\\"dialog\\">
+      <section class=\\"content\\">
+        <header>My dialog title</header>
+        <article>
+          <div>My dialog content</div>
+        </article>
+        <footer><button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\">Cancel</span></button><button class=\\"button primary\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Confirm</span></button></footer>
+      </section>
+    </div>
+  </div>
+</div>"
+`;
+
 exports[`The component should render in body with loader instead of confirm button 1`] = `<div />`;
 
 exports[`The component should render in body with loader instead of confirm button 2`] = `

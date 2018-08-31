@@ -4,6 +4,7 @@ import {observable } from 'mobx';
 import type {IObservableValue} from 'mobx';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import DatagridOverlay from '../DatagridOverlay';
+import type {OverlayType} from '../DatagridOverlay';
 
 type Props = {|
     adapter: string,
@@ -16,6 +17,7 @@ type Props = {|
     onConfirm: (selectedItems: Array<Object>) => void,
     open: boolean,
     options?: Object,
+    overlayType: OverlayType,
     resourceKey: string,
     preSelectedItems: Array<Object>,
     title: string,
@@ -28,6 +30,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
     static defaultProps = {
         clearSelectionOnClose: false,
         preSelectedItems: [],
+        overlayType: 'overlay',
     };
 
     constructor(props: Props) {
@@ -66,6 +69,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
             disabledIds,
             onClose,
             open,
+            overlayType,
             preSelectedItems,
             title,
         } = this.props;
@@ -81,6 +85,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
                 onClose={onClose}
                 onConfirm={this.handleConfirm}
                 open={open}
+                overlayType={overlayType}
                 preSelectedItems={preSelectedItems}
                 title={title}
             />

@@ -37,6 +37,14 @@ $transitionDuration: 300ms;
     & > * {
         pointer-events: auto;
     }
+
+    &.small {
+        width: 50vw;
+    }
+
+    &.large {
+        width: 80vw;
+    }
 }
 
 .open {

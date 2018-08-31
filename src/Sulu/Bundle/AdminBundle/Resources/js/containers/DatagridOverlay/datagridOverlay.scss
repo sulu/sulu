@@ -5,12 +5,29 @@
     padding: 30px 60px 60px;
 }
 
-.adapter-container.column_list {
-    height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom);
-    overflow: hidden;
+.overlay {
+    &.adapter-container.column_list {
+        height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom);
+        overflow: hidden;
+    }
+
+    .adapter.column_list {
+        padding: 0;
+        height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom + $columnBorderWidth);
+    }
 }
 
-.adapter.column_list {
-    padding: 0;
-    height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom + $columnBorderWidth);
+.dialog {
+    text-align: left;
+    margin: 0 -30px -30px;
+
+    &.adapter-container.column_list {
+        height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom);
+        overflow: hidden;
+    }
+
+    .adapter.column_list {
+        padding: 0;
+        height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom + $columnBorderWidth);
+    }
 }

@@ -4,11 +4,13 @@ import {autorun, computed, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import equals from 'fast-deep-equal';
+import Dialog from '../../components/Dialog';
 import Overlay from '../../components/Overlay';
 import Datagrid from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import {translate} from '../../utils';
 import datagridOverlayStyles from './datagridOverlay.scss';
+import type {OverlayType} from './types';
 
 type Props = {|
     adapter: string,
@@ -20,6 +22,7 @@ type Props = {|
     onClose: () => void,
     onConfirm: () => void,
     open: boolean,
+    overlayType: OverlayType,
     preSelectedItems: Array<Object>,
     title: string,
 |};
@@ -30,6 +33,7 @@ export default class DatagridOverlay extends React.Component<Props> {
         allowActivateForDisabledItems: true,
         clearSelectionOnClose: false,
         disabledIds: [],
+        overlayType: 'overlay',
         preSelectedItems: [],
     };
 
@@ -79,12 +83,14 @@ export default class DatagridOverlay extends React.Component<Props> {
             disabledIds,
             onClose,
             open,
+            overlayType,
             preSelectedItems,
             title,
         } = this.props;
 
         const datagridContainerClass = classNames(
-            datagridOverlayStyles['adapter-container'],
+            datagridOverlayStyles.adapterContainer,
+            datagridOverlayStyles[overlayType],
             datagridOverlayStyles[adapter]
         );
 
@@ -94,32 +100,56 @@ export default class DatagridOverlay extends React.Component<Props> {
             datagridOverlayStyles[adapter]
         );
 
-        return (
-            <Overlay
-                confirmDisabled={equals(toJS(preSelectedItems), toJS(this.datagridStore.selections))}
-                confirmLoading={confirmLoading}
-                confirmText={translate('sulu_admin.confirm')}
-                onClose={onClose}
-                onConfirm={this.handleConfirm}
-                open={open}
-                size="large"
-                title={title}
-            >
-                <div className={datagridContainerClass}>
-                    <div className={datagridClass}>
-                        <Datagrid
-                            adapters={[adapter]}
-                            allowActivateForDisabledItems={allowActivateForDisabledItems}
-                            copyable={false}
-                            deletable={false}
-                            disabledIds={disabledIds}
-                            movable={false}
-                            searchable={false}
-                            store={this.datagridStore}
-                        />
-                    </div>
+        const datagrid = (
+            <div className={datagridContainerClass}>
+                <div className={datagridClass}>
+                    <Datagrid
+                        adapters={[adapter]}
+                        allowActivateForDisabledItems={allowActivateForDisabledItems}
+                        copyable={false}
+                        deletable={false}
+                        disabledIds={disabledIds}
+                        movable={false}
+                        searchable={false}
+                        store={this.datagridStore}
+                    />
                 </div>
-            </Overlay>
+            </div>
         );
+
+        if (overlayType === 'overlay') {
+            return (
+                <Overlay
+                    confirmDisabled={equals(toJS(preSelectedItems), toJS(this.datagridStore.selections))}
+                    confirmLoading={confirmLoading}
+                    confirmText={translate('sulu_admin.confirm')}
+                    onClose={onClose}
+                    onConfirm={this.handleConfirm}
+                    open={open}
+                    size="large"
+                    title={title}
+                >
+                    {datagrid}
+                </Overlay>
+            );
+        }
+
+        if (overlayType === 'dialog') {
+            return (
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmDisabled={equals(toJS(preSelectedItems), toJS(this.datagridStore.selections))}
+                    confirmLoading={confirmLoading}
+                    confirmText={translate('sulu_admin.confirm')}
+                    onCancel={onClose}
+                    onConfirm={this.handleConfirm}
+                    open={open}
+                    size="large"
+                    title={title}
+                >
+                    {datagrid}
+                </Dialog>
+            );
+        }
     }
 }

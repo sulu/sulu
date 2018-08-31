@@ -380,6 +380,7 @@ export default class FilterOverlay extends React.Component<Props> {
                         onClose={this.handleCloseDataSourceDialog}
                         onConfirm={this.handleConfirmDataSourceDialog}
                         open={this.showDataSourceDialog}
+                        overlayType="dialog"
                         preSelectedItem={this.dataSource}
                         resourceKey={dataSourceResourceKey}
                         title={translate('sulu_admin.choose_data_source')}
@@ -393,6 +394,7 @@ export default class FilterOverlay extends React.Component<Props> {
                         onClose={this.handleCloseCategoryDialog}
                         onConfirm={this.handleConfirmCategoryDialog}
                         open={this.showCategoryDialog}
+                        overlayType="dialog"
                         preSelectedItems={this.categories || []}
                         resourceKey="categories"
                         title={translate('sulu_admin.choose_categories')}

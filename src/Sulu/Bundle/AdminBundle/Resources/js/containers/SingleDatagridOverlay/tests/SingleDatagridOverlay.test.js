@@ -65,6 +65,39 @@ test('Should instantiate the DatagridStore without locale and options', () => {
     expect(singleDatagridOverlay.instance().datagridStore.observableOptions.locale).toEqual(undefined);
 });
 
+test('Should pass overlayType overlay by default', () => {
+    const singleDatagridOverlay = shallow(
+        <SingleDatagridOverlay
+            adapter="table"
+            allowActivateForDisabledItems={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(singleDatagridOverlay.find(DatagridOverlay).prop('overlayType')).toEqual('overlay');
+});
+
+test('Should pass overlayType dialog if it is set via props', () => {
+    const singleDatagridOverlay = shallow(
+        <SingleDatagridOverlay
+            adapter="table"
+            allowActivateForDisabledItems={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            overlayType="dialog"
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(singleDatagridOverlay.find(DatagridOverlay).prop('overlayType')).toEqual('dialog');
+});
+
 test('Should pass disabledIds to the DatagridOverlay', () => {
     const disabledIds = [1, 2, 5];
 
