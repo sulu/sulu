@@ -35,7 +35,8 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, observa
     this.searchTerm = {
         get: jest.fn(),
     };
-    this.updateStrategies = jest.fn();
+    this.updateLoadingStrategy = jest.fn();
+    this.updateStructureStrategy = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
     this.selections = [];
@@ -370,7 +371,6 @@ test('Switching the adapter should render the correct adapter', () => {
 
 test('DatagridStore should be initialized correctly on init and update', () => {
     const datagridStore = new DatagridStore('test', {page: observable.box(1)});
-    datagridStore.updateStrategies = jest.fn();
 
     datagridAdapterRegistry.get.mockImplementation((adapter) => {
         switch (adapter) {
@@ -381,8 +381,8 @@ test('DatagridStore should be initialized correctly on init and update', () => {
         }
     });
     mount(<Datagrid adapters={['table', 'folder']} store={datagridStore} />);
-    expect(datagridStore.updateStrategies)
-        .toBeCalledWith(expect.any(TableAdapter.LoadingStrategy), expect.any(TableAdapter.StructureStrategy));
+    expect(datagridStore.updateLoadingStrategy).toBeCalledWith(expect.any(TableAdapter.LoadingStrategy));
+    expect(datagridStore.updateStructureStrategy).toBeCalledWith(expect.any(TableAdapter.StructureStrategy));
 });
 
 test('DatagridStore should be updated with current active element', () => {

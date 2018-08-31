@@ -37,7 +37,8 @@ jest.mock(
         this.searchTerm = {
             get: jest.fn(),
         };
-        this.updateStrategies = jest.fn();
+        this.updateLoadingStrategy = jest.fn();
+        this.updateStructureStrategy = jest.fn();
         this.data = [
             {
                 id: 1,

@@ -43,7 +43,8 @@ test('The loading strategy should get passed the structure strategy', () => {
     const structureStrategy = new StructureStrategy();
 
     const datagridStore = new DatagridStore('tests', {});
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
     expect(loadingStrategy.setStructureStrategy).toBeCalledWith(structureStrategy);
 });
 
@@ -65,7 +66,8 @@ test('The loading strategy should be called when a request is sent', () => {
         }
     );
 
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         'tests',
@@ -97,7 +99,8 @@ test('The loading strategy should be called with a different resourceKey when a 
         }
     );
 
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
@@ -128,7 +131,8 @@ test('The loading strategy should be called with a different page when a request
         }
     );
 
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
@@ -170,7 +174,8 @@ test('The loading strategy should be called with a different locale when a reque
         }
     );
 
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
@@ -208,7 +213,8 @@ test('The loading strategy should be called with the defined sortings', () => {
     );
 
     datagridStore.sort('title', 'desc');
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
@@ -235,7 +241,8 @@ test('The loading strategy should be called with the defined search', () => {
     );
 
     structureStrategy.clear = jest.fn();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.search('search-value');
 
@@ -266,7 +273,8 @@ test('The loading strategy should be called with the active item as parentId', (
 
     structureStrategy.findById.mockReturnValue({});
     datagridStore.setActive('some-uuid');
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(structureStrategy.findById).toBeCalledWith('some-uuid');
     expect(loadingStrategy.load).toBeCalledWith(
@@ -293,7 +301,8 @@ test('The loading strategy should be called with expandedIds if the active item 
     );
 
     datagridStore.setActive('some-uuid');
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(structureStrategy.findById).toBeCalledWith('some-uuid');
     expect(structureStrategy.clear).toBeCalledWith();
@@ -338,7 +347,8 @@ test('The loading strategy should be called with expandedIds if some items are a
         }
     });
 
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         'categories',
@@ -376,7 +386,8 @@ test('The loading strategy should be called only once even if the data changes a
 
     datagridStore.setActive('some-uuid');
     structureStrategy.findById.mockImplementation(() => Array.from(structureStrategy.data));
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
 
     expect(structureStrategy.findById).toBeCalledWith('some-uuid');
     expect(loadingStrategy.load).toHaveBeenCalledTimes(1);
@@ -400,7 +411,8 @@ test('The active item should not be passed as parent if undefined', () => {
         }
     );
 
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
@@ -422,7 +434,8 @@ test('The activeItems from the StructureStrategy should be passed', () => {
     const datagridStore = new DatagridStore('snippets', {
         page,
     });
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     const activeItems = [1, 2, 3];
     structureStrategy.activeItems = activeItems;
@@ -434,7 +447,8 @@ test('Set loading flag to true before schema is loaded', () => {
     metadataStore.getSchema.mockReturnValue(promise);
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
-    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(new StructureStrategy());
     page.set(1);
     datagridStore.setDataLoading(false);
     expect(datagridStore.loading).toEqual(true);
@@ -447,7 +461,8 @@ test('Set loading flag to true before schema is loaded', () => {
 test('Set loading flag to true before request', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
-    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(new StructureStrategy());
     page.set(1);
     datagridStore.setDataLoading(false);
     datagridStore.sendRequest();
@@ -464,7 +479,8 @@ test('Set loading flag to false after request', (done) => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
     loadingStrategy.load.mockReturnValue(promise);
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
     datagridStore.sendRequest();
     return promise.then(() => {
         expect(datagridStore.loading).toEqual(false);
@@ -484,7 +500,8 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(new StructureStrategy());
     expect(metadataStore.getSchema).toBeCalledWith('tests');
     return promise.then(() => {
         expect(datagridStore.schema).toBe(fields);
@@ -497,7 +514,8 @@ test('After initialization no row should be selected', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(new StructureStrategy());
     expect(datagridStore.selections.length).toBe(0);
     datagridStore.destroy();
 });
@@ -507,7 +525,8 @@ test('Select an item', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(new StructureStrategy());
     datagridStore.select({id: 1}) ;
     datagridStore.select({id: 2}) ;
     expect(toJS(datagridStore.selectionIds)).toEqual([1, 2]);
@@ -522,7 +541,8 @@ test('Deselect an item that has not been selected yet', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(new StructureStrategy());
     datagridStore.select({id: 1}) ;
     datagridStore.deselect({id: 2});
 
@@ -533,7 +553,8 @@ test('Deselect an item that has not been selected yet', () => {
 test('Select all visible items', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
-    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(new StructureStrategy());
     datagridStore.structureStrategy.visibleItems = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [
         {id: 1},
@@ -549,7 +570,8 @@ test('Deselect all visible items', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(new StructureStrategy());
     datagridStore.structureStrategy.visibleItems = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [
         {id: 1},
@@ -566,7 +588,8 @@ test('Deselect an item by id', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(new StructureStrategy());
     datagridStore.structureStrategy.visibleItems = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [
         {id: 1},
@@ -583,7 +606,8 @@ test('Clear the selection', () => {
     const datagridStore = new DatagridStore('tests', {
         page,
     });
-    datagridStore.updateStrategies(new LoadingStrategy(), new StructureStrategy());
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(new StructureStrategy());
     datagridStore.selections = [1, 4, 5];
     page.set(1);
     expect(datagridStore.selections).toHaveLength(3);
@@ -597,7 +621,8 @@ test('Clear the data', () => {
         page: observable.box(),
     });
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(new LoadingStrategy(), structureStrategy);
+    datagridStore.updateLoadingStrategy(new LoadingStrategy());
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.clearData();
     expect(structureStrategy.clear).toBeCalled();
@@ -620,7 +645,8 @@ test('Should reset the data array and set page to 1 when the reload method is ca
         },
         {}
     );
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     locale.set('en');
     page.set(3);
@@ -653,7 +679,8 @@ test('Should reset page count to 0 and page to 1 when locale is changed', () => 
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -686,7 +713,8 @@ test('Should not reset page count to 0 and page to 1 when locale stays the same'
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -704,7 +732,8 @@ test('Should reset page count to 0 and page to 1 when search is changed', () => 
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -738,7 +767,8 @@ test('Should not reset page count to 0 and page to 1 when search stays the same'
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -757,7 +787,8 @@ test('Should reset page count to 0 and page to 1 when sort column is changed', (
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -791,7 +822,8 @@ test('Should not reset page count to 0 and page to 1 when sort column stays the 
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -810,7 +842,8 @@ test('Should reset page count to 0 and page to 1 when sort order is changed', ()
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -844,7 +877,8 @@ test('Should not reset page count to 0 and page to 1 when sort order stays the s
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -863,11 +897,13 @@ test('Should reset page count and page when loading strategy changes', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
     const otherLoadingStrategy = new OtherLoadingStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.setPage(5);
     datagridStore.pageCount = 7;
-    datagridStore.updateStrategies(otherLoadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(otherLoadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(page.get()).toEqual(1);
     expect(datagridStore.pageCount).toEqual(0);
@@ -894,7 +930,8 @@ test('Should trigger a mobx autorun if activate is called with the same id', () 
     const structureStrategy = new StructureStrategy();
     structureStrategy.findById.mockReturnValue({});
 
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
     datagridStore.activate(3);
 
     let lastActive;
@@ -915,7 +952,8 @@ test('Should call the activate method of the structure strategy if an item gets 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
     structureStrategy.findById.mockReturnValue({});
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.activate(3);
 
@@ -928,7 +966,8 @@ test('Should call the deactivate method of the structure strategy if an item get
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.deactivate(2);
 
@@ -941,7 +980,8 @@ test('Should call the remove method of the structure strategy if an item gets re
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.remove(2);
 
@@ -956,7 +996,8 @@ test('Should move the item with the given ID to the new given parent and reload 
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.move(3, 8);
 
@@ -981,7 +1022,8 @@ test('Should copy the item with the given ID to the new given parent and reload 
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.copy(3, 8);
 
@@ -1007,7 +1049,8 @@ test('Should delete the item with the given ID', () => {
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.delete(5);
 
@@ -1027,7 +1070,8 @@ test('Should delete the item with the given ID and remove it from the selection 
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.select({id: 5});
     expect(datagridStore.selections.toJS()).toEqual([{id: 5}]);
@@ -1049,7 +1093,8 @@ test('Should delete the item with the given ID without locale', () => {
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    datagridStore.updateStrategies(loadingStrategy, structureStrategy);
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.delete(5);
 

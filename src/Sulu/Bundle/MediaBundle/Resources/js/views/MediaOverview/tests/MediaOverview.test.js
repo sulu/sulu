@@ -82,7 +82,8 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
             this.clearData = jest.fn();
-            this.updateStrategies = jest.fn();
+            this.updateLoadingStrategy = jest.fn();
+            this.updateStructureStrategy = jest.fn();
         }),
         FlatStructureStrategy: require(
             'sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStructureStrategy'

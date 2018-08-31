@@ -68,15 +68,14 @@ export default class Datagrid extends React.Component<Props> {
     }
 
     componentDidUpdate(prevProps: Props) {
-        if (!equal(this.props.adapters, prevProps.adapters)) {
+        const {adapters, store} = this.props;
+        if (!equal(adapters, prevProps.adapters)) {
             this.validateAdapters();
         }
 
-        if (this.props.store !== prevProps.store) {
-            this.props.store.updateStrategies(
-                new this.currentAdapter.LoadingStrategy(),
-                new this.currentAdapter.StructureStrategy()
-            );
+        if (store !== prevProps.store) {
+            store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy());
+            store.updateStructureStrategy(new this.currentAdapter.StructureStrategy());
         }
     }
 
@@ -99,10 +98,14 @@ export default class Datagrid extends React.Component<Props> {
 
     @action setCurrentAdapterKey = (adapter: string) => {
         this.currentAdapterKey = adapter;
-        this.props.store.updateStrategies(
-            new this.currentAdapter.LoadingStrategy(),
-            new this.currentAdapter.StructureStrategy()
-        );
+
+        if (!(this.props.store.loadingStrategy instanceof this.currentAdapter.LoadingStrategy)) {
+            this.props.store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy());
+        }
+
+        if (!(this.props.store.structureStrategy instanceof this.currentAdapter.StructureStrategy)) {
+            this.props.store.updateStructureStrategy(new this.currentAdapter.StructureStrategy());
+        }
     };
 
     @action handleRequestItemDelete = (id: string | number) => {
@@ -214,7 +217,6 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     handleAdapterChange = (adapter: string) => {
-        this.props.store.setActive(undefined); // TODO keep active and expand correctly
         this.setCurrentAdapterKey(adapter);
     };
 
