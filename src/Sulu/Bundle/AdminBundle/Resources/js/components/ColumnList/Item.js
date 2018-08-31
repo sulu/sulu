@@ -20,7 +20,7 @@ type Props = {|
     id: string | number,
     indicators?: Array<Node>,
     onClick?: (id: string | number) => void,
-    onOrderChange?: (id: string | number, order: number) => void,
+    onOrderChange?: (id: string | number, order: number) => Promise<boolean>,
     order?: number,
     showOrderField: boolean,
     selected: boolean,
@@ -73,7 +73,11 @@ export default class Item extends React.Component<Props> {
         const {id, onOrderChange, order} = this.props;
 
         if (onOrderChange && this.order && order !== this.order) {
-            onOrderChange(id, this.order);
+            onOrderChange(id, this.order).then(action((ordered) => {
+                if (!ordered) {
+                    this.order = this.props.order;
+                }
+            }));
         }
     };
 

@@ -53,12 +53,11 @@ export default class Datagrid extends React.Component<Props> {
     @observable showMoveOverlay: boolean = false;
     @observable showOrderDialog: boolean = false;
     @observable ordering: boolean = false;
-    copyId: ?string | number;
-    deleteId: ?string | number;
+    resolveCopy: ?({copied: boolean, parent?: ?Object}) => void;
+    resolveDelete: ?({deleted: boolean}) => void;
+    resolveMove: ?({moved: boolean, parent?: ?Object}) => void;
+    resolveOrder: ?({ordered: boolean}) => void;
     moveId: ?string | number;
-    deleteId: ?string | number;
-    orderId: ?string | number;
-    orderPosition: ?number;
 
     @computed get currentAdapter(): typeof AbstractAdapter {
         return datagridAdapterRegistry.get(this.currentAdapterKey);
@@ -116,116 +115,165 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     @action handleRequestItemDelete = (id: string | number) => {
-        this.deleteId = id;
         this.showDeleteDialog = true;
+
+        const deletePromise = new Promise((resolve) => this.resolveDelete = resolve);
+        deletePromise.then(action((response) => {
+            if (!response.deleted) {
+                this.showDeleteDialog = false;
+                return response;
+            }
+
+            this.deleting = true;
+            this.props.store.delete(id).then(action(() => {
+                this.showDeleteDialog = false;
+                this.deleting = false;
+            }));
+
+            return response;
+        }));
+
+        return deletePromise;
     };
 
     @action handleDeleteDialogConfirmClick = () => {
-        if (!this.deleteId) {
-            throw new Error('The id for deletion was not set. This should not happen, and is likely a bug.');
+        if (!this.resolveDelete) {
+            throw new Error('The resolveDelete function is not set. This should not happen, and is likely a bug.');
         }
 
-        this.deleting = true;
-        this.props.store.delete(this.deleteId).then(action(() => {
-            this.hideDeleteDialog();
-            this.deleting = false;
-        }));
+        this.resolveDelete({deleted: true});
     };
 
     @action handleDeleteDialogCancelClick = () => {
-        this.hideDeleteDialog();
-    };
+        if (!this.resolveDelete) {
+            throw new Error('The resolveDelete function is not set. This should not happen, and is likely a bug.');
+        }
 
-    @action hideDeleteDialog() {
-        this.deleteId = undefined;
-        this.showDeleteDialog = false;
-    }
+        this.resolveDelete({deleted: false});
+    };
 
     @action handleRequestItemMove = (id: string | number) => {
         this.moveId = id;
         this.showMoveOverlay = true;
+
+        const movePromise = new Promise((resolve) => this.resolveMove = resolve);
+        movePromise.then(action((response) => {
+            if (!response.moved || !response.parent) {
+                this.showMoveOverlay = false;
+                this.moveId = undefined;
+                return response;
+            }
+
+            if (!this.moveId) {
+                throw new Error('The moveId is not set. This should not happen and is likely a bug.');
+            }
+
+            this.moving = true;
+            // TODO do not hardcode "id", but use some kind of metadata instead
+            this.props.store.move(this.moveId, response.parent.id).then(action(() => {
+                this.moveId = undefined;
+                this.moving = false;
+                this.showMoveOverlay = false;
+            }));
+
+            return response;
+        }));
+
+        return movePromise;
     };
 
     @action handleMoveOverlayConfirmClick = (parent: Object) => {
-        if (!this.moveId) {
-            throw new Error('The id for moving was not set. This should not happen and is likely a bug.');
+        if (!this.resolveMove) {
+            throw new Error('The resolveMove function is not set. This should not happen, and is likely a bug.');
         }
 
-        this.moving = true;
-        // TODO do not hardcode "id", but use some kind of metadata instead
-        this.props.store.move(this.moveId, parent.id).then(action(() => {
-            this.moving = false;
-            this.hideMoveOverlay();
-        }));
+        this.resolveMove({moved: true, parent});
     };
 
     @action handleMoveOverlayClose = () => {
-        this.hideMoveOverlay();
+        if (!this.resolveMove) {
+            throw new Error('The resolveMove function is not set. This should not happen, and is likely a bug.');
+        }
+
+        this.resolveMove({moved: false});
     };
 
-    @action hideMoveOverlay() {
-        this.showMoveOverlay = false;
-        this.moveId = undefined;
-    }
-
     @action handleRequestItemCopy = (id: string | number) => {
-        this.copyId = id;
         this.showCopyOverlay = true;
+
+        const copyPromise = new Promise((resolve) => this.resolveCopy = resolve);
+        copyPromise.then(action((response) => {
+            if (!response.copied) {
+                this.showCopyOverlay = false;
+                return response;
+            }
+
+            this.copying = true;
+            // TODO do not hardcode "id", but use some kind of metadata instead
+            this.props.store.copy(id, response.parent.id).then(action(() => {
+                this.copying = false;
+                this.showCopyOverlay = false;
+            }));
+
+            return response;
+        }));
+
+        return copyPromise;
     };
 
     @action handleCopyOverlayConfirmClick = (parent: Object) => {
-        if (!this.copyId) {
-            throw new Error('The id for moving was not set. This should not happen and is likely a bug.');
+        if (!this.resolveCopy) {
+            throw new Error('The resolveCopy deletion is not set. This should not happen, and is likely a bug.');
         }
 
-        this.copying = true;
-        // TODO do not hardcode "id", but use some kind of metadata instead
-        this.props.store.copy(this.copyId, parent.id).then(action(() => {
-            this.copying = false;
-            this.hideCopyOverlay();
-        }));
+        this.resolveCopy({copied: true, parent});
     };
 
     @action handleCopyOverlayClose = () => {
-        this.hideCopyOverlay();
+        if (!this.resolveCopy) {
+            throw new Error('The resolveCopy deletion is not set. This should not happen, and is likely a bug.');
+        }
+
+        this.resolveCopy({copied: false});
     };
 
-    @action hideCopyOverlay() {
-        this.showCopyOverlay = false;
-        this.copyId = undefined;
-    }
-
     @action handleRequestItemOrder = (id: string | number, position: number) => {
-        this.orderId = id;
-        this.orderPosition = position;
         this.showOrderDialog = true;
+
+        const orderPromise = new Promise((resolve) => this.resolveOrder = resolve);
+        orderPromise.then(action((response) => {
+            if (!response.ordered) {
+                this.showOrderDialog = false;
+                return response;
+            }
+
+            this.ordering = true;
+            this.props.store.order(id, position).then(action(() => {
+                this.showOrderDialog = false;
+                this.ordering = false;
+            }));
+
+            return response;
+        }));
+
+        return orderPromise;
     };
 
     @action handleOrderDialogConfirmClick = () => {
-        if (!this.orderId) {
-            throw new Error('The id for ordering was not set. This should not happen, and is likely a bug.');
+        if (!this.resolveOrder) {
+            throw new Error('The resolveOrder function is not set. This should not happen, and is likely a bug.');
         }
 
-        if (!this.orderPosition) {
-            throw new Error('The position for ordering was not set. This should not happen, and is likely a bug.');
-        }
-
-        this.ordering = true;
-        this.props.store.order(this.orderId, this.orderPosition).then(action(() => {
-            this.hideOrderDialog();
-            this.ordering = false;
-        }));
+        this.resolveOrder({ordered: true});
     };
 
     @action handleOrderDialogCancelClick = () => {
-        this.hideOrderDialog();
-    };
+        if (!this.resolveOrder) {
+            throw new Error('The resolveOrder function is not set. This should not happen, and is likely a bug.');
+        }
 
-    @action hideOrderDialog() {
-        this.orderId = undefined;
-        this.orderPosition = undefined;
-        this.showOrderDialog = false;
-    }
+        this.resolveOrder({ordered: false});
+    };
 
     handlePageChange = (page: number) => {
         this.props.store.setPage(page);

@@ -85,7 +85,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
             order = itemsCount;
         }
 
-        onRequestItemOrder(id, order);
+        return onRequestItemOrder(id, order).then(({ordered}) => ordered);
     };
 
     getIndicators = (item: Object) => {
@@ -161,7 +161,11 @@ export default class ColumnListAdapter extends AbstractAdapter {
             toolbarItems.push({
                 icon: 'su-plus-circle',
                 type: 'button',
-                onClick: this.handleColumnAdd,
+                onClick: () => {
+                    if (activeItems && activeItems[index]) {
+                        onItemAdd(activeItems[index]);
+                    }
+                },
             });
         }
 

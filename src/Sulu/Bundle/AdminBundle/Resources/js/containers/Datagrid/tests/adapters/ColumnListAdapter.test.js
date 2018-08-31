@@ -408,8 +408,9 @@ test('Do not show order button if onRequestItemOrder callback is undefined', () 
     expect(columnListAdapter.find('Toolbar button').find({children: 'sulu_admin.order'})).toHaveLength(0);
 });
 
-test('Call onRequestItemOrder callback when a item ordering has been changed', () => {
-    const requestItemOrderSpy = jest.fn();
+test('Call onRequestItemOrder callback when an item ordering has been changed', () => {
+    const requestItemOrderPromise = Promise.resolve({ordered: true});
+    const requestItemOrderSpy = jest.fn().mockReturnValue(requestItemOrderPromise);
 
     const data = [
         [

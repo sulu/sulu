@@ -446,17 +446,19 @@ test('SingleDatagridOverlay should disappear when onRequestItemCopy callback is 
     ];
     const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onRequestItemCopy')(5);
+    const requestCopyPromise = datagrid.find('TableAdapter').prop('onRequestItemCopy')(5);
     datagrid.update();
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('clearSelectionOnClose')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('disabledIds')).toEqual(undefined);
 
     datagrid.find(SingleDatagridOverlay).at(1).prop('onClose')();
-    datagrid.update();
-    expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(false);
+    return requestCopyPromise.then(() => {
+        datagrid.update();
+        expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(false);
 
-    expect(datagridStore.copy).not.toBeCalled();
+        expect(datagridStore.copy).not.toBeCalled();
+    });
 });
 
 test('DatagridStore should copy item when onRequestItemCopy callback is called and overlay is confirmed', () => {
@@ -473,19 +475,21 @@ test('DatagridStore should copy item when onRequestItemCopy callback is called a
     ];
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onRequestItemCopy')(5);
+    const requestCopyPromise = datagrid.find('TableAdapter').prop('onRequestItemCopy')(5);
     datagrid.update();
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('clearSelectionOnClose')).toEqual(true);
 
     datagrid.find(SingleDatagridOverlay).at(1).prop('onConfirm')({id: 8});
-    expect(datagrid.instance().copying).toEqual(true);
-    expect(datagridStore.copy).toBeCalledWith(5, 8);
+    return requestCopyPromise.then(() => {
+        expect(datagrid.instance().copying).toEqual(true);
+        expect(datagridStore.copy).toBeCalledWith(5, 8);
 
-    return copyPromise.then(() => {
-        datagrid.update();
-        expect(datagrid.instance().copying).toEqual(false);
-        expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(false);
+        return copyPromise.then(() => {
+            datagrid.update();
+            expect(datagrid.instance().copying).toEqual(false);
+            expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(false);
+        });
     });
 });
 
@@ -499,16 +503,19 @@ test('SingleDatagridOverlay should disappear when onRequestItemMove callback is 
     ];
     const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onRequestItemMove')(5);
+    const requestMovePromise = datagrid.find('TableAdapter').prop('onRequestItemMove')(5);
     datagrid.update();
     expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(0).prop('disabledIds')).toEqual([5]);
 
     datagrid.find(SingleDatagridOverlay).at(0).prop('onClose')();
-    datagrid.update();
-    expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(false);
 
-    expect(datagridStore.move).not.toBeCalled();
+    return requestMovePromise.then(() => {
+        datagrid.update();
+        expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(false);
+
+        expect(datagridStore.move).not.toBeCalled();
+    });
 });
 
 test('DatagridStore should move item when onRequestItemMove callback is called and overlay is confirmed', () => {
@@ -525,18 +532,20 @@ test('DatagridStore should move item when onRequestItemMove callback is called a
     ];
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onRequestItemMove')(5);
+    const requestMovePromise = datagrid.find('TableAdapter').prop('onRequestItemMove')(5);
     datagrid.update();
     expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(true);
 
     datagrid.find(SingleDatagridOverlay).at(0).prop('onConfirm')({id: 8});
-    expect(datagrid.instance().moving).toEqual(true);
-    expect(datagridStore.move).toBeCalledWith(5, 8);
+    return requestMovePromise.then(() => {
+        expect(datagrid.instance().moving).toEqual(true);
+        expect(datagridStore.move).toBeCalledWith(5, 8);
 
-    return movePromise.then(() => {
-        datagrid.update();
-        expect(datagrid.instance().moving).toEqual(false);
-        expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(false);
+        return movePromise.then(() => {
+            datagrid.update();
+            expect(datagrid.instance().moving).toEqual(false);
+            expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(false);
+        });
     });
 });
 
@@ -550,15 +559,17 @@ test('Delete warning should disappear when onRequestItemDelete callback is calle
     ];
     const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onRequestItemDelete')(5);
+    const requestDeletePromise = datagrid.find('TableAdapter').prop('onRequestItemDelete')(5);
     datagrid.update();
     expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(true);
 
     datagrid.find('Dialog').at(0).prop('onCancel')();
-    datagrid.update();
-    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
+    return requestDeletePromise.then(() => {
+        datagrid.update();
+        expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
 
-    expect(datagridStore.delete).not.toBeCalled();
+        expect(datagridStore.delete).not.toBeCalled();
+    });
 });
 
 test('DatagridStore should delete item when onRequestItemDelete callback is called and overlay is confirmed', () => {
@@ -575,18 +586,20 @@ test('DatagridStore should delete item when onRequestItemDelete callback is call
     ];
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onRequestItemDelete')(5);
+    const requestDeletePromise = datagrid.find('TableAdapter').prop('onRequestItemDelete')(5);
     datagrid.update();
     expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(true);
 
     datagrid.find('Dialog').at(0).prop('onConfirm')();
-    expect(datagrid.instance().deleting).toEqual(true);
-    expect(datagridStore.delete).toBeCalledWith(5);
+    return requestDeletePromise.then(() => {
+        expect(datagrid.instance().deleting).toEqual(true);
+        expect(datagridStore.delete).toBeCalledWith(5);
 
-    return deletePromise.then(() => {
-        datagrid.update();
-        expect(datagrid.instance().deleting).toEqual(false);
-        expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
+        return deletePromise.then(() => {
+            datagrid.update();
+            expect(datagrid.instance().deleting).toEqual(false);
+            expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
+        });
     });
 });
 
@@ -600,15 +613,18 @@ test('Order warning should just disappear when onRequestItemOrder callback is ca
     ];
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onRequestItemOrder')(5);
+    const requestOrderPromise = datagrid.find('TableAdapter').prop('onRequestItemOrder')(5);
     datagrid.update();
     expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(true);
 
     datagrid.find('Dialog').at(1).prop('onCancel')();
-    datagrid.update();
-    expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
 
-    expect(datagridStore.order).not.toBeCalled();
+    return requestOrderPromise.then(() => {
+        datagrid.update();
+        expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
+
+        expect(datagridStore.order).not.toBeCalled();
+    });
 });
 
 test('DatagridStore should order item when onRequestItemOrder callback is called and overlay is confirmed', () => {
@@ -625,17 +641,19 @@ test('DatagridStore should order item when onRequestItemOrder callback is called
     ];
     const datagrid = mount(<Datagrid adapters={['table']} store={datagridStore} />);
 
-    datagrid.find('TableAdapter').prop('onRequestItemOrder')(5, 8);
+    const requestOrderPromise = datagrid.find('TableAdapter').prop('onRequestItemOrder')(5, 8);
     datagrid.update();
     expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(true);
-
     datagrid.find('Dialog').at(1).prop('onConfirm')();
-    expect(datagrid.instance().ordering).toEqual(true);
-    expect(datagridStore.order).toBeCalledWith(5, 8);
 
-    return orderPromise.then(() => {
-        datagrid.update();
-        expect(datagrid.instance().ordering).toEqual(false);
-        expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
+    return requestOrderPromise.then(() => {
+        expect(datagrid.instance().ordering).toEqual(true);
+        expect(datagridStore.order).toBeCalledWith(5, 8);
+
+        return orderPromise.then(() => {
+            datagrid.update();
+            expect(datagrid.instance().ordering).toEqual(false);
+            expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
+        });
     });
 });

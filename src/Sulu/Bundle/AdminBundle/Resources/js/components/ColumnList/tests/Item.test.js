@@ -35,7 +35,8 @@ test('Should render item with order input', () => {
 });
 
 test('Should call onOrderChange callback when order has changed', () => {
-    const orderChangeSpy = jest.fn();
+    const orderChangePromise = Promise.resolve(true);
+    const orderChangeSpy = jest.fn().mockReturnValue(orderChangePromise);
     const item = shallow(
         <Item id={2} onOrderChange={orderChangeSpy} order={4} showOrderField={true}>Test with indicators</Item>
     );
@@ -43,6 +44,28 @@ test('Should call onOrderChange callback when order has changed', () => {
     item.find('Input').simulate('change', 5);
     item.find('Input').simulate('blur');
     expect(orderChangeSpy).toBeCalledWith(2, 5);
+
+    expect(item.instance().order).toEqual(5);
+    return orderChangePromise.then(() => {
+        expect(item.instance().order).toEqual(5);
+    });
+});
+
+test('Should call onOrderChange callback when order has changed and reset order if cancelled', () => {
+    const orderChangePromise = Promise.resolve(false);
+    const orderChangeSpy = jest.fn().mockReturnValue(orderChangePromise);
+    const item = shallow(
+        <Item id={2} onOrderChange={orderChangeSpy} order={4} showOrderField={true}>Test with indicators</Item>
+    );
+
+    item.find('Input').simulate('change', 5);
+    item.find('Input').simulate('blur');
+    expect(orderChangeSpy).toBeCalledWith(2, 5);
+
+    expect(item.instance().order).toEqual(5);
+    return orderChangePromise.then(() => {
+        expect(item.instance().order).toEqual(4);
+    });
 });
 
 test('Should call onOrderChange callback when order has changed after pressing enter', () => {
