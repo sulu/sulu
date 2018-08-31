@@ -33,7 +33,7 @@ export default class SmartContent extends React.Component<Props> {
             schemaOptions: {
                 provider: {
                     value: provider,
-                },
+                } = {value: 'pages'},
             } = {},
             value,
         } = this.props;
@@ -49,8 +49,7 @@ export default class SmartContent extends React.Component<Props> {
             value,
             formInspector.locale,
             datasourceResourceKey,
-            // TODO Not completely correct because of media/collections... maybe rename provider to match resourceKey?
-            formInspector.resourceKey === datasourceResourceKey ? formInspector.id : undefined
+            formInspector.resourceKey === provider ? formInspector.id : undefined
         );
 
         autorun(this.handleFilterCriteriaChange);
@@ -98,18 +97,11 @@ export default class SmartContent extends React.Component<Props> {
         const {
             label,
             schemaOptions: {
-                provider: {
-                    value: provider,
-                },
                 present_as: {
                     value: schemaPresentations = [],
                 } = {},
             } = {},
         } = this.props;
-
-        if (typeof provider !== 'string') {
-            throw new Error('The "provider" schemaOption must be a string, but received ' + typeof provider + '!');
-        }
 
         if (!Array.isArray(schemaPresentations)) {
             throw new Error(
@@ -134,7 +126,6 @@ export default class SmartContent extends React.Component<Props> {
             <SmartContentComponent
                 fieldLabel={label}
                 presentations={presentations}
-                provider={provider}
                 store={this.smartContentStore}
             />
         );

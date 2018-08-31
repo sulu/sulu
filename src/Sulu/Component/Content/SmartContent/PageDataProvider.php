@@ -32,7 +32,7 @@ use Sulu\Component\SmartContent\DatasourceItem;
 /**
  * DataProvider for content.
  */
-class ContentDataProvider implements DataProviderInterface, DataProviderAliasInterface
+class PageDataProvider implements DataProviderInterface, DataProviderAliasInterface
 {
     /**
      * @var ContentQueryBuilderInterface

@@ -13,7 +13,6 @@ import type {Presentation, SmartContentConfig} from './types';
 type Props = {
     fieldLabel: string,
     presentations: Array<Presentation>,
-    provider: string,
     store: SmartContentStore,
 };
 
@@ -35,9 +34,9 @@ export default class SmartContent extends React.Component<Props> {
     }
 
     @action initialize() {
-        const {provider, store} = this.props;
+        const {store} = this.props;
 
-        this.config = smartContentConfigStore.getConfig(provider);
+        this.config = smartContentConfigStore.getConfig(store.provider);
 
         if (this.config.datasourceResourceKey && this.config.datasourceAdapter) {
             this.sections.push('datasource');

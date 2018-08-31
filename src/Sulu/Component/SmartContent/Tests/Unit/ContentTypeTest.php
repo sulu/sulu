@@ -74,7 +74,7 @@ class ContentTypeTest extends TestCase
     /**
      * @var DataProviderInterface
      */
-    private $contentDataProvider;
+    private $pageDataProvider;
 
     /**
      * @var TargetGroupStoreInterface
@@ -93,12 +93,12 @@ class ContentTypeTest extends TestCase
 
     public function setUp()
     {
-        $this->contentDataProvider = $this->prophesize(DataProviderInterface::class);
-        $this->contentDataProvider->getConfiguration()->willReturn($this->getProviderConfiguration());
-        $this->contentDataProvider->getDefaultPropertyParameter()->willReturn([]);
+        $this->pageDataProvider = $this->prophesize(DataProviderInterface::class);
+        $this->pageDataProvider->getConfiguration()->willReturn($this->getProviderConfiguration());
+        $this->pageDataProvider->getDefaultPropertyParameter()->willReturn([]);
 
         $this->dataProviderPool = new DataProviderPool();
-        $this->dataProviderPool->add('content', $this->contentDataProvider->reveal());
+        $this->dataProviderPool->add('pages', $this->pageDataProvider->reveal());
 
         $this->tagManager = $this->getMockForAbstractClass(
             TagManagerInterface::class,
@@ -314,7 +314,7 @@ class ContentTypeTest extends TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure->reveal()));
 
-        $this->contentDataProvider->resolveResourceItems(
+        $this->pageDataProvider->resolveResourceItems(
             [
                 'dataSource' => 'some-uuid',
                 'page' => 1,
@@ -328,7 +328,7 @@ class ContentTypeTest extends TestCase
                 'websiteCategoriesOperator' => 'OR',
             ],
             [
-                'provider' => new PropertyParameter('provider', 'content'),
+                'provider' => new PropertyParameter('provider', 'pages'),
                 'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
@@ -412,7 +412,7 @@ class ContentTypeTest extends TestCase
         $this->tagReferenceStore->add(1)->shouldBeCalled();
         $this->tagReferenceStore->add(2)->shouldBeCalled();
 
-        $contentData = $smartContent->getContentData($property);
+        $pageData = $smartContent->getContentData($property);
 
         $this->assertEquals(
             [
@@ -423,7 +423,7 @@ class ContentTypeTest extends TestCase
                 ['uuid' => 5],
                 ['uuid' => 6],
             ],
-            $contentData
+            $pageData
         );
     }
 
@@ -462,7 +462,7 @@ class ContentTypeTest extends TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure->reveal()));
 
-        $this->contentDataProvider->resolveResourceItems(
+        $this->pageDataProvider->resolveResourceItems(
             [
                 'tags' => [],
                 'categories' => [],
@@ -474,7 +474,7 @@ class ContentTypeTest extends TestCase
                 'excluded' => ['123-123-123'],
             ],
             [
-                'provider' => new PropertyParameter('provider', 'content'),
+                'provider' => new PropertyParameter('provider', 'pages'),
                 'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
@@ -519,9 +519,9 @@ class ContentTypeTest extends TestCase
         $structure->getWebspaceKey()->willReturn('sulu_io');
         $structure->getLanguageCode()->willReturn('de');
 
-        $contentData = $smartContent->getContentData($property);
+        $pageData = $smartContent->getContentData($property);
 
-        $this->assertEquals([1, 2, 3, 4, 5], $contentData);
+        $this->assertEquals([1, 2, 3, 4, 5], $pageData);
     }
 
     public function pageProvider()
@@ -585,7 +585,7 @@ class ContentTypeTest extends TestCase
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
-        $this->contentDataProvider->resolveResourceItems(
+        $this->pageDataProvider->resolveResourceItems(
             [
                 'tags' => [],
                 'categories' => [],
@@ -598,7 +598,7 @@ class ContentTypeTest extends TestCase
                 'excluded' => [$uuid],
             ],
             [
-                'provider' => new PropertyParameter('provider', 'content'),
+                'provider' => new PropertyParameter('provider', 'pages'),
                 'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
@@ -650,8 +650,8 @@ class ContentTypeTest extends TestCase
         $structure->getWebspaceKey()->willReturn('sulu_io');
         $structure->getLanguageCode()->willReturn('de');
 
-        $contentData = $smartContent->getContentData($property);
-        $this->assertEquals($expectedData, $contentData);
+        $pageData = $smartContent->getContentData($property);
+        $this->assertEquals($expectedData, $pageData);
     }
 
     /**
@@ -697,7 +697,7 @@ class ContentTypeTest extends TestCase
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
-        $this->contentDataProvider->resolveResourceItems(
+        $this->pageDataProvider->resolveResourceItems(
             [
                 'tags' => [],
                 'categories' => [],
@@ -712,7 +712,7 @@ class ContentTypeTest extends TestCase
                 'excluded' => [$uuid],
             ],
             [
-                'provider' => new PropertyParameter('provider', 'content'),
+                'provider' => new PropertyParameter('provider', 'pages'),
                 'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
@@ -815,7 +815,7 @@ class ContentTypeTest extends TestCase
         $property->expects($this->any())->method('getStructure')
             ->will($this->returnValue($structure->reveal()));
 
-        $this->contentDataProvider->resolveResourceItems(
+        $this->pageDataProvider->resolveResourceItems(
             [
                 'categories' => array_key_exists('categories', $value) ? $value['categories'] : [],
                 'websiteCategories' => array_key_exists('websiteCategories', $value) ? $value['websiteCategories'] : [],
@@ -827,7 +827,7 @@ class ContentTypeTest extends TestCase
                 'excluded' => [$value['dataSource']],
             ],
             [
-                'provider' => new PropertyParameter('provider', 'content'),
+                'provider' => new PropertyParameter('provider', 'pages'),
                 'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
@@ -899,7 +899,7 @@ class ContentTypeTest extends TestCase
 
         $property = $this->prophesize(PropertyInterface::class);
         $property->getParams()->willReturn([
-            'provider' => new PropertyParameter('provider', 'content'),
+            'provider' => new PropertyParameter('provider', 'pages'),
         ]);
         $property->getValue()->willReturn([
             'audienceTargeting' => true,
@@ -909,7 +909,7 @@ class ContentTypeTest extends TestCase
         $property->getStructure()->willReturn($structure->reveal());
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(1);
-        $this->contentDataProvider->resolveResourceItems(
+        $this->pageDataProvider->resolveResourceItems(
             Argument::that(function($value) {
                 return 1 === $value['targetGroupId'];
             }),
@@ -938,7 +938,7 @@ class ContentTypeTest extends TestCase
 
         $property = $this->prophesize(PropertyInterface::class);
         $property->getParams()->willReturn([
-            'provider' => new PropertyParameter('provider', 'content'),
+            'provider' => new PropertyParameter('provider', 'pages'),
         ]);
         $property->getValue()->willReturn([
             'audienceTargeting' => false,
@@ -948,7 +948,7 @@ class ContentTypeTest extends TestCase
         $property->getStructure()->willReturn($structure->reveal());
 
         $this->targetGroupStore->getTargetGroupId()->shouldNotBeCalled();
-        $this->contentDataProvider->resolveResourceItems(
+        $this->pageDataProvider->resolveResourceItems(
             Argument::that(function($value) {
                 return !array_key_exists('targetGroupId', $value);
             }),

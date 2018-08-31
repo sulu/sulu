@@ -177,7 +177,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $configuration = $provider->getConfiguration();
 
         $defaults = [
-            'provider' => new PropertyParameter('provider', 'content'),
+            'provider' => new PropertyParameter('provider', 'pages'),
             'alias' => null,
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),
             'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
@@ -378,8 +378,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     {
         $params = $property->getParams();
 
-        // default fallback to content
-        $providerAlias = 'content';
+        $providerAlias = 'pages';
         if (array_key_exists('provider', $params)) {
             $providerAlias = $params['provider']->getValue();
         }

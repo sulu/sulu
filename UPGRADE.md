@@ -2,6 +2,19 @@
 
 ## dev-develop
 
+### SmartContent
+
+The `DataProvider`s for the `SmartContent` have changed their aliases. The alias now matches the resourceKey of the
+entity. These aliases are also what has to be passed to the `smart_content` type as `provider` param. Have a look at
+the following table to find the changed aliases:
+
+Old alias | New alias
+----------|----------
+content   | pages
+snippet   | snippets
+account   | accounts
+contact   | contacts
+
 ### Datagrid
 
 **This change only affects you if you have used a 2.0.0 alpha release before**

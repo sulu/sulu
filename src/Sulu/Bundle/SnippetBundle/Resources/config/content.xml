@@ -47,7 +47,7 @@
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_snippet.reference_store.snippet"/>
 
-            <tag name="sulu.smart_content.data_provider" alias="snippet"/>
+            <tag name="sulu.smart_content.data_provider" alias="snippets"/>
         </service>
     </services>
 </container>
