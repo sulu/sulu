@@ -21,8 +21,8 @@ test('Do not display if open is set to false', () => {
     const smartContentStore = new SmartContentStore('content');
     const filterOverlay = shallow(
         <FilterOverlay
-            dataSourceAdapter={undefined}
-            dataSourceResourceKey={undefined}
+            dataSourceAdapter="table"
+            dataSourceResourceKey="snippets"
             onClose={jest.fn()}
             open={false}
             presentations={{}}
@@ -34,6 +34,51 @@ test('Do not display if open is set to false', () => {
     );
 
     expect(filterOverlay.find('Overlay').prop('open')).toEqual(false);
+});
+
+test('Render with DatagridOverlays if smartContentStore is loaded', () => {
+    const smartContentStore = new SmartContentStore('content');
+    // $FlowFixMe
+    smartContentStore.loading = false;
+
+    const filterOverlay = shallow(
+        <FilterOverlay
+            dataSourceAdapter="table"
+            dataSourceResourceKey="snippets"
+            onClose={jest.fn()}
+            open={true}
+            presentations={{}}
+            sortings={{}}
+            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
+            smartContentStore={smartContentStore}
+            title="Test"
+        />
+    );
+
+    expect(filterOverlay.find(SingleDatagridOverlay)).toHaveLength(1);
+    expect(filterOverlay.find(MultiDatagridOverlay)).toHaveLength(1);
+});
+
+test('Render without DatagridOverlays if smartContentStore is not loaded', () => {
+    const smartContentStore = new SmartContentStore('content');
+    // $FlowFixMe
+    smartContentStore.loading = true;
+
+    const filterOverlay = mount(
+        <FilterOverlay
+            dataSourceAdapter={undefined}
+            dataSourceResourceKey={undefined}
+            onClose={jest.fn()}
+            open={true}
+            presentations={{}}
+            sortings={{}}
+            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
+            smartContentStore={smartContentStore}
+            title="Test"
+        />
+    );
+    expect(filterOverlay.find(SingleDatagridOverlay)).toHaveLength(0);
+    expect(filterOverlay.find(MultiDatagridOverlay)).toHaveLength(0);
 });
 
 test('Render with all fields', () => {

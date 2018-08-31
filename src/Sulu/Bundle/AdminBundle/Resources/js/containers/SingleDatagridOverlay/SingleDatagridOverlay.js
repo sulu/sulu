@@ -41,10 +41,11 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
             observableOptions.locale = locale;
         }
 
-        this.datagridStore = new DatagridStore(resourceKey, observableOptions, options);
+        const initialSelectionIds = [];
         if (preSelectedItem) {
-            this.datagridStore.select(preSelectedItem);
+            initialSelectionIds.push(preSelectedItem.id);
         }
+        this.datagridStore = new DatagridStore(resourceKey, observableOptions, options, initialSelectionIds);
 
         this.selectionDisposer = autorun(() => {
             const {selections} = this.datagridStore;

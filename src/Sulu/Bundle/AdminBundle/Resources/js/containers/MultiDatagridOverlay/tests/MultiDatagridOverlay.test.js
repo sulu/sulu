@@ -2,6 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import DatagridStore from '../../../containers/Datagrid/stores/DatagridStore';
 import DatagridOverlay from '../../../containers/DatagridOverlay';
 import MultiDatagridOverlay from '../MultiDatagridOverlay';
 
@@ -156,7 +157,7 @@ test('Should call onConfirm with the current selection', () => {
 });
 
 test('Should select the preSelectedItems in the DatagridStore', () => {
-    const multiDatagridOverlay = shallow(
+    shallow(
         <MultiDatagridOverlay
             adapter="table"
             onClose={jest.fn()}
@@ -168,11 +169,7 @@ test('Should select the preSelectedItems in the DatagridStore', () => {
         />
     );
 
-    const datagridStore = multiDatagridOverlay.instance().datagridStore;
-
-    expect(datagridStore.select).toBeCalledWith({id: 1});
-    expect(datagridStore.select).toBeCalledWith({id: 2});
-    expect(datagridStore.select).toBeCalledWith({id: 3});
+    expect(DatagridStore).toBeCalledWith('snippets', expect.anything(), undefined, [1, 2, 3]);
 });
 
 test('Should not fail when preSelectedItems is undefined', () => {

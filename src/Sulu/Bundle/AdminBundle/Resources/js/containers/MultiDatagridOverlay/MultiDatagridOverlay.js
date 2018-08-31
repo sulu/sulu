@@ -41,11 +41,12 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
             observableOptions.locale = locale;
         }
 
-        this.datagridStore = new DatagridStore(resourceKey, observableOptions, options);
-
-        preSelectedItems.forEach((preSelectedItem) => {
-            this.datagridStore.select(preSelectedItem);
-        });
+        this.datagridStore = new DatagridStore(
+            resourceKey,
+            observableOptions,
+            options,
+            preSelectedItems.map((preSelectedItem) => preSelectedItem.id)
+        );
     }
 
     componentWillUnmount() {

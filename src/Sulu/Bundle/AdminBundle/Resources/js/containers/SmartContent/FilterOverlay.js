@@ -372,9 +372,10 @@ export default class FilterOverlay extends React.Component<Props> {
                         }
                     </div>
                 </Overlay>
-                {dataSourceAdapter && dataSourceResourceKey &&
+                {!smartContentStore.loading && dataSourceAdapter && dataSourceResourceKey &&
                     <SingleDatagridOverlay
                         adapter={dataSourceAdapter}
+                        clearSelectionOnClose={false}
                         locale={smartContentStore.locale}
                         onClose={this.handleCloseDataSourceDialog}
                         onConfirm={this.handleConfirmDataSourceDialog}
@@ -384,16 +385,19 @@ export default class FilterOverlay extends React.Component<Props> {
                         title={translate('sulu_admin.choose_data_source')}
                     />
                 }
-                <MultiDatagridOverlay
-                    adapter="tree_table"
-                    locale={smartContentStore.locale}
-                    onClose={this.handleCloseCategoryDialog}
-                    onConfirm={this.handleConfirmCategoryDialog}
-                    open={this.showCategoryDialog}
-                    preSelectedItems={this.categories || []}
-                    resourceKey="categories"
-                    title={translate('sulu_admin.choose_categories')}
-                />
+                {!smartContentStore.loading &&
+                    <MultiDatagridOverlay
+                        adapter="tree_table"
+                        clearSelectionOnClose={false}
+                        locale={smartContentStore.locale}
+                        onClose={this.handleCloseCategoryDialog}
+                        onConfirm={this.handleConfirmCategoryDialog}
+                        open={this.showCategoryDialog}
+                        preSelectedItems={this.categories || []}
+                        resourceKey="categories"
+                        title={translate('sulu_admin.choose_categories')}
+                    />
+                }
             </Fragment>
         );
     }
