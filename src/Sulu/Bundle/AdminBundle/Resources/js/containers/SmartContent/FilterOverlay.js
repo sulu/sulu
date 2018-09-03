@@ -3,7 +3,7 @@ import React, {Fragment} from 'react';
 import {action, autorun, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Button from '../../components/Button';
-import Checkbox from '../../components/Checkbox';
+import Toggler from '../../components/Toggler';
 import Number from '../../components/Number';
 import SingleSelect from '../../components/SingleSelect';
 import Overlay from '../../components/Overlay';
@@ -236,12 +236,12 @@ export default class FilterOverlay extends React.Component<Props> {
                                     >
                                         {translate('sulu_admin.choose_data_source')}
                                     </Button>
-                                    <Checkbox
+                                    <Toggler
                                         checked={this.includeSubElements || false}
                                         onChange={this.handleIncludeSubElementsChange}
                                     >
                                         {translate('sulu_admin.include_sub_elements')}
-                                    </Checkbox>
+                                    </Toggler>
                                 </div>
                                 <label className={filterOverlayStyles.description}>
                                     {/* TODO do not hardcode "title" */}
@@ -311,12 +311,12 @@ export default class FilterOverlay extends React.Component<Props> {
                         {sections.includes('audienceTargeting') &&
                             <section className={filterOverlayStyles.section}>
                                 <h3>{translate('sulu_admin.target_groups')}</h3>
-                                <Checkbox
+                                <Toggler
                                     checked={this.audienceTargeting || false}
                                     onChange={this.handleAudienceTargetingChange}
                                 >
                                     {translate('sulu_admin.use_target_groups')}
-                                </Checkbox>
+                                </Toggler>
                             </section>
                         }
 

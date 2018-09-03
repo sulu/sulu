@@ -48,7 +48,7 @@ exports[`Render with all fields 1`] = `
                 class="label"
               >
                 <span
-                  class="switch checkbox dark"
+                  class="switch toggler"
                 >
                   <input
                     type="checkbox"
@@ -201,7 +201,7 @@ exports[`Render with all fields 1`] = `
               class="label"
             >
               <span
-                class="switch checkbox dark"
+                class="switch toggler"
               >
                 <input
                   type="checkbox"

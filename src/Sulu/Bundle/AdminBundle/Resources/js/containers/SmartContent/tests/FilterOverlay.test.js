@@ -150,9 +150,9 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
         .toEqual('sulu_admin.data_source: Test');
 
-    filterOverlay.find('Checkbox[children="sulu_admin.include_sub_elements"]').prop('onChange')(true);
+    filterOverlay.find('Toggler[children="sulu_admin.include_sub_elements"]').prop('onChange')(true);
     filterOverlay.update();
-    expect(filterOverlay.find('Checkbox[children="sulu_admin.include_sub_elements"]').prop('checked')).toEqual(true);
+    expect(filterOverlay.find('Toggler[children="sulu_admin.include_sub_elements"]').prop('checked')).toEqual(true);
 
     filterOverlay.find('Button[children="sulu_admin.choose_categories"]').prop('onClick')();
     filterOverlay.update();
@@ -178,9 +178,9 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     filterOverlay.update();
     expect(filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('value')).toEqual('or');
 
-    filterOverlay.find('Checkbox[children="sulu_admin.use_target_groups"]').prop('onChange')(false);
+    filterOverlay.find('Toggler[children="sulu_admin.use_target_groups"]').prop('onChange')(false);
     filterOverlay.update();
-    expect(filterOverlay.find('Checkbox[children="sulu_admin.use_target_groups"]').prop('checked')).toEqual(false);
+    expect(filterOverlay.find('Toggler[children="sulu_admin.use_target_groups"]').prop('checked')).toEqual(false);
 
     filterOverlay.find('div[className="sortColumn"]').find('SingleSelect').prop('onChange')('changed');
     filterOverlay.update();
@@ -265,7 +265,7 @@ test('Prefill all fields with correct values', () => {
         .toEqual('sulu_admin.data_source: Homepage');
     expect(filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('preSelectedItem'))
         .toEqual({id: 4, title: 'Homepage'});
-    expect(filterOverlay.find('Checkbox[children="sulu_admin.include_sub_elements"]').prop('checked')).toEqual(true);
+    expect(filterOverlay.find('Toggler[children="sulu_admin.include_sub_elements"]').prop('checked')).toEqual(true);
 
     expect(filterOverlay.find('section').at(2).find('label[className="description"]').text())
         .toEqual('sulu_category.categories: Test1, Test3');
@@ -276,7 +276,7 @@ test('Prefill all fields with correct values', () => {
     expect(filterOverlay.find(MultiAutoComplete).prop('value')).toEqual(['Test5', 'Test7']);
     expect(filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('value')).toEqual('and');
 
-    expect(filterOverlay.find('Checkbox[children="sulu_admin.use_target_groups"]').prop('checked')).toEqual(true);
+    expect(filterOverlay.find('Toggler[children="sulu_admin.use_target_groups"]').prop('checked')).toEqual(true);
 
     expect(filterOverlay.find('div[className="sortColumn"]').find('SingleSelect').prop('value')).toEqual('created');
     expect(filterOverlay.find('div[className="sortOrder"]').find('SingleSelect').prop('value')).toEqual('desc');
