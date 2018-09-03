@@ -28,6 +28,7 @@ type Props = {
 };
 
 const CLOSE_ICON = 'su-times';
+const CLOSE_OVERLAY_KEY = 'esc';
 
 @observer
 export default class Overlay extends React.Component<Props> {
@@ -44,12 +45,16 @@ export default class Overlay extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        Mousetrap.bind('esc', this.close);
+        if (this.props.open) {
+            Mousetrap.bind(CLOSE_OVERLAY_KEY, this.close);
+        }
         this.openHasChanged = this.props.open;
     }
 
     componentWillUnmount() {
-        Mousetrap.unbind('esc');
+        if (this.props.open) {
+            Mousetrap.unbind(CLOSE_OVERLAY_KEY);
+        }
     }
 
     componentDidMount() {
@@ -60,8 +65,16 @@ export default class Overlay extends React.Component<Props> {
         this.openHasChanged = nextProps.open !== this.props.open;
     }
 
-    @action componentDidUpdate() {
+    @action componentDidUpdate(prevProps: Props) {
         this.toggle();
+
+        if (prevProps.open !== this.props.open) {
+            if (this.props.open) {
+                Mousetrap.bind(CLOSE_OVERLAY_KEY, this.close);
+            } else {
+                Mousetrap.unbind(CLOSE_OVERLAY_KEY);
+            }
+        }
     }
 
     close = () => {
