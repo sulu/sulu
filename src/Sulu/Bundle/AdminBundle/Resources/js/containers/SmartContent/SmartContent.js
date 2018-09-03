@@ -112,6 +112,7 @@ export default class SmartContent extends React.Component<Props> {
         return (
             <Fragment>
                 <MultiItemSelection
+                    label={translate('sulu_admin.smart_content_label', {count: store.items.length})}
                     leftButton={{
                         icon: 'fa-filter',
                         onClick: this.handleFilterClick,

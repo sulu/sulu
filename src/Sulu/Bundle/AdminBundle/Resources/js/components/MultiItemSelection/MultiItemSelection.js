@@ -88,10 +88,10 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
 
     render() {
         const {
-            label,
-            loading,
             children,
+            label,
             leftButton,
+            loading,
             rightButton,
         } = this.props;
         const emptyList = !React.Children.count(children);
