@@ -90,6 +90,7 @@ export default class SmartContentStore {
 
     loadItems = () => {
         if (!this.hasFilterCriteria || this.loading) {
+            this.setItems([]);
             return;
         }
 
@@ -103,10 +104,14 @@ export default class SmartContentStore {
                 ...this.filterCriteria,
             })
         ).then(action((response) => {
-            this.items = response._embedded.items;
+            this.setItems(response._embedded.items);
             this.setItemsLoading(false);
         }));
     };
+
+    @action setItems(items: Array<Object>) {
+        this.items = items;
+    }
 
     @action setItemsLoading(itemsLoading: boolean) {
         this.itemsLoading = itemsLoading;
