@@ -33,6 +33,7 @@ class SuluAudienceTargetingExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('sulu_audience_targeting.enabled', true);
         $container->setParameter('sulu_audience_targeting.number_of_priorities', $config['number_of_priorities']);
         $container->setParameter('sulu_audience_targeting.frequencies', [
             TargetGroupRuleInterface::FREQUENCY_HIT => TargetGroupRuleInterface::FREQUENCY_HIT_NAME,

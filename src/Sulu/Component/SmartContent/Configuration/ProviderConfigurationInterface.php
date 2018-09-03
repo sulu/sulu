@@ -41,6 +41,11 @@ interface ProviderConfigurationInterface
     public function hasAudienceTargeting(): bool;
 
     /**
+     * Sets whether or not the audience targeting feature is activated.
+     */
+    public function setAudienceTargeting(bool $audienceTargeting);
+
+    /**
      * Returns TRUE if tags should be displayed.
      */
     public function hasTags(): bool;

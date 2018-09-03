@@ -12,6 +12,7 @@
 namespace Sulu\Component\SmartContent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPool;
 use Sulu\Component\SmartContent\Exception\DataProviderAliasAlreadyExistsException;
@@ -21,8 +22,8 @@ class DataProviderPoolTest extends TestCase
 {
     public function addProvider()
     {
-        $pool1 = new DataProviderPool();
-        $pool2 = new DataProviderPool();
+        $pool1 = new DataProviderPool(true);
+        $pool2 = new DataProviderPool(true);
 
         $provider1 = $this->prophesize(DataProviderInterface::class);
         $provider2 = $this->prophesize(DataProviderInterface::class);
@@ -82,9 +83,21 @@ class DataProviderPoolTest extends TestCase
         $this->assertEquals($expectedProviders, $pool->getAll());
     }
 
+    public function testAddWithoutAudienceTargeting()
+    {
+        $pool = new DataProviderPool(false);
+        $provider = $this->prophesize(DataProviderInterface::class);
+        $configuration = $this->prophesize(ProviderConfigurationInterface::class);
+        $provider->getConfiguration()->willReturn($configuration);
+
+        $configuration->setAudienceTargeting(false)->shouldBeCalled();
+
+        $pool->add('test', $provider->reveal());
+    }
+
     public function existsProvider()
     {
-        $pool = new DataProviderPool();
+        $pool = new DataProviderPool(true);
         $provider = $this->prophesize(DataProviderInterface::class);
         $pool->add('test', $provider->reveal());
 
@@ -112,7 +125,7 @@ class DataProviderPoolTest extends TestCase
 
     public function getProvider()
     {
-        $pool = new DataProviderPool();
+        $pool = new DataProviderPool(true);
         $provider = $this->prophesize(DataProviderInterface::class);
         $pool->add('test', $provider->reveal());
 
@@ -145,8 +158,8 @@ class DataProviderPoolTest extends TestCase
 
     public function getAllProvider()
     {
-        $pool1 = new DataProviderPool();
-        $pool2 = new DataProviderPool();
+        $pool1 = new DataProviderPool(true);
+        $pool2 = new DataProviderPool(true);
         $provider1 = $this->prophesize(DataProviderInterface::class);
         $provider2 = $this->prophesize(DataProviderInterface::class);
         $pool1->add('test-1', $provider1->reveal());
