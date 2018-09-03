@@ -134,8 +134,8 @@ test('Pass correct props to SmartContent component', () => {
         },
         present_as: {
             value: [
-                {value: 'one', title: 'One column'},
-                {value: 'two', title: 'Two column'},
+                {name: 'one', title: 'One column'},
+                {name: 'two', title: 'Two column'},
             ],
         },
     };

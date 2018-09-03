@@ -110,14 +110,14 @@ export default class SmartContent extends React.Component<Props> {
         }
 
         const presentations = schemaPresentations.map((presentation) => {
-            if (typeof presentation.value !== 'string' || typeof presentation.title !== 'string') {
+            if (typeof presentation.name !== 'string' || typeof presentation.title !== 'string') {
                 throw new Error(
-                    'Every presentation in the "present_as" schemaOption must contain a string value and a string title'
+                    'Every presentation in the "present_as" schemaOption must contain a string value and a string name'
                 );
             }
 
             return {
-                name: presentation.value,
+                name: presentation.name,
                 value: presentation.title,
             };
         });

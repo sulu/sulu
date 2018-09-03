@@ -152,7 +152,7 @@ class ResourceMetadataMapper
         if ('collection' === $parameter['type']) {
             foreach ($parameter['value'] as $parameterName => $parameterValue) {
                 $valueOption = new Option();
-                $valueOption->setName($parameterName);
+                $valueOption->setName($parameterValue['name']);
                 $valueOption->setValue($parameterValue['value']);
 
                 $this->mapOptionMeta($parameterValue, $locale, $valueOption);
