@@ -2,130 +2,180 @@
 
 exports[`Render a field with a description 1`] = `
 <div
-  class="field"
+  class="item gridItem size size-12 space-before-0 space-after-0"
 >
-  <label
-    class="label"
+  <div
+    class="field"
   >
-    label1
-  </label>
-  <input
-    type="text"
-  />
-  <label
-    class="descriptionLabel"
-  >
-    Small description describing the field
-  </label>
-  <label
-    class="errorLabel"
-  />
+    <label
+      class="label"
+    >
+      label1
+    </label>
+    <input
+      type="text"
+    />
+    <label
+      class="descriptionLabel"
+    >
+      Small description describing the field
+    </label>
+    <label
+      class="errorLabel"
+    />
+  </div>
 </div>
 `;
 
 exports[`Render a field with a error collection 1`] = `
 <div
-  class="field error"
+  class="item gridItem size size-12 space-before-0 space-after-0"
 >
-  <label
-    class="label"
+  <div
+    class="field error"
   >
-    label1
-  </label>
-  <input
-    type="text"
-  />
-  <label
-    class="errorLabel"
-  >
-    sulu_admin.error_minitems
-  </label>
+    <label
+      class="label"
+    >
+      label1
+    </label>
+    <input
+      type="text"
+    />
+    <label
+      class="errorLabel"
+    >
+      sulu_admin.error_minitems
+    </label>
+  </div>
 </div>
 `;
 
 exports[`Render a field with an error 1`] = `
 <div
-  class="field error"
+  class="item gridItem size size-12 space-before-0 space-after-0"
 >
-  <label
-    class="label"
+  <div
+    class="field error"
   >
-    label1
-  </label>
-  <input
-    type="text"
-  />
-  <label
-    class="errorLabel"
-  >
-    sulu_admin.error_minlength
-  </label>
+    <label
+      class="label"
+    >
+      label1
+    </label>
+    <input
+      type="text"
+    />
+    <label
+      class="errorLabel"
+    >
+      sulu_admin.error_minlength
+    </label>
+  </div>
 </div>
 `;
 
 exports[`Render a field without a label 1`] = `
 <div
-  class="field"
+  class="item gridItem size size-12 space-before-0 space-after-0"
 >
-  <input
-    type="text"
-  />
-  <label
-    class="errorLabel"
-  />
+  <div
+    class="field"
+  >
+    <input
+      type="text"
+    />
+    <label
+      class="errorLabel"
+    />
+  </div>
 </div>
 `;
 
 exports[`Render a required field with correct field type 1`] = `
 <div
-  class="field"
+  class="item gridItem size size-12 space-before-0 space-after-0"
 >
-  <label
-    class="label"
+  <div
+    class="field"
   >
-    label1 *
-  </label>
-  <input
-    type="text"
-  />
-  <label
-    class="errorLabel"
-  />
+    <label
+      class="label"
+    >
+      label1 *
+    </label>
+    <input
+      type="text"
+    />
+    <label
+      class="errorLabel"
+    />
+  </div>
 </div>
 `;
 
 exports[`Render correct label with correct field type 1`] = `
 <div
-  class="field"
+  class="item gridItem size size-12 space-before-0 space-after-0"
 >
-  <label
-    class="label"
+  <div
+    class="field"
   >
-    label1
-  </label>
-  <input
-    type="text"
-  />
-  <label
-    class="errorLabel"
-  />
+    <label
+      class="label"
+    >
+      label1
+    </label>
+    <input
+      type="text"
+    />
+    <label
+      class="errorLabel"
+    />
+  </div>
 </div>
 `;
 
 exports[`Render correct label with correct field type 2`] = `
 <div
-  class="field"
+  class="item gridItem size size-12 space-before-0 space-after-0"
 >
-  <label
-    class="label"
+  <div
+    class="field"
   >
-    label2
-  </label>
-  <input
-    type="date"
-  />
-  <label
-    class="errorLabel"
-  />
+    <label
+      class="label"
+    >
+      label2
+    </label>
+    <input
+      type="date"
+    />
+    <label
+      class="errorLabel"
+    />
+  </div>
+</div>
+`;
+
+exports[`Render field with correct values for grid 1`] = `
+<div
+  class="item gridItem size size-8 space-before-0 space-after-3"
+>
+  <div
+    class="field"
+  >
+    <label
+      class="label"
+    >
+      label1
+    </label>
+    <input
+      type="text"
+    />
+    <label
+      class="errorLabel"
+    />
+  </div>
 </div>
 `;

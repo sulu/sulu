@@ -110,19 +110,17 @@ export default class Form extends React.Component<Props> {
                             open={this.displayGhostDialog}
                         />
                     }
-                    <form>
-                        <Renderer
-                            data={store.data}
-                            dataPath=""
-                            errors={store.errors}
-                            formInspector={this.formInspector}
-                            onChange={this.handleChange}
-                            onFieldFinish={this.handleFieldFinish}
-                            schema={store.schema}
-                            schemaPath=""
-                            showAllErrors={this.showAllErrors}
-                        />
-                    </form>
+                    <Renderer
+                        data={store.data}
+                        dataPath=""
+                        errors={store.errors}
+                        formInspector={this.formInspector}
+                        onChange={this.handleChange}
+                        onFieldFinish={this.handleFieldFinish}
+                        schema={store.schema}
+                        schemaPath=""
+                        showAllErrors={this.showAllErrors}
+                    />
                 </Fragment>
             );
     }

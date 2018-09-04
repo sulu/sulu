@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
+import type {Node} from 'react';
 import classNames from 'classnames';
 import Item from './Item';
 import Section from './Section';
 import gridStyles from './grid.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Item | typeof Section>>,
+    children: Node,
     className?: string,
 };
 

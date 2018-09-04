@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Display a field with a required label 1`] = `
+<div
+  class="item gridItem size size-12 space-before-0 space-after-0"
+>
+  <div
+    class="field"
+  >
+    <label
+      class="label"
+    >
+      Testlabel *
+    </label>
+    <div>
+      Test
+    </div>
+    <label
+      class="errorLabel"
+    />
+  </div>
+</div>
+`;
+
+exports[`Display a field with an error 1`] = `
+<div
+  class="item gridItem size size-12 space-before-0 space-after-0"
+>
+  <div
+    class="field error"
+  >
+    <label
+      class="label"
+    >
+      Testlabel
+    </label>
+    <div>
+      Test
+    </div>
+    <label
+      class="errorLabel"
+    >
+      Error! Help!
+    </label>
+  </div>
+</div>
+`;
+
+exports[`Display a field with description 1`] = `
+<div
+  class="item gridItem size size-12 space-before-0 space-after-0"
+>
+  <div
+    class="field"
+  >
+    <div>
+      Test
+    </div>
+    <label
+      class="descriptionLabel"
+    >
+      Testdescription
+    </label>
+    <label
+      class="errorLabel"
+    />
+  </div>
+</div>
+`;
+
+exports[`Display a field with label 1`] = `
+<div
+  class="item gridItem size size-12 space-before-0 space-after-0"
+>
+  <div
+    class="field"
+  >
+    <label
+      class="label"
+    >
+      Test
+    </label>
+    <p>
+      Test
+    </p>
+    <label
+      class="errorLabel"
+    />
+  </div>
+</div>
+`;
+
+exports[`Display a field with size and after space 1`] = `
+<div
+  class="item gridItem size size-7 space-before-0 space-after-5"
+>
+  <div
+    class="field"
+  >
+    <div>
+      Test
+    </div>
+    <label
+      class="errorLabel"
+    />
+  </div>
+</div>
+`;
+
+exports[`Display a field without label 1`] = `
+<div
+  class="item gridItem size size-12 space-before-0 space-after-0"
+>
+  <div
+    class="field"
+  >
+    <p>
+      Test
+    </p>
+    <label
+      class="errorLabel"
+    />
+  </div>
+</div>
+`;

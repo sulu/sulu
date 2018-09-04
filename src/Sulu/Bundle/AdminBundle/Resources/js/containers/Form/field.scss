@@ -1,53 +1,14 @@
 @import '../Application/colors.scss';
-@import './variables.scss';
-
-$labelColor: $scorpion;
-$labelErrorColor: $roman;
-$errorLabelColor: $persianRed;
-$errorLabelBackgroundColor: $roman;
 
 $exceptionColor: $white;
 $exceptionBackgroundColor: $roman;
 $exceptionBorderColor: $persianRed;
-
-$errorLabelHeight: 20px;
-
-.field {
-    margin-bottom: calc($fieldMarginBottom - $errorLabelHeight);
-}
-
-.error {
-    & > .label {
-        color: $labelErrorColor;
-    }
-}
-
-.label {
-    display: block;
-    color: $labelColor;
-    font-size: 14px;
-    line-height: 19px;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
-.description-label,
-.error-label {
-    display: block;
-    color: $labelColor;
-    font-size: 10px;
-    line-height: $errorLabelHeight;
-    height: $errorLabelHeight;
-}
-
-.error-label {
-    color: $errorLabelColor;
-}
+$exceptionBorderColor: $persianRed;
 
 .field-exception {
     color: $exceptionColor;
     background: $exceptionBackgroundColor;
-    border: 1px solid $errorLabelColor;
+    border: 1px solid $exceptionBorderColor;
     padding: 0 20px;
     border-radius: 3px;
     margin-bottom: 20px;
