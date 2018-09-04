@@ -1,13 +1,22 @@
 // @flow
 import {ResourceRequester} from 'sulu-admin-bundle/services';
+import {userStore} from 'sulu-admin-bundle/stores';
 import type {Webspace} from './types';
 
 class WebspaceStore {
-    webspacePromise: Promise<Object>;
+    webspacePromise: ?Promise<Object>;
+
+    clear() {
+        this.webspacePromise = undefined;
+    }
 
     sendRequest(): Promise<Object> {
+        if (!userStore.user) {
+            throw new Error('A user must be logged in to load the webspaces with the correct locale');
+        }
+
         if (!this.webspacePromise) {
-            this.webspacePromise = ResourceRequester.getList('webspaces');
+            this.webspacePromise = ResourceRequester.getList('webspaces', {locale: userStore.user.locale});
         }
 
         return this.webspacePromise;

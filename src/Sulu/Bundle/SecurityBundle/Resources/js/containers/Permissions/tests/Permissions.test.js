@@ -3,6 +3,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
 import {MultiSelect} from 'sulu-admin-bundle/containers';
+import {userStore} from 'sulu-admin-bundle/stores';
 import Permissions from '../Permissions';
 import type {ContextPermission} from '../types';
 import type {SecurityContextGroups} from '../../../stores/SecurityContextStore/types';
@@ -13,6 +14,14 @@ jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn());
 
 jest.mock('../../../stores/SecurityContextStore/SecurityContextStore', () => ({
     loadSecurityContextGroups: jest.fn(() => Promise.resolve()),
+}));
+
+jest.mock('sulu-admin-bundle/stores', () => ({
+    userStore: {
+        user: {
+            locale: 'en',
+        },
+    },
 }));
 
 jest.mock('sulu-admin-bundle/utils', () => ({
@@ -767,6 +776,65 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
         expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledWith('Sulu');
         expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledWith('Other-System');
         expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledTimes(2);
+    });
+});
+
+test('Pass correct apiOptions to MultiSelect', () => {
+    const securityContextGroups: SecurityContextGroups = {
+        'Webspaces': {
+            'sulu.webspaces.#webspace#': ['view'],
+        },
+    };
+    const promise = Promise.resolve(securityContextGroups);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+
+    const permissions = mount(
+        <Permissions
+            onChange={jest.fn()}
+            system={'Sulu'}
+            value={[]}
+        />
+    );
+
+    return promise.then(() => {
+        permissions.update();
+        expect(permissions.find(MultiSelect).prop('apiOptions')).toEqual({
+            checkForPermissions: 0,
+            locale: 'en',
+        });
+    });
+});
+
+test('Pass correct locale to MultiSelect', () => {
+    const securityContextGroups: SecurityContextGroups = {
+        'Webspaces': {
+            'sulu.webspaces.#webspace#': ['view'],
+        },
+    };
+    const promise = Promise.resolve(securityContextGroups);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+
+    userStore.user = {
+        id: 1,
+        locale: 'de',
+        settings: [],
+        username: 'Test',
+    };
+
+    const permissions = mount(
+        <Permissions
+            onChange={jest.fn()}
+            system={'Sulu'}
+            value={[]}
+        />
+    );
+
+    return promise.then(() => {
+        permissions.update();
+        expect(permissions.find(MultiSelect).prop('apiOptions')).toEqual({
+            checkForPermissions: 0,
+            locale: 'de',
+        });
     });
 });
 
