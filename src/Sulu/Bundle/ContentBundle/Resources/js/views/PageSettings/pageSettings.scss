@@ -2,4 +2,6 @@
 
 .page-settings {
     padding: $viewPadding;
+    max-width: $viewMaxWidth;
+    min-width: $viewMinWidth;
 }

@@ -6,6 +6,12 @@ export type Webspace = {
     urls: Array<Url>,
     allLocalizations: Array<LocalizationItem>,
     portalInformation: Array<PortalInformation>,
+    navigations: Array<Navigation>,
+};
+
+export type Navigation = {
+    key: string,
+    title: string,
 };
 
 export type Localization = {

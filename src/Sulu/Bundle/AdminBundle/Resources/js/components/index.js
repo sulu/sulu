@@ -19,6 +19,7 @@ import Matrix from './Matrix';
 import Menu from './Menu';
 import Masonry from './Masonry';
 import MultiItemSelection from './MultiItemSelection';
+import MultiSelect from './MultiSelect';
 import Overlay from './Overlay';
 import Popover from './Popover';
 import PublishIndicator from './PublishIndicator';
@@ -49,6 +50,7 @@ export {
     Menu,
     Masonry,
     MultiItemSelection,
+    MultiSelect,
     Navigation,
     Overlay,
     Popover,
