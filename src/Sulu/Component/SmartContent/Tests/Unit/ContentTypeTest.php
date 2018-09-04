@@ -97,7 +97,7 @@ class ContentTypeTest extends TestCase
         $this->pageDataProvider->getConfiguration()->willReturn($this->getProviderConfiguration());
         $this->pageDataProvider->getDefaultPropertyParameter()->willReturn([]);
 
-        $this->dataProviderPool = new DataProviderPool();
+        $this->dataProviderPool = new DataProviderPool(true);
         $this->dataProviderPool->add('pages', $this->pageDataProvider->reveal());
 
         $this->tagManager = $this->getMockForAbstractClass(
