@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Route;
 
 /**
  * Renders preview responses.
@@ -89,6 +90,11 @@ class PreviewRenderer implements PreviewRendererInterface
      * @var string
      */
     private $targetGroupHeader;
+
+    /**
+     * @var \Symfony\Component\HttpKernel\KernelInterface
+     */
+    private $previewKernel;
 
     /**
      * @param RouteDefaultsProviderInterface $routeDefaultsProvider
@@ -150,19 +156,20 @@ class PreviewRenderer implements PreviewRendererInterface
         $localization = $webspace->getLocalization($locale);
 
         $query = [];
-        $request = [];
+        $requestParams = [];
         $currentRequest = $this->requestStack->getCurrentRequest();
         if (null !== $currentRequest) {
             $query = $currentRequest->query->all();
-            $request = $currentRequest->request->all();
+            $requestParams = $currentRequest->request->all();
         }
 
         $attributes = $this->routeDefaultsProvider->getByEntity(get_class($object), $id, $locale, $object);
+        $this->registerPreviewRoute($locale, $attributes);
 
         // get server parameters
         $server = $this->createServerAttributes($portalInformation, $currentRequest);
 
-        $request = new Request($query, $request, $attributes, [], [], $server);
+        $request = new Request($query, $requestParams, $attributes, [], [], $server);
         $request->setLocale($locale);
 
         if ($this->targetGroupHeader && $targetGroupId) {
@@ -180,7 +187,7 @@ class PreviewRenderer implements PreviewRendererInterface
                     'portalUrl' => $portalInformation->getUrl(),
                     'resourceLocatorPrefix' => $portalInformation->getPrefix(),
                     'getParameters' => $query,
-                    'postParameters' => $request,
+                    'postParameters' => $requestParams,
                     'analyticsKey' => $this->previewDefaults['analyticsKey'],
                     'portalInformation' => $portalInformation,
                 ]
@@ -211,7 +218,7 @@ class PreviewRenderer implements PreviewRendererInterface
      */
     private function handle(Request $request)
     {
-        $kernel = $this->kernelFactory->create($this->environment);
+        $kernel = $this->getPreviewKernel();
 
         try {
             return $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
@@ -312,5 +319,36 @@ class PreviewRenderer implements PreviewRendererInterface
         $webspace->setPortals([$portal]);
 
         return new PortalInformation(RequestAnalyzer::MATCH_TYPE_FULL, $webspace, $portal, $localization, $domain);
+    }
+
+    /**
+     * @param string $locale
+     * @param array $attributes
+     */
+    private function registerPreviewRoute($locale, array $attributes)
+    {
+        $kernel = $this->getPreviewKernel();
+        $contentRouteProvider = $kernel->getContainer()->get('sulu_website.provider.content');
+        $object = $attributes['object'];
+        $urls = $attributes['structure']->getUrls();
+
+        $contentRouteProvider
+            ->getRouteCollection()
+            ->add(
+                $object->getStructureType() . '_' . $object->getUuid(),
+                new Route($urls[$locale], $attributes)
+            );
+    }
+
+    /**
+     * @return \Symfony\Component\HttpKernel\KernelInterface
+     */
+    private function getPreviewKernel()
+    {
+        if (!$this->previewKernel) {
+            $this->previewKernel = $this->kernelFactory->create($this->environment);
+        }
+
+        return $this->previewKernel;
     }
 }
