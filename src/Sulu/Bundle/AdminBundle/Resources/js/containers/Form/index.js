@@ -20,6 +20,7 @@ import SmartContent from './fields/SmartContent';
 import TextArea from './fields/TextArea';
 import TextEditor from './fields/TextEditor';
 import Time from './fields/Time';
+import Url from './fields/Url';
 import type {Schema, Types} from './types';
 
 export {
@@ -43,6 +44,7 @@ export {
     TextArea,
     TextEditor,
     Time,
+    Url,
 };
 export type {Schema, Types};
 export default Form;

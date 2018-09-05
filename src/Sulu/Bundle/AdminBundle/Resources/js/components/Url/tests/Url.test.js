@@ -1,7 +1,13 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, shallow} from 'enzyme';
 import Url from '../Url';
+
+test('Render the component with an error', () => {
+    expect(render(
+        <Url onChange={jest.fn()} protocols={['http://', 'https://']} valid={false} value={undefined} />
+    )).toMatchSnapshot();
+});
 
 test('Set the correct values for protocol and path when initializing', () => {
     const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://']} value="https://www.sulu.io" />);

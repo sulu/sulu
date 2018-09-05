@@ -3,6 +3,7 @@
 $urlBackgroundColor: $white;
 $urlBorderColor: $silver;
 $urlButtonColor: $dustyGray;
+$urlErrorBorderColor: $persianRed;
 
 .url {
     display: flex;
@@ -12,6 +13,10 @@ $urlButtonColor: $dustyGray;
     border: 1px solid $urlBorderColor;
     background-color: $urlBackgroundColor;
     font-size: 12px;
+
+    &.error {
+        border-color: $urlErrorBorderColor;
+    }
 
     .protocols {
         color: $urlButtonColor;

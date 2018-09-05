@@ -2,6 +2,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {action, autorun, computed, observable} from 'mobx';
+import classNames from 'classnames';
 import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
 
@@ -9,11 +10,16 @@ type Props = {|
     onBlur?: () => void,
     onChange: (value: ?string) => void,
     protocols: Array<string>,
+    valid: boolean,
     value: ?string,
 |};
 
 @observer
 export default class Url extends React.Component<Props> {
+    static defaultProps = {
+        valid: true,
+    };
+
     @observable protocol: ?string = undefined;
     @observable path: ?string = undefined;
     changeDisposer: () => void;
@@ -118,10 +124,17 @@ export default class Url extends React.Component<Props> {
     };
 
     render() {
-        const {onBlur, protocols} = this.props;
+        const {onBlur, protocols, valid} = this.props;
+
+        const urlClass = classNames(
+            urlStyles.url,
+            {
+                [urlStyles.error]: !valid,
+            }
+        );
 
         return (
-            <div className={urlStyles.url}>
+            <div className={urlClass}>
                 <div className={urlStyles.protocols}>
                     <SingleSelect onChange={this.handleProtocolChange} skin="flat" value={this.protocol}>
                         {protocols.map((protocol) => (
