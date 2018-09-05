@@ -6,7 +6,7 @@ import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
 
 type Props = {|
-    onBlur: () => void,
+    onBlur?: () => void,
     onChange: (value: ?string) => void,
     protocols: Array<string>,
     value: ?string,
@@ -37,6 +37,10 @@ export default class Url extends React.Component<Props> {
 
     @computed get onChange() {
         return this.props.onChange;
+    }
+
+    @computed get protocols() {
+        return this.props.protocols;
     }
 
     callChangeCallback = () => {
@@ -73,11 +77,13 @@ export default class Url extends React.Component<Props> {
     }
 
     @computed get url() {
-        if (!this.protocol || !this.path) {
+        if (!this.path) {
             return undefined;
         }
 
-        return this.protocol + this.path;
+        const protocol = this.protocol || this.protocols[0];
+
+        return protocol + this.path;
     }
 
     @action handleProtocolChange = (protocol: string | number) => {

@@ -32,6 +32,18 @@ test('Call disposer when unmounted', () => {
     expect(changeDisposerSpy).toBeCalledWith();
 });
 
+test('Call onChange callback with the first protocol if none was selected', () => {
+    const changeSpy = jest.fn();
+    const url = shallow(<Url onChange={changeSpy} protocols={['http://', 'https://']} value={undefined} />);
+    url.find('input').prop('onChange')({
+        currentTarget: {
+            value: 'sulu.at',
+        },
+    });
+
+    expect(changeSpy).toBeCalledWith('http://sulu.at');
+});
+
 test('Call onChange callback when protocol was changed', () => {
     const changeSpy = jest.fn();
     const url = shallow(<Url onChange={changeSpy} protocols={['http://', 'https://']} value="https://www.sulu.io" />);
