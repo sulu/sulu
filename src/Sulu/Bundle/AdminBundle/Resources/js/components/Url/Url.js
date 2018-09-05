@@ -6,6 +6,7 @@ import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
 
 type Props = {|
+    onBlur: () => void,
     onChange: (value: ?string) => void,
     protocols: Array<string>,
     value: ?string,
@@ -80,7 +81,7 @@ export default class Url extends React.Component<Props> {
     }
 
     @action handleProtocolChange = (protocol: string | number) => {
-        const {protocols} = this.props;
+        const {onBlur, protocols} = this.props;
 
         if (typeof protocol !== 'string' || !protocols.includes(protocol)) {
             throw new Error(
@@ -89,23 +90,29 @@ export default class Url extends React.Component<Props> {
         }
 
         this.protocol = protocol;
+
+        if (onBlur) {
+            onBlur();
+        }
     };
 
     @action handlePathChange = (event: SyntheticEvent<HTMLInputElement>) => {
         const {protocols} = this.props;
         this.path = event.currentTarget.value;
 
-        const protocol = protocols.find((protocol) => this.path && this.path.startsWith(protocol));
+        const path = this.path;
+
+        const protocol = protocols.find((protocol) => path.startsWith(protocol));
         if (!protocol) {
             return;
         }
 
         this.protocol = protocol;
-        this.path = this.path.substring(this.protocol.length);
+        this.path = path.substring(this.protocol.length);
     };
 
     render() {
-        const {protocols} = this.props;
+        const {onBlur, protocols} = this.props;
 
         return (
             <div className={urlStyles.url}>
@@ -116,7 +123,7 @@ export default class Url extends React.Component<Props> {
                         ))}
                     </SingleSelect>
                 </div>
-                <input type="text" onChange={this.handlePathChange} value={this.path || ''} />
+                <input type="text" onBlur={onBlur} onChange={this.handlePathChange} value={this.path || ''} />
             </div>
         );
     }

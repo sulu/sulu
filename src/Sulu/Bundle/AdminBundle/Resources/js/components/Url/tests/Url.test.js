@@ -77,3 +77,33 @@ test('Should remove the protocol from path and set it on the protocol select if 
     expect(url.find('SingleSelect').prop('value')).toEqual('https://');
     expect(url.find('input').prop('value')).toEqual('www.sulu.io');
 });
+
+test('Call onBlur callback when protocol was changed', () => {
+    const blurSpy = jest.fn();
+    const url = shallow(
+        <Url
+            onBlur={blurSpy}
+            onChange={jest.fn()}
+            protocols={['http://', 'https://']}
+            value="https://www.sulu.io"
+        />
+    );
+    url.find('SingleSelect').prop('onChange')('http://');
+
+    expect(blurSpy).toBeCalledWith();
+});
+
+test('Call onChange callback when path was changed', () => {
+    const blurSpy = jest.fn();
+    const url = shallow(
+        <Url
+            onBlur={blurSpy}
+            onChange={jest.fn()}
+            protocols={['http://', 'https://']}
+            value="https://www.sulu.io"
+        />
+    );
+    url.find('input').prop('onBlur')();
+
+    expect(blurSpy).toBeCalledWith();
+});
