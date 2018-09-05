@@ -103,7 +103,7 @@ class Collection extends ApiWrapper
     /**
      * @var Collection[]
      */
-    protected $children = [];
+    protected $children = null;
 
     /**
      * @var Collection
@@ -155,6 +155,10 @@ class Collection extends ApiWrapper
      */
     public function addChild(self $child)
     {
+        if (!is_array($this->children)) {
+            $this->children = [];
+        }
+
         $this->children[] = $child;
     }
 
@@ -174,11 +178,11 @@ class Collection extends ApiWrapper
      * Indicates if sub collections exists.
      *
      * @VirtualProperty
-     * @SerializedName("hasSub")
+     * @SerializedName("hasChildren")
      *
      * @return bool
      */
-    public function getHasSub()
+    public function getHasChildren()
     {
         if (null !== ($children = $this->getEntity()->getChildren())) {
             return $children->count() > 0;

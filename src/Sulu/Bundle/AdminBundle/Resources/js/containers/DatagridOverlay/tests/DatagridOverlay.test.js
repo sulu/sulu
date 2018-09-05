@@ -2,6 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import Dialog from '../../../components/Dialog';
 import Overlay from '../../../components/Overlay';
 import Datagrid from '../../../containers/Datagrid';
 import DatagridStore from '../../../containers/Datagrid/stores/DatagridStore';
@@ -25,6 +26,47 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(
         this.selections = [];
     }
 ));
+
+test('Should use an Overlay by default', () => {
+    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const disabledIds = [1, 2, 5];
+
+    const datagridOverlay = shallow(
+        <DatagridOverlay
+            adapter="table"
+            datagridStore={datagridStore}
+            disabledIds={disabledIds}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            title="Selection"
+        />
+    );
+
+    expect(datagridOverlay.find(Dialog)).toHaveLength(0);
+    expect(datagridOverlay.find(Overlay)).toHaveLength(1);
+});
+
+test('Should use a dialog if overlayType is set to dialog', () => {
+    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const disabledIds = [1, 2, 5];
+
+    const datagridOverlay = shallow(
+        <DatagridOverlay
+            adapter="table"
+            datagridStore={datagridStore}
+            disabledIds={disabledIds}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            overlayType="dialog"
+            title="Selection"
+        />
+    );
+
+    expect(datagridOverlay.find(Dialog)).toHaveLength(1);
+    expect(datagridOverlay.find(Overlay)).toHaveLength(0);
+});
 
 test('Should pass disabledIds to the Datagrid', () => {
     const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});

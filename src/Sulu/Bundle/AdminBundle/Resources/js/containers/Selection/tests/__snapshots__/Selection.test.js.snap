@@ -8,9 +8,11 @@ exports[`Should open an overlay 1`] = `
   <div class=\\"container\\">
     <div class=\\"overlay large\\">
       <section class=\\"content\\">
-        <header>Selection<span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <header>
+          <h2>Selection</h2><span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span>
+        </header>
         <article>
-          <div class=\\"adapter-container table\\">
+          <div class=\\"adapterContainer overlay table\\">
             <div class=\\"datagrid adapter table\\">
               <div class=\\"datagrid\\"></div>
             </div>
@@ -135,7 +137,7 @@ Array [
           class="item"
         >
           <span
-            class="dragHandle"
+            class="dragHandle sortable"
           >
             <span
               aria-label="su-more"
@@ -183,7 +185,7 @@ Array [
           class="item"
         >
           <span
-            class="dragHandle"
+            class="dragHandle sortable"
           >
             <span
               aria-label="su-more"
@@ -231,7 +233,7 @@ Array [
           class="item"
         >
           <span
-            class="dragHandle"
+            class="dragHandle sortable"
           >
             <span
               aria-label="su-more"

@@ -51,16 +51,10 @@ class MediaDataProvider extends BaseDataProvider
             ->enablePagination()
             ->enablePresentAs()
             ->enableAudienceTargeting()
-            ->enableDatasource(
-                'media-datasource@sulumedia',
+            ->enableDatasource('collections', 'column_list')
+            ->enableSorting(
                 [
-                    'rootUrl' => '/admin/api/collections?sortBy=title&limit=9999&locale={locale}&include-root=true',
-                    'selectedUrl' => '/admin/api/collections/{datasource}?tree=true&sortBy=title&locale={locale}&include-root=true',
-                    'resultKey' => 'collections',
-                ]
-            )->enableSorting(
-                [
-                    ['column' => 'fileVersionMeta.title', 'title' => 'public.title'],
+                    ['column' => 'fileVersionMeta.title', 'title' => 'sulu_admin.title'],
                 ]
             )
             ->getConfiguration();

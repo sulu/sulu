@@ -331,6 +331,26 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('Fourth Category', $categories[0]->children[0]->children[0]->name);
     }
 
+    public function testCGetByIds()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories?locale=en&ids=' . $this->category3->getId() . ',' . $this->category4->getId()
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $categories = $response->_embedded->categories;
+
+        $this->assertCount(2, $categories);
+
+        $this->assertEquals('Third Category', $categories[0]->name);
+        $this->assertEquals('Fourth Category', $categories[1]->name);
+    }
+
     public function testCGetFlat()
     {
         $client = $this->createAuthenticatedClient();

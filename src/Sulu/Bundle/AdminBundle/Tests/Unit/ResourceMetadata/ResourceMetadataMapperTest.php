@@ -153,12 +153,12 @@ class ResourceMetadataMapperTest extends TestCase
         $this->assertCount(2, $option2->getValue());
 
         $option2Value1 = $option2->getValue()[0];
-        $this->assertSame($option2Value1->getName(), '0');
+        $this->assertSame($option2Value1->getName(), 'option1');
         $this->assertSame($option2Value1->getTitle(), 'Select Option 1');
         $this->assertSame($option2Value1->getValue(), 0);
 
         $option2Value2 = $option2->getValue()[1];
-        $this->assertSame($option2Value2->getName(), '1');
+        $this->assertSame($option2Value2->getName(), 'option2');
         $this->assertSame($option2Value2->getTitle(), 'Select Option 2');
         $this->assertSame($option2Value2->getValue(), 1);
     }
@@ -277,7 +277,7 @@ class ResourceMetadataMapperTest extends TestCase
                     'type' => 'collection',
                     'value' => [
                         [
-                            'name' => '0',
+                            'name' => 'option1',
                             'type' => 'string',
                             'meta' => [
                                 'title' => [
@@ -287,7 +287,7 @@ class ResourceMetadataMapperTest extends TestCase
                             'value' => 0,
                         ],
                         [
-                            'name' => '1',
+                            'name' => 'option2',
                             'type' => 'string',
                             'meta' => [
                                 'title' => [

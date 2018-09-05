@@ -31,7 +31,6 @@ class AccountDataProvider extends BaseDataProvider
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
-            ->setDeepLink('contacts/accounts/edit:{id}/details')
             ->getConfiguration();
     }
 

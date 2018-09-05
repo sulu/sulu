@@ -154,12 +154,9 @@ class BuilderTest extends TestCase
 
     public function testDatasource()
     {
-        $component = 'test@sulutest';
-        $options = ['url' => '/admin/api/test'];
-
         $builder = Builder::create();
 
-        $this->assertEquals($builder, $builder->enableDatasource($component, $options));
+        $this->assertEquals($builder, $builder->enableDatasource('collections', 'column_list'));
 
         $configuration = $builder->getConfiguration();
 
@@ -171,33 +168,7 @@ class BuilderTest extends TestCase
         $this->assertFalse($configuration->hasPresentAs());
         $this->assertFalse($configuration->hasPagination());
 
-        $componentConfiguration = $configuration->getDatasource();
-
-        $this->assertEquals($component, $componentConfiguration->getName());
-        $this->assertEquals($options, $componentConfiguration->getOptions());
-    }
-
-    public function testDatasourceWithoutOptions()
-    {
-        $component = 'test@sulutest';
-
-        $builder = Builder::create();
-
-        $this->assertEquals($builder, $builder->enableDatasource($component));
-
-        $configuration = $builder->getConfiguration();
-
-        $this->assertTrue($configuration->hasDatasource());
-        $this->assertFalse($configuration->hasSorting());
-        $this->assertFalse($configuration->hasTags());
-        $this->assertFalse($configuration->hasCategories());
-        $this->assertFalse($configuration->hasLimit());
-        $this->assertFalse($configuration->hasPresentAs());
-        $this->assertFalse($configuration->hasPagination());
-
-        $componentConfiguration = $configuration->getDatasource();
-
-        $this->assertEquals($component, $componentConfiguration->getName());
-        $this->assertEquals([], $componentConfiguration->getOptions());
+        $this->assertEquals('collections', $configuration->getDatasourceResourceKey());
+        $this->assertEquals('column_list', $configuration->getDatasourceAdapter());
     }
 }

@@ -4,6 +4,7 @@ import {autorun, observable } from 'mobx';
 import type {IObservableValue} from 'mobx';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import DatagridOverlay from '../DatagridOverlay';
+import type {OverlayType} from '../DatagridOverlay';
 
 type Props = {|
     adapter: string,
@@ -16,6 +17,7 @@ type Props = {|
     onConfirm: (selectedItem: Object) => void,
     open: boolean,
     options?: Object,
+    overlayType: OverlayType,
     resourceKey: string,
     preSelectedItem?: ?Object,
     title: string,
@@ -28,6 +30,7 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
 
     static defaultProps = {
         clearSelectionOnClose: false,
+        overlayType: 'overlay',
     };
 
     constructor(props: Props) {
@@ -41,10 +44,11 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
             observableOptions.locale = locale;
         }
 
-        this.datagridStore = new DatagridStore(resourceKey, observableOptions, options);
+        const initialSelectionIds = [];
         if (preSelectedItem) {
-            this.datagridStore.select(preSelectedItem);
+            initialSelectionIds.push(preSelectedItem.id);
         }
+        this.datagridStore = new DatagridStore(resourceKey, observableOptions, options, initialSelectionIds);
 
         this.selectionDisposer = autorun(() => {
             const {selections} = this.datagridStore;
@@ -89,6 +93,7 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
             disabledIds,
             onClose,
             open,
+            overlayType,
             preSelectedItem,
             title,
         } = this.props;
@@ -104,6 +109,7 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
                 onClose={onClose}
                 onConfirm={this.handleConfirm}
                 open={open}
+                overlayType={overlayType}
                 preSelectedItems={preSelectedItem ? [preSelectedItem] : undefined}
                 title={title}
             />

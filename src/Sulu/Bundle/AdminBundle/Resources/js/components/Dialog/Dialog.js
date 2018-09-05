@@ -10,22 +10,25 @@ import Backdrop from '../Backdrop';
 import Button from '../Button';
 import dialogStyles from './dialog.scss';
 
-type Props = {
-    open: boolean,
-    title: string,
+type Props = {|
+    confirmDisabled: boolean,
     children: Node,
     cancelText: string,
     confirmText: string,
     confirmLoading: boolean,
     onConfirm: () => void,
     onCancel: () => void,
-};
+    open: boolean,
+    size?: 'small' | 'large',
+    title: string,
+|};
 
 @observer
 export default class Dialog extends React.Component<Props> {
     static defaultProps = {
-        open: false,
+        confirmDisabled: false,
         confirmLoading: false,
+        open: false,
     };
 
     @observable visible: boolean = false;
@@ -72,11 +75,13 @@ export default class Dialog extends React.Component<Props> {
             open,
             title,
             children,
+            confirmDisabled,
             onCancel,
             onConfirm,
             cancelText,
             confirmText,
             confirmLoading,
+            size,
         } = this.props;
         const containerClass = classNames(
             dialogStyles.dialogContainer,
@@ -87,6 +92,13 @@ export default class Dialog extends React.Component<Props> {
 
         const showPortal = open || this.openHasChanged;
 
+        const dialogClass = classNames(
+            dialogStyles.dialog,
+            {
+                [dialogStyles[size]]: size,
+            }
+        );
+
         return (
             <div>
                 <Backdrop open={showPortal} />
@@ -96,7 +108,7 @@ export default class Dialog extends React.Component<Props> {
                             className={containerClass}
                             onTransitionEnd={this.handleTransitionEnd}
                         >
-                            <div className={dialogStyles.dialog}>
+                            <div className={dialogClass}>
                                 <section className={dialogStyles.content}>
                                     <header>
                                         {title}
@@ -108,7 +120,12 @@ export default class Dialog extends React.Component<Props> {
                                         <Button skin="secondary" onClick={onCancel}>
                                             {cancelText}
                                         </Button>
-                                        <Button skin="primary" onClick={onConfirm} loading={confirmLoading}>
+                                        <Button
+                                            disabled={confirmDisabled}
+                                            loading={confirmLoading}
+                                            onClick={onConfirm}
+                                            skin="primary"
+                                        >
                                             {confirmText}
                                         </Button>
                                     </footer>

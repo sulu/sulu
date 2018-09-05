@@ -24,13 +24,13 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\SmartContent\ContentDataItem;
-use Sulu\Component\Content\SmartContent\ContentDataProvider;
+use Sulu\Component\Content\SmartContent\PageDataProvider;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
 
-class ContentDataProviderTest extends TestCase
+class PageDataProviderTest extends TestCase
 {
     /**
      * @param array|null $initValue
@@ -126,7 +126,7 @@ class ContentDataProviderTest extends TestCase
 
     public function testGetConfiguration()
     {
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(),
             $this->getContentQueryExecutor(),
             $this->getDocumentManager(),
@@ -143,7 +143,7 @@ class ContentDataProviderTest extends TestCase
 
     public function testGetDefaultParameter()
     {
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(),
             $this->getContentQueryExecutor(),
             $this->getDocumentManager(),
@@ -164,7 +164,7 @@ class ContentDataProviderTest extends TestCase
 
     public function testResolveDataItemsNoDataSource()
     {
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(),
             $this->getContentQueryExecutor(),
             $this->getDocumentManager(),
@@ -189,7 +189,7 @@ class ContentDataProviderTest extends TestCase
 
     public function testResolveDataItemsNoResult()
     {
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
                 [
                     'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
@@ -228,7 +228,7 @@ class ContentDataProviderTest extends TestCase
             ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
                 [
                     'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
@@ -271,7 +271,7 @@ class ContentDataProviderTest extends TestCase
             ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
                 [
                     'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
@@ -315,7 +315,7 @@ class ContentDataProviderTest extends TestCase
         ];
 
         $referenceStore = new ReferenceStore();
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
                 [
                     'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
@@ -359,7 +359,7 @@ class ContentDataProviderTest extends TestCase
             ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
                 [
                     'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
@@ -399,7 +399,7 @@ class ContentDataProviderTest extends TestCase
 
     public function testResolveDataItemsWithDeletedDataSource()
     {
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(),
             $this->getContentQueryExecutor(),
             $this->getDocumentManager(),
@@ -424,7 +424,7 @@ class ContentDataProviderTest extends TestCase
     {
         $data = ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'];
 
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
                 ['ids' => [$data['uuid']], 'properties' => ['my-properties' => true], 'published' => false]
             ),
@@ -472,7 +472,7 @@ class ContentDataProviderTest extends TestCase
 
         $referenceStore = new ReferenceStore();
         $referenceStore->add('123-456-789');
-        $provider = new ContentDataProvider(
+        $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
                 [
                     'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],

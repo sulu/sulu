@@ -2,6 +2,7 @@
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import DatagridStore from '../../../containers/Datagrid/stores/DatagridStore';
 import DatagridOverlay from '../../../containers/DatagridOverlay';
 import SingleDatagridOverlay from '../SingleDatagridOverlay';
 
@@ -62,6 +63,39 @@ test('Should instantiate the DatagridStore without locale and options', () => {
     );
 
     expect(singleDatagridOverlay.instance().datagridStore.observableOptions.locale).toEqual(undefined);
+});
+
+test('Should pass overlayType overlay by default', () => {
+    const singleDatagridOverlay = shallow(
+        <SingleDatagridOverlay
+            adapter="table"
+            allowActivateForDisabledItems={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(singleDatagridOverlay.find(DatagridOverlay).prop('overlayType')).toEqual('overlay');
+});
+
+test('Should pass overlayType dialog if it is set via props', () => {
+    const singleDatagridOverlay = shallow(
+        <SingleDatagridOverlay
+            adapter="table"
+            allowActivateForDisabledItems={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            overlayType="dialog"
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(singleDatagridOverlay.find(DatagridOverlay).prop('overlayType')).toEqual('dialog');
 });
 
 test('Should pass disabledIds to the DatagridOverlay', () => {
@@ -159,8 +193,8 @@ test('Should call onConfirm with the current selection', () => {
     expect(confirmSpy).toBeCalledWith({id: 1});
 });
 
-test('Should select the preSelectedItems in the DatagridStore', () => {
-    const singleDatagridOverlay = shallow(
+test('Should pass the id froms the preSelectedItems to the DatagridStore', () => {
+    shallow(
         <SingleDatagridOverlay
             adapter="table"
             onClose={jest.fn()}
@@ -172,9 +206,7 @@ test('Should select the preSelectedItems in the DatagridStore', () => {
         />
     );
 
-    const datagridStore = singleDatagridOverlay.instance().datagridStore;
-
-    expect(datagridStore.select).toBeCalledWith({id: 1});
+    expect(DatagridStore).toBeCalledWith('snippets', expect.anything(), undefined, [1]);
 });
 
 test('Should not fail when preSelectedItem is undefined', () => {

@@ -7,7 +7,7 @@
 
         <!-- content provider -->
         <parameter key="sulu_content.smart_content.data_provider.content.query_builder.class">Sulu\Component\Content\SmartContent\QueryBuilder</parameter>
-        <parameter key="sulu_content.smart_content.data_provider.content.class">Sulu\Component\Content\SmartContent\ContentDataProvider</parameter>
+        <parameter key="sulu_content.smart_content.data_provider.page.class">Sulu\Component\Content\SmartContent\PageDataProvider</parameter>
         <parameter key="sulu_content.smart_content.data_provider.content.proxy_factory.class">ProxyManager\Factory\LazyLoadingValueHolderFactory</parameter>
 
         <!-- content type -->
@@ -17,6 +17,7 @@
         <!-- data provider -->
         <service id="sulu_content.smart_content.data_provider_pool"
                  class="%sulu_content.smart_content.data_provider_pool.class%">
+            <argument type="expression">container.hasParameter('sulu_audience_targeting.enabled')</argument>
         </service>
 
         <!-- content provider -->
@@ -32,7 +33,7 @@
             <argument>%sulu.content.language.namespace%</argument>
         </service>
         <service id="sulu_content.smart_content.data_provider.content"
-                 class="%sulu_content.smart_content.data_provider.content.class%">
+                 class="%sulu_content.smart_content.data_provider.page.class%">
             <argument type="service" id="sulu_content.smart_content.data_provider.content.query_builder"/>
             <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
@@ -41,7 +42,7 @@
             <argument type="service" id="sulu_content.reference_store.content"/>
             <argument>%sulu_document_manager.show_drafts%</argument>
 
-            <tag name="sulu.smart_content.data_provider" alias="content"/>
+            <tag name="sulu.smart_content.data_provider" alias="pages"/>
         </service>
 
         <!-- content type -->

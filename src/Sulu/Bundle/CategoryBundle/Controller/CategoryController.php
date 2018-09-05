@@ -119,6 +119,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 $expandedIds,
                 $request->query->has('expandedIds')
             );
+        } elseif ($request->query->has('ids')) {
+            $entities = $this->getCategoryManager()->findByIds(explode(',', $request->query->get('ids')));
+            $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
+            $list = new CollectionRepresentation($categories, self::$entityKey);
         } else {
             $entities = $this->getCategoryManager()->findChildrenByParentKey($rootKey);
             $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);

@@ -44,10 +44,15 @@ export default class Selection extends React.Component<Props> {
 
         this.selectionStore = new SelectionStore(resourceKey, value, locale);
         this.changeDisposer = autorun(() => {
+            const {value} = this.props;
             const itemIds = this.selectionStore.items.map((item) => item.id);
 
             if (!this.changeAutorunInitialized) {
                 this.changeAutorunInitialized = true;
+                return;
+            }
+
+            if (equals(toJS(value), toJS(itemIds))) {
                 return;
             }
 

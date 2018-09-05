@@ -83,7 +83,8 @@ jest.mock('sulu-admin-bundle/containers', () => {
                 title: {},
                 description: {},
             });
-            this.updateStrategies = jest.fn();
+            this.updateLoadingStrategy = jest.fn();
+            this.updateStructureStrategy = jest.fn();
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();

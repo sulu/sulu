@@ -8,7 +8,9 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
   <div class=\\"container\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
-        <header>Select media<span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
+        <header>
+          <h2>Select media</h2><span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span>
+        </header>
         <article>
           <div class=\\"overlay\\">
             <div class=\\"dropzone\\" style=\\"position: relative;\\" aria-disabled=\\"false\\">
@@ -175,7 +177,7 @@ Array [
           class="item"
         >
           <span
-            class="dragHandle"
+            class="dragHandle sortable"
           >
             <span
               aria-label="su-more"
@@ -222,7 +224,7 @@ Array [
           class="item"
         >
           <span
-            class="dragHandle"
+            class="dragHandle sortable"
           >
             <span
               aria-label="su-more"
@@ -269,7 +271,7 @@ Array [
           class="item"
         >
           <span
-            class="dragHandle"
+            class="dragHandle sortable"
           >
             <span
               aria-label="su-more"

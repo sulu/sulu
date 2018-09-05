@@ -2,6 +2,23 @@
 
 ## dev-develop
 
+### SmartContent
+
+The `DataProvider`s for the `SmartContent` have changed their aliases. The alias now matches the resourceKey of the
+entity. These aliases are also what has to be passed to the `smart_content` type as `provider` param. Have a look at
+the following table to find the changed aliases:
+
+Old alias | New alias
+----------|----------
+content   | pages
+snippet   | snippets
+account   | accounts
+contact   | contacts
+
+The `Builder` class which is used in the `DataProvider`s for generating the SmartContent configuration has also
+changed a bit. The `enableDataSource` method now takes different parameters: The first one defines which resource
+should be loaded, and the second one which `DatagridAdapter` should be used for displaying the resources.
+
 ### Datagrid
 
 **This change only affects you if you have used a 2.0.0 alpha release before**

@@ -6,8 +6,6 @@ $secondaryBackground: $white;
 $borderRadius: 3px;
 $footerBorderColor: $silver;
 
-$titleColor: $black;
-
 $iconFontSize: 14px;
 
 $confirmBackground: $shakespeare;
@@ -72,11 +70,13 @@ $transitionDuration: 300ms;
     header {
         background: $primaryBackground;
         height: $overlayHeaderHeight;
-        color: $titleColor;
-        font-size: 22px;
-        font-weight: bold;
         text-align: center;
         line-height: $overlayHeaderHeight;
+
+        h2 {
+            display: inline-block;
+            margin: 0;
+        }
     }
 
     article {

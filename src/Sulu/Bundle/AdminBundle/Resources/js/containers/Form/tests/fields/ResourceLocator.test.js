@@ -49,6 +49,7 @@ test('Pass props correctly to ResourceLocator', () => {
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
@@ -80,6 +81,7 @@ test('Throw an exception if a non-valid mode is passed', () => {
                 error={undefined}
                 fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
                 formInspector={formInspector}
+                label="Test"
                 maxOccurs={undefined}
                 minOccurs={undefined}
                 onChange={jest.fn()}
@@ -104,6 +106,7 @@ test('Throw an exception if a no generationUrl is passed', () => {
                 error={undefined}
                 fieldTypeOptions={{}}
                 formInspector={formInspector}
+                label="Test"
                 maxOccurs={undefined}
                 minOccurs={undefined}
                 onChange={jest.fn()}
@@ -125,6 +128,7 @@ test('Set default mode correctly', () => {
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
@@ -149,6 +153,7 @@ test('Should not pass any argument to onFinish callback', () => {
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
@@ -173,6 +178,7 @@ test('Should not request a new URL if on an edit form', () =>{
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
@@ -204,6 +210,7 @@ test('Should request a new URL if no URL was defined', () => {
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={changeSpy}
@@ -256,6 +263,7 @@ test('Should not request a new URL if URL was defined', () => {
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={changeSpy}
@@ -293,6 +301,7 @@ test('Should request a new URL including the options from the FormStore if no UR
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={changeSpy}
@@ -340,6 +349,7 @@ test('Should not request a new URL if no parts are available', () => {
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
@@ -374,6 +384,7 @@ test('Should not request a new URL if only empty parts are available', () => {
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
@@ -408,6 +419,7 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
@@ -442,6 +454,7 @@ test('Should not request a new URL if a field without any tags has finished edit
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
@@ -473,6 +486,7 @@ test('Should not request a new URL if the resource locator field has already bee
             error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={changeSpy}

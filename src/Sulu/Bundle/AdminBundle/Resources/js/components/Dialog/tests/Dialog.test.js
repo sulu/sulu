@@ -31,6 +31,50 @@ test('The component should render in body when open', () => {
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
+test('The component should render in body with disabled confirm button', () => {
+    const body = document.body;
+    const onCancel = jest.fn();
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Dialog
+            title="My dialog title"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+            cancelText="Cancel"
+            confirmDisabled={true}
+            confirmText="Confirm"
+            open={true}
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    ).render();
+
+    expect(view).toMatchSnapshot();
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+});
+
+test('The component should render in body with a large class', () => {
+    const body = document.body;
+    const onCancel = jest.fn();
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Dialog
+            title="My dialog title"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+            cancelText="Cancel"
+            confirmText="Confirm"
+            open={true}
+            size="large"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    ).render();
+
+    expect(view).toMatchSnapshot();
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+});
+
 test('The component should render in body with loader instead of confirm button', () => {
     const body = document.body;
     const onCancel = jest.fn();

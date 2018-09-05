@@ -39,7 +39,7 @@ exports[`Clicking the left and right button inside the header should call the ri
         class="item"
       >
         <span
-          class="dragHandle"
+          class="dragHandle sortable"
         >
           <span
             aria-label="su-more"
@@ -65,7 +65,7 @@ exports[`Clicking the left and right button inside the header should call the ri
         class="item"
       >
         <span
-          class="dragHandle"
+          class="dragHandle sortable"
         >
           <span
             aria-label="su-more"
@@ -91,12 +91,96 @@ exports[`Clicking the left and right button inside the header should call the ri
         class="item"
       >
         <span
-          class="dragHandle"
+          class="dragHandle sortable"
         >
           <span
             aria-label="su-more"
             class="su-more"
           />
+          <span
+            class="index"
+          >
+            3
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 3
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`Render a not sortable MultiItemSelection with children 1`] = `
+<div>
+  <div
+    class="header"
+  >
+    <div
+      class="label"
+    >
+      I have children
+    </div>
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle"
+        >
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 1
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle"
+        >
+          <span
+            class="index"
+          >
+            2
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 2
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle"
+        >
           <span
             class="index"
           >
@@ -167,7 +251,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
         class="item"
       >
         <span
-          class="dragHandle"
+          class="dragHandle sortable"
         >
           <span
             aria-label="su-more"
@@ -193,7 +277,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
         class="item"
       >
         <span
-          class="dragHandle"
+          class="dragHandle sortable"
         >
           <span
             aria-label="su-more"
@@ -219,7 +303,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
         class="item"
       >
         <span
-          class="dragHandle"
+          class="dragHandle sortable"
         >
           <span
             aria-label="su-more"

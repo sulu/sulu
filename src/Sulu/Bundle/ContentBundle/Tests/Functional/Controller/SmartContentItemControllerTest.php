@@ -251,7 +251,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
-            '&provider=content&excluded=' . $this->team->getUuid()
+            '&provider=pages&excluded=' . $this->team->getUuid()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -271,6 +271,33 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
     }
 
+    public function testGetItemsSorted()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
+            '&sortBy=title&sortMethod=asc&provider=pages&excluded=' . $this->team->getUuid()
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(
+            ['id' => $this->team->getUuid(), 'title' => 'Team', 'path' => '/team'],
+            $result['datasource']
+        );
+        $this->assertEquals(
+            [
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false, 'url' => '/team/daniel'],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'publishedState' => false, 'url' => '/team/johannes'],
+                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'publishedState' => false, 'url' => '/team/thomas'],
+            ],
+            $result['_embedded']['items']
+        );
+    }
+
     public function testGetItemsExcluded()
     {
         $client = $this->createAuthenticatedClient();
@@ -278,7 +305,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
-            '&provider=content&excluded=' . $this->johannes->getUuid()
+            '&provider=pages&excluded=' . $this->johannes->getUuid()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -305,7 +332,7 @@ class SmartContentItemControllerTest extends SuluTestCase
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource='
             . $this->team->getUuid()
-            . '&provider=content&excluded='
+            . '&provider=pages&excluded='
             . $this->johannes->getUuid()
             . ','
             . $this->daniel->getUuid()
@@ -338,7 +365,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
-            '&provider=content&excluded=' . $this->johannes->getUuid() .
+            '&provider=pages&excluded=' . $this->johannes->getUuid() .
             '&params={"max_per_page":{"value":"5","type":"string"},' .
             '"properties":{"value":{"title":{"value":"title","type":"string"}},"type":"collection"}}'
         );
@@ -366,7 +393,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
-            '&provider=content&excluded=' . $this->team->getUuid() . '&limitResult=2'
+            '&provider=pages&excluded=' . $this->team->getUuid() . '&limitResult=2'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -392,7 +419,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
-            '&provider=content&excluded=' . $this->team->getUuid() . '&limitResult=2&tags[]=' . $this->tag1->getName()
+            '&provider=pages&excluded=' . $this->team->getUuid() . '&limitResult=2&tags=' . $this->tag1->getName()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());

@@ -683,9 +683,10 @@ class CollectionManager implements CollectionManagerInterface
     {
         $apiEntity = new Collection($entity, $locale);
 
-        $children = [];
+        $children = null;
 
         if (null !== $entities) {
+            $children = [];
             foreach ($entities as $possibleChild) {
                 if (null !== ($parent = $possibleChild->getParent()) && $parent->getId() === $entity->getId()) {
                     $children[] = $this->getApiEntity($possibleChild, $locale, $entities);

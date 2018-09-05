@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render item with additional columns except for id 1`] = `
+<div
+  class="smartContentItem"
+>
+  <div
+    class="title"
+  >
+    Title with URL
+  </div>
+  <div
+    class="column"
+  >
+    /url
+  </div>
+  <div
+    class="column"
+  >
+    Test
+  </div>
+</div>
+`;
+
+exports[`Render item with only title 1`] = `
+<div
+  class="smartContentItem"
+>
+  <div
+    class="title"
+  >
+    Only title
+  </div>
+</div>
+`;
+
+exports[`Render item with title and draft with published state 1`] = `
+<div
+  class="smartContentItem"
+>
+  <div
+    class="title"
+  >
+    <div
+      class="publishIndicator"
+    >
+      <span
+        class="published"
+      />
+      <span
+        class="draft"
+      />
+    </div>
+    Draft and published
+  </div>
+</div>
+`;
+
+exports[`Render item with title and image 1`] = `
+<div
+  class="smartContentItem"
+>
+  <div
+    class="image"
+  >
+    <img
+      src="image.jpg"
+    />
+  </div>
+  <div
+    class="title"
+  >
+    Image
+  </div>
+</div>
+`;
+
+exports[`Render item with title and published state 1`] = `
+<div
+  class="smartContentItem"
+>
+  <div
+    class="title"
+  >
+    Published
+  </div>
+</div>
+`;

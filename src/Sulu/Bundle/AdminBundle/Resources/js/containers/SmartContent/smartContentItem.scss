@@ -1,0 +1,35 @@
+@import '../../containers/Application/colors.scss';
+
+$smartContentColumnColor: $scorpion;
+
+.smart-content-item {
+    display: inline-flex;
+    align-items: center;
+
+    > * {
+        margin-right: 10px;
+    }
+}
+
+.image {
+    img {
+        height: 30px;
+        width: 30px;
+    }
+}
+
+.publish-indicator {
+    padding-right: 10px;
+}
+
+.title,
+.column {
+    display: flex;
+    align-items: center;
+    flex-basis: 0;
+    flex-grow: 1;
+}
+
+.column {
+    color: $smartContentColumnColor;
+}

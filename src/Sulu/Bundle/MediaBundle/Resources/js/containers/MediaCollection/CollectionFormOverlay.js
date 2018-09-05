@@ -86,7 +86,6 @@ export default class CollectionFormOverlay extends React.Component<Props> {
                 <Dialog
                     open={open}
                     title={this.title}
-                    onClose={this.handleClose}
                     onConfirm={this.handleConfirm}
                     confirmText={confirmText}
                     confirmLoading={resourceStore.saving}

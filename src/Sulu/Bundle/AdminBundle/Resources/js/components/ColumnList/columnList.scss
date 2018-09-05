@@ -1,6 +1,8 @@
 @import '../../containers/Application/colors.scss';
 @import './variables.scss';
 
+$columnListContainerTextColor: $black;
+
 :export {
     column-width: $columnWidth;
 }
@@ -12,6 +14,7 @@
 }
 
 .column-list-container {
+    color: $columnListContainerTextColor;
     height: 100%;
     width: 100%;
     overflow-x: auto;

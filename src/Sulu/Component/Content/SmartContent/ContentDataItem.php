@@ -15,13 +15,14 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\ItemInterface;
+use Sulu\Component\SmartContent\PublishInterface;
 
 /**
  * Represents item in content data provider.
  *
  * @ExclusionPolicy("all")
  */
-class ContentDataItem extends ArrayAccessItem implements ItemInterface
+class ContentDataItem extends ArrayAccessItem implements ItemInterface, PublishInterface
 {
     /**
      * @param array $data

@@ -30,6 +30,7 @@ import {
     PasswordConfirmation,
     Phone,
     ResourceLocator,
+    SmartContent,
     SingleSelect,
     SingleSelection,
     TextArea,
@@ -37,6 +38,7 @@ import {
     Time,
 } from '../../containers/Form';
 import FieldBlocks from '../../containers/FieldBlocks';
+import {smartContentConfigStore} from '../../containers/SmartContent';
 import {textEditorRegistry} from '../../containers/TextEditor';
 import userStore from '../../stores/UserStore';
 import {navigationRegistry} from '../../containers/Navigation';
@@ -95,6 +97,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('password_confirmation', PasswordConfirmation);
     fieldRegistry.add('phone', Phone);
     fieldRegistry.add('resource_locator', ResourceLocator, {generationUrl: Config.endpoints.generateUrl});
+    fieldRegistry.add('smart_content', SmartContent);
     fieldRegistry.add('single_select', SingleSelect);
     fieldRegistry.add('text_line', Input);
     fieldRegistry.add('text_area', TextArea);
@@ -132,6 +135,7 @@ function processConfig(config: Object) {
     routeRegistry.addCollection(config['sulu_admin'].routes);
     navigationRegistry.set(config['sulu_admin'].navigation);
     resourceMetadataStore.setEndpoints(config['sulu_admin'].resourceMetadataEndpoints);
+    smartContentConfigStore.setConfig(config['sulu_admin'].smartContent);
 }
 
 function getBrowserLanguage() {

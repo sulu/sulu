@@ -4,6 +4,8 @@
 
 $bodyBackgroundColor: $wildSand;
 $h1TextColor: $blueZodiac;
+$h2TextColor: $black;
+$h3TextColor: $scorpion;
 $inputBackgroundColor: $white;
 
 *,
@@ -31,7 +33,22 @@ body {
 h1 {
     color: $h1TextColor;
     margin: 0 0 30px;
+    font-size: 30px;
     font-weight: 600;
+}
+
+h2 {
+    color: $h2TextColor;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+h3 {
+    color: $h3TextColor;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 19px;
+    margin: 0 0 20px;
 }
 
 button {

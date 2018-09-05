@@ -152,20 +152,20 @@ class CollectionManagerTest extends TestCase
         $this->assertCount(2, $result);
         $this->assertEquals(1, $result[0]->getId());
         $this->assertEquals(6, $result[1]->getId());
-        $this->assertCount(0, $result[1]->getChildren());
+        $this->assertNull($result[1]->getChildren());
 
         $result = $result[0]->getChildren();
         $this->assertCount(2, $result);
         $this->assertEquals(2, $result[0]->getId());
         $this->assertEquals(3, $result[1]->getId());
-        $this->assertCount(0, $result[0]->getChildren());
+        $this->assertNull($result[0]->getChildren());
 
         $result = $result[1]->getChildren();
         $this->assertCount(2, $result);
         $this->assertEquals(4, $result[0]->getId());
         $this->assertEquals(5, $result[1]->getId());
-        $this->assertCount(0, $result[0]->getChildren());
-        $this->assertCount(0, $result[1]->getChildren());
+        $this->assertNull($result[0]->getChildren());
+        $this->assertNull($result[1]->getChildren());
     }
 
     /**

@@ -80,14 +80,14 @@
             <argument type="service" id="jms_serializer"/>
             <argument type="service" id="sulu_contact.reference_store.contact"/>
 
-            <tag name="sulu.smart_content.data_provider" alias="contact"/>
+            <tag name="sulu.smart_content.data_provider" alias="contacts"/>
         </service>
         <service id="sulu_contact.smart_content.data_provider.account" class="%sulu_contact.smart_content.data_provider.account.class%">
             <argument type="service" id="sulu_contact.account_manager"/>
             <argument type="service" id="jms_serializer"/>
             <argument type="service" id="sulu_contact.reference_store.account"/>
 
-            <tag name="sulu.smart_content.data_provider" alias="account"/>
+            <tag name="sulu.smart_content.data_provider" alias="accounts"/>
         </service>
 
         <service id="sulu_contact.util.index_comparator" class="%sulu_contact.util.index_comparator.class%"/>

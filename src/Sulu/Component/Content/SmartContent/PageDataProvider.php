@@ -32,7 +32,7 @@ use Sulu\Component\SmartContent\DatasourceItem;
 /**
  * DataProvider for content.
  */
-class ContentDataProvider implements DataProviderInterface, DataProviderAliasInterface
+class PageDataProvider implements DataProviderInterface, DataProviderAliasInterface
 {
     /**
      * @var ContentQueryBuilderInterface
@@ -118,24 +118,16 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
             ->enablePagination()
             ->enablePresentAs()
             ->enableAudienceTargeting()
-            ->enableDatasource(
-                'content-datasource@sulucontent',
-                [
-                    'rootUrl' => '/admin/api/nodes?language={locale}&fields=title,order,published&webspace-nodes=all',
-                    'selectedUrl' => '/admin/api/nodes/{datasource}?tree=true&language={locale}&fields=title,order,published&webspace-nodes=all',
-                    'resultKey' => 'nodes',
-                ]
-            )
+            ->enableDatasource('pages', 'column_list')
             ->enableSorting(
                 [
-                    ['column' => 'title', 'title' => 'smart-content.title'],
-                    ['column' => 'published', 'title' => 'smart-content.published'],
-                    ['column' => 'created', 'title' => 'smart-content.created'],
-                    ['column' => 'changed', 'title' => 'smart-content.changed'],
-                    ['column' => 'authored', 'title' => 'smart-content.authored'],
+                    ['column' => 'title', 'title' => 'sulu_admin.title'],
+                    ['column' => 'published', 'title' => 'sulu_admin.published'],
+                    ['column' => 'created', 'title' => 'sulu_admin.created'],
+                    ['column' => 'changed', 'title' => 'sulu_admin.changed'],
+                    ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                 ]
             )
-            ->setDeepLink('content/contents/{webspace}/{locale}/edit:{id}/details')
             ->getConfiguration();
 
         return $this->configuration;
@@ -262,7 +254,7 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
         $properties = array_key_exists('properties', $propertyParameter) ?
             $propertyParameter['properties']->getValue() : [];
 
-        $excluded = $filters['excluded'];
+        $excluded = isset($filters['excluded']) ? $filters['excluded'] : [];
         if (array_key_exists('exclude_duplicates', $propertyParameter)
             && $propertyParameter['exclude_duplicates']->getValue()
         ) {

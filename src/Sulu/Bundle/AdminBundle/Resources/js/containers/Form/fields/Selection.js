@@ -211,11 +211,7 @@ export default class Selection extends React.Component<Props> {
             );
         }
 
-        if (equal(toJS(value), datagridStore.selectionIds) || datagridStore.dataLoading) {
-            return;
-        }
-
-        if (datagridStore.loading) {
+        if (equal(toJS(value), datagridStore.selectionIds) || datagridStore.dataLoading || datagridStore.loading) {
             return;
         }
 

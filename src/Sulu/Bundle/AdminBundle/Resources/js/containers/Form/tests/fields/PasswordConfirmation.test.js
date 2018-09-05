@@ -19,6 +19,7 @@ test('Pass error correctly to PasswordConfirmation component', () => {
         <PasswordConfirmation
             dataPath=""
             fieldTypeOptions={{}}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
@@ -45,6 +46,7 @@ test('Pass props correctly to PasswordConfirmation component', () => {
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={changeSpy}

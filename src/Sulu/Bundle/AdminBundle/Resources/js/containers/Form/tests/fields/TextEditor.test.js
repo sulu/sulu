@@ -21,6 +21,7 @@ test('Pass props correctly to TextEditor', () => {
             error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
+            label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={changeSpy}

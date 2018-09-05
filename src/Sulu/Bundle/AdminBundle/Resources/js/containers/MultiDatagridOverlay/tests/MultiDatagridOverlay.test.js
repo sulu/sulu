@@ -2,6 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import DatagridStore from '../../../containers/Datagrid/stores/DatagridStore';
 import DatagridOverlay from '../../../containers/DatagridOverlay';
 import MultiDatagridOverlay from '../MultiDatagridOverlay';
 
@@ -56,6 +57,39 @@ test('Should instantiate the DatagridStore without locale and options', () => {
     );
 
     expect(multiDatagridOverlay.instance().datagridStore.observableOptions.locale).toEqual(undefined);
+});
+
+test('Should pass overlayType overlay by default', () => {
+    const multiDatagridOverlay = shallow(
+        <MultiDatagridOverlay
+            adapter="table"
+            allowActivateForDisabledItems={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(multiDatagridOverlay.find(DatagridOverlay).prop('overlayType')).toEqual('overlay');
+});
+
+test('Should pass overlayType dialog if it is set via props', () => {
+    const multiDatagridOverlay = shallow(
+        <MultiDatagridOverlay
+            adapter="table"
+            allowActivateForDisabledItems={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            overlayType="dialog"
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(multiDatagridOverlay.find(DatagridOverlay).prop('overlayType')).toEqual('dialog');
 });
 
 test('Should pass disabledIds to the DatagridOverlay', () => {
@@ -156,7 +190,7 @@ test('Should call onConfirm with the current selection', () => {
 });
 
 test('Should select the preSelectedItems in the DatagridStore', () => {
-    const multiDatagridOverlay = shallow(
+    shallow(
         <MultiDatagridOverlay
             adapter="table"
             onClose={jest.fn()}
@@ -168,11 +202,7 @@ test('Should select the preSelectedItems in the DatagridStore', () => {
         />
     );
 
-    const datagridStore = multiDatagridOverlay.instance().datagridStore;
-
-    expect(datagridStore.select).toBeCalledWith({id: 1});
-    expect(datagridStore.select).toBeCalledWith({id: 2});
-    expect(datagridStore.select).toBeCalledWith({id: 3});
+    expect(DatagridStore).toBeCalledWith('snippets', expect.anything(), undefined, [1, 2, 3]);
 });
 
 test('Should not fail when preSelectedItems is undefined', () => {

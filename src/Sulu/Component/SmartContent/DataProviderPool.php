@@ -20,9 +20,19 @@ use Sulu\Component\SmartContent\Exception\DataProviderNotExistsException;
 class DataProviderPool implements DataProviderPoolInterface
 {
     /**
+     * @var bool
+     */
+    private $hasAudienceTargeting = false;
+
+    /**
      * @var DataProviderInterface[]
      */
     private $providers = [];
+
+    public function __construct(bool $hasAudienceTargeting)
+    {
+        $this->hasAudienceTargeting = $hasAudienceTargeting;
+    }
 
     /**
      * {@inheritdoc}
@@ -31,6 +41,10 @@ class DataProviderPool implements DataProviderPoolInterface
     {
         if ($this->exists($alias)) {
             throw new DataProviderAliasAlreadyExistsException($alias);
+        }
+
+        if (!$this->hasAudienceTargeting) {
+            $provider->getConfiguration()->setAudienceTargeting(false);
         }
 
         $this->providers[$alias] = $provider;

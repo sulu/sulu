@@ -89,14 +89,6 @@ export default class DatagridStore {
         return this.structureStrategy.activeItems;
     }
 
-    @action updateStrategies = (
-        loadingStrategy: LoadingStrategyInterface,
-        structureStrategy: StructureStrategyInterface
-    ) => {
-        this.updateLoadingStrategy(loadingStrategy);
-        this.updateStructureStrategy(structureStrategy);
-    };
-
     @action updateLoadingStrategy = (loadingStrategy: LoadingStrategyInterface) => {
         if (this.loadingStrategy && this.loadingStrategy === loadingStrategy) {
             return;
@@ -124,6 +116,9 @@ export default class DatagridStore {
         }
 
         this.structureStrategy = structureStrategy;
+
+        // force a reload with the currently active item to match new structure
+        this.activate(this.active.get());
     };
 
     @action clear = () => {

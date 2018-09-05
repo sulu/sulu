@@ -25,7 +25,7 @@ interface BuilderInterface
      *
      * @return BuilderInterface
      */
-    public function enableTags($enable = true);
+    public function enableTags(bool $enable = true);
 
     /**
      * Enables categories.
@@ -34,7 +34,7 @@ interface BuilderInterface
      *
      * @return BuilderInterface
      */
-    public function enableCategories($enable = true);
+    public function enableCategories(bool $enable = true);
 
     /**
      * Enables limit.
@@ -43,7 +43,7 @@ interface BuilderInterface
      *
      * @return BuilderInterface
      */
-    public function enableLimit($enable = true);
+    public function enableLimit(bool $enable = true);
 
     /**
      * Enables pagination.
@@ -52,7 +52,7 @@ interface BuilderInterface
      *
      * @return BuilderInterface
      */
-    public function enablePagination($enable = true);
+    public function enablePagination(bool $enable = true);
 
     /**
      * Enables present as.
@@ -61,17 +61,14 @@ interface BuilderInterface
      *
      * @return BuilderInterface
      */
-    public function enablePresentAs($enable = true);
+    public function enablePresentAs(bool $enable = true);
 
     /**
      * Enables datasource.
      *
-     * @param string $component name of component
-     * @param array $options options to initialized component
-     *
      * @return BuilderInterface
      */
-    public function enableDatasource($component, array $options = []);
+    public function enableDatasource(string $resourceKey, string $adapter);
 
     /**
      * Enables audience targeting.
@@ -80,7 +77,7 @@ interface BuilderInterface
      *
      * @return BuilderInterface
      */
-    public function enableAudienceTargeting($enable = true);
+    public function enableAudienceTargeting(bool $enable = true);
 
     /**
      * Enables categories.
@@ -92,18 +89,7 @@ interface BuilderInterface
     public function enableSorting(array $sorting);
 
     /**
-     * Set deep-link.
-     *
-     * @param string $deepLink
-     *
-     * @return BuilderInterface
-     */
-    public function setDeepLink($deepLink);
-
-    /**
      * Returns build configuration.
-     *
-     * @return ProviderConfigurationInterface
      */
-    public function getConfiguration();
+    public function getConfiguration(): ProviderConfigurationInterface;
 }
