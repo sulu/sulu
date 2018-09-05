@@ -7,7 +7,10 @@ import Option from './Option';
 export type SelectProps = {
     children: SelectChildren,
     icon?: string,
+    skin: Skin,
 }
+
+export type Skin = 'default' | 'flat';
 
 export type OptionSelectedVisualization = 'icon' | 'checkbox';
 

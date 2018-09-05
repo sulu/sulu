@@ -5,16 +5,18 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 
 type Props = SelectProps & {
-    value: ?string | number,
     onChange?: (value: string | number) => void,
+    value: ?string | number,
 };
 
 export default class SingleSelect extends React.PureComponent<Props> {
     static Action = Select.Action;
-
     static Option = Select.Option;
-
     static Divider = Select.Divider;
+
+    static defaultProps = {
+        skin: 'default',
+    };
 
     get displayValue(): string {
         let displayValue = '';
@@ -49,14 +51,15 @@ export default class SingleSelect extends React.PureComponent<Props> {
     };
 
     render() {
-        const {icon, children} = this.props;
+        const {children, icon, skin} = this.props;
 
         return (
             <Select
-                icon={icon}
-                onSelect={this.handleSelect}
                 displayValue={this.displayValue}
+                onSelect={this.handleSelect}
+                icon={icon}
                 isOptionSelected={this.isOptionSelected}
+                skin={skin}
             >
                 {children}
             </Select>

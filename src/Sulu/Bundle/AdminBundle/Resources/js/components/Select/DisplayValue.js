@@ -5,17 +5,21 @@ import classNames from 'classnames';
 import CroppedText from '../CroppedText';
 import Icon from '../Icon';
 import displayValueStyles from './displayValue.scss';
+import type {Skin} from './types';
 
 type Props = {
-    onClick: () => void,
     children: string,
-    icon?: string,
     displayValueRef?: (button: ElementRef<'button'>) => void,
+    icon?: string,
+    onClick: () => void,
+    skin: Skin,
 };
 
-const TOGGLE_ICON = 'su-angle-down';
-
 export default class DisplayValue extends React.PureComponent<Props> {
+    static defaultProps = {
+        skin: 'default',
+    };
+
     button: ElementRef<'button'>;
 
     handleClick = (event: SyntheticEvent<HTMLButtonElement>) => {
@@ -33,11 +37,13 @@ export default class DisplayValue extends React.PureComponent<Props> {
     };
 
     render() {
-        const {icon, children} = this.props;
+        const {children, icon, skin} = this.props;
+
         const displayValueClass = classNames(
             displayValueStyles.displayValue,
             {
                 [displayValueStyles.hasIcon]: !!icon,
+                [displayValueStyles[skin]]: !!skin,
             }
         );
 
@@ -52,7 +58,7 @@ export default class DisplayValue extends React.PureComponent<Props> {
                     <Icon className={displayValueStyles.frontIcon} name={icon} />
                 }
                 <CroppedText>{children}</CroppedText>
-                <Icon className={displayValueStyles.toggle} name={TOGGLE_ICON} />
+                <Icon className={displayValueStyles.toggle} name="su-angle-down" />
             </button>
         );
     }
