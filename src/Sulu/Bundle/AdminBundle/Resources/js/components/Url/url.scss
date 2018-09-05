@@ -1,0 +1,27 @@
+@import '../../containers/Application/colors.scss';
+
+$urlBackgroundColor: $white;
+$urlBorderColor: $silver;
+$urlButtonColor: $dustyGray;
+
+.url {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid $urlBorderColor;
+    background-color: $urlBackgroundColor;
+    font-size: 12px;
+
+    .protocols {
+        color: $urlButtonColor;
+        border-right: 1px solid $urlBorderColor;
+    }
+
+    input {
+        flex-grow: 1;
+        border: none;
+        height: 28px;
+        padding: 0 10px;
+    }
+}
