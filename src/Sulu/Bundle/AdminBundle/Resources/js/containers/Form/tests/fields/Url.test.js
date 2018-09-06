@@ -11,16 +11,12 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
-test('Pass error prop correctly to Input component', () => {
+test('Pass error prop correctly to Url component', () => {
     const schemaOptions = {
         schemes: {
             value: [
-                {
-                    name: 'http://',
-                },
-                {
-                    name: 'https://',
-                },
+                {name: 'http://'},
+                {name: 'https://'},
             ],
         } ,
     };
@@ -28,7 +24,7 @@ test('Pass error prop correctly to Input component', () => {
     const error = {keyword: 'minLength', parameters: {}};
 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
-    const inputValid = shallow(
+    const url = shallow(
         <Url
             dataPath=""
             error={error}
@@ -47,25 +43,21 @@ test('Pass error prop correctly to Input component', () => {
         />
     );
 
-    expect(inputValid.find(UrlComponent).prop('valid')).toEqual(false);
+    expect(url.find(UrlComponent).prop('valid')).toEqual(false);
 });
 
-test('Pass props correctly to Input component', () => {
+test('Pass props correctly to Url component', () => {
     const schemaOptions = {
         schemes: {
             value: [
-                {
-                    name: 'http://',
-                },
-                {
-                    name: 'https://',
-                },
+                {name: 'http://'},
+                {name: 'https://'},
             ],
         } ,
     };
 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
-    const inputValid = shallow(
+    const url = shallow(
         <Url
             dataPath=""
             error={undefined}
@@ -84,20 +76,134 @@ test('Pass props correctly to Input component', () => {
         />
     );
 
-    expect(inputValid.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://']);
-    expect(inputValid.find(UrlComponent).prop('value')).toEqual('http://www.sulu.io');
+    expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://']);
+    expect(url.find(UrlComponent).prop('value')).toEqual('http://www.sulu.io');
+});
+
+test('Throw error if only specific_part default is set', () => {
+    const schemaOptions = {
+        schemes: {
+            value: [
+                {name: 'http://'},
+                {name: 'https://'},
+            ],
+        } ,
+        defaults: {
+            value: [
+                {name: 'specific_part', value: 'sulu.io'},
+            ],
+        },
+    };
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    expect(() => shallow(
+        <Url
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={undefined}
+        />
+    )).toThrow(/without a scheme/);
+});
+
+test('Do not build URL from defaults if value is already given', () => {
+    const changeSpy = jest.fn();
+
+    const schemaOptions = {
+        schemes: {
+            value: [
+                {name: 'http://'},
+                {name: 'https://'},
+            ],
+        } ,
+        defaults: {
+            value: [
+                {name: 'scheme', value: 'https://'},
+                {name: 'specific_part', value: 'sulu.io'},
+            ],
+        },
+    };
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    shallow(
+        <Url
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={'http://www.sulu.io'}
+        />
+    );
+
+    expect(changeSpy).not.toBeCalled();
+});
+
+test('Build URL from defaults to pass as value to URL component', () => {
+    const changeSpy = jest.fn();
+
+    const schemaOptions = {
+        schemes: {
+            value: [
+                {name: 'http://'},
+                {name: 'https://'},
+            ],
+        } ,
+        defaults: {
+            value: [
+                {name: 'scheme', value: 'https://'},
+                {name: 'specific_part', value: 'sulu.io'},
+            ],
+        },
+    };
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    shallow(
+        <Url
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={undefined}
+        />
+    );
+
+    expect(changeSpy).toBeCalledWith('https://sulu.io');
 });
 
 test('Should not pass any arguments to onFinish callback', () => {
     const schemaOptions = {
         schemes: {
             value: [
-                {
-                    name: 'http://',
-                },
-                {
-                    name: 'https://',
-                },
+                {name: 'http://'},
+                {name: 'https://'},
             ],
         } ,
     };
@@ -105,7 +211,7 @@ test('Should not pass any arguments to onFinish callback', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const finishSpy = jest.fn();
 
-    const input = shallow(
+    const url = shallow(
         <Url
             dataPath=""
             error={undefined}
@@ -124,7 +230,7 @@ test('Should not pass any arguments to onFinish callback', () => {
         />
     );
 
-    input.find('Url').prop('onBlur')('Test');
+    url.find('Url').prop('onBlur')('Test');
 
     expect(finishSpy).toBeCalledWith();
 });

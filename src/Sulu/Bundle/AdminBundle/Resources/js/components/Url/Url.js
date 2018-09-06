@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, autorun, computed, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import classNames from 'classnames';
 import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
@@ -22,12 +22,10 @@ export default class Url extends React.Component<Props> {
 
     @observable protocol: ?string = undefined;
     @observable path: ?string = undefined;
-    changeDisposer: () => void;
 
     componentDidMount() {
         const {value} = this.props;
         this.setUrl(value);
-        this.changeDisposer = autorun(this.callChangeCallback);
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -37,26 +35,18 @@ export default class Url extends React.Component<Props> {
         }
     }
 
-    componentWillUnmount() {
-        this.changeDisposer();
-    }
-
-    @computed get onChange() {
-        return this.props.onChange;
-    }
-
     @computed get protocols() {
         return this.props.protocols;
     }
 
     callChangeCallback = () => {
-        const {value} = this.props;
+        const {onChange, value} = this.props;
 
         if (this.url === value) {
             return;
         }
 
-        this.onChange(this.url);
+        onChange(this.url);
     };
 
     @action setUrl(url: ?string) {
@@ -103,6 +93,8 @@ export default class Url extends React.Component<Props> {
 
         this.protocol = protocol;
 
+        this.callChangeCallback();
+
         if (onBlur) {
             onBlur();
         }
@@ -115,12 +107,12 @@ export default class Url extends React.Component<Props> {
         const path = this.path;
 
         const protocol = protocols.find((protocol) => path.startsWith(protocol));
-        if (!protocol) {
-            return;
+        if (protocol) {
+            this.protocol = protocol;
+            this.path = path.substring(this.protocol.length);
         }
 
-        this.protocol = protocol;
-        this.path = path.substring(this.protocol.length);
+        this.callChangeCallback();
     };
 
     render() {

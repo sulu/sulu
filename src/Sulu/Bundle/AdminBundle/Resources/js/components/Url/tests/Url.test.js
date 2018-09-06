@@ -28,16 +28,6 @@ test('Set the correct values for protocol and path when updating', () => {
     expect(url.find('input').prop('value')).toEqual('sulu.at');
 });
 
-test('Call disposer when unmounted', () => {
-    const url = shallow(<Url onChange={jest.fn()} protocols={[]} value={undefined} />);
-    const changeDisposerSpy = jest.fn();
-    url.instance().changeDisposer = changeDisposerSpy;
-
-    url.unmount();
-
-    expect(changeDisposerSpy).toBeCalledWith();
-});
-
 test('Call onChange callback with the first protocol if none was selected', () => {
     const changeSpy = jest.fn();
     const url = shallow(<Url onChange={changeSpy} protocols={['http://', 'https://']} value={undefined} />);
