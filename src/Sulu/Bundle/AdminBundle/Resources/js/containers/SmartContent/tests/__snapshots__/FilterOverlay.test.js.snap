@@ -93,7 +93,7 @@ exports[`Render with all fields 1`] = `
                   class="select"
                 >
                   <button
-                    class="displayValue"
+                    class="displayValue default"
                     type="button"
                   >
                     <div
@@ -154,7 +154,7 @@ exports[`Render with all fields 1`] = `
                   class="select"
                 >
                   <button
-                    class="displayValue"
+                    class="displayValue default"
                     type="button"
                   >
                     <div
@@ -230,7 +230,7 @@ exports[`Render with all fields 1`] = `
                   class="select"
                 >
                   <button
-                    class="displayValue"
+                    class="displayValue default"
                     type="button"
                   >
                     <span
@@ -247,7 +247,7 @@ exports[`Render with all fields 1`] = `
                   class="select"
                 >
                   <button
-                    class="displayValue"
+                    class="displayValue default"
                     type="button"
                   >
                     <div
@@ -297,7 +297,7 @@ exports[`Render with all fields 1`] = `
                 class="select"
               >
                 <button
-                  class="displayValue"
+                  class="displayValue default"
                   type="button"
                 >
                   <span
