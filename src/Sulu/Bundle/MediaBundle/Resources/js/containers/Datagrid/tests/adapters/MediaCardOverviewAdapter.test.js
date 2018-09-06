@@ -56,6 +56,7 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={2}

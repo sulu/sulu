@@ -89,6 +89,17 @@ export default class DatagridStore {
         return this.structureStrategy.activeItems;
     }
 
+    @computed get queryOptions(): Object {
+        const queryOptions = {...this.options};
+
+        const {locale} = this.observableOptions;
+        if (locale) {
+            queryOptions.locale = locale.get();
+        }
+
+        return queryOptions;
+    }
+
     @action updateLoadingStrategy = (loadingStrategy: LoadingStrategyInterface) => {
         if (this.loadingStrategy && this.loadingStrategy === loadingStrategy) {
             return;
@@ -155,14 +166,7 @@ export default class DatagridStore {
     }
 
     delete = (id: string | number): Promise<void> => {
-        const queryOptions = {...this.options};
-
-        const {locale} = this.observableOptions;
-        if (locale) {
-            queryOptions.locale = locale.get();
-        }
-
-        return ResourceRequester.delete(this.resourceKey, id, queryOptions)
+        return ResourceRequester.delete(this.resourceKey, id, this.queryOptions)
             .then(action(() => {
                 this.deselectById(id);
                 this.remove(id);
@@ -326,6 +330,17 @@ export default class DatagridStore {
     @action sort(column: string, order: SortOrder) {
         this.sortColumn.set(column);
         this.sortOrder.set(order);
+    }
+
+    @action order(id: string | number, order: number) {
+        return ResourceRequester.postWithId(
+            this.resourceKey,
+            id,
+            {position: order},
+            {...this.queryOptions, action: 'order'}
+        ).then(() => {
+            this.structureStrategy.order(id, order);
+        });
     }
 
     @action search(searchTerm: ?string) {

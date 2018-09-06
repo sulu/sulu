@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import ColumnList from '../../../components/ColumnList';
 import GhostIndicator from '../../../components/GhostIndicator';
@@ -22,10 +23,23 @@ export default class ColumnListAdapter extends AbstractAdapter {
         data: [],
     };
 
-    handleItemClick = (id: string | number) => {
-        const {onItemActivate} = this.props;
+    @observable orderColumn: ?number = undefined;
+
+    @action handleItemClick = (id: string | number) => {
+        const {data, onItemActivate} = this.props;
+
+        // TODO: Don't access id directly but use some kind of metadata instead
+        if (
+            this.orderColumn !== undefined
+            && this.orderColumn !== null
+            && data[this.orderColumn].some((item) => item.id === id)
+        ) {
+            return;
+        }
+
         if (onItemActivate) {
             onItemActivate(id);
+            this.orderColumn = undefined;
         }
     };
 
@@ -48,32 +62,64 @@ export default class ColumnListAdapter extends AbstractAdapter {
         }
     };
 
-    render() {
-        const {
-            activeItems,
-            disabledIds,
-            loading,
-            onItemAdd,
-            onRequestItemCopy,
-            onRequestItemDelete,
-            onItemClick,
-            onItemSelectionChange,
-            onRequestItemMove,
-            selections,
-        } = this.props;
+    handleOrderChange = (id: string | number, order: number) => {
+        const {data, onRequestItemOrder} = this.props;
+
+        if (!onRequestItemOrder) {
+            throw new Error(
+                'Items were tried to order although there is no onRequestItemOrder callback available.'
+                + ' This should not happen and is likely a bug.'
+            );
+        }
+
+        if (this.orderColumn === undefined || this.orderColumn === null) {
+            throw new Error(
+                'Ordering can only be changed if a column has been selected to be ordered.'
+                + ' This should not happen and is likely a bug.'
+            );
+        }
+
+        const column = data[this.orderColumn];
+        const itemsCount = column.length;
+        if (order > itemsCount) {
+            order = itemsCount;
+        }
+
+        return onRequestItemOrder(id, order).then(({ordered}) => ordered);
+    };
+
+    getIndicators = (item: Object) => {
+        if (item.type && item.type.name === 'ghost') {
+            return [<GhostIndicator key={'ghost'} locale={item.type.value} />];
+        }
+
+        const draft = item.publishedState === undefined ? false : !item.publishedState;
+        const published = item.published === undefined ? false : !!item.published;
+
+        if (draft || !published) {
+            return [<PublishIndicator key={'publish'} draft={draft} published={published} />];
+        }
+
+        return [];
+    };
+
+    getButtons = (item: Object) => {
+        const {onItemClick, onItemSelectionChange} = this.props;
+        const isGhost = item.type && item.type.name === 'ghost';
 
         const buttons = [];
-        const ghostButtons = [];
-
         if (onItemClick) {
-            buttons.push({
-                icon: 'su-pen',
-                onClick: onItemClick,
-            });
-            ghostButtons.push({
-                icon: 'su-plus-circle',
-                onClick: onItemClick,
-            });
+            if (isGhost) {
+                buttons.push({
+                    icon: 'su-plus-circle',
+                    onClick: onItemClick,
+                });
+            } else {
+                buttons.push({
+                    icon: 'su-pen',
+                    onClick: onItemClick,
+                });
+            }
         }
 
         if (onItemSelectionChange) {
@@ -82,7 +128,31 @@ export default class ColumnListAdapter extends AbstractAdapter {
                 onClick: this.handleItemSelectionChange,
             };
             buttons.push(checkButton);
-            ghostButtons.push(checkButton);
+        }
+
+        return buttons;
+    };
+
+    getToolbarItems = (index: number) => {
+        const {
+            activeItems,
+            onItemAdd,
+            onRequestItemCopy,
+            onRequestItemDelete,
+            onRequestItemMove,
+            onRequestItemOrder,
+        } = this.props;
+
+        if (this.orderColumn === index) {
+            return [
+                {
+                    icon: 'su-times',
+                    type: 'button',
+                    onClick: action(() => {
+                        this.orderColumn = undefined;
+                    }),
+                },
+            ];
         }
 
         const toolbarItems = [];
@@ -91,7 +161,11 @@ export default class ColumnListAdapter extends AbstractAdapter {
             toolbarItems.push({
                 icon: 'su-plus-circle',
                 type: 'button',
-                onClick: this.handleColumnAdd,
+                onClick: () => {
+                    if (activeItems && activeItems[index]) {
+                        onItemAdd(activeItems[index]);
+                    }
+                },
             });
         }
 
@@ -102,16 +176,14 @@ export default class ColumnListAdapter extends AbstractAdapter {
             );
         }
 
-        const isDisabled = (index) => {
-            return activeItems[((index + 1: any): number)] === undefined;
-        };
+        const hasActiveItem = activeItems[index + 1] === undefined;
 
         const settingOptions = [];
         if (onRequestItemDelete) {
             settingOptions.push({
-                isDisabled,
+                disabled: hasActiveItem,
                 label: translate('sulu_admin.delete'),
-                onClick: (index) => {
+                onClick: () => {
                     onRequestItemDelete(activeItems[index + 1]);
                 },
             });
@@ -119,9 +191,9 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
         if (onRequestItemMove) {
             settingOptions.push({
-                isDisabled,
+                disabled: hasActiveItem,
                 label: translate('sulu_admin.move'),
-                onClick: (index) => {
+                onClick: () => {
                     onRequestItemMove(activeItems[index + 1]);
                 },
             });
@@ -129,11 +201,20 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
         if (onRequestItemCopy) {
             settingOptions.push({
-                isDisabled,
+                disabled: hasActiveItem,
                 label: translate('sulu_admin.copy'),
-                onClick: (index) => {
+                onClick: () => {
                     onRequestItemCopy(activeItems[index + 1]);
                 },
+            });
+        }
+
+        if (onRequestItemOrder) {
+            settingOptions.push({
+                label: translate('sulu_admin.order'),
+                onClick: action(() => {
+                    this.orderColumn = index;
+                }),
             });
         }
 
@@ -145,45 +226,43 @@ export default class ColumnListAdapter extends AbstractAdapter {
             });
         }
 
+        return toolbarItems;
+    };
+
+    render() {
+        const {
+            activeItems,
+            disabledIds,
+            loading,
+            selections,
+        } = this.props;
+
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
-                <ColumnList onItemClick={this.handleItemClick} toolbarItems={toolbarItems}>
+                <ColumnList onItemClick={this.handleItemClick} toolbarItemsProvider={this.getToolbarItems}>
                     {this.props.data.map((items, index) => (
                         <ColumnList.Column
                             key={index}
                             loading={index >= this.props.data.length - 1 && loading}
                         >
-                            {items.map((item: Object) => {
-                                const draft = item.publishedState === undefined ? false : !item.publishedState;
-                                const published = item.published === undefined ? false : !!item.published;
-
-                                return (
-                                    // TODO: Don't access hasChildren, published, publishedState, title or type directly
-                                    <ColumnList.Item
-                                        active={activeItems ? activeItems.includes(item.id) : undefined}
-                                        buttons={item.type && item.type.name === 'ghost' ? ghostButtons : buttons}
-                                        disabled={disabledIds.includes(item.id)}
-                                        hasChildren={item.hasChildren}
-                                        id={item.id}
-                                        indicators={item.type && item.type.name === 'ghost'
-                                            ? [
-                                                <GhostIndicator key={'ghost'} locale={item.type.value} />,
-                                            ]
-                                            : [
-                                                (draft || !published) && <PublishIndicator
-                                                    key={'publish'}
-                                                    draft={draft}
-                                                    published={published}
-                                                />,
-                                            ]
-                                        }
-                                        key={item.id}
-                                        selected={selections.includes(item.id)}
-                                    >
-                                        {item.title}
-                                    </ColumnList.Item>
-                                );})
-                            }
+                            {items.map((item: Object, itemIndex: number) => (
+                                // TODO: Don't access hasChildren, published, publishedState, title or type directly
+                                <ColumnList.Item
+                                    active={activeItems ? activeItems.includes(item.id) : undefined}
+                                    buttons={this.getButtons(item)}
+                                    disabled={disabledIds.includes(item.id)}
+                                    hasChildren={item.hasChildren}
+                                    id={item.id}
+                                    indicators={this.getIndicators(item)}
+                                    key={item.id}
+                                    onOrderChange={this.handleOrderChange}
+                                    order={itemIndex + 1}
+                                    showOrderField={this.orderColumn === index}
+                                    selected={selections.includes(item.id)}
+                                >
+                                    {item.title}
+                                </ColumnList.Item>
+                            ))}
                         </ColumnList.Column>
                     ))}
                 </ColumnList>

@@ -66,6 +66,7 @@ test('Render different kind of data with edit button', () => {
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -108,6 +109,7 @@ test('Render data without edit button', () => {
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -150,6 +152,7 @@ test('Render data with selection', () => {
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -200,6 +203,7 @@ test('Render data with disabled items', () => {
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -236,6 +240,7 @@ test('Render with add button in toolbar when onItemAdd callback is given', () =>
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -284,6 +289,7 @@ test('Render data with loading column', () => {
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -299,7 +305,7 @@ test('Render data with loading column', () => {
 });
 
 test('Execute onItemActivate callback when an item is clicked with the correct parameter', () => {
-    const onItemActivateSpy = jest.fn();
+    const itemActivateSpy = jest.fn();
 
     const data = [
         [
@@ -331,7 +337,7 @@ test('Execute onItemActivate callback when an item is clicked with the correct p
             disabledIds={[]}
             loading={false}
             onAllSelectionChange={undefined}
-            onItemActivate={onItemActivateSpy}
+            onItemActivate={itemActivateSpy}
             onItemAdd={undefined}
             onItemClick={undefined}
             onItemDeactivate={jest.fn()}
@@ -340,6 +346,7 @@ test('Execute onItemActivate callback when an item is clicked with the correct p
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -353,7 +360,173 @@ test('Execute onItemActivate callback when an item is clicked with the correct p
 
     columnListAdapter.find('Item').at(1).simulate('click');
 
-    expect(onItemActivateSpy).toBeCalledWith(2);
+    expect(itemActivateSpy).toBeCalledWith(2);
+});
+
+test('Do not show order button if onRequestItemOrder callback is undefined', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            active={3}
+            activeItems={[1, 3]}
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            onAllSelectionChange={undefined}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
+            onItemClick={undefined}
+            onItemDeactivate={jest.fn()}
+            onItemSelectionChange={undefined}
+            onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={jest.fn()}
+            onRequestItemOrder={undefined}
+            onSort={jest.fn()}
+            options={{}}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    expect(columnListAdapter.find('Toolbar button').find({children: 'sulu_admin.order'})).toHaveLength(0);
+});
+
+test('Call onRequestItemOrder callback when an item ordering has been changed', () => {
+    const requestItemOrderPromise = Promise.resolve({ordered: true});
+    const requestItemOrderSpy = jest.fn().mockReturnValue(requestItemOrderPromise);
+
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+            },
+        ],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            active={1}
+            activeItems={[1, 3]}
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            onAllSelectionChange={undefined}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
+            onItemClick={undefined}
+            onItemDeactivate={jest.fn()}
+            onItemSelectionChange={undefined}
+            onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
+            onRequestItemOrder={requestItemOrderSpy}
+            onSort={jest.fn()}
+            options={{}}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    columnListAdapter.find('ToolbarDropdownListOption').find({children: 'sulu_admin.order'}).at(0).prop('onClick')(0);
+    columnListAdapter.update();
+
+    columnListAdapter.find('Item Input').at(0).prop('onChange')(5);
+    columnListAdapter.find('Item Input').at(0).prop('onBlur')();
+
+    expect(requestItemOrderSpy).toBeCalledWith(1, 2);
+});
+
+test('Do not execute onItemActivate callback when a column is ordering', () => {
+    const itemActivateSpy = jest.fn();
+
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+            },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: false,
+            },
+        ],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            active={1}
+            activeItems={[1, 3]}
+            data={data}
+            disabledIds={[]}
+            loading={false}
+            onAllSelectionChange={undefined}
+            onItemActivate={itemActivateSpy}
+            onItemAdd={undefined}
+            onItemClick={undefined}
+            onItemDeactivate={jest.fn()}
+            onItemSelectionChange={undefined}
+            onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
+            onRequestItemOrder={jest.fn()}
+            onSort={jest.fn()}
+            options={{}}
+            page={undefined}
+            pageCount={0}
+            schema={{}}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    columnListAdapter.find('ToolbarDropdownListOption').find({children: 'sulu_admin.order'}).at(0).prop('onClick')(0);
+
+    columnListAdapter.find('Item').at(0).simulate('click');
+    columnListAdapter.find('Item').at(1).simulate('click');
+
+    expect(itemActivateSpy).not.toBeCalled();
 });
 
 test('Execute onItemSelectionChange callback when an item is selected', () => {
@@ -390,6 +563,7 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -450,6 +624,7 @@ test('Execute onRequestItemCopy callback when an item is moved with the correct 
             onRequestItemCopy={copyClickSpy}
             onRequestItemDelete={undefined}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -509,6 +684,7 @@ test('Execute onRequestItemMove callback when an item is moved with the correct 
             onRequestItemCopy={undefined}
             onRequestItemDelete={undefined}
             onRequestItemMove={moveClickSpy}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -568,6 +744,7 @@ test('Execute onRequestItemDelete callback when an item is deleted with the corr
             onRequestItemCopy={undefined}
             onRequestItemDelete={deleteClickSpy}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -626,6 +803,7 @@ test('Enable delete and move button if an item in this column has been activated
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={jest.fn()}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -683,6 +861,7 @@ test('Disable delete and move button if no item in this column has been activate
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={jest.fn()}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}
@@ -717,6 +896,7 @@ test('Do not show settings if no options are available', () => {
             onRequestItemCopy={undefined}
             onRequestItemDelete={undefined}
             onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
             onSort={jest.fn()}
             options={{}}
             page={undefined}

@@ -72,8 +72,7 @@ exports[`The component should render in body with loader instead of confirm butt
                 <div class=\\"doubleBounce1\\"></div>
                 <div class=\\"doubleBounce2\\"></div>
               </div>
-            </div>
-          </button></footer>
+            </div></button></footer>
       </section>
     </div>
   </div>

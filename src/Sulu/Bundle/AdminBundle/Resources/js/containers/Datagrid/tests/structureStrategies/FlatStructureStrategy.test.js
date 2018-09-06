@@ -109,3 +109,21 @@ test('Should remove an item by id', () => {
     expect(flatStructureStrategy.findById(1)).toEqual(item1);
     expect(flatStructureStrategy.findById(2)).toEqual(undefined);
 });
+
+test('Should order item to the new given position', () => {
+    const flatStructureStrategy = new FlatStructureStrategy();
+
+    flatStructureStrategy.data = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+
+    flatStructureStrategy.order(3, 1);
+
+    expect(flatStructureStrategy.data).toEqual([
+        {id: 3},
+        {id: 1},
+        {id: 2},
+    ]);
+});

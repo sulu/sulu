@@ -11,7 +11,7 @@ export default class ToolbarButton extends React.Component<ToolbarButtonProps> {
     };
 
     handleClick = () => {
-        this.props.onClick(this.props.columnIndex);
+        this.props.onClick();
     };
 
     render = () => {

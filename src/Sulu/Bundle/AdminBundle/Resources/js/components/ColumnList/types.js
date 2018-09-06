@@ -5,13 +5,12 @@ export type ItemButtonConfig = {
 };
 
 export type ToolbarDropdownOptionConfig = {
-    isDisabled?: (columnIndex?: number) => boolean,
+    disabled?: boolean,
     label: string,
-    onClick: (columnIndex?: number) => void,
+    onClick: () => void,
 };
 
 type ToolbarBase = {
-    columnIndex?: number,
     icon: string,
     skin?: 'primary' | 'secondary',
 };
@@ -21,7 +20,7 @@ export type ToolbarDropdown = ToolbarBase & {
 };
 
 export type ToolbarButton = ToolbarBase & {
-    onClick: (columnIndex?: string | number) => void,
+    onClick: () => void,
 };
 
 export type ToolbarDropdownConfig = ToolbarDropdown & { type: 'dropdown' };

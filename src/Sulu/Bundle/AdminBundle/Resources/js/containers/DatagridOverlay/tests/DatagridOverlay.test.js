@@ -109,7 +109,7 @@ test('Should pass allowActivateForDisabledItems to the Datagrid', () => {
     expect(datagridOverlay.find(Datagrid).prop('allowActivateForDisabledItems')).toEqual(false);
 });
 
-test('Should pass copyable, deletable, movable, confirmDisabled and confirmLoading flag to the Datagrid', () => {
+test('Should pass correct flags to the Datagrid', () => {
     const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
     const disabledIds = [1, 2, 5];
 
@@ -128,6 +128,7 @@ test('Should pass copyable, deletable, movable, confirmDisabled and confirmLoadi
     expect(datagridOverlay.find(Datagrid).prop('copyable')).toEqual(false);
     expect(datagridOverlay.find(Datagrid).prop('deletable')).toEqual(false);
     expect(datagridOverlay.find(Datagrid).prop('movable')).toEqual(false);
+    expect(datagridOverlay.find(Datagrid).prop('orderable')).toEqual(false);
 });
 
 test('Should pass confirmLoading and confirmDisabled flag to the Overlay', () => {

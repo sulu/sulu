@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import 'url-search-params-polyfill';
 import {autorun, observable, toJS, when} from 'mobx';
 import ResourceRequester from '../../../../services/ResourceRequester';
@@ -14,35 +14,40 @@ jest.mock('../../../../services/ResourceRequester', () => ({
     postWithId: jest.fn(),
 }));
 
-function LoadingStrategy() {
-    this.destroy = jest.fn();
-    this.initialize = jest.fn();
-    this.load = jest.fn().mockReturnValue({then: jest.fn()});
-    this.reset = jest.fn();
-    this.setStructureStrategy = jest.fn();
+class LoadingStrategy {
+    destroy = jest.fn();
+    initialize = jest.fn();
+    load = jest.fn().mockReturnValue(Promise.resolve({}));
+    reset = jest.fn();
+    setStructureStrategy = jest.fn();
 }
 
-function OtherLoadingStrategy() {
-    this.load = jest.fn().mockReturnValue({then: jest.fn()});
-    this.setStructureStrategy = jest.fn();
+class OtherLoadingStrategy {
+    destroy = jest.fn();
+    initialize = jest.fn();
+    load = jest.fn().mockReturnValue(Promise.resolve({}));
+    reset = jest.fn();
+    setStructureStrategy = jest.fn();
 }
 
 class StructureStrategy {
     @observable data = [];
+    visibleItems = [];
     addItem = jest.fn();
     clear = jest.fn();
     activeItems = [];
     activate = jest.fn();
     deactivate = jest.fn();
     remove = jest.fn();
-    findById = jest.fn();
+    order = jest.fn();
+    findById: (id: string | number) => ?Object = jest.fn();
 }
 
 test('The loading strategy should get passed the structure strategy', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
 
-    const datagridStore = new DatagridStore('tests', {});
+    const datagridStore = new DatagridStore('tests', {page: observable.box()});
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
     expect(loadingStrategy.setStructureStrategy).toBeCalledWith(structureStrategy);
@@ -555,6 +560,7 @@ test('Select all visible items', () => {
     const datagridStore = new DatagridStore('tests', {page});
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
     datagridStore.updateStructureStrategy(new StructureStrategy());
+    // $FlowFixMe
     datagridStore.structureStrategy.visibleItems = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [
         {id: 1},
@@ -572,6 +578,7 @@ test('Deselect all visible items', () => {
     });
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
     datagridStore.updateStructureStrategy(new StructureStrategy());
+    // $FlowFixMe
     datagridStore.structureStrategy.visibleItems = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [
         {id: 1},
@@ -590,6 +597,7 @@ test('Deselect an item by id', () => {
     });
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
     datagridStore.updateStructureStrategy(new StructureStrategy());
+    // $FlowFixMe
     datagridStore.structureStrategy.visibleItems = [{id: 1}, {id: 2}, {id: 3}];
     datagridStore.selections = [
         {id: 1},
@@ -608,7 +616,7 @@ test('Clear the selection', () => {
     });
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
     datagridStore.updateStructureStrategy(new StructureStrategy());
-    datagridStore.selections = [1, 4, 5];
+    datagridStore.selections = [{id: 1}, {id: 4}, {id: 5}];
     page.set(1);
     expect(datagridStore.selections).toHaveLength(3);
 
@@ -656,7 +664,7 @@ test('Should reset the data array and set page to 1 when the reload method is ca
 
     when(
         () => !datagridStore.loading,
-        () => {
+        (): void => {
             expect(page.get()).toBe(3);
 
             datagridStore.reload();
@@ -911,7 +919,7 @@ test('Should reset page count and page when loading strategy changes', () => {
 });
 
 test('Should clear the StructureStrategy when the clear method is called', () => {
-    const datagridStore = new DatagridStore('snippets', {});
+    const datagridStore = new DatagridStore('snippets', {page: observable.box()});
 
     const structureStrategy = new StructureStrategy();
     datagridStore.clear();
@@ -1007,7 +1015,7 @@ test('Should call the remove method of the structure strategy if an item gets re
 
 test('Should move the item with the given ID to the new given parent and reload the datagrid', () => {
     const locale = observable.box('de');
-    const datagridStore = new DatagridStore('snippets', {locale}, {webspace: 'sulu'});
+    const datagridStore = new DatagridStore('snippets', {page: observable.box(), locale}, {webspace: 'sulu'});
     const postWithIdPromise = Promise.resolve();
     ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
 
@@ -1033,7 +1041,7 @@ test('Should move the item with the given ID to the new given parent and reload 
 
 test('Should copy the item with the given ID to the new given parent and reload the datagrid', () => {
     const locale = observable.box('de');
-    const datagridStore = new DatagridStore('snippets', {locale}, {webspace: 'sulu'});
+    const datagridStore = new DatagridStore('snippets', {page: observable.box(), locale}, {webspace: 'sulu'});
     const postWithIdPromise = Promise.resolve({id: 9});
     ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
 
@@ -1057,7 +1065,7 @@ test('Should copy the item with the given ID to the new given parent and reload 
     });
 });
 
-test('Should delete the item with the given ID', () => {
+test('Should delete the item with the given ID and options', () => {
     const page = observable.box(1);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale}, {webspace: 'sulu'});
@@ -1091,13 +1099,13 @@ test('Should delete the item with the given ID and remove it from the selection 
     datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.select({id: 5});
-    expect(datagridStore.selections.toJS()).toEqual([{id: 5}]);
+    expect(toJS(datagridStore.selections)).toEqual([{id: 5}]);
     datagridStore.delete(5);
 
     expect(ResourceRequester.delete).toBeCalledWith('snippets', 5, {locale: 'en'});
 
     return deletePromise.then(() => {
-        expect(datagridStore.selections.toJS()).toEqual([]);
+        expect(toJS(datagridStore.selections)).toEqual([]);
         expect(structureStrategy.remove).toBeCalledWith(5);
     });
 });
@@ -1181,6 +1189,28 @@ test('Should crash when deleting all selected items and one request fails with a
     deletePromise.catch((error) => {
         expect(error.status).toEqual(500);
         done();
+    });
+});
+
+test('Should order the item with the given ID and options to the given position', () => {
+    const page = observable.box(1);
+    const locale = observable.box('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale}, {webspace: 'sulu'});
+    const orderPromise = Promise.resolve();
+    ResourceRequester.postWithId.mockReturnValue(orderPromise);
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    datagridStore.order(5, 1);
+
+    expect(ResourceRequester.postWithId)
+        .toBeCalledWith('snippets', 5, {position: 1}, {action: 'order', locale: 'en', webspace: 'sulu'});
+
+    return orderPromise.then(() => {
+        expect(structureStrategy.order).toBeCalledWith(5, 1);
     });
 });
 
