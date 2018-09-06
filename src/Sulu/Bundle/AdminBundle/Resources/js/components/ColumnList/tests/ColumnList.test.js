@@ -32,7 +32,7 @@ test('The ColumnList component should render in a non-scrolling container', () =
         },
     ];
 
-    const toolbarItems = jest.fn(() => [
+    const toolbarItemsProvider = jest.fn(() => [
         {
             index: 0,
             icon: 'fa-plus',
@@ -65,7 +65,7 @@ test('The ColumnList component should render in a non-scrolling container', () =
     expect(render(
         <ColumnList
             onItemClick={onItemClick}
-            toolbarItems={toolbarItems}
+            toolbarItemsProvider={toolbarItemsProvider}
         >
             <Column>
                 <Item buttons={buttonsConfig} id="1" selected={true}>Item 1</Item>
@@ -88,7 +88,7 @@ test('The ColumnList component should render in a non-scrolling container', () =
 test('The ColumnList component should render in a scrolling container', () => {
     const onItemClick = jest.fn();
 
-    const toolbarItems = jest.fn(() => [
+    const toolbarItemsProvider = jest.fn(() => [
         {
             index: 0,
             icon: 'fa-plus',
@@ -100,7 +100,7 @@ test('The ColumnList component should render in a scrolling container', () => {
     const columnList = mount(
         <ColumnList
             onItemClick={onItemClick}
-            toolbarItems={toolbarItems}
+            toolbarItemsProvider={toolbarItemsProvider}
         >
             <Column>
                 <Item id="1" selected={true}>Item 1</Item>
@@ -136,7 +136,7 @@ test('The ColumnList component should trigger the item callback', () => {
     const columnList = mount(
         <ColumnList
             onItemClick={onItemClick}
-            toolbarItems={jest.fn(() => [])}
+            toolbarItemsProvider={jest.fn(() => [])}
         >
             <Column>
                 <Item id="1" selected={true}>Item 1</Item>
@@ -169,7 +169,7 @@ test('The ColumnList component should trigger the item callback', () => {
 test('The ColumnList component should handle which toolbar is active on mouse enter event', () => {
     const buttonClickSpy = jest.fn();
 
-    const toolbarItems = jest.fn(() => [
+    const toolbarItemsProvider = jest.fn(() => [
         {
             icon: 'fa-plus',
             type: 'button',
@@ -179,7 +179,7 @@ test('The ColumnList component should handle which toolbar is active on mouse en
 
     const columnList = mount(
         <ColumnList
-            toolbarItems={toolbarItems}
+            toolbarItemsProvider={toolbarItemsProvider}
             onItemClick={jest.fn()}
         >
             <Column>
@@ -198,23 +198,23 @@ test('The ColumnList component should handle which toolbar is active on mouse en
         </ColumnList>
     );
     const columns = columnList.find(Column);
-    expect(toolbarItems).toHaveBeenLastCalledWith(0);
+    expect(toolbarItemsProvider).toHaveBeenLastCalledWith(0);
     columnList.find('.fa-plus').simulate('click');
     expect(buttonClickSpy).toHaveBeenCalledWith();
 
     columns.at(1).simulate('mouseEnter');
-    expect(toolbarItems).toHaveBeenLastCalledWith(1);
+    expect(toolbarItemsProvider).toHaveBeenLastCalledWith(1);
     columnList.find('.fa-plus').simulate('click');
     expect(buttonClickSpy).toHaveBeenLastCalledWith();
 
     columns.at(2).simulate('mouseEnter');
-    expect(toolbarItems).toHaveBeenLastCalledWith(2);
+    expect(toolbarItemsProvider).toHaveBeenLastCalledWith(2);
     columnList.find('.fa-plus').simulate('click');
     expect(buttonClickSpy).toHaveBeenLastCalledWith();
 });
 
 test('Should move the toolbar container to the beginning if active column does not exist anymore', () => {
-    const toolbarItems = jest.fn(() => [
+    const toolbarItemsProvider = jest.fn(() => [
         {
             icon: 'fa-plus',
             type: 'button',
@@ -223,7 +223,7 @@ test('Should move the toolbar container to the beginning if active column does n
     ]);
 
     const columnList = mount(
-        <ColumnList onItemClick={jest.fn()} toolbarItems={toolbarItems}>
+        <ColumnList onItemClick={jest.fn()} toolbarItemsProvider={toolbarItemsProvider}>
             <Column />
             <Column />
         </ColumnList>
@@ -234,7 +234,7 @@ test('Should move the toolbar container to the beginning if active column does n
 });
 
 test('Should move the toolbar container to the correct position', () => {
-    const toolbarItems = jest.fn(() => [
+    const toolbarItemsProvider = jest.fn(() => [
         {
             icon: 'fa-plus',
             type: 'button',
@@ -243,7 +243,7 @@ test('Should move the toolbar container to the correct position', () => {
     ]);
 
     const columnList = mount(
-        <ColumnList onItemClick={jest.fn()} toolbarItems={toolbarItems}>
+        <ColumnList onItemClick={jest.fn()} toolbarItemsProvider={toolbarItemsProvider}>
             <Column />
             <Column />
             <Column />
@@ -261,7 +261,7 @@ test('Should move the toolbar container to the correct position', () => {
 
 test('Should set classes if the toolbar is active on the first or last visible column', () => {
     const columnList = mount(
-        <ColumnList onItemClick={jest.fn()} toolbarItems={jest.fn(() => [])}>
+        <ColumnList onItemClick={jest.fn()} toolbarItemsProvider={jest.fn(() => [])}>
             <Column />
             <Column />
             <Column />
@@ -299,7 +299,7 @@ test('Should set classes if the toolbar is active on the first or last visible c
 
 test('Should scroll to the last column when new column is loaded', () => {
     const columnList = mount(
-        <ColumnList onItemClick={jest.fn()} toolbarItems={jest.fn(() => [])}>
+        <ColumnList onItemClick={jest.fn()} toolbarItemsProvider={jest.fn(() => [])}>
             <Column />
         </ColumnList>
     );
@@ -325,7 +325,7 @@ test('Should not scroll to the last column when other props are updated', () => 
         <Column key={1} />,
     ];
     const columnList = mount(
-        <ColumnList onItemClick={jest.fn()} toolbarItems={jest.fn(() => [])}>
+        <ColumnList onItemClick={jest.fn()} toolbarItemsProvider={jest.fn(() => [])}>
             {children}
         </ColumnList>
     );

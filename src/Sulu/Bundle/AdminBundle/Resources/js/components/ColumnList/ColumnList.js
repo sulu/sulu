@@ -12,16 +12,12 @@ import columnListStyles from './columnList.scss';
 
 type Props = {|
     children: ChildrenArray<Element<typeof Column>>,
-    toolbarItems: (index: number) => Array<ToolbarItemConfig>,
+    toolbarItemsProvider: (index: number) => Array<ToolbarItemConfig>,
     onItemClick: (id: string | number) => void,
 |};
 
 @observer
 export default class ColumnList extends React.Component<Props> {
-    static defaultProps = {
-        toolbarItems: [],
-    };
-
     static Column = Column;
 
     static Item = Item;
@@ -138,7 +134,7 @@ export default class ColumnList extends React.Component<Props> {
             }
         );
 
-        const toolbarItems = this.props.toolbarItems(this.activeColumnIndex);
+        const toolbarItems = this.props.toolbarItemsProvider(this.activeColumnIndex);
 
         return (
             <div className={columnListStyles.columnListToolbarContainer}>

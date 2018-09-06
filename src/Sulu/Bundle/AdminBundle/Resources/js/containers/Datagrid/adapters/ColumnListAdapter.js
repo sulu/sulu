@@ -176,7 +176,6 @@ export default class ColumnListAdapter extends AbstractAdapter {
             );
         }
 
-        // TODO use simple variable instead of function
         const hasActiveItem = activeItems[index + 1] === undefined;
 
         const settingOptions = [];
@@ -240,7 +239,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
-                <ColumnList onItemClick={this.handleItemClick} toolbarItems={this.getToolbarItems}>
+                <ColumnList onItemClick={this.handleItemClick} toolbarItemsProvider={this.getToolbarItems}>
                     {this.props.data.map((items, index) => (
                         <ColumnList.Column
                             key={index}
