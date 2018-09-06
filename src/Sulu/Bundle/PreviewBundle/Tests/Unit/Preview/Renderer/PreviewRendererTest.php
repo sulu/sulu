@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview\Renderer;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\RouteDefaultsProviderNotFoundException;
@@ -26,6 +27,8 @@ use Sulu\Bundle\PreviewBundle\Preview\Renderer\KernelFactoryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
+use Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
@@ -33,12 +36,16 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\Replacer;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Cmf\Component\Routing\RouteProviderInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\RouteCollection;
 
 class PreviewRendererTest extends TestCase
 {
@@ -58,7 +65,7 @@ class PreviewRendererTest extends TestCase
     private $kernelFactory;
 
     /**
-     * @var HttpKernelInterface
+     * @var KernelInterface
      */
     private $httpKernel;
 
@@ -104,8 +111,14 @@ class PreviewRendererTest extends TestCase
         $this->kernelFactory = $this->prophesize(KernelFactoryInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $this->container = $this->prophesize(ContainerInterface::class);
+        $this->httpKernel = $this->prophesize(KernelInterface::class);
+        $this->routeProvider = $this->prophesize(ContentRouteProvider::class);
+        $this->routeCollection = $this->prophesize(RouteCollection::class);
 
-        $this->httpKernel = $this->prophesize(HttpKernelInterface::class);
+        $this->routeProvider->getRouteCollection()->willReturn($this->routeCollection->reveal());
+        $this->container->get('sulu_website.provider.content')->willReturn($this->routeProvider->reveal());
+        $this->httpKernel->getContainer()->willReturn($this->container->reveal());
         $this->kernelFactory->create($this->environment)->willReturn($this->httpKernel->reveal());
 
         $this->renderer = new PreviewRenderer(
@@ -161,7 +174,8 @@ class PreviewRendererTest extends TestCase
      */
     public function testRender($scheme, $portalUrl)
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(PageDocument::class);
+        $structure = $this->prophesize(PageBridge::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -177,7 +191,7 @@ class PreviewRendererTest extends TestCase
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render', 'structure' => $structure]);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
@@ -241,7 +255,8 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderWithTargetGroup()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(PageDocument::class);
+        $structure = $this->prophesize(PageBridge::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -257,7 +272,7 @@ class PreviewRendererTest extends TestCase
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render', 'structure' => $structure]);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
@@ -277,7 +292,8 @@ class PreviewRendererTest extends TestCase
      */
     public function testRenderWithoutRequest($portalUrl)
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(PageDocument::class);
+        $structure = $this->prophesize(PageBridge::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -293,7 +309,7 @@ class PreviewRendererTest extends TestCase
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render', 'structure' => $structure]);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
@@ -303,7 +319,8 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderPortalNotFound()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(PageDocument::class);
+        $structure = $this->prophesize(PageBridge::class);
 
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([]);
@@ -315,7 +332,7 @@ class PreviewRendererTest extends TestCase
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render', 'structure' => $structure]);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
@@ -406,7 +423,8 @@ class PreviewRendererTest extends TestCase
     {
         $this->expectException(TwigException::class, '', 9903);
 
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(PageDocument::class);
+        $structure = $this->prophesize(PageBridge::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -422,7 +440,7 @@ class PreviewRendererTest extends TestCase
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render', 'structure' => $structure]);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
@@ -440,7 +458,8 @@ class PreviewRendererTest extends TestCase
     {
         $this->expectException(TemplateNotFoundException::class, '', 9904);
 
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(PageDocument::class);
+        $structure = $this->prophesize(PageBridge::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -456,7 +475,7 @@ class PreviewRendererTest extends TestCase
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render', 'structure' => $structure]);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
@@ -474,7 +493,8 @@ class PreviewRendererTest extends TestCase
     {
         $this->expectException(TemplateNotFoundException::class, '', 9904);
 
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(PageDocument::class);
+        $structure = $this->prophesize(PageBridge::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -490,7 +510,7 @@ class PreviewRendererTest extends TestCase
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render', 'structure' => $structure]);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
@@ -510,7 +530,8 @@ class PreviewRendererTest extends TestCase
     {
         $this->expectException(UnexpectedException::class, '', 9905);
 
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(PageDocument::class);
+        $structure = $this->prophesize(PageBridge::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -526,7 +547,7 @@ class PreviewRendererTest extends TestCase
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render', 'structure' => $structure]);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
@@ -544,7 +565,8 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderRequestWithServerAttributes()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(PageDocument::class);
+        $structure = $this->prophesize(PageBridge::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -560,7 +582,7 @@ class PreviewRendererTest extends TestCase
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render', 'structure' => $structure]);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
