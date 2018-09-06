@@ -14,6 +14,17 @@ type Props = {|
     value: ?string,
 |};
 
+const URL_REGEX = new RegExp(
+    '^(?:(?:https?|ftps?)://)(?:\\S+(?::\\S*)?@)?'
+    + '('
+    + '?:(?!127(?:\\.\\d{1,3}){3})(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}'
+    + '(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)'
+    + '(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))'
+    + ')'
+    + '(?::\\d{2,})?(?:/[^\\s]*)?$',
+    'iu'
+);
+
 @observer
 export default class Url extends React.Component<Props> {
     static defaultProps = {
@@ -22,6 +33,7 @@ export default class Url extends React.Component<Props> {
 
     @observable protocol: ?string = undefined;
     @observable path: ?string = undefined;
+    @observable validUrl: boolean = true;
 
     componentDidMount() {
         const {value} = this.props;
@@ -30,9 +42,17 @@ export default class Url extends React.Component<Props> {
 
     componentDidUpdate(prevProps: Props) {
         const {value} = this.props;
-        if (prevProps.value !== value) {
+        if (prevProps.value !== value && !(this.url && !value)) {
             this.setUrl(value);
         }
+    }
+
+    isValidUrl(url: ?string) {
+        if (!url) {
+            return true;
+        }
+
+        return URL_REGEX.test(url);
     }
 
     @computed get protocols() {
@@ -46,7 +66,8 @@ export default class Url extends React.Component<Props> {
             return;
         }
 
-        onChange(this.url);
+        this.validUrl = this.isValidUrl(this.url);
+        onChange(this.validUrl ? this.url : undefined);
     };
 
     @action setUrl(url: ?string) {
@@ -67,9 +88,11 @@ export default class Url extends React.Component<Props> {
         if (!protocol) {
             throw new Error('The URL "' + url + '" has a protocol type not supported by this instance!');
         }
-        this.protocol = protocol;
 
+        this.protocol = protocol;
         this.path = url.substring(this.protocol.length);
+
+        this.validUrl = this.isValidUrl(this.url);
     }
 
     @computed get url() {
@@ -111,17 +134,27 @@ export default class Url extends React.Component<Props> {
             this.protocol = protocol;
             this.path = path.substring(this.protocol.length);
         }
+    };
 
-        this.callChangeCallback();
+    @action handlePathBlur = () => {
+        const {onBlur, value} = this.props;
+
+        if (this.url !== value) {
+            this.callChangeCallback();
+        }
+
+        if (onBlur) {
+            onBlur();
+        }
     };
 
     render() {
-        const {onBlur, protocols, valid} = this.props;
+        const {protocols, valid} = this.props;
 
         const urlClass = classNames(
             urlStyles.url,
             {
-                [urlStyles.error]: !valid,
+                [urlStyles.error]: !valid || !this.validUrl,
             }
         );
 
@@ -134,7 +167,12 @@ export default class Url extends React.Component<Props> {
                         ))}
                     </SingleSelect>
                 </div>
-                <input type="text" onBlur={onBlur} onChange={this.handlePathChange} value={this.path || ''} />
+                <input
+                    type="text"
+                    onBlur={this.handlePathBlur}
+                    onChange={this.handlePathChange}
+                    value={this.path || ''}
+                />
             </div>
         );
     }

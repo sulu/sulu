@@ -3,7 +3,7 @@ The `URL` component lets the user choose one of a given set of protocols and typ
 ```javascript
 initialState = {value: undefined};
 
-const protocols = ['http://', 'https://', 'mailto:'];
+const protocols = ['http://', 'https://'];
 
 const onChange = (value) => {
     setState({value});
@@ -19,10 +19,29 @@ It also automatically detects the protocol of a given URL and sets the value of 
 
 ```javascript
 initialState = {
-    value: 'http://www.google.at',
+    value: 'http://www.sulu.io',
 };
 
-const protocols = ['http://', 'https://', 'mailto:'];
+const protocols = ['http://', 'https://'];
+
+const onChange = (value) => {
+    setState({value});
+};
+
+<div>
+    <Url onChange={onChange} protocols={protocols} value={state.value} />
+    <p>Returned URL: {state.value}</p>
+</div>
+```
+
+Finally it validates the entered URL. That also works when it is passed in initially:
+
+```javascript
+initialState = {
+    value: 'http://www.su lu.at',
+};
+
+const protocols = ['http://', 'https://'];
 
 const onChange = (value) => {
     setState({value});
