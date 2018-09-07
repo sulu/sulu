@@ -42,7 +42,7 @@ export default class Url extends React.Component<Props> {
 
     componentDidUpdate(prevProps: Props) {
         const {value} = this.props;
-        if (prevProps.value !== value && !(this.url && !value)) {
+        if (prevProps.value !== value && !((this.protocol || this.path) && !value)) {
             this.setUrl(value);
         }
     }

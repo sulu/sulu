@@ -37,6 +37,16 @@ test('Show error when invalid URL was passed via updated prop', () => {
     expect(url.find('.error')).toHaveLength(1);
 });
 
+test('Should not reset value of protocol select when undefined value is passed', () => {
+    const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://', 'ftp://']} value={'https://'} />);
+    expect(url.find('SingleSelect').prop('value')).toEqual('https://');
+    expect(url.find('input').prop('value')).toEqual('');
+
+    url.setProps({value: undefined});
+    expect(url.find('SingleSelect').prop('value')).toEqual('https://');
+    expect(url.find('input').prop('value')).toEqual('');
+});
+
 test('Remove error when valid URL was passed via updated prop', () => {
     const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://']} value="http://su lu.at" />);
     expect(url.find('.error')).toHaveLength(1);
