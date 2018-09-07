@@ -1,0 +1,53 @@
+@import '../../containers/Application/colors.scss';
+
+$singleItemSelectionBackgroundColor: $white;
+$singleItemSelectionBorderColor: $silver;
+$singleItemSelectionButtonColor: $scorpion;
+$singleItemSelectionButtonActiveColor: $white;
+$singleItemSelectionButtonBackgroundColor: $white;
+$singleItemSelectionButtonActiveBackgroundColor: $shakespeare;
+$singleItemSelectionEmptyColor: $silver;
+
+.single-item-selection {
+    display: flex;
+    align-items: center;
+    background-color: $singleItemSelectionBackgroundColor;
+    border: 1px solid $singleItemSelectionBorderColor;
+    height: 40px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.button {
+    height: 100%;
+    width: 40px;
+    background-color: $singleItemSelectionButtonBackgroundColor;
+    color: $singleItemSelectionButtonColor;
+    border: none;
+    border-right: 1px solid $singleItemSelectionBorderColor;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+        background-color: $singleItemSelectionButtonActiveBackgroundColor;
+        color: $singleItemSelectionButtonActiveColor;
+    }
+}
+
+.item {
+    flex-grow: 1;
+    margin-left: 20px;
+    font-size: 12px;
+}
+
+.empty {
+    color: $singleItemSelectionEmptyColor;
+}
+
+.remove-button {
+    border: 0;
+    margin-right: 10px;
+    padding: 0 10px;
+    cursor: pointer;
+    background-color: transparent;
+}
