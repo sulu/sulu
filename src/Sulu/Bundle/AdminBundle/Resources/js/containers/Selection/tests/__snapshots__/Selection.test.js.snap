@@ -27,255 +27,247 @@ exports[`Should open an overlay 1`] = `
 
 exports[`Show with default plus icon 1`] = `
 Array [
-  <div>
-    <div
-      class="header emptyList"
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      type="button"
     >
-      <button
-        class="button left"
-        type="button"
-      >
-        <span
-          aria-label="su-plus"
-          class="su-plus"
-        />
-      </button>
-      <div
-        class="label"
+      <span
+        aria-label="su-plus"
+        class="su-plus"
       />
-    </div>
-    <ul
-      class="list"
+    </button>
+    <div
+      class="label"
     />
   </div>,
+  <ul
+    class="list"
+  />,
   <div />,
 ]
 `;
 
 exports[`Show with passed icon 1`] = `
 Array [
-  <div>
-    <div
-      class="header emptyList"
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      type="button"
     >
-      <button
-        class="button left"
-        type="button"
-      >
-        <span
-          aria-label="su-document"
-          class="su-document"
-        />
-      </button>
-      <div
-        class="label"
+      <span
+        aria-label="su-document"
+        class="su-document"
       />
-    </div>
-    <ul
-      class="list"
+    </button>
+    <div
+      class="label"
     />
   </div>,
+  <ul
+    class="list"
+  />,
   <div />,
 ]
 `;
 
 exports[`Show with passed label 1`] = `
 Array [
-  <div>
-    <div
-      class="header emptyList"
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      type="button"
     >
-      <button
-        class="button left"
-        type="button"
-      >
-        <span
-          aria-label="su-plus"
-          class="su-plus"
-        />
-      </button>
-      <div
-        class="label"
-      >
-        Select Snippets
-      </div>
+      <span
+        aria-label="su-plus"
+        class="su-plus"
+      />
+    </button>
+    <div
+      class="label"
+    >
+      Select Snippets
     </div>
-    <ul
-      class="list"
-    />
   </div>,
+  <ul
+    class="list"
+  />,
   <div />,
 ]
 `;
 
 exports[`Show with passed values as items in right locale 1`] = `
 Array [
-  <div>
-    <div
-      class="header"
+  <div
+    class="header"
+  >
+    <button
+      class="button left"
+      type="button"
     >
-      <button
-        class="button left"
-        type="button"
+      <span
+        aria-label="su-plus"
+        class="su-plus"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>,
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
       >
         <span
-          aria-label="su-plus"
-          class="su-plus"
-        />
-      </button>
-      <div
-        class="label"
-      />
-    </div>
-    <ul
-      class="list"
-    >
-      <li
-        class="listElement"
-      >
-        <div
-          class="item"
+          class="dragHandle sortable"
         >
           <span
-            class="dragHandle sortable"
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
           >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div>
             <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
+              class="itemColumn"
+              style="width:50%"
             >
               1
             </span>
-          </span>
-          <div
-            class="content"
-          >
-            <div>
-              <span
-                class="itemColumn"
-                style="width:50%"
-              >
-                1
-              </span>
-              <span
-                class="itemColumn"
-                style="width:50%"
-              >
-                Title 1
-              </span>
-            </div>
-          </div>
-          <button
-            class="removeButton"
-            type="button"
-          >
             <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
+              class="itemColumn"
+              style="width:50%"
+            >
+              Title 1
+            </span>
+          </div>
         </div>
-      </li>
-      <li
-        class="listElement"
-      >
-        <div
-          class="item"
+        <button
+          class="removeButton"
+          type="button"
         >
           <span
-            class="dragHandle sortable"
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </button>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
           >
+            2
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div>
             <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
+              class="itemColumn"
+              style="width:50%"
             >
               2
             </span>
-          </span>
-          <div
-            class="content"
-          >
-            <div>
-              <span
-                class="itemColumn"
-                style="width:50%"
-              >
-                2
-              </span>
-              <span
-                class="itemColumn"
-                style="width:50%"
-              >
-                Title 2
-              </span>
-            </div>
-          </div>
-          <button
-            class="removeButton"
-            type="button"
-          >
             <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
+              class="itemColumn"
+              style="width:50%"
+            >
+              Title 2
+            </span>
+          </div>
         </div>
-      </li>
-      <li
-        class="listElement"
-      >
-        <div
-          class="item"
+        <button
+          class="removeButton"
+          type="button"
         >
           <span
-            class="dragHandle sortable"
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </button>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
           >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              3
-            </span>
+            3
           </span>
-          <div
-            class="content"
-          >
-            <div>
-              <span
-                class="itemColumn"
-                style="width:50%"
-              >
-                5
-              </span>
-              <span
-                class="itemColumn"
-                style="width:50%"
-              >
-                Title 5
-              </span>
-            </div>
-          </div>
-          <button
-            class="removeButton"
-            type="button"
-          >
+        </span>
+        <div
+          class="content"
+        >
+          <div>
             <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
+              class="itemColumn"
+              style="width:50%"
+            >
+              5
+            </span>
+            <span
+              class="itemColumn"
+              style="width:50%"
+            >
+              Title 5
+            </span>
+          </div>
         </div>
-      </li>
-    </ul>
-  </div>,
+        <button
+          class="removeButton"
+          type="button"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </button>
+      </div>
+    </li>
+  </ul>,
   <div />,
 ]
 `;

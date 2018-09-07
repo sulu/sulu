@@ -1,4 +1,3 @@
-
 The `MultiItemSelection` component is a list used for referencing different datasets in `Sulu`. Inside the 
 `MultiItemSelection` those references can be added, sorted and deleted. The sorting can be done by drag and drop.
 
@@ -48,27 +47,25 @@ const handleAddItem = () => {
     });
 };
 
-<div style={{padding: 20, backgroundColor: '#f1f1f1'}}>
-    <MultiItemSelection
-        label="Select an item"
-        onItemRemove={handleRemove}
-        leftButton={{
-            icon: 'fa-plus',
-            onClick: handleAddItem,
-        }}
-        onItemsSorted={handleItemsSorted}
-    >
-        {state.items.map((item, index) =>
-            <Item
-                key={item.id}
-                id={item.id}
-                index={index + 1}
-            >
-                <div>
-                    {item.content}
-                </div>
-            </Item>
-        )}
-    </MultiItemSelection>
-</div>
+<MultiItemSelection
+    label="Select an item"
+    onItemRemove={handleRemove}
+    leftButton={{
+        icon: 'fa-plus',
+        onClick: handleAddItem,
+    }}
+    onItemsSorted={handleItemsSorted}
+>
+    {state.items.map((item, index) =>
+        <Item
+            key={item.id}
+            id={item.id}
+            index={index + 1}
+        >
+            <div>
+                {item.content}
+            </div>
+        </Item>
+    )}
+</MultiItemSelection>
 ```

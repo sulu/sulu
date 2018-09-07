@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ChildrenArray, Element} from 'react';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import type {Button} from './types';
@@ -98,7 +98,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
         const List = this.createList();
 
         return (
-            <div>
+            <Fragment>
                 <Header
                     label={label}
                     loading={loading}
@@ -115,7 +115,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
                 >
                     {children}
                 </List>
-            </div>
+            </Fragment>
         );
     }
 }

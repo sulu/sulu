@@ -1,121 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Clicking the left and right button inside the header should call the right handler 1`] = `
-<div>
+<div
+  class="header"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus"
+    />
+  </button>
   <div
-    class="header"
+    class="label"
   >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-plus"
-        class="su-plus"
-      />
-    </button>
-    <div
-      class="label"
-    >
-      I have handler
-    </div>
-    <button
-      class="button right"
-      type="button"
-    >
-      <span
-        aria-label="fa-gear"
-        class="fa fa-gear"
-      />
-    </button>
+    I have handler
   </div>
-  <ul
-    class="list"
+  <button
+    class="button right"
+    type="button"
   >
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            1
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          Child 1
-        </div>
-      </div>
-    </li>
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            2
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          Child 2
-        </div>
-      </div>
-    </li>
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            3
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          Child 3
-        </div>
-      </div>
-    </li>
-  </ul>
+    <span
+      aria-label="fa-gear"
+      class="fa fa-gear"
+    />
+  </button>
 </div>
 `;
 
 exports[`Render a not sortable MultiItemSelection with children 1`] = `
-<div>
+Array [
   <div
     class="header"
   >
@@ -124,7 +40,7 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
     >
       I have children
     </div>
-  </div>
+  </div>,
   <ul
     class="list"
   >
@@ -194,12 +110,12 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
         </div>
       </div>
     </li>
-  </ul>
-</div>
+  </ul>,
+]
 `;
 
 exports[`Render an MultiItemSelection while loading 1`] = `
-<div>
+Array [
   <div
     class="header emptyList"
   >
@@ -223,15 +139,15 @@ exports[`Render an MultiItemSelection while loading 1`] = `
         </div>
       </div>
     </div>
-  </div>
+  </div>,
   <ul
     class="list"
-  />
-</div>
+  />,
+]
 `;
 
 exports[`Render an MultiItemSelection with children 1`] = `
-<div>
+Array [
   <div
     class="header"
   >
@@ -240,7 +156,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
     >
       I have children
     </div>
-  </div>
+  </div>,
   <ul
     class="list"
   >
@@ -322,12 +238,12 @@ exports[`Render an MultiItemSelection with children 1`] = `
         </div>
       </div>
     </li>
-  </ul>
-</div>
+  </ul>,
+]
 `;
 
 exports[`Render an empty MultiItemSelection 1`] = `
-<div>
+Array [
   <div
     class="header emptyList"
   >
@@ -336,9 +252,9 @@ exports[`Render an empty MultiItemSelection 1`] = `
     >
       I am empty
     </div>
-  </div>
+  </div>,
   <ul
     class="list"
-  />
-</div>
+  />,
+]
 `;
