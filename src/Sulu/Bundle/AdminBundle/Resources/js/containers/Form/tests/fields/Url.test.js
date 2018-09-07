@@ -80,6 +80,34 @@ test('Pass props correctly to Url component', () => {
     expect(url.find(UrlComponent).prop('value')).toEqual('http://www.sulu.io');
 });
 
+test('Pass correct default props to Url component', () => {
+    const schemaOptions = {};
+    const changeSpy = jest.fn();
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const url = shallow(
+        <Url
+            dataPath=""
+            error={undefined}
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={undefined}
+            minOccurs={undefined}
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            schemaPath=""
+            showAllErrors={false}
+            types={undefined}
+            value={undefined}
+        />
+    );
+
+    expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://', 'ftp://', 'ftps://']);
+    expect(changeSpy).toBeCalledWith('https://');
+});
+
 test('Throw error if only specific_part default is set', () => {
     const schemaOptions = {
         schemes: {

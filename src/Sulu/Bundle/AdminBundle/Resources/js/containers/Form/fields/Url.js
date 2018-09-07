@@ -12,7 +12,11 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             schemaOptions: {
                 defaults: {
                     value: defaults,
-                } = {},
+                } = {
+                    value: [
+                        {name: 'scheme', value: 'https://'},
+                    ],
+                },
             } = {},
             value,
         } = this.props;
@@ -62,7 +66,12 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             onChange,
             schemaOptions: {
                 schemes: {
-                    value: schemes,
+                    value: schemes = [
+                        {name: 'http://'},
+                        {name: 'https://'},
+                        {name: 'ftp://'},
+                        {name: 'ftps://'},
+                    ],
                 } = {},
             } = {},
             value,
