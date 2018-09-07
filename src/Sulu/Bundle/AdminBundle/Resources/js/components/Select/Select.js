@@ -26,6 +26,7 @@ type Props = SelectProps & {
 export default class Select extends React.Component<Props> {
     static defaultProps = {
         closeOnSelect: true,
+        skin: 'default',
     };
 
     static Action = Action;
@@ -109,6 +110,7 @@ export default class Select extends React.Component<Props> {
         const {
             icon,
             displayValue,
+            skin,
         } = this.props;
         const clonedChildren = this.cloneChildren();
 
@@ -116,8 +118,9 @@ export default class Select extends React.Component<Props> {
             <div className={selectStyles.select}>
                 <DisplayValue
                     icon={icon}
-                    onClick={this.handleDisplayValueClick}
                     displayValueRef={this.setDisplayValueRef}
+                    onClick={this.handleDisplayValueClick}
+                    skin={skin}
                 >
                     {displayValue}
                 </DisplayValue>

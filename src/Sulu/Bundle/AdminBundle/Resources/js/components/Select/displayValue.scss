@@ -10,20 +10,29 @@ $iconSize: 10px;
 $hoverColor: $shakespeare;
 
 .displayValue {
-    display: block;
-    position: relative;
-    width: 100%;
-    padding: 7px 30px 7px 10px;
-    border: $borderSize solid $borderColor;
-    border-radius: 3px;
-    text-align: left;
-    font-size: $fontSize;
-    color: $blueZodiac;
     cursor: pointer;
-    background: $backgroundColor;
+    position: relative;
+    padding: 7px 30px 7px 10px;
 
-    &:hover {
-        color: $hoverColor;
+    &.flat {
+        border: none;
+        background-color: transparent;
+        color: inherit;
+    }
+
+    &.default {
+        display: block;
+        width: 100%;
+        border: $borderSize solid $borderColor;
+        border-radius: 3px;
+        text-align: left;
+        font-size: $fontSize;
+        color: $blueZodiac;
+        background: $backgroundColor;
+
+        &:hover {
+            color: $hoverColor;
+        }
     }
 }
 

@@ -13,6 +13,7 @@ type Props = SelectProps & {
 
 export default class MultiSelect extends React.PureComponent<Props> {
     static defaultProps = {
+        skin: 'default',
         values: [],
     };
 
@@ -67,7 +68,7 @@ export default class MultiSelect extends React.PureComponent<Props> {
     };
 
     render() {
-        const {icon, children} = this.props;
+        const {children, icon, skin} = this.props;
 
         return (
             <Select
@@ -77,6 +78,7 @@ export default class MultiSelect extends React.PureComponent<Props> {
                 displayValue={this.displayValue}
                 selectedVisualization="checkbox"
                 isOptionSelected={this.isOptionSelected}
+                skin={skin}
             >
                 {children}
             </Select>

@@ -36,6 +36,7 @@ import {
     TextArea,
     TextEditor,
     Time,
+    Url,
 } from '../../containers/Form';
 import FieldBlocks from '../../containers/FieldBlocks';
 import {smartContentConfigStore} from '../../containers/SmartContent';
@@ -103,6 +104,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('text_area', TextArea);
     fieldRegistry.add('text_editor', TextEditor);
     fieldRegistry.add('time', Time);
+    fieldRegistry.add('url', Url);
 
     registerFieldTypesWithOptions(fieldTypeOptions['selection'], Selection);
     registerFieldTypesWithOptions(fieldTypeOptions['single_selection'], SingleSelection);
