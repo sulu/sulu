@@ -3,6 +3,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import classNames from 'classnames';
+import log from 'loglevel';
 import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
 
@@ -86,11 +87,11 @@ export default class Url extends React.Component<Props> {
 
         const protocol = protocols.find((protocol) => url && url.startsWith(protocol));
         if (!protocol) {
-            throw new Error('The URL "' + url + '" has a protocol type not supported by this instance!');
+            log.warn('The URL "' + url + '" has a protocol type not supported by this instance.');
         }
 
         this.protocol = protocol;
-        this.path = url.substring(this.protocol.length);
+        this.path = url.substring(protocol ? protocol.length : 0);
 
         this.validUrl = this.isValidUrl(this.url);
     }
@@ -110,7 +111,8 @@ export default class Url extends React.Component<Props> {
 
         if (typeof protocol !== 'string' || !protocols.includes(protocol)) {
             throw new Error(
-                'The protocol "' + protocol + '" is not in listed as available protocol (' + protocols.join(',') + ')'
+                'The protocol "' + protocol + '" is not in listed as available protocol (' + protocols.join(',') + ').'
+                + ' This should not happen and is likely a bug.'
             );
         }
 

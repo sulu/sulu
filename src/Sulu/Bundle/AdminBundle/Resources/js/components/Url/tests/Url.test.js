@@ -1,7 +1,12 @@
 // @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
+import log from 'loglevel';
 import Url from '../Url';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 test('Render the component with an error', () => {
     expect(render(
@@ -26,6 +31,14 @@ test('Set the correct values for protocol and path when updating', () => {
 
     expect(url.find('SingleSelect').prop('value')).toEqual('http://');
     expect(url.find('input').prop('value')).toEqual('sulu.at');
+});
+
+test('Should log a warning if a not available protocol has been given', () => {
+    const url = shallow(<Url onChange={jest.fn()} protocols={['http://']} value="https://www.sulu.io" />);
+
+    expect(url.find('SingleSelect').prop('value')).toEqual(undefined);
+    expect(url.find('input').prop('value')).toEqual('https://www.sulu.io');
+    expect(log.warn).toBeCalled();
 });
 
 test('Show error when invalid URL was passed via updated prop', () => {
