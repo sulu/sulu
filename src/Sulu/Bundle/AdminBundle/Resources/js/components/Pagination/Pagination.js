@@ -113,14 +113,14 @@ export default class Pagination extends React.Component<Props> {
     };
 
     @action handleInputChange = (value: ?string) => {
-        if(value === undefined) {
+        if (value === undefined) {
             this.currentInputValue = undefined;
             return;
         }
 
         const page = parseInt(value);
 
-        if(!isNaN(page)) {
+        if (!isNaN(page)) {
             this.currentInputValue = page;
         }
     };
