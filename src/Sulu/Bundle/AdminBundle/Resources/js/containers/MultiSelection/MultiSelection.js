@@ -7,7 +7,7 @@ import equals from 'fast-deep-equal';
 import {MultiItemSelection} from '../../components';
 import SelectionStore from '../../stores/SelectionStore';
 import MultiDatagridOverlay from '../MultiDatagridOverlay';
-import selectionStyles from './selection.scss';
+import multiSelectionStyles from './multiSelection.scss';
 
 type Props = {|
     adapter: string,
@@ -23,7 +23,7 @@ type Props = {|
 |};
 
 @observer
-export default class Selection extends React.Component<Props> {
+export default class MultiSelection extends React.Component<Props> {
     static defaultProps = {
         disabledIds: [],
         displayProperties: [],
@@ -126,7 +126,7 @@ export default class Selection extends React.Component<Props> {
                             <div>
                                 {displayProperties.map((displayProperty) => (
                                     <span
-                                        className={selectionStyles.itemColumn}
+                                        className={multiSelectionStyles.itemColumn}
                                         key={displayProperty}
                                         style={{width: 100 / columns + '%'}}
                                     >

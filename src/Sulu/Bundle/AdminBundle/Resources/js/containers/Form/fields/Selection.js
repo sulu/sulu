@@ -6,7 +6,7 @@ import Datagrid from '../../../containers/Datagrid';
 import DatagridStore from '../../../containers/Datagrid/stores/DatagridStore';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
 import {translate} from '../../../utils/Translator';
-import SelectionComponent from '../../Selection';
+import MultiSelectionComponent from '../../MultiSelection';
 import type {FieldTypeProps} from '../../../types';
 import selectionStyles from './selection.scss';
 
@@ -100,7 +100,7 @@ export default class Selection extends React.Component<Props> {
         }
 
         return (
-            <SelectionComponent
+            <MultiSelectionComponent
                 adapter={adapter}
                 displayProperties={displayProperties}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}

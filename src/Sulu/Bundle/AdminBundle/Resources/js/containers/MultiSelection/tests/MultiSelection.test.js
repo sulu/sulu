@@ -3,7 +3,7 @@ import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import {observable} from 'mobx';
 import pretty from 'pretty';
-import Selection from '../Selection';
+import MultiSelection from '../MultiSelection';
 import SelectionStore from '../../../stores/SelectionStore';
 
 jest.mock('../../../utils', () => ({
@@ -39,13 +39,14 @@ beforeEach(() => {
 });
 
 test('Show with default plus icon', () => {
-    expect(render(<Selection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />))
-        .toMatchSnapshot();
+    expect(render(
+        <MultiSelection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />)
+    ).toMatchSnapshot();
 });
 
 test('Show with passed label', () => {
     expect(render(
-        <Selection
+        <MultiSelection
             adapter="column_list"
             onChange={jest.fn()}
             label="Select Snippets"
@@ -57,7 +58,7 @@ test('Show with passed label', () => {
 
 test('Show with passed icon', () => {
     expect(render(
-        <Selection
+        <MultiSelection
             adapter="table"
             onChange={jest.fn()}
             icon="su-document"
@@ -70,7 +71,7 @@ test('Show with passed icon', () => {
 test('Pass locale to MultiDatagridOverlay', () => {
     const locale = observable.box('de');
     const selection = mount(
-        <Selection
+        <MultiSelection
             adapter="table"
             onChange={jest.fn()}
             locale={locale}
@@ -86,7 +87,7 @@ test('Pass disabledIds to MultiDatagridOverlay', () => {
     const disabledIds = [1, 2, 4];
 
     const selection = mount(
-        <Selection
+        <MultiSelection
             adapter="table"
             disabledIds={disabledIds}
             onChange={jest.fn()}
@@ -107,7 +108,7 @@ test('Show with passed values as items in right locale', () => {
     });
 
     expect(render(
-        <Selection
+        <MultiSelection
             adapter="table"
             displayProperties={['id', 'title']}
             onChange={jest.fn()}
@@ -123,7 +124,7 @@ test('Show with passed values as items in right locale', () => {
 
 test('Should open an overlay', () => {
     const selection = mount(
-        <Selection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />
+        <MultiSelection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -134,7 +135,7 @@ test('Should open an overlay', () => {
 
 test('Should close an overlay using the close button', () => {
     const selection = mount(
-        <Selection
+        <MultiSelection
             adapter="table"
             onChange={jest.fn()}
             resourceKey="snippets"
@@ -155,7 +156,7 @@ test('Should close an overlay using the close button', () => {
 
 test('Should close an overlay using the confirm button', () => {
     const selection = mount(
-        <Selection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />
+        <MultiSelection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -172,7 +173,7 @@ test('Should close an overlay using the confirm button', () => {
 test('Should call the onChange callback when clicking the confirm button', () => {
     const changeSpy = jest.fn();
     const selection = mount(
-        <Selection adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Selection" />
+        <MultiSelection adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Selection" />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -190,7 +191,13 @@ test('Should call the onChange callback when clicking the confirm button', () =>
 test('Should not call the onChange callback when items have not changed', () => {
     const changeSpy = jest.fn();
     const selection = mount(
-        <Selection adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Selection" value={[1]} />
+        <MultiSelection
+            adapter="table"
+            onChange={changeSpy}
+            resourceKey="snippets"
+            overlayTitle="Selection"
+            value={[1]}
+        />
     );
 
     expect(changeSpy).not.toBeCalled();
@@ -203,7 +210,13 @@ test('Should not call the onChange callback when items have not changed', () => 
 test('Should load the items if value prop changes', () => {
     const changeSpy = jest.fn();
     const selection = mount(
-        <Selection adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Selection" value={[1]} />
+        <MultiSelection
+            adapter="table"
+            onChange={changeSpy}
+            resourceKey="snippets"
+            overlayTitle="Selection"
+            value={[1]}
+        />
     );
 
     selection.setProps({value: [1, 3]});
@@ -212,7 +225,7 @@ test('Should load the items if value prop changes', () => {
 
 test('Should instantiate the DatagridStore with the correct resourceKey and destroy it on unmount', () => {
     const selection = mount(
-        <Selection adapter="table" onChange={jest.fn()} resourceKey="pages" overlayTitle="Selection" />
+        <MultiSelection adapter="table" onChange={jest.fn()} resourceKey="pages" overlayTitle="Selection" />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -231,7 +244,7 @@ test('Should instantiate the DatagridStore with the preselected ids', () => {
     });
 
     const selection = mount(
-        <Selection
+        <MultiSelection
             adapter="table"
             onChange={jest.fn()}
             value={[1, 5, 8]}
@@ -258,7 +271,7 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     });
 
     const selection = mount(
-        <Selection
+        <MultiSelection
             adapter="table"
             onChange={jest.fn()}
             locale={locale}
@@ -290,7 +303,7 @@ test('Should not reload items if none of the items changed', () => {
     });
 
     const selection = mount(
-        <Selection
+        <MultiSelection
             adapter="table"
             onChange={jest.fn()}
             locale={locale}
@@ -321,7 +334,7 @@ test('Should not reinstantiate the DatagridStore with the preselected ids when n
     });
 
     const selection = mount(
-        <Selection
+        <MultiSelection
             adapter="table"
             onChange={jest.fn()}
             locale={locale}
@@ -340,7 +353,7 @@ test('Should not reinstantiate the DatagridStore with the preselected ids when n
 test('Should remove an item when the remove button is clicked', () => {
     const changeSpy = jest.fn();
     const selection = shallow(
-        <Selection
+        <MultiSelection
             adapter="table"
             onChange={changeSpy}
             resourceKey="snippets"
@@ -356,7 +369,7 @@ test('Should remove an item when the remove button is clicked', () => {
 test('Should reorder the items on drag and drop', () => {
     const changeSpy = jest.fn();
     const selection = shallow(
-        <Selection
+        <MultiSelection
             adapter="table"
             onChange={changeSpy}
             resourceKey="snippets"

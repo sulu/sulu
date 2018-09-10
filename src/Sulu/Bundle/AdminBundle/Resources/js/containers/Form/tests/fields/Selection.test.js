@@ -90,7 +90,7 @@ test('Should pass props correctly to selection component', () => {
 
     expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
 
-    expect(selection.find('Selection').props()).toEqual(expect.objectContaining({
+    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
         displayProperties: ['id', 'title'],
         label: 'sulu_snippet.selection_label',
@@ -132,7 +132,7 @@ test('Should pass id of form as disabledId to overlay type to avoid assigning so
         />
     );
 
-    expect(selection.find('Selection').prop('disabledIds')).toEqual([4]);
+    expect(selection.find('MultiSelection').prop('disabledIds')).toEqual([4]);
 });
 
 test('Should pass empty array if value is not given to overlay type', () => {
@@ -168,7 +168,7 @@ test('Should pass empty array if value is not given to overlay type', () => {
     );
 
     expect(translate).toBeCalledWith('sulu_content.selection_label', {count: 0});
-    expect(selection.find('Selection').props()).toEqual(expect.objectContaining({
+    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'column_list',
         resourceKey: 'pages',
         value: [],
@@ -209,7 +209,7 @@ test('Should call onChange and onFinish callback when selection overlay is confi
         />
     );
 
-    selection.find('Selection').prop('onChange')([1, 2, 3]);
+    selection.find('MultiSelection').prop('onChange')([1, 2, 3]);
 
     expect(changeSpy).toBeCalledWith([1, 2, 3]);
     expect(finishSpy).toBeCalledWith();
