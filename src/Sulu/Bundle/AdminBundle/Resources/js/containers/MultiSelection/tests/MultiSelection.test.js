@@ -4,7 +4,7 @@ import {mount, render, shallow} from 'enzyme';
 import {observable} from 'mobx';
 import pretty from 'pretty';
 import MultiSelection from '../MultiSelection';
-import SelectionStore from '../../../stores/SelectionStore';
+import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 
 jest.mock('../../../utils', () => ({
     translate: jest.fn((key) => key),
@@ -22,7 +22,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.setActive = jest.fn();
 }));
 
-jest.mock('../../../stores/SelectionStore', () => jest.fn(function() {
+jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
     this.items = [];
     this.set = jest.fn();
     this.move = jest.fn();
@@ -103,7 +103,7 @@ test('Show with passed values as items in right locale', () => {
     const locale = observable.box('en');
 
     // $FlowFixMe
-    SelectionStore.mockImplementationOnce(function () {
+    MultiSelectionStore.mockImplementationOnce(function () {
         this.items = [{id: 1, title: 'Title 1'}, {id: 2, title: 'Title 2'}, {id: 5, title: 'Title 5'}];
     });
 
@@ -119,7 +119,7 @@ test('Show with passed values as items in right locale', () => {
         />
     )).toMatchSnapshot();
 
-    expect(SelectionStore).toBeCalledWith('snippets', [1, 2, 5], locale);
+    expect(MultiSelectionStore).toBeCalledWith('snippets', [1, 2, 5], locale);
 });
 
 test('Should open an overlay', () => {
@@ -239,7 +239,7 @@ test('Should instantiate the DatagridStore with the correct resourceKey and dest
 
 test('Should instantiate the DatagridStore with the preselected ids', () => {
     // $FlowFixMe
-    SelectionStore.mockImplementationOnce(function () {
+    MultiSelectionStore.mockImplementationOnce(function () {
         this.items = [{id: 1}, {id: 5}, {id: 8}];
     });
 
@@ -265,7 +265,7 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     const locale = observable.box('en');
 
     // $FlowFixMe
-    SelectionStore.mockImplementationOnce(function () {
+    MultiSelectionStore.mockImplementationOnce(function () {
         this.items = [{id: 1}, {id: 5}, {id: 8}];
         this.loadItems = jest.fn();
     });
@@ -297,7 +297,7 @@ test('Should not reload items if none of the items changed', () => {
     const locale = observable.box('en');
 
     // $FlowFixMe
-    SelectionStore.mockImplementationOnce(function () {
+    MultiSelectionStore.mockImplementationOnce(function () {
         this.items = [{id: 1}, {id: 5}, {id: 8}];
         this.loadItems = jest.fn();
     });
@@ -328,7 +328,7 @@ test('Should not reinstantiate the DatagridStore with the preselected ids when n
     const locale = observable.box('en');
 
     // $FlowFixMe
-    SelectionStore.mockImplementationOnce(function () {
+    MultiSelectionStore.mockImplementationOnce(function () {
         this.items = [{id: 1}, {id: 5}, {id: 8}];
         this.loadItems = jest.fn();
     });

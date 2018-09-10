@@ -1,6 +1,6 @@
 // @flow
 import {observable, toJS} from 'mobx';
-import SelectionStore from '../SelectionStore';
+import MultiSelectionStore from '../MultiSelectionStore';
 import ResourceRequester from '../../../services/ResourceRequester';
 
 jest.mock('../../../services/ResourceRequester', () => ({
@@ -18,7 +18,7 @@ test('Should load items when being constructed', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const selectionStore = new SelectionStore('snippets', [1, 3, 4], observable.box('en'));
+    const selectionStore = new MultiSelectionStore('snippets', [1, 3, 4], observable.box('en'));
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
@@ -38,7 +38,7 @@ test('Should load items when being constructed', () => {
 });
 
 test('Should not load items but replace current selection with empty array when no itemIds are given', () => {
-    const selectionStore = new SelectionStore('snippets', [], observable.box('en'));
+    const selectionStore = new MultiSelectionStore('snippets', [], observable.box('en'));
     selectionStore.items = [{id: 1}];
 
     selectionStore.loadItems(undefined);
@@ -59,7 +59,7 @@ test('Should load items with different filterParameter when being constructed', 
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const selectionStore = new SelectionStore('snippets', [1, 3, 4], observable.box('en'), 'names');
+    const selectionStore = new MultiSelectionStore('snippets', [1, 3, 4], observable.box('en'), 'names');
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
@@ -89,7 +89,7 @@ test('Should load items when being constructed in the given locale', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const selectionStore = new SelectionStore('snippets', [1, 3, 4], observable.box('de'));
+    const selectionStore = new MultiSelectionStore('snippets', [1, 3, 4], observable.box('de'));
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
@@ -119,7 +119,7 @@ test('Should load items when being constructed without a locale', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const selectionStore = new SelectionStore('snippets', [1, 3, 4]);
+    const selectionStore = new MultiSelectionStore('snippets', [1, 3, 4]);
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
@@ -150,7 +150,7 @@ test('Should remove an item from the store', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const selectionStore = new SelectionStore('snippets', [1, 3, 4], observable.box('en'));
+    const selectionStore = new MultiSelectionStore('snippets', [1, 3, 4], observable.box('en'));
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
@@ -186,7 +186,7 @@ test('Should move the items in a store', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const selectionStore = new SelectionStore('snippets', [1, 2], observable.box('en'));
+    const selectionStore = new MultiSelectionStore('snippets', [1, 2], observable.box('en'));
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
@@ -222,7 +222,7 @@ test('Should set all items on the store', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const selectionStore = new SelectionStore('snippets', [1, 2], observable.box('en'));
+    const selectionStore = new MultiSelectionStore('snippets', [1, 2], observable.box('en'));
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
