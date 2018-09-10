@@ -1,8 +1,7 @@
 {
-    "sulu_category.categories": "Kategorien",
-    "sulu_category.details": "Details",
-    "sulu_category.key": "Schlüssel",
-    "sulu_category.name": "Name",
-    "sulu_category.key_word": "Schlüsselwort",
-    "sulu_category.multiple_usage": "Mehrfachverwendung"
+  "sulu_category.details": "Details",
+  "sulu_category.key": "Schlüssel",
+  "sulu_category.name": "Name",
+  "sulu_category.key_word": "Schlüsselwort",
+  "sulu_category.multiple_usage": "Mehrfachverwendung"
 }

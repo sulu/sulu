@@ -1,8 +1,7 @@
 {
-    "sulu_snippet.selection_overlay_title": "Choose snippets",
-    "sulu_snippet.selection_label": "{count} {count, plural, =1 {snippet} other {snippets}} selected",
-    "sulu_snippet.snippets": "Snippets",
-    "sulu_snippet.details": "Details",
-    "sulu_snippet.taxonomies": "Taxonomies",
-    "sulu_snippet.title": "Title"
+  "sulu_snippet.selection_overlay_title": "Choose snippets",
+  "sulu_snippet.selection_label": "{count} {count, plural, =1 {snippet} other {snippets}} selected",
+  "sulu_snippet.details": "Details",
+  "sulu_snippet.taxonomies": "Taxonomies",
+  "sulu_snippet.title": "Title"
 }

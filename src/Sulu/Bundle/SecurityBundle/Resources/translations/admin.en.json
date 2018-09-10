@@ -1,7 +1,6 @@
 {
-    "sulu_security.roles": "User roles",
-    "sulu_security.permissions": "Permissions",
-    "sulu_security.name": "Name",
-    "sulu_security.system": "System",
-    "sulu_security.reset_mail_subject": "Reset your Sulu password"
+  "sulu_security.permissions": "Permissions",
+  "sulu_security.name": "Name",
+  "sulu_security.system": "System",
+  "sulu_security.reset_mail_subject": "Reset your Sulu password"
 }
