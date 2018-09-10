@@ -50,6 +50,21 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                                 ],
                             ],
                         ],
+                        'single_selection' => [
+                            'single_internal_link' => [
+                                'default_type' => 'overlay',
+                                'resource_key' => 'pages',
+                                'types' => [
+                                    'overlay' => [
+                                        'adapter' => 'column_list',
+                                        'display_properties' => ['title'],
+                                        'empty_text' => 'sulu_content.no_page_selected',
+                                        'icon' => 'su-document',
+                                        'overlay_title' => 'sulu_content.single_selection_overlay_title',
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                     'resources' => [
                         'pages_seo' => [

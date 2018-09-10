@@ -6,10 +6,10 @@ import singleItemSelectionStyles from './singleItemSelection.scss';
 import type {Button} from './types';
 
 type Props = {|
-    children: Node,
+    children?: Node,
     emptyText?: string,
     leftButton: Button,
-    onRemove: () => void,
+    onRemove?: () => void,
 |};
 
 export default class SingleItemSelection extends React.Component<Props> {
