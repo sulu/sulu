@@ -165,6 +165,18 @@ exports[`Input should render with icon 1`] = `
 </label>
 `;
 
+exports[`Input should render with inputmode 1`] = `
+<label
+  class="input default"
+>
+  <input
+    inputmode="numeric"
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
 exports[`Input should render with invalid value 1`] = `
 <label
   class="input default error"

@@ -11,7 +11,7 @@ exports[`Render disabled next link if current page is last page 1`] = `
     <span
       class="display"
     >
-      :
+      Items per page:
     </span>
     <span>
       <div
@@ -56,10 +56,26 @@ exports[`Render disabled next link if current page is last page 1`] = `
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 5 of 5
+      of 5
     </span>
     <button
       class="previous"
@@ -93,7 +109,7 @@ exports[`Render disabled previous link current page is first page 1`] = `
     <span
       class="display"
     >
-      :
+      Items per page:
     </span>
     <span>
       <div
@@ -138,10 +154,26 @@ exports[`Render disabled previous link current page is first page 1`] = `
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 1 of 5
+      of 5
     </span>
     <button
       class="previous"
@@ -189,7 +221,7 @@ exports[`Render pagination with loader 1`] = `
     <span
       class="display"
     >
-      :
+      Items per page:
     </span>
     <span>
       <div
@@ -246,10 +278,26 @@ exports[`Render pagination with loader 1`] = `
         />
       </div>
     </div>
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 5 of 10
+      of 10
     </span>
     <button
       class="previous"
@@ -282,7 +330,7 @@ exports[`Render pagination with page numbers 1`] = `
     <span
       class="display"
     >
-      :
+      Items per page:
     </span>
     <span>
       <div
@@ -327,10 +375,26 @@ exports[`Render pagination with page numbers 1`] = `
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 5 of 10
+      of 10
     </span>
     <button
       class="previous"

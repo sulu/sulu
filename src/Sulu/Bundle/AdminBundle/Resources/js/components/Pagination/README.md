@@ -6,7 +6,7 @@ when the page is being changed. The callback also receives the new page.
             currentLimit={20}
             currentPage={5}
             onLimitChange={(limit) => alert('The new limit is ' + limit)}
-            onPageChange={(page) => alert('The new page number is ' + page)
+            onPageChange={(page) => alert('The new page number is ' + page)}
             totalPages={10}
         />
     </div>

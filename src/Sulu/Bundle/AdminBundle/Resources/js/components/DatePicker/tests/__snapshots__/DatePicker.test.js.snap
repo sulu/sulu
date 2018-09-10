@@ -471,6 +471,7 @@ exports[`DatePicker should render 1`] = `
                       }
                     >
                       <Input
+                        centered={false}
                         className="form-control"
                         collapsed={false}
                         icon="su-calendar"

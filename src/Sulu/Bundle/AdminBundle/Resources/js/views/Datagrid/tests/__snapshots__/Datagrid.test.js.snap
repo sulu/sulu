@@ -199,10 +199,26 @@ exports[`Should render the datagrid with a title 1`] = `
         <div
           class="loader"
         />
+        <span>
+          Page:
+        </span>
+        <span
+          class="inputContainer"
+        >
+          <label
+            class="input dark centered"
+          >
+            <input
+              inputmode="numeric"
+              type="text"
+              value="1"
+            />
+          </label>
+        </span>
         <span
           class="display"
         >
-          Page: 2 of 3
+          of 3
         </span>
         <button
           class="previous"
@@ -424,10 +440,26 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
         <div
           class="loader"
         />
+        <span>
+          Page:
+        </span>
+        <span
+          class="inputContainer"
+        >
+          <label
+            class="input dark centered"
+          >
+            <input
+              inputmode="numeric"
+              type="text"
+              value="1"
+            />
+          </label>
+        </span>
         <span
           class="display"
         >
-          Page: 2 of 3
+          of 3
         </span>
         <button
           class="previous"

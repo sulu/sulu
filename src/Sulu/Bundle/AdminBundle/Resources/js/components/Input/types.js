@@ -4,6 +4,7 @@ import type {ElementRef} from 'react';
 export type InputProps<T: ?string | ?number> = {|
     inputClass?: string,
     collapsed?: boolean,
+    centered?: boolean,
     name?: string,
     icon?: string,
     type: string,
@@ -11,6 +12,7 @@ export type InputProps<T: ?string | ?number> = {|
     placeholder?: string,
     labelRef?: (ref: ?ElementRef<'label'>) => void,
     inputRef?: (ref: ?ElementRef<'input'>) => void,
+    inputMode?: string,
     valid: boolean,
     value: ?T,
     maxCharacters?: number,

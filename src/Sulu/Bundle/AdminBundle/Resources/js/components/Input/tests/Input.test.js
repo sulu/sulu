@@ -22,6 +22,18 @@ test('Input should render with icon', () => {
     expect(render(<Input icon="su-pen" onBlur={jest.fn()} onChange={onChange} value="My value" />)).toMatchSnapshot();
 });
 
+test('Input should render with inputmode', () => {
+    const onChange = jest.fn();
+    expect(render(
+        <Input
+            inputMode="numeric"
+            onBlur={jest.fn()}
+            onChange={onChange}
+            value="My value"
+        />
+    )).toMatchSnapshot();
+});
+
 test('Input should render with type', () => {
     const onChange = jest.fn();
     expect(render(

@@ -162,10 +162,26 @@ exports[`Render the MediaCollection 1`] = `
           <div
             class="loader"
           />
+          <span>
+            Page:
+          </span>
+          <span
+            class="inputContainer"
+          >
+            <label
+              class="input dark centered"
+            >
+              <input
+                inputmode="numeric"
+                type="text"
+                value="1"
+              />
+            </label>
+          </span>
           <span
             class="display"
           >
-            Page: 2 of 3
+            of 3
           </span>
           <button
             class="previous"

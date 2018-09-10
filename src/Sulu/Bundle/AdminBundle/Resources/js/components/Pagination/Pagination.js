@@ -1,6 +1,9 @@
 // @flow
 import React, {type Node} from 'react';
+import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import Icon from '../Icon';
+import Input from '../Input';
 import Loader from '../Loader';
 import SingleSelect from '../SingleSelect';
 import {translate} from '../../utils/Translator';
@@ -18,10 +21,36 @@ type Props = {
 
 const AVAILABLE_LIMITS = [10, 20, 50, 100];
 
-export default class Pagination extends React.PureComponent<Props> {
+@observer
+export default class Pagination extends React.Component<Props> {
+    @observable currentInputValue = 1;
+
     static defaultProps = {
         loading: false,
     };
+
+    @action componentDidMount() {
+        const {currentPage} = this.props;
+
+        if(!currentPage) {
+            return;
+        }
+
+        this.currentInputValue = this.props.currentPage;
+    }
+
+    @action componentDidUpdate(prevProps: Props) {
+        const {currentPage} = this.props;
+
+        if(prevProps.currentPage !== currentPage) {
+            if(!currentPage) {
+                this.currentInputValue = 1;
+                return;
+            }
+
+            this.currentInputValue = currentPage;
+        }
+    }
 
     hasNextPage = () => {
         const {currentPage, totalPages} = this.props;
@@ -39,6 +68,21 @@ export default class Pagination extends React.PureComponent<Props> {
         }
 
         return currentPage > 1;
+    };
+
+    getPage = () => {
+        const {totalPages} = this.props;
+        const page = this.currentInputValue;
+
+        if(!page || !totalPages || page < 1) {
+            return 1;
+        }
+
+        if(page > totalPages) {
+            return totalPages;
+        }
+
+        return page;
     };
 
     handlePreviousClick = () => {
@@ -68,8 +112,33 @@ export default class Pagination extends React.PureComponent<Props> {
         }
     };
 
+    @action handleInputChange = (value: ?string) => {
+        if(value === undefined) {
+            this.currentInputValue = undefined;
+            return;
+        }
+
+        const page = parseInt(value);
+
+        if(!isNaN(page)) {
+            this.currentInputValue = page;
+        }
+    };
+
+    @action handleInputBlur = () => {
+        const {currentPage, onPageChange} = this.props;
+        const page = this.getPage();
+
+        if(page !== currentPage) {
+            onPageChange(page);
+        }
+
+        this.currentInputValue = currentPage;
+    };
+
     render() {
-        const {children, currentPage, loading, totalPages, currentLimit} = this.props;
+        const {currentInputValue} = this;
+        const {children, loading, totalPages, currentLimit} = this.props;
 
         if (loading && !totalPages) {
             return <Loader />;
@@ -90,9 +159,25 @@ export default class Pagination extends React.PureComponent<Props> {
                         </SingleSelect>
                     </span>
 
-                    <div className={paginationStyles.loader}>{loading && <Loader size={24} />}</div>
+                    <div className={paginationStyles.loader}>
+                        {loading && <Loader size={24} />}
+                    </div>
+                    <span>
+                        {translate('sulu_admin.page')}:
+                    </span>
+                    <span className={paginationStyles.inputContainer}>
+                        <Input
+                            centered={true}
+                            inputMode="numeric"
+                            onBlur={this.handleInputBlur}
+                            onChange={this.handleInputChange}
+                            skin="dark"
+                            type="text"
+                            value={currentInputValue}
+                        />
+                    </span>
                     <span className={paginationStyles.display}>
-                        {translate('sulu_admin.page')}: {currentPage} {translate('sulu_admin.of')} {totalPages}
+                        {translate('sulu_admin.of')} {totalPages}
                     </span>
                     <button
                         className={paginationStyles.previous}

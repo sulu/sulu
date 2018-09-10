@@ -2,7 +2,7 @@
 
 $borderRadius: 4px;
 $buttonWidth: 34px;
-$paginationColor: $gray;
+$paginationColor: $black;
 $buttonBackgroundColor: $wildSand;
 $buttonBorderColor: $scorpion;
 $buttonActiveColor: $blueZodiac;
@@ -22,6 +22,16 @@ $buttonActiveColor: $blueZodiac;
 
 .display {
     margin-right: 20px;
+}
+
+.text {
+    color: black;
+}
+
+.inputContainer {
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 50px;
 }
 
 .next,

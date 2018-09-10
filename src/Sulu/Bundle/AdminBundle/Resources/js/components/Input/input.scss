@@ -37,6 +37,7 @@ $darkIconColor: $doveGray;
         border: none;
         border-radius: $inputBorderRadius;
         height: calc($inputHeight - 2 * $inputBorderWidth);
+        padding: 1px;
         padding-left: 10px;
         font-size: $inputFontSize;
         color: $inputColor;
@@ -53,10 +54,18 @@ $darkIconColor: $doveGray;
         }
     }
 
+    &.centered {
+        input {
+            text-align: center;
+            padding-left: 1px;
+            padding-right: 1px;
+        }
+    }
+
     &.collapsed {
         input {
-            padding-left: 0;
-            padding-right: 0;
+            padding-left: 1px;
+            padding-right: 1px;
             width: 0;
         }
     }

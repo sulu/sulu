@@ -109,10 +109,26 @@ exports[`Render column with ascending sort icon 1`] = `
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 1 of 3
+      of 3
     </span>
     <button
       class="previous"
@@ -244,10 +260,26 @@ exports[`Render column with descending sort icon 1`] = `
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 1 of 3
+      of 3
     </span>
     <button
       class="previous"
@@ -393,10 +425,26 @@ exports[`Render data with all different visibility types schema 1`] = `
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 2 of 5
+      of 5
     </span>
     <button
       class="previous"
@@ -558,10 +606,26 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 1 of 3
+      of 3
     </span>
     <button
       class="previous"
@@ -686,10 +750,26 @@ exports[`Render data with schema 1`] = `
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 2 of 5
+      of 5
     </span>
     <button
       class="previous"
@@ -919,10 +999,26 @@ exports[`Render data with schema and selections 1`] = `
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 1 of 3
+      of 3
     </span>
     <button
       class="previous"
@@ -1047,10 +1143,26 @@ exports[`Render data with schema in different order 1`] = `
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 2 of 3
+      of 3
     </span>
     <button
       class="previous"
@@ -1146,10 +1258,26 @@ exports[`Render data with schema not containing all fields 1`] = `
     <div
       class="loader"
     />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark centered"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      Page: 1 of 3
+      of 3
     </span>
     <button
       class="previous"
