@@ -1,9 +1,9 @@
 {
-    "sulu_content.selection_label": "{count} {count, plural, =1 {page} other {pages}} selected",
-    "sulu_content.selection_overlay_title": "Choose pages",
-    "sulu_content.page_form_detail": "Details",
-    "sulu_content.page_form_seo": "SEO",
-    "sulu_content.page_form_excerpt": "Excerpt & Taxonomies",
-    "sulu_content.title": "Title",
-    "sulu_content.show_ghost_and_shadow": "Show ghost and shadow pages"
+  "sulu_content.selection_label": "{count} {count, plural, =1 {page} other {pages}} selected",
+  "sulu_content.selection_overlay_title": "Choose pages",
+  "sulu_content.page_form_detail": "Details",
+  "sulu_content.page_form_seo": "SEO",
+  "sulu_content.page_form_excerpt": "Excerpt & Taxonomies",
+  "sulu_content.title": "Title",
+  "sulu_content.show_ghost_and_shadow": "Show ghost and shadow pages"
 }

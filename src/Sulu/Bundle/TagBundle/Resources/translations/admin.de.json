@@ -1,5 +1,4 @@
 {
-    "sulu_tag.tags": "Tags",
-    "sulu_tag.tag": "Tag",
-    "sulu_tag.details": "Details"
+  "sulu_tag.tag": "Tag",
+  "sulu_tag.details": "Details"
 }
