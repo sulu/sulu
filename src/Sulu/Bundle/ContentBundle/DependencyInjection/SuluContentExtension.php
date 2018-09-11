@@ -42,7 +42,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                                 'types' => [
                                     'overlay' => [
                                         'adapter' => 'column_list',
-                                        'display_properties' => ['title'],
+                                        'display_properties' => ['title', 'url'],
                                         'icon' => 'su-document',
                                         'label' => 'sulu_content.selection_label',
                                         'overlay_title' => 'sulu_content.selection_overlay_title',
