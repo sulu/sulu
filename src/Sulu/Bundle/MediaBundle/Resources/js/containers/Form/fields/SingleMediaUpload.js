@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import type {FieldTypeProps} from 'sulu-admin-bundle';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import MediaUploadStore from '../../../stores/MediaUploadStore';
 import SingleMediaUploadComponent from '../../SingleMediaUpload';
 import type {Media} from '../../../types';

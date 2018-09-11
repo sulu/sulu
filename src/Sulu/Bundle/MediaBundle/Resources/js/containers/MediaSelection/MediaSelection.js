@@ -2,7 +2,7 @@
 import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import type {FieldTypeProps} from 'sulu-admin-bundle';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaSelectionStore from './stores/MediaSelectionStore';

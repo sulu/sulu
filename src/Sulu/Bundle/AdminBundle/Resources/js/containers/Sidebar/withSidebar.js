@@ -14,8 +14,10 @@ export default function withSidebar(
 
         sidebarDisposer: Function;
 
-        constructor(props: *) {
-            super(props);
+        componentDidMount() {
+            if (super.componentDidMount) {
+                super.componentDidMount();
+            }
 
             if (super.hasOwnProperty('sidebarDisposer')) {
                 throw new Error('Component passed to withSidebar cannot declare a property called "sidebarDisposer".');

@@ -1,23 +1,8 @@
 // @flow
 import 'core-js/library/fn/promise';
-import moment from 'moment';
 import initializer from '../Initializer';
 import Requester from '../../Requester';
-import {Selection, fieldRegistry, SingleSelection} from '../../../containers/Form';
-import {textEditorRegistry} from '../../../containers/TextEditor';
 import {setTranslations} from '../../../utils/Translator';
-import routeRegistry from '../../Router/registries/RouteRegistry';
-import navigationRegistry from '../../../containers/Navigation/registries/NavigationRegistry';
-import smartContentConfigStore from '../../../containers/SmartContent/stores/SmartContentConfigStore';
-import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
-import userStore from '../../../stores/UserStore';
-import viewRegistry from '../../../containers/ViewRenderer/registries/ViewRegistry';
-import datagridAdapterRegistry from '../../../containers/Datagrid/registries/DatagridAdapterRegistry';
-import datagridFieldTransformerRegistry from '../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry';
-
-jest.mock('moment', () => ({
-    locale: jest.fn(),
-}));
 
 jest.mock('../../Requester', () => ({
     get: jest.fn(),
@@ -29,65 +14,6 @@ jest.mock('../../Bundles', () => ({
 
 jest.mock('../../../utils/Translator', () => ({
     setTranslations: jest.fn(),
-}));
-
-jest.mock('../../../containers/Form', () => ({
-    Selection: jest.fn(),
-    fieldRegistry: {
-        add: jest.fn(),
-    },
-    SingleSelection: jest.fn(),
-}));
-
-jest.mock('../../../containers/TextEditor', () => ({
-    textEditorRegistry: {
-        add: jest.fn(),
-    },
-}));
-
-jest.mock('../../../containers/ViewRenderer/registries/ViewRegistry', () => ({
-    add: jest.fn(),
-}));
-
-jest.mock('../../../containers/Datagrid/registries/DatagridAdapterRegistry', () => ({
-    add: jest.fn(),
-}));
-
-jest.mock('../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry', () => ({
-    add: jest.fn(),
-}));
-
-jest.mock('../../../containers/SmartContent/stores/SmartContentConfigStore', () => ({
-    setConfig: jest.fn(),
-}));
-
-jest.mock('../../Router/registries/RouteRegistry', () => ({
-    clear: jest.fn(),
-    addCollection: jest.fn(),
-}));
-
-jest.mock('../../../containers/Navigation/registries/NavigationRegistry', () => ({
-    clear: jest.fn(),
-    set: jest.fn(),
-}));
-
-jest.mock('../../../stores/ResourceMetadataStore', () => ({
-    clear: jest.fn(),
-    setEndpoints: jest.fn(),
-}));
-
-jest.mock('../../../stores/UserStore', () => ({
-    setUser: jest.fn(),
-    setContact: jest.fn(),
-    setLoggedIn: jest.fn(),
-}));
-
-jest.mock('../../../containers/Datagrid/registries/DatagridAdapterRegistry', () => ({
-    add: jest.fn(),
-}));
-
-jest.mock('../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry', () => ({
-    add: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -138,6 +64,9 @@ test('Should initialize when everything works', () => {
         }
     });
 
+    const hook = jest.fn();
+    initializer.addUpdateConfigHook('sulu_admin', hook);
+
     const initPromise = initializer.initialize();
     expect(initializer.loading).toBe(true);
 
@@ -145,37 +74,11 @@ test('Should initialize when everything works', () => {
         .then(() => {
             expect(setTranslations).toBeCalledWith(translationData, 'en');
             expect(initializer.initializedTranslationsLocale).toBe('en');
-            expect(moment.locale).toBeCalledWith('en-US');
-
-            // static things
-            expect(viewRegistry.add).toBeCalled();
-            expect(datagridAdapterRegistry.add).toBeCalled();
-            expect(datagridFieldTransformerRegistry.add).toBeCalled();
-            expect(fieldRegistry.add).toBeCalled();
-            expect(textEditorRegistry.add).toBeCalled();
-
-            // dynamic things
-            expect(fieldRegistry.add)
-                .toBeCalledWith('contact_selection', Selection, {resourceKey: 'contacts'});
-            expect(fieldRegistry.add)
-                .toBeCalledWith('single_account_selection', SingleSelection, {resourceKey: 'accounts'});
-
-            expect(routeRegistry.clear).toBeCalled();
-            expect(navigationRegistry.clear).toBeCalled();
-            expect(resourceMetadataStore.clear).toBeCalled();
-            expect(smartContentConfigStore.setConfig).toBeCalledWith(configData.sulu_admin.smartContent);
-
-            expect(routeRegistry.addCollection).toBeCalledWith('crazy_routes');
-            expect(navigationRegistry.set).toBeCalledWith('nice_navigation');
-            expect(resourceMetadataStore.setEndpoints).toBeCalledWith('top_endpoints');
-
-            // user store things
-            expect(userStore.setContact).toBeCalledWith('contact_of_the_user');
-            expect(userStore.setUser).toBeCalledWith('the_logged_in_user');
-            expect(userStore.setLoggedIn).toBeCalledWith(true);
 
             expect(initializer.initialized).toBe(true);
             expect(initializer.loading).toBe(false);
+
+            expect(hook).toBeCalledWith(configData['sulu_admin'], false);
         });
 });
 
@@ -215,26 +118,6 @@ test('Should not reinitialize everything when it was already initialized', () =>
     return initPromise
         .then(() => {
             expect(setTranslations).not.toBeCalled();
-
-            // static things
-            expect(viewRegistry.add).not.toBeCalled();
-            expect(datagridAdapterRegistry.add).not.toBeCalled();
-            expect(datagridFieldTransformerRegistry.add).not.toBeCalled();
-            expect(fieldRegistry.add).not.toBeCalled();
-
-            // dynamic things
-            expect(routeRegistry.clear).toBeCalled();
-            expect(navigationRegistry.clear).toBeCalled();
-            expect(resourceMetadataStore.clear).toBeCalled();
-
-            expect(routeRegistry.addCollection).toBeCalledWith('crazy_routes');
-            expect(navigationRegistry.set).toBeCalledWith('nice_navigation');
-            expect(resourceMetadataStore.setEndpoints).toBeCalledWith('top_endpoints');
-
-            // user store things
-            expect(userStore.setContact).toBeCalledWith('contact_of_the_user');
-            expect(userStore.setUser).toBeCalledWith('the_logged_in_user');
-            expect(userStore.setLoggedIn).toBeCalledWith(true);
 
             expect(initializer.initialized).toBe(true);
             expect(initializer.loading).toBe(false);
