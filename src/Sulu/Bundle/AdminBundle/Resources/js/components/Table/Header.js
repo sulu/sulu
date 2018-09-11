@@ -26,9 +26,9 @@ type Props = {
 
 export default class Header extends React.PureComponent<Props> {
     static defaultProps = {
-        selectMode: 'none',
         allSelected: false,
         selectInFirstCell: false,
+        selectMode: 'none',
     };
 
     isMultipleSelect = () => {

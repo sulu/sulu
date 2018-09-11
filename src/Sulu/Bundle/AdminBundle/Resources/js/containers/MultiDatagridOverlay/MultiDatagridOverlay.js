@@ -29,8 +29,8 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
 
     static defaultProps = {
         clearSelectionOnClose: false,
-        preSelectedItems: [],
         overlayType: 'overlay',
+        preSelectedItems: [],
     };
 
     constructor(props: Props) {

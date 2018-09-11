@@ -15,8 +15,8 @@ type Props = BaseItemProps & {
 export default class Section extends React.PureComponent<Props> {
     static defaultProps = {
         size: 12,
-        spaceBefore: 0,
         spaceAfter: 0,
+        spaceBefore: 0,
     };
 
     render() {

@@ -47,10 +47,10 @@ type Props = {
 @observer
 export default class MediaCard extends React.Component<Props> {
     static defaultProps = {
+        downloadCopyText: '',
+        imageSizes: [],
         selected: false,
         showCover: false,
-        imageSizes: [],
-        downloadCopyText: '',
     };
 
     @observable downloadButtonRef: ?ElementRef<'button'>;

@@ -25,10 +25,10 @@ type Props = {|
 export default class SingleMediaDropzone extends React.Component<Props> {
     static defaultProps = {
         emptyIcon: 'su-image',
+        mimeType: '',
         progress: 0,
         skin: 'default',
         uploading: false,
-        mimeType: '',
     };
 
     @observable uploadIndicatorVisibility: boolean;

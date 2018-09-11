@@ -26,8 +26,8 @@ export default class Option extends React.PureComponent<Props> {
     static defaultProps = {
         anchorWidth: 0,
         disabled: false,
-        selected: false,
         focus: false,
+        selected: false,
         selectedVisualization: 'icon',
         value: '',
     };

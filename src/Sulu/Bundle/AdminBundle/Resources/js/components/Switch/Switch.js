@@ -15,8 +15,8 @@ type Props = SwitchProps & {
 
 export default class Switch extends React.PureComponent<Props> {
     static defaultProps = {
-        type: 'checkbox',
         active: true,
+        type: 'checkbox',
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {

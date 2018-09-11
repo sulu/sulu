@@ -40,8 +40,8 @@ export default class Datagrid extends React.Component<Props> {
         disabledIds: [],
         movable: true,
         orderable: true,
-        selectable: true,
         searchable: true,
+        selectable: true,
     };
 
     @observable currentAdapterKey: string;

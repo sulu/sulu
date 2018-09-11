@@ -16,10 +16,10 @@ type Props = {
 
 export default class Backdrop extends React.PureComponent<Props> {
     static defaultProps = {
+        fixed: true,
+        local: false,
         open: true,
         visible: true,
-        local: false,
-        fixed: true,
     };
 
     handleClick = () => {

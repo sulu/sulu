@@ -24,8 +24,8 @@ type Props = {
 @observer
 export default class LoginForm extends React.Component<Props> {
     static defaultProps = {
-        loading: false,
         error: false,
+        loading: false,
     };
 
     @observable inputRef: ?ElementRef<*>;
