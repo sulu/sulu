@@ -8,4 +8,41 @@
             <title lang="de">Zeige Seite in</title>
         </meta>
     </property>
+    <section name="pageType">
+        <meta>
+            <title lang="en">Page Type</title>
+            <title lang="de">Inhaltstyp</title>
+        </meta>
+        <properties>
+            <property name="nodeType" type="single_select" mandatory="true" colspan="6">
+                <meta>
+                    <title lang="en">Page Type</title>
+                    <title lang="de">Inhaltstyp</title>
+                </meta>
+                <params>
+                    <param name="default_value" value="1"/>
+                    <param name="values" type="collection">
+                        <param name="1" value="1">
+                            <meta>
+                                <title lang="en">Content</title>
+                                <title lang="de">Inhalt</title>
+                            </meta>
+                        </param>
+                        <param name="2" value="2">
+                            <meta>
+                                <title lang="en">Internal Link</title>
+                                <title lang="de">Interner Link</title>
+                            </meta>
+                        </param>
+                        <param name="4" value="4">
+                            <meta>
+                                <title lang="en">External Link</title>
+                                <title lang="de">Externer Link</title>
+                            </meta>
+                        </param>
+                    </param>
+                </params>
+            </property>
+        </properties>
+    </section>
 </properties>
