@@ -22,19 +22,21 @@ export default class SingleItemSelection extends React.Component<Props> {
                 <button className={singleItemSelectionStyles.button} onClick={onClick} type="button">
                     <Icon name={icon} />
                 </button>
-                <div className={singleItemSelectionStyles.item}>
-                    {children
-                        ? children
-                        : <div className={singleItemSelectionStyles.empty}>
-                            {emptyText}
-                        </div>
+                <div className={singleItemSelectionStyles.itemContainer}>
+                    <div className={singleItemSelectionStyles.item}>
+                        {children
+                            ? children
+                            : <div className={singleItemSelectionStyles.empty}>
+                                {emptyText}
+                            </div>
+                        }
+                    </div>
+                    {onRemove &&
+                        <button className={singleItemSelectionStyles.removeButton} onClick={onRemove} type="button">
+                            <Icon name="su-trash-alt" />
+                        </button>
                     }
                 </div>
-                {onRemove &&
-                    <button className={singleItemSelectionStyles.removeButton} onClick={onRemove} type="button">
-                        <Icon name="su-trash-alt" />
-                    </button>
-                }
             </div>
         );
     }

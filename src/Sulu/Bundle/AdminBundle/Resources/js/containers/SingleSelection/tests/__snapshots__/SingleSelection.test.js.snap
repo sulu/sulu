@@ -14,32 +14,36 @@ exports[`Render with selected item 1`] = `
     />
   </button>
   <div
-    class="item"
+    class="itemContainer"
   >
-    <div>
-      <span
-        class="itemColumn"
-        style="width: 50%;"
-      >
-        Name
-      </span>
-      <span
-        class="itemColumn"
-        style="width: 50%;"
-      >
-        Value
-      </span>
+    <div
+      class="item"
+    >
+      <div>
+        <span
+          class="itemColumn"
+          style="width: 50%;"
+        >
+          Name
+        </span>
+        <span
+          class="itemColumn"
+          style="width: 50%;"
+        >
+          Value
+        </span>
+      </div>
     </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
   </div>
-  <button
-    class="removeButton"
-    type="button"
-  >
-    <span
-      aria-label="su-trash-alt"
-      class="su-trash-alt"
-    />
-  </button>
 </div>
 `;
 
@@ -58,12 +62,16 @@ Array [
       />
     </button>
     <div
-      class="item"
+      class="itemContainer"
     >
       <div
-        class="empty"
+        class="item"
       >
-        Test
+        <div
+          class="empty"
+        >
+          Test
+        </div>
       </div>
     </div>
   </div>,

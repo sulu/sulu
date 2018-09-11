@@ -8,36 +8,47 @@ $singleItemSelectionButtonBackgroundColor: $white;
 $singleItemSelectionButtonActiveBackgroundColor: $shakespeare;
 $singleItemSelectionEmptyColor: $silver;
 
+$singleItemSelectionBorderRadius: 3px;
+
 .single-item-selection {
     display: flex;
     align-items: center;
     background-color: $singleItemSelectionBackgroundColor;
-    border: 1px solid $singleItemSelectionBorderColor;
-    height: 40px;
-    border-radius: 3px;
+    height: 30px;
     overflow: hidden;
 }
 
 .button {
     height: 100%;
-    width: 40px;
+    width: 28px;
     background-color: $singleItemSelectionButtonBackgroundColor;
     color: $singleItemSelectionButtonColor;
-    border: none;
-    border-right: 1px solid $singleItemSelectionBorderColor;
+    border: 1px solid $singleItemSelectionBorderColor;
+    border-right: none;
+    border-radius: $singleItemSelectionBorderRadius 0 0 $singleItemSelectionBorderRadius;
     cursor: pointer;
     font-size: 14px;
 
     &:hover {
         background-color: $singleItemSelectionButtonActiveBackgroundColor;
+        border-color: $singleItemSelectionButtonActiveBackgroundColor;
         color: $singleItemSelectionButtonActiveColor;
     }
 }
 
+.item-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex-grow: 1;
+    padding-left: 10px;
+    font-size: 12px;
+    border: 1px solid $singleItemSelectionBorderColor;
+    border-radius: 0 $singleItemSelectionBorderRadius $singleItemSelectionBorderRadius 0;
+}
+
 .item {
     flex-grow: 1;
-    margin-left: 20px;
-    font-size: 12px;
 }
 
 .empty {
@@ -46,7 +57,6 @@ $singleItemSelectionEmptyColor: $silver;
 
 .remove-button {
     border: 0;
-    margin-right: 10px;
     padding: 0 10px;
     cursor: pointer;
     background-color: transparent;

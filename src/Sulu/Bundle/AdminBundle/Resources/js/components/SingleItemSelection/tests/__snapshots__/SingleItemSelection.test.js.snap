@@ -14,23 +14,27 @@ exports[`Render with emptyText if no children have been passed 1`] = `
     />
   </button>
   <div
-    class="item"
+    class="itemContainer"
   >
     <div
-      class="empty"
+      class="item"
     >
-      Nothing!
+      <div
+        class="empty"
+      >
+        Nothing!
+      </div>
     </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
   </div>
-  <button
-    class="removeButton"
-    type="button"
-  >
-    <span
-      aria-label="su-trash-alt"
-      class="su-trash-alt"
-    />
-  </button>
 </div>
 `;
 
@@ -48,9 +52,13 @@ exports[`Render with given children prop 1`] = `
     />
   </button>
   <div
-    class="item"
+    class="itemContainer"
   >
-    Test Item
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
   </div>
 </div>
 `;
@@ -69,18 +77,22 @@ exports[`Render with given onRemove prop 1`] = `
     />
   </button>
   <div
-    class="item"
+    class="itemContainer"
   >
-    Test Item
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
   </div>
-  <button
-    class="removeButton"
-    type="button"
-  >
-    <span
-      aria-label="su-trash-alt"
-      class="su-trash-alt"
-    />
-  </button>
 </div>
 `;
