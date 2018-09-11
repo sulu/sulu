@@ -37,10 +37,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                     'field_type_options' => [
                         'selection' => [
                             'internal_links' => [
-                                'default_type' => 'overlay',
+                                'default_type' => 'datagrid_overlay',
                                 'resource_key' => 'pages',
                                 'types' => [
-                                    'overlay' => [
+                                    'datagrid_overlay' => [
                                         'adapter' => 'column_list',
                                         'display_properties' => ['title', 'url'],
                                         'icon' => 'su-document',
@@ -52,10 +52,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                         ],
                         'single_selection' => [
                             'single_internal_link' => [
-                                'default_type' => 'overlay',
+                                'default_type' => 'datagrid_overlay',
                                 'resource_key' => 'pages',
                                 'types' => [
-                                    'overlay' => [
+                                    'datagrid_overlay' => [
                                         'adapter' => 'column_list',
                                         'display_properties' => ['title'],
                                         'empty_text' => 'sulu_content.no_page_selected',

@@ -6,8 +6,21 @@ import SingleAutoComplete from '../../../containers/SingleAutoComplete';
 import SingleSelectionComponent from '../../../containers/SingleSelection';
 import {translate} from '../../../utils/Translator';
 
-export default class SingleSelection extends React.Component<FieldTypeProps<?Object | string | number>>
+type Props = FieldTypeProps<?Object | string | number>;
+
+export default class SingleSelection extends React.Component<Props>
 {
+    constructor(props: Props) {
+        super(props);
+
+        if (this.type !== 'datagrid_overlay' && this.type !== 'auto_complete') {
+            throw new Error(
+                'The Selection field must either be declared as "datagrid_overlay" or as "auto_complete", '
+                + 'received type was "' + this.type + '"!'
+            );
+        }
+    }
+
     handleChange = (value: ?Object | string | number) => {
         const {onChange, onFinish} = this.props;
 
@@ -20,8 +33,8 @@ export default class SingleSelection extends React.Component<FieldTypeProps<?Obj
     }
 
     render() {
-        if (this.type === 'overlay') {
-            return this.renderOverlay();
+        if (this.type === 'datagrid_overlay') {
+            return this.renderDatagridOverlay();
         }
 
         if (this.type === 'auto_complete') {
@@ -29,13 +42,13 @@ export default class SingleSelection extends React.Component<FieldTypeProps<?Obj
         }
     }
 
-    renderOverlay() {
+    renderDatagridOverlay() {
         const {
             formInspector,
             fieldTypeOptions: {
                 resource_key: resourceKey,
                 types: {
-                    overlay: {
+                    datagrid_overlay: {
                         adapter,
                         display_properties: displayProperties,
                         empty_text: emptyText,

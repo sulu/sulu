@@ -148,10 +148,10 @@ test('Pass correct props to SingleItemSelection', () => {
     const value = 3;
 
     const fieldTypeOptions = {
-        default_type: 'overlay',
+        default_type: 'datagrid_overlay',
         resource_key: 'accounts',
         types: {
-            overlay: {
+            datagrid_overlay: {
                 adapter: 'table',
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',
@@ -197,10 +197,10 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
     const value = 3;
 
     const fieldTypeOptions = {
-        default_type: 'overlay',
+        default_type: 'datagrid_overlay',
         resource_key: 'accounts',
         types: {
-            overlay: {
+            datagrid_overlay: {
                 adapter: 'table',
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',
@@ -242,10 +242,10 @@ test('Call onChange and onFinish when SingleAutoComplete changes', () => {
     const value = 6;
 
     const fieldTypeOptions = {
-        default_type: 'overlay',
+        default_type: 'datagrid_overlay',
         resource_key: 'accounts',
         types: {
-            overlay: {
+            datagrid_overlay: {
                 adapter: 'table',
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',
