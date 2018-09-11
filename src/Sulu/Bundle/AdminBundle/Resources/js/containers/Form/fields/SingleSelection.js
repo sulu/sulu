@@ -77,7 +77,7 @@ export default class SingleSelection extends React.Component<FieldTypeProps<?Obj
         } = this.props;
 
         if (typeof value === 'string' || typeof value === 'number') {
-            // TODO implement id value support for overlay type
+            // TODO implement id value support for auto_complete type
             throw new Error(
                 'The "auto_complete" type of the SingleSelection field type supports only an object value until now.'
             );
