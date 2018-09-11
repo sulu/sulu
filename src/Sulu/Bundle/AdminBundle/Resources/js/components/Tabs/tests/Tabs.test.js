@@ -7,7 +7,7 @@ test('Render a Tabs component', () => {
     const changeSpy = jest.fn();
 
     expect(render(
-        <Tabs selectedIndex={null} onSelect={changeSpy}>
+        <Tabs onSelect={changeSpy} selectedIndex={null}>
             <Tabs.Tab>
                 Tab 1
             </Tabs.Tab>
@@ -26,7 +26,7 @@ test('Render a Tabs component with a selected tab', () => {
     const selectedTabIndex = 0;
 
     expect(render(
-        <Tabs selectedIndex={selectedTabIndex} onSelect={changeSpy}>
+        <Tabs onSelect={changeSpy} selectedIndex={selectedTabIndex}>
             <Tabs.Tab>
                 Tab 1
             </Tabs.Tab>
@@ -45,7 +45,7 @@ test('Clicking on a Tab should call the onSelect handler', () => {
     const selectedTabIndex = 0;
 
     const tabs = mount(
-        <Tabs selectedIndex={null} onSelect={changeSpy}>
+        <Tabs onSelect={changeSpy} selectedIndex={null}>
             <Tabs.Tab>
                 Tab 1
             </Tabs.Tab>

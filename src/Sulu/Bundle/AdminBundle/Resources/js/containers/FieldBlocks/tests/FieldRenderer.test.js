@@ -66,9 +66,9 @@ test('Should pass showAllErrors prop to Renderer', () => {
             index={2}
             onChange={jest.fn()}
             onFieldFinish={jest.fn()}
-            showAllErrors={true}
             schema={{}}
             schemaPath=""
+            showAllErrors={true}
         />
     );
 

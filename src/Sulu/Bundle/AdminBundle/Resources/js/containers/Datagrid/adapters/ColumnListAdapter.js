@@ -97,7 +97,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
         const published = item.published === undefined ? false : !!item.published;
 
         if (draft || !published) {
-            return [<PublishIndicator key={'publish'} draft={draft} published={published} />];
+            return [<PublishIndicator draft={draft} key={'publish'} published={published} />];
         }
 
         return [];
@@ -257,8 +257,8 @@ export default class ColumnListAdapter extends AbstractAdapter {
                                     key={item.id}
                                     onOrderChange={this.handleOrderChange}
                                     order={itemIndex + 1}
-                                    showOrderField={this.orderColumn === index}
                                     selected={selections.includes(item.id)}
+                                    showOrderField={this.orderColumn === index}
                                 >
                                     {item.title}
                                 </ColumnList.Item>

@@ -15,7 +15,7 @@ test('Clicking the left and right button inside the header should call the right
     const clickHandler = jest.fn();
 
     const item = mount(
-        <Item active={true} icon="fa-home" value="house" onClick={clickHandler}>My House</Item>
+        <Item active={true} icon="fa-home" onClick={clickHandler} value="house">My House</Item>
     );
 
     item.simulate('click');

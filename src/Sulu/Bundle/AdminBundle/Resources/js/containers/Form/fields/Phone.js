@@ -9,8 +9,8 @@ export default class Phone extends React.Component<FieldTypeProps<?string>> {
 
         return (
             <PhoneComponent
-                onChange={onChange}
                 onBlur={onFinish}
+                onChange={onChange}
                 valid={!error}
                 value={value}
             />

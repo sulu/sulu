@@ -27,8 +27,8 @@ export default class DownloadList extends React.PureComponent<Props> {
         const directDownloadItem = (
             <DownloadListItem
                 key="downloadlist-direct-download-item"
-                url={downloadUrl}
                 onClick={this.handleItemDownload}
+                url={downloadUrl}
             >
                 {downloadText}
             </DownloadListItem>
@@ -36,11 +36,11 @@ export default class DownloadList extends React.PureComponent<Props> {
         const divider = <Menu.Divider key="downloadlist-divider" />;
         const copyableItems = imageSizes.map((imageSize, index) => (
             <DownloadListItem
-                key={index}
-                url={imageSize.url}
-                onClick={this.handleItemCopy}
                 copyText={copyText}
                 copyUrlOnClick={true}
+                key={index}
+                onClick={this.handleItemCopy}
+                url={imageSize.url}
             >
                 {imageSize.label}
             </DownloadListItem>
@@ -76,14 +76,14 @@ export default class DownloadList extends React.PureComponent<Props> {
 
         return (
             <Popover
-                open={open}
-                onClose={this.handleClose}
                 anchorElement={buttonRef}
+                onClose={this.handleClose}
+                open={open}
             >
                 {(setPopoverRef, popoverStyle) => (
                     <Menu
-                        style={popoverStyle}
                         menuRef={setPopoverRef}
+                        style={popoverStyle}
                     >
                         {items}
                     </Menu>

@@ -56,9 +56,9 @@ export default class SingleSelect extends React.PureComponent<Props> {
         return (
             <Select
                 displayValue={this.displayValue}
-                onSelect={this.handleSelect}
                 icon={icon}
                 isOptionSelected={this.isOptionSelected}
+                onSelect={this.handleSelect}
                 skin={skin}
             >
                 {children}

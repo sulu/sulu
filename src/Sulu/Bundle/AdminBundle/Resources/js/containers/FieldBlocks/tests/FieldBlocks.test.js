@@ -18,7 +18,7 @@ jest.mock('../../Form/registries/FieldRegistry', () => ({
         switch (type) {
             case 'text_line':
                 return function TextLine({error, value}) {
-                    return <input className={error && error.keyword} type="text" defaultValue={value} />;
+                    return <input className={error && error.keyword} defaultValue={value} type="text" />;
                 };
         }
     }),
@@ -133,8 +133,8 @@ test('Render block with schema and error on fields already being modified', () =
     const fieldBlocks = mount(
         <FieldBlocks
             dataPath="/block"
-            fieldTypeOptions={{}}
             error={error}
+            fieldTypeOptions={{}}
             formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}

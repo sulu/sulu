@@ -91,17 +91,17 @@ export default class AutoCompletePopover extends React.Component<Props> {
         return (
             <Popover
                 anchorElement={anchorElement}
+                horizontalOffset={5}
                 onClose={this.handlePopoverClose}
                 open={open}
                 popoverChildRef={this.setSuggestionsRef}
-                horizontalOffset={5}
                 verticalOffset={-2}
             >
                 {
                     (setPopoverElementRef, popoverStyle) => (
                         <Menu
-                            style={popoverStyle}
                             menuRef={setPopoverElementRef}
+                            style={popoverStyle}
                         >
                             {suggestions.map((searchResult) => (
                                 <Suggestion

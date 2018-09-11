@@ -38,8 +38,8 @@ export default class EditToolbarAction extends AbstractToolbarAction {
         return (
             <CopyLocaleDialog
                 concreteLocales={concreteLanguages}
-                key="sulu_admin.edit"
                 id={id}
+                key="sulu_admin.edit"
                 locale={locale.get()}
                 locales={locales}
                 onClose={this.handleCopyLocaleDialogClose}

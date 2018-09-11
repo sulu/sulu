@@ -18,14 +18,14 @@ test('Pass error correctly to PasswordConfirmation component', () => {
     const passwordConfirmation = shallow(
         <PasswordConfirmation
             dataPath=""
+            error={error}
             fieldTypeOptions={{}}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            error={error}
-            formInspector={formInspector}
             schemaPath=""
             showAllErrors={false}
             types={undefined}

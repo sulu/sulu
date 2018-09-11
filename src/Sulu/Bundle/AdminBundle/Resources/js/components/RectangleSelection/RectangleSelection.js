@@ -154,13 +154,13 @@ export class RectangleSelection extends React.Component<Props> {
             <div className={rectangleSelectionStyles.selection}>
                 {this.props.children}
                 <ModifiableRectangle
+                    backdropSize={backdropSize}
+                    height={this.selection.height}
+                    left={this.selection.left}
                     onChange={this.handleRectangleChange}
                     onDoubleClick={this.handleRectangleDoubleClick}
-                    left={this.selection.left}
                     top={this.selection.top}
                     width={this.selection.width}
-                    height={this.selection.height}
-                    backdropSize={backdropSize}
                 />
             </div>
         );

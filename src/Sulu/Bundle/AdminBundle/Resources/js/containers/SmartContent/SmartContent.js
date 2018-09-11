@@ -121,7 +121,7 @@ export default class SmartContent extends React.Component<Props> {
                     sortable={false}
                 >
                     {store.items.map((item, index) => (
-                        <MultiItemSelection.Item key={index} id={item.id} index={index + 1}>
+                        <MultiItemSelection.Item id={item.id} index={index + 1} key={index}>
                             <SmartContentItem item={item} />
                         </MultiItemSelection.Item>
                     ))}
@@ -133,8 +133,8 @@ export default class SmartContent extends React.Component<Props> {
                     open={this.showFilterOverlay}
                     presentations={presentations}
                     sections={this.sections}
-                    sortings={this.sortings}
                     smartContentStore={store}
+                    sortings={this.sortings}
                     title={translate('sulu_admin.filter_overlay_title', {fieldLabel})}
                 />
             </Fragment>

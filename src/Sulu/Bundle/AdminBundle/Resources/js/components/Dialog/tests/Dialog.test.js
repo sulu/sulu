@@ -16,12 +16,12 @@ test('The component should render in body when open', () => {
     const onConfirm = jest.fn();
     const view = mount(
         <Dialog
-            title="My dialog title"
-            onCancel={onCancel}
-            onConfirm={onConfirm}
             cancelText="Cancel"
             confirmText="Confirm"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
             open={true}
+            title="My dialog title"
         >
             <div>My dialog content</div>
         </Dialog>
@@ -37,13 +37,13 @@ test('The component should render in body with disabled confirm button', () => {
     const onConfirm = jest.fn();
     const view = mount(
         <Dialog
-            title="My dialog title"
-            onCancel={onCancel}
-            onConfirm={onConfirm}
             cancelText="Cancel"
             confirmDisabled={true}
             confirmText="Confirm"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
             open={true}
+            title="My dialog title"
         >
             <div>My dialog content</div>
         </Dialog>
@@ -59,13 +59,13 @@ test('The component should render in body with a large class', () => {
     const onConfirm = jest.fn();
     const view = mount(
         <Dialog
-            title="My dialog title"
-            onCancel={onCancel}
-            onConfirm={onConfirm}
             cancelText="Cancel"
             confirmText="Confirm"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
             open={true}
             size="large"
+            title="My dialog title"
         >
             <div>My dialog content</div>
         </Dialog>
@@ -81,13 +81,13 @@ test('The component should render in body with loader instead of confirm button'
     const onConfirm = jest.fn();
     const view = mount(
         <Dialog
-            title="My dialog title"
+            cancelText="Cancel"
+            confirmLoading={true}
+            confirmText="Confirm"
             onCancel={onCancel}
             onConfirm={onConfirm}
-            cancelText="Cancel"
-            confirmText="Confirm"
-            confirmLoading={true}
             open={true}
+            title="My dialog title"
         >
             <div>My dialog content</div>
         </Dialog>
@@ -103,12 +103,12 @@ test('The component should not render in body when closed', () => {
     const onConfirm = jest.fn();
     const view = mount(
         <Dialog
-            title="My dialog title"
-            onCancel={onCancel}
-            onConfirm={onConfirm}
             cancelText="Cancel"
             confirmText="Confirm"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
             open={false}
+            title="My dialog title"
         >
             My dialog content
         </Dialog>
@@ -123,12 +123,12 @@ test('The component should call the callback when the confirm button is clicked'
     const onConfirm = jest.fn();
     const view = shallow(
         <Dialog
-            title="My dialog title"
-            onCancel={onCancel}
-            onConfirm={onConfirm}
             cancelText="Cancel"
             confirmText="Confirm"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
             open={true}
+            title="My dialog title"
         >
             My dialog content
         </Dialog>
@@ -144,12 +144,12 @@ test('The component should call the callback when the cancel button is clicked',
     const onCancel = jest.fn();
     const view = shallow(
         <Dialog
-            title="My dialog title"
-            onCancel={onCancel}
-            onConfirm={onConfirm}
             cancelText="Cancel"
             confirmText="Confirm"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
             open={true}
+            title="My dialog title"
         >
             My dialog content
         </Dialog>

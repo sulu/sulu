@@ -180,10 +180,8 @@ class WebspaceOverview extends React.Component<ViewProps> {
                 {this.webspaces
                     ? <Datagrid
                         adapters={['column_list', 'tree_table']}
-                        onItemAdd={this.handleItemAdd}
-                        onItemClick={this.handleEditClick}
                         header={this.webspace &&
-                            <WebspaceSelect value={this.webspace.get()} onChange={this.handleWebspaceChange}>
+                            <WebspaceSelect onChange={this.handleWebspaceChange} value={this.webspace.get()}>
                                 {this.webspaces.map((webspace) => (
                                     <WebspaceSelect.Item key={webspace.key} value={webspace.key}>
                                         {webspace.name}
@@ -191,8 +189,10 @@ class WebspaceOverview extends React.Component<ViewProps> {
                                 ))}
                             </WebspaceSelect>
                         }
-                        selectable={false}
+                        onItemAdd={this.handleItemAdd}
+                        onItemClick={this.handleEditClick}
                         searchable={false}
+                        selectable={false}
                         store={this.datagridStore}
                     />
                     : <div>

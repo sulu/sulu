@@ -40,7 +40,7 @@ test('The component should not render in the body when closed', () => {
 
 test('The component should call a function when clicked', () => {
     const onClickSpy = jest.fn();
-    const view = shallow(<Backdrop open={true} onClick={onClickSpy} />);
+    const view = shallow(<Backdrop onClick={onClickSpy} open={true} />);
 
     expect(onClickSpy).toHaveBeenCalledTimes(0);
     view.find('.backdrop').simulate('click');

@@ -52,12 +52,12 @@ export default class Switch extends React.PureComponent<Props> {
             <label className={switchStyles.label} onClick={this.handleClick}>
                 <span className={switchClass}>
                     <input
-                        type={type}
-                        name={name}
-                        value={value}
                         checked={checked}
                         disabled={!active}
+                        name={name}
                         onChange={this.handleChange}
+                        type={type}
+                        value={value}
                     />
                     <span>
                         {icon &&

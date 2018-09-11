@@ -74,8 +74,8 @@ test('Should pass props correctly to selection component', () => {
         <Selection
             dataPath=""
             error={undefined}
-            formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -118,8 +118,8 @@ test('Should pass id of form as disabledId to overlay type to avoid assigning so
         <Selection
             dataPath=""
             error={undefined}
-            formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -153,8 +153,8 @@ test('Should pass empty array if value is not given to overlay type', () => {
         <Selection
             dataPath=""
             error={undefined}
-            formInspector={formInspector}
             fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -195,8 +195,8 @@ test('Should call onChange and onFinish callback when selection overlay is confi
         <Selection
             dataPath=""
             error={undefined}
-            formInspector={formInspector}
             fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -222,8 +222,8 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
         <Selection
             dataPath=""
             error={undefined}
-            formInspector={formInspector}
             fieldTypeOptions={{default_type: 'datagrid_overlay'}}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -251,13 +251,13 @@ test('Should throw an error if no "adapter" option is passed for overlay type in
         <Selection
             dataPath=""
             error={undefined}
+            fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            fieldTypeOptions={fieldTypeOptions}
             schemaPath=""
             showAllErrors={false}
             types={undefined}
@@ -282,13 +282,13 @@ test('Should call the disposer for datagrid selections if unmounted', () => {
         <Selection
             dataPath=""
             error={undefined}
+            fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            fieldTypeOptions={fieldTypeOptions}
             schemaPath=""
             showAllErrors={false}
             types={undefined}
@@ -329,8 +329,8 @@ test('Should pass props correctly to datagrid component', () => {
         <Selection
             dataPath=""
             error={undefined}
-            formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -377,8 +377,8 @@ test('Should call onChange and onFinish prop when datagrid selection changes', (
         <Selection
             dataPath=""
             error={undefined}
-            formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -424,8 +424,8 @@ test('Should not call onChange and onFinish prop while datagrid is still loading
         <Selection
             dataPath=""
             error={undefined}
-            formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -472,8 +472,8 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         <Selection
             dataPath=""
             error={undefined}
-            formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -527,8 +527,8 @@ test('Should pass allowAdd prop to MultiAutoComplete component', () => {
         <Selection
             dataPath=""
             error={undefined}
-            formInspector={formInspector}
             fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}

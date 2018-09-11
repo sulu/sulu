@@ -75,23 +75,23 @@ export default class Application extends React.Component<Props> {
             <Fragment>
                 {!loggedIn &&
                     <Login
-                        onLoginSuccess={this.handleLoginSuccess}
-                        initialized={!initializer.loading && !!initializer.initializedTranslationsLocale}
                         backLink="/" // TODO: Get the correct link here from the backend
+                        initialized={!initializer.loading && !!initializer.initializedTranslationsLocale}
+                        onLoginSuccess={this.handleLoginSuccess}
                     />
                 }
                 {initializer.initialized &&
                     <div className={rootClass}>
                         <nav className={applicationStyles.navigation}>
-                            <Navigation router={router} onNavigate={this.handleNavigate} onLogout={this.handleLogout} />
+                            <Navigation onLogout={this.handleLogout} onNavigate={this.handleNavigate} router={router} />
                         </nav>
                         <div className={contentClass}>
                             <Backdrop
+                                fixed={false}
+                                local={true}
+                                onClick={this.handleNavigationButtonClick}
                                 open={this.navigationVisible}
                                 visible={false}
-                                onClick={this.handleNavigationButtonClick}
-                                local={true}
-                                fixed={false}
                             />
                             <main className={applicationStyles.main}>
                                 <header className={applicationStyles.header}>

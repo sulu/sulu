@@ -74,10 +74,10 @@ export default class MediaCardAdapter extends React.Component<Props> {
 
         return (
             <InfiniteScroller
-                total={pageCount}
                 current={page}
                 loading={loading}
                 onChange={onPageChange}
+                total={pageCount}
             >
                 <Masonry>
                     {data.map((item: Object) => {
@@ -90,17 +90,17 @@ export default class MediaCardAdapter extends React.Component<Props> {
                             // TODO: Don't access properties like "title" directly.
                             <MediaCard
                                 {...downloadDropdownProps}
-                                key={item.id}
-                                id={item.id}
-                                meta={meta}
                                 icon={icon}
-                                title={item.title}
+                                id={item.id}
                                 image={thumbnail}
+                                key={item.id}
+                                meta={meta}
                                 mimeType={item.mimeType}
                                 onClick={onItemClick}
-                                selected={selected}
                                 onSelectionChange={onItemSelectionChange}
+                                selected={selected}
                                 showCover={showCoverWhenSelected && selected}
+                                title={item.title}
                             />
                         );
                     })}

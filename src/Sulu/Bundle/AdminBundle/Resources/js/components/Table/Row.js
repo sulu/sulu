@@ -153,8 +153,8 @@ export default class Row extends React.PureComponent<Props> {
                 {isLoading
                     ? <Loader size={10} />
                     : <Icon
-                        onClick={expanded === false ? this.handleExpand : this.handleCollapse}
                         name={expanded === true ? 'su-angle-down' : 'su-angle-right'}
+                        onClick={expanded === false ? this.handleExpand : this.handleCollapse}
                     />
                 }
             </span>
@@ -166,10 +166,10 @@ export default class Row extends React.PureComponent<Props> {
 
         return (
             <Radio
-                skin="dark"
-                value={this.getIdentifier()}
                 checked={selected}
                 onChange={this.handleSingleSelectionChange}
+                skin="dark"
+                value={this.getIdentifier()}
             />
         );
     };
@@ -179,10 +179,10 @@ export default class Row extends React.PureComponent<Props> {
 
         return (
             <Checkbox
-                skin="dark"
-                value={this.getIdentifier()}
                 checked={selected}
                 onChange={this.handleMultipleSelectionChange}
+                skin="dark"
+                value={this.getIdentifier()}
             />
         );
     };
@@ -200,10 +200,10 @@ export default class Row extends React.PureComponent<Props> {
 
             return (
                 <ButtonCell
-                    key={key}
                     icon={button.icon}
-                    rowId={this.getIdentifier()}
+                    key={key}
                     onClick={handleClick}
+                    rowId={this.getIdentifier()}
                 />
             );
         });

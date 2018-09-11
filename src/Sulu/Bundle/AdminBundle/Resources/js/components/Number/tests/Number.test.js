@@ -4,12 +4,12 @@ import {render, shallow} from 'enzyme';
 import Number from '../Number';
 
 test('Number should render', () => {
-    expect(render(<Number value={undefined} onChange={jest.fn()} />)).toMatchSnapshot();
+    expect(render(<Number onChange={jest.fn()} value={undefined} />)).toMatchSnapshot();
 });
 
 test('Number should call onChange with parsed value', () => {
     const onChange = jest.fn();
-    const number = shallow(<Number value={undefined} onChange={onChange} />);
+    const number = shallow(<Number onChange={onChange} value={undefined} />);
 
     const event = {};
     number.find('Input').simulate('change', '10.2', event);
@@ -17,7 +17,7 @@ test('Number should call onChange with parsed value', () => {
 
 test('Number should call onChange with undefined when value isn`t a float', () => {
     const onChange = jest.fn();
-    const number = shallow(<Number value={undefined} onChange={onChange} />);
+    const number = shallow(<Number onChange={onChange} value={undefined} />);
 
     const event = {};
     number.find('Input').simulate('change', 'xxx', event);
@@ -27,7 +27,7 @@ test('Number should call onChange with undefined when value isn`t a float', () =
 
 test('Number should call onChange with undefined when value is undefined', () => {
     const onChange = jest.fn();
-    const number = shallow(<Number value={undefined} onChange={onChange} />);
+    const number = shallow(<Number onChange={onChange} value={undefined} />);
 
     const event = {};
     number.find('Input').simulate('change', undefined, event);

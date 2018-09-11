@@ -11,7 +11,7 @@ test('Render a CircularProgressbar', () => {
 
 test('Render a CircularProgressbar without the progress info in the center', () => {
     expect(render(
-        <CircularProgressbar percentage={60} hidePercentageText={true} />
+        <CircularProgressbar hidePercentageText={true} percentage={60} />
     )).toMatchSnapshot();
 });
 

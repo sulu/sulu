@@ -70,8 +70,8 @@ export default class CopyLocaleDialog extends React.Component<Props> {
 
         return (
             <Dialog
-                confirmLoading={this.copying}
                 cancelText={translate('sulu_admin.cancel')}
+                confirmLoading={this.copying}
                 confirmText={translate('sulu_admin.ok')}
                 onCancel={this.handleClose}
                 onConfirm={this.handleConfirm}

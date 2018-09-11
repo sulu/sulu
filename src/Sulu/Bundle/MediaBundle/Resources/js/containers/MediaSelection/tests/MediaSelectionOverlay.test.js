@@ -169,11 +169,11 @@ test('Render an open MediaSelectionOverlay', () => {
     const body = document.body;
     mount(
         <MediaSelectionOverlay
-            open={true}
-            locale={locale}
             excludedIds={[]}
+            locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
+            open={true}
         />
     ).render();
 
@@ -186,11 +186,11 @@ test('Should instantiate the needed stores when the overlay opens', () => {
     const locale = observable.box();
     const mediaSelectionOverlayInstance = shallow(
         <MediaSelectionOverlay
-            open={true}
-            locale={locale}
             excludedIds={[]}
+            locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
+            open={true}
         />
     ).instance();
 
@@ -221,11 +221,11 @@ test('Should call onConfirm callback with selections from datagrid', () => {
     const locale = observable.box();
     const mediaSelectionOverlay = shallow(
         <MediaSelectionOverlay
-            open={true}
-            locale={locale}
             excludedIds={[]}
+            locale={locale}
             onClose={jest.fn()}
             onConfirm={confirmSpy}
+            open={true}
         />
     );
 
@@ -243,11 +243,11 @@ test('Should reset the selection array when the "Reset Selection" button was cli
     const locale = observable.box();
     const mediaSelectionOverlayInstance = shallow(
         <MediaSelectionOverlay
-            open={true}
-            locale={locale}
             excludedIds={[]}
+            locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
+            open={true}
         />
     ).instance();
 
@@ -259,11 +259,11 @@ test('Should destroy the stores and cleanup all states when the overlay is close
     const locale = observable.box();
     const mediaSelectionOverlayInstance = shallow(
         <MediaSelectionOverlay
-            open={true}
-            locale={locale}
             excludedIds={[]}
+            locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
+            open={true}
         />
     ).instance();
 
@@ -282,11 +282,11 @@ test('Should change collection with selected media', () => {
     const locale = observable.box();
     const mediaSelectionOverlay = mount(
         <MediaSelectionOverlay
-            open={true}
-            locale={locale}
             excludedIds={[]}
+            locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
+            open={true}
         />
     );
 
@@ -305,11 +305,11 @@ test('Should reset both datagrid to first page after reopening overlay', () => {
     const locale = observable.box();
     const mediaSelectionOverlay = mount(
         <MediaSelectionOverlay
-            open={true}
-            locale={locale}
             excludedIds={[]}
+            locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
+            open={true}
         />
     );
 

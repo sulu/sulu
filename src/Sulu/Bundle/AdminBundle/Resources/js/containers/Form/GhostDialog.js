@@ -49,8 +49,8 @@ export default class GhostDialog extends React.Component<Props> {
         return (
             <Dialog
                 cancelText={translate('sulu_admin.no')}
-                onCancel={this.handleCancel}
                 confirmText={translate('sulu_admin.yes')}
+                onCancel={this.handleCancel}
                 onConfirm={this.handleConfirm}
                 open={open}
                 title={translate('sulu_admin.ghost_dialog_title')}

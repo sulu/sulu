@@ -365,8 +365,8 @@ export default class Datagrid extends React.Component<Props> {
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
                         onItemActivate={this.handleItemActivate}
                         onItemAdd={onItemAdd}
-                        onItemDeactivate={this.handleItemDeactivate}
                         onItemClick={onItemClick}
+                        onItemDeactivate={this.handleItemDeactivate}
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
                         onPageChange={this.handlePageChange}
                         onRequestItemCopy={copyable ? this.handleRequestItemCopy : undefined}
@@ -378,15 +378,15 @@ export default class Datagrid extends React.Component<Props> {
                         page={store.getPage()}
                         pageCount={store.pageCount}
                         schema={store.schema}
+                        selections={store.selectionIds}
                         sortColumn={store.sortColumn.get()}
                         sortOrder={store.sortOrder.get()}
-                        selections={store.selectionIds}
                     />
                 </div>
                 {deletable &&
                     <Dialog
-                        confirmLoading={this.deleting}
                         cancelText={translate('sulu_admin.cancel')}
+                        confirmLoading={this.deleting}
                         confirmText={translate('sulu_admin.ok')}
                         onCancel={this.handleDeleteDialogCancelClick}
                         onConfirm={this.handleDeleteDialogConfirmClick}
@@ -428,8 +428,8 @@ export default class Datagrid extends React.Component<Props> {
                 }
                 {orderable &&
                     <Dialog
-                        confirmLoading={this.ordering}
                         cancelText={translate('sulu_admin.cancel')}
+                        confirmLoading={this.ordering}
                         confirmText={translate('sulu_admin.ok')}
                         onCancel={this.handleOrderDialogCancelClick}
                         onConfirm={this.handleOrderDialogConfirmClick}

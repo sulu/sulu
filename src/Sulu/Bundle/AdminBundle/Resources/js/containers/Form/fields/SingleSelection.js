@@ -115,9 +115,9 @@ export default class SingleSelection extends React.Component<Props>
         return (
             <SingleAutoComplete
                 displayProperty={displayProperty}
-                searchProperties={searchProperties}
                 onChange={this.handleChange}
                 resourceKey={resourceKey}
+                searchProperties={searchProperties}
                 value={value}
             />
         );

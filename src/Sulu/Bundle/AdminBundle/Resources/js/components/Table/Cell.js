@@ -43,8 +43,8 @@ export default class Cell extends React.PureComponent<Props> {
 
         return (
             <td
-                colSpan={colspan}
                 className={cellClass}
+                colSpan={colspan}
             >
                 <div className={tableStyles.cellContent} style={style}>
                     {children}

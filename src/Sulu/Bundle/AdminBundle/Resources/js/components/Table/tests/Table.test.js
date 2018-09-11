@@ -291,7 +291,7 @@ test('Header cells with an attached onClick handler should be clickable', () => 
     const table = mount(
         <Table>
             <Header>
-                <HeaderCell onClick={clickSpy} name="column1">Column Title</HeaderCell>
+                <HeaderCell name="column1" onClick={clickSpy}>Column Title</HeaderCell>
                 <HeaderCell>Column Title</HeaderCell>
                 <HeaderCell>Column Title</HeaderCell>
             </Header>
@@ -315,9 +315,9 @@ test('Header cells with an attached name should call the onClick callback with t
     const table = mount(
         <Table>
             <Header>
-                <HeaderCell onClick={clickSpy} name="column1">Column Title</HeaderCell>
-                <HeaderCell onClick={clickSpy} name="column2" sortOrder="asc">Column Title</HeaderCell>
-                <HeaderCell onClick={clickSpy} name="column3" sortOrder="desc">Column Title</HeaderCell>
+                <HeaderCell name="column1" onClick={clickSpy}>Column Title</HeaderCell>
+                <HeaderCell name="column2" onClick={clickSpy} sortOrder="asc">Column Title</HeaderCell>
+                <HeaderCell name="column3" onClick={clickSpy} sortOrder="desc">Column Title</HeaderCell>
             </Header>
             <Body>
                 <Row>
@@ -352,12 +352,12 @@ test('Collapse should be called correctly', () => {
                 <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
-                <Row depth={0} hasChildren={true} expanded={true}>
+                <Row depth={0} expanded={true} hasChildren={true}>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
                 </Row>
-                <Row depth={1} hasChildren={true} expanded={true}>
+                <Row depth={1} expanded={true} hasChildren={true}>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
@@ -388,12 +388,12 @@ test('Expand should be called correctly', () => {
                 <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
-                <Row depth={0} hasChildren={true} expanded={true}>
+                <Row depth={0} expanded={true} hasChildren={true}>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
                 </Row>
-                <Row depth={1} hasChildren={true} expanded={false}>
+                <Row depth={1} expanded={false} hasChildren={true}>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>

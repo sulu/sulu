@@ -23,10 +23,10 @@ test('InfiniteScroller traverses the dom upwards until it finds a scroll contain
     const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
-                onChange={loadSpy}
                 current={1}
-                total={10}
                 loading={false}
+                onChange={loadSpy}
+                total={10}
             >
                 <div />
             </InfiniteScroller>
@@ -45,10 +45,10 @@ test('InfiniteScroller should call onChange if the the bottom of the content is 
     const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
-                onChange={loadSpy}
-                total={10}
                 current={1}
                 loading={false}
+                onChange={loadSpy}
+                total={10}
             >
                 <div />
             </InfiniteScroller>
@@ -86,10 +86,10 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
     const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
-                onChange={loadSpy}
-                total={10}
                 current={1}
                 loading={false}
+                onChange={loadSpy}
+                total={10}
             >
                 <div />
             </InfiniteScroller>
@@ -116,10 +116,10 @@ test('InfiniteScroller should show a loader when the loading prop is set to true
     expect(render(
         <div id="scrollable">
             <InfiniteScroller
-                onChange={loadSpy}
-                total={10}
                 current={1}
                 loading={true}
+                onChange={loadSpy}
+                total={10}
             >
                 <div />
             </InfiniteScroller>
@@ -136,10 +136,10 @@ test('InfiniteScroller should show an info message when the last page has been r
     expect(render(
         <div id="scrollable">
             <InfiniteScroller
-                onChange={loadSpy}
-                total={10}
                 current={10}
                 loading={false}
+                onChange={loadSpy}
+                total={10}
             >
                 <div />
             </InfiniteScroller>

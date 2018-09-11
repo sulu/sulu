@@ -22,12 +22,12 @@ export default class CroppedText extends React.PureComponent<Props> {
 
         return (
             <div
-                title={children}
                 aria-label={children}
                 className={croppedTextStyle.croppedText}
+                title={children}
             >
-                <div className={croppedTextStyle.front} aria-hidden={true}>{frontText}</div>
-                <div className={croppedTextStyle.back} aria-hidden={true}><span>{backText}</span></div>
+                <div aria-hidden={true} className={croppedTextStyle.front}>{frontText}</div>
+                <div aria-hidden={true} className={croppedTextStyle.back}><span>{backText}</span></div>
                 <div className={croppedTextStyle.whole}>{children}</div>
             </div>
         );

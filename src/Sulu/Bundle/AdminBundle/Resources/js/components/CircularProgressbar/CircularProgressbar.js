@@ -39,6 +39,7 @@ export default class CircularProgressbar extends React.PureComponent<Props> {
         return (
             <div style={sizeStyle}>
                 <ReactCircularProgressbar
+                    background={true}
                     classes={{
                         root: circularProgressbarStyles.root,
                         path: circularProgressbarStyles.path,
@@ -47,7 +48,6 @@ export default class CircularProgressbar extends React.PureComponent<Props> {
                         background: circularProgressbarStyles.background,
                     }}
                     percentage={percentage}
-                    background={true}
                     textForPercentage={this.handlePercentageText} // eslint-disable-line react/jsx-handler-names
                 />
             </div>

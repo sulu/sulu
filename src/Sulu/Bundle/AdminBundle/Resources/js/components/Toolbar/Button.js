@@ -46,22 +46,22 @@ export default class Button extends React.PureComponent<ButtonProps> {
 
         return (
             <button
-                disabled={disabled}
                 className={buttonClass}
+                disabled={disabled}
                 onClick={this.handleOnClick}
                 value={value}
             >
                 {loading &&
-                    <Loader size={LOADER_SIZE} className={buttonStyles.loader} />
+                    <Loader className={buttonStyles.loader} size={LOADER_SIZE} />
                 }
                 {icon &&
-                    <Icon name={icon} className={buttonStyles.icon} />
+                    <Icon className={buttonStyles.icon} name={icon} />
                 }
                 {buttonContent &&
                     <span className={buttonStyles.label}>{buttonContent}</span>
                 }
                 {hasOptions &&
-                    <Icon name={ICON_ANGLE_DOWN} className={buttonStyles.dropdownIcon} />
+                    <Icon className={buttonStyles.dropdownIcon} name={ICON_ANGLE_DOWN} />
                 }
             </button>
         );

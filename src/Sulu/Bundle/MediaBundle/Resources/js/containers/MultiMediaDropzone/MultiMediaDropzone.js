@@ -105,18 +105,18 @@ export default class MultiMediaDropzone extends React.Component<Props> {
 
         return (
             <Dropzone
-                ref={this.setDropzoneRef}
-                style={{}} // to disable default style
+                className={dropzoneStyles.dropzone}
                 disableClick={true}
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
-                className={dropzoneStyles.dropzone}
+                ref={this.setDropzoneRef}
+                style={{}} // to disable default style
             >
                 <DropzoneOverlay
-                    open={this.overlayOpen}
-                    onClose={this.handleOverlayClose}
                     onClick={this.handleOverlayClick}
+                    onClose={this.handleOverlayClose}
+                    open={this.overlayOpen}
                 >
                     {this.createMediaItems()}
                 </DropzoneOverlay>

@@ -4,10 +4,10 @@ exports[`Render block with schema 1`] = `
 "<section class=\\"blockCollection\\">
   <div class=\\"sortableBlockList\\">
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
+      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"sortableHandle su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid grid\\">
@@ -22,10 +22,10 @@ exports[`Render block with schema 1`] = `
       </div>
     </section>
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
+      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"sortableHandle su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid grid\\">
@@ -39,7 +39,7 @@ exports[`Render block with schema 1`] = `
         </article>
       </div>
     </section>
-  </div><button class=\\"button secondary\\" type=\\"button\\"><span class=\\"buttonIcon su-plus\\" aria-label=\\"su-plus\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
+  </div><button class=\\"button secondary\\" type=\\"button\\"><span aria-label=\\"su-plus\\" class=\\"buttonIcon su-plus\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
 </section>"
 `;
 
@@ -47,10 +47,10 @@ exports[`Render block with schema and error on fields already being modified 1`]
 "<section class=\\"blockCollection\\">
   <div class=\\"sortableBlockList\\">
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
+      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"sortableHandle su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid grid\\">
@@ -62,10 +62,10 @@ exports[`Render block with schema and error on fields already being modified 1`]
       </div>
     </section>
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
+      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"sortableHandle su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid grid\\">
@@ -77,10 +77,10 @@ exports[`Render block with schema and error on fields already being modified 1`]
       </div>
     </section>
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
+      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"sortableHandle su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid grid\\">
@@ -91,7 +91,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
         </article>
       </div>
     </section>
-  </div><button class=\\"button secondary\\" type=\\"button\\"><span class=\\"buttonIcon su-plus\\" aria-label=\\"su-plus\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
+  </div><button class=\\"button secondary\\" type=\\"button\\"><span aria-label=\\"su-plus\\" class=\\"buttonIcon su-plus\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
 </section>"
 `;
 
@@ -99,10 +99,10 @@ exports[`Render block with schema and error on fields already being modified 2`]
 "<section class=\\"blockCollection\\">
   <div class=\\"sortableBlockList\\">
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
+      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"sortableHandle su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid grid\\">
@@ -114,10 +114,10 @@ exports[`Render block with schema and error on fields already being modified 2`]
       </div>
     </section>
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
+      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"sortableHandle su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid grid\\">
@@ -129,10 +129,10 @@ exports[`Render block with schema and error on fields already being modified 2`]
       </div>
     </section>
     <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span class=\\"sortableHandle su-more\\" aria-label=\\"su-more\\"></span></div>
+      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"sortableHandle su-more\\"></span></div>
       <div class=\\"content\\">
         <header class=\\"header\\">
-          <div class=\\"icons\\"><span class=\\"su-trash-alt clickable\\" aria-label=\\"su-trash-alt\\" role=\\"button\\" tabindex=\\"0\\"></span><span class=\\"su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
         </header>
         <article>
           <div class=\\"grid grid\\">
@@ -143,6 +143,6 @@ exports[`Render block with schema and error on fields already being modified 2`]
         </article>
       </div>
     </section>
-  </div><button class=\\"button secondary\\" type=\\"button\\"><span class=\\"buttonIcon su-plus\\" aria-label=\\"su-plus\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
+  </div><button class=\\"button secondary\\" type=\\"button\\"><span aria-label=\\"su-plus\\" class=\\"buttonIcon su-plus\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
 </section>"
 `;

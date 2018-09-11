@@ -13,7 +13,7 @@ jest.mock('../../../utils', () => ({
 }));
 
 jest.mock('../../../containers/Datagrid', () => jest.fn(function Datagrid(props) {
-    return <div className="datagrid" adapter={props.adapter} />;
+    return <div adapter={props.adapter} className="datagrid" />;
 }));
 
 jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(

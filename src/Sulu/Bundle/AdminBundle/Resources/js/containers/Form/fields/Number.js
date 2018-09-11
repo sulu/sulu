@@ -38,11 +38,11 @@ export default class Number extends React.Component<FieldTypeProps<?number>> {
 
         return (
             <NumberComponent
-                min={this.min}
                 max={this.max}
-                step={this.step}
-                onChange={onChange}
+                min={this.min}
                 onBlur={this.handleBlur}
+                onChange={onChange}
+                step={this.step}
                 valid={!error}
                 value={value}
             />

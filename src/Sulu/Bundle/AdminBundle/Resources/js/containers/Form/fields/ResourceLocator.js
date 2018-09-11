@@ -72,7 +72,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
         }
 
         return (
-            <ResourceLocatorComponent value={value} onChange={onChange} mode={mode} onBlur={this.handleBlur} />
+            <ResourceLocatorComponent mode={mode} onBlur={this.handleBlur} onChange={onChange} value={value} />
         );
     }
 }

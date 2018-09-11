@@ -118,6 +118,12 @@
         ],
         "react/jsx-wrap-multilines": "error",
         "react/jsx-pascal-case": "error",
+        "react/jsx-sort-props": [
+            "error",
+            {
+                "ignoreCase": true
+            }
+        ],
         "react/jsx-tag-spacing": [
             "error",
             {

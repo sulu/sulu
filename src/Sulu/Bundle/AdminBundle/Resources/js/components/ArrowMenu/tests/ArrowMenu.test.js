@@ -20,15 +20,15 @@ test('Render ArrowMenu closed', () => {
     const value2 = undefined;
 
     const arrowMenu = mount(
-        <ArrowMenu open={open} onClose={handleClose} anchorElement={button}>
+        <ArrowMenu anchorElement={button} onClose={handleClose} open={open}>
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
             </ArrowMenu.Section>
             <ArrowMenu.SingleItemSection
                 icon="su-webspace"
+                onChange={handleChangeSection1}
                 title="Webspaces"
                 value={value1}
-                onChange={handleChangeSection1}
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
@@ -36,9 +36,9 @@ test('Render ArrowMenu closed', () => {
             </ArrowMenu.SingleItemSection>
             <ArrowMenu.SingleItemSection
                 icon="su-check"
+                onChange={handleChangeSection2}
                 title="Columns"
                 value={value2}
-                onChange={handleChangeSection2}
             >
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
@@ -60,15 +60,15 @@ test('Render ArrowMenu open', () => {
     const value2 = undefined;
 
     const arrowMenu = mount(
-        <ArrowMenu open={open} onClose={handleClose} anchorElement={button}>
+        <ArrowMenu anchorElement={button} onClose={handleClose} open={open}>
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
             </ArrowMenu.Section>
             <ArrowMenu.SingleItemSection
                 icon="su-webspace"
+                onChange={handleChangeSection1}
                 title="Webspaces"
                 value={value1}
-                onChange={handleChangeSection1}
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
@@ -76,9 +76,9 @@ test('Render ArrowMenu open', () => {
             </ArrowMenu.SingleItemSection>
             <ArrowMenu.SingleItemSection
                 icon="su-check"
+                onChange={handleChangeSection2}
                 title="Columns"
                 value={value2}
-                onChange={handleChangeSection2}
             >
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
@@ -100,15 +100,15 @@ test('Events should be called correctly', () => {
     const value2 = undefined;
 
     const arrowMenu = mount(
-        <ArrowMenu open={open} onClose={handleClose} anchorElement={button}>
+        <ArrowMenu anchorElement={button} onClose={handleClose} open={open}>
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
             </ArrowMenu.Section>
             <ArrowMenu.SingleItemSection
                 icon="su-webspace"
+                onChange={handleChangeSection1}
                 title="Webspaces"
                 value={value1}
-                onChange={handleChangeSection1}
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
@@ -116,9 +116,9 @@ test('Events should be called correctly', () => {
             </ArrowMenu.SingleItemSection>
             <ArrowMenu.SingleItemSection
                 icon="check"
+                onChange={handleChangeSection2}
                 title="Columns"
                 value={value2}
-                onChange={handleChangeSection2}
             >
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>

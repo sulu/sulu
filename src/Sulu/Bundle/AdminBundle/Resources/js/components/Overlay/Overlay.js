@@ -130,7 +130,7 @@ export default class Overlay extends React.Component<Props> {
 
         return (
             <div>
-                <Backdrop open={showPortal} onClick={onClose} />
+                <Backdrop onClick={onClose} open={showPortal} />
                 {showPortal &&
                     <Portal>
                         <div
@@ -142,8 +142,8 @@ export default class Overlay extends React.Component<Props> {
                                     <header>
                                         <h2>{title}</h2>
                                         <Icon
-                                            name={CLOSE_ICON}
                                             className={overlayStyles.icon}
+                                            name={CLOSE_ICON}
                                             onClick={this.handleIconClick}
                                         />
                                     </header>

@@ -12,10 +12,10 @@ jest.mock('../../../utils/Translator', () => ({
 test('Should render the component', () => {
     expect(render(
         <ResetForm
-            user={undefined}
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            user={undefined}
         />)
     ).toMatchSnapshot();
 });
@@ -23,12 +23,12 @@ test('Should render the component', () => {
 test('Should render the component with data', () => {
     expect(render(
         <ResetForm
-            user="test"
-            password="test"
             onChangeForm={jest.fn()}
             onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            password="test"
+            user="test"
         />)
     ).toMatchSnapshot();
 });
@@ -37,10 +37,10 @@ test('Should render the component loading', () => {
     expect(render(
         <ResetForm
             error={true}
-            user="test"
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            user="test"
         />)
     ).toMatchSnapshot();
 });
@@ -48,11 +48,11 @@ test('Should render the component loading', () => {
 test('Should render the component with success', () => {
     expect(render(
         <ResetForm
-            success={true}
-            user="test"
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            success={true}
+            user="test"
         />)
     ).toMatchSnapshot();
 });
@@ -61,10 +61,10 @@ test('Should trigger onUserChange correctly', () => {
     const onUserChange = jest.fn();
     const resetForm = shallow(
         <ResetForm
-            user="test"
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={onUserChange}
+            user="test"
         />
     );
 
@@ -77,10 +77,10 @@ test('Should trigger onChangeForm correctly', () => {
     const onChangeForm = jest.fn();
     const resetForm = shallow(
         <ResetForm
-            user="test"
             onChangeForm={onChangeForm}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            user="test"
         />
     );
 
@@ -93,10 +93,10 @@ test('Should trigger onSubmit correctly', () => {
     const onSubmit = jest.fn();
     const resetForm = shallow(
         <ResetForm
-            user="test"
             onChangeForm={jest.fn()}
             onSubmit={onSubmit}
             onUserChange={jest.fn()}
+            user="test"
         />
     );
     resetForm.find('form').simulate('submit');

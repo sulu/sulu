@@ -164,7 +164,7 @@ export default class Popover extends React.Component<Props> {
         return (
             <Fragment>
                 {backdrop &&
-                    <Backdrop visible={false} open={true} onClick={this.handleBackdropClick} />
+                    <Backdrop onClick={this.handleBackdropClick} open={true} visible={false} />
                 }
                 <Portal>
                     <div className={popoverStyles.container}>

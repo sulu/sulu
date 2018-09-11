@@ -144,8 +144,8 @@ export default class CollectionSection extends React.Component<Props> {
                 {!resourceStore.loading &&
                     <div className={collectionSectionStyles.collectionSection}>
                         <CollectionBreadcrumb
-                            resourceStore={resourceStore}
                             onNavigate={this.handleBreadcrumbNavigate}
+                            resourceStore={resourceStore}
                         />
                         <div>
                             <Icon name="su-plus" onClick={this.handleAddCollectionClick} />
@@ -160,25 +160,25 @@ export default class CollectionSection extends React.Component<Props> {
                 }
                 <Datagrid
                     adapters={['folder']}
+                    onItemClick={this.handleCollectionClick}
                     searchable={false}
                     store={datagridStore}
-                    onItemClick={this.handleCollectionClick}
                 />
                 <CollectionFormOverlay
+                    onClose={this.handleCollectionOverlayClose}
+                    onConfirm={this.handleCollectionOverlayConfirm}
                     operationType={operationType}
                     overlayType={overlayType}
                     resourceStore={this.resourceStoreByOperationType}
-                    onConfirm={this.handleCollectionOverlayConfirm}
-                    onClose={this.handleCollectionOverlayClose}
                 />
                 <Dialog
-                    title={translate('sulu_media.remove_collection')}
-                    open={operationType === 'remove'}
+                    cancelText={translate('sulu_admin.cancel')}
                     confirmLoading={resourceStore.deleting}
                     confirmText={translate('sulu_admin.ok')}
-                    cancelText={translate('sulu_admin.cancel')}
-                    onConfirm={this.handleRemoveCollectionConfirm}
                     onCancel={this.handleRemoveCollectionCancel}
+                    onConfirm={this.handleRemoveCollectionConfirm}
+                    open={operationType === 'remove'}
+                    title={translate('sulu_media.remove_collection')}
                 >
                     {translate('sulu_media.remove_collection_warning')}
                 </Dialog>

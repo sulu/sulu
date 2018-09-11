@@ -45,8 +45,8 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         return (
             <FieldRenderer
-                dataPath={dataPath + '/' + index}
                 data={value}
+                dataPath={dataPath + '/' + index}
                 errors={errors && errors.length > index && errors[index] ? errors[index] : undefined}
                 formInspector={formInspector}
                 index={index}

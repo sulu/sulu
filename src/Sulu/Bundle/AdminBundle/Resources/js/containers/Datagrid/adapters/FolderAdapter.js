@@ -40,19 +40,19 @@ export default class FolderAdapter extends AbstractAdapter {
 
         return (
             <Pagination
-                total={pageCount}
                 current={page}
                 loading={loading}
                 onChange={onPageChange}
+                total={pageCount}
             >
                 <FolderList onFolderClick={onItemClick}>
                     {data.map((item: Object) => (
                         // TODO: Don't access properties like "title" directly.
                         <FolderList.Folder
-                            key={item.id}
                             id={item.id}
-                            title={item.title}
                             info={FolderAdapter.getInfoText(item)}
+                            key={item.id}
+                            title={item.title}
                         />
                     ))}
                 </FolderList>

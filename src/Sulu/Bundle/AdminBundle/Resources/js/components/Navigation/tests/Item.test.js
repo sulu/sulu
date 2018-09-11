@@ -8,9 +8,9 @@ test('The component should render', () => {
     const item = render(
         <Item
             icon="su-search"
-            value="test_1"
             onClick={handleClick}
             title="Test"
+            value="test_1"
         />
     );
     expect(item).toMatchSnapshot();
@@ -20,11 +20,11 @@ test('The component should render active', () => {
     const handleClick = jest.fn();
     const item = render(
         <Item
+            active={true}
             icon="su-search"
-            value="test_1"
             onClick={handleClick}
             title="Test"
-            active={true}
+            value="test_1"
         />
     );
     expect(item).toMatchSnapshot();
@@ -35,18 +35,18 @@ test('The component should render with children', () => {
     const item = render(
         <Item
             icon="su-cog"
-            value="settings"
             title="Settings"
+            value="settings"
         >
             <Item
-                value="settings_1"
                 onClick={handleClick}
                 title="Settings 1"
+                value="settings_1"
             />
             <Item
-                value="settings_2"
                 onClick={handleClick}
                 title="Settings 2"
+                value="settings_2"
             />
         </Item>
     );
@@ -57,21 +57,21 @@ test('The component should render with children an active child and expanded', (
     const handleClick = jest.fn();
     const item = render(
         <Item
-            icon="su-cog"
-            value="settings"
-            title="Settings"
             expanded={true}
+            icon="su-cog"
+            title="Settings"
+            value="settings"
         >
             <Item
-                value="settings_1"
                 onClick={handleClick}
                 title="Settings 1"
+                value="settings_1"
             />
             <Item
-                value="settings_2"
+                active={true}
                 onClick={handleClick}
                 title="Settings 2"
-                active={true}
+                value="settings_2"
             />
         </Item>
     );
@@ -84,22 +84,22 @@ test('The component should handle clicks correctly', () => {
 
     const item = mount(
         <Item
-            icon="su-cog"
-            value="settings"
-            title="Settings"
-            onClick={handleItemClick}
             expanded={true}
+            icon="su-cog"
+            onClick={handleItemClick}
+            title="Settings"
+            value="settings"
         >
             <Item
-                value="settings_1"
                 onClick={handleSubItemClick}
                 title="Settings 1"
+                value="settings_1"
             />
             <Item
-                value="settings_2"
+                active={true}
                 onClick={handleSubItemClick}
                 title="Settings 2"
-                active={true}
+                value="settings_2"
             />
         </Item>
     );

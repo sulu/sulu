@@ -26,9 +26,9 @@ test('Do not display if open is set to false', () => {
             onClose={jest.fn()}
             open={false}
             presentations={{}}
-            sortings={{}}
             sections={[]}
             smartContentStore={smartContentStore}
+            sortings={{}}
             title="Test"
         />
     );
@@ -48,9 +48,9 @@ test('Render with DatagridOverlays if smartContentStore is loaded', () => {
             onClose={jest.fn()}
             open={true}
             presentations={{}}
-            sortings={{}}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             smartContentStore={smartContentStore}
+            sortings={{}}
             title="Test"
         />
     );
@@ -71,9 +71,9 @@ test('Render without DatagridOverlays if smartContentStore is not loaded', () =>
             onClose={jest.fn()}
             open={true}
             presentations={{}}
-            sortings={{}}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             smartContentStore={smartContentStore}
+            sortings={{}}
             title="Test"
         />
     );
@@ -90,9 +90,9 @@ test('Render with all fields', () => {
             onClose={jest.fn()}
             open={true}
             presentations={{}}
-            sortings={{}}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             smartContentStore={smartContentStore}
+            sortings={{}}
             title="Test"
         />
     );
@@ -108,9 +108,9 @@ test('Render with no fields', () => {
             onClose={jest.fn()}
             open={true}
             presentations={{}}
-            sortings={{}}
             sections={[]}
             smartContentStore={smartContentStore}
+            sortings={{}}
             title="Test"
         />
     );
@@ -132,11 +132,11 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
                 large: 'Large',
             }}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
+            smartContentStore={smartContentStore}
             sortings={{
                 title: 'Title',
                 changed: 'Changed',
             }}
-            smartContentStore={smartContentStore}
             title="Test"
         />
     );
@@ -251,12 +251,12 @@ test('Prefill all fields with correct values', () => {
                 small: 'Small',
                 large: 'Large',
             }}
+            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
+            smartContentStore={smartContentStore}
             sortings={{
                 title: 'Title',
                 created: 'Created',
             }}
-            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
-            smartContentStore={smartContentStore}
             title="Test"
         />
     );
@@ -310,11 +310,11 @@ test('Reset all fields when reset action is clicked', () => {
                 large: 'Large',
             }}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
+            smartContentStore={smartContentStore}
             sortings={{
                 title: 'Title',
                 created: 'Created',
             }}
-            smartContentStore={smartContentStore}
             title="Test"
         />
     );

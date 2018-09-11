@@ -74,7 +74,7 @@ test('Render a loading MediaDetail view', () => {
     resourceStore.loading = true;
 
     expect(mount(
-        <MediaDetail router={router} resourceStore={resourceStore} />
+        <MediaDetail resourceStore={resourceStore} router={router} />
     ).render()).toMatchSnapshot();
 });
 
@@ -95,7 +95,7 @@ test('Should change locale via locale chooser', () => {
             },
         },
     };
-    const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />).get(0);
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />).get(0);
     resourceStore.locale.set('de');
 
     const toolbarConfig = toolbarFunction.call(mediaDetail);
@@ -120,7 +120,7 @@ test('Should navigate to defined route on back button click', () => {
         },
         attributes: {},
     };
-    const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />).get(0);
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />).get(0);
     resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(mediaDetail);
@@ -145,7 +145,7 @@ test('Should show locales from router options in toolbar', () => {
         },
         attributes: {},
     };
-    const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />).get(0);
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />).get(0);
 
     const toolbarConfig = toolbarFunction.call(mediaDetail);
     expect(toolbarConfig.locale.options).toEqual([
@@ -186,7 +186,7 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
         },
         attributes: {},
     };
-    const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
 
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
@@ -227,7 +227,7 @@ test('Should initialize the ResourceStore with a schema', () => {
         description: {},
     });
     metadataStore.getSchema.mockReturnValue(metadataPromise);
-    mount(<MediaDetail router={router} resourceStore={resourceStore} />);
+    mount(<MediaDetail resourceStore={resourceStore} router={router} />);
 
     return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(resourceStore.resourceKey).toBe('media');
@@ -258,7 +258,7 @@ test('Should render save button disabled only if form is not dirty', () => {
         },
         attributes: {},
     };
-    const form = mount(<MediaDetail router={router} resourceStore={resourceStore} />).get(0);
+    const form = mount(<MediaDetail resourceStore={resourceStore} router={router} />).get(0);
 
     expect(getSaveItem().disabled).toBe(true);
 
@@ -300,7 +300,7 @@ test('Should save form when submitted', (done) => {
             id: 4,
         },
     };
-    const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
 
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
@@ -329,7 +329,7 @@ test('Should destroy the store on unmount', () => {
         attributes: {},
     };
 
-    const mediaDetail = mount(<MediaDetail router={router} resourceStore={resourceStore} />);
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
 
     const formStore = mediaDetail.instance().formStore;
     formStore.destroy = jest.fn();

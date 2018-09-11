@@ -139,8 +139,8 @@ export default class SingleSelection extends React.Component<Props> {
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
-                    resourceKey={resourceKey}
                     preSelectedItem={item}
+                    resourceKey={resourceKey}
                     title={overlayTitle}
                 />
             </Fragment>

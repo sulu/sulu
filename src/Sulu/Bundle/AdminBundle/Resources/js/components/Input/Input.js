@@ -116,9 +116,9 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                     {!loading && icon &&
                         <div className={prependContainerClass}>
                             <Icon
-                                onClick={onIconClick ? onIconClick : undefined}
                                 className={iconClass}
                                 name={icon}
+                                onClick={onIconClick ? onIconClick : undefined}
                                 style={iconStyle}
                             />
                         </div>
@@ -132,25 +132,25 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
 
                     <input
                         className={inputClass}
-                        ref={inputRef ? this.setInputRef : undefined}
+                        max={max}
+                        min={min}
                         name={name}
-                        type={type}
-                        value={value == null ? '' : value}
-                        placeholder={placeholder}
                         onBlur={onBlur}
                         onChange={this.handleChange}
                         onKeyPress={onKeyPress ? this.handleKeyPress : undefined}
-                        min={min}
-                        max={max}
+                        placeholder={placeholder}
+                        ref={inputRef ? this.setInputRef : undefined}
                         step={step}
+                        type={type}
+                        value={value == null ? '' : value}
                     />
 
                     {!collapsed && !!value && onClearClick &&
                         <div className={inputStyles.appendContainer}>
                             <Icon
-                                onClick={onClearClick ? onClearClick : undefined}
                                 className={iconClass}
                                 name="su-times"
+                                onClick={onClearClick ? onClearClick : undefined}
                                 style={iconStyle}
                             />
                         </div>
