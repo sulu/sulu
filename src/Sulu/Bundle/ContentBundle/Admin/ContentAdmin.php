@@ -131,8 +131,9 @@ class ContentAdmin extends Admin
                 ->addOption('tabTitle', 'sulu_content.page_form_excerpt')
                 ->addOption('resourceKey', 'pages_excerpt')
                 ->setParent('sulu_content.page_edit_form'),
-            (new Route('sulu_content.page_edit_form.settings', '/settings', 'sulu_content.page_settings'))
+            (new Route('sulu_content.page_edit_form.settings', '/settings', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_settings')
+                ->addOption('resourceKey', 'pages_settings')
                 ->setParent('sulu_content.page_edit_form'),
         ];
     }
