@@ -80,6 +80,9 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('sulu_http_cache.cache.max_age', $config['cache']['max_age']);
+        $container->setParameter('sulu_http_cache.cache.shared_max_age', $config['cache']['shared_max_age']);
+
         if (!$this->shouldCache($container)) {
             return;
         }
@@ -102,9 +105,6 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
                 $loader->load('tags.xml');
             }
         }
-
-        $container->setParameter('sulu_http_cache.cache.max_age', $config['cache']['max_age']);
-        $container->setParameter('sulu_http_cache.cache.shared_max_age', $config['cache']['shared_max_age']);
     }
 
     /**
