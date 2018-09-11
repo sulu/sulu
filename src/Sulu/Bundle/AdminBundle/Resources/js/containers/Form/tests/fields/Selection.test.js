@@ -49,10 +49,10 @@ test('Should pass props correctly to selection component', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
-        default_type: 'overlay',
+        default_type: 'datagrid_overlay',
         resource_key: 'snippets',
         types: {
-            overlay: {
+            datagrid_overlay: {
                 adapter: 'table',
                 display_properties: ['id', 'title'],
                 icon: '',
@@ -90,7 +90,7 @@ test('Should pass props correctly to selection component', () => {
 
     expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
 
-    expect(selection.find('Selection').props()).toEqual(expect.objectContaining({
+    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
         displayProperties: ['id', 'title'],
         label: 'sulu_snippet.selection_label',
@@ -103,10 +103,10 @@ test('Should pass props correctly to selection component', () => {
 
 test('Should pass id of form as disabledId to overlay type to avoid assigning something to itself', () => {
     const fieldTypeOptions = {
-        default_type: 'overlay',
+        default_type: 'datagrid_overlay',
         resource_key: 'pages',
         types: {
-            overlay: {
+            datagrid_overlay: {
                 adapter: 'table',
             },
         },
@@ -132,16 +132,16 @@ test('Should pass id of form as disabledId to overlay type to avoid assigning so
         />
     );
 
-    expect(selection.find('Selection').prop('disabledIds')).toEqual([4]);
+    expect(selection.find('MultiSelection').prop('disabledIds')).toEqual([4]);
 });
 
 test('Should pass empty array if value is not given to overlay type', () => {
     const changeSpy = jest.fn();
     const fieldOptions = {
-        default_type: 'overlay',
+        default_type: 'datagrid_overlay',
         resource_key: 'pages',
         types: {
-            overlay: {
+            datagrid_overlay: {
                 adapter: 'column_list',
                 label: 'sulu_content.selection_label',
             },
@@ -168,7 +168,7 @@ test('Should pass empty array if value is not given to overlay type', () => {
     );
 
     expect(translate).toBeCalledWith('sulu_content.selection_label', {count: 0});
-    expect(selection.find('Selection').props()).toEqual(expect.objectContaining({
+    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'column_list',
         resourceKey: 'pages',
         value: [],
@@ -180,10 +180,10 @@ test('Should call onChange and onFinish callback when selection overlay is confi
     const finishSpy = jest.fn();
 
     const fieldOptions = {
-        default_type: 'overlay',
+        default_type: 'datagrid_overlay',
         resource_key: 'pages',
         types: {
-            overlay: {
+            datagrid_overlay: {
                 adapter: 'column_list',
                 label: 'sulu_content.selection_label',
             },
@@ -209,7 +209,7 @@ test('Should call onChange and onFinish callback when selection overlay is confi
         />
     );
 
-    selection.find('Selection').prop('onChange')([1, 2, 3]);
+    selection.find('MultiSelection').prop('onChange')([1, 2, 3]);
 
     expect(changeSpy).toBeCalledWith([1, 2, 3]);
     expect(finishSpy).toBeCalledWith();
@@ -223,7 +223,7 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
             dataPath=""
             error={undefined}
             formInspector={formInspector}
-            fieldTypeOptions={{default_type: 'overlay'}}
+            fieldTypeOptions={{default_type: 'datagrid_overlay'}}
             label="Test"
             maxOccurs={undefined}
             minOccurs={undefined}
@@ -240,10 +240,10 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
 test('Should throw an error if no "adapter" option is passed for overlay type in fieldTypeOptions', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
     const fieldTypeOptions = {
-        default_type: 'overlay',
+        default_type: 'datagrid_overlay',
         resource_key: 'test',
         types: {
-            overlay: {},
+            datagrid_overlay: {},
         },
     };
 

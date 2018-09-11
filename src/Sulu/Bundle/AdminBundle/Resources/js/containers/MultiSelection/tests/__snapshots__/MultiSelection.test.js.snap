@@ -1,0 +1,273 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should open an overlay 1`] = `
+"<div>
+  <div class=\\"backdrop visible fixed\\"></div>
+</div>
+<div>
+  <div class=\\"container\\">
+    <div class=\\"overlay large\\">
+      <section class=\\"content\\">
+        <header>
+          <h2>Selection</h2><span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span>
+        </header>
+        <article>
+          <div class=\\"adapterContainer overlay table\\">
+            <div class=\\"datagrid adapter table\\">
+              <div class=\\"datagrid\\"></div>
+            </div>
+          </div>
+        </article>
+        <footer><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">sulu_admin.confirm</span></button></footer>
+      </section>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Show with default plus icon 1`] = `
+Array [
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>,
+  <ul
+    class="list"
+  />,
+  <div />,
+]
+`;
+
+exports[`Show with passed icon 1`] = `
+Array [
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-document"
+        class="su-document"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>,
+  <ul
+    class="list"
+  />,
+  <div />,
+]
+`;
+
+exports[`Show with passed label 1`] = `
+Array [
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus"
+      />
+    </button>
+    <div
+      class="label"
+    >
+      Select Snippets
+    </div>
+  </div>,
+  <ul
+    class="list"
+  />,
+  <div />,
+]
+`;
+
+exports[`Show with passed values as items in right locale 1`] = `
+Array [
+  <div
+    class="header"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>,
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div>
+            <span
+              class="itemColumn"
+              style="width:50%"
+            >
+              1
+            </span>
+            <span
+              class="itemColumn"
+              style="width:50%"
+            >
+              Title 1
+            </span>
+          </div>
+        </div>
+        <button
+          class="removeButton"
+          type="button"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </button>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            2
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div>
+            <span
+              class="itemColumn"
+              style="width:50%"
+            >
+              2
+            </span>
+            <span
+              class="itemColumn"
+              style="width:50%"
+            >
+              Title 2
+            </span>
+          </div>
+        </div>
+        <button
+          class="removeButton"
+          type="button"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </button>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            3
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div>
+            <span
+              class="itemColumn"
+              style="width:50%"
+            >
+              5
+            </span>
+            <span
+              class="itemColumn"
+              style="width:50%"
+            >
+              Title 5
+            </span>
+          </div>
+        </div>
+        <button
+          class="removeButton"
+          type="button"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </button>
+      </div>
+    </li>
+  </ul>,
+  <div />,
+]
+`;

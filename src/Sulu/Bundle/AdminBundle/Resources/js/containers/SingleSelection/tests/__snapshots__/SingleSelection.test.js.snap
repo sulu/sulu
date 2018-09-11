@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with selected item 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button"
+    type="button"
+  >
+    <span
+      aria-label="su-test"
+      class="su-test"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      <div>
+        <span
+          class="itemColumn"
+          style="width: 50%;"
+        >
+          Name
+        </span>
+        <span
+          class="itemColumn"
+          style="width: 50%;"
+        >
+          Value
+        </span>
+      </div>
+    </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Show with passed emptyText and icon 1`] = `
+Array [
+  <div
+    class="singleItemSelection"
+  >
+    <button
+      class="button"
+      type="button"
+    >
+      <span
+        aria-label="su-document"
+        class="su-document"
+      />
+    </button>
+    <div
+      class="itemContainer"
+    >
+      <div
+        class="item"
+      >
+        <div
+          class="empty"
+        >
+          Test
+        </div>
+      </div>
+    </div>
+  </div>,
+  <div />,
+]
+`;

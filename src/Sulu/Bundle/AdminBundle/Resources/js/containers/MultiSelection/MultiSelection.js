@@ -5,9 +5,9 @@ import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import {MultiItemSelection} from '../../components';
-import SelectionStore from '../../stores/SelectionStore';
+import MultiSelectionStore from '../../stores/MultiSelectionStore';
 import MultiDatagridOverlay from '../MultiDatagridOverlay';
-import selectionStyles from './selection.scss';
+import multiSelectionStyles from './multiSelection.scss';
 
 type Props = {|
     adapter: string,
@@ -23,7 +23,7 @@ type Props = {|
 |};
 
 @observer
-export default class Selection extends React.Component<Props> {
+export default class MultiSelection extends React.Component<Props> {
     static defaultProps = {
         disabledIds: [],
         displayProperties: [],
@@ -31,7 +31,7 @@ export default class Selection extends React.Component<Props> {
         value: [],
     };
 
-    selectionStore: SelectionStore;
+    selectionStore: MultiSelectionStore;
     changeDisposer: () => void;
     changeAutorunInitialized: boolean = false;
 
@@ -42,7 +42,7 @@ export default class Selection extends React.Component<Props> {
 
         const {onChange, locale, resourceKey, value} = this.props;
 
-        this.selectionStore = new SelectionStore(resourceKey, value, locale);
+        this.selectionStore = new MultiSelectionStore(resourceKey, value, locale);
         this.changeDisposer = autorun(() => {
             const {value} = this.props;
             const itemIds = this.selectionStore.items.map((item) => item.id);
@@ -126,7 +126,7 @@ export default class Selection extends React.Component<Props> {
                             <div>
                                 {displayProperties.map((displayProperty) => (
                                     <span
-                                        className={selectionStyles.itemColumn}
+                                        className={multiSelectionStyles.itemColumn}
                                         key={displayProperty}
                                         style={{width: 100 / columns + '%'}}
                                     >

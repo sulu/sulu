@@ -6,7 +6,7 @@ import Datagrid from '../../../containers/Datagrid';
 import DatagridStore from '../../../containers/Datagrid/stores/DatagridStore';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
 import {translate} from '../../../utils/Translator';
-import SelectionComponent from '../../Selection';
+import MultiSelectionComponent from '../../MultiSelection';
 import type {FieldTypeProps} from '../../../types';
 import selectionStyles from './selection.scss';
 
@@ -19,7 +19,7 @@ export default class Selection extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        if (this.type !== 'overlay' && this.type !== 'datagrid' && this.type !== 'auto_complete') {
+        if (this.type !== 'datagrid_overlay' && this.type !== 'datagrid' && this.type !== 'auto_complete') {
             throw new Error(
                 'The Selection field must either be declared as "overlay", "datagrid" or as "auto_complete", '
                 + 'received type was "' + this.type + '"!'
@@ -64,8 +64,8 @@ export default class Selection extends React.Component<Props> {
     }
 
     render() {
-        if (this.type === 'overlay') {
-            return this.renderOverlay();
+        if (this.type === 'datagrid_overlay') {
+            return this.renderDatagridOverlay();
         }
 
         if (this.type === 'auto_complete') {
@@ -77,13 +77,13 @@ export default class Selection extends React.Component<Props> {
         }
     }
 
-    renderOverlay() {
+    renderDatagridOverlay() {
         const {
             formInspector,
             fieldTypeOptions: {
                 resource_key: resourceKey,
                 types: {
-                    overlay: {
+                    datagrid_overlay: {
                         adapter,
                         display_properties: displayProperties,
                         icon,
@@ -100,7 +100,7 @@ export default class Selection extends React.Component<Props> {
         }
 
         return (
-            <SelectionComponent
+            <MultiSelectionComponent
                 adapter={adapter}
                 displayProperties={displayProperties}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}

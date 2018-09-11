@@ -6,7 +6,7 @@ import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import MultiAutoCompleteComponent from '../../components/MultiAutoComplete';
 import SearchStore from '../../stores/SearchStore';
-import SelectionStore from '../../stores/SelectionStore';
+import MultiSelectionStore from '../../stores/MultiSelectionStore';
 
 type Props = {|
     allowAdd: boolean,
@@ -29,7 +29,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
     };
 
     searchStore: SearchStore;
-    selectionStore: SelectionStore;
+    selectionStore: MultiSelectionStore;
     changeDisposer: () => void;
     changeAutorunInitialized: boolean = false;
 
@@ -47,7 +47,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
         } = this.props;
 
         this.searchStore = new SearchStore(resourceKey, searchProperties);
-        this.selectionStore = new SelectionStore(resourceKey, value || [], locale, filterParameter);
+        this.selectionStore = new MultiSelectionStore(resourceKey, value || [], locale, filterParameter);
 
         this.changeDisposer = autorun(() => {
             const itemIds = this.selectionStore.items.map((item) => item[idProperty]);

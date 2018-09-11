@@ -74,7 +74,7 @@ const indicators = [
 ];
 
 <div style={{height: '60vh'}}>
-    <ColumnList buttons={buttons} onItemClick={handleItemClick} toolbarItems={toolbarItems}>
+    <ColumnList buttons={buttons} onItemClick={handleItemClick} toolbarItemsProvider={toolbarItems}>
         <ColumnList.Column>
             <ColumnList.Item buttons={buttons} id="1">Google 1</ColumnList.Item>
             <ColumnList.Item buttons={buttons} id="2" hasChildren="true" disabled={true}>Apple 1</ColumnList.Item>
@@ -100,7 +100,7 @@ no toolbar.
 const toolbarItems = () => [];
 
 <div style={{height: '60vh'}}>
-    <ColumnList toolbarItems={toolbarItems}>
+    <ColumnList toolbarItemsProvider={toolbarItems}>
         <ColumnList.Column>
             <ColumnList.Item id="1">Google 1</ColumnList.Item>
             <ColumnList.Item id="2" hasChildren="true">Apple 1</ColumnList.Item>

@@ -1,0 +1,13 @@
+@import '../../containers/Application/colors.scss';
+
+$multiSelectionMainColumnColor: $black;
+$multiSelectionColumnColor: $scorpion;
+
+.item-column {
+    color: $multiSelectionColumnColor;
+    display: inline-block;
+
+    &:first-child {
+        color: $multiSelectionMainColumnColor;
+    }
+}

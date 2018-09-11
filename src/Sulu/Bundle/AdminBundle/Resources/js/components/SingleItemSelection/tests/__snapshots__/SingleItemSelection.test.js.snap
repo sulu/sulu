@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with emptyText if no children have been passed 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button"
+    type="button"
+  >
+    <span
+      aria-label="su-page"
+      class="su-page"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      <div
+        class="empty"
+      >
+        Nothing!
+      </div>
+    </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Render with given children prop 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render with given onRemove prop 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button"
+    type="button"
+  >
+    <span
+      aria-label="su-page"
+      class="su-page"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
+  </div>
+</div>
+`;

@@ -1,0 +1,63 @@
+@import '../../containers/Application/colors.scss';
+
+$singleItemSelectionBackgroundColor: $white;
+$singleItemSelectionBorderColor: $silver;
+$singleItemSelectionButtonColor: $scorpion;
+$singleItemSelectionButtonActiveColor: $white;
+$singleItemSelectionButtonBackgroundColor: $white;
+$singleItemSelectionButtonActiveBackgroundColor: $shakespeare;
+$singleItemSelectionEmptyColor: $silver;
+
+$singleItemSelectionBorderRadius: 3px;
+
+.single-item-selection {
+    display: flex;
+    align-items: center;
+    background-color: $singleItemSelectionBackgroundColor;
+    height: 30px;
+    overflow: hidden;
+}
+
+.button {
+    height: 100%;
+    width: 28px;
+    background-color: $singleItemSelectionButtonBackgroundColor;
+    color: $singleItemSelectionButtonColor;
+    border: 1px solid $singleItemSelectionBorderColor;
+    border-right: none;
+    border-radius: $singleItemSelectionBorderRadius 0 0 $singleItemSelectionBorderRadius;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+        background-color: $singleItemSelectionButtonActiveBackgroundColor;
+        border-color: $singleItemSelectionButtonActiveBackgroundColor;
+        color: $singleItemSelectionButtonActiveColor;
+    }
+}
+
+.item-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex-grow: 1;
+    padding-left: 10px;
+    font-size: 12px;
+    border: 1px solid $singleItemSelectionBorderColor;
+    border-radius: 0 $singleItemSelectionBorderRadius $singleItemSelectionBorderRadius 0;
+}
+
+.item {
+    flex-grow: 1;
+}
+
+.empty {
+    color: $singleItemSelectionEmptyColor;
+}
+
+.remove-button {
+    border: 0;
+    padding: 0 10px;
+    cursor: pointer;
+    background-color: transparent;
+}

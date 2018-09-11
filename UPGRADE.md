@@ -2,6 +2,12 @@
 
 ## dev-develop
 
+### Selection Component
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The `Selection` container component was renamed to `MultiSelection`.
+
 ### SmartContent
 
 The `DataProvider`s for the `SmartContent` have changed their aliases. The alias now matches the resourceKey of the

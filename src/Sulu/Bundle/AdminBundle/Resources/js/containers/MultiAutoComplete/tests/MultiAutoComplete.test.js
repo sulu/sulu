@@ -5,10 +5,10 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MultiAutoComplete from '../MultiAutoComplete';
 import MultiAutoCompleteComponent from '../../../components/MultiAutoComplete';
 import SearchStore from '../../../stores/SearchStore';
-import SelectionStore from '../../../stores/SelectionStore';
+import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 
 jest.mock('../../../stores/SearchStore', () => jest.fn());
-jest.mock('../../../stores/SelectionStore', () => jest.fn());
+jest.mock('../../../stores/MultiSelectionStore', () => jest.fn());
 
 test('Render in loading state', () => {
     // $FlowFixMe
@@ -18,7 +18,7 @@ test('Render in loading state', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = true;
         mockExtendObservable(this, {
@@ -37,7 +37,7 @@ test('Render in loading state', () => {
     )).toMatchSnapshot();
 });
 
-test('Pass loading flag if SelectionStore and SearchStore is loading', () => {
+test('Pass loading flag if MultiSelectionStore and SearchStore is loading', () => {
     // $FlowFixMe
     SearchStore.mockImplementation(function() {
         this.searchResults = [];
@@ -45,7 +45,7 @@ test('Pass loading flag if SelectionStore and SearchStore is loading', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = true;
         mockExtendObservable(this, {
@@ -74,7 +74,7 @@ test('Pass loading flag if only SearchStore is loading', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = false;
         mockExtendObservable(this, {
@@ -95,7 +95,7 @@ test('Pass loading flag if only SearchStore is loading', () => {
     expect(multiAutoComplete.find('MultiAutoComplete').prop('loading')).toEqual(true);
 });
 
-test('Pass loading flag if only SelectionStore is loading', () => {
+test('Pass loading flag if only MultiSelectionStore is loading', () => {
     // $FlowFixMe
     SearchStore.mockImplementation(function() {
         this.searchResults = [];
@@ -103,7 +103,7 @@ test('Pass loading flag if only SelectionStore is loading', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = true;
         mockExtendObservable(this, {
@@ -129,7 +129,7 @@ test('Pass allowAdd and idProperty prop to component', () => {
     SearchStore.mockImplementation(function() {});
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         mockExtendObservable(this, {
             items: [],
         });
@@ -166,7 +166,7 @@ test('Render with loaded suggestions', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = false;
         mockExtendObservable(this, {
@@ -201,7 +201,7 @@ test('Render with given value', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = false;
         mockExtendObservable(this, {
@@ -219,7 +219,7 @@ test('Render with given value', () => {
         />
     );
 
-    expect(SelectionStore).toBeCalledWith('test', [1, 2], undefined, 'ids');
+    expect(MultiSelectionStore).toBeCalledWith('test', [1, 2], undefined, 'ids');
     multiAutoComplete.instance().selectionStore.items = [
         {id: 1, name: 'James Bond', number: '007'},
         {id: 2, name: 'John Doe', number: '005'},
@@ -236,7 +236,7 @@ test('Do not load items if passed value has not changed', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.items = [];
         this.loadItems = jest.fn();
     });
@@ -264,7 +264,7 @@ test('Load items if passed value has changed', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.items = [];
         this.loadItems = jest.fn();
     });
@@ -284,7 +284,7 @@ test('Load items if passed value has changed', () => {
     expect(multiAutoComplete.instance().selectionStore.loadItems).toBeCalledWith(undefined);
 });
 
-test('Pass filterParameter to SelectionStore', () => {
+test('Pass filterParameter to MultiSelectionStore', () => {
     // $FlowFixMe
     SearchStore.mockImplementation(function() {
         this.searchResults = [];
@@ -292,7 +292,7 @@ test('Pass filterParameter to SelectionStore', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = false;
         mockExtendObservable(this, {
@@ -311,10 +311,10 @@ test('Pass filterParameter to SelectionStore', () => {
         />
     );
 
-    expect(SelectionStore).toBeCalledWith('tags', [1, 2], undefined, 'names');
+    expect(MultiSelectionStore).toBeCalledWith('tags', [1, 2], undefined, 'names');
 });
 
-test('Pass locale to SelectionStore', () => {
+test('Pass locale to MultiSelectionStore', () => {
     const locale = observable.box('en');
     // $FlowFixMe
     SearchStore.mockImplementation(function() {
@@ -323,7 +323,7 @@ test('Pass locale to SelectionStore', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = false;
         mockExtendObservable(this, {
@@ -343,7 +343,7 @@ test('Pass locale to SelectionStore', () => {
         />
     );
 
-    expect(SelectionStore).toBeCalledWith('tags', [1, 2], locale, 'names');
+    expect(MultiSelectionStore).toBeCalledWith('tags', [1, 2], locale, 'names');
 });
 
 test('Search using store when new search value is retrieved from MultiAutoComplete component', () => {
@@ -355,7 +355,7 @@ test('Search using store when new search value is retrieved from MultiAutoComple
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = false;
         mockExtendObservable(this, {
@@ -387,7 +387,7 @@ test('Search using store with excluded ids when new search value is retrieved fr
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = false;
         mockExtendObservable(this, {
@@ -423,7 +423,7 @@ test('Call onChange and clear search result when chosen option has been selected
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = false;
         mockExtendObservable(this, {
@@ -466,7 +466,7 @@ test('Call onChange and clear search result when chosen option has been selected
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = false;
         mockExtendObservable(this, {
@@ -514,7 +514,7 @@ test('Should call disposer when component unmounts', () => {
     });
 
     // $FlowFixMe
-    SelectionStore.mockImplementation(function() {
+    MultiSelectionStore.mockImplementation(function() {
         this.set = jest.fn();
         this.loading = false;
         mockExtendObservable(this, {

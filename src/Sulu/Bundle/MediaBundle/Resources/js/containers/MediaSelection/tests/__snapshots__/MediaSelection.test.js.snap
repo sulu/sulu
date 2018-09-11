@@ -150,171 +150,169 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
 
 exports[`Render a MediaSelection field 1`] = `
 Array [
-  <div>
-    <div
-      class="header"
+  <div
+    class="header"
+  >
+    <button
+      class="button left"
+      type="button"
     >
-      <button
-        class="button left"
-        type="button"
+      <span
+        aria-label="su-image"
+        class="su-image"
+      />
+    </button>
+    <div
+      class="label"
+    >
+      3 media elements selected
+    </div>
+  </div>,
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
       >
         <span
-          aria-label="su-image"
-          class="su-image"
-        />
-      </button>
-      <div
-        class="label"
-      >
-        3 media elements selected
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="mediaSelectionItem"
+          >
+            <div
+              class="thumbnail"
+            >
+              <img
+                alt="http://lorempixel.com/25/25"
+                src="http://lorempixel.com/25/25"
+              />
+            </div>
+            Media 1
+          </div>
+        </div>
+        <button
+          class="removeButton"
+          type="button"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </button>
       </div>
-    </div>
-    <ul
-      class="list"
+    </li>
+    <li
+      class="listElement"
     >
-      <li
-        class="listElement"
+      <div
+        class="item"
       >
-        <div
-          class="item"
+        <span
+          class="dragHandle sortable"
         >
           <span
-            class="dragHandle sortable"
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
           >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              1
-            </span>
+            2
           </span>
+        </span>
+        <div
+          class="content"
+        >
           <div
-            class="content"
+            class="mediaSelectionItem"
           >
             <div
-              class="mediaSelectionItem"
+              class="thumbnail"
             >
-              <div
-                class="thumbnail"
-              >
-                <img
-                  alt="http://lorempixel.com/25/25"
-                  src="http://lorempixel.com/25/25"
-                />
-              </div>
-              Media 1
+              <img
+                alt="http://lorempixel.com/25/25"
+                src="http://lorempixel.com/25/25"
+              />
             </div>
+            Media 2
           </div>
-          <button
-            class="removeButton"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
         </div>
-      </li>
-      <li
-        class="listElement"
-      >
-        <div
-          class="item"
+        <button
+          class="removeButton"
+          type="button"
         >
           <span
-            class="dragHandle sortable"
-          >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              2
-            </span>
-          </span>
-          <div
-            class="content"
-          >
-            <div
-              class="mediaSelectionItem"
-            >
-              <div
-                class="thumbnail"
-              >
-                <img
-                  alt="http://lorempixel.com/25/25"
-                  src="http://lorempixel.com/25/25"
-                />
-              </div>
-              Media 2
-            </div>
-          </div>
-          <button
-            class="removeButton"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
-      </li>
-      <li
-        class="listElement"
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </button>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
       >
-        <div
-          class="item"
+        <span
+          class="dragHandle sortable"
         >
           <span
-            class="dragHandle sortable"
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
           >
-            <span
-              aria-label="su-more"
-              class="su-more"
-            />
-            <span
-              class="index"
-            >
-              3
-            </span>
+            3
           </span>
+        </span>
+        <div
+          class="content"
+        >
           <div
-            class="content"
+            class="mediaSelectionItem"
           >
             <div
-              class="mediaSelectionItem"
+              class="thumbnail"
             >
-              <div
-                class="thumbnail"
-              >
-                <img
-                  alt="http://lorempixel.com/25/25"
-                  src="http://lorempixel.com/25/25"
-                />
-              </div>
-              Media 3
+              <img
+                alt="http://lorempixel.com/25/25"
+                src="http://lorempixel.com/25/25"
+              />
             </div>
+            Media 3
           </div>
-          <button
-            class="removeButton"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
         </div>
-      </li>
-    </ul>
-  </div>,
+        <button
+          class="removeButton"
+          type="button"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </button>
+      </div>
+    </li>
+  </ul>,
   <div />,
 ]
 `;
