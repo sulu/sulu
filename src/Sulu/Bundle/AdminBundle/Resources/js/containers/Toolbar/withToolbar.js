@@ -13,8 +13,10 @@ export default function withToolbar<P, C: Class<Component<P>>>(
     const WithToolbarComponent = class extends Component {
         toolbarDisposer: Function;
 
-        constructor(props: P) {
-            super(props);
+        componentDidMount() {
+            if (super.componentDidMount) {
+                super.componentDidMount();
+            }
 
             if (super.hasOwnProperty('toolbarDisposer')) {
                 throw new Error('Component passed to withToolbar cannot declare a property called "toolbarDisposer".');

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {FieldTypeProps} from 'sulu-admin-bundle';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import SearchResultComponent from '../../../components/SearchResult';
 
 export default class SearchResult extends React.Component<FieldTypeProps<typeof undefined>> {
