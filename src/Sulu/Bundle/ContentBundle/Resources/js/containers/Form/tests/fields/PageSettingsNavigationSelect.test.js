@@ -4,7 +4,7 @@ import {shallow} from 'enzyme';
 import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import webspaceStore from '../../../../stores/WebspaceStore';
-import WebspaceNavigationSelect from '../../fields/WebspaceNavigationSelect';
+import PageSettingsNavigationSelect from '../../fields/PageSettingsNavigationSelect';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     FormInspector: jest.fn(function(formStore) {
@@ -38,8 +38,8 @@ test('Pass correct props to MultiSelect', () => {
     });
     webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
 
-    const webspaceNavigationSelect = shallow(
-        <WebspaceNavigationSelect
+    const pageSettingsNavigationSelect = shallow(
+        <PageSettingsNavigationSelect
             dataPath="/test"
             error={undefined}
             fieldTypeOptions={{}}
@@ -59,11 +59,11 @@ test('Pass correct props to MultiSelect', () => {
     expect(webspaceStore.loadWebspace).toBeCalledWith('sulu_io');
 
     return webspacePromise.then(() => {
-        expect(webspaceNavigationSelect.find('MultiSelect').prop('values')).toEqual(['footer']);
-        expect(webspaceNavigationSelect.find('Option').at(0).prop('children')).toEqual('Main Navigation');
-        expect(webspaceNavigationSelect.find('Option').at(0).prop('value')).toEqual('main');
-        expect(webspaceNavigationSelect.find('Option').at(1).prop('children')).toEqual('Footer Navigation');
-        expect(webspaceNavigationSelect.find('Option').at(1).prop('value')).toEqual('footer');
+        expect(pageSettingsNavigationSelect.find('MultiSelect').prop('values')).toEqual(['footer']);
+        expect(pageSettingsNavigationSelect.find('Option').at(0).prop('children')).toEqual('Main Navigation');
+        expect(pageSettingsNavigationSelect.find('Option').at(0).prop('value')).toEqual('main');
+        expect(pageSettingsNavigationSelect.find('Option').at(1).prop('children')).toEqual('Footer Navigation');
+        expect(pageSettingsNavigationSelect.find('Option').at(1).prop('value')).toEqual('footer');
     });
 });
 
@@ -81,8 +81,8 @@ test('Call onChange an onBlur if the value is changed', () => {
     });
     webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
 
-    const webspaceNavigationSelect = shallow(
-        <WebspaceNavigationSelect
+    const pageSettingsNavigationSelect = shallow(
+        <PageSettingsNavigationSelect
             dataPath="/test"
             error={undefined}
             fieldTypeOptions={{}}
@@ -100,7 +100,7 @@ test('Call onChange an onBlur if the value is changed', () => {
     );
 
     return webspacePromise.then(() => {
-        webspaceNavigationSelect.find('MultiSelect').prop('onChange')(['footer', 'main']);
+        pageSettingsNavigationSelect.find('MultiSelect').prop('onChange')(['footer', 'main']);
         expect(changeSpy).toBeCalledWith(['footer', 'main']);
         expect(finishSpy).toBeCalledWith();
     });

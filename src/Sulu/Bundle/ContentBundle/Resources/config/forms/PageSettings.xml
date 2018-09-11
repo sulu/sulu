@@ -2,7 +2,7 @@
 <properties xmlns="http://schemas.sulu.io/template/template"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
-    <property name="navContexts" type="webspace_navigation_select" colspan="6">
+    <property name="navContexts" type="page_settings_navigation_select" colspan="6">
         <meta>
             <title lang="en">Show page in</title>
             <title lang="de">Zeige Seite in</title>
@@ -42,6 +42,12 @@
                         </param>
                     </param>
                 </params>
+            </property>
+            <property name="title" type="page_settings_link_title">
+                <meta>
+                    <title lang="en">Link title</title>
+                    <title lang="de">Link Titel</title>
+                </meta>
             </property>
         </properties>
     </section>
