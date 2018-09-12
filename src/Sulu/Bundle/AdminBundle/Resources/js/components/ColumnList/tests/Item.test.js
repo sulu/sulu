@@ -8,11 +8,11 @@ test('Should render item as not selected by default', () => {
 });
 
 test('Should render item as selected', () => {
-    expect(render(<Item id={1} selected={true} order={2}>Test</Item>)).toMatchSnapshot();
+    expect(render(<Item id={1} order={2} selected={true}>Test</Item>)).toMatchSnapshot();
 });
 
 test('Should render item as disabled', () => {
-    expect(render(<Item id={1} disabled={true} order={3}>Test</Item>)).toMatchSnapshot();
+    expect(render(<Item disabled={true} id={1} order={3}>Test</Item>)).toMatchSnapshot();
 });
 
 test('Should render item with indicators', () => {

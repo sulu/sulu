@@ -38,14 +38,14 @@ export default class Phone extends React.PureComponent<Props> {
         return (
             <Input
                 icon="su-phone"
+                name={name}
+                onBlur={onBlur}
                 onChange={onChange}
-                value={value}
+                onIconClick={(value && value.length > 1) ? this.handleIconClick : undefined}
+                placeholder={placeholder}
                 type="tel"
                 valid={valid}
-                name={name}
-                placeholder={placeholder}
-                onBlur={onBlur}
-                onIconClick={(value && value.length > 1) ? this.handleIconClick : undefined}
+                value={value}
             />
         );
     }

@@ -122,7 +122,7 @@ export default class MultiSelection extends React.Component<Props> {
                     onItemsSorted={this.handleSorted}
                 >
                     {items.map((item, index) => (
-                        <MultiItemSelection.Item key={item.id} id={item.id} index={index + 1}>
+                        <MultiItemSelection.Item id={item.id} index={index + 1} key={item.id}>
                             <div>
                                 {displayProperties.map((displayProperty) => (
                                     <span
@@ -144,8 +144,8 @@ export default class MultiSelection extends React.Component<Props> {
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
-                    resourceKey={resourceKey}
                     preSelectedItems={items}
+                    resourceKey={resourceKey}
                     title={overlayTitle}
                 />
             </Fragment>

@@ -98,7 +98,7 @@ export default class Item extends React.Component<Props> {
             const key = `button-${index}`;
 
             return (
-                <ItemButton id={id} key={key} config={button} />
+                <ItemButton config={button} id={id} key={key} />
             );
         });
     };
@@ -116,7 +116,7 @@ export default class Item extends React.Component<Props> {
         );
 
         return (
-            <div onClick={this.handleClick} className={itemClass} role="button">
+            <div className={itemClass} onClick={this.handleClick} role="button">
                 {!showOrderField &&
                     <span className={itemStyles.buttons}>
                         {this.renderButtons()}
@@ -136,7 +136,7 @@ export default class Item extends React.Component<Props> {
                     <CroppedText>{children}</CroppedText>
                 </span>
                 {indicators && indicators.map((indicator, index) => (
-                    <span key={index} className={itemStyles.indicator}>
+                    <span className={itemStyles.indicator} key={index}>
                         {indicator}
                     </span>
                 ))}

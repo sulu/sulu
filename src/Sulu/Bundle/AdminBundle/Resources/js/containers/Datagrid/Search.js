@@ -77,15 +77,15 @@ export default class Search extends React.Component<Props> {
     render() {
         return (
             <Input
-                icon="su-search"
                 collapsed={this.collapsed}
+                icon="su-search"
                 onBlur={this.handleBlur}
                 onChange={this.handleChange}
+                onClearClick={this.handleClearClick}
                 onIconClick={this.handleIconClick}
                 onKeyPress={this.handleKeyPress}
-                onClearClick={this.handleClearClick}
-                skin="dark"
                 placeholder={translate('sulu_admin.datagrid_search_placeholder')}
+                skin="dark"
                 value={this.value}
             />
         );

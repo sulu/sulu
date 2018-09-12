@@ -37,12 +37,12 @@ export default class Radio extends React.PureComponent<Props> {
 
         return (
             <Switch
-                type="radio"
-                name={name}
-                value={value}
                 checked={checked}
-                onChange={this.handleChange}
                 className={radioClass}
+                name={name}
+                onChange={this.handleChange}
+                type="radio"
+                value={value}
             >
                 {children}
             </Switch>

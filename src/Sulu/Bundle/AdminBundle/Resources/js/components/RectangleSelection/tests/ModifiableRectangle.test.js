@@ -4,20 +4,20 @@ import React from 'react';
 import ModifiableRectangle from '../ModifiableRectangle';
 
 test('The component should render', () => {
-    const view = render(<ModifiableRectangle width={200} height={100} />);
+    const view = render(<ModifiableRectangle height={100} width={200} />);
 
     expect(view).toMatchSnapshot();
 });
 
 test('The component should render with correct positions', () => {
-    const view = render(<ModifiableRectangle width={200} height={100} left={10} top={20} />);
+    const view = render(<ModifiableRectangle height={100} left={10} top={20} width={200} />);
 
     expect(view).toMatchSnapshot();
 });
 
 test('The component should call the double click callback', () => {
     const clickSpy = jest.fn();
-    const rectangle = shallow(<ModifiableRectangle onDoubleClick={clickSpy} width={200} height={100} />);
+    const rectangle = shallow(<ModifiableRectangle height={100} onDoubleClick={clickSpy} width={200} />);
 
     rectangle.simulate('dblclick');
     expect(clickSpy).toHaveBeenCalledTimes(1);
@@ -28,7 +28,7 @@ test('The component should call the change callback on move', () => {
     const changeSpy = jest.fn();
     document.body.addEventListener = jest.fn((event, cb) => bodyListeners[event] = cb);
 
-    const rectangle = mount(<ModifiableRectangle onChange={changeSpy} width={200} height={100} />);
+    const rectangle = mount(<ModifiableRectangle height={100} onChange={changeSpy} width={200} />);
     expect(bodyListeners.mousemove).toBeDefined();
     expect(bodyListeners.mouseup).toBeDefined();
 
@@ -49,7 +49,7 @@ test('The component should call the change callback on resize', () => {
     const changeSpy = jest.fn();
     document.body.addEventListener = jest.fn((event, cb) => bodyListeners[event] = cb);
 
-    const rectangle = mount(<ModifiableRectangle onChange={changeSpy} width={200} height={100} />);
+    const rectangle = mount(<ModifiableRectangle height={100} onChange={changeSpy} width={200} />);
     const resizeHandle = rectangle.find('.resizeHandle');
     expect(bodyListeners.mousemove).toBeDefined();
     expect(bodyListeners.mouseup).toBeDefined();

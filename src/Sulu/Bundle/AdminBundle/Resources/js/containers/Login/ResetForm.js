@@ -68,21 +68,21 @@ export default class ResetForm extends React.Component<Props> {
                                 {translate('sulu_admin.username_or_email')}
                             </div>
                             <Input
-                                inputRef={this.setInputRef}
                                 icon="su-user"
-                                value={this.props.user}
+                                inputRef={this.setInputRef}
                                 onChange={this.props.onUserChange}
+                                value={this.props.user}
                             />
                         </label>
                         <div className={formStyles.buttons}>
-                            <Button skin="link" onClick={this.props.onChangeForm}>
+                            <Button onClick={this.props.onChangeForm} skin="link">
                                 {translate('sulu_admin.to_login')}
                             </Button>
                             <Button
                                 disabled={this.submitButtonDisabled}
-                                type="submit"
-                                skin="primary"
                                 loading={this.props.loading}
+                                skin="primary"
+                                type="submit"
                             >
                                 {this.props.success
                                     ? translate('sulu_admin.reset_resend') : translate('sulu_admin.reset')

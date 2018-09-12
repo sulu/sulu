@@ -49,9 +49,9 @@ export default class DisplayValue extends React.PureComponent<Props> {
 
         return (
             <button
-                ref={this.setButtonRef}
-                onClick={this.handleClick}
                 className={displayValueClass}
+                onClick={this.handleClick}
+                ref={this.setButtonRef}
                 type="button"
             >
                 {!!icon &&

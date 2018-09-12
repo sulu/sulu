@@ -61,31 +61,31 @@ export default class Navigation extends React.Component<Props> {
 
         return (
             <NavigationComponent
-                title="Sulu" // TODO: Get this dynamically from server
-                username={this.username}
-                userImage={this.userImage}
-                suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
-                suluVersionLink={SULU_CHANGELOG_URL}
                 onLogoutClick={this.props.onLogout}
                 onProfileClick={this.handleProfileEditClick}
+                suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
+                suluVersionLink={SULU_CHANGELOG_URL}
+                title="Sulu" // TODO: Get this dynamically from server
+                userImage={this.userImage}
+                username={this.username}
             >
                 {navigationItems.map((navigationItem: NavigationItem) => (
                     <NavigationComponent.Item
-                        key={navigationItem.id}
-                        value={navigationItem.id}
-                        title={navigationItem.label}
-                        icon={navigationItem.icon}
                         active={this.isItemActive(navigationItem)}
+                        icon={navigationItem.icon}
+                        key={navigationItem.id}
                         onClick={this.handleNavigationItemClick}
+                        title={navigationItem.label}
+                        value={navigationItem.id}
                     >
                         {Array.isArray(navigationItem.items) &&
                             navigationItem.items.map((subNavigationItem) => (
                                 <NavigationComponent.Item
-                                    key={subNavigationItem.id}
-                                    value={subNavigationItem.id}
-                                    title={subNavigationItem.label}
                                     active={this.isItemActive(subNavigationItem)}
+                                    key={subNavigationItem.id}
                                     onClick={this.handleNavigationItemClick}
+                                    title={subNavigationItem.label}
+                                    value={subNavigationItem.id}
                                 />
                             ))
                         }

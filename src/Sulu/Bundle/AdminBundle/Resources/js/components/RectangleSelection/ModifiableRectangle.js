@@ -18,9 +18,9 @@ type Props = {
 @observer
 export default class ModifiableRectangle extends React.Component<Props> {
     static defaultProps = {
+        backdropSize: 0,
         left: 0,
         top: 0,
-        backdropSize: 0,
     };
 
     @observable clickAnchor = {pageY: 0, pageX: 0};
@@ -99,8 +99,8 @@ export default class ModifiableRectangle extends React.Component<Props> {
         return (
             <div
                 className={modifiableRectangleStyles.rectangle}
-                onMouseDown={this.handleMoveMouseDown}
                 onDoubleClick={this.handleDoubleClick}
+                onMouseDown={this.handleMoveMouseDown}
                 style={style}
             >
                 <div

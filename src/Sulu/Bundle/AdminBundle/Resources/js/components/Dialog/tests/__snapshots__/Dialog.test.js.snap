@@ -81,7 +81,7 @@ exports[`The component should render in body with loader instead of confirm butt
         </article>
         <footer><button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\">Cancel</span></button><button class=\\"button primary loading\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Confirm</span>
             <div class=\\"loader\\">
-              <div style=\\"width: 25px; height: 25px;\\" class=\\"spinner\\">
+              <div class=\\"spinner\\" style=\\"width: 25px; height: 25px;\\">
                 <div class=\\"doubleBounce1\\"></div>
                 <div class=\\"doubleBounce2\\"></div>
               </div>

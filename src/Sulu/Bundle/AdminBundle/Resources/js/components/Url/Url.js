@@ -170,9 +170,9 @@ export default class Url extends React.Component<Props> {
                     </SingleSelect>
                 </div>
                 <input
-                    type="text"
                     onBlur={this.handlePathBlur}
                     onChange={this.handlePathChange}
+                    type="text"
                     value={this.path || ''}
                 />
             </div>

@@ -109,7 +109,7 @@ export default class Table extends React.Component<Props> {
 
         return (
             <div className={tableStyles.tablePlaceholderArea}>
-                <Icon name={PLACEHOLDER_ICON} className={tableStyles.tablePlaceholderIcon} />
+                <Icon className={tableStyles.tablePlaceholderIcon} name={PLACEHOLDER_ICON} />
                 {placeholderText &&
                     <div className={tableStyles.tablePlaceholderText}>
                         {placeholderText}

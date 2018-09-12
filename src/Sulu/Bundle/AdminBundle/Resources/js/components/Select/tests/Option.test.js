@@ -11,17 +11,17 @@ test('The component should render', () => {
 });
 
 test('The component should render in selected state', () => {
-    const option = render(<Option value="my-option" selected={true}>My option</Option>);
+    const option = render(<Option selected={true} value="my-option">My option</Option>);
     expect(option).toMatchSnapshot();
 });
 
 test('The component should render with checkbox', () => {
-    const option = render(<Option value="my-option" selectedVisualization="checkbox">My option</Option>);
+    const option = render(<Option selectedVisualization="checkbox" value="my-option">My option</Option>);
     expect(option).toMatchSnapshot();
 });
 
 test('The component should render in disabled state', () => {
-    const option = render(<Option value="my-option" disabled={true}>My option</Option>);
+    const option = render(<Option disabled={true} value="my-option">My option</Option>);
     expect(option).toMatchSnapshot();
 });
 

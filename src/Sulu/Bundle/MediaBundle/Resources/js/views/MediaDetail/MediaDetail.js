@@ -66,7 +66,7 @@ class MediaDetail extends React.Component<Props> {
                 {this.formStore.loading
                     ? <Loader />
                     : <Grid>
-                        <Grid.Section size={4} className={mediaDetailStyles.imageSection}>
+                        <Grid.Section className={mediaDetailStyles.imageSection} size={4}>
                             <Grid.Item>
                                 <SingleMediaUpload
                                     deletable={false}
@@ -80,9 +80,9 @@ class MediaDetail extends React.Component<Props> {
                         <Grid.Section size={8}>
                             <Grid.Item className={mediaDetailStyles.form}>
                                 <Form
+                                    onSubmit={this.handleSubmit}
                                     ref={this.setFormRef}
                                     store={this.formStore}
-                                    onSubmit={this.handleSubmit}
                                 />
                             </Grid.Item>
                         </Grid.Section>

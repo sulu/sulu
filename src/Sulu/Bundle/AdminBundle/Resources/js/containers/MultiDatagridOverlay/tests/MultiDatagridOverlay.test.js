@@ -11,7 +11,7 @@ jest.mock('../../../utils', () => ({
 }));
 
 jest.mock('../../../containers/DatagridOverlay', () => jest.fn(function DatagridOverlay(props) {
-    return <div className="datagrid" adapter={props.adapter} />;
+    return <div adapter={props.adapter} className="datagrid" />;
 }));
 
 jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(

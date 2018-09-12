@@ -28,7 +28,7 @@ export default class Breadcrumb extends React.PureComponent<Props> {
                         onClick: (!lastItem) ? this.handleItemClick : undefined,
                     })}
                     {!lastItem &&
-                        <Icon name={ICON_ANGLE_RIGHT} className={breadcrumbStyles.arrow} />
+                        <Icon className={breadcrumbStyles.arrow} name={ICON_ANGLE_RIGHT} />
                     }
                 </li>
             );

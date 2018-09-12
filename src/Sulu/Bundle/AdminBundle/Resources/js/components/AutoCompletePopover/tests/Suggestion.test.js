@@ -18,9 +18,9 @@ test('Suggestion should render', () => {
 test('Suggestion should render strong-tags around found chars', () => {
     expect(render(
         <Suggestion
-            query="sug"
             icon="fa-ticket"
             onSelect={jest.fn()}
+            query="sug"
             value={{name: 'suggestion-1'}}
         >
             Suggestion 2
@@ -32,10 +32,10 @@ test('Clicking on a suggestion should call the onClick handler', () => {
     const selectSpy = jest.fn();
     const suggestion = shallow(
         <Suggestion
-            query="sug"
             icon="fa-ticket"
-            value={{name: 'suggestion-1'}}
             onSelect={selectSpy}
+            query="sug"
+            value={{name: 'suggestion-1'}}
         >
             {() => (
                 <div>Suggestion 3</div>
@@ -50,9 +50,9 @@ test('Clicking on a suggestion should call the onClick handler', () => {
 test('Should highlight the part of the suggestion text which matches the query prop', () => {
     const suggestion = shallow(
         <Suggestion
-            query="sug"
             icon="fa-ticket"
             onSelect={jest.fn()}
+            query="sug"
             value={{name: 'suggestion-1'}}
         >
             {(highlight) => (

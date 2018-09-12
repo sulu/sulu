@@ -220,9 +220,9 @@ class Form extends React.Component<Props> {
         return (
             <div className={formStyles.form}>
                 <FormContainer
+                    onSubmit={this.handleSubmit}
                     ref={this.setFormRef}
                     store={this.formStore}
-                    onSubmit={this.handleSubmit}
                 />
                 {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
             </div>
@@ -270,8 +270,8 @@ export default withToolbar(Form, function() {
         const {publishedState, published} = formData;
         icons.push(
             <PublishIndicator
-                key={'publish'}
                 draft={publishedState === undefined ? false : !publishedState}
+                key={'publish'}
                 published={published === undefined ? false : !!published}
             />
         );

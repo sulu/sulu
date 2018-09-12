@@ -24,8 +24,8 @@ export default class TextArea extends React.Component<FieldTypeProps<?string>> {
         return (
             <TextAreaComponent
                 maxCharacters={maxCharacters ? parseInt(maxCharacters) : undefined}
-                onChange={onChange}
                 onBlur={onFinish}
+                onChange={onChange}
                 valid={!error}
                 value={value}
             />

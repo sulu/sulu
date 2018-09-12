@@ -171,8 +171,8 @@ export default class MultiAutoComplete extends React.Component<Props> {
                     <div className={multiAutoCompleteStyles.items}>
                         {value.map((item) => (
                             <Item
-                                onDelete={this.handleDelete}
                                 key={item[idProperty]}
+                                onDelete={this.handleDelete}
                                 value={item}
                             >
                                 {item[displayProperty]}
@@ -180,10 +180,10 @@ export default class MultiAutoComplete extends React.Component<Props> {
                         ))}
                         <input
                             className={inputClass}
-                            ref={this.setInputRef}
                             onBlur={this.handleInputBlur}
                             onChange={this.handleInputChange}
                             onFocus={this.handleInputFocus}
+                            ref={this.setInputRef}
                             value={this.inputValue}
                         />
                     </div>

@@ -102,14 +102,14 @@ export default class Selection extends React.Component<Props> {
         return (
             <MultiSelectionComponent
                 adapter={adapter}
-                displayProperties={displayProperties}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
+                displayProperties={displayProperties}
                 icon={icon}
                 label={translate(label, {count: value ? value.length : 0})}
                 locale={formInspector.locale}
                 onChange={this.handleSelectionChange}
-                resourceKey={resourceKey}
                 overlayTitle={translate(overlayTitle)}
+                resourceKey={resourceKey}
                 value={value || []}
             />
         );

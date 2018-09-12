@@ -54,8 +54,8 @@ class SortableBlocks extends React.Component<Props> {
                         expanded={expandedBlocks[index]}
                         index={index}
                         key={block.__id}
-                        onExpand={this.handleExpand}
                         onCollapse={this.handleCollapse}
+                        onExpand={this.handleExpand}
                         onRemove={onRemove ? this.handleRemove : undefined}
                         onTypeChange={this.handleTypeChange}
                         renderBlockContent={renderBlockContent}

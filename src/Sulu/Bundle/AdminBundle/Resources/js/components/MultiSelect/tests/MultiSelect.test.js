@@ -13,8 +13,8 @@ test('The component should render a generic select', () => {
     const onChange = jest.fn();
     const select = shallow(
         <MultiSelect
-            noneSelectedText="None selected"
             allSelectedText="All selected"
+            noneSelectedText="None selected"
             onChange={onChange}
         >
             <Option value="option-1">Option 1</Option>
@@ -30,8 +30,8 @@ test('The component should pass the correct display value if nothing is selected
     const onChange = jest.fn();
     const select = shallow(
         <MultiSelect
-            noneSelectedText="None selected"
             allSelectedText="All selected"
+            noneSelectedText="None selected"
             onChange={onChange}
         >
             <Option value="option-1">Option 1</Option>
@@ -48,10 +48,10 @@ test('The component should pass the correct display value if everything is selec
     const onChange = jest.fn();
     const select = shallow(
         <MultiSelect
-            values={['option-1', 'option-2', 'option-3']}
-            noneSelectedText="None selected"
             allSelectedText="All selected"
+            noneSelectedText="None selected"
             onChange={onChange}
+            values={['option-1', 'option-2', 'option-3']}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -67,10 +67,10 @@ test('The component should pass the correct display value if some options are se
     const onChange = jest.fn();
     const select = shallow(
         <MultiSelect
-            values={['option-1', 'option-2']}
-            noneSelectedText="None selected"
             allSelectedText="All selected"
+            noneSelectedText="None selected"
             onChange={onChange}
+            values={['option-1', 'option-2']}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -86,10 +86,10 @@ test('The component should select the correct option', () => {
     const onChange = jest.fn();
     const select = shallow(
         <MultiSelect
-            values={['option-1', 'option-2']}
-            noneSelectedText="None selected"
             allSelectedText="All selected"
+            noneSelectedText="None selected"
             onChange={onChange}
+            values={['option-1', 'option-2']}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -107,10 +107,10 @@ test('The component should trigger the change callback on select with an added v
     const onChangeSpy = jest.fn();
     const select = shallow(
         <MultiSelect
-            values={['option-1', 'option-2']}
-            noneSelectedText="None selected"
             allSelectedText="All selected"
+            noneSelectedText="None selected"
             onChange={onChangeSpy}
+            values={['option-1', 'option-2']}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -126,10 +126,10 @@ test('The component should trigger the change callback on select with a removed 
     const onChangeSpy = jest.fn();
     const select = shallow(
         <MultiSelect
-            values={['option-1', 'option-2']}
-            noneSelectedText="None selected"
             allSelectedText="All selected"
+            noneSelectedText="None selected"
             onChange={onChangeSpy}
+            values={['option-1', 'option-2']}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>

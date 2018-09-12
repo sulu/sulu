@@ -56,7 +56,7 @@ test('Should render form using renderer', () => {
     const submitSpy = jest.fn();
     const store = new FormStore(new ResourceStore('snippet', '1'));
 
-    const form = render(<Form store={store} onSubmit={submitSpy} />);
+    const form = render(<Form onSubmit={submitSpy} store={store} />);
     expect(form).toMatchSnapshot();
 });
 
@@ -248,7 +248,7 @@ test('Should change data on store without sections', () => {
         },
     };
 
-    const form = mount(<Form store={store} onSubmit={submitSpy} />);
+    const form = mount(<Form onSubmit={submitSpy} store={store} />);
     form.find('Input').at(0).instance().handleChange({currentTarget: {value: 'value!'}});
 
     expect(store.change).toBeCalledWith('item11', 'value!');

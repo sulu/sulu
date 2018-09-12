@@ -16,10 +16,10 @@ type Props = {
 
 export default class Backdrop extends React.PureComponent<Props> {
     static defaultProps = {
+        fixed: true,
+        local: false,
         open: true,
         visible: true,
-        local: false,
-        fixed: true,
     };
 
     handleClick = () => {
@@ -42,7 +42,7 @@ export default class Backdrop extends React.PureComponent<Props> {
                 [backdropStyles.fixed]: fixed,
             }
         );
-        const backdrop = <div onClick={this.handleClick} className={backdropClass} />;
+        const backdrop = <div className={backdropClass} onClick={this.handleClick} />;
 
         if (!open) {
             return null;

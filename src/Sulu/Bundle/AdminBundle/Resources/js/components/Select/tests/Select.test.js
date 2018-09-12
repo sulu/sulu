@@ -15,9 +15,9 @@ test('The component should render with the popover closed', () => {
     const onSelect = jest.fn();
     const select = mount(
         <Select
-            onSelect={onSelect}
-            isOptionSelected={isOptionSelected}
             displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -35,10 +35,10 @@ test('The component should render with an icon', () => {
     const onSelect = jest.fn();
     const select = mount(
         <Select
-            icon="su-plus"
-            onSelect={onSelect}
-            isOptionSelected={isOptionSelected}
             displayValue="My text"
+            icon="su-plus"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -56,9 +56,9 @@ test('The component should open the popover when the display value is clicked', 
     const onSelect = jest.fn();
     const select = mount(
         <Select
-            onSelect={onSelect}
-            isOptionSelected={isOptionSelected}
             displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -82,9 +82,9 @@ test('The component should trigger the select callback and close the popover whe
     const isOptionSelected = jest.fn().mockReturnValue(false);
     const select = mount(
         <Select
-            onSelect={onSelect}
-            isOptionSelected={isOptionSelected}
             displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -104,9 +104,9 @@ test('The component should pass the centered child node to the popover', () => {
     const selectedOption = (<Option value="option-3">Option 3</Option>);
     const select = mount(
         <Select
-            onSelect={onSelect}
-            isOptionSelected={isOptionSelected}
             displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -124,9 +124,9 @@ test('The component should pass the selected property to the options', () => {
     const onSelect = jest.fn();
     const select = mount(
         <Select
-            onSelect={onSelect}
-            isOptionSelected={isOptionSelected}
             displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>

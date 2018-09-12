@@ -98,9 +98,9 @@ export default class Field extends React.Component<Props> {
                 <FieldType
                     dataPath={dataPath}
                     error={error}
-                    label={label || name}
                     fieldTypeOptions={fieldTypeOptions}
                     formInspector={formInspector}
+                    label={label || name}
                     maxOccurs={maxOccurs}
                     minOccurs={minOccurs}
                     onChange={this.handleChange}

@@ -14,11 +14,11 @@ exports[`Should render a Dialog 1`] = `
             <p></p><label class=\\"label\\"></label>
             <div class=\\"localeSelect\\">
               <div class=\\"select\\"><button class=\\"displayValue default\\" type=\\"button\\">
-                  <div title=\\"en\\" aria-label=\\"en\\" class=\\"croppedText\\">
-                    <div class=\\"front\\" aria-hidden=\\"true\\">e</div>
-                    <div class=\\"back\\" aria-hidden=\\"true\\"><span>n</span></div>
+                  <div aria-label=\\"en\\" class=\\"croppedText\\" title=\\"en\\">
+                    <div aria-hidden=\\"true\\" class=\\"front\\">e</div>
+                    <div aria-hidden=\\"true\\" class=\\"back\\"><span>n</span></div>
                     <div class=\\"whole\\">en</div>
-                  </div><span class=\\"toggle su-angle-down\\" aria-label=\\"su-angle-down\\"></span>
+                  </div><span aria-label=\\"su-angle-down\\" class=\\"toggle su-angle-down\\"></span>
                 </button></div>
             </div>
           </div>

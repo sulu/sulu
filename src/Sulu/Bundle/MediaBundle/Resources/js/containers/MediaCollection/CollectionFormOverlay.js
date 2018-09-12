@@ -75,22 +75,22 @@ export default class CollectionFormOverlay extends React.Component<Props> {
         const cancelText = translate('sulu_admin.cancel');
         const form = (
             <Form
+                onSubmit={this.handleSubmit}
                 ref={this.setFormRef}
                 store={this.formStore}
-                onSubmit={this.handleSubmit}
             />
         );
 
         if (overlayType === 'dialog') {
             return (
                 <Dialog
+                    cancelText={cancelText}
+                    confirmLoading={resourceStore.saving}
+                    confirmText={confirmText}
+                    onCancel={this.handleClose}
+                    onConfirm={this.handleConfirm}
                     open={open}
                     title={this.title}
-                    onConfirm={this.handleConfirm}
-                    confirmText={confirmText}
-                    confirmLoading={resourceStore.saving}
-                    cancelText={cancelText}
-                    onCancel={this.handleClose}
                 >
                     {form}
                 </Dialog>
@@ -99,12 +99,12 @@ export default class CollectionFormOverlay extends React.Component<Props> {
 
         return (
             <Overlay
-                open={open}
-                title={this.title}
+                confirmLoading={resourceStore.saving}
+                confirmText={confirmText}
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}
-                confirmText={confirmText}
-                confirmLoading={resourceStore.saving}
+                open={open}
+                title={this.title}
             >
                 <div className={collectionFormOverlayStyles.overlay}>
                     {form}

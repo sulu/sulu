@@ -40,18 +40,18 @@ beforeEach(() => {
 
 test('Show with default plus icon', () => {
     expect(render(
-        <MultiSelection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />)
-    ).toMatchSnapshot();
+        <MultiSelection adapter="table" onChange={jest.fn()} overlayTitle="Selection" resourceKey="snippets" />
+    )).toMatchSnapshot();
 });
 
 test('Show with passed label', () => {
     expect(render(
         <MultiSelection
             adapter="column_list"
-            onChange={jest.fn()}
             label="Select Snippets"
-            resourceKey="snippets"
+            onChange={jest.fn()}
             overlayTitle="Selection"
+            resourceKey="snippets"
         />
     )).toMatchSnapshot();
 });
@@ -60,10 +60,10 @@ test('Show with passed icon', () => {
     expect(render(
         <MultiSelection
             adapter="table"
-            onChange={jest.fn()}
             icon="su-document"
-            resourceKey="snippets"
+            onChange={jest.fn()}
             overlayTitle="Selection"
+            resourceKey="snippets"
         />
     )).toMatchSnapshot();
 });
@@ -73,10 +73,10 @@ test('Pass locale to MultiDatagridOverlay', () => {
     const selection = mount(
         <MultiSelection
             adapter="table"
-            onChange={jest.fn()}
             locale={locale}
-            resourceKey="snippets"
+            onChange={jest.fn()}
             overlayTitle="Selection"
+            resourceKey="snippets"
         />
     );
 
@@ -111,10 +111,10 @@ test('Show with passed values as items in right locale', () => {
         <MultiSelection
             adapter="table"
             displayProperties={['id', 'title']}
-            onChange={jest.fn()}
             locale={locale}
-            resourceKey="snippets"
+            onChange={jest.fn()}
             overlayTitle="Selection"
+            resourceKey="snippets"
             value={[1, 2, 5]}
         />
     )).toMatchSnapshot();
@@ -124,7 +124,7 @@ test('Show with passed values as items in right locale', () => {
 
 test('Should open an overlay', () => {
     const selection = mount(
-        <MultiSelection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />
+        <MultiSelection adapter="table" onChange={jest.fn()} overlayTitle="Selection" resourceKey="snippets" />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -138,8 +138,8 @@ test('Should close an overlay using the close button', () => {
         <MultiSelection
             adapter="table"
             onChange={jest.fn()}
-            resourceKey="snippets"
             overlayTitle="Selection"
+            resourceKey="snippets"
         />
     );
 
@@ -156,7 +156,7 @@ test('Should close an overlay using the close button', () => {
 
 test('Should close an overlay using the confirm button', () => {
     const selection = mount(
-        <MultiSelection adapter="table" onChange={jest.fn()} resourceKey="snippets" overlayTitle="Selection" />
+        <MultiSelection adapter="table" onChange={jest.fn()} overlayTitle="Selection" resourceKey="snippets" />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -173,7 +173,7 @@ test('Should close an overlay using the confirm button', () => {
 test('Should call the onChange callback when clicking the confirm button', () => {
     const changeSpy = jest.fn();
     const selection = mount(
-        <MultiSelection adapter="table" onChange={changeSpy} resourceKey="snippets" overlayTitle="Selection" />
+        <MultiSelection adapter="table" onChange={changeSpy} overlayTitle="Selection" resourceKey="snippets" />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -194,8 +194,8 @@ test('Should not call the onChange callback when items have not changed', () => 
         <MultiSelection
             adapter="table"
             onChange={changeSpy}
-            resourceKey="snippets"
             overlayTitle="Selection"
+            resourceKey="snippets"
             value={[1]}
         />
     );
@@ -213,8 +213,8 @@ test('Should load the items if value prop changes', () => {
         <MultiSelection
             adapter="table"
             onChange={changeSpy}
-            resourceKey="snippets"
             overlayTitle="Selection"
+            resourceKey="snippets"
             value={[1]}
         />
     );
@@ -225,7 +225,7 @@ test('Should load the items if value prop changes', () => {
 
 test('Should instantiate the DatagridStore with the correct resourceKey and destroy it on unmount', () => {
     const selection = mount(
-        <MultiSelection adapter="table" onChange={jest.fn()} resourceKey="pages" overlayTitle="Selection" />
+        <MultiSelection adapter="table" onChange={jest.fn()} overlayTitle="Selection" resourceKey="pages" />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -247,9 +247,9 @@ test('Should instantiate the DatagridStore with the preselected ids', () => {
         <MultiSelection
             adapter="table"
             onChange={jest.fn()}
-            value={[1, 5, 8]}
-            resourceKey="pages"
             overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
         />
     );
 
@@ -273,11 +273,11 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     const selection = mount(
         <MultiSelection
             adapter="table"
-            onChange={jest.fn()}
             locale={locale}
-            value={[1, 5, 8]}
-            resourceKey="pages"
+            onChange={jest.fn()}
             overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
         />
     );
 
@@ -305,11 +305,11 @@ test('Should not reload items if none of the items changed', () => {
     const selection = mount(
         <MultiSelection
             adapter="table"
-            onChange={jest.fn()}
             locale={locale}
-            value={[1, 5, 8]}
-            resourceKey="pages"
+            onChange={jest.fn()}
             overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
         />
     );
 
@@ -336,11 +336,11 @@ test('Should not reinstantiate the DatagridStore with the preselected ids when n
     const selection = mount(
         <MultiSelection
             adapter="table"
-            onChange={jest.fn()}
             locale={locale}
-            value={[1, 5, 8]}
-            resourceKey="pages"
+            onChange={jest.fn()}
             overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
         />
     );
 
@@ -356,9 +356,9 @@ test('Should remove an item when the remove button is clicked', () => {
         <MultiSelection
             adapter="table"
             onChange={changeSpy}
+            overlayTitle="Selection"
             resourceKey="snippets"
             value={[3, 7, 9]}
-            overlayTitle="Selection"
         />
     );
 
@@ -372,9 +372,9 @@ test('Should reorder the items on drag and drop', () => {
         <MultiSelection
             adapter="table"
             onChange={changeSpy}
+            overlayTitle="Selection"
             resourceKey="snippets"
             value={[3, 7, 9]}
-            overlayTitle="Selection"
         />
     );
 

@@ -14,7 +14,7 @@ test('The component should render in checked state', () => {
 });
 
 test('The component should render with class', () => {
-    const component = render(<Switch className="my-class" checked={false} />);
+    const component = render(<Switch checked={false} className="my-class" />);
     expect(component).toMatchSnapshot();
 });
 
@@ -24,17 +24,17 @@ test('The component should render in inactive state', () => {
 });
 
 test('The component should render with name', () => {
-    const component = render(<Switch name="my-name" checked={false} />);
+    const component = render(<Switch checked={false} name="my-name" />);
     expect(component).toMatchSnapshot();
 });
 
 test('The component should render without a label container', () => {
-    const component = render(<Switch name="my-name" checked={false} />);
+    const component = render(<Switch checked={false} name="my-name" />);
     expect(component).toMatchSnapshot();
 });
 
 test('The component should render with radio type', () => {
-    const component = render(<Switch type="radio" className="my-class" checked={false} />);
+    const component = render(<Switch checked={false} className="my-class" type="radio" />);
     expect(component).toMatchSnapshot();
 });
 
@@ -49,7 +49,7 @@ test('A click on the checkbox should trigger the change callback', () => {
 
 test('A click on the checkbox should trigger the change callback with the value', () => {
     const onChangeSpy = jest.fn();
-    const component = shallow(<Switch checked={false} value="my-value" onChange={onChangeSpy} />);
+    const component = shallow(<Switch checked={false} onChange={onChangeSpy} value="my-value" />);
     component.find('input').simulate('change', {currentTarget: {checked: true}});
     expect(onChangeSpy).toHaveBeenCalledWith(true, 'my-value');
     component.find('input').simulate('change', {currentTarget: {checked: false}});

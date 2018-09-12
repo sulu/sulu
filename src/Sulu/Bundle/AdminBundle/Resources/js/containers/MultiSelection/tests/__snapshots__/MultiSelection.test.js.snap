@@ -9,7 +9,7 @@ exports[`Should open an overlay 1`] = `
     <div class=\\"overlay large\\">
       <section class=\\"content\\">
         <header>
-          <h2>Selection</h2><span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>Selection</h2><span aria-label=\\"su-times\\" class=\\"icon su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span>
         </header>
         <article>
           <div class=\\"adapterContainer overlay table\\">

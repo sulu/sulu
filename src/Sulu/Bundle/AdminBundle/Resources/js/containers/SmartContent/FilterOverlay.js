@@ -222,8 +222,8 @@ export default class FilterOverlay extends React.Component<Props> {
                     onClose={onClose}
                     onConfirm={this.handleConfirm}
                     open={open}
-                    title={title}
                     size="small"
+                    title={title}
                 >
                     <div className={filterOverlayStyles.content}>
                         {sections.includes('datasource') &&

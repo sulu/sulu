@@ -97,14 +97,14 @@ export default class Login extends React.Component<Props> {
         if (this.loginFormVisible) {
             return (
                 <LoginForm
+                    error={userStore.loginError}
                     loading={userStore.loading}
-                    user={this.user}
-                    password={this.password}
+                    onChangeForm={this.handleChangeToResetForm}
+                    onPasswordChange={this.handlePasswordChange}
                     onSubmit={this.handleLoginFormSubmit}
                     onUserChange={this.handleUserChange}
-                    onPasswordChange={this.handlePasswordChange}
-                    onChangeForm={this.handleChangeToResetForm}
-                    error={userStore.loginError}
+                    password={this.password}
+                    user={this.user}
                 />
             );
         }
@@ -113,11 +113,11 @@ export default class Login extends React.Component<Props> {
             return (
                 <ResetForm
                     loading={userStore.loading}
-                    user={this.user}
+                    onChangeForm={this.handleChangeToLoginForm}
                     onSubmit={this.handleResetFormSubmit}
                     onUserChange={this.handleUserChange}
-                    onChangeForm={this.handleChangeToLoginForm}
                     success={userStore.resetSuccess}
+                    user={this.user}
                 />
             );
         }
@@ -132,7 +132,7 @@ export default class Login extends React.Component<Props> {
 
         return (
             <a className={loginStyles.backLink} href={backLink}>
-                <Icon name={BACK_LINK_ARROW_LEFT_ICON} className={loginStyles.backLinkIcon} />
+                <Icon className={loginStyles.backLinkIcon} name={BACK_LINK_ARROW_LEFT_ICON} />
                 {translate('sulu_admin.back_to_website')}
             </a>
         );

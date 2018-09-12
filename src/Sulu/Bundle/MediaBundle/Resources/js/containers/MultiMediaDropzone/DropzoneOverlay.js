@@ -48,11 +48,11 @@ export default class DropzoneOverlay extends React.Component<Props> {
                         {children &&
                             <div
                                 className={dropzoneOverlayStyles.uploadInfo}
+                                onClick={this.handleClick}
                                 role="button"
                                 tabIndex="0"
-                                onClick={this.handleClick}
                             >
-                                <Icon name={UPLOAD_ICON} className={dropzoneOverlayStyles.uploadIcon} />
+                                <Icon className={dropzoneOverlayStyles.uploadIcon} name={UPLOAD_ICON} />
                                 <h3 className={dropzoneOverlayStyles.uploadInfoHeadline}>
                                     {translate('sulu_media.drop_files_to_upload')}
                                 </h3>

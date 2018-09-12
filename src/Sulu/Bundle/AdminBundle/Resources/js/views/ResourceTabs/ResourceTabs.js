@@ -71,7 +71,7 @@ export default class ResourceTabs extends React.Component<Props> {
 
         return (
             <Fragment>
-                <Tabs selectedIndex={selectedRouteIndex} onSelect={this.handleSelect}>
+                <Tabs onSelect={this.handleSelect} selectedIndex={selectedRouteIndex}>
                     {route.children.map((childRoute) => {
                         const tabTitle = childRoute.options.tabTitle;
                         return (

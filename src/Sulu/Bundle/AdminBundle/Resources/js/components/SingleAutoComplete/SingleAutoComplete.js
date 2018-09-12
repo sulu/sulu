@@ -96,18 +96,18 @@ export default class SingleAutoComplete extends React.Component<Props> {
                 <Input
                     icon={LENS_ICON}
                     inputClass="mousetrap"
-                    value={inputValue}
-                    loading={loading}
                     labelRef={this.setLabelRef}
-                    onChange={this.handleInputChange}
+                    loading={loading}
                     onBlur={onFinish}
+                    onChange={this.handleInputChange}
                     placeholder={placeholder}
+                    value={inputValue}
                 />
                 <AutoCompletePopover
                     anchorElement={this.labelRef}
                     minWidth={this.popoverMinWidth}
-                    open={showSuggestionList}
                     onSelect={this.handleSelect}
+                    open={showSuggestionList}
                     query={inputValue}
                     searchProperties={searchProperties}
                     suggestions={suggestions}

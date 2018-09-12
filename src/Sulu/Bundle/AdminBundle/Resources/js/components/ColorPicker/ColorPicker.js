@@ -122,35 +122,35 @@ export default class ColorPicker extends React.Component<Props> {
         return (
             <Fragment>
                 <Input
-                    onBlur={this.handleBlur}
-                    onChange={this.handleInputChange}
-                    onIconClick={this.handlePopoverOpen}
                     icon="su-square"
                     iconClassName={colorPickerStyles.icon}
                     iconStyle={iconStyle}
                     labelRef={this.setRef}
                     name={name}
+                    onBlur={this.handleBlur}
+                    onChange={this.handleInputChange}
+                    onIconClick={this.handlePopoverOpen}
                     placeholder={placeholder}
                     valid={valid && !this.showError}
                     value={this.value}
                 />
                 <Popover
                     anchorElement={this.popoverAnchorElement}
-                    open={this.popoverOpen}
-                    onClose={this.handlePopoverClose}
                     horizontalOffset={35}
+                    onClose={this.handlePopoverClose}
+                    open={this.popoverOpen}
                     verticalOffset={-30}
                 >
                     {
                         (setPopoverElementRef, popoverStyle) => (
                             <div
-                                style={popoverStyle}
                                 ref={setPopoverElementRef}
+                                style={popoverStyle}
                             >
                                 <SketchPicker
                                     color={this.value ? this.value : undefined}
-                                    onChangeComplete={this.handleChange}
                                     disableAlpha={true}
+                                    onChangeComplete={this.handleChange}
                                     presetColors={[]}
                                 />
                             </div>

@@ -24,8 +24,8 @@ type Props = {
 @observer
 export default class LoginForm extends React.Component<Props> {
     static defaultProps = {
-        loading: false,
         error: false,
+        loading: false,
     };
 
     @observable inputRef: ?ElementRef<*>;
@@ -78,11 +78,11 @@ export default class LoginForm extends React.Component<Props> {
                                 {translate('sulu_admin.username_or_email')}
                             </div>
                             <Input
-                                inputRef={this.setInputRef}
-                                valid={!this.props.error}
                                 icon="su-user"
-                                value={this.props.user}
+                                inputRef={this.setInputRef}
                                 onChange={this.props.onUserChange}
+                                valid={!this.props.error}
+                                value={this.props.user}
                             />
                         </label>
                         <label className={inputFieldClass}>
@@ -90,22 +90,22 @@ export default class LoginForm extends React.Component<Props> {
                                 {translate('sulu_admin.password')}
                             </div>
                             <Input
-                                valid={!this.props.error}
                                 icon="su-lock"
-                                type="password"
-                                value={this.props.password}
                                 onChange={this.props.onPasswordChange}
+                                type="password"
+                                valid={!this.props.error}
+                                value={this.props.password}
                             />
                         </label>
                         <div className={formStyles.buttons}>
-                            <Button skin="link" onClick={this.props.onChangeForm}>
+                            <Button onClick={this.props.onChangeForm} skin="link">
                                 {translate('sulu_admin.forgot_password')}
                             </Button>
                             <Button
                                 disabled={this.submitButtonDisabled}
-                                type="submit"
-                                skin="primary"
                                 loading={this.props.loading}
+                                skin="primary"
+                                type="submit"
                             >
                                 {translate('sulu_admin.login')}
                             </Button>

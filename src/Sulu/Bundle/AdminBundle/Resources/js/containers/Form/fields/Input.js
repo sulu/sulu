@@ -42,8 +42,8 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
             <InputComponent
                 maxCharacters={maxCharacters ? parseInt(maxCharacters) : undefined}
                 maxSegments={maxSegments ? parseInt(maxSegments) : undefined}
-                onChange={onChange}
                 onBlur={this.handleBlur}
+                onChange={onChange}
                 segmentDelimiter={segmentDelimiter}
                 valid={!error}
                 value={value}

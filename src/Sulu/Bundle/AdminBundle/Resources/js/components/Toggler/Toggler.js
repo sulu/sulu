@@ -20,11 +20,11 @@ export default class Toggler extends React.PureComponent<Props> {
 
         return (
             <Switch
-                className={togglerStyles.toggler}
                 checked={checked}
-                value={value}
+                className={togglerStyles.toggler}
                 name={name}
                 onChange={onChange}
+                value={value}
             >
                 {children}
             </Switch>

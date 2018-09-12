@@ -12,12 +12,12 @@ jest.mock('../../../utils/Translator', () => ({
 test('Should render the component', () => {
     expect(render(
         <LoginForm
-            user={undefined}
-            password={undefined}
             onChangeForm={jest.fn()}
             onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            password={undefined}
+            user={undefined}
         />)
     ).toMatchSnapshot();
 });
@@ -25,12 +25,12 @@ test('Should render the component', () => {
 test('Should render the component with data', () => {
     expect(render(
         <LoginForm
-            user="test"
-            password="test"
             onChangeForm={jest.fn()}
             onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            password="test"
+            user="test"
         />)
     ).toMatchSnapshot();
 });
@@ -39,12 +39,12 @@ test('Should render the component loading', () => {
     expect(render(
         <LoginForm
             error={true}
-            user="test"
-            password="test"
             onChangeForm={jest.fn()}
             onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            password="test"
+            user="test"
         />)
     ).toMatchSnapshot();
 });
@@ -53,12 +53,12 @@ test('Should render the component with error', () => {
     expect(render(
         <LoginForm
             error={true}
-            user="test"
-            password="test"
             onChangeForm={jest.fn()}
             onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            password="test"
+            user="test"
         />)
     ).toMatchSnapshot();
 });
@@ -67,12 +67,12 @@ test('Should trigger onUserChange correctly', () => {
     const onUserChange = jest.fn();
     const loginForm = shallow(
         <LoginForm
-            user="test"
-            password="test"
             onChangeForm={jest.fn()}
             onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={onUserChange}
+            password="test"
+            user="test"
         />
     );
 
@@ -85,12 +85,12 @@ test('Should trigger onPasswordChange correctly', () => {
     const onPasswordChange = jest.fn();
     const loginForm = shallow(
         <LoginForm
-            user="test"
-            password="test"
             onChangeForm={jest.fn()}
             onPasswordChange={onPasswordChange}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            password="test"
+            user="test"
         />
     );
 
@@ -103,12 +103,12 @@ test('Should trigger onChangeForm correctly', () => {
     const onChangeForm = jest.fn();
     const loginForm = shallow(
         <LoginForm
-            user="test"
-            password="test"
             onChangeForm={onChangeForm}
             onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
             onUserChange={jest.fn()}
+            password="test"
+            user="test"
         />
     );
 
@@ -121,12 +121,12 @@ test('Should trigger onSubmit correctly', () => {
     const onSubmit = jest.fn();
     const loginForm = shallow(
         <LoginForm
-            user="test"
-            password="test"
             onChangeForm={jest.fn()}
             onPasswordChange={jest.fn()}
             onSubmit={onSubmit}
             onUserChange={jest.fn()}
+            password="test"
+            user="test"
         />
     );
     loginForm.find('form').simulate('submit');

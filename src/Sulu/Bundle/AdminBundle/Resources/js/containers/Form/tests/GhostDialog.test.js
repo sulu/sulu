@@ -17,7 +17,7 @@ afterEach(() => {
 test('Should render a Dialog', () => {
     const body = document.body;
 
-    mount(<GhostDialog onCancel={jest.fn()} onConfirm={jest.fn()} open={true} locales={['en', 'de']} />);
+    mount(<GhostDialog locales={['en', 'de']} onCancel={jest.fn()} onConfirm={jest.fn()} open={true} />);
 
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
@@ -25,7 +25,7 @@ test('Should render a Dialog', () => {
 test('Should call onCancel callback if user chooses not to copy content', () => {
     const cancelSpy = jest.fn();
     const ghostDialog = mount(
-        <GhostDialog onCancel={cancelSpy} onConfirm={jest.fn()} open={true} locales={['en', 'de']} />
+        <GhostDialog locales={['en', 'de']} onCancel={cancelSpy} onConfirm={jest.fn()} open={true} />
     );
 
     ghostDialog.find('Button[skin="secondary"]').simulate('click');
@@ -36,7 +36,7 @@ test('Should call onCancel callback if user chooses not to copy content', () => 
 test('Should call onConfirm callback with chosen locale if user chooses to copy content', () => {
     const confirmSpy = jest.fn();
     const ghostDialog = mount(
-        <GhostDialog onCancel={jest.fn()} onConfirm={confirmSpy} open={true} locales={['en', 'de']} />
+        <GhostDialog locales={['en', 'de']} onCancel={jest.fn()} onConfirm={confirmSpy} open={true} />
     );
 
     ghostDialog.find('SingleSelect').prop('onChange')('de');

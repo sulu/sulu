@@ -47,8 +47,8 @@ export default class Toolbar extends React.Component<Props> {
 
         return (
             <div
-                ref={this.setToolbarRef}
                 className={toolbarStyles.toolbar}
+                ref={this.setToolbarRef}
             >
                 {this.renderToolbarItems(toolbarItems)}
             </div>

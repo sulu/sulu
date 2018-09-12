@@ -117,7 +117,7 @@ export default class Dialog extends React.Component<Props> {
                                         {children}
                                     </article>
                                     <footer>
-                                        <Button skin="secondary" onClick={onCancel}>
+                                        <Button onClick={onCancel} skin="secondary">
                                             {cancelText}
                                         </Button>
                                         <Button

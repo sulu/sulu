@@ -41,9 +41,9 @@ export default class Tab extends React.PureComponent<Props> {
         return (
             <li className={tabClass}>
                 <button
-                    title={children}
-                    onClick={this.handleClick}
                     disabled={selected}
+                    onClick={this.handleClick}
+                    title={children}
                 >
                     {children}
                 </button>

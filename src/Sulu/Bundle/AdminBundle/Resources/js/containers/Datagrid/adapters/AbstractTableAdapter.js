@@ -51,8 +51,8 @@ export default class AbstractTableAdapter extends AbstractAdapter {
             return(
                 <Table.HeaderCell
                     key={schemaKey}
-                    onClick={columnSchema.sortable ? onSort : undefined}
                     name={schemaKey}
+                    onClick={columnSchema.sortable ? onSort : undefined}
                     sortOrder={sortColumn === schemaKey ? sortOrder : undefined}
                 >
                     {label}

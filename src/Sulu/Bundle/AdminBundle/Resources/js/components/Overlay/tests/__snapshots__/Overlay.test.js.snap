@@ -13,7 +13,7 @@ exports[`The component should render in body when open 2`] = `
     <div class=\\"overlay small\\">
       <section class=\\"content\\">
         <header>
-          <h2>My overlay title</h2><span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"icon su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span>
         </header>
         <article>
           <p>My overlay content</p>
@@ -36,7 +36,7 @@ exports[`The component should render in body with actions when open 2`] = `
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
-          <h2>My overlay title</h2><span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"icon su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span>
         </header>
         <article>
           <p>My overlay content</p>
@@ -61,14 +61,14 @@ exports[`The component should render in body with loader instead of confirm butt
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
-          <h2>My overlay title</h2><span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"icon su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span>
         </header>
         <article>
           <p>My overlay content</p>
         </article>
         <footer><button class=\\"button primary loading\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Apply</span>
             <div class=\\"loader\\">
-              <div style=\\"width: 25px; height: 25px;\\" class=\\"spinner\\">
+              <div class=\\"spinner\\" style=\\"width: 25px; height: 25px;\\">
                 <div class=\\"doubleBounce1\\"></div>
                 <div class=\\"doubleBounce2\\"></div>
               </div>
@@ -90,7 +90,7 @@ exports[`The component should render with a disabled confirm button 2`] = `
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
-          <h2>My overlay title</h2><span class=\\"icon su-times clickable\\" aria-label=\\"su-times\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"icon su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span>
         </header>
         <article>
           <p>My overlay content</p>

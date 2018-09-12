@@ -146,7 +146,7 @@ export default class ColumnList extends React.Component<Props> {
                         />
                     </div>
                 }
-                <div ref={this.setContainerRef} className={columnListContainerClass}>
+                <div className={columnListContainerClass} ref={this.setContainerRef}>
                     <div className={columnListStyles.columnList}>
                         {this.cloneColumns(children)}
                     </div>

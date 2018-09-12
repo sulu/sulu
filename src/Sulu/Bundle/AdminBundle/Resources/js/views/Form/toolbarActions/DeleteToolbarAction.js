@@ -11,12 +11,12 @@ export default class DeleteToolbarAction extends AbstractToolbarAction {
     getNode() {
         return (
             <Dialog
-                confirmLoading={this.formStore.deleting}
                 cancelText={translate('sulu_admin.cancel')}
+                confirmLoading={this.formStore.deleting}
                 confirmText={translate('sulu_admin.ok')}
+                key="sulu_admin.delete"
                 onCancel={this.handleCancel}
                 onConfirm={this.handleConfirm}
-                key="sulu_admin.delete"
                 open={this.showDialog}
                 title={translate('sulu_admin.delete_warning_title')}
             >

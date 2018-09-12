@@ -63,16 +63,16 @@ export default class MediaCollection extends React.Component<Props> {
 
         return (
             <MultiMediaDropzone
-                locale={locale}
                 collectionId={collectionStore.id}
+                locale={locale}
                 onUpload={this.handleUpload}
             >
                 <CollectionSection
+                    datagridStore={collectionDatagridStore}
                     locale={locale}
+                    onCollectionNavigate={this.handleCollectionNavigate}
                     overlayType={overlayType}
                     resourceStore={collectionStore.resourceStore}
-                    datagridStore={collectionDatagridStore}
-                    onCollectionNavigate={this.handleCollectionNavigate}
                 />
                 <Divider />
                 <div>
