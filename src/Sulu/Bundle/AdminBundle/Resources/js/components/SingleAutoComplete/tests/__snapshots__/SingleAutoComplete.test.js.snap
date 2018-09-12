@@ -5,7 +5,7 @@ exports[`Render the SingleAutoComplete with open suggestions list 1`] = `
   class="singleAutoComplete"
 >
   <label
-    class="input default"
+    class="input default left"
   >
     <div
       class="prependedContainer default"
@@ -44,7 +44,7 @@ exports[`SingleAutoComplete should render 1`] = `
   class="singleAutoComplete"
 >
   <label
-    class="input default"
+    class="input default left"
   >
     <div
       class="prependedContainer default"

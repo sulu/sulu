@@ -63,7 +63,7 @@ exports[`Render disabled next link if current page is last page 1`] = `
       class="inputContainer"
     >
       <label
-        class="input dark centered"
+        class="input dark center"
       >
         <input
           inputmode="numeric"
@@ -161,7 +161,7 @@ exports[`Render disabled previous link current page is first page 1`] = `
       class="inputContainer"
     >
       <label
-        class="input dark centered"
+        class="input dark center"
       >
         <input
           inputmode="numeric"
@@ -285,7 +285,7 @@ exports[`Render pagination with loader 1`] = `
       class="inputContainer"
     >
       <label
-        class="input dark centered"
+        class="input dark center"
       >
         <input
           inputmode="numeric"
@@ -382,7 +382,7 @@ exports[`Render pagination with page numbers 1`] = `
       class="inputContainer"
     >
       <label
-        class="input dark centered"
+        class="input dark center"
       >
         <input
           inputmode="numeric"

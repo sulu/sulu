@@ -36,7 +36,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
               sulu_admin.username_or_email
             </div>
             <label
-              class="input default"
+              class="input default left"
             >
               <div
                 class="prependedContainer default"
@@ -61,7 +61,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
               sulu_admin.password
             </div>
             <label
-              class="input default"
+              class="input default left"
             >
               <div
                 class="prependedContainer default"
@@ -159,7 +159,7 @@ exports[`Should render the Login with reset password view 1`] = `
               sulu_admin.username_or_email
             </div>
             <label
-              class="input default"
+              class="input default left"
             >
               <div
                 class="prependedContainer default"
@@ -257,7 +257,7 @@ exports[`Should render the Login with reset password with success 1`] = `
               sulu_admin.username_or_email
             </div>
             <label
-              class="input default"
+              class="input default left"
             >
               <div
                 class="prependedContainer default"
@@ -355,7 +355,7 @@ exports[`Should render the LoginForm component with error 1`] = `
               sulu_admin.username_or_email
             </div>
             <label
-              class="input default"
+              class="input default left"
             >
               <div
                 class="prependedContainer default"
@@ -380,7 +380,7 @@ exports[`Should render the LoginForm component with error 1`] = `
               sulu_admin.password
             </div>
             <label
-              class="input default"
+              class="input default left"
             >
               <div
                 class="prependedContainer default"

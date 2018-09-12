@@ -181,7 +181,7 @@ exports[`Render a simple MediaOverview 1`] = `
               class="inputContainer"
             >
               <label
-                class="input dark centered"
+                class="input dark center"
               >
                 <input
                   inputmode="numeric"
@@ -230,7 +230,7 @@ exports[`Render a simple MediaOverview 1`] = `
           class="toolbar"
         >
           <label
-            class="input dark collapsed hasAppendIcon"
+            class="input dark left collapsed hasAppendIcon"
           >
             <div
               class="prependedContainer dark collapsed"

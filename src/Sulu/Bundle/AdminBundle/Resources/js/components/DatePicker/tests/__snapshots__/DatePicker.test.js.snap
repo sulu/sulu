@@ -13,7 +13,7 @@ exports[`DatePicker should render 1`] = `
       anchorElement={
         <div>
           <label
-            class="input default"
+            class="input default left"
           >
             <div
               class="prependedContainer default"
@@ -449,7 +449,7 @@ exports[`DatePicker should render 1`] = `
                       containerInfo={
                         <div>
                           <label
-                            class="input default"
+                            class="input default left"
                           >
                             <div
                               class="prependedContainer default"
@@ -471,7 +471,7 @@ exports[`DatePicker should render 1`] = `
                       }
                     >
                       <Input
-                        centered={false}
+                        alignment="left"
                         className="form-control"
                         collapsed={false}
                         icon="su-calendar"
@@ -488,7 +488,7 @@ exports[`DatePicker should render 1`] = `
                         value=""
                       >
                         <label
-                          className="input default"
+                          className="input default left"
                         >
                           <div
                             className="prependedContainer default"

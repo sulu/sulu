@@ -2,7 +2,7 @@
 
 exports[`Phone should render 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"
@@ -21,7 +21,7 @@ exports[`Phone should render 1`] = `
 
 exports[`Phone should render error 1`] = `
 <label
-  class="input default error"
+  class="input default left error"
 >
   <div
     class="prependedContainer default"
@@ -40,7 +40,7 @@ exports[`Phone should render error 1`] = `
 
 exports[`Phone should render null value as empty string 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"
@@ -59,7 +59,7 @@ exports[`Phone should render null value as empty string 1`] = `
 
 exports[`Phone should render with placeholder 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"
@@ -79,7 +79,7 @@ exports[`Phone should render with placeholder 1`] = `
 
 exports[`Phone should render with value 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"

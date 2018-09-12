@@ -2,7 +2,7 @@
 
 exports[`Number should render 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <input
     type="number"

@@ -16,7 +16,7 @@ exports[`Should render the datagrid with a title 1`] = `
       class="toolbar"
     >
       <label
-        class="input dark collapsed hasAppendIcon"
+        class="input dark left collapsed hasAppendIcon"
       >
         <div
           class="prependedContainer dark collapsed"
@@ -206,7 +206,7 @@ exports[`Should render the datagrid with a title 1`] = `
           class="inputContainer"
         >
           <label
-            class="input dark centered"
+            class="input dark center"
           >
             <input
               inputmode="numeric"
@@ -257,7 +257,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
       class="toolbar"
     >
       <label
-        class="input dark collapsed hasAppendIcon"
+        class="input dark left collapsed hasAppendIcon"
       >
         <div
           class="prependedContainer dark collapsed"
@@ -447,7 +447,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
           class="inputContainer"
         >
           <label
-            class="input dark centered"
+            class="input dark center"
           >
             <input
               inputmode="numeric"

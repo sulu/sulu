@@ -124,7 +124,7 @@ exports[`Render a basic Folder list with data 1`] = `
       class="inputContainer"
     >
       <label
-        class="input dark centered"
+        class="input dark center"
       >
         <input
           inputmode="numeric"

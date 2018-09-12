@@ -318,7 +318,7 @@ exports[`Render with all fields 1`] = `
               class="limit"
             >
               <label
-                class="input default"
+                class="input default left"
               >
                 <input
                   type="number"

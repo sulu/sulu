@@ -195,7 +195,7 @@ exports[`Should render item with order input 1`] = `
     class="orderInput"
   >
     <label
-      class="input default centered"
+      class="input default center"
     >
       <input
         type="text"
