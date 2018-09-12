@@ -42,8 +42,8 @@ export default class FolderAdapter extends AbstractAdapter {
 
         return (
             <Pagination
-                currentPage={page}
                 currentLimit={limit}
+                currentPage={page}
                 loading={loading}
                 onLimitChange={onLimitChange}
                 onPageChange={onPageChange}

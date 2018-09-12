@@ -161,7 +161,7 @@ exports[`Should render the datagrid with a title 1`] = `
             class="select"
           >
             <button
-              class="displayValue dark"
+              class="displayValue dark dark"
               type="button"
             >
               <div
@@ -386,7 +386,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
             class="select"
           >
             <button
-              class="displayValue dark"
+              class="displayValue dark dark"
               type="button"
             >
               <div

@@ -43,12 +43,12 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                         </div>
                       </li>
                     </ul>
-                    <nav class=\\"pagination\\"><span class=\\"display\\">:</span><span><div class=\\"select\\"><button class=\\"displayValue dark\\" type=\\"button\\"><div title=\\"10\\" aria-label=\\"10\\" class=\\"croppedText\\"><div class=\\"front\\" aria-hidden=\\"true\\">1</div><div class=\\"back\\" aria-hidden=\\"true\\"><span>0</span>
+                    <nav class=\\"pagination\\"><span class=\\"display\\">:</span><span><div class=\\"select\\"><button class=\\"displayValue dark dark\\" type=\\"button\\"><div aria-label=\\"10\\" class=\\"croppedText\\" title=\\"10\\"><div aria-hidden=\\"true\\" class=\\"front\\">1</div><div aria-hidden=\\"true\\" class=\\"back\\"><span>0</span>
                 </div>
                 <div class=\\"whole\\">10</div>
-              </div><span class=\\"toggle su-angle-down\\" aria-label=\\"su-angle-down\\"></span></button>
+              </div><span aria-label=\\"su-angle-down\\" class=\\"toggle su-angle-down\\"></span></button>
             </div></span>
-            <div class=\\"loader\\"></div><span class=\\"display\\">Page: 2 of 3</span><button class=\\"previous\\"><span class=\\"su-angle-left\\" aria-label=\\"su-angle-left\\"></span></button><button class=\\"next\\"><span class=\\"su-angle-right\\" aria-label=\\"su-angle-right\\"></span></button></nav>
+            <div class=\\"loader\\"></div><span class=\\"display\\">Page: 2 of 3</span><button class=\\"previous\\"><span aria-label=\\"su-angle-left\\" class=\\"su-angle-left\\"></span></button><button class=\\"next\\"><span aria-label=\\"su-angle-right\\" class=\\"su-angle-right\\"></span></button></nav>
       </section>
     </div>
     <div></div>
@@ -60,7 +60,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
   <div>
     <div class=\\"headerContainer\\">
       <div class=\\"toolbar\\"><label class=\\"input dark collapsed hasAppendIcon\\">
-          <div class=\\"prependedContainer dark collapsed\\"><span class=\\"icon dark iconClickable collapsed su-search clickable\\" aria-label=\\"su-search\\" role=\\"button\\" tabindex=\\"0\\"></span></div><input type=\\"text\\" value=\\"\\">
+          <div class=\\"prependedContainer dark collapsed\\"><span aria-label=\\"su-search\\" class=\\"icon dark iconClickable collapsed su-search clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div><input type=\\"text\\" value=\\"\\">
         </label></div>
     </div>
     <div class=\\"datagrid\\">
@@ -74,25 +74,25 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                     <div class=\\"title\\"><label class=\\"label\\"><span class=\\"switch checkbox dark checkbox\\"><input type=\\"checkbox\\" value=\\"1\\"><span></span></span>
                         <div>
                           <div class=\\"titleText\\">
-                            <div title=\\"Title 1\\" aria-label=\\"Title 1\\" class=\\"croppedText\\">
-                              <div class=\\"front\\" aria-hidden=\\"true\\">Titl</div>
-                              <div class=\\"back\\" aria-hidden=\\"true\\"><span>e 1</span></div>
+                            <div aria-label=\\"Title 1\\" class=\\"croppedText\\" title=\\"Title 1\\">
+                              <div aria-hidden=\\"true\\" class=\\"front\\">Titl</div>
+                              <div aria-hidden=\\"true\\" class=\\"back\\"><span>e 1</span></div>
                               <div class=\\"whole\\">Title 1</div>
                             </div>
                           </div>
                         </div>
                       </label></div>
                     <div class=\\"meta\\">
-                      <div title=\\"image/png 12.35 KB\\" aria-label=\\"image/png 12.35 KB\\" class=\\"croppedText\\">
-                        <div class=\\"front\\" aria-hidden=\\"true\\">image/png</div>
-                        <div class=\\"back\\" aria-hidden=\\"true\\"><span> 12.35 KB</span></div>
+                      <div aria-label=\\"image/png 12.35 KB\\" class=\\"croppedText\\" title=\\"image/png 12.35 KB\\">
+                        <div aria-hidden=\\"true\\" class=\\"front\\">image/png</div>
+                        <div aria-hidden=\\"true\\" class=\\"back\\"><span> 12.35 KB</span></div>
                         <div class=\\"whole\\">image/png 12.35 KB</div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class=\\"media\\"><img alt=\\"Title 1\\" src=\\"http://lorempixel.com/240/100\\">
-                  <div class=\\"cover\\"><span class=\\"mediaIcon su-check\\" aria-label=\\"su-check\\"></span></div>
+                  <div class=\\"cover\\"><span aria-label=\\"su-check\\" class=\\"mediaIcon su-check\\"></span></div>
                 </div>
               </div>
             </li>
@@ -103,25 +103,25 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                     <div class=\\"title\\"><label class=\\"label\\"><span class=\\"switch checkbox dark checkbox\\"><input type=\\"checkbox\\" value=\\"2\\"><span></span></span>
                         <div>
                           <div class=\\"titleText\\">
-                            <div title=\\"Title 2\\" aria-label=\\"Title 2\\" class=\\"croppedText\\">
-                              <div class=\\"front\\" aria-hidden=\\"true\\">Titl</div>
-                              <div class=\\"back\\" aria-hidden=\\"true\\"><span>e 2</span></div>
+                            <div aria-label=\\"Title 2\\" class=\\"croppedText\\" title=\\"Title 2\\">
+                              <div aria-hidden=\\"true\\" class=\\"front\\">Titl</div>
+                              <div aria-hidden=\\"true\\" class=\\"back\\"><span>e 2</span></div>
                               <div class=\\"whole\\">Title 2</div>
                             </div>
                           </div>
                         </div>
                       </label></div>
                     <div class=\\"meta\\">
-                      <div title=\\"image/jpeg 54.32 KB\\" aria-label=\\"image/jpeg 54.32 KB\\" class=\\"croppedText\\">
-                        <div class=\\"front\\" aria-hidden=\\"true\\">image/jpeg</div>
-                        <div class=\\"back\\" aria-hidden=\\"true\\"><span> 54.32 KB</span></div>
+                      <div aria-label=\\"image/jpeg 54.32 KB\\" class=\\"croppedText\\" title=\\"image/jpeg 54.32 KB\\">
+                        <div aria-hidden=\\"true\\" class=\\"front\\">image/jpeg</div>
+                        <div aria-hidden=\\"true\\" class=\\"back\\"><span> 54.32 KB</span></div>
                         <div class=\\"whole\\">image/jpeg 54.32 KB</div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class=\\"media\\"><img alt=\\"Title 2\\" src=\\"http://lorempixel.com/240/100\\">
-                  <div class=\\"cover\\"><span class=\\"mediaIcon su-check\\" aria-label=\\"su-check\\"></span></div>
+                  <div class=\\"cover\\"><span aria-label=\\"su-check\\" class=\\"mediaIcon su-check\\"></span></div>
                 </div>
               </div>
             </li>

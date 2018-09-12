@@ -35,10 +35,10 @@ test('The component should render with a dark skin', () => {
     const onSelect = jest.fn();
     const select = mount(
         <Select
-            skin="dark"
-            onSelect={onSelect}
-            isOptionSelected={isOptionSelected}
             displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
+            skin="dark"
         >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>

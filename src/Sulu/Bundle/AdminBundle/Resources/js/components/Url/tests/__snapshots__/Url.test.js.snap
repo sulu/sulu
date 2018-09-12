@@ -11,7 +11,7 @@ exports[`Render the component with an error 1`] = `
       class="select"
     >
       <button
-        class="displayValue flat"
+        class="displayValue flat flat"
         type="button"
       >
         <div

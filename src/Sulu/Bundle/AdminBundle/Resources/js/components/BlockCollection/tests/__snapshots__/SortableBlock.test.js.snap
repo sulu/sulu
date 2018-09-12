@@ -87,7 +87,7 @@ exports[`Render expanded sortable block with types 1`] = `
           class="select"
         >
           <button
-            class="displayValue default"
+            class="displayValue default default"
             type="button"
           >
             <div

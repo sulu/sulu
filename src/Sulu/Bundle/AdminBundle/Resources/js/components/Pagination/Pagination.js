@@ -81,7 +81,7 @@ export default class Pagination extends React.PureComponent<Props> {
                 <nav className={paginationStyles.pagination}>
                     <span className={paginationStyles.display}>{translate('sulu_admin.per_page')}:</span>
                     <span>
-                        <SingleSelect skin="dark" value={currentLimit} onChange={this.handleLimitChange}>
+                        <SingleSelect onChange={this.handleLimitChange} skin="dark" value={currentLimit}>
                             {AVAILABLE_LIMITS.map((i) => (<SingleSelect.Option
                                 key={i}
                                 value={i}

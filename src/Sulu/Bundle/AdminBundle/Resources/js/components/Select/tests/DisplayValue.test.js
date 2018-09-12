@@ -15,7 +15,7 @@ test('The component should render with the flat skin', () => {
 });
 
 test('The component should render with the dark skin', () => {
-    const displayValue = render(<DisplayValue skin="dark" onClick={jest.fn()}>My value</DisplayValue>);
+    const displayValue = render(<DisplayValue onClick={jest.fn()} skin="dark">My value</DisplayValue>);
     expect(displayValue).toMatchSnapshot();
 });
 

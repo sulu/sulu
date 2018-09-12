@@ -50,11 +50,11 @@ export default class TableAdapter extends AbstractTableAdapter {
 
         return (
             <Pagination
-                currentPage={page}
                 currentLimit={limit}
+                currentPage={page}
                 loading={loading}
-                onPageChange={onPageChange}
                 onLimitChange={onLimitChange}
+                onPageChange={onPageChange}
                 totalPages={pageCount}
             >
                 <Table

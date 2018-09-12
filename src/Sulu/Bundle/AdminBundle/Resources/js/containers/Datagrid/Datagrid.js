@@ -365,6 +365,7 @@ export default class Datagrid extends React.Component<Props> {
                         activeItems={store.activeItems}
                         data={store.data}
                         disabledIds={disabledIds}
+                        limit={store.limit.get()}
                         loading={store.loading}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
                         onItemActivate={this.handleItemActivate}
@@ -372,8 +373,8 @@ export default class Datagrid extends React.Component<Props> {
                         onItemClick={onItemClick}
                         onItemDeactivate={this.handleItemDeactivate}
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
-                        onPageChange={this.handlePageChange}
                         onLimitChange={this.handleLimitChange}
+                        onPageChange={this.handlePageChange}
                         onRequestItemCopy={copyable ? this.handleRequestItemCopy : undefined}
                         onRequestItemDelete={deletable ? this.handleRequestItemDelete : undefined}
                         onRequestItemMove={movable ? this.handleRequestItemMove : undefined}
@@ -381,7 +382,6 @@ export default class Datagrid extends React.Component<Props> {
                         onSort={this.handleSort}
                         options={this.currentAdapterOptions}
                         page={store.getPage()}
-                        limit={store.limit.get()}
                         pageCount={store.pageCount}
                         schema={store.schema}
                         selections={store.selectionIds}

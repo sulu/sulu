@@ -23,10 +23,10 @@ test('InfiniteScroller traverses the dom upwards until it finds a scroll contain
     const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
-                onPageChange={loadSpy}
                 currentPage={1}
-                totalPages={10}
                 loading={false}
+                onPageChange={loadSpy}
+                totalPages={10}
             >
                 <div />
             </InfiniteScroller>
@@ -45,10 +45,10 @@ test('InfiniteScroller should call onPageChange if the the bottom of the content
     const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
-                onPageChange={loadSpy}
-                totalPages={10}
                 currentPage={1}
                 loading={false}
+                onPageChange={loadSpy}
+                totalPages={10}
             >
                 <div />
             </InfiniteScroller>
@@ -86,10 +86,10 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
     const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
-                onPageChange={loadSpy}
-                totalPages={10}
                 currentPage={1}
                 loading={false}
+                onPageChange={loadSpy}
+                totalPages={10}
             >
                 <div />
             </InfiniteScroller>
@@ -116,10 +116,10 @@ test('InfiniteScroller should show a loader when the loading prop is set to true
     expect(render(
         <div id="scrollable">
             <InfiniteScroller
-                onPageChange={loadSpy}
-                totalPages={10}
                 currentPage={1}
                 loading={true}
+                onPageChange={loadSpy}
+                totalPages={10}
             >
                 <div />
             </InfiniteScroller>
@@ -136,10 +136,10 @@ test('InfiniteScroller should show an info message when the last page has been r
     expect(render(
         <div id="scrollable">
             <InfiniteScroller
-                onPageChange={loadSpy}
-                totalPages={10}
                 currentPage={10}
                 loading={false}
+                onPageChange={loadSpy}
+                totalPages={10}
             >
                 <div />
             </InfiniteScroller>

@@ -124,7 +124,7 @@ exports[`Render the MediaCollection 1`] = `
               class="select"
             >
               <button
-                class="displayValue dark"
+                class="displayValue dark dark"
                 type="button"
               >
                 <div

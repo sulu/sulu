@@ -20,7 +20,6 @@ type Props = SelectProps & {
     closeOnSelect: boolean,
     isOptionSelected: (option: Element<typeof Option>) => boolean,
     selectedVisualization?: OptionSelectedVisualization,
-    skin?: 'default' | 'dark',
 };
 
 @observer

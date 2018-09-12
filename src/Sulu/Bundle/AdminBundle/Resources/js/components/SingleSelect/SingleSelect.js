@@ -7,7 +7,6 @@ import Select from '../Select';
 type Props = SelectProps & {
     onChange?: (value: string | number) => void,
     value: ?string | number,
-    skin?: 'default' | 'dark',
 };
 
 export default class SingleSelect extends React.PureComponent<Props> {
