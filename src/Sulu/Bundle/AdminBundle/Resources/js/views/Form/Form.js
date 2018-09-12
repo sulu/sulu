@@ -239,11 +239,9 @@ class Form extends React.Component<Props> {
 
                 return response;
             })
-            .catch((errorResponse) => {
-                return errorResponse.json().then(action((error) => {
-                    this.errors.push(error);
-                }));
-            });
+            .catch(action((error) => {
+                this.errors.push(error);
+            }));
     };
 
     setFormRef = (form) => {
