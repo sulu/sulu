@@ -51,4 +51,24 @@
             </property>
         </properties>
     </section>
+    <section name="changelog">
+        <meta>
+            <title lang="en">Changelog</title>
+            <title lang="de">Änderungshistorie</title>
+        </meta>
+        <properties>
+            <property name="authored" type="date" colspan="6">
+                <meta>
+                    <title lang="en">Authored Date</title>
+                    <title lang="de">Verfasst am</title>
+                </meta>
+            </property>
+            <property name="author" type="single_contact_selection" colspan="6">
+                <meta>
+                    <title lang="en">Author</title>
+                    <title lang="de">Autor</title>
+                </meta>
+            </property>
+        </properties>
+    </section>
 </properties>

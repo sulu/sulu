@@ -100,6 +100,19 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                     ],
                                 ],
                             ],
+                            'single_contact_selection' => [
+                                'default_type' => 'datagrid_overlay',
+                                'resource_key' => 'contacts',
+                                'types' => [
+                                    'datagrid_overlay' => [
+                                        'adapter' => 'table',
+                                        'display_properties' => ['fullName'],
+                                        'empty_text' => 'sulu_contact.no_contact_selected',
+                                        'icon' => 'su-user',
+                                        'overlay_title' => 'sulu_contact.single_selection_overlay_title',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ]
