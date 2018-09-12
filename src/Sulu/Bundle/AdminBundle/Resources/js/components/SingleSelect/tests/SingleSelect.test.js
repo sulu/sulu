@@ -21,6 +21,18 @@ test('The component should render a generic select', () => {
     expect(select.getElement().type).toBe(Select);
 });
 
+test('The component should render a select with dark skin', () => {
+    const select = shallow(
+        <SingleSelect skin="dark">
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </SingleSelect>
+    );
+    expect(select.render()).toMatchSnapshot();
+});
+
 test('The component should return the first option as default display value', () => {
     const select = shallow(
         <SingleSelect>

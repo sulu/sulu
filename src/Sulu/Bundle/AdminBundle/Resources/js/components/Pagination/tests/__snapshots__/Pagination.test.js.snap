@@ -8,6 +8,51 @@ exports[`Render disabled next link if current page is last page 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />
@@ -45,6 +90,51 @@ exports[`Render disabled previous link current page is first page 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />
@@ -96,6 +186,51 @@ exports[`Render pagination with loader 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     >
@@ -144,6 +279,51 @@ exports[`Render pagination with page numbers 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />

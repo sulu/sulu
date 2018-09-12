@@ -81,6 +81,9 @@ test('The loading strategy should be called when a request is sent', () => {
             locale: undefined,
             page: 1,
             test: 'value',
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
         },
         undefined
     );
@@ -113,6 +116,9 @@ test('The loading strategy should be called with a different resourceKey when a 
             locale: undefined,
             page: 1,
             test: 'value',
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
         },
         undefined
     );
@@ -145,6 +151,9 @@ test('The loading strategy should be called with a different page when a request
             locale: undefined,
             page: 1,
             test: 'value',
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
         },
         undefined
     );
@@ -156,6 +165,9 @@ test('The loading strategy should be called with a different page when a request
             locale: undefined,
             page: 3,
             test: 'value',
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
         },
         undefined
     );
@@ -188,6 +200,9 @@ test('The loading strategy should be called with a different locale when a reque
             locale: 'en',
             page: 1,
             test: 'value',
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
         },
         undefined
     );
@@ -199,6 +214,9 @@ test('The loading strategy should be called with a different locale when a reque
             locale: 'de',
             page: 1,
             test: 'value',
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
         },
         undefined
     );
@@ -227,6 +245,7 @@ test('The loading strategy should be called with the defined sortings', () => {
             page: 1,
             sortBy: 'title',
             sortOrder: 'desc',
+            limit: 10,
         },
         undefined
     );
@@ -256,6 +275,9 @@ test('The loading strategy should be called with the defined search', () => {
         {
             page: 1,
             search: 'search-value',
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
         },
         undefined
     );
@@ -287,6 +309,9 @@ test('The loading strategy should be called with the active item as parentId', (
         {
             page: 1,
             parentId: 'some-uuid',
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
         },
         'some-uuid'
     );
@@ -316,6 +341,7 @@ test('The loading strategy should be called with expandedIds if the active item 
         {
             expandedIds: 'some-uuid',
             page: 1,
+            limit: 10,
             sortBy: undefined,
             sortOrder: undefined,
         },
@@ -360,6 +386,7 @@ test('The loading strategy should be called with expandedIds if some items are a
         {
             selectedIds: '1,5,10',
             page: 1,
+            limit: 10,
             sortBy: undefined,
             sortOrder: undefined,
         },
@@ -424,6 +451,9 @@ test('The active item should not be passed as parent if undefined', () => {
         {
             page: 1,
             parent: 9,
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
         },
         undefined
     );
@@ -898,6 +928,47 @@ test('Should not reset page count to 0 and page to 1 when sort order stays the s
     datagridStore.destroy();
 });
 
+test('Should reset page count to 0 and page to 1 when limit is changed', () => {
+    const page = observable.box(3);
+    const locale = observable.box('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale});
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    datagridStore.setPage(2);
+    datagridStore.pageCount = 7;
+    datagridStore.limit.set(50);
+
+    expect(structureStrategy.clear).toBeCalled();
+    expect(page.get()).toEqual(1);
+    expect(datagridStore.pageCount).toEqual(0);
+    datagridStore.destroy();
+});
+
+test('Should not reset page count to 0 and page to 1 when limit stays the same', () => {
+    const page = observable.box(3);
+    const locale = observable.box('en');
+    const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.limit.set(20);
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    datagridStore.setPage(2);
+    datagridStore.pageCount = 7;
+    datagridStore.limit.set(20);
+
+    expect(structureStrategy.clear).not.toBeCalled();
+    expect(page.get()).toEqual(2);
+    expect(datagridStore.pageCount).toEqual(7);
+    datagridStore.destroy();
+});
+
 test('Should reset page count and page when loading strategy changes', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
@@ -1033,7 +1104,7 @@ test('Should move the item with the given ID to the new given parent and reload 
         expect(structureStrategy.clear).toBeCalledWith();
         expect(loadingStrategy.load).toHaveBeenLastCalledWith(
             'snippets',
-            {expandedIds: 3, locale: 'de', sortBy: undefined, sortOrder: undefined, webspace: 'sulu'},
+            {expandedIds: 3, limit: 10, locale: 'de', sortBy: undefined, sortOrder: undefined, webspace: 'sulu'},
             undefined
         );
     });
@@ -1059,7 +1130,8 @@ test('Should copy the item with the given ID to the new given parent and reload 
         expect(structureStrategy.clear).toBeCalledWith();
         expect(loadingStrategy.load).toHaveBeenLastCalledWith(
             'snippets',
-            {expandedIds: 9, locale: 'de', sortBy: undefined, sortOrder: undefined, webspace: 'sulu'},
+            {expandedIds: 9, limit: 10, locale: 'de', page: undefined,
+                sortBy: undefined, sortOrder: undefined, webspace: 'sulu'},
             undefined
         );
     });
@@ -1221,6 +1293,7 @@ test('Should call all disposers if destroy is called', () => {
     datagridStore.searchDisposer = jest.fn();
     datagridStore.sortColumnDisposer = jest.fn();
     datagridStore.sortOrderDisposer = jest.fn();
+    datagridStore.limitDisposer = jest.fn();
 
     datagridStore.destroy();
 
@@ -1229,4 +1302,5 @@ test('Should call all disposers if destroy is called', () => {
     expect(datagridStore.searchDisposer).toBeCalledWith();
     expect(datagridStore.sortColumnDisposer).toBeCalledWith();
     expect(datagridStore.sortOrderDisposer).toBeCalledWith();
+    expect(datagridStore.limitDisposer).toBeCalledWith();
 });

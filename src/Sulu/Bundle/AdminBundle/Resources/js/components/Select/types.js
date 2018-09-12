@@ -10,7 +10,7 @@ export type SelectProps = {
     skin: Skin,
 }
 
-export type Skin = 'default' | 'flat';
+export type Skin = 'default' | 'flat' | 'dark';
 
 export type OptionSelectedVisualization = 'icon' | 'checkbox';
 

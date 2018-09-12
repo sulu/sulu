@@ -31,8 +31,10 @@ export default class FolderAdapter extends AbstractAdapter {
     render() {
         const {
             data,
+            limit,
             loading,
             onItemClick,
+            onLimitChange,
             onPageChange,
             page,
             pageCount,
@@ -40,10 +42,12 @@ export default class FolderAdapter extends AbstractAdapter {
 
         return (
             <Pagination
-                current={page}
+                currentPage={page}
+                currentLimit={limit}
                 loading={loading}
-                onChange={onPageChange}
-                total={pageCount}
+                onLimitChange={onLimitChange}
+                onPageChange={onPageChange}
+                totalPages={pageCount}
             >
                 <FolderList onFolderClick={onItemClick}>
                     {data.map((item: Object) => (

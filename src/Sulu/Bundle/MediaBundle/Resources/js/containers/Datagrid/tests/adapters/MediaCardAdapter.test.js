@@ -60,6 +60,8 @@ test('Render a basic Masonry view with MediaCards', () => {
             options={{}}
             page={1}
             pageCount={7}
+            limit={10}
+            onLimitChange={jest.fn()}
             schema={{}}
             selections={[]}
             sortColumn={undefined}
@@ -117,6 +119,8 @@ test('MediaCard should call the the appropriate handler', () => {
             options={{}}
             page={3}
             pageCount={9}
+            limit={10}
+            onLimitChange={jest.fn()}
             schema={{}}
             selections={[]}
             sortColumn={undefined}
@@ -153,6 +157,8 @@ test('InfiniteScroller should be passed correct props', () => {
             options={{}}
             page={2}
             pageCount={7}
+            limit={10}
+            onLimitChange={jest.fn()}
             schema={{}}
             selections={[]}
             sortColumn={undefined}
@@ -160,10 +166,10 @@ test('InfiniteScroller should be passed correct props', () => {
         />
     );
     expect(tableAdapter.find('InfiniteScroller').get(0).props).toEqual({
-        total: 7,
-        current: 2,
+        totalPages: 7,
+        currentPage: 2,
         loading: false,
-        onChange: pageChangeSpy,
+        onPageChange: pageChangeSpy,
         children: expect.anything(),
     });
 });

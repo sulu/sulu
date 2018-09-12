@@ -29,6 +29,27 @@ test('The component should render with the popover closed', () => {
     expect(body.innerHTML).toBe('');
 });
 
+test('The component should render with a dark skin', () => {
+    const body = document.body;
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const onSelect = jest.fn();
+    const select = mount(
+        <Select
+            skin="dark"
+            onSelect={onSelect}
+            isOptionSelected={isOptionSelected}
+            displayValue="My text"
+        >
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </Select>
+    );
+    expect(select.render()).toMatchSnapshot();
+    expect(body.innerHTML).toBe('');
+});
+
 test('The component should render with an icon', () => {
     const body = document.body;
     const isOptionSelected = jest.fn().mockReturnValue(false);

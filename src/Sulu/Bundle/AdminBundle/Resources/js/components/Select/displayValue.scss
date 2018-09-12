@@ -6,25 +6,38 @@ $color: $blueZodiac;
 $backgroundColor: $white;
 $borderSize: 1px;
 $borderColor: $frenchGray;
+$borderRadius: 3px;
 $iconSize: 10px;
 $hoverColor: $shakespeare;
+
+$darkBorderRadius: 4px;
+$darkBorderColor: $doveGray;
+$darkColor: $black;
+$darkBackgroundColor: $white;
 
 .displayValue {
     cursor: pointer;
     position: relative;
     padding: 7px 30px 7px 10px;
-
+    
     &.flat {
         border: none;
         background-color: transparent;
         color: inherit;
     }
 
+    &.dark {
+        background-color: $darkBackgroundColor;
+        color: $darkColor;
+        border-radius: $darkBorderRadius;
+        border-color: $darkBorderColor;
+    }
+
     &.default {
         display: block;
         width: 100%;
         border: $borderSize solid $borderColor;
-        border-radius: 3px;
+        border-radius: $borderRadius;
         text-align: left;
         font-size: $fontSize;
         color: $blueZodiac;

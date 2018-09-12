@@ -29,10 +29,12 @@ export default class TableAdapter extends AbstractTableAdapter {
 
     render() {
         const {
+            limit,
             loading,
-            onItemClick,
             onAllSelectionChange,
+            onItemClick,
             onItemSelectionChange,
+            onLimitChange,
             onPageChange,
             page,
             pageCount,
@@ -48,10 +50,12 @@ export default class TableAdapter extends AbstractTableAdapter {
 
         return (
             <Pagination
-                current={page}
+                currentPage={page}
+                currentLimit={limit}
                 loading={loading}
-                onChange={onPageChange}
-                total={pageCount}
+                onPageChange={onPageChange}
+                onLimitChange={onLimitChange}
+                totalPages={pageCount}
             >
                 <Table
                     buttons={buttons}

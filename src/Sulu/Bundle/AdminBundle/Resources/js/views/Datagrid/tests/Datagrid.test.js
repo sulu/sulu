@@ -37,6 +37,10 @@ jest.mock(
         this.searchTerm = {
             get: jest.fn(),
         };
+        this.limit = {
+            get: jest.fn().mockReturnValue(10),
+        };
+        this.setLimit = jest.fn();
         this.updateLoadingStrategy = jest.fn();
         this.updateStructureStrategy = jest.fn();
         this.data = [
@@ -271,19 +275,23 @@ test('Should destroy the store on unmount', () => {
     expect(locale.get()).toBe(undefined);
     expect(router.bind).toBeCalledWith('page', page, 1);
     expect(router.bind).toBeCalledWith('locale', locale);
+    expect(router.bind).toBeCalledWith('active', datagridStore.active);
     expect(router.bind).toBeCalledWith('sortColumn', datagridStore.sortColumn);
     expect(router.bind).toBeCalledWith('sortOrder', datagridStore.sortOrder);
-    expect(router.bind).toBeCalledWith('active', datagridStore.active);
+    expect(router.bind).toBeCalledWith('limit', datagridStore.limit);
 
     expect(datagrid.instance().sortColumnDisposer).toBeDefined();
     expect(datagrid.instance().sortOrderDisposer).toBeDefined();
+    expect(datagrid.instance().limitDisposer).toBeDefined();
 
     const activeDisposerSpy = jest.fn();
     const sortColumnDisposerSpy = jest.fn();
     const sortOrderDisposerSpy = jest.fn();
+    const limitDisposerSpy = jest.fn();
     datagrid.instance().activeDisposer = activeDisposerSpy;
     datagrid.instance().sortColumnDisposer = sortColumnDisposerSpy;
     datagrid.instance().sortOrderDisposer = sortOrderDisposerSpy;
+    datagrid.instance().limitDisposer = limitDisposerSpy;
 
     datagrid.unmount();
 
@@ -291,6 +299,7 @@ test('Should destroy the store on unmount', () => {
     expect(activeDisposerSpy).toBeCalledWith();
     expect(sortColumnDisposerSpy).toBeCalledWith();
     expect(sortOrderDisposerSpy).toBeCalledWith();
+    expect(limitDisposerSpy).toBeCalledWith();
 });
 
 test('Should render the add button in the toolbar only if an addRoute has been passed in options', () => {
@@ -418,7 +427,7 @@ test('Should navigate without locale when pencil button is clicked', () => {
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
 });
 
-test('Should update user settings when sorting is changed', () => {
+test('Should update user settings when sorting or limit is changed', () => {
     const userStore = require('../../../stores/UserStore');
     const Datagrid = require('../Datagrid').default;
     const router = {
@@ -436,6 +445,7 @@ test('Should update user settings when sorting is changed', () => {
 
     expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.datagrid.test.sort_order', undefined);
     expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.datagrid.test.sort_column', undefined);
+    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.datagrid.test.limit', 10);
 });
 
 test('Should load the route attributes from the UserStore', () => {
@@ -450,6 +460,8 @@ test('Should load the route attributes from the UserStore', () => {
                 return 'title';
             case 'sulu_admin.datagrid.test.sort_order':
                 return 'desc';
+            case 'sulu_admin.datagrid.test.limit':
+                return 20;
         }
     });
 
@@ -461,6 +473,7 @@ test('Should load the route attributes from the UserStore', () => {
         active: 'some-uuid',
         sortColumn: 'title',
         sortOrder: 'desc',
+        limit: 20,
     });
 });
 

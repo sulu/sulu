@@ -16,6 +16,7 @@ const USER_SETTING_PREFIX = 'sulu_admin.datagrid';
 const USER_SETTING_ACTIVE = 'active';
 const USER_SETTING_SORT_COLUMN = 'sort_column';
 const USER_SETTING_SORT_ORDER = 'sort_order';
+const USER_SETTING_LIMIT = 'limit';
 
 function getActiveSettingKey(resourceKey): string {
     return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_ACTIVE].join('.');
@@ -29,6 +30,10 @@ function getSortOrderSettingKey(resourceKey): string {
     return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_SORT_ORDER].join('.');
 }
 
+function getLimitSettingKey(resourceKey): string {
+    return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_LIMIT].join('.');
+}
+
 @observer
 class Datagrid extends React.Component<ViewProps> {
     page: IObservableValue<number> = observable.box();
@@ -38,6 +43,7 @@ class Datagrid extends React.Component<ViewProps> {
     activeDisposer: () => void;
     sortColumnDisposer: () => void;
     sortOrderDisposer: () => void;
+    limitDisposer: () => void;
 
     static getDerivedRouteAttributes(route: Route) {
         const {
@@ -50,6 +56,7 @@ class Datagrid extends React.Component<ViewProps> {
             active: userStore.getPersistentSetting(getActiveSettingKey(resourceKey)),
             sortColumn: userStore.getPersistentSetting(getSortColumnSettingKey(resourceKey)),
             sortOrder: userStore.getPersistentSetting(getSortOrderSettingKey(resourceKey)),
+            limit: userStore.getPersistentSetting(getLimitSettingKey(resourceKey)),
         };
     }
 
@@ -92,11 +99,13 @@ class Datagrid extends React.Component<ViewProps> {
         router.bind('sortColumn', this.datagridStore.sortColumn);
         router.bind('sortOrder', this.datagridStore.sortOrder);
         router.bind('search', this.datagridStore.searchTerm);
+        router.bind('limit', this.datagridStore.limit);
 
         const {
             active,
             sortColumn,
             sortOrder,
+            limit,
         } = this.datagridStore;
 
         this.sortColumnDisposer = autorun(
@@ -104,6 +113,9 @@ class Datagrid extends React.Component<ViewProps> {
         );
         this.sortOrderDisposer = autorun(
             () => userStore.setPersistentSetting(getSortOrderSettingKey(resourceKey), sortOrder.get())
+        );
+        this.limitDisposer = autorun(
+            () => userStore.setPersistentSetting(getLimitSettingKey(resourceKey), limit.get())
         );
         this.activeDisposer = autorun(
             () => {
@@ -120,6 +132,7 @@ class Datagrid extends React.Component<ViewProps> {
         this.activeDisposer();
         this.sortColumnDisposer();
         this.sortOrderDisposer();
+        this.limitDisposer();
     }
 
     handleItemAdd = (rowId) => {
