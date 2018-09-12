@@ -51,9 +51,7 @@ class FormXmlLoader extends AbstractLoader
             $type,
             '/x:properties/x:*',
             $tags,
-            $xpath,
-            null,
-            false
+            $xpath
         );
 
         foreach ($properties as $property) {
