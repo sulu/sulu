@@ -5,6 +5,7 @@ import Input from '../Input';
 import type {InputProps} from '../Input';
 
 type Props = {|
+    alignment: 'left' | 'center' | 'right',
     collapsed?: boolean,
     name?: string,
     icon?: string,
@@ -27,6 +28,7 @@ type Props = {|
 
 export default class Number extends React.PureComponent<Props> {
     static defaultProps = {
+        alignment: 'left',
         valid: true,
     };
 
@@ -46,6 +48,7 @@ export default class Number extends React.PureComponent<Props> {
 
     render() {
         const inputProps: InputProps<number> = {
+            alignment: this.props.alignment,
             collapsed: this.props.collapsed,
             name: this.props.name,
             icon: this.props.icon,

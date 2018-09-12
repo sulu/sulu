@@ -13,7 +13,7 @@ const LOADER_SIZE = 20;
 
 export default class Input<T: ?string | ?number> extends React.PureComponent<InputProps<T>> {
     static defaultProps = {
-        centered: false,
+        alignment: 'left',
         collapsed: false,
         skin: 'default',
         type: 'text',
@@ -54,12 +54,12 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
 
     render() {
         const {
+            alignment,
             inputClass,
             valid,
             icon,
             loading,
             collapsed,
-            centered,
             maxCharacters,
             maxSegments,
             name,
@@ -85,10 +85,10 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
         const labelClass = classNames(
             inputStyles.input,
             inputStyles[skin],
+            inputStyles[alignment],
             {
                 [inputStyles.error]: !valid,
                 [inputStyles.collapsed]: collapsed,
-                [inputStyles.centered]: centered,
                 [inputStyles.hasAppendIcon]: onClearClick,
             }
         );

@@ -167,7 +167,7 @@ export default class Pagination extends React.Component<Props> {
                     </span>
                     <span className={paginationStyles.inputContainer}>
                         <Input
-                            centered={true}
+                            alignment="center"
                             inputMode="numeric"
                             onBlur={this.handleInputBlur}
                             onChange={this.handleInputChange}

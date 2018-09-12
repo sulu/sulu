@@ -37,8 +37,6 @@ $darkIconColor: $doveGray;
         border: none;
         border-radius: $inputBorderRadius;
         height: calc($inputHeight - 2 * $inputBorderWidth);
-        padding: 1px;
-        padding-left: 10px;
         font-size: $inputFontSize;
         color: $inputColor;
         will-change: width, padding-left;
@@ -54,7 +52,15 @@ $darkIconColor: $doveGray;
         }
     }
 
-    &.centered {
+    &.left {
+        input {
+            text-align: left;
+            padding-left: 10px;
+            padding-right: 1px;
+        }
+    }
+
+    &.center {
         input {
             text-align: center;
             padding-left: 1px;
@@ -62,10 +68,17 @@ $darkIconColor: $doveGray;
         }
     }
 
+    &.right {
+        input {
+            text-align: right;
+            padding-left: 1px;
+            padding-right: 10px;
+        }
+    }
+
     &.collapsed {
         input {
-            padding-left: 1px;
-            padding-right: 1px;
+            padding: 0;
             width: 0;
         }
     }
