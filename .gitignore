@@ -11,6 +11,13 @@
 /src/Sulu/Bundle/*/Resources/app/cache
 /src/Sulu/Bundle/*/Tests/Resources/app/cache
 
+# bin folder
+/bin/*
+!/bin/build-bundles.sh
+!/bin/cli/validate-build-bundles.sh
+!/bin/console
+!/bin/runtests
+
 # web
 /public/bundles
 /public/uploads

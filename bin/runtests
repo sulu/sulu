@@ -398,7 +398,7 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
 
 function get_phpunit_path()
 {
-    $phpUnitPath = __DIR__ . '/../vendor/bin/phpunit';
+    $phpUnitPath = __DIR__ . '/phpunit';
 
     if (!file_exists($phpUnitPath)) {
         write_error(sprintf('Could not find phpunit in "%s"', $phpUnitPath));

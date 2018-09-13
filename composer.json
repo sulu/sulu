@@ -161,9 +161,9 @@
     },
     "scripts": {
         "auto-scripts": [
-            "bin/adminconsole cache:clear",
-            "bin/websiteconsole cache:clear",
-            "bin/adminconsole assets:install --symlink --relative"
+            "adminconsole cache:clear",
+            "websiteconsole cache:clear",
+            "adminconsole assets:install --symlink --relative"
         ],
         "post-install-cmd": [
             "@auto-scripts"
@@ -173,6 +173,7 @@
         ]
     },
     "config": {
+        "bin-dir": "bin",
         "preferred-install": {
             "*": "dist"
         },
