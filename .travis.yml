@@ -9,6 +9,8 @@ env:
   global:
     - APP_ENV="test"
     - APP_SECRET=a448d1dfcaa563fce56c2fd9981f662b
+    - MAILER_URL=null://localhost
+    - SULU_ADMIN_EMAIL=
     - JACKRABBIT_VERSION=2.12.0
     - SULU_PHPCR_TRANSPORT=doctrinedbal
     - TEST_FLAGS=""
