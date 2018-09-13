@@ -3,6 +3,7 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils';
 import webspaceStore from '../../../../stores/WebspaceStore';
 import PageSettingsNavigationSelect from '../../fields/PageSettingsNavigationSelect';
 
@@ -40,18 +41,8 @@ test('Pass correct props to MultiSelect', () => {
 
     const pageSettingsNavigationSelect = shallow(
         <PageSettingsNavigationSelect
-            dataPath="/test"
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath="/test"
-            showAllErrors={false}
-            types={undefined}
             value={['footer']}
         />
     );
@@ -83,18 +74,10 @@ test('Call onChange an onBlur if the value is changed', () => {
 
     const pageSettingsNavigationSelect = shallow(
         <PageSettingsNavigationSelect
-            dataPath="/test"
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
-            schemaPath="/test"
-            showAllErrors={false}
-            types={undefined}
             value={['footer']}
         />
     );
