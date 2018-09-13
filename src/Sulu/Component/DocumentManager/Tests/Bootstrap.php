@@ -26,13 +26,20 @@ class Bootstrap
 {
     public static function createContainer()
     {
-        $logDir = __DIR__ . '/../../../../../var/logs';
+        $varDir = __DIR__ . '/../../../../../var';
+        $logDir = $varDir . '/logs';
+        $cacheDir = $varDir . '/cache';
+
+        if (!file_exists($varDir)) {
+            mkdir($varDir);
+        }
 
         if (!file_exists($logDir)) {
-            if (!file_exists(dirname($logDir))) {
-                mkdir(dirname($logDir));
-            }
             mkdir($logDir);
+        }
+
+        if (!file_exists($cacheDir)) {
+            mkdir($cacheDir);
         }
 
         $container = new ContainerBuilder();
