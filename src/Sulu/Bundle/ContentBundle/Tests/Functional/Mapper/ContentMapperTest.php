@@ -107,6 +107,9 @@ class ContentMapperTest extends SuluTestCase
 
     public function testNewProperty()
     {
+        $token = $this->createUserTokenWithId(1);
+        $this->tokenStorage->setToken($token);
+
         $data = [
             'title' => 'Testname',
             'tags' => [
@@ -2668,7 +2671,10 @@ class ContentMapperTest extends SuluTestCase
             }
         }
 
-        $persistOptions = [];
+        $persistOptions = [
+            'user' => $userId,
+        ];
+
         if ($parentUuid) {
             $document->setParent($this->documentManager->find($parentUuid, $locale));
         } elseif ($document instanceof HomeDocument || !$document->getParent()) {
