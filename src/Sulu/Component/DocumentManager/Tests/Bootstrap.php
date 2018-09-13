@@ -29,6 +29,9 @@ class Bootstrap
         $logDir = __DIR__ . '/../../../../../var/logs';
 
         if (!file_exists($logDir)) {
+            if (!file_exists(dirname($logDir))) {
+                mkdir(dirname($logDir));
+            }
             mkdir($logDir);
         }
 
