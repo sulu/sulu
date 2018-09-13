@@ -159,21 +159,7 @@
             "App\\": "tests/"
         }
     },
-    "scripts": {
-        "auto-scripts": [
-            "adminconsole cache:clear",
-            "websiteconsole cache:clear",
-            "adminconsole assets:install --symlink --relative"
-        ],
-        "post-install-cmd": [
-            "@auto-scripts"
-        ],
-        "post-update-cmd": [
-            "@auto-scripts"
-        ]
-    },
     "config": {
-        "bin-dir": "bin",
         "preferred-install": {
             "*": "dist"
         },
