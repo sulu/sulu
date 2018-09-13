@@ -3,6 +3,7 @@ import type {SidebarView} from '../types';
 
 class SidebarViewRegistry {
     views: {[string]: SidebarView};
+    disabled = [];
 
     constructor() {
         this.clear();
@@ -33,6 +34,14 @@ class SidebarViewRegistry {
         }
 
         return this.views[name];
+    }
+
+    disable(name: string): void {
+        this.disabled.push(name);
+    }
+
+    isDisabled(name: string): boolean {
+        return this.disabled.indexOf(name) > -1;
     }
 }
 

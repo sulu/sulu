@@ -16,26 +16,14 @@ use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
+use Symfony\Component\DomCrawler\Crawler;
 
-/**
- * Provider functionality to render and update preview instances.
- */
 class Preview implements PreviewInterface
 {
-    /**
-     * @var int
-     */
-    private $cacheLifeTime;
-
     /**
      * @var PreviewObjectProviderInterface[]
      */
     private $objectProviders;
-
-    /**
-     * @var Cache
-     */
-    private $dataCache;
 
     /**
      * @var PreviewRendererInterface
@@ -43,173 +31,176 @@ class Preview implements PreviewInterface
     private $renderer;
 
     /**
-     * @param PreviewObjectProviderInterface[] $objectProviders
-     * @param Cache $dataCache
-     * @param PreviewRendererInterface $renderer
-     * @param int $cacheLifeTime
+     * @var Cache
      */
+    private $cache;
+
+    /**
+     * @var int
+     */
+    private $cacheLifeTime;
+
     public function __construct(
         array $objectProviders,
-        Cache $dataCache,
+        Cache $cache,
         PreviewRendererInterface $renderer,
-        $cacheLifeTime = 3600
+        int $cacheLifeTime = 3600
     ) {
         $this->objectProviders = $objectProviders;
-        $this->dataCache = $dataCache;
         $this->renderer = $renderer;
+        $this->cache = $cache;
         $this->cacheLifeTime = $cacheLifeTime;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function start($objectClass, $id, $userId, $webspaceKey, $locale, array $data = [])
+    public function start(string $providerKey, string $id, string $locale, int $userId, array $data = []): string
     {
-        $provider = $this->getProvider($objectClass);
+        $provider = $this->getProvider($providerKey);
         $object = $provider->getObject($id, $locale);
-        $token = md5(sprintf('%s.%s.%s', $id, $locale, $userId));
 
-        if (0 !== count($data)) {
+        $cacheItem = new PreviewCacheItem($id, $locale, $userId, $providerKey, $object);
+        if (!empty($data)) {
             $provider->setValues($object, $locale, $data);
         }
 
-        $this->save($token, $object);
+        $this->save($cacheItem);
 
-        return $token;
+        return $cacheItem->getToken();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function stop($token)
+    public function stop(string $token): void
     {
         if (!$this->exists($token)) {
             return;
         }
 
-        $this->dataCache->delete($token);
+        $this->cache->delete($token);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function exists($token)
+    public function exists(string $token): bool
     {
-        return $this->dataCache->contains($token);
+        return $this->cache->contains($token);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function update($token, $webspaceKey, $locale, array $data, $targetGroupId = null)
+    public function update(string $token, string $webspaceKey, array $data, ?int $targetGroupId): string
     {
-        if (0 === count($data)) {
-            return [];
+        $cacheItem = $this->fetch($token);
+
+        $provider = $this->getProvider($cacheItem->getProviderKey());
+        if (!empty($data)) {
+            $provider->setValues($cacheItem->getObject(), $cacheItem->getLocale(), $data);
+            $this->save($cacheItem);
         }
 
-        $object = $this->fetch($token);
-        $provider = $this->getProvider(get_class($object));
-        $provider->setValues($object, $locale, $data);
-        $this->save($token, $object);
+        $partialHtml = $this->renderer->render(
+            $cacheItem->getObject(),
+            $cacheItem->getId(),
+            $webspaceKey,
+            $cacheItem->getLocale(),
+            true,
+            $targetGroupId
+        );
 
-        $id = $provider->getId($object);
-        $html = $this->renderer->render($object, $id, $webspaceKey, $locale, true, $targetGroupId);
-
-        $extractor = new RdfaExtractor($html);
-
-        return $extractor->getPropertyValues(array_keys($data));
+        return str_replace('<!-- CONTENT-REPLACER -->', $partialHtml, $cacheItem->getHtml());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function updateContext($token, $webspaceKey, $locale, array $context, array $data, $targetGroupId = null)
+    public function updateContext(string $token, string $webspaceKey, array $context, ?int $targetGroupId): string
     {
-        $object = $this->fetch($token);
-        $provider = $this->getProvider(get_class($object));
+        $cacheItem = $this->fetch($token);
+
+        $provider = $this->getProvider($cacheItem->getProviderKey());
         if (0 === count($context)) {
-            $id = $provider->getId($object);
-
-            return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
+            return $this->renderer->render(
+                $cacheItem->getObject(),
+                $cacheItem->getId(),
+                $webspaceKey,
+                $cacheItem->getLocale(),
+                false,
+                $targetGroupId
+            );
         }
 
-        // context
-        $object = $provider->setContext($object, $locale, $context);
-        $id = $provider->getId($object);
+        $cacheItem->setObject($provider->setContext($cacheItem->getObject(), $cacheItem->getLocale(), $context));
 
-        if (0 < count($data)) {
-            // data
-            $provider->setValues($object, $locale, $data);
+        $html = $this->renderer->render(
+            $cacheItem->getObject(),
+            $cacheItem->getId(),
+            $webspaceKey,
+            $cacheItem->getLocale(),
+            false,
+            $targetGroupId
+        );
+
+        $crawler = new Crawler($html);
+        $cacheItem->setHtml(str_replace($crawler->filter('#content')->html(), '<!-- CONTENT-REPLACER -->', $html));
+        $this->save($cacheItem);
+
+        return $html;
+    }
+
+    public function render(string $token, string $webspaceKey, string $locale, ?int $targetGroupId): string
+    {
+        $cacheItem = $this->fetch($token);
+
+        $html = $this->renderer->render(
+            $cacheItem->getObject(),
+            $cacheItem->getId(),
+            $webspaceKey,
+            $cacheItem->getLocale(),
+            false,
+            $targetGroupId
+        );
+
+        $crawler = new Crawler($html);
+        $cacheItem->setHtml(str_replace($crawler->filter('#content')->html(), '<!-- CONTENT-REPLACER -->', $html));
+        $this->save($cacheItem);
+
+        return $html;
+    }
+
+    protected function getProvider(string $providerKey): PreviewObjectProviderInterface
+    {
+        if (!array_key_exists($providerKey, $this->objectProviders)) {
+            throw new ProviderNotFoundException($providerKey);
         }
 
-        $this->save($token, $object);
-
-        return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
+        return $this->objectProviders[$providerKey];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render($token, $webspaceKey, $locale, $targetGroupId = null)
+    protected function save(PreviewCacheItem $item): void
     {
-        $object = $this->fetch($token);
-        $id = $this->getProvider(get_class($object))->getId($object);
+        $data = [
+            'id' => $item->getId(),
+            'locale' => $item->getLocale(),
+            'userId' => $item->getUserId(),
+            'providerKey' => $item->getProviderKey(),
+            'html' => $item->getHtml(),
+            'object' => $this->getProvider($item->getProviderKey())->serialize($item->getObject()),
+            'objectClass' => get_class($item->getObject()),
+        ];
 
-        return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
+        $this->cache->save($item->getToken(), json_encode($data), $this->cacheLifeTime);
     }
 
-    /**
-     * Returns provider for given object-class.
-     *
-     * @param string $objectClass
-     *
-     * @return mixed|PreviewObjectProviderInterface
-     *
-     * @throws ProviderNotFoundException
-     */
-    protected function getProvider($objectClass)
-    {
-        if (!array_key_exists($objectClass, $this->objectProviders)) {
-            throw new ProviderNotFoundException($objectClass);
-        }
-
-        return $this->objectProviders[$objectClass];
-    }
-
-    /**
-     * Save the object.
-     *
-     * @param string $token
-     * @param string $object
-     *
-     * @throws ProviderNotFoundException
-     */
-    protected function save($token, $object)
-    {
-        $data = $this->getProvider(get_class($object))->serialize($object);
-        $data = sprintf("%s\n%s", get_class($object), $data);
-
-        $this->dataCache->save($token, $data, $this->cacheLifeTime);
-    }
-
-    /**
-     * Fetch the object.
-     *
-     * @param string $token
-     *
-     * @return mixed
-     *
-     * @throws ProviderNotFoundException
-     * @throws TokenNotFoundException
-     */
-    protected function fetch($token)
+    protected function fetch(string $token): PreviewCacheItem
     {
         if (!$this->exists($token)) {
             throw new TokenNotFoundException($token);
         }
 
-        $cacheEntry = explode("\n", $this->dataCache->fetch($token), 2);
+        $data = json_decode($this->cache->fetch($token), true);
+        $provider = $this->getProvider($data['providerKey']);
 
-        return $this->getProvider($cacheEntry[0])->deserialize($cacheEntry[1], $cacheEntry[0]);
+        $cacheItem = new PreviewCacheItem(
+            $data['id'],
+            $data['locale'],
+            $data['userId'],
+            $data['providerKey'],
+            $provider->deserialize($data['object'], $data['objectClass'])
+        );
+        if ($data['html']) {
+            $cacheItem->setHtml($data['html']);
+        }
+
+        return $cacheItem;
     }
 }

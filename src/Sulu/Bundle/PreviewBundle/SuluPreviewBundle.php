@@ -28,7 +28,12 @@ class SuluPreviewBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(
-            new TaggedServiceCollectorCompilerPass('sulu_preview.preview', 'sulu_preview.object_provider', 0, 'class')
+            new TaggedServiceCollectorCompilerPass(
+                'sulu_preview.preview',
+                'sulu_preview.object_provider',
+                0,
+                'provider-key'
+            )
         );
     }
 }

@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render button to start preview 1`] = `
+<button>
+  Start
+</button>
+`;
+
+exports[`Render correct preview 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="loaderContainer"
+  >
+    <Loader
+      size={40}
+    />
+  </div>
+  <Toolbar
+    skin="dark"
+  >
+    <Controls
+      skin="light"
+    >
+      <Button
+        active={false}
+        disabled={false}
+        hasOptions={false}
+        icon="su-arrow-right"
+        onClick={[Function]}
+        primary={false}
+      />
+      <Button
+        active={false}
+        disabled={false}
+        hasOptions={false}
+        icon="fa-refresh"
+        onClick={[Function]}
+        primary={false}
+      />
+    </Controls>
+  </Toolbar>
+</div>
+`;

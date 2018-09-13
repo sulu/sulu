@@ -130,8 +130,7 @@
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="jms_serializer"/>
 
-            <tag name="sulu_preview.object_provider" class="Sulu\Bundle\ContentBundle\Document\HomeDocument"/>
-            <tag name="sulu_preview.object_provider" class="Sulu\Bundle\ContentBundle\Document\PageDocument"/>
+            <tag name="sulu_preview.object_provider" provider-key="pages"/>
         </service>
         <service id="sulu_content.preview.defaults_provider"
                  class="Sulu\Bundle\ContentBundle\Preview\PageRouteDefaultsProvider">

@@ -120,6 +120,7 @@ class ContentAdmin extends Admin
                 ->setParent('sulu_content.page_add_form'),
             (new Route('sulu_content.page_edit_form', '/webspaces/:webspace/:locale/:id', 'sulu_content.page_tabs'))
                 ->addOption('resourceKey', 'pages')
+                ->addOption('preview', true)
                 ->addOption('backRoute', 'sulu_content.webspaces')
                 ->addOption('routerAttributesToFormStore', ['parentId', 'webspace'])
                 ->addOption('toolbarActions', $formToolbarActionsWithoutType),

@@ -5,6 +5,7 @@ import {observer} from 'mobx-react';
 import Tabs from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
+import {withSidebar} from '../../containers/Sidebar';
 import ResourceStore from '../../stores/ResourceStore';
 
 type Props = ViewProps & {
@@ -12,7 +13,7 @@ type Props = ViewProps & {
 };
 
 @observer
-export default class ResourceTabs extends React.Component<Props> {
+class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
 
     constructor(props: Props) {
@@ -86,3 +87,28 @@ export default class ResourceTabs extends React.Component<Props> {
         );
     }
 }
+
+export default withSidebar(ResourceTabs, function() {
+    const {
+        router: {
+            route: {
+                options: {
+                    preview,
+                },
+            },
+        },
+    } = this.props;
+
+    if (!preview) {
+        return {};
+    }
+
+    return {
+        view: 'sulu_preview.preview',
+        sizes: ['medium', 'large'],
+        props: {
+            router: this.props.router,
+            resourceStore: this.resourceStore,
+        },
+    };
+});
