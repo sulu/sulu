@@ -375,11 +375,16 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     write_info('Running tests');
 
     $flags = $input->getOption('flags');
+    $phpunitPath = __DIR__ . '/../vendor/bin/phpunit';
+
+    if (!file_exists($phpunitPath)) {
+        write_error(sprintf('Could not find phpunit in "%s"', $phpunitPath));
+        exit(1);
+    }
+
     $process = exec_cmd(sprintf(
-        '..%svendor%sbin%sphpunit --testdox --configuration %s %s',
-        DIRECTORY_SEPARATOR,
-        DIRECTORY_SEPARATOR,
-        DIRECTORY_SEPARATOR,
+        '%s --testdox --configuration %s %s',
+        $phpunitPath,
         $phpunitFile->getPathname(),
         $flags
     ), true, false);
