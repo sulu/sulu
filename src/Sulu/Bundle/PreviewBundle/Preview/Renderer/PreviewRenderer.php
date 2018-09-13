@@ -158,6 +158,9 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         $attributes = $this->routeDefaultsProvider->getByEntity(get_class($object), $id, $locale, $object);
+        $attributes['object'] = $object;
+        $attributes['preview'] = true;
+        $attributes['partial'] = $partial;
 
         // get server parameters
         $server = $this->createServerAttributes($portalInformation, $currentRequest);
@@ -261,6 +264,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $server['SERVER_PORT'] = $port;
         $server['HTTP_HOST'] = $httpHost;
         $server['REQUEST_URI'] = $prefixPath . '/_sulu_preview';
+        unset($server['X-Requested-With']);
 
         return $server;
     }
