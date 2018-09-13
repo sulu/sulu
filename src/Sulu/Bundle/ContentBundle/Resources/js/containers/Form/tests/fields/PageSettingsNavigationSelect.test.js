@@ -3,7 +3,7 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils';
+import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import webspaceStore from '../../../../stores/WebspaceStore';
 import PageSettingsNavigationSelect from '../../fields/PageSettingsNavigationSelect';
 
