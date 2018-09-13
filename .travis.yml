@@ -65,7 +65,7 @@ before_script:
   - composer update $COMPOSER_FLAGS
 
 script:
-  - time ./bin/runtests -i -a $TEST_FLAGS --flags="--testdox"
+  - time ./bin/runtests -i -a $TEST_FLAGS
 
 notifications:
   slack:
