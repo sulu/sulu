@@ -136,7 +136,7 @@ exports[`Render a simple MediaOverview 1`] = `
                 class="select"
               >
                 <button
-                  class="displayValue dark dark"
+                  class="displayValue dark"
                   type="button"
                 >
                   <div

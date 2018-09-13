@@ -85,7 +85,10 @@
         "no-multi-spaces": "error",
         "prefer-const": "error",
         "space-infix-ops": "error",
-        "space-before-function-paren": ["error", "never"],
+        "space-before-function-paren": [
+            "error", 
+            "never"
+        ],
         "yoda": [
             "error",
             "never"

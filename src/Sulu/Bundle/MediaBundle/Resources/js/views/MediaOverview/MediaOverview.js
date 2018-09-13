@@ -10,6 +10,7 @@ import MediaCollection from '../../containers/MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaOverviewStyles from './mediaOverview.scss';
 
+const COLLECTION_ROUTE = 'sulu_media.overview';
 const MEDIA_ROUTE = 'sulu_media.form.detail';
 
 const USER_SETTING_PREFIX = 'sulu_media.overview';
@@ -63,12 +64,16 @@ class MediaOverview extends React.Component<ViewProps> {
         router.bind('mediaLimit', this.mediaDatagridStore.limit, 10);
 
         this.collectionLimitDisposer = autorun(
-            () => userStore.setPersistentSetting(getLimitSettingKey(COLLECTIONS_RESOURCE_KEY),
-                this.collectionDatagridStore.limit.get())
+            () => userStore.setPersistentSetting(
+                getLimitSettingKey(COLLECTIONS_RESOURCE_KEY),
+                this.collectionDatagridStore.limit.get()
+            )
         );
         this.mediaLimitDisposer = autorun(
-            () => userStore.setPersistentSetting(getLimitSettingKey(MEDIA_RESOURCE_KEY),
-                this.mediaDatagridStore.limit.get())
+            () => userStore.setPersistentSetting(
+                getLimitSettingKey(MEDIA_RESOURCE_KEY),
+                this.mediaDatagridStore.limit.get()
+            )
         );
     }
 
@@ -204,7 +209,7 @@ export default withToolbar(MediaOverview, function() {
                 onClick: () => {
                     this.clearDatagrids();
                     router.restore(
-                        USER_SETTING_PREFIX,
+                        COLLECTION_ROUTE,
                         {
                             id: this.collectionStore.parentId,
                             locale: this.locale.get(),

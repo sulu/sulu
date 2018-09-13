@@ -26,13 +26,7 @@ $darkBackgroundColor: $white;
         color: inherit;
     }
 
-    &.dark {
-        background-color: $darkBackgroundColor;
-        color: $darkColor;
-        border-radius: $darkBorderRadius;
-        border-color: $darkBorderColor;
-    }
-
+    &.dark,
     &.default {
         display: block;
         width: 100%;
@@ -41,11 +35,18 @@ $darkBackgroundColor: $white;
         text-align: left;
         font-size: $fontSize;
         color: $blueZodiac;
-        background: $backgroundColor;
+        background-color: $backgroundColor;
 
         &:hover {
             color: $hoverColor;
         }
+    }
+
+    &.dark {
+        background-color: $darkBackgroundColor;
+        color: $darkColor;
+        border-color: $darkBorderColor;
+        border-radius: $darkBorderRadius;
     }
 }
 

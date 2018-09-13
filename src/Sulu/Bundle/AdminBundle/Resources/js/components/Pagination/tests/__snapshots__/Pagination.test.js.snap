@@ -18,7 +18,7 @@ exports[`Render disabled next link if current page is last page 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div
@@ -100,7 +100,7 @@ exports[`Render disabled previous link current page is first page 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div
@@ -196,7 +196,7 @@ exports[`Render pagination with loader 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div
@@ -289,7 +289,7 @@ exports[`Render pagination with page numbers 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div

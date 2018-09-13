@@ -71,7 +71,7 @@ exports[`Render column with ascending sort icon 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div
@@ -206,7 +206,7 @@ exports[`Render column with descending sort icon 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div
@@ -355,7 +355,7 @@ exports[`Render data with all different visibility types schema 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div
@@ -520,7 +520,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div
@@ -648,7 +648,7 @@ exports[`Render data with schema 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div
@@ -881,7 +881,7 @@ exports[`Render data with schema and selections 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div
@@ -1009,7 +1009,7 @@ exports[`Render data with schema in different order 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div
@@ -1108,7 +1108,7 @@ exports[`Render data with schema not containing all fields 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div

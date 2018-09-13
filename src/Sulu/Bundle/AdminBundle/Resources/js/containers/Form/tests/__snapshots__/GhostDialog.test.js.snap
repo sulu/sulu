@@ -13,7 +13,7 @@ exports[`Should render a Dialog 1`] = `
           <div class=\\"ghostDialog\\">
             <p></p><label class=\\"label\\"></label>
             <div class=\\"localeSelect\\">
-              <div class=\\"select\\"><button class=\\"displayValue default default\\" type=\\"button\\">
+              <div class=\\"select\\"><button class=\\"displayValue default\\" type=\\"button\\">
                   <div aria-label=\\"en\\" class=\\"croppedText\\" title=\\"en\\">
                     <div aria-hidden=\\"true\\" class=\\"front\\">e</div>
                     <div aria-hidden=\\"true\\" class=\\"back\\"><span>n</span></div>

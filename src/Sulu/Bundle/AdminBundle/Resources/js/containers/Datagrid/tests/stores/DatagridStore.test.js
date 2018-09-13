@@ -1130,8 +1130,15 @@ test('Should copy the item with the given ID to the new given parent and reload 
         expect(structureStrategy.clear).toBeCalledWith();
         expect(loadingStrategy.load).toHaveBeenLastCalledWith(
             'snippets',
-            {expandedIds: 9, limit: 10, locale: 'de', page: undefined,
-                sortBy: undefined, sortOrder: undefined, webspace: 'sulu'},
+            {
+                expandedIds: 9,
+                limit: 10,
+                locale: 'de',
+                page: undefined,
+                sortBy: undefined,
+                sortOrder: undefined,
+                webspace: 'sulu',
+            },
             undefined
         );
     });

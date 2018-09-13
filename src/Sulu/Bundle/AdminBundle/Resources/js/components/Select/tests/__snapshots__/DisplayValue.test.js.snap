@@ -2,7 +2,7 @@
 
 exports[`The component should render 1`] = `
 <button
-  class="displayValue default default"
+  class="displayValue default"
   type="button"
 >
   <div
@@ -39,7 +39,7 @@ exports[`The component should render 1`] = `
 
 exports[`The component should render with an icon 1`] = `
 <button
-  class="displayValue default hasIcon default"
+  class="displayValue default hasIcon"
   type="button"
 >
   <span
@@ -80,7 +80,7 @@ exports[`The component should render with an icon 1`] = `
 
 exports[`The component should render with the dark skin 1`] = `
 <button
-  class="displayValue dark dark"
+  class="displayValue dark"
   type="button"
 >
   <div
@@ -117,7 +117,7 @@ exports[`The component should render with the dark skin 1`] = `
 
 exports[`The component should render with the flat skin 1`] = `
 <button
-  class="displayValue flat flat"
+  class="displayValue flat"
   type="button"
 >
   <div

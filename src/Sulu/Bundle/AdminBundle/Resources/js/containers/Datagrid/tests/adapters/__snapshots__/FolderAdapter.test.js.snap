@@ -79,7 +79,7 @@ exports[`Render a basic Folder list with data 1`] = `
         class="select"
       >
         <button
-          class="displayValue dark dark"
+          class="displayValue dark"
           type="button"
         >
           <div

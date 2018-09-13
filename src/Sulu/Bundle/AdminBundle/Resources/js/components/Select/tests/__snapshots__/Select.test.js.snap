@@ -5,7 +5,7 @@ exports[`The component should open the popover when the display value is clicked
   class="select"
 >
   <button
-    class="displayValue default default"
+    class="displayValue default"
     type="button"
   >
     <div
@@ -62,7 +62,7 @@ exports[`The component should render with a dark skin 1`] = `
   class="select"
 >
   <button
-    class="displayValue dark dark"
+    class="displayValue dark"
     type="button"
   >
     <div
@@ -103,7 +103,7 @@ exports[`The component should render with an icon 1`] = `
   class="select"
 >
   <button
-    class="displayValue default hasIcon default"
+    class="displayValue default hasIcon"
     type="button"
   >
     <span
@@ -148,7 +148,7 @@ exports[`The component should render with the popover closed 1`] = `
   class="select"
 >
   <button
-    class="displayValue default default"
+    class="displayValue default"
     type="button"
   >
     <div
