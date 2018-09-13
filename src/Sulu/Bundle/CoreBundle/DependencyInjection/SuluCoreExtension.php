@@ -62,24 +62,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             );
         }
 
-        $templatesPath = '%kernel.project_dir%/vendor/sulu/sulu/src/Sulu/Bundle/CoreBundle/Content/templates';
-
-        $container->prependExtensionConfig(
-            'sulu_core',
-            [
-                'content' => [
-                    'structure' => [
-                        'paths' => [
-                            'sulu' => [
-                                'path' => $templatesPath,
-                                'type' => 'page',
-                            ],
-                        ],
-                    ],
-                ],
-            ]
-        );
-
         if ($container->hasExtension('massive_build')) {
             $container->prependExtensionConfig('massive_build', [
                 'command_class' => 'Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand',

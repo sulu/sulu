@@ -1,12 +1,6 @@
 framework:
-    translator:
-        fallbacks: ['en']
     secret: secret
     router: { resource: '%kernel.root_dir%/config/routing.yml' }
-    templating: { engines: ['twig'] }
-    form:
-        enabled: true
-    csrf_protection: ~
     test: ~
     session:
         storage_id: session.storage.mock_file
@@ -22,7 +16,6 @@ monolog:
 sulu_core:
     webspace:
         config_dir: "%kernel.root_dir%/Resources/webspaces"
-    cache_dir: '%kernel.root_dir%/cache/sulu'
     content:
         structure:
              default_type:
@@ -37,12 +30,6 @@ sulu_core:
                  templates:
                      path: '%kernel.root_dir%/Resources/snippets'
                      type: snippet
-
-                 # This configuration could be used either from a bundle or the 'root' of the repository
-                 # We try both just to be sure
-                 sulu_1:
-                     path: '%kernel.root_dir%/../../../CoreBundle/Content/templates'
-                     type: 'page'
     webspace: ~
 
 doctrine:
@@ -58,23 +45,12 @@ doctrine:
                 alias: GedmoTree
                 is_bundle: false
     dbal:
-        driver: '%database.driver%'
-        host: '%database.host%'
-        port: '%database.port%'
-        dbname: '%database.name%'
-        user: '%database.user%'
-        password: '%database.password%'
-        path: '%database.path%'
+        url: '%database.url%'
         server_version: '%database.version%'
         charset: '%database.charset%'
         default_table_options:
             charset: '%database.charset%'
             collate: '%database.collate%'
-
-stof_doctrine_extensions:
-    orm:
-        default:
-            tree: true
 
 sulu_test:
     enable_test_user_provider: true
