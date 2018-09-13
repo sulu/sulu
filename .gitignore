@@ -3,6 +3,7 @@
 !/var/.gitkeep
 /vendor/
 /.web-server-pid
+/src/Sulu/Bundle/*/Tests/var/
 
 # web
 /public/bundles
