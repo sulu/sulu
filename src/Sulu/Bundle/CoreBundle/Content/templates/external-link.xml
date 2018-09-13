@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>external-link</key>
+
+    <controller>not in use</controller>
+    <view>not in use</view>
+    <cacheLifetime>1</cacheLifetime>
+    <internal>true</internal>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="de">Titel</title>
+                <title lang="en">Title</title>
+            </meta>
+        </property>
+
+        <property name="external" type="url">
+            <meta>
+                <title lang="de">Link</title>
+                <title lang="en">Link</title>
+            </meta>
+            <tag name="sulu.rlp"/>
+        </property>
+    </properties>
+</template>
