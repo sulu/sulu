@@ -160,25 +160,16 @@
         }
     },
     "scripts": {
-        "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
-        },
-        "auto-sulu-scripts": [
-            "Sulu\\Bundle\\MediaBundle\\Composer\\MediaScriptHandler::initBundle",
-            "Massive\\Bundle\\SearchBundle\\Composer\\SearchScriptHandler::initBundle"
+        "auto-scripts": [
+            "bin/adminconsole cache:clear",
+            "bin/websiteconsole cache:clear",
+            "bin/adminconsole assets:install --symlink --relative"
         ],
         "post-install-cmd": [
-            "@auto-scripts",
-            "@auto-sulu-scripts"
+            "@auto-scripts"
         ],
         "post-update-cmd": [
-            "@auto-scripts",
-            "@auto-sulu-scripts"
-        ],
-        "post-create-project-cmd": [
-            "Sulu\\Bundle\\CoreBundle\\Composer\\ScriptHandler::removeComposerLockFromGitIgnore",
-            "Sulu\\Bundle\\CoreBundle\\Composer\\ScriptHandler::removePackageLockJsonFromGitIgnore"
+            "@auto-scripts"
         ]
     },
     "config": {
