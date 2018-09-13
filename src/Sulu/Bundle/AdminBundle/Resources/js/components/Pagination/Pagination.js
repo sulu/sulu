@@ -63,7 +63,7 @@ export default class Pagination extends React.PureComponent<Props> {
         const {currentLimit, onLimitChange} = this.props;
         const selected = parseInt(value);
 
-        if(selected !== currentLimit) {
+        if (selected !== currentLimit) {
             onLimitChange(selected);
         }
     };
@@ -82,16 +82,15 @@ export default class Pagination extends React.PureComponent<Props> {
                     <span className={paginationStyles.display}>{translate('sulu_admin.per_page')}:</span>
                     <span>
                         <SingleSelect onChange={this.handleLimitChange} skin="dark" value={currentLimit}>
-                            {AVAILABLE_LIMITS.map((limit) => (<SingleSelect.Option
-                                key={limit}
-                                value={limit}
-                            >{limit}</SingleSelect.Option>))}
+                            {AVAILABLE_LIMITS.map((limit) => (
+                                <SingleSelect.Option key={limit} value={limit}>
+                                    {limit}
+                                </SingleSelect.Option>
+                            ))}
                         </SingleSelect>
                     </span>
 
-                    <div className={paginationStyles.loader}>
-                        {loading && <Loader size={24} />}
-                    </div>
+                    <div className={paginationStyles.loader}>{loading && <Loader size={24} />}</div>
                     <span className={paginationStyles.display}>
                         {translate('sulu_admin.page')}: {currentPage} {translate('sulu_admin.of')} {totalPages}
                     </span>
