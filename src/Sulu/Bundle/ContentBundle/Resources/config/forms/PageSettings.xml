@@ -57,7 +57,7 @@
             <title lang="de">Änderungshistorie</title>
         </meta>
         <properties>
-            <property name="authored" type="date" colspan="6">
+            <property name="authored" type="datetime" colspan="6">
                 <meta>
                     <title lang="en">Authored Date</title>
                     <title lang="de">Verfasst am</title>
