@@ -24,8 +24,8 @@ use Symfony\Component\Process\Process;
 // ============================
 
 // set default env variables
-if (!getenv('SULU_PHPCR_TRANSPORT')) {
-    putenv('SULU_PHPCR_TRANSPORT=doctrinedbal');
+if (!getenv('PHPCR_TRANSPORT')) {
+    putenv('PHPCR_TRANSPORT=doctrinedbal');
 }
 
 // ensure that we don't timeout
@@ -137,7 +137,7 @@ function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
     }
 
     return exec_cmd(
-        'php ' . __DIR__ . '/console ' . $cmd,
+        'php ' . get_test_console_path() . ' ' . $cmd,
         $echo,
         $checkForError
     );
@@ -226,9 +226,9 @@ function get_bundles($target = null)
     return iterator_to_array($finder);
 }
 
-function get_bundle_console_path($bundlePath)
+function get_test_console_path()
 {
-    $consolePath = realpath($bundlePath . '/..') . '/TestBundle/Resources/app/console';
+    $consolePath = __DIR__ . '/../src/Sulu/Bundle/TestBundle/Resources/app/console';
 
     if (!file_exists($consolePath)) {
         write_error(sprintf('Could not find test console "%s", is the test being executed in the correct directory?', $consolePath));
@@ -396,9 +396,9 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     writeln('');
 }
 
-function init_bundle($phpunitPath)
+function init_bundle()
 {
-    if (!$console = get_bundle_console_path(dirname($phpunitPath))) {
+    if (!$console = get_test_console_path()) {
         return;
     }
 
@@ -475,7 +475,7 @@ if ($input->getOption('initialize')) {
     }
     init_dbal();
     write_info('Initializing the content repository');
-    if (getenv('SULU_PHPCR_TRANSPORT') === 'doctrinedbal') {
+    if (getenv('PHPCR_TRANSPORT') === 'doctrinedbal') {
         init_phpcr_dbal();
     }
     write(PHP_EOL);
