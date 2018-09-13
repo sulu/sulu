@@ -7,6 +7,8 @@ cache:
 
 env:
   global:
+    - APP_ENV="test"
+    - APP_SECRET=a448d1dfcaa563fce56c2fd9981f662b
     - JACKRABBIT_VERSION=2.12.0
     - SULU_PHPCR_TRANSPORT=doctrinedbal
     - TEST_FLAGS=""
