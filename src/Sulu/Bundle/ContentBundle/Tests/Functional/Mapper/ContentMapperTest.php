@@ -107,9 +107,6 @@ class ContentMapperTest extends SuluTestCase
 
     public function testNewProperty()
     {
-        $token = $this->createUserTokenWithId(1);
-        $this->tokenStorage->setToken($token);
-
         $data = [
             'title' => 'Testname',
             'tags' => [
