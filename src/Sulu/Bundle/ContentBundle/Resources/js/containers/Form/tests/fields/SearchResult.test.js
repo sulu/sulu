@@ -4,6 +4,7 @@ import {observable} from 'mobx';
 import {shallow} from 'enzyme';
 import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils';
 import SearchResult from '../../fields/SearchResult';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -37,20 +38,8 @@ test('Pass correct fields to SearchResult component', () => {
 
     const searchResult = shallow(
         <SearchResult
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaOptions={{}}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -78,20 +67,8 @@ test('Pass correct fields to SearchResult component', () => {
 
     const searchResult = shallow(
         <SearchResult
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaOptions={{}}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 

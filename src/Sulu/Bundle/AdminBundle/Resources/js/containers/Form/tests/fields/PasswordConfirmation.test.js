@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
@@ -17,19 +18,9 @@ test('Pass error correctly to PasswordConfirmation component', () => {
 
     const passwordConfirmation = shallow(
         <PasswordConfirmation
-            dataPath=""
+            {...fieldTypeDefaultProps}
             error={error}
-            fieldTypeOptions={{}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -42,19 +33,10 @@ test('Pass props correctly to PasswordConfirmation component', () => {
     const finishSpy = jest.fn();
     const passwordConfirmation = shallow(
         <PasswordConfirmation
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 

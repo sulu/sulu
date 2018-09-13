@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
@@ -17,19 +18,9 @@ test('Pass error correctly to component', () => {
 
     const field = shallow(
         <Number
-            dataPath=""
+            {...fieldTypeDefaultProps}
             error={error}
-            fieldTypeOptions={{}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={50.2}
         />
     );
 
@@ -40,19 +31,8 @@ test('Pass props correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const field = shallow(
         <Number
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={50.2}
         />
     );
 
@@ -75,20 +55,9 @@ test('Pass props correctly to component inclusive schemaOptions', () => {
 
     const field = shallow(
         <Number
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={50.2}
         />
     );
 
@@ -104,19 +73,9 @@ test('Should not pass any arguments to onFinish callback', () => {
 
     const input = shallow(
         <Number
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
             onFinish={finishSpy}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={60.2}
         />
     );
 

@@ -3,6 +3,7 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils';
 import SingleMediaUpload from '../../fields/SingleMediaUpload';
 import SingleMediaUploadComponent from '../../../SingleMediaUpload';
 import MediaUploadStore from '../../../../stores/MediaUploadStore';
@@ -35,20 +36,9 @@ test('Pass correct props', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -71,20 +61,9 @@ test('Pass correct skin to props', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -105,20 +84,9 @@ test('Throw if emptyIcon is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
-                dataPath=""
-                error={undefined}
-                fieldTypeOptions={{}}
+                {...fieldTypeDefaultProps}
                 formInspector={formInspector}
-                label="Test"
-                maxOccurs={undefined}
-                minOccurs={undefined}
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
                 schemaOptions={schemaOptions}
-                schemaPath=""
-                showAllErrors={false}
-                types={undefined}
-                value={undefined}
             />
         )
     ).toThrow('"empty_icon"');
@@ -138,20 +106,9 @@ test('Throw if skin is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
-                dataPath=""
-                error={undefined}
-                fieldTypeOptions={{}}
+                {...fieldTypeDefaultProps}
                 formInspector={formInspector}
-                label="Test"
-                maxOccurs={undefined}
-                minOccurs={undefined}
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
                 schemaOptions={schemaOptions}
-                schemaPath=""
-                showAllErrors={false}
-                types={undefined}
-                value={undefined}
             />
         )
     ).toThrow('"default" or "round"');
@@ -171,20 +128,9 @@ test('Throw if image_size is set but not a valid value', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
-                dataPath=""
-                error={undefined}
-                fieldTypeOptions={{}}
+                {...fieldTypeDefaultProps}
                 formInspector={formInspector}
-                label="Test"
-                maxOccurs={undefined}
-                minOccurs={undefined}
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
                 schemaOptions={schemaOptions}
-                schemaPath=""
-                showAllErrors={false}
-                types={undefined}
-                value={undefined}
             />
         )
     ).toThrow('"image_size"');
@@ -197,20 +143,9 @@ test('Throw if collectionId is not set', () => {
     expect(
         () => shallow(
             <SingleMediaUpload
-                dataPath=""
-                error={undefined}
-                fieldTypeOptions={{}}
+                {...fieldTypeDefaultProps}
                 formInspector={formInspector}
-                label="Test"
-                maxOccurs={undefined}
-                minOccurs={undefined}
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
                 schemaOptions={schemaOptions}
-                schemaPath=""
-                showAllErrors={false}
-                types={undefined}
-                value={undefined}
             />
         )
     ).toThrow('"collection_id"');
@@ -229,20 +164,11 @@ test('Call onChange and onFinish when upload has completed', () => {
 
     const singleMediaUpload = shallow(
         <SingleMediaUpload
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -261,20 +187,9 @@ test('Create a MediaUploadStore when constructed', () => {
     };
     const singleMediaUpload = shallow(
         <SingleMediaUpload
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -297,19 +212,9 @@ test('Create a MediaUploadStore when constructed with data', () => {
     };
     const singleMediaUpload = shallow(
         <SingleMediaUpload
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={data}
         />
     );
