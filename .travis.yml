@@ -7,6 +7,7 @@ cache:
 
 env:
   global:
+    - APP_ENV="test"
     - JACKRABBIT_VERSION=2.12.0
     - SULU_PHPCR_TRANSPORT=doctrinedbal
     - TEST_FLAGS=""
