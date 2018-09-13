@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ExcerptControllerTest extends SuluTestCase
 {
@@ -23,7 +24,7 @@ class ExcerptControllerTest extends SuluTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
+        $this->session = $this->getPhpcrDefaultSession();
         $this->initPhpcr();
     }
 

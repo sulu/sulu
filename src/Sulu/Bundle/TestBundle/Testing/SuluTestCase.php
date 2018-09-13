@@ -174,6 +174,7 @@ abstract class SuluTestCase extends KernelTestCase
 
         if (!self::$workspaceInitialized) {
             $this->getInitializer()->initialize(null, true);
+
             $this->dumpPhpcr($session, 'default');
             $this->dumpPhpcr($liveSession, 'live');
             self::$workspaceInitialized = true;

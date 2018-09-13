@@ -14,7 +14,7 @@ env:
     - JACKRABBIT_VERSION=2.12.0
     - PHPCR_TRANSPORT=doctrinedbal
     - TEST_FLAGS=""
-    - DATABASE_URL=mysql://root:@127.0.0.1:3306/sulu_test
+    - DATABASE_URL=mysql://root:@127.0.0.1/sulu_test
     - DATABASE_VERSION=5.6
     - DATABASE_CHARSET=utf8mb4
     - DATABASE_COLLATE=utf8mb4_unicode_ci
@@ -30,7 +30,7 @@ matrix:
       php: 7.1
       env:
         - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
-        - DATABASE_URL=postgres://postgres:postgres@127.0.0.1:3306/sulu_test
+        - DATABASE_URL=postgres://postgres:postgres@127.0.0.1/sulu_test
         - DATABASE_VERSION=9.2
         - PHPCR_TRANSPORT=jackrabbit
         - DATABASE_CHARSET=UTF8

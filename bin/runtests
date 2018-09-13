@@ -377,8 +377,8 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     $flags = $input->getOption('flags');
 
     $process = exec_cmd(sprintf(
-        '%s --configuration %s %s',
-        getPhpUnitPath(),
+        '%s --testdox --configuration %s %s',
+        get_phpunit_path(),
         $phpunitFile->getPathname(),
         $flags
     ), true, false);
@@ -396,7 +396,7 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     writeln('');
 }
 
-function getPhpUnitPath()
+function get_phpunit_path()
 {
     $phpUnitPath = __DIR__ . '/../vendor/bin/phpunit';
 
@@ -510,7 +510,7 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
     write_header('Component Tests');
 
     $process = exec_cmd(
-        sprintf('%s ' . $input->getOption('flags'), getPhpUnitPath()),
+        sprintf('%s --testdox ' . $input->getOption('flags'), get_phpunit_path()),
         true,
         false
     );

@@ -6,6 +6,7 @@
 /src/Sulu/Bundle/*/Tests/var/
 /src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/cache/
 /tests/Resources/cache/
+/src/Sulu/Bundle/TestBundle/Resources/app/cache
 
 # web
 /public/bundles
