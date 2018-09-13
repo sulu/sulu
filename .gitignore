@@ -4,6 +4,8 @@
 /vendor/
 /.web-server-pid
 /src/Sulu/Bundle/*/Tests/var/
+/src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/cache/
+/tests/Resources/cache/
 
 # web
 /public/bundles

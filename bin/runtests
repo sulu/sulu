@@ -375,16 +375,10 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     write_info('Running tests');
 
     $flags = $input->getOption('flags');
-    $phpunitPath = __DIR__ . '/../vendor/bin/phpunit';
-
-    if (!file_exists($phpunitPath)) {
-        write_error(sprintf('Could not find phpunit in "%s"', $phpunitPath));
-        exit(1);
-    }
 
     $process = exec_cmd(sprintf(
-        '%s --testdox --configuration %s %s',
-        $phpunitPath,
+        '%s --configuration %s %s',
+        getPhpUnitPath(),
         $phpunitFile->getPathname(),
         $flags
     ), true, false);
@@ -400,6 +394,18 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
         jackrabbit_restart();
     }
     writeln('');
+}
+
+function getPhpUnitPath()
+{
+    $phpUnitPath = __DIR__ . '/../vendor/bin/phpunit';
+
+    if (!file_exists($phpUnitPath)) {
+        write_error(sprintf('Could not find phpunit in "%s"', $phpUnitPath));
+        exit(1);
+    }
+
+    return $phpUnitPath;
 }
 
 function init_bundle()
@@ -503,14 +509,8 @@ foreach ($bundles as $bundle) {
 if (false === $input->getOption('no-component-tests') || $input->getOption('all')) {
     write_header('Component Tests');
 
-    // reset the use the "default" test kernel, the same which is used for
-    // bin/console. note this is historically something of a mess. test classes
-    // should explicitly indicate which kernels they are using.
-    // https://github.com/sulu-io/sulu/issues/2187
-    putenv('KERNEL_DIR=' . __DIR__ . '/../tests/app');
-    exec_sf_cmd('sulu:document:initialize --purge --ansi --force', true);
     $process = exec_cmd(
-        '.' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit --testdox ' . $input->getOption('flags'),
+        sprintf('%s ' . $input->getOption('flags'), getPhpUnitPath()),
         true,
         false
     );
