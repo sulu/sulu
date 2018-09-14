@@ -59,6 +59,9 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                         [
                             'path' => '^/admin/api/*',
                         ],
+                        [
+                            'path' => '^/api/*',
+                        ],
                     ],
                 ]
             );
