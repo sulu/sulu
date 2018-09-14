@@ -158,7 +158,6 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         $attributes = $this->routeDefaultsProvider->getByEntity(get_class($object), $id, $locale, $object);
-        $attributes['object'] = $object;
         $attributes['preview'] = true;
         $attributes['partial'] = $partial;
 
