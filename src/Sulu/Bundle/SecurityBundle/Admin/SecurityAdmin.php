@@ -79,11 +79,24 @@ class SecurityAdmin extends Admin
 
     public function getRoutes(): array
     {
+        $formToolbarActions = [
+            'sulu_admin.save',
+        ];
+
         return [
             (new Route('sulu_security.datagrid', '/roles', 'sulu_admin.datagrid'))
                 ->addOption('title', 'sulu_security.roles')
                 ->addOption('adapters', ['table'])
-                ->addOption('resourceKey', 'roles'),
+                ->addOption('resourceKey', 'roles')
+                ->addOption('editRoute', 'sulu_security.role_edit_form.detail'),
+            (new Route('sulu_security.role_edit_form', '/roles/:id', 'sulu_admin.resource_tabs'))
+                ->addOption('resourceKey', 'roles')
+                ->addOption('toolbarActions', $formToolbarActions),
+            (new Route('sulu_security.role_edit_form.detail', '/details', 'sulu_admin.form'))
+                ->addOption('tabTitle', 'sulu_security.details')
+                ->addOption('backRoute', 'sulu_security.datagrid')
+                ->addOption('toolbarActions', $formToolbarActions)
+                ->setParent('sulu_security.role_edit_form'),
             (new Route('sulu_security.form.permissions', '/permissions', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_security.permissions')
                 ->addOption('backRoute', 'sulu_contact.contacts_datagrid')

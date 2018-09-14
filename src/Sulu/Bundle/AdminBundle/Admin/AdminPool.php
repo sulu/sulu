@@ -79,6 +79,19 @@ class AdminPool
         return $contexts;
     }
 
+    public function getSecurityContextsValues()
+    {
+        $values = [];
+        foreach (array_keys($this->getSecurityContexts()) as $context) {
+            $values[] = [
+                'value' => $context,
+                'title' => ucfirst($context),
+            ];
+        }
+
+        return $values;
+    }
+
     /**
      * Helper function to iterate over all available Admin objects.
      */
