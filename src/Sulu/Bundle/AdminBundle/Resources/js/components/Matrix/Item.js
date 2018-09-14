@@ -7,17 +7,25 @@ import matrixStyles from './matrix.scss';
 type Props = {
     icon: string,
     name: string,
-    onChange: (name: string, value: boolean) => void,
+    onChange?: (name: string, value: boolean) => void,
     value: boolean,
 };
 
 export default class Item extends React.PureComponent<Props> {
+    static defaultProps = {
+        value: false,
+    };
+
     handleClick = () => {
         const {
             name,
             onChange,
             value,
         } = this.props;
+
+        if (!onChange) {
+            return;
+        }
 
         onChange(name, !value);
     };

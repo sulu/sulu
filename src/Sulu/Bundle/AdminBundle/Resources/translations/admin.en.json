@@ -77,5 +77,7 @@
     "sulu_admin.limit_result_to": "Limit result to",
     "sulu_admin.smart_content_label": "{count} {count, plural, =1 {element} other {elements}} selected",
     "sulu_admin.order_warning_title": "Rearrange items",
-    "sulu_admin.order_warning_text": "The operation you are about to do will rearrange items."
+    "sulu_admin.order_warning_text": "The operation you are about to do will rearrange items.",
+    "sulu_admin.activate_all": "Activate all",
+    "sulu_admin.deactivate_all": "Deactivate all"
 }

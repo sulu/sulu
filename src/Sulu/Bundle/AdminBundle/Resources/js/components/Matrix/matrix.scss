@@ -1,5 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
+$fontColor: $blueZodiac;
+
 $itemColor: $shakespeare;
 $itemBorderColor: $shakespeare;
 
@@ -20,6 +22,7 @@ $itemColorSelected: $white;
 
 .row {
     border-bottom: 1px solid $mercury;
+    color: $fontColor;
     padding: 8px 20px;
 
     > div:first-child {
@@ -37,13 +40,30 @@ $itemColorSelected: $white;
     &:last-child {
         border-bottom: none;
     }
+
+    &:hover {
+        .row-button {
+            display: inline-block;
+        }
+    }
+}
+
+.row-button {
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 22px;
+    margin: 0 7px;
+    display: none;
 }
 
 .item {
+    align-items: center;
     border-radius: 6px;
     border: 1px solid $itemBorderColor;
     color: $itemColor;
-    display: inline-block;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
     margin-right: 5px;
     text-align: center;
     height: 26px;
