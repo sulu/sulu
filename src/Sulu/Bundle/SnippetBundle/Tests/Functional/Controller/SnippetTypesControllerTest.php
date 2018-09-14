@@ -35,7 +35,8 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/snippet-types');
+        $client->request('GET', '/api/snippet-types');
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(2, $response['total']);
@@ -55,10 +56,11 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
 
         $client->request(
             'PUT',
-            '/snippet-types/car/default',
+            '/api/snippet-types/car/default',
             ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('car', $response['template']);
@@ -66,7 +68,8 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
         $this->assertEquals($this->car1->getUuid(), $response['defaultUuid']);
         $this->assertEquals($this->car1->getTitle(), $response['defaultTitle']);
 
-        $client->request('GET', '/snippet-types?defaults=true&webspace=sulu_io');
+        $client->request('GET', '/api/snippet-types?defaults=true&webspace=sulu_io');
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(2, $response['total']);
@@ -89,10 +92,11 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
 
         $client->request(
             'DELETE',
-            '/snippet-types/car/default',
+            '/api/snippet-types/car/default',
             ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('car', $response['template']);
@@ -100,8 +104,9 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
         $this->assertEquals(null, $response['defaultUuid']);
         $this->assertEquals(null, $response['defaultTitle']);
 
-        $client->request('GET', '/snippet-types?defaults=true&webspace=sulu_io');
+        $client->request('GET', '/api/snippet-types?defaults=true&webspace=sulu_io');
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
         $responseAreas = $response['_embedded'];
 
