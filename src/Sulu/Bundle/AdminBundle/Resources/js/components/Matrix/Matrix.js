@@ -14,6 +14,10 @@ type Props = {
 };
 
 export default class Matrix extends React.PureComponent<Props> {
+    static defaultProps = {
+        values: {},
+    };
+
     static Row = Row;
 
     static Item = Item;
