@@ -74,10 +74,10 @@ export default class MediaCardAdapter extends React.Component<Props> {
 
         return (
             <InfiniteScroller
-                current={page}
+                currentPage={page}
                 loading={loading}
-                onChange={onPageChange}
-                total={pageCount}
+                onPageChange={onPageChange}
+                totalPages={pageCount}
             >
                 <Masonry>
                     {data.map((item: Object) => {

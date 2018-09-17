@@ -68,6 +68,10 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.searchTerm = {
                 get: jest.fn(),
             };
+            this.limit = {
+                get: jest.fn().mockReturnValue(10),
+            };
+            this.setLimit = jest.fn();
             this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
                 ? collectionData
                 : mediaData;
@@ -193,13 +197,20 @@ test('Destroy all stores on unmount', () => {
 
     const mediaOverview = mount(<MediaOverview router={router} />);
     const mediaOverviewInstance = mediaOverview.instance();
-    const page = router.bind.mock.calls[0][1];
-    const locale = router.bind.mock.calls[1][1];
+    const collectionPage = router.bind.mock.calls[0][1];
+    const mediaPage = router.bind.mock.calls[1][1];
+    const locale = router.bind.mock.calls[2][1];
+    const collectionLimit = router.bind.mock.calls[5][1];
+    const mediaLimit = router.bind.mock.calls[6][1];
 
-    expect(page.get()).toBe(undefined);
+    expect(collectionPage.get()).toBe(undefined);
+    expect(mediaPage.get()).toBe(1);
     expect(locale.get()).toBe(undefined);
-    expect(router.bind).toBeCalledWith('collectionPage', page, 1);
+    expect(router.bind).toBeCalledWith('collectionPage', collectionPage, 1);
+    expect(router.bind).toBeCalledWith('mediaPage', mediaPage, 1);
     expect(router.bind).toBeCalledWith('locale', locale);
+    expect(router.bind).toBeCalledWith('collectionLimit', collectionLimit, 10);
+    expect(router.bind).toBeCalledWith('mediaLimit', mediaLimit, 10);
 
     mediaOverview.unmount();
     expect(mediaOverviewInstance.mediaDatagridStore.destroy).toBeCalled();

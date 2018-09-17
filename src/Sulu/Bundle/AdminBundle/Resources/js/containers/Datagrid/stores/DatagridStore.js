@@ -24,6 +24,7 @@ export default class DatagridStore {
     sortColumn: IObservableValue<string> = observable.box();
     sortOrder: IObservableValue<SortOrder> = observable.box();
     searchTerm: IObservableValue<?string> = observable.box();
+    limit: IObservableValue<number> = observable.box(10);
     resourceKey: string;
     schema: Schema = {};
     observableOptions: ObservableOptions;
@@ -31,6 +32,7 @@ export default class DatagridStore {
     searchDisposer: () => void;
     sortColumnDisposer: () => void;
     sortOrderDisposer: () => void;
+    limitDisposer: () => void;
     sendRequestDisposer: () => void;
     initialSelectionIds: ?Array<string | number>;
 
@@ -61,6 +63,7 @@ export default class DatagridStore {
         this.searchDisposer = intercept(this.searchTerm, '', callResetForChangedObservable);
         this.sortColumnDisposer = intercept(this.sortColumn, '', callResetForChangedObservable);
         this.sortOrderDisposer = intercept(this.sortOrder, '', callResetForChangedObservable);
+        this.limitDisposer = intercept(this.limit, '', callResetForChangedObservable);
 
         metadataStore.getSchema(this.resourceKey)
             .then(action((schema) => {
@@ -265,6 +268,7 @@ export default class DatagridStore {
 
         options.sortBy = this.sortColumn.get();
         options.sortOrder = this.sortOrder.get();
+        options.limit = this.limit.get();
 
         if (this.searchTerm.get()) {
             options.search = this.searchTerm.get();
@@ -305,6 +309,10 @@ export default class DatagridStore {
 
     @action setPage(page: number) {
         this.observableOptions.page.set(page);
+    }
+
+    @action setLimit(limit: number) {
+        this.limit.set(limit);
     }
 
     @action setActive(active: ?string | number) {
@@ -405,6 +413,7 @@ export default class DatagridStore {
         this.searchDisposer();
         this.sortColumnDisposer();
         this.sortOrderDisposer();
+        this.limitDisposer();
 
         if (this.localeDisposer) {
             this.localeDisposer();

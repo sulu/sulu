@@ -28,6 +28,7 @@ export type DatagridAdapterProps = {
     activeItems: ?Array<string | number>,
     data: Array<*>,
     disabledIds: Array<string | number>,
+    limit: number,
     loading: boolean,
     onAllSelectionChange: ?(selected?: boolean) => void,
     onItemActivate: (itemId: string | number) => void,
@@ -35,6 +36,7 @@ export type DatagridAdapterProps = {
     onItemClick: ?(itemId: string | number) => void,
     onItemDeactivate: (itemId: string | number) => void,
     onItemSelectionChange: ?(rowId: string | number, selected?: boolean) => void,
+    onLimitChange: (limit: number) => void,
     onPageChange: (page: number) => void,
     onRequestItemCopy: ?(id: string | number) => Promise<{copied: boolean, parent: ?Object}>,
     onRequestItemDelete: ?(id: string | number) => Promise<{deleted: boolean}>,
@@ -58,6 +60,7 @@ export type ObservableOptions = {
 export type LoadOptions = {
     locale?: ?string,
     page?: number,
+    limit?: number,
     sortBy?: string,
     sortOrder?: SortOrder,
 };

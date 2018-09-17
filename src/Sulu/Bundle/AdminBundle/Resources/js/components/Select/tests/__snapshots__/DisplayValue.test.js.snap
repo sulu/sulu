@@ -39,13 +39,50 @@ exports[`The component should render 1`] = `
 
 exports[`The component should render with an icon 1`] = `
 <button
-  class="displayValue hasIcon default"
+  class="displayValue default hasIcon"
   type="button"
 >
   <span
     aria-label="su-plus"
     class="frontIcon su-plus"
   />
+  <div
+    aria-label="My value"
+    class="croppedText"
+    title="My value"
+  >
+    <div
+      aria-hidden="true"
+      class="front"
+    >
+      My v
+    </div>
+    <div
+      aria-hidden="true"
+      class="back"
+    >
+      <span>
+        alue
+      </span>
+    </div>
+    <div
+      class="whole"
+    >
+      My value
+    </div>
+  </div>
+  <span
+    aria-label="su-angle-down"
+    class="toggle su-angle-down"
+  />
+</button>
+`;
+
+exports[`The component should render with the dark skin 1`] = `
+<button
+  class="displayValue dark"
+  type="button"
+>
   <div
     aria-label="My value"
     class="croppedText"

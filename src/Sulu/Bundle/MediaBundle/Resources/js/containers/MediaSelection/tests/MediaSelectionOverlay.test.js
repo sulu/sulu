@@ -75,6 +75,10 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.searchTerm = {
                 get: jest.fn(),
             };
+            this.limit = {
+                get: jest.fn().mockReturnValue(10),
+            };
+            this.setLimit = jest.fn();
             this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
                 ? collectionData
                 : mediaData;

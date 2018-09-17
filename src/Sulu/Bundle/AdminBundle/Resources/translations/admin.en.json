@@ -7,6 +7,7 @@
     "sulu_admin.order": "Order",
     "sulu_admin.of": "of",
     "sulu_admin.page": "Page",
+    "sulu_admin.per_page": "Items per page",
     "sulu_admin.save": "Save",
     "sulu_admin.save_draft": "Save as draft",
     "sulu_admin.save_publish": "Save and publish",

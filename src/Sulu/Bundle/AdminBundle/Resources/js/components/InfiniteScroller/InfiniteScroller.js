@@ -1,15 +1,22 @@
 // @flow
-import React from 'react';
+import React, {type Node} from 'react';
 import debounce from 'debounce';
 import type {ElementRef} from 'react';
 import {translate} from '../../utils/Translator';
-import type {PaginationProps} from '../../types.js';
 import Loader from '../Loader';
 import infiniteScrollerStyles from './infiniteScroller.scss';
 
+type Props = {
+    children: Node,
+    currentPage: ?number,
+    loading: boolean,
+    onPageChange: (page: number) => void,
+    totalPages: ?number,
+};
+
 const THRESHOLD = 100;
 
-export default class InfiniteScroller extends React.PureComponent<PaginationProps> {
+export default class InfiniteScroller extends React.PureComponent<Props> {
     static defaultProps = {
         loading: false,
     };
@@ -60,11 +67,11 @@ export default class InfiniteScroller extends React.PureComponent<PaginationProp
 
     bindScrollListener() {
         const {
-            current,
-            total,
+            currentPage,
+            totalPages,
         } = this.props;
 
-        if (!current || !total || current >= total) {
+        if (!currentPage || !totalPages || currentPage >= totalPages) {
             return;
         }
 
@@ -84,8 +91,8 @@ export default class InfiniteScroller extends React.PureComponent<PaginationProp
         }
 
         const {
-            onChange,
-            current,
+            onPageChange,
+            currentPage,
         } = this.props;
         const {
             bottom: scrollContainerOffsetBottom,
@@ -95,17 +102,17 @@ export default class InfiniteScroller extends React.PureComponent<PaginationProp
         } = elementRef.getBoundingClientRect();
 
         if ((elementOffsetBottom - scrollContainerOffsetBottom) < THRESHOLD) {
-            const nextPage = current + 1;
+            const nextPage = currentPage + 1;
 
-            onChange(nextPage);
+            onPageChange(nextPage);
             this.unbindScrollListener();
         }
     }, 200);
 
     render() {
         const {
-            total,
-            current,
+            totalPages,
+            currentPage,
             loading,
             children,
         } = this.props;
@@ -113,7 +120,7 @@ export default class InfiniteScroller extends React.PureComponent<PaginationProp
 
         if (loading) {
             indicator = <Loader />;
-        } else if (current === total && !loading) {
+        } else if (currentPage === totalPages && !loading) {
             indicator = translate('sulu_admin.reached_end_of_list');
         }
 

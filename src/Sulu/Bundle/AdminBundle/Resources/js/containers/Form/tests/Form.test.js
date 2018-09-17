@@ -39,7 +39,7 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.getValueByPath = jest.fn();
 }));
 
-jest.mock('../../../stores/ResourceStore', () => jest.fn(function (resourceKey, id, observableOptions = {}) {
+jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
     this.resourceKey = resourceKey;
     this.id = id;
     this.data = {};

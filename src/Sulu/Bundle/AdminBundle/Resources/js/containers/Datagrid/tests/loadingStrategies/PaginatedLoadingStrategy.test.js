@@ -96,6 +96,7 @@ test('Should load items with correct options', () => {
         'snippets',
         {
             page: 2,
+            limit: 10,
             locale: 'en',
         },
         undefined

@@ -10,13 +10,13 @@ type Props = SelectProps & {
 };
 
 export default class SingleSelect extends React.PureComponent<Props> {
-    static Action = Select.Action;
-    static Option = Select.Option;
-    static Divider = Select.Divider;
-
     static defaultProps = {
         skin: 'default',
     };
+
+    static Action = Select.Action;
+    static Option = Select.Option;
+    static Divider = Select.Divider;
 
     get displayValue(): string {
         let displayValue = '';

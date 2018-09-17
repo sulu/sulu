@@ -61,6 +61,51 @@ exports[`Render column with ascending sort icon 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />
@@ -151,6 +196,51 @@ exports[`Render column with descending sort icon 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />
@@ -255,6 +345,51 @@ exports[`Render data with all different visibility types schema 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />
@@ -375,6 +510,51 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />
@@ -458,6 +638,51 @@ exports[`Render data with schema 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />
@@ -646,6 +871,51 @@ exports[`Render data with schema and selections 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />
@@ -729,6 +999,51 @@ exports[`Render data with schema in different order 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />
@@ -783,6 +1098,51 @@ exports[`Render data with schema not containing all fields 1`] = `
   <nav
     class="pagination"
   >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="toggle su-angle-down"
+          />
+        </button>
+      </div>
+    </span>
     <div
       class="loader"
     />

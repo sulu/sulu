@@ -279,6 +279,10 @@ export default class Datagrid extends React.Component<Props> {
         this.props.store.setPage(page);
     };
 
+    handleLimitChange = (limit: number) => {
+        this.props.store.setLimit(limit);
+    };
+
     handleSort = (column: string, order: SortOrder) => {
         this.props.store.sort(column, order);
     };
@@ -361,6 +365,7 @@ export default class Datagrid extends React.Component<Props> {
                         activeItems={store.activeItems}
                         data={store.data}
                         disabledIds={disabledIds}
+                        limit={store.limit.get()}
                         loading={store.loading}
                         onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
                         onItemActivate={this.handleItemActivate}
@@ -368,6 +373,7 @@ export default class Datagrid extends React.Component<Props> {
                         onItemClick={onItemClick}
                         onItemDeactivate={this.handleItemDeactivate}
                         onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
+                        onLimitChange={this.handleLimitChange}
                         onPageChange={this.handlePageChange}
                         onRequestItemCopy={copyable ? this.handleRequestItemCopy : undefined}
                         onRequestItemDelete={deletable ? this.handleRequestItemDelete : undefined}

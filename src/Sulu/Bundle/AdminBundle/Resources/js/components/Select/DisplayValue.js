@@ -41,9 +41,9 @@ export default class DisplayValue extends React.PureComponent<Props> {
 
         const displayValueClass = classNames(
             displayValueStyles.displayValue,
+            displayValueStyles[skin],
             {
                 [displayValueStyles.hasIcon]: !!icon,
-                [displayValueStyles[skin]]: !!skin,
             }
         );
 

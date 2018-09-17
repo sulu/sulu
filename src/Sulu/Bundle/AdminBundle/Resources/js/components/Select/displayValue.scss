@@ -6,8 +6,14 @@ $color: $blueZodiac;
 $backgroundColor: $white;
 $borderSize: 1px;
 $borderColor: $frenchGray;
+$borderRadius: 3px;
 $iconSize: 10px;
 $hoverColor: $shakespeare;
+
+$darkBorderRadius: 4px;
+$darkBorderColor: $doveGray;
+$darkColor: $black;
+$darkBackgroundColor: $white;
 
 .displayValue {
     cursor: pointer;
@@ -20,19 +26,27 @@ $hoverColor: $shakespeare;
         color: inherit;
     }
 
+    &.dark,
     &.default {
         display: block;
         width: 100%;
         border: $borderSize solid $borderColor;
-        border-radius: 3px;
+        border-radius: $borderRadius;
         text-align: left;
         font-size: $fontSize;
         color: $blueZodiac;
-        background: $backgroundColor;
+        background-color: $backgroundColor;
 
         &:hover {
             color: $hoverColor;
         }
+    }
+
+    &.dark {
+        background-color: $darkBackgroundColor;
+        color: $darkColor;
+        border-color: $darkBorderColor;
+        border-radius: $darkBorderRadius;
     }
 }
 

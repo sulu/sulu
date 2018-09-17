@@ -4,26 +4,43 @@ import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {withToolbar, DatagridStore} from 'sulu-admin-bundle/containers';
+import userStore from 'sulu-admin-bundle/stores/UserStore';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import MediaCollection from '../../containers/MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaOverviewStyles from './mediaOverview.scss';
 
-const MEDIA_ROUTE = 'sulu_media.form.detail';
 const COLLECTION_ROUTE = 'sulu_media.overview';
-const MEDIA_RESOURCE_KEY = 'media';
+const MEDIA_ROUTE = 'sulu_media.form.detail';
+
+const USER_SETTING_PREFIX = 'sulu_media.overview';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
+const MEDIA_RESOURCE_KEY = 'media';
+const USER_SETTING_LIMIT = 'limit';
+
+function getLimitSettingKey(resourceKey): string {
+    return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_LIMIT].join('.');
+}
 
 @observer
 class MediaOverview extends React.Component<ViewProps> {
-    mediaPage: IObservableValue<number> = observable.box();
     collectionPage: IObservableValue<number> = observable.box();
+    mediaPage: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
     collectionId: IObservableValue<?number | string> = observable.box();
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;
     @observable collectionStore: CollectionStore;
     disposer: () => void;
+    collectionLimitDisposer: () => void;
+    mediaLimitDisposer: () => void;
+
+    static getDerivedRouteAttributes() {
+        return {
+            collectionLimit: userStore.getPersistentSetting(getLimitSettingKey(COLLECTIONS_RESOURCE_KEY)),
+            mediaLimit: userStore.getPersistentSetting(getLimitSettingKey(MEDIA_RESOURCE_KEY)),
+        };
+    }
 
     constructor(props: ViewProps) {
         super(props);
@@ -33,14 +50,31 @@ class MediaOverview extends React.Component<ViewProps> {
         this.mediaPage.set(1);
 
         router.bind('collectionPage', this.collectionPage, 1);
+        router.bind('mediaPage', this.mediaPage, 1);
         router.bind('locale', this.locale);
         router.bind('id', this.collectionId);
 
         this.disposer = autorun(this.createCollectionStore);
+
         this.createCollectionDatagridStore();
         this.createMediaDatagridStore();
 
         router.bind('search', this.mediaDatagridStore.searchTerm);
+        router.bind('collectionLimit', this.collectionDatagridStore.limit, 10);
+        router.bind('mediaLimit', this.mediaDatagridStore.limit, 10);
+
+        this.collectionLimitDisposer = autorun(
+            () => userStore.setPersistentSetting(
+                getLimitSettingKey(COLLECTIONS_RESOURCE_KEY),
+                this.collectionDatagridStore.limit.get()
+            )
+        );
+        this.mediaLimitDisposer = autorun(
+            () => userStore.setPersistentSetting(
+                getLimitSettingKey(MEDIA_RESOURCE_KEY),
+                this.mediaDatagridStore.limit.get()
+            )
+        );
     }
 
     componentWillUnmount() {
@@ -48,6 +82,8 @@ class MediaOverview extends React.Component<ViewProps> {
         this.collectionDatagridStore.destroy();
         this.collectionStore.destroy();
         this.disposer();
+        this.collectionLimitDisposer();
+        this.mediaLimitDisposer();
     }
 
     createCollectionStore = () => {
@@ -76,7 +112,6 @@ class MediaOverview extends React.Component<ViewProps> {
     createMediaDatagridStore() {
         const options = {};
 
-        options.limit = 50;
         options.fields = [
             'id',
             'type',

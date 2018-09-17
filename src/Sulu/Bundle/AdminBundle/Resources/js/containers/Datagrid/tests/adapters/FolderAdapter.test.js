@@ -36,6 +36,7 @@ test('Render a basic Folder list with data', () => {
             activeItems={[]}
             data={data}
             disabledIds={[]}
+            limit={10}
             loading={false}
             onAllSelectionChange={undefined}
             onItemActivate={jest.fn()}
@@ -43,6 +44,7 @@ test('Render a basic Folder list with data', () => {
             onItemClick={undefined}
             onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
+            onLimitChange={jest.fn()}
             onPageChange={jest.fn()}
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
@@ -90,6 +92,7 @@ test('Click on a Folder should call the onItemEdit callback', () => {
             activeItems={[]}
             data={data}
             disabledIds={[]}
+            limit={10}
             loading={false}
             onAllSelectionChange={undefined}
             onItemActivate={jest.fn()}
@@ -97,6 +100,7 @@ test('Click on a Folder should call the onItemEdit callback', () => {
             onItemClick={itemClickSpy}
             onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
+            onLimitChange={jest.fn()}
             onPageChange={jest.fn()}
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
@@ -117,11 +121,13 @@ test('Click on a Folder should call the onItemEdit callback', () => {
 
 test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
+    const limitChangeSpy = jest.fn();
     const folderAdapter = shallow(
         <FolderAdapter
             active={undefined}
             activeItems={[]}
             disabledIds={[]}
+            limit={10}
             loading={false}
             onAllSelectionChange={undefined}
             onItemActivate={jest.fn()}
@@ -129,6 +135,7 @@ test('Pagination should be passed correct props', () => {
             onItemClick={undefined}
             onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
+            onLimitChange={limitChangeSpy}
             onPageChange={pageChangeSpy}
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
@@ -145,10 +152,12 @@ test('Pagination should be passed correct props', () => {
         />
     );
     expect(folderAdapter.find('Pagination').get(0).props).toEqual({
-        total: 7,
-        current: 2,
+        totalPages: 7,
+        currentPage: 2,
+        currentLimit: 10,
         loading: false,
-        onChange: pageChangeSpy,
+        onLimitChange: limitChangeSpy,
+        onPageChange: pageChangeSpy,
         children: expect.anything(),
     });
 });

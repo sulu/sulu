@@ -44,6 +44,7 @@ test('Render a basic Masonry view with MediaCards', () => {
             data={data}
             disabledIds={[]}
             icon="su-pen"
+            limit={10}
             loading={false}
             onAllSelectionChange={undefined}
             onItemActivate={jest.fn()}
@@ -51,6 +52,7 @@ test('Render a basic Masonry view with MediaCards', () => {
             onItemClick={undefined}
             onItemDeactivate={jest.fn()}
             onItemSelectionChange={jest.fn()}
+            onLimitChange={jest.fn()}
             onPageChange={jest.fn()}
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
@@ -101,6 +103,7 @@ test('MediaCard should call the the appropriate handler', () => {
             data={data}
             disabledIds={[]}
             icon="su-pen"
+            limit={10}
             loading={false}
             onAllSelectionChange={undefined}
             onItemActivate={jest.fn()}
@@ -108,6 +111,7 @@ test('MediaCard should call the the appropriate handler', () => {
             onItemClick={mediaCardSelectionChangeSpy}
             onItemDeactivate={jest.fn()}
             onItemSelectionChange={mediaCardSelectionChangeSpy}
+            onLimitChange={jest.fn()}
             onPageChange={jest.fn()}
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
@@ -137,6 +141,7 @@ test('InfiniteScroller should be passed correct props', () => {
             data={[]}
             disabledIds={[]}
             icon="su-pen"
+            limit={10}
             loading={false}
             onAllSelectionChange={undefined}
             onItemActivate={jest.fn()}
@@ -144,6 +149,7 @@ test('InfiniteScroller should be passed correct props', () => {
             onItemClick={undefined}
             onItemDeactivate={jest.fn()}
             onItemSelectionChange={undefined}
+            onLimitChange={jest.fn()}
             onPageChange={pageChangeSpy}
             onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
@@ -160,10 +166,10 @@ test('InfiniteScroller should be passed correct props', () => {
         />
     );
     expect(tableAdapter.find('InfiniteScroller').get(0).props).toEqual({
-        total: 7,
-        current: 2,
+        totalPages: 7,
+        currentPage: 2,
         loading: false,
-        onChange: pageChangeSpy,
+        onPageChange: pageChangeSpy,
         children: expect.anything(),
     });
 });

@@ -36,6 +36,10 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, observa
     this.searchTerm = {
         get: jest.fn(),
     };
+    this.limit = {
+        get: jest.fn().mockReturnValue(10),
+    };
+    this.setLimit = jest.fn();
     this.updateLoadingStrategy = jest.fn();
     this.updateStructureStrategy = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);

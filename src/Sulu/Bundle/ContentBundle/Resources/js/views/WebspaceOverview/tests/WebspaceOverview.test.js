@@ -20,6 +20,10 @@ jest.mock('sulu-admin-bundle/containers', () => ({
         this.sortOrder = {
             get: jest.fn(),
         };
+        this.limit = {
+            get: jest.fn().mockReturnValue(10),
+        };
+        this.setLimit = jest.fn();
         this.selections = [];
         this.selectionIds = [];
         this.getPage = jest.fn().mockReturnValue(1);
