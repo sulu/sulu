@@ -72,4 +72,20 @@ class WebsiteAdmin extends Admin
             ],
         ];
     }
+
+    public function getSecurityContextsWithPlaceholder()
+    {
+        return [
+            'Sulu' => [
+                'Webspace Settings' => [
+                    self::getAnalyticsSecurityContext('#webspace#') => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
+                ],
+            ],
+        ];
+    }
 }

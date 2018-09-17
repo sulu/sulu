@@ -1,15 +1,13 @@
 // @flow
-import {Requester} from 'sulu-admin-bundle/services';
+import {Config, Requester} from 'sulu-admin-bundle/services';
 import type {Webspace} from './types';
 
 class WebspaceStore {
-    baseUrl: string = '/admin/api/webspaces'; // TODO get URL from server
-
     webspacePromise: Promise<Object>;
 
     sendRequest(): Promise<Object> {
         if (!this.webspacePromise) {
-            this.webspacePromise = Requester.get(this.baseUrl);
+            this.webspacePromise = Requester.get(Config.endpoints.webspaces);
         }
 
         return this.webspacePromise;

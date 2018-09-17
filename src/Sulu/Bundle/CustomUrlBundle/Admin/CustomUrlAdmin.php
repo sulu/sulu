@@ -66,4 +66,20 @@ class CustomUrlAdmin extends Admin
              ],
          ];
     }
+
+    public function getSecurityContextsWithPlaceholder()
+    {
+        return [
+            'Sulu' => [
+                'Webspace Settings' => [
+                    self::getCustomUrlSecurityContext('#webspace#') => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
+                ],
+            ],
+        ];
+    }
 }

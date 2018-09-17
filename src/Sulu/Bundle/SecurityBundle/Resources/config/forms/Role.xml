@@ -26,9 +26,10 @@
         </meta>
         <properties>
             <property name="permissions" type="permissions">
-                <params>
-                    <param name="data" expression="service('sulu_admin.admin_pool').getSecurityContexts()"/>
-                </params>
+                <meta>
+                    <title lang="en" />
+                    <title lang="de" />
+                </meta>
             </property>
         </properties>
     </section>

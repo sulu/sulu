@@ -42,9 +42,10 @@ export default class Row extends React.Component<Props> {
             return;
         }
 
-        values[itemName] = value;
+        const newValues = Object.assign({}, values);
+        newValues[itemName] = value;
 
-        onChange(name, values);
+        onChange(name, newValues);
     };
 
     cloneItems = (originalItems: ChildrenArray<Element<typeof Item>>) => {
@@ -79,11 +80,12 @@ export default class Row extends React.Component<Props> {
             return;
         }
 
-        for (const value in values) {
-            values[value] = newValue;
+        const newValues = Object.assign({}, values);
+        for (const value in newValues) {
+            newValues[value] = newValue;
         }
 
-        onChange(name, values);
+        onChange(name, newValues);
     };
 
     renderAllButton() {

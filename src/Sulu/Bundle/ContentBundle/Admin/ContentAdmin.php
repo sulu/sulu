@@ -162,4 +162,22 @@ class ContentAdmin extends Admin
             ],
         ];
     }
+
+    public function getSecurityContextsWithPlaceholder()
+    {
+        return [
+            'Sulu' => [
+                'Webspaces' => [
+                    self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                        PermissionTypes::LIVE,
+                        PermissionTypes::SECURITY,
+                    ],
+                ],
+            ],
+        ];
+    }
 }

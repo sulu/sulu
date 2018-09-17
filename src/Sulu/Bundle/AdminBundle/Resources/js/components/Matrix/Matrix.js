@@ -3,14 +3,14 @@ import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import Row from './Row';
 import Item from './Item';
-import type {Values} from './types';
+import type {MatrixValues} from './types';
 import matrixStyles from './matrix.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Row>>,
     title: string,
-    onChange: (value: Values) => void,
-    values: Values,
+    onChange: (value: MatrixValues) => void,
+    values: MatrixValues,
 };
 
 export default class Matrix extends React.PureComponent<Props> {
@@ -28,9 +28,10 @@ export default class Matrix extends React.PureComponent<Props> {
             values,
         } = this.props;
 
-        values[rowName] = rowValues;
+        const newValues = Object.assign({}, values);
+        newValues[rowName] = rowValues;
 
-        onChange(values);
+        onChange(newValues);
     };
 
     cloneRows = (originalRows: ChildrenArray<Element<typeof Row>>) => {
