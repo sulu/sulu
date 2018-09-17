@@ -13,6 +13,7 @@ const LOADER_SIZE = 20;
 
 export default class Input<T: ?string | ?number> extends React.PureComponent<InputProps<T>> {
     static defaultProps = {
+        alignment: 'left',
         collapsed: false,
         skin: 'default',
         type: 'text',
@@ -53,6 +54,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
 
     render() {
         const {
+            alignment,
             inputClass,
             valid,
             icon,
@@ -71,6 +73,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
             value,
             iconStyle,
             iconClassName,
+            inputMode,
             inputRef,
             labelRef,
             skin,
@@ -82,6 +85,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
         const labelClass = classNames(
             inputStyles.input,
             inputStyles[skin],
+            inputStyles[alignment],
             {
                 [inputStyles.error]: !valid,
                 [inputStyles.collapsed]: collapsed,
@@ -132,6 +136,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
 
                     <input
                         className={inputClass}
+                        inputMode={inputMode}
                         max={max}
                         min={min}
                         name={name}

@@ -125,6 +125,7 @@ export default class Item extends React.Component<Props> {
                 {showOrderField &&
                     <div className={itemStyles.orderInput}>
                         <Input
+                            alignment="center"
                             onBlur={this.handleOrderBlur}
                             onChange={this.handleOrderChange}
                             onKeyPress={this.handleOrderKeyPress}

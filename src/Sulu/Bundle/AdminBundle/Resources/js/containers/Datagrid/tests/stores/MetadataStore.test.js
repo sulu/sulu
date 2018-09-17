@@ -29,7 +29,7 @@ test('Return datagrid fields for given resourceKey from ResourceMetadataStore', 
     const snippetPromise = Promise.resolve(snippetMetadata);
     const contactPromise = Promise.resolve(contactMetadata);
     resourceMetadataStore.loadConfiguration.mockImplementation((resourceKey) => {
-        switch(resourceKey) {
+        switch (resourceKey) {
             case 'snippets':
                 return snippetPromise;
             case 'contacts':

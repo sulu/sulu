@@ -48,7 +48,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
             const columnSchema = this.schema[schemaKey];
             const label = columnSchema.label ? columnSchema.label : schemaKey;
 
-            return(
+            return (
                 <Table.HeaderCell
                     key={schemaKey}
                     name={schemaKey}

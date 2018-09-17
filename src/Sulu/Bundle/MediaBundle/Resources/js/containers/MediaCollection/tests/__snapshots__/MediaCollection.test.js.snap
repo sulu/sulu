@@ -162,10 +162,26 @@ exports[`Render the MediaCollection 1`] = `
           <div
             class="loader"
           />
+          <span>
+            Page:
+          </span>
+          <span
+            class="inputContainer"
+          >
+            <label
+              class="input dark center"
+            >
+              <input
+                inputmode="numeric"
+                type="text"
+                value="1"
+              />
+            </label>
+          </span>
           <span
             class="display"
           >
-            Page: 2 of 3
+            of 3
           </span>
           <button
             class="previous"
@@ -202,7 +218,7 @@ exports[`Render the MediaCollection 1`] = `
         class="toolbar"
       >
         <label
-          class="input dark collapsed hasAppendIcon"
+          class="input dark left collapsed hasAppendIcon"
         >
           <div
             class="prependedContainer dark collapsed"

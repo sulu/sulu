@@ -117,10 +117,26 @@ exports[`Render a basic Folder list with data 1`] = `
     <div
       class="loader"
     />
+    <span>
+      :
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark center"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
     <span
       class="display"
     >
-      : 1  2
+       2
     </span>
     <button
       class="previous"

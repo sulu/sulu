@@ -2,7 +2,7 @@
 
 exports[`ColorPicker should render 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"
@@ -23,7 +23,7 @@ exports[`ColorPicker should render 1`] = `
 
 exports[`ColorPicker should render error 1`] = `
 <label
-  class="input default error"
+  class="input default left error"
 >
   <div
     class="prependedContainer default"
@@ -44,7 +44,7 @@ exports[`ColorPicker should render error 1`] = `
 
 exports[`ColorPicker should render error when invalid value is set 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"
@@ -65,7 +65,7 @@ exports[`ColorPicker should render error when invalid value is set 1`] = `
 
 exports[`ColorPicker should render error when invalid value is set 2`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"
@@ -86,7 +86,7 @@ exports[`ColorPicker should render error when invalid value is set 2`] = `
 
 exports[`ColorPicker should render null value as empty string 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"
@@ -204,7 +204,7 @@ exports[`ColorPicker should render with open overlay 1`] = `
 
 exports[`ColorPicker should render with placeholder 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"
@@ -226,7 +226,7 @@ exports[`ColorPicker should render with placeholder 1`] = `
 
 exports[`ColorPicker should render with value 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"

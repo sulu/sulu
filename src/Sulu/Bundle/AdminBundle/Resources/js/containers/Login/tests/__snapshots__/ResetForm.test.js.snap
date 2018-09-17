@@ -20,7 +20,7 @@ Array [
           sulu_admin.username_or_email
         </div>
         <label
-          class="input default"
+          class="input default left"
         >
           <div
             class="prependedContainer default"
@@ -86,7 +86,7 @@ Array [
           sulu_admin.username_or_email
         </div>
         <label
-          class="input default"
+          class="input default left"
         >
           <div
             class="prependedContainer default"
@@ -151,7 +151,7 @@ Array [
           sulu_admin.username_or_email
         </div>
         <label
-          class="input default"
+          class="input default left"
         >
           <div
             class="prependedContainer default"
@@ -216,7 +216,7 @@ Array [
           sulu_admin.username_or_email
         </div>
         <label
-          class="input default"
+          class="input default left"
         >
           <div
             class="prependedContainer default"

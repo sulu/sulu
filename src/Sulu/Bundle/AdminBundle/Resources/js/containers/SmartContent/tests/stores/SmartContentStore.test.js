@@ -34,7 +34,7 @@ test('Load categories and datasource when constructed', () => {
         },
     });
     ResourceRequester.get.mockImplementation((resourceKey) => {
-        switch(resourceKey) {
+        switch (resourceKey) {
             case 'pages':
                 return dataSourcePromise;
             case 'categories':

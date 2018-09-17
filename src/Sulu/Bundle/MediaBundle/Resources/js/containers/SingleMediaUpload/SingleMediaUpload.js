@@ -54,7 +54,7 @@ export default class SingleMediaUpload extends React.Component<Props> {
         if (mediaUploadStore.id) {
             mediaUploadStore.update(file)
                 .then(this.callUploadComplete);
-        } else if(collectionId) {
+        } else if (collectionId) {
             mediaUploadStore.create(collectionId, file)
                 .then(this.callUploadComplete);
         }

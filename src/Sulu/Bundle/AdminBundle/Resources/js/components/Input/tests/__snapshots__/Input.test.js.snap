@@ -2,7 +2,7 @@
 
 exports[`Input should render 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <input
     type="text"
@@ -13,7 +13,7 @@ exports[`Input should render 1`] = `
 
 exports[`Input should render append container when onClearClick callback is provided 1`] = `
 <label
-  class="input default hasAppendIcon"
+  class="input default left hasAppendIcon"
 >
   <input
     type="text"
@@ -24,7 +24,7 @@ exports[`Input should render append container when onClearClick callback is prov
 
 exports[`Input should render append container with icon when onClearClick callback is provided and value is set 1`] = `
 <label
-  class="input default hasAppendIcon"
+  class="input default left hasAppendIcon"
 >
   <input
     type="text"
@@ -45,7 +45,7 @@ exports[`Input should render append container with icon when onClearClick callba
 
 exports[`Input should render collapsed 1`] = `
 <label
-  class="input default collapsed"
+  class="input default left collapsed"
 >
   <input
     type="text"
@@ -56,7 +56,7 @@ exports[`Input should render collapsed 1`] = `
 
 exports[`Input should render undefined value as empty string 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <input
     type="text"
@@ -68,7 +68,7 @@ exports[`Input should render undefined value as empty string 1`] = `
 exports[`Input should render with a character counter 1`] = `
 Array [
   <label
-    class="input default"
+    class="input default left"
   >
     <input
       type="text"
@@ -85,7 +85,7 @@ Array [
 
 exports[`Input should render with a loader 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"
@@ -112,7 +112,7 @@ exports[`Input should render with a loader 1`] = `
 exports[`Input should render with a segment counter 1`] = `
 Array [
   <label
-    class="input default"
+    class="input default left"
   >
     <input
       type="text"
@@ -129,7 +129,7 @@ Array [
 
 exports[`Input should render with dark skin 1`] = `
 <label
-  class="input dark hasAppendIcon"
+  class="input dark left hasAppendIcon"
 >
   <div
     class="prependedContainer dark"
@@ -148,7 +148,7 @@ exports[`Input should render with dark skin 1`] = `
 
 exports[`Input should render with icon 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <div
     class="prependedContainer default"
@@ -165,9 +165,21 @@ exports[`Input should render with icon 1`] = `
 </label>
 `;
 
+exports[`Input should render with inputmode 1`] = `
+<label
+  class="input default left"
+>
+  <input
+    inputmode="numeric"
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
 exports[`Input should render with invalid value 1`] = `
 <label
-  class="input default error"
+  class="input default left error"
 >
   <input
     type="text"
@@ -178,7 +190,7 @@ exports[`Input should render with invalid value 1`] = `
 
 exports[`Input should render with placeholder 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <input
     placeholder="My placeholder"
@@ -190,7 +202,7 @@ exports[`Input should render with placeholder 1`] = `
 
 exports[`Input should render with type 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <input
     type="password"
@@ -201,7 +213,7 @@ exports[`Input should render with type 1`] = `
 
 exports[`Input should render with type number with attributes 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <input
     max="50"
@@ -215,7 +227,7 @@ exports[`Input should render with type number with attributes 1`] = `
 
 exports[`Input should render with value 1`] = `
 <label
-  class="input default"
+  class="input default left"
 >
   <input
     type="text"

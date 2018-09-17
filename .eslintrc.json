@@ -89,6 +89,13 @@
             "error", 
             "never"
         ],
+        "keyword-spacing": [
+            "error",
+            {
+                "before": true,
+                "after": true
+            }
+        ],
         "yoda": [
             "error",
             "never"

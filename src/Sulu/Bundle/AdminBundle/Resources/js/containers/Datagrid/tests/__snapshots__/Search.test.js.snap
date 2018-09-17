@@ -2,7 +2,7 @@
 
 exports[`The component should expand the input when clicking on icon 1`] = `
 <label
-  class="input dark hasAppendIcon"
+  class="input dark left hasAppendIcon"
 >
   <div
     class="prependedContainer dark"
@@ -24,7 +24,7 @@ exports[`The component should expand the input when clicking on icon 1`] = `
 
 exports[`The component should render collapsed 1`] = `
 <label
-  class="input dark collapsed hasAppendIcon"
+  class="input dark left collapsed hasAppendIcon"
 >
   <div
     class="prependedContainer dark collapsed"
@@ -46,7 +46,7 @@ exports[`The component should render collapsed 1`] = `
 
 exports[`The component should render not collapsed when value is given 1`] = `
 <label
-  class="input dark hasAppendIcon"
+  class="input dark left hasAppendIcon"
 >
   <div
     class="prependedContainer dark"

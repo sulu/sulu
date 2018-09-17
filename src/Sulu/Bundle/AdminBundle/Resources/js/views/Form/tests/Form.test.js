@@ -257,7 +257,7 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
     }
 
     toolbarActionRegistry.get.mockImplementation((name) => {
-        switch(name) {
+        switch (name) {
             case 'save':
                 return SaveToolbarAction;
             case 'delete':
@@ -440,7 +440,7 @@ test('Should set and update locales defined in ToolbarActions', () => {
     }
 
     toolbarActionRegistry.get.mockImplementation((name) => {
-        switch(name) {
+        switch (name) {
             case 'save':
                 return SaveToolbarAction;
         }

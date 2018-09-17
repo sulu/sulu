@@ -368,7 +368,7 @@ test('The loading strategy should be called with expandedIds if some items are a
     loadingStrategy.load.mockReturnValue(promise);
 
     structureStrategy.findById.mockImplementation((id) => {
-        switch(id) {
+        switch (id) {
             case 1:
                 return {id: 1};
             case 5:

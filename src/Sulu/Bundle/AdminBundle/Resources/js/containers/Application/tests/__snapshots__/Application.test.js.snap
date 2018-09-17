@@ -337,7 +337,7 @@ exports[`Application should render login when user is not logged in 1`] = `
               sulu_admin.username_or_email
             </div>
             <label
-              class="input default"
+              class="input default left"
             >
               <div
                 class="prependedContainer default"
@@ -362,7 +362,7 @@ exports[`Application should render login when user is not logged in 1`] = `
               sulu_admin.password
             </div>
             <label
-              class="input default"
+              class="input default left"
             >
               <div
                 class="prependedContainer default"

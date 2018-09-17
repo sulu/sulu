@@ -5,7 +5,7 @@ exports[`Render in loading state 1`] = `
   class="singleAutoComplete"
 >
   <label
-    class="input default"
+    class="input default left"
   >
     <div
       class="prependedContainer default"
@@ -36,7 +36,7 @@ exports[`Render with given value 1`] = `
   class="singleAutoComplete"
 >
   <label
-    class="input default"
+    class="input default left"
   >
     <div
       class="prependedContainer default"
