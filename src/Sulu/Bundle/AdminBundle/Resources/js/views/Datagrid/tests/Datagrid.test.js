@@ -278,7 +278,7 @@ test('Should destroy the store on unmount', () => {
     expect(router.bind).toBeCalledWith('active', datagridStore.active);
     expect(router.bind).toBeCalledWith('sortColumn', datagridStore.sortColumn);
     expect(router.bind).toBeCalledWith('sortOrder', datagridStore.sortOrder);
-    expect(router.bind).toBeCalledWith('limit', datagridStore.limit);
+    expect(router.bind).toBeCalledWith('limit', datagridStore.limit, 10);
 
     expect(datagrid.instance().sortColumnDisposer).toBeDefined();
     expect(datagrid.instance().sortOrderDisposer).toBeDefined();
