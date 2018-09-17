@@ -44,7 +44,7 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * @var BundleInterface
      */
-    private $fixtures;
+    private $bundle;
 
     /**
      * @var DocumentFixtureInterface
@@ -66,7 +66,7 @@ class FixturesLoadCommandTest extends TestCase
         $this->loader = $this->prophesize(DocumentFixtureLoader::class);
         $this->executor = $this->prophesize(DocumentExecutor::class);
         $this->kernel = $this->prophesize(KernelInterface::class);
-        $this->fixtures = $this->prophesize(BundleInterface::class);
+        $this->bundle = $this->prophesize(BundleInterface::class);
         $this->fixture1 = $this->prophesize(DocumentFixtureInterface::class);
 
         $application = new Application();
@@ -79,9 +79,10 @@ class FixturesLoadCommandTest extends TestCase
         $this->commandTester = new CommandTester($this->command);
 
         $this->kernel->getBundles()->willReturn([
-            $this->fixtures->reveal(),
+            $this->bundle->reveal(),
         ]);
-        $this->fixtures->getPath()->willReturn(
+        $this->kernel->getRootDir()->willReturn(__DIR__ . '/NoFixtures');
+        $this->bundle->getPath()->willReturn(
             __DIR__ . '/fixtures'
         );
     }
@@ -91,6 +92,9 @@ class FixturesLoadCommandTest extends TestCase
      */
     public function testNoFixtures()
     {
+        $this->kernel->getBundles()->willReturn([
+            $this->bundle->reveal(),
+        ]);
         $this->kernel->getBundles()->willReturn([]);
         $tester = $this->execute([
             '--no-interaction' => true,
@@ -118,13 +122,39 @@ class FixturesLoadCommandTest extends TestCase
             Argument::type(OutputInterface::class)
         )->shouldBeCalled();
 
-        $tester = $this->execute([
-        ]);
+        $tester = $this->execute([]);
         $this->assertEquals(0, $tester->getStatusCode());
     }
 
     /**
-     * It should not purge the database when --purge is given.
+     * It should load fixtures from kernel root dir.
+     */
+    public function testLoadFixturesFromKernelRootDir()
+    {
+        $this->kernel->getRootDir()->willReturn(__DIR__ . '/fixtures');
+        $this->kernel->getBundles()->willReturn([]);
+
+        $this->loader->load([
+            __DIR__ . '/fixtures/DataFixtures/Document',
+        ])->willReturn([
+            $this->fixture1->reveal(),
+        ]);
+
+        $this->executor->execute(
+            [
+                $this->fixture1->reveal(),
+            ],
+            true,
+            true,
+            Argument::type(OutputInterface::class)
+        )->shouldBeCalled();
+
+        $tester = $this->execute([]);
+        $this->assertEquals(0, $tester->getStatusCode());
+    }
+
+    /**
+     * It should not purge the database when --append is given.
      */
     public function testLoadFixturesAppend()
     {
