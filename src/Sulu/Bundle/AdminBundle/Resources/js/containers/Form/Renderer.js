@@ -31,7 +31,7 @@ export default class Renderer extends React.Component<Props> {
     @action handleFieldFinish = (dataPath: string, schemaPath: string) => {
         const {onFieldFinish} = this.props;
 
-        if(onFieldFinish) {
+        if (onFieldFinish) {
             onFieldFinish(dataPath, schemaPath);
         }
     };

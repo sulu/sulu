@@ -453,7 +453,7 @@ test('Should load the route attributes from the UserStore', () => {
     const userStore = require('../../../stores/UserStore');
 
     userStore.getPersistentSetting.mockImplementation((key) => {
-        switch(key) {
+        switch (key) {
             case 'sulu_admin.datagrid.test.active':
                 return 'some-uuid';
             case 'sulu_admin.datagrid.test.sort_column':

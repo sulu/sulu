@@ -32,7 +32,7 @@ export default class Pagination extends React.Component<Props> {
     @action componentDidMount() {
         const {currentPage} = this.props;
 
-        if(!currentPage) {
+        if (!currentPage) {
             return;
         }
 
@@ -42,8 +42,8 @@ export default class Pagination extends React.Component<Props> {
     @action componentDidUpdate(prevProps: Props) {
         const {currentPage} = this.props;
 
-        if(prevProps.currentPage !== currentPage) {
-            if(!currentPage) {
+        if (prevProps.currentPage !== currentPage) {
+            if (!currentPage) {
                 this.currentInputValue = 1;
                 return;
             }
@@ -68,21 +68,6 @@ export default class Pagination extends React.Component<Props> {
         }
 
         return currentPage > 1;
-    };
-
-    getPage = () => {
-        const {totalPages} = this.props;
-        const page = this.currentInputValue;
-
-        if(!page || !totalPages || page < 1) {
-            return 1;
-        }
-
-        if(page > totalPages) {
-            return totalPages;
-        }
-
-        return page;
     };
 
     handlePreviousClick = () => {
@@ -126,10 +111,16 @@ export default class Pagination extends React.Component<Props> {
     };
 
     @action handleInputBlur = () => {
-        const {currentPage, onPageChange} = this.props;
-        const page = this.getPage();
+        const {currentPage, onPageChange, totalPages} = this.props;
+        let page = this.currentInputValue;
 
-        if(page !== currentPage) {
+        if (!page || !totalPages || page < 1) {
+            page = 1;
+        } else if (page > totalPages) {
+            page = totalPages;
+        }
+
+        if (page !== currentPage) {
             onPageChange(page);
         }
 

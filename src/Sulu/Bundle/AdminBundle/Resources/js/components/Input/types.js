@@ -12,8 +12,7 @@ export type InputProps<T: ?string | ?number> = {|
     placeholder?: string,
     labelRef?: (ref: ?ElementRef<'label'>) => void,
     inputRef?: (ref: ?ElementRef<'input'>) => void,
-    inputMode?: 'verbatim' | 'latin' | 'latin-name' | 'latin-prose' | 'full-width-latin' |
-        'kana' | 'katakana' | 'numeric' | 'tel' | 'email' | 'url',
+    inputMode?: string,
     valid: boolean,
     value: ?T,
     maxCharacters?: number,
