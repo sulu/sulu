@@ -21,7 +21,7 @@
             <factory method="getRepository" service="doctrine.orm.entity_manager"/>
             <argument>%sulu_tag.entity.tag%</argument>
         </service>
-        <service id="sulu_tag.tag_manager" class="%sulu_tag.tag_manager.class%">
+        <service id="sulu_tag.tag_manager" class="%sulu_tag.tag_manager.class%" public="true">
             <argument type="service" id="sulu.repository.tag"/>
             <argument type="service" id="sulu.repository.user"/>
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>

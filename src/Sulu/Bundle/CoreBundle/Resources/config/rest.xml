@@ -20,7 +20,7 @@
             <argument type="service" id="sulu_core.list_rest_helper"/>
         </service>
 
-        <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%">
+        <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%" public="true">
             <argument type="service" id="request_stack"/>
         </service>
 

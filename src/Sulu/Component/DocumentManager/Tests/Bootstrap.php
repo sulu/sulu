@@ -14,13 +14,13 @@ namespace Sulu\Component\DocumentManager\tests;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Jackalope\RepositoryFactoryDoctrineDBAL;
 use Jackalope\Transport\DoctrineDBAL\RepositorySchema;
+use JMS\Serializer\EventDispatcher\EventDispatcher;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use PHPCR\SessionInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
 
 class Bootstrap
 {
@@ -48,7 +48,7 @@ class Bootstrap
         $logger = new Logger('test');
         $logger->pushHandler(new StreamHandler($logDir . '/test.log'));
 
-        $dispatcher = new ContainerAwareEventDispatcher($container);
+        $dispatcher = new EventDispatcher();
         $container->set('sulu_document_manager.event_dispatcher', $dispatcher);
 
         $config = [

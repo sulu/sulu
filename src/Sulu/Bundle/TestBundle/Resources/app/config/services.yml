@@ -18,3 +18,11 @@ services:
     sulu_test.doctrine_phpcr.session:
         alias: doctrine_phpcr.session
         public: true
+
+    sulu_test.massive_search.adapter:
+        alias: massive_search.adapter
+        public: true
+
+    sulu_test.massive_search.adapter.test:
+        alias: massive_search.adapter.test
+        public: true

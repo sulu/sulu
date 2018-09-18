@@ -7,18 +7,19 @@
     <services>
 
         <!-- Core -->
-        <service id="sulu_document_manager.event_dispatcher.debug" class="Sulu\Component\DocumentManager\EventDispatcher\DebugEventDispatcher" public="false">
+        <!-- TODO DebugEventDispatcher -->
+        <service id="sulu_document_manager.event_dispatcher.debug" class="Sulu\Component\DocumentManager\EventDispatcher\EventDispatcher" public="false">
             <argument type="service" id="service_container"/>
             <argument type="service" id="debug.stopwatch"/>
             <argument type="service" id="logger"/>
             <tag name="monolog.logger" channel="sulu_document_manager"/>
         </service>
 
-        <service id="sulu_document_manager.event_dispatcher.standard" class="Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher" public="false">
+        <service id="sulu_document_manager.event_dispatcher.standard" class="Symfony\Component\EventDispatcher\EventDispatcher" public="false">
             <argument type="service" id="service_container"/>
         </service>
 
-        <service id="sulu_document_manager.document_manager" class="Sulu\Component\DocumentManager\DocumentManager">
+        <service id="sulu_document_manager.document_manager" class="Sulu\Component\DocumentManager\DocumentManager" public="true">
             <argument type="service" id="sulu_document_manager.event_dispatcher"/>
             <argument type="service" id="sulu_document_manager.node_manager"/>
         </service>
@@ -33,7 +34,7 @@
 
         <service id="sulu_document_manager.node_helper" class="Sulu\Component\DocumentManager\NodeHelper"/>
 
-        <service id="sulu_document_manager.metadata_factory.base" class="Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory" public="false">
+        <service id="sulu_document_manager.metadata_factory.base" class="Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory" public="true">
             <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <argument>%sulu_document_manager.mapping%</argument>
         </service>
@@ -67,7 +68,7 @@
             </argument>
         </service>
 
-        <service id="sulu_document_manager.document_inspector" class="Sulu\Component\DocumentManager\DocumentInspector">
+        <service id="sulu_document_manager.document_inspector" class="Sulu\Component\DocumentManager\DocumentInspector" public="true">
             <argument type="service" id="sulu_document_manager.document_registry"/>
             <argument type="service" id="sulu_document_manager.path_segment_registry"/>
             <argument type="service" id="sulu_document_manager.proxy_factory"/>

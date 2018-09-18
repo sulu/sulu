@@ -84,7 +84,7 @@ class SearchIntegrationTest extends SuluTestCase
             $format => 'myimage.jpg',
         ]);
 
-        $testAdapter = $this->getContainer()->get('massive_search.adapter.test');
+        $testAdapter = $this->getContainer()->get('sulu_test.massive_search.adapter.test');
 
         // remove the documents indexed when creating the fixtures
         foreach ($testAdapter->listIndexes() as $indexName) {
@@ -111,7 +111,7 @@ class SearchIntegrationTest extends SuluTestCase
 
     public function testIndexNoMedia()
     {
-        $testAdapter = $this->getContainer()->get('massive_search.adapter.test');
+        $testAdapter = $this->getContainer()->get('sulu_test.massive_search.adapter.test');
 
         $document = $this->documentManager->create('page');
         $document->setStructureType('images');

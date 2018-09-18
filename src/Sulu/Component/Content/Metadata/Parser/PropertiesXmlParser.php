@@ -436,7 +436,8 @@ class PropertiesXmlParser
         $property->setType($data['type']);
         $property->setLocalized($data['multilingual']);
         $property->setRequired($data['mandatory']);
-        $property->setSize($data['size'] ?: $data['colspan']);
+        $property->setColSpan($data['colspan']);
+        $property->setSize($data['size']);
         $property->setSpaceAfter($data['spaceAfter']);
         $property->setCssClass($data['cssClass']);
         $property->setTags($data['tags']);

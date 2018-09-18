@@ -3,7 +3,7 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="sulu_website.sitemap.pool" class="Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPool">
+        <service id="sulu_website.sitemap.pool" class="Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPool" public="true">
             <argument type="collection"/>
         </service>
 
@@ -15,12 +15,12 @@
             <tag name="sulu.sitemap.provider" alias="pages"/>
         </service>
 
-        <service id="sulu_website.sitemap.xml_renderer" class="Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRenderer">
+        <service id="sulu_website.sitemap.xml_renderer" class="Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRenderer" public="true">
             <argument type="service" id="sulu_website.sitemap.pool"/>
             <argument type="service" id="templating"/>
         </service>
 
-        <service id="sulu_website.sitemap.xml_dumper" class="Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumper">
+        <service id="sulu_website.sitemap.xml_dumper" class="Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumper" public="true">
             <argument type="service" id="sulu_website.sitemap.xml_renderer"/>
             <argument type="service" id="sulu_website.sitemap.pool"/>
             <argument type="service" id="filesystem"/>

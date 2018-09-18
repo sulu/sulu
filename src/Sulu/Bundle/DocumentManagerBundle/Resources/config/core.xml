@@ -5,18 +5,19 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <!-- Core -->
-        <service id="sulu_document_manager.event_dispatcher.debug" class="Sulu\Component\DocumentManager\EventDispatcher\DebugEventDispatcher" public="false">
+        <!-- TODO DebugEventDispatcher -->
+        <service id="sulu_document_manager.event_dispatcher.debug" class="Sulu\Component\DocumentManager\EventDispatcher\EventDispatcher" public="false">
             <argument type="service" id="service_container" />
             <argument type="service" id="debug.stopwatch" />
             <argument type="service" id="logger" />
             <tag name="monolog.logger" channel="sulu_document_manager" />
         </service>
 
-        <service id="sulu_document_manager.event_dispatcher.standard" class="Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher" public="false">
+        <service id="sulu_document_manager.event_dispatcher.standard" class="Symfony\Component\EventDispatcher\EventDispatcher" public="false">
             <argument type="service" id="service_container" />
         </service>
 
-        <service id="sulu_document_manager.document_manager" class="Sulu\Component\DocumentManager\DocumentManager">
+        <service id="sulu_document_manager.document_manager" class="Sulu\Component\DocumentManager\DocumentManager" public="true">
             <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <argument type="service" id="sulu_document_manager.node_manager" />
         </service>
@@ -36,7 +37,7 @@
             <argument type="service" id="sulu_document_manager.live_session"/>
         </service>
 
-        <service id="sulu_document_manager.metadata_factory.base" class="Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory">
+        <service id="sulu_document_manager.metadata_factory.base" class="Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory" public="true">
             <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <argument>%sulu_document_manager.mapping%</argument>
         </service>
@@ -73,7 +74,7 @@
             <argument type="service" id="sulu_document_manager.path_segment_registry" />
         </service>
 
-        <service id="sulu_document_manager.document_inspector" class="Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector">
+        <service id="sulu_document_manager.document_inspector" class="Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector" public="true">
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_document_manager.path_segment_registry" />
             <argument type="service" id="sulu_document_manager.namespace_registry" />
@@ -104,7 +105,7 @@
             <tag name="sulu_document_manager.initializer" priority="250"/>
         </service>
 
-        <service id="sulu_document_manager.initializer" class="Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer">
+        <service id="sulu_document_manager.initializer" class="Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer" public="true">
             <argument type="service" id="service_container" />
             <argument type="collection" />
         </service>

@@ -47,6 +47,9 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         }
 
         $this->configurePersistence($config['objects'], $container);
+
+        // the service "security.encoder_factory" is private use an alias to make it public
+        $container->setAlias('sulu_security.encoder_factory', 'security.encoder_factory')->setPublic(true);
     }
 
     public function prepend(ContainerBuilder $container)

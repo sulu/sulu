@@ -10,6 +10,6 @@
     </parameters>
 
     <services>
-        <service id="sulu.core.localization_manager" class="%sulu.core.localization_manager.class%"/>
+        <service id="sulu.core.localization_manager" class="%sulu.core.localization_manager.class%" public="true"/>
     </services>
 </container>

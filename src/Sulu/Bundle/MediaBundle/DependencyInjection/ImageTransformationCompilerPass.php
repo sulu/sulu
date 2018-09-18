@@ -38,6 +38,7 @@ class ImageTransformationCompilerPass implements CompilerPassInterface
 
         foreach ($taggedServices as $id => $tags) {
             foreach ($tags as $attributes) {
+                $container->getDefinition($id)->setPublic(true);
                 $definition->addMethodCall(
                     'add',
                     [new Reference($id), $attributes['alias']]

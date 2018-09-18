@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_document_manager.serializer.subscriber.proxy"
-                 class="Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Subscriber\ProxySubscriber">
+                 class="Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Subscriber\ProxySubscriber" public="true">
             <tag name="jms_serializer.event_subscriber" />
         </service>
 

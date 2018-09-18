@@ -37,6 +37,6 @@ class UserManagerCompilerPass implements CompilerPassInterface
                     new Reference('sulu.repository.user'),
                 ]
             )
-        );
+        )->setPublic(true);
     }
 }
