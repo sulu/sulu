@@ -62,7 +62,7 @@ class SnippetControllerTest extends SuluTestCase
      */
     public function testGet($locale, $expected)
     {
-        $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?locale=' . $locale);
+        $this->client->request('GET', '/api/snippets/' . $this->hotel1->getUuid() . '?locale=' . $locale);
         $response = $this->client->getResponse();
 
         $result = json_decode($response->getContent(), true);
@@ -106,7 +106,7 @@ class SnippetControllerTest extends SuluTestCase
     public function testGetMany()
     {
         $this->client->request('GET', sprintf(
-            '/snippets?ids=%s,%s%s',
+            '/api/snippets?ids=%s,%s%s',
             $this->hotel1->getUuid(),
             $this->hotel2->getUuid(),
             '&locale=de'
@@ -132,7 +132,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request(
             'GET',
             sprintf(
-                '/snippets?ids=%s&locale=fr',
+                '/api/snippets?ids=%s&locale=fr',
                 $this->hotel1->getUuid()
             )
         );
@@ -148,7 +148,7 @@ class SnippetControllerTest extends SuluTestCase
     public function testGetMultipleWithNotExistingIds()
     {
         $this->client->request('GET', sprintf(
-            '/snippets?ids=%s,%s,%s%s',
+            '/api/snippets?ids=%s,%s,%s%s',
             $this->hotel1->getUuid(),
             '99999999-754c-4da0-bbc7-bf909b05c352',
             $this->hotel2->getUuid(),
@@ -218,7 +218,7 @@ class SnippetControllerTest extends SuluTestCase
         ], $params);
 
         $query = http_build_query($params);
-        $this->client->request('GET', '/snippets?' . $query);
+        $this->client->request('GET', '/api/snippets?' . $query);
         $response = $this->client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
@@ -270,7 +270,7 @@ class SnippetControllerTest extends SuluTestCase
         ];
 
         $query = http_build_query($params);
-        $this->client->request('POST', '/snippets?' . $query, $data);
+        $this->client->request('POST', '/api/snippets?' . $query, $data);
         $response = $this->client->getResponse();
 
         $result = json_decode($response->getContent(), true);
@@ -307,7 +307,7 @@ class SnippetControllerTest extends SuluTestCase
         ];
 
         $query = http_build_query($params);
-        $this->client->request('POST', '/snippets?' . $query, $data);
+        $this->client->request('POST', '/api/snippets?' . $query, $data);
         $response = $this->client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
@@ -330,7 +330,7 @@ class SnippetControllerTest extends SuluTestCase
         ];
 
         $query = http_build_query($params);
-        $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
+        $this->client->request('PUT', sprintf('/api/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
         $response = $this->client->getResponse();
 
         $result = json_decode($response->getContent(), true);
@@ -358,7 +358,7 @@ class SnippetControllerTest extends SuluTestCase
         ];
 
         $query = http_build_query($params);
-        $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
+        $this->client->request('PUT', sprintf('/api/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
         $response = $this->client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
@@ -383,7 +383,7 @@ class SnippetControllerTest extends SuluTestCase
             'description' => 'My car is red.',
         ];
 
-        $this->client->request('POST', '/snippets?locale=de', $data);
+        $this->client->request('POST', '/api/snippets?locale=de', $data);
         $response = $this->client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
@@ -391,7 +391,7 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->client->request(
             'PUT',
-            '/snippets/' . $result['id'] . '?locale=de',
+            '/api/snippets/' . $result['id'] . '?locale=de',
             array_merge(['_hash' => $result['_hash']], $data)
         );
 
@@ -406,7 +406,7 @@ class SnippetControllerTest extends SuluTestCase
             'description' => 'My car is red.',
         ];
 
-        $this->client->request('POST', '/snippets?locale=de', $data);
+        $this->client->request('POST', '/api/snippets?locale=de', $data);
         $response = $this->client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
@@ -414,7 +414,7 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->client->request(
             'PUT',
-            '/snippets/' . $result['id'] . '?locale=de',
+            '/api/snippets/' . $result['id'] . '?locale=de',
             array_merge(['_hash' => 'wrong-hash'], $data)
         );
 
@@ -439,7 +439,7 @@ class SnippetControllerTest extends SuluTestCase
         ];
 
         $query = http_build_query($params);
-        $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
+        $this->client->request('PUT', sprintf('/api/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
         $response = $this->client->getResponse();
 
         $result = json_decode($response->getContent(), true);
@@ -464,7 +464,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager->persist($page, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->flush();
 
-        $this->client->request('DELETE', '/snippets/' . $this->hotel1->getUuid() . '?_format=text');
+        $this->client->request('DELETE', '/api/snippets/' . $this->hotel1->getUuid() . '?_format=text');
         $response = $this->client->getResponse();
         $content = json_decode($response->getContent(), true);
 
@@ -478,7 +478,7 @@ class SnippetControllerTest extends SuluTestCase
         $node->setProperty('test', $this->phpcrSession->getNodeByIdentifier($this->hotel1->getUuid()));
         $this->phpcrSession->save();
 
-        $this->client->request('DELETE', '/snippets/' . $this->hotel1->getUuid() . '?_format=text');
+        $this->client->request('DELETE', '/api/snippets/' . $this->hotel1->getUuid() . '?_format=text');
         $response = $this->client->getResponse();
         $content = json_decode($response->getContent(), true);
 
@@ -495,7 +495,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager->publish($snippet, 'de');
         $this->documentManager->flush();
 
-        $this->client->request('POST', '/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&locale=de');
+        $this->client->request('POST', '/api/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&locale=de');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->documentManager->clear();

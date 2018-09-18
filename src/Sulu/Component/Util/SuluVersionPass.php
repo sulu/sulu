@@ -25,7 +25,7 @@ class SuluVersionPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $dir = dirname(realpath($container->getParameter('kernel.root_dir')));
+        $dir = realpath($container->getParameter('kernel.project_dir'));
 
         $container->setParameter('sulu.version', $this->getSuluVersion($dir));
         $container->setParameter('app.version', $this->getAppVersion($dir));

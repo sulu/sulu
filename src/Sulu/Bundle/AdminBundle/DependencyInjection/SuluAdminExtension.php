@@ -37,12 +37,31 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                     'assets' => [
                         'packages' => [
                             'sulu_admin' => [
-                                'json_manifest_path' => '%kernel.project_dir%/web/admin/build/manifest.json',
+                                'json_manifest_path' => '%kernel.project_dir%/public/admin/build/manifest.json',
                             ],
                         ],
                     ],
                     'web_link' => [
                         'enabled' => true,
+                    ],
+                    'translator' => [
+                        'enabled' => true,
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'zone' => [
+                        [
+                            'path' => '^/admin/api/*',
+                        ],
+                        [
+                            'path' => '^/api/*',
+                        ],
                     ],
                 ]
             );

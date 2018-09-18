@@ -14,7 +14,6 @@ namespace Sulu\Bundle\TestBundle\Kernel;
 use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -22,6 +21,16 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class SuluTestKernel extends SuluKernel
 {
+    /**
+     * @var string
+     */
+    private $projectDir;
+
+    public function __construct(string $environment, bool $debug, string $suluContext = SuluKernel::CONTEXT_ADMIN)
+    {
+        parent::__construct($environment, $debug, $suluContext);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -83,6 +92,20 @@ class SuluTestKernel extends SuluKernel
     }
 
     /**
+     * Gets the application root dir (path of the project's composer file).
+     *
+     * @return string The project root dir
+     */
+    public function getProjectDir()
+    {
+        if (null === $this->projectDir) {
+            $this->projectDir = dirname($this->rootDir);
+        }
+
+        return $this->projectDir;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -104,7 +127,7 @@ class SuluTestKernel extends SuluKernel
      */
     public function getCacheDir()
     {
-        return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;
+        return $this->getProjectDir() . '/var/cache/' . $this->getContext() . '/' . $this->environment;
     }
 
     /**

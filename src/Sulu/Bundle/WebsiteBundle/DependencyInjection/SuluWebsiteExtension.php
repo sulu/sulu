@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -22,8 +23,34 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluWebsiteExtension extends Extension
+class SuluWebsiteExtension extends Extension implements PrependExtensionInterface
 {
+    public function prepend(ContainerBuilder $container)
+    {
+        if (SuluKernel::CONTEXT_WEBSITE !== $container->getParameter('sulu.context')) {
+            return;
+        }
+
+        $container->prependExtensionConfig('cmf_routing', [
+            'chain' => [
+                'routers_by_id' => [
+                    'router.default' => 100,
+                    'cmf_routing.dynamic_router' => 20,
+                ],
+            ],
+            'dynamic' => [
+                'enabled' => true,
+                'route_provider_service_id' => 'sulu_website.provider.content',
+            ],
+        ]);
+
+        $container->prependExtensionConfig('fos_rest', [
+            'exception' => [
+                'enabled' => false,
+            ],
+        ]);
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -22,7 +22,8 @@ class MediaScriptHandler extends ScriptHandler
     public static function initBundle(Event $event)
     {
         $options = parent::getOptions($event);
-        $consoleDir = isset($options['symfony-bin-dir']) ? $options['symfony-bin-dir'] : $options['symfony-app-dir'];
+
+        $consoleDir = isset($options['symfony-bin-dir']) ? $options['symfony-bin-dir'] : 'bin';
 
         parent::executeCommand(
             $event,

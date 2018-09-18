@@ -197,7 +197,7 @@
             <argument type="string">%kernel.environment%</argument>
             <argument type="string">%kernel.root_dir%</argument>
             <argument type="service" id="request_stack"/>
-            <argument type="expression">container.hasParameter('kernel.var_dir') ? parameter('kernel.var_dir') : null</argument>
+            <argument>%kernel.project_dir%/var</argument>
             <argument type="service" id="sulu_http_cache.cache_manager" on-invalid="null"/>
         </service>
 

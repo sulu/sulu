@@ -80,6 +80,12 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             );
         }
 
+        if ($container->hasExtension('framework')) {
+            $container->prependExtensionConfig('framework', [
+                'form' => true,
+            ]);
+        }
+
         if ($container->hasExtension('sulu_core')) {
             $container->prependExtensionConfig(
                 'sulu_core',
@@ -87,8 +93,16 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                     'content' => [
                         'structure' => [
                             'paths' => [
-                                [
+                                'page_extension' => [
                                     'path' => __DIR__ . '/../Content/templates',
+                                    'type' => 'page',
+                                ],
+                                'home' => [
+                                    'path' => '%kernel.project_dir%/config/templates/pages',
+                                    'type' => 'home',
+                                ],
+                                'page' => [
+                                    'path' => '%kernel.project_dir%/config/templates/pages',
                                     'type' => 'page',
                                 ],
                             ],

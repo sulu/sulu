@@ -2,6 +2,18 @@
 
 ## dev-develop
 
+### Default folder changed
+
+The following default configurations were changed to use the symfony 4 folder structure.
+
+| Configuration                                | Old Default                                  | New Default
+|----------------------------------------------|----------------------------------------------|-----------------------------------------------
+| sulu_core.webspaces.config_dir               | %kernel.root_dir%/Resources/webspaces        | %kernel.project_dir%/config/webspaces
+| sulu_media.storage.local.path                | %kernel.root_dir%/../uploads/media           | %kernel.project_dir%/var/uploads/media
+| sulu_media.format_cache..path                | %kernel.root_dir%/../web/uploads/media       | %kernel.project_dir%/public/uploads/media
+| sulu_media.image_format_files[0]             | %kernel.root_dir%/config/image-formats.xml   | %kernel.project_dir%/config/image-formats.xml
+| massive_search.adapters.zend_lucene.basepath | %kernel.root_dir%/data                       | %kernel.project_dir%/var/indexes
+
 ### Selection Component
 
 **This change only affects you if you have used a 2.0.0 alpha release before**

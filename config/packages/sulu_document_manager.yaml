@@ -1,0 +1,13 @@
+parameters:
+    env(PHPCR_WORKSPACE): 'default'
+
+sulu_document_manager:
+    sessions:
+        default:
+            backend:
+                type: doctrinedbal
+            workspace: "%env(PHPCR_WORKSPACE)%"
+        live:
+            backend:
+                type: doctrinedbal
+            workspace: "%env(PHPCR_WORKSPACE)%_live"

@@ -2668,7 +2668,10 @@ class ContentMapperTest extends SuluTestCase
             }
         }
 
-        $persistOptions = [];
+        $persistOptions = [
+            'user' => $userId,
+        ];
+
         if ($parentUuid) {
             $document->setParent($this->documentManager->find($parentUuid, $locale));
         } elseif ($document instanceof HomeDocument || !$document->getParent()) {

@@ -4,10 +4,16 @@ platform:
   - x64
 
 environment:
+  APP_ENV: test
+  APP_SECRET: a448d1dfcaa563fce56c2fd9981f662b
+  MAILER_URL: null://localhost
+  SULU_ADMIN_EMAIL:
+  PHPCR_TRANSPORT: doctrinedbal
+  DATABASE_URL: mysql://root:Password12!@127.0.0.1/sulu_test
+  DATABASE_CHARSET: utf8mb4
+  DATABASE_COLLATE: utf8mb4_unicode_ci
   matrix:
-    # see http://windows.php.net/downloads/releases/ for available versions
-    - PHP_VERSION: 7.2.4
-      SULU_DATABASE_PASSWORD: Password12!
+   - PHP_VERSION: 7.2.4
 
 services:
   - mysql

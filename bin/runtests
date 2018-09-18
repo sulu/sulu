@@ -24,8 +24,8 @@ use Symfony\Component\Process\Process;
 // ============================
 
 // set default env variables
-if (!getenv('SULU_PHPCR_TRANSPORT')) {
-    putenv('SULU_PHPCR_TRANSPORT=doctrinedbal');
+if (!getenv('PHPCR_TRANSPORT')) {
+    putenv('PHPCR_TRANSPORT=doctrinedbal');
 }
 
 // ensure that we don't timeout
@@ -137,7 +137,7 @@ function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
     }
 
     return exec_cmd(
-        'php ' . __DIR__ . '/console ' . $cmd,
+        'php ' . get_test_console_path() . ' ' . $cmd,
         $echo,
         $checkForError
     );
@@ -226,9 +226,9 @@ function get_bundles($target = null)
     return iterator_to_array($finder);
 }
 
-function get_bundle_console_path($bundlePath)
+function get_test_console_path()
 {
-    $consolePath = realpath($bundlePath . '/..') . '/TestBundle/Resources/app/console';
+    $consolePath = __DIR__ . '/../src/Sulu/Bundle/TestBundle/Resources/app/console';
 
     if (!file_exists($consolePath)) {
         write_error(sprintf('Could not find test console "%s", is the test being executed in the correct directory?', $consolePath));
@@ -375,10 +375,10 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     write_info('Running tests');
 
     $flags = $input->getOption('flags');
+
     $process = exec_cmd(sprintf(
-        '.%sbin%sphpunit --configuration %s %s',
-        DIRECTORY_SEPARATOR,
-        DIRECTORY_SEPARATOR,
+        '%s --configuration %s %s',
+        get_phpunit_path(),
         $phpunitFile->getPathname(),
         $flags
     ), true, false);
@@ -396,9 +396,21 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     writeln('');
 }
 
-function init_bundle($phpunitPath)
+function get_phpunit_path()
 {
-    if (!$console = get_bundle_console_path(dirname($phpunitPath))) {
+    $phpUnitPath = __DIR__ . '/../vendor/bin/phpunit';
+
+    if (!file_exists($phpUnitPath)) {
+        write_error(sprintf('Could not find phpunit in "%s"', $phpUnitPath));
+        exit(1);
+    }
+
+    return $phpUnitPath;
+}
+
+function init_bundle()
+{
+    if (!$console = get_test_console_path()) {
         return;
     }
 
@@ -406,7 +418,7 @@ function init_bundle($phpunitPath)
         'php %s %s',
         $console,
         'debug:container doctrine.orm.entity_manager'
-    ), false);
+    ), false, false);
 
     // bundle does not use Doctrine ORM
     if ($process->getExitCode() !== 0) {
@@ -475,7 +487,7 @@ if ($input->getOption('initialize')) {
     }
     init_dbal();
     write_info('Initializing the content repository');
-    if (getenv('SULU_PHPCR_TRANSPORT') === 'doctrinedbal') {
+    if (getenv('PHPCR_TRANSPORT') === 'doctrinedbal') {
         init_phpcr_dbal();
     }
     write(PHP_EOL);
@@ -497,17 +509,12 @@ foreach ($bundles as $bundle) {
 if (false === $input->getOption('no-component-tests') || $input->getOption('all')) {
     write_header('Component Tests');
 
-    // reset the use the "default" test kernel, the same which is used for
-    // bin/console. note this is historically something of a mess. test classes
-    // should explicitly indicate which kernels they are using.
-    // https://github.com/sulu-io/sulu/issues/2187
-    putenv('KERNEL_DIR=' . __DIR__ . '/../tests/app');
-    exec_sf_cmd('sulu:document:initialize --purge --ansi --force', true);
     $process = exec_cmd(
-        '.' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit ' . $input->getOption('flags'),
+        sprintf('%s ' . $input->getOption('flags'), get_phpunit_path()),
         true,
         false
     );
+
     if ($process->getExitCode() !== 0) {
         $failedTests[] = 'Components';
     }

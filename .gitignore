@@ -1,63 +1,43 @@
-# Vendor, logs and cache
-/app/config/parameters.yml
-/bin/*
-!/bin/build-bundles.sh
-!/bin/cli/validate-build-bundles.sh
-!/bin/console
-!/bin/runtests
-/src/Sulu/Bundle/*/Tests/app/cache
-/src/Sulu/Bundle/*/Tests/app/data
-/src/Sulu/Bundle/*/Tests/app/logs
-/src/Sulu/Bundle/*/vendor
-/src/Sulu/Bundle/TestBundle/Resources/app/cache
-/src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/cache
-/tests/app/cache
-/tests/app/data
-/tests/app/logs
-/tests/Resources/cache
-/var/cache/*
-/var/indexes/*
-/var/logs/*
-/var/sessions/*
-/var/uploads/*
-/var/sitemaps/*
-!/var/cache/.gitkeep
-!/var/indexes/.gitkeep
-!/var/logs/.gitkeep
-!/var/sessions/.gitkeep
-!/var/uploads/.gitkeep
-!/var/sitemaps/.gitkeep
-/var/bootstrap.php.cache
-/var/SymfonyRequirements.php
-/web/bundles
-/web/uploads
-/web/admin
+/.env
+/var/
+!/var/.gitkeep
+/vendor/
+/.web-server-pid
 
+# test cache folders
+/src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/cache/
+/tests/Resources/cache/
+/src/Sulu/Bundle/*/Tests/var/
+/src/Sulu/Bundle/*/Resources/app/cache
+/src/Sulu/Bundle/*/Tests/Resources/app/cache
+
+# web
+/public/bundles
+/public/uploads
+/public/admin
+!/public/admin/.gitkeep
+
+# composer
+/composer.phar
+composer.lock
 /vendor
 
-# Composer
-/composer.lock
-/composer.phar
+# npm
+package-lock.json
+/node_modules
 
-# Text editors backup files
+# phpunit
+.phpunit
+phpunit.xml
+
+# IDEs
+/.idea
+*.iml
 *~
-*.swp
+.web-server-pid
 
-# Meld
-*.orig
-
-# OS generated files
-._*
+# System files
 .DS_Store
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# NPM
-**/node_modules
-**/package-lock.json
-npm-debug.log
 
 # Styleguide
 /styleguide
@@ -66,9 +46,26 @@ npm-debug.log
 .idea
 *.iml
 
-# PHPunit
-phpunit.xml
-
 # Jackrabbit
 jackrabbit-standalone*
 jackrabbit/*
+
+###> symfony/framework-bundle ###
+/.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> symfony/web-server-bundle ###
+/.web-server-pid
+###< symfony/web-server-bundle ###

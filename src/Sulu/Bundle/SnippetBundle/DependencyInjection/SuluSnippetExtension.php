@@ -66,10 +66,13 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                     'content' => [
                         'structure' => [
                             'paths' => [
-                                [
-                                    'path' => __DIR__ . '/../Content/templates',
-                                    'type' => 'page',
+                                'snippet' => [
+                                    'path' => '%kernel.project_dir%/config/templates/snippets',
+                                    'type' => 'snippet',
                                 ],
+                            ],
+                            'default_type' => [
+                                'snippet' => 'default',
                             ],
                             'type_map' => ['snippet' => SnippetBridge::class],
                             'resources' => [

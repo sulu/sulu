@@ -10,7 +10,6 @@ set_time_limit(0);
 require_once __DIR__ . '/bootstrap.php';
 require_kernel();
 
-
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Debug\Debug;
@@ -35,16 +34,24 @@ foreach ($adminPool->getCommands() as $command) {
 
 function require_kernel()
 {
-    $dirs = [ 'app', 'Tests/app' ];
+    $dirs = [ 'app', 'tests', 'Tests/app' ];
 
     if ($kernelDir = getenv('KERNEL_DIR')) {
         array_unshift($dirs, $kernelDir);
     }
 
+    if (!$kernelDir) {
+        require_once(__DIR__ . '/../../Tests/app/AppKernel.php');
+
+        return;
+    }
+
     $found = false;
+
     foreach ($dirs as $dir) {
         // TODO: Use autoloading for the kernel.
         $kernelPath = sprintf('%s/AppKernel.php', $dir);
+
         if (file_exists($kernelPath)) {
             $found = true;
             break;

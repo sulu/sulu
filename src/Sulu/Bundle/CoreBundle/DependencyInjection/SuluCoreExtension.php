@@ -62,8 +62,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             );
         }
 
-        $templatesPath = '%kernel.root_dir%/../vendor/sulu/sulu/src/Sulu/Bundle/CoreBundle/Content/templates';
-
+        $templatesPath = __DIR__ . '/../Content/templates';
         $container->prependExtensionConfig(
             'sulu_core',
             [
@@ -105,6 +104,22 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             );
         }
 
+        if ($container->hasExtension('framework')) {
+            $container->prependExtensionConfig(
+                'framework',
+                [
+                    'session' => [
+                        'save_path' => '%kernel.project_dir%/var/sessions/%sulu.context%/%kernel.environment%',
+                    ],
+                    'templating' => [
+                        'engines' => [
+                            'twig',
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('doctrine')) {
             $container->prependExtensionConfig(
                 'doctrine',
@@ -114,7 +129,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             'gedmo_tree' => [
                                 'type' => 'xml',
                                 'prefix' => 'Gedmo\\Tree\\Entity',
-                                'dir' => '%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity',
+                                'dir' => '%kernel.project_dir%/vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity',
                                 'alias' => 'GedmoTree',
                                 'is_bundle' => false,
                             ],

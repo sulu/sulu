@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\HttpCacheBundle\CacheLifetime;
 
-use Sulu\Bundle\HttpCacheBundle\Cache\AbstractHttpCache;
+use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Component\Content\Compat\PageInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,6 +68,6 @@ class CacheLifetimeEnhancer implements CacheLifetimeEnhancerInterface
         $response->setSharedMaxAge($this->sharedMaxAge);
 
         // set reverse-proxy TTL (Symfony HttpCache, Varnish, ...) to avoid caching of intermediate proxies
-        $response->headers->set(AbstractHttpCache::HEADER_REVERSE_PROXY_TTL, $cacheLifetime);
+        $response->headers->set(SuluHttpCache::HEADER_REVERSE_PROXY_TTL, $cacheLifetime);
     }
 }

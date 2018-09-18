@@ -15,7 +15,7 @@ use FOS\HttpCache\SymfonyCache\CacheEvent;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\AudienceTargetingCacheListener;
-use Sulu\Bundle\HttpCacheBundle\Cache\AbstractHttpCache;
+use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -108,7 +108,7 @@ class AudienceTargetingCacheListenerTest extends TestCase
         return $response;
     }
 
-    protected function getCacheEvent(AbstractHttpCache $httpCache, Request $request, Response $response): CacheEvent
+    protected function getCacheEvent(SuluHttpCache $httpCache, Request $request, Response $response): CacheEvent
     {
         return new CacheEvent(
             $httpCache,
@@ -117,7 +117,7 @@ class AudienceTargetingCacheListenerTest extends TestCase
         );
     }
 
-    protected function getHttpCache(): AbstractHttpCache
+    protected function getHttpCache(): SuluHttpCache
     {
         $targetGroupResponse = $this->prophesize(Response::class);
 
@@ -126,7 +126,7 @@ class AudienceTargetingCacheListenerTest extends TestCase
 
         $targetGroupResponse->headers = $responseHeaderBag->reveal();
 
-        $httpCache = $this->prophesize(AbstractHttpCache::class);
+        $httpCache = $this->prophesize(SuluHttpCache::class);
         $httpCache->handle(Argument::any())->willReturn($targetGroupResponse->reveal());
 
         return $httpCache->reveal();

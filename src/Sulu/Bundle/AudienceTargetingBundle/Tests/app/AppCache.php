@@ -10,10 +10,10 @@
  */
 
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\AudienceTargetingCacheListener;
-use Sulu\Bundle\HttpCacheBundle\Cache\AbstractHttpCache;
+use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class AppCache extends AbstractHttpCache implements KernelInterface
+class AppCache extends SuluHttpCache implements KernelInterface
 {
     /**
      * {@inheritdoc}

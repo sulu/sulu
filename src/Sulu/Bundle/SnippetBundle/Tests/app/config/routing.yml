@@ -1,4 +1,5 @@
 sulu_snippet:
+    prefix: /api
     resource: '@SuluSnippetBundle/Resources/config/routing_api.yml'
 
 sulu_media_website:

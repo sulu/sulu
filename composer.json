@@ -94,11 +94,13 @@
         "phpspec/prophecy": "^1.7",
         "phpunit/phpunit": "^6.5",
         "pulse00/ffmpeg-bundle": "^0.6",
+        "sensio/generator-bundle": "^2.8 || ^3.0",
         "symfony/browser-kit": "^3.4",
         "symfony/css-selector": "^3.4",
         "symfony/debug": "^3.4",
         "symfony/debug-bundle": "^3.4",
         "symfony/dom-crawler": "^3.4",
+        "symfony/dotenv": "^3.4",
         "symfony/monolog-bundle": "^3.1",
         "symfony/phpunit-bridge": "^3.4.8",
         "symfony/process": "^3.4",
@@ -150,43 +152,17 @@
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
             "src/Sulu/Bundle/*/Tests/"
-        ],
-        "classmap": [
-            "app/AppKernel.php"
         ]
     },
     "autoload-dev": {
-        "psr-0": {
-            "Sulu\\": "tests/"
+        "psr-4": {
+            "App\\": "tests/"
         }
-    },
-    "scripts": {
-        "sulu-scripts": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
-        ],
-        "post-install-cmd": [
-            "@sulu-scripts"
-        ],
-        "post-update-cmd": [
-            "@sulu-scripts"
-        ]
     },
     "config": {
-        "bin-dir": "bin"
-    },
-    "extra": {
-        "symfony-app-dir": "app",
-        "symfony-bin-dir": "bin",
-        "symfony-var-dir": "var",
-        "symfony-web-dir": "web",
-        "symfony-tests-dir": "tests",
-        "symfony-assets-install": "relative",
-        "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
+        "preferred-install": {
+            "*": "dist"
         },
-        "branch-alias": {
-            "dev-develop": "2.0-dev"
-        }
+        "sort-packages": true
     }
 }

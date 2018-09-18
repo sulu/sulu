@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Bundle\HttpCacheBundle\Cache\AbstractHttpCache;
+use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Component\Webspace\Portal;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -173,7 +173,7 @@ class SitemapController extends WebsiteController
     private function setCacheLifetime(Response $response)
     {
         $response->headers->set(
-            AbstractHttpCache::HEADER_REVERSE_PROXY_TTL,
+            SuluHttpCache::HEADER_REVERSE_PROXY_TTL,
             $response->getAge() + $this->container->getParameter('sulu_website.sitemap.cache.lifetime')
         );
 
