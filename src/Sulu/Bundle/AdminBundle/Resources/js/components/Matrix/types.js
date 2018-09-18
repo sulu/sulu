@@ -1,2 +1,3 @@
 // @flow
-export type MatrixValues = {[string]: {[string]: boolean}};
+export type MatrixValues = {[string]: MatrixRowValue};
+export type MatrixRowValue = {[string]: boolean};

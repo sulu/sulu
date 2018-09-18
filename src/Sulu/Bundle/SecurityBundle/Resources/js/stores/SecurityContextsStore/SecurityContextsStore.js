@@ -1,10 +1,11 @@
 // @flow
 import {Config, Requester} from 'sulu-admin-bundle/services';
+import type {SecurityContextGroups, Systems} from './types';
 
 class SecurityContextsStore {
-    promise: Promise<Object>;
+    promise: Promise<Systems>;
 
-    sendRequest(): Promise<Object> {
+    sendRequest(): Promise<Systems> {
         if (!this.promise) {
             this.promise = Requester.get(Config.endpoints.securityContexts);
         }
@@ -12,9 +13,9 @@ class SecurityContextsStore {
         return this.promise;
     }
 
-    loadSecurityContexts(): Promise<Object> {
-        return this.sendRequest().then((response: Object) => {
-            return response;
+    loadSecurityContextGroups(system: string): Promise<SecurityContextGroups> {
+        return this.sendRequest().then((response: Systems) => {
+            return response[system];
         });
     }
 }

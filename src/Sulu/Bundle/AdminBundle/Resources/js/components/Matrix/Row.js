@@ -6,12 +6,13 @@ import type {ChildrenArray, Element} from 'react';
 import {translate} from '../../utils/index';
 import Item from './Item';
 import matrixStyles from './matrix.scss';
+import type {MatrixRowValue} from './types';
 
 type Props = {
     children: ChildrenArray<Element<typeof Item>>,
     name: string,
     onChange?: (name: string, value: {[string]: boolean}) => void,
-    values: {[string]: boolean},
+    values: MatrixRowValue,
 };
 
 @observer
@@ -90,7 +91,7 @@ export default class Row extends React.Component<Props> {
 
     renderAllButton() {
         let clickHandler = this.handleDeactivateAllButtonClicked;
-        let translation = 'sulu_admin.deactive_all';
+        let translation = 'sulu_admin.deactivate_all';
 
         if (!this.showDeactiveAllButton) {
             clickHandler = this.handleActivateAllButtonClicked;

@@ -3,5 +3,11 @@
     "sulu_security.permissions": "Berechtigungen",
     "sulu_security.name": "Name",
     "sulu_security.system": "System",
-    "sulu_security.reset_mail_subject": "Sulu Password zurücksetzen"
+    "sulu_security.reset_mail_subject": "Sulu Password zurücksetzen",
+    "sulu_security.view": "Ansehen",
+    "sulu_security.add": "Hinzufügen",
+    "sulu_security.edit": "Bearbeiten",
+    "sulu_security.delete": "Löschen",
+    "sulu_security.live": "Live",
+    "sulu_security.security": "Sicherheit"
 }

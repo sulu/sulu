@@ -8,6 +8,7 @@ type Props = {
     icon: string,
     name: string,
     onChange?: (name: string, value: boolean) => void,
+    title?: string,
     value: boolean,
 };
 
@@ -33,6 +34,8 @@ export default class Item extends React.PureComponent<Props> {
     render() {
         const {
             icon,
+            name,
+            title,
             value,
         } = this.props;
         const itemClass = classNames(
@@ -42,8 +45,10 @@ export default class Item extends React.PureComponent<Props> {
             }
         );
 
+        const itemTitle = title ? title : name.charAt(0).toUpperCase() + name.slice(1);
+
         return (
-            <div className={itemClass} onClick={this.handleClick}>
+            <div className={itemClass} onClick={this.handleClick} title={itemTitle}>
                 <Icon name={icon} />
             </div>
         );
