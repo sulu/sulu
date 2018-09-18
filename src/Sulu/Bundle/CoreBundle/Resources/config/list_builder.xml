@@ -5,7 +5,7 @@
 
     <services>
         <service id="sulu_core.list_builder.field_descriptor_factory"
-                 class="Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory">
+                 class="Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory" public="true">
             <argument type="service" id="sulu_core.list_builder.metadata.provider.chain"/>
             <argument type="string">%sulu.cache_dir%/field_descriptor</argument>
             <argument>%kernel.debug%</argument>

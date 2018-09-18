@@ -8,7 +8,7 @@
     </parameters>
 
     <services>
-        <service id="sulu_admin.admin_controller" class="%sulu_admin.admin_controller.class%">
+        <service id="sulu_admin.admin_controller" class="%sulu_admin.admin_controller.class%" public="true">
             <argument type="service" id="router"/>
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="sulu_admin.admin_pool"/>

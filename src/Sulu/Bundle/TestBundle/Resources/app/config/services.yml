@@ -1,0 +1,20 @@
+services:
+    sulu_test.doctrine.orm.default_entity_manager:
+        alias: doctrine.orm.default_entity_manager
+        public: true
+
+    sulu_test.doctrine_phpcr.default_session:
+        alias: doctrine_phpcr.default_session
+        public: true
+
+    sulu_test.doctrine_phpcr:
+        alias: doctrine_phpcr
+        public: true
+
+    sulu_test.doctrine_phpcr.live_session:
+        alias: doctrine_phpcr.live_session
+        public: true
+
+    sulu_test.doctrine_phpcr.session:
+        alias: doctrine_phpcr.session
+        public: true

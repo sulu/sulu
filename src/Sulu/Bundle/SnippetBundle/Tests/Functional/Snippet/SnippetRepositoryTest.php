@@ -41,7 +41,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         $this->loadFixtures();
 
         $this->snippetRepository = $this->getContainer()->get('sulu_snippet.repository');
-        $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $this->phpcrSession = $this->getContainer()->get('sulu_test.doctrine_phpcr')->getConnection();
     }
 
     public function provideGetSnippets()
