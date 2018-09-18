@@ -1,7 +1,6 @@
 parameters:
     env(PHPCR_WORKSPACE): 'default'
 
-# SuluDocumentManager Configuration
 sulu_document_manager:
     sessions:
         default:

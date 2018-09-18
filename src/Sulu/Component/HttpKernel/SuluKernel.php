@@ -103,9 +103,9 @@ abstract class SuluKernel extends Kernel
     protected function load(LoaderInterface $loader, $glob)
     {
         $configExtensions = $this->getConfigExtensions();
-        $notReversedContext = $this->getNotReversedContext();
+        $reversedConfigExtensions = $this->getReversedConfigExtensions();
         $configFiles = glob($glob . $configExtensions, GLOB_BRACE);
-        $excludedConfigFiles = glob($glob . $notReversedContext, GLOB_BRACE);
+        $excludedConfigFiles = glob($glob . $reversedConfigExtensions, GLOB_BRACE);
 
         foreach ($configFiles as $resource) {
             if (!in_array($resource, $excludedConfigFiles)) {
@@ -117,10 +117,10 @@ abstract class SuluKernel extends Kernel
     protected function import(RouteCollectionBuilder $routes, $glob)
     {
         $configExtensions = $this->getConfigExtensions();
-        $notReversedContext = $this->getNotReversedContext();
+        $reversedConfigExtensions = $this->getReversedConfigExtensions();
 
         $configFiles = glob($glob . $configExtensions, GLOB_BRACE);
-        $excludedConfigFiles = glob($glob . $notReversedContext, GLOB_BRACE);
+        $excludedConfigFiles = glob($glob . $reversedConfigExtensions, GLOB_BRACE);
 
         foreach ($configFiles as $resource) {
             if (!in_array($resource, $excludedConfigFiles)) {
@@ -152,7 +152,7 @@ abstract class SuluKernel extends Kernel
             . $this->context;
     }
 
-    private function getNotReversedContext()
+    private function getReversedConfigExtensions()
     {
         $configExtensions = $this->getConfigExtensions();
 

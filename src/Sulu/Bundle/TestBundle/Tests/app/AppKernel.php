@@ -9,6 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
-class AppKernel extends \Sulu\Bundle\TestBundle\Kernel\SuluTestKernel
+use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+
+class AppKernel extends SuluTestKernel
 {
 }

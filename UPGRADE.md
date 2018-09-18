@@ -4,7 +4,7 @@
 
 ### Default folder changed
 
-The following default configurations where changed to use the symfony 4 folder structure.
+The following default configurations were changed to use the symfony 4 folder structure.
 
 | Configuration                                | Old Default                                  | New Default
 |----------------------------------------------|----------------------------------------------|-----------------------------------------------

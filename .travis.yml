@@ -38,14 +38,6 @@ matrix:
         # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
         - TEST_FLAGS="--jackrabbit-restart"
 
-# Sqlite support: https://github.com/sulu/sulu/issues/2048
-#
-#    - language: php
-#      php: 7.1
-#      env:
-#        - DATABASE_DRIVER=pdo_sqlite
-#        - DATABASE_PATH=test.sqlite
-
 before_script:
   - if [ ! -d downloads ]; then mkdir downloads; fi
   - |

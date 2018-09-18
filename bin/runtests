@@ -418,7 +418,7 @@ function init_bundle()
         'php %s %s',
         $console,
         'debug:container doctrine.orm.entity_manager'
-    ), false);
+    ), false, false);
 
     // bundle does not use Doctrine ORM
     if ($process->getExitCode() !== 0) {
