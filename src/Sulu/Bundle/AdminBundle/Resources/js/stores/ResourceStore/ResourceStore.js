@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable, toJS} from 'mobx';
+import {action, autorun, observable, toJS, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import ResourceRequester from '../../services/ResourceRequester';
 import type {ObservableOptions} from './types';
@@ -9,7 +9,7 @@ export default class ResourceStore {
     @observable id: ?string | number;
     observableOptions: ObservableOptions;
     disposer: () => void;
-    @observable loading: boolean = false;
+    @observable loading: boolean = true;
     @observable saving: boolean = false;
     @observable deleting: boolean = false;
     @observable data: Object = {};
@@ -242,7 +242,15 @@ export default class ResourceStore {
             true
         );
 
-        clonedResourceStore.data = toJS(this.data);
+        clonedResourceStore.loading = this.loading;
+
+        when(
+            () => !this.loading,
+            (): void => {
+                clonedResourceStore.data = toJS(this.data);
+                clonedResourceStore.loading = false;
+            }
+        );
 
         return clonedResourceStore;
     }

@@ -10,6 +10,7 @@ import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import {withSidebar} from '../../containers/Sidebar';
 import type {ViewProps} from '../../containers/ViewRenderer';
+import resourceMetadataStore from '../../stores/ResourceMetadataStore';
 import ResourceStore from '../../stores/ResourceStore';
 import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import formStyles from './form.scss';
@@ -94,18 +95,26 @@ class Form extends React.Component<Props> {
                 locale = observable.box();
             }
 
-            this.resourceStore = idQueryParameter
-                ? new ResourceStore(resourceKey, id, {locale}, formStoreOptions, idQueryParameter)
-                : new ResourceStore(resourceKey, id, {locale}, formStoreOptions);
+            const formEndpoint = resourceMetadataStore.getEndpoint(resourceKey);
+            const resourceStoreEndpoint = resourceMetadataStore.getEndpoint(resourceStore.resourceKey);
+
+            if (idQueryParameter) {
+                this.resourceStore = new ResourceStore(resourceKey, id, {locale}, formStoreOptions, idQueryParameter);
+            } else if (formEndpoint === resourceStoreEndpoint) {
+                this.resourceStore = resourceStore.clone();
+                this.resourceStore.resourceKey = resourceKey;
+            } else {
+                this.resourceStore = new ResourceStore(resourceKey, id, {locale}, formStoreOptions);
+            }
         } else {
             this.resourceStore = resourceStore;
+        }
 
-            if (Object.keys(this.resourceStore.data).length > 0) {
-                // data should be reloaded if ResourceTabs ResourceStore is used and user comes back from another tab
-                // the above check assumes that loading the data from the backend takes longer than calling this method
-                // the very unlikely worst case scenario if this assumption is not met, is that the data is loaded twice
-                this.resourceStore.load();
-            }
+        if (Object.keys(this.resourceStore.data).length > 0) {
+            // data should be reloaded if ResourceTabs ResourceStore is used and user comes back from another tab
+            // the above check assumes that loading the data from the backend takes longer than calling this method
+            // the very unlikely worst case scenario if this assumption is not met, is that the data is loaded twice
+            this.resourceStore.load();
         }
 
         this.formStore = new FormStore(this.resourceStore, formStoreOptions);

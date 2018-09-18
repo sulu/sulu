@@ -2,6 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 
@@ -50,6 +51,10 @@ jest.mock('../../../utils/Translator', () => ({
                 return 'Save';
         }
     },
+}));
+
+jest.mock('../../../stores/ResourceMetadataStore', () => ({
+    getEndpoint: jest.fn((key) => key),
 }));
 
 jest.mock('../../../services/ResourceRequester', () => ({
@@ -235,6 +240,39 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
     const formResourceStore = form.instance().resourceStore;
 
     expect(formResourceStore.idQueryParameter).toEqual('contactId');
+});
+
+test('Should clone the resourceStore if the passed resourceKey differs but the endpoint is the same', () => {
+    const Form = require('../Form').default;
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('pages', 10);
+    const route = {
+        options: {
+            resourceKey: 'page-settings',
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        attributes: {},
+        route,
+    };
+
+    resourceMetadataStore.getEndpoint.mockImplementation((resourceKey) => {
+        switch (resourceKey) {
+            case 'pages':
+            case 'page-settings':
+                return '/pages';
+        }
+    });
+
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const formResourceStore = form.instance().resourceStore;
+
+    expect(ResourceRequester.get).toHaveBeenCalledTimes(1);
+    expect(ResourceRequester.get).toBeCalledWith('pages', 10, {});
+    expect(resourceStore.resourceKey).toEqual('pages');
+    expect(formResourceStore.resourceKey).toEqual('page-settings');
 });
 
 test('Should add items defined in ToolbarActions to Toolbar', () => {
