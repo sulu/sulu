@@ -10,7 +10,6 @@ environment:
   SULU_ADMIN_EMAIL:
   PHPCR_TRANSPORT: doctrinedbal
   DATABASE_URL: mysql://root:Password12!@127.0.0.1/sulu_test
-  DATABASE_VERSION: "5.6"
   DATABASE_CHARSET: utf8mb4
   DATABASE_COLLATE: utf8mb4_unicode_ci
   matrix:

@@ -1,6 +1,5 @@
 parameters:
     database.url: '%env(DATABASE_URL)%'
-    database.version: '%env(DATABASE_VERSION)%'
     database.charset: '%env(DATABASE_CHARSET)%'
     database.collate: '%env(DATABASE_COLLATE)%'
 
@@ -14,7 +13,6 @@ parameters:
     # Fallback values (used if environmental variables are not set)
 
     env(DATABASE_URL): mysql://root:@127.0.0.1:3306/sulu_test
-    env(DATABASE_VERSION): '5.7'
     env(DATABASE_CHARSET): utf8mb4
     env(DATABASE_COLLATE): utf8mb4_unicode_ci
 

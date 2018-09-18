@@ -47,7 +47,6 @@ doctrine:
                 is_bundle: false
     dbal:
         url: '%database.url%'
-        server_version: '%database.version%'
         charset: '%database.charset%'
         default_table_options:
             charset: '%database.charset%'
