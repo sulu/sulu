@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import classNames from 'classnames';
 import {translate} from '../../utils';
 import type {Error, ErrorCollection} from '../../types';
+import FieldComponent from '../../components/Form/Field';
 import fieldRegistry from './registries/FieldRegistry';
 import fieldStyles from './field.scss';
 import FormInspector from './FormInspector';
@@ -72,29 +72,33 @@ export default class Field extends React.Component<Props> {
             log.error(e);
 
             return (
-                <div className={fieldStyles.fieldException}>
-                    <h4>Error while rendering field!</h4>
-                    <p>
-                        <b>Name:</b> {name}<br />
-                        <b>Exception:</b> {e.toString()}
-                    </p>
-                </div>
+                <FieldComponent
+                    size={schema.size}
+                    spaceAfter={schema.spaceAfter}
+                >
+                    <div className={fieldStyles.fieldException}>
+                        <h4>Error while rendering field!</h4>
+                        <p>
+                            <b>Name:</b> {name}<br />
+                            <b>Exception:</b> {e.toString()}
+                        </p>
+                    </div>
+                </FieldComponent>
             );
         }
         const fieldTypeOptions = fieldRegistry.getOptions(type);
 
-        const fieldClass = classNames(
-            fieldStyles.field,
-            {
-                [fieldStyles.error]: !!error,
-            }
-        );
-
         const errorKeyword = this.findErrorKeyword(error);
 
         return (
-            <div className={fieldClass}>
-                {label && <label className={fieldStyles.label}>{label}{required && ' *'}</label>}
+            <FieldComponent
+                description={description}
+                error={errorKeyword ? translate('sulu_admin.error_' + errorKeyword.toLowerCase()) : undefined}
+                label={label}
+                required={required}
+                size={schema.size}
+                spaceAfter={schema.spaceAfter}
+            >
                 <FieldType
                     dataPath={dataPath}
                     error={error}
@@ -111,15 +115,7 @@ export default class Field extends React.Component<Props> {
                     types={types}
                     value={value}
                 />
-                {description &&
-                    <label className={fieldStyles.descriptionLabel}>
-                        {description}
-                    </label>
-                }
-                <label className={fieldStyles.errorLabel}>
-                    {errorKeyword && translate('sulu_admin.error_' + errorKeyword.toLowerCase())}
-                </label>
-            </div>
+            </FieldComponent>
         );
     }
 }

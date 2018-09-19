@@ -5,6 +5,7 @@ import Renderer from '../Renderer';
 import FormInspector from '../FormInspector';
 import FormStore from '../stores/FormStore';
 import ResourceStore from '../../../stores/ResourceStore';
+import Field from '../Field';
 
 jest.mock('../FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
@@ -27,24 +28,6 @@ jest.mock('../registries/FieldRegistry', () => ({
     }),
     getOptions: jest.fn().mockReturnValue({}),
 }));
-
-test('Should render a grid', () => {
-    const changeSpy = jest.fn();
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
-
-    const renderer = render(
-        <Renderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            schema={{}}
-            schemaPath=""
-        />
-    );
-    expect(renderer).toMatchSnapshot();
-});
 
 test('Should call onFieldFinish callback when editing a field has finished', () => {
     const schema = {
@@ -72,10 +55,10 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
         />
     );
 
-    renderer.find('Field').at(0).prop('onFinish')('/text', '/text');
+    renderer.find(Field).at(0).prop('onFinish')('/text', '/text');
     expect(fieldFinishSpy).toHaveBeenLastCalledWith('/text', '/text');
 
-    renderer.find('Field').at(1).prop('onFinish')('/datetime', '/datetime');
+    renderer.find(Field).at(1).prop('onFinish')('/datetime', '/datetime');
     expect(fieldFinishSpy).toHaveBeenLastCalledWith('/datetime', '/datetime');
 });
 
@@ -287,7 +270,7 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
         />
     );
 
-    renderer.find('Field').at(0).simulate('finish', 'text');
+    renderer.find(Field).at(0).prop('onFinish')('text');
 
     const fields = renderer.find('Field');
 

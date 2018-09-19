@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render section with given size 1`] = `
+<div
+  class="section gridSection size size-12 space-before-0 space-after-0"
+>
+  <div
+    class="item size size-12 space-before-0 space-after-0"
+  >
+    <div
+      class="divider"
+    >
+      Test
+    </div>
+  </div>
+  <p>
+    Test
+  </p>
+</div>
+`;
+
+exports[`Render section without label 1`] = `
+<div
+  class="section gridSection size size-12 space-before-0 space-after-0"
+>
+  <div>
+    Test
+  </div>
+</div>
+`;

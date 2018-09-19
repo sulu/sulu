@@ -1,11 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should render a grid 1`] = `
-<div
-  class="grid grid"
-/>
-`;
-
 exports[`Should render field types based on schema 1`] = `
 <div
   class="grid grid"

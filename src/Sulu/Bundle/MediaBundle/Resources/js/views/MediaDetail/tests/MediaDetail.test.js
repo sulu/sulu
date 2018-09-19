@@ -272,6 +272,7 @@ test('Should save form when submitted', (done) => {
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
+    const Form = require('sulu-admin-bundle/containers').Form;
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
@@ -305,7 +306,7 @@ test('Should save form when submitted', (done) => {
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
             mediaDetail.update();
-            mediaDetail.find('Form').instance().submit();
+            mediaDetail.find(Form).instance().submit();
             expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
             done();
         });

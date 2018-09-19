@@ -177,7 +177,7 @@ test('Call finish handlers with dataPath and schemaPath when a block field has f
     form.instance().formInspector.addFinishFieldHandler(handler2);
     form.find('SortableBlocks').prop('onExpand')(0);
     form.update();
-    form.find('SortableBlock Field').instance().handleFinish();
+    form.find('SortableBlock Field').at(0).instance().handleFinish();
     expect(handler1).toHaveBeenLastCalledWith('/block/0/text', '/block/types/default/form/text');
     expect(handler2).toHaveBeenLastCalledWith('/block/0/text', '/block/types/default/form/text');
 });
@@ -204,7 +204,7 @@ test('Should pass showAllErrors flag to Renderer when form has been submitted', 
     const form = mount(<Form onSubmit={jest.fn()} store={store} />);
 
     expect(form.find('Renderer').prop('showAllErrors')).toEqual(false);
-    form.find('Form').instance().submit();
+    form.find(Form).instance().submit();
     form.update();
     expect(form.find('Renderer').prop('showAllErrors')).toEqual(true);
 });

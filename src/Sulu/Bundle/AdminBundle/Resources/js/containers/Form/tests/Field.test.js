@@ -54,6 +54,25 @@ test('Render correct label with correct field type', () => {
     )).toMatchSnapshot();
 });
 
+test('Render field with correct values for grid', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+    expect(render(
+        <Field
+            dataPath=""
+            formInspector={formInspector}
+            name="test"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schema={{label: 'label1', type: 'text', size: 8, spaceAfter: 3}}
+            schemaPath=""
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render a required field with correct field type', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 

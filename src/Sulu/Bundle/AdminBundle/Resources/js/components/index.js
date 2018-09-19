@@ -9,6 +9,7 @@ import CroppedText from './CroppedText';
 import DatePicker from './DatePicker';
 import Dialog from './Dialog';
 import Divider from './Divider';
+import Form from './Form';
 import Grid from './Grid';
 import Icon from './Icon';
 import InfiniteScroller from './InfiniteScroller';
@@ -35,6 +36,7 @@ export {
     DatePicker,
     Dialog,
     Divider,
+    Form,
     Grid,
     Icon,
     InfiniteScroller,

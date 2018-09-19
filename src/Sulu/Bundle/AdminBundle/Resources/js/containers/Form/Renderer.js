@@ -2,12 +2,10 @@
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
-import Divider from '../../components/Divider';
-import Grid from '../../components/Grid';
+import Form from '../../components/Form';
 import type {ErrorCollection} from '../../types';
 import Field from './Field';
 import FormInspector from './FormInspector';
-import rendererStyles from './renderer.scss';
 import type {Schema, SchemaEntry} from './types';
 
 type Props = {|
@@ -36,26 +34,18 @@ export default class Renderer extends React.Component<Props> {
         }
     };
 
-    renderGridSection(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
-        const {items, size} = schemaField;
+    renderSection(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
+        const {label, items, size} = schemaField;
         return (
-            <Grid.Section className={rendererStyles.gridSection} key={schemaKey} size={size}>
-                {schemaField.label &&
-                    <Grid.Item size={12}>
-                        <Divider>
-                            {schemaField.label}
-                        </Divider>
-                    </Grid.Item>
-                }
+            <Form.Section key={schemaKey} label={label} size={size}>
                 {items &&
-                Object.keys(items).map(
-                    (key) => this.renderItem(items[key], key, schemaPath + '/items/' + key)
-                )}
-            </Grid.Section>
+                    Object.keys(items).map((key) => this.renderItem(items[key], key, schemaPath + '/items/' + key))
+                }
+            </Form.Section>
         );
     }
 
-    renderGridItem(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
+    renderField(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
         const {data, dataPath, errors, formInspector, onChange, showAllErrors} = this.props;
         const itemDataPath = dataPath + '/' + schemaKey;
 
@@ -64,34 +54,28 @@ export default class Renderer extends React.Component<Props> {
             : undefined;
 
         return (
-            <Grid.Item
-                className={rendererStyles.gridItem}
+            <Field
+                dataPath={itemDataPath}
+                error={error}
+                formInspector={formInspector}
                 key={schemaKey}
-                size={schemaField.size}
-                spaceAfter={schemaField.spaceAfter}
-            >
-                <Field
-                    dataPath={itemDataPath}
-                    error={error}
-                    formInspector={formInspector}
-                    name={schemaKey}
-                    onChange={onChange}
-                    onFinish={this.handleFieldFinish}
-                    schema={schemaField}
-                    schemaPath={schemaPath}
-                    showAllErrors={showAllErrors}
-                    value={data[schemaKey]}
-                />
-            </Grid.Item>
+                name={schemaKey}
+                onChange={onChange}
+                onFinish={this.handleFieldFinish}
+                schema={schemaField}
+                schemaPath={schemaPath}
+                showAllErrors={showAllErrors}
+                value={data[schemaKey]}
+            />
         );
     }
 
     renderItem(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
         if (schemaField.type === 'section') {
-            return this.renderGridSection(schemaField, schemaKey, schemaPath);
+            return this.renderSection(schemaField, schemaKey, schemaPath);
         }
 
-        return this.renderGridItem(schemaField, schemaKey, schemaPath);
+        return this.renderField(schemaField, schemaKey, schemaPath);
     }
 
     render() {
@@ -102,15 +86,13 @@ export default class Renderer extends React.Component<Props> {
         const schemaKeys = Object.keys(schema);
 
         return (
-            <Grid className={rendererStyles.grid}>
-                {schemaKeys.map(
-                    (schemaKey) => this.renderItem(
-                        schema[schemaKey],
-                        schemaKey,
-                        schemaPath + '/' + schemaKey
-                    )
-                )}
-            </Grid>
+            <Form>
+                {schemaKeys.map((schemaKey) => this.renderItem(
+                    schema[schemaKey],
+                    schemaKey,
+                    schemaPath + '/' + schemaKey
+                ))}
+            </Form>
         );
     }
 }
