@@ -18,8 +18,4 @@
             </exclude>
         </whitelist>
     </filter>
-
-    <php>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="strong"/>
-    </php>
 </phpunit>
