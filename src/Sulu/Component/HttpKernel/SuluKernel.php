@@ -83,7 +83,7 @@ abstract class SuluKernel extends Kernel
         $confDir = $this->getProjectDir() . '/config';
 
         $this->load($loader, $confDir . '/{packages}/*');
-        $this->load($loader, $confDir . '/{packages}/' . $this->environment . '/**/*');
+        $this->load($loader, $confDir . '/{packages}/' . $this->environment . '/*');
         $this->load($loader, $confDir . '/{services}');
         $this->load($loader, $confDir . '/{services}_' . $this->environment);
     }
@@ -96,7 +96,7 @@ abstract class SuluKernel extends Kernel
         $confDir = $this->getProjectDir() . '/config';
 
         $this->import($routes, $confDir . '/{routes}/*');
-        $this->import($routes, $confDir . '/{routes}/' . $this->environment . '/**/*');
+        $this->import($routes, $confDir . '/{routes}/' . $this->environment . '/*');
         $this->import($routes, $confDir . '/{routes}');
     }
 
