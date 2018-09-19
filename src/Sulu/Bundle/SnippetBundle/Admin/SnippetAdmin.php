@@ -135,18 +135,7 @@ class SnippetAdmin extends Admin
      */
     public function getSecurityContexts()
     {
-        $contexts = [
-            'Sulu' => [
-                'Global' => [
-                    'sulu.global.snippets' => [
-                        PermissionTypes::VIEW,
-                        PermissionTypes::ADD,
-                        PermissionTypes::EDIT,
-                        PermissionTypes::DELETE,
-                    ],
-                ],
-            ],
-        ];
+        $contexts = $this->getGlobalSnippetsSecurityContext();
 
         if ($this->defaultEnabled) {
             $webspaceContexts = [];
@@ -158,7 +147,7 @@ class SnippetAdmin extends Admin
                 ];
             }
 
-            $contexts['Sulu']['Webspace Settings'] = $webspaceContexts;
+            $contexts['Sulu']['Webspaces'] = $webspaceContexts;
         }
 
         return $contexts;
@@ -166,7 +155,23 @@ class SnippetAdmin extends Admin
 
     public function getSecurityContextsWithPlaceholder()
     {
-        $contexts = [
+        $contexts = $this->getGlobalSnippetsSecurityContext();
+
+        if ($this->defaultEnabled) {
+            $webspaceContexts[self::getDefaultSnippetsSecurityContext('#webspace#')] = [
+                PermissionTypes::VIEW,
+                PermissionTypes::EDIT,
+            ];
+
+            $contexts['Sulu']['Webspaces'] = $webspaceContexts;
+        }
+
+        return $contexts;
+    }
+
+    private function getGlobalSnippetsSecurityContext()
+    {
+        return [
             'Sulu' => [
                 'Global' => [
                     'sulu.global.snippets' => [
@@ -178,16 +183,5 @@ class SnippetAdmin extends Admin
                 ],
             ],
         ];
-
-        if ($this->defaultEnabled) {
-            $webspaceContexts[self::getDefaultSnippetsSecurityContext('#webspace#')] = [
-                PermissionTypes::VIEW,
-                PermissionTypes::EDIT,
-            ];
-
-            $contexts['Sulu']['Webspace Settings'] = $webspaceContexts;
-        }
-
-        return $contexts;
     }
 }

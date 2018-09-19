@@ -8,11 +8,11 @@ import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import MultiSelect from 'sulu-admin-bundle/components/MultiSelect/MultiSelect';
 import webspaceStore from 'sulu-content-bundle/stores/WebspaceStore';
-import securityContextsStore from '../../../stores/SecurityContextsStore';
-import type {ContextPermission} from './types';
 import type {Webspace} from 'sulu-content-bundle/stores/WebspaceStore/types';
-import permissionsStyle from './permissions.scss';
+import securityContextsStore from '../../../stores/SecurityContextsStore';
 import type {Actions, SecurityContextGroups, SecurityContexts} from '../../../stores/SecurityContextsStore/types';
+import type {ContextPermission} from './types';
+import permissionsStyle from './permissions.scss';
 
 type Props = FieldTypeProps<?Array<ContextPermission>>;
 
@@ -21,7 +21,18 @@ export default class Permissions extends React.Component<Props> {
     @observable securityContextGroups: SecurityContextGroups;
     @observable availableWebspaces: Array<Webspace> = [];
 
-    @computed get selectedWebspaces() {
+    @computed get system(): string {
+        const {formInspector} = this.props;
+        const system = formInspector.getValueByPath('/system');
+
+        if (!system || typeof system !== 'string') {
+            throw new Error('Value "system" needs to be provided as string');
+        }
+
+        return system;
+    }
+
+    @computed get selectedWebspaces(): Array<string> {
         if (!this.props.value) {
             return [];
         }
@@ -38,10 +49,7 @@ export default class Permissions extends React.Component<Props> {
     }
 
     @action componentDidMount() {
-        const {formInspector} = this.props;
-        const system = formInspector.getValueByPath('/system');
-
-        securityContextsStore.loadSecurityContextGroups(system).then(action((securityContextGroups) => {
+        securityContextsStore.loadSecurityContextGroups(this.system).then(action((securityContextGroups) => {
             this.securityContextGroups = securityContextGroups;
         }));
         webspaceStore.loadAllWebspaces().then(action((webspaces) => {
@@ -128,18 +136,12 @@ export default class Permissions extends React.Component<Props> {
 
     getWebspaceSecurityContexts(webspace: string): SecurityContexts {
         const webspaceSecurityContextGroup = this.securityContextGroups['Webspaces'];
-        const webspaceSettingsSecurityContextGroup = this.securityContextGroups['Webspace Settings'];
 
         const securityContexts = {};
 
         Object.keys(webspaceSecurityContextGroup).map((securityContextKey) => {
             securityContexts[securityContextKey.replace('#webspace#', webspace)]
                 = toJS(webspaceSecurityContextGroup[securityContextKey]);
-        });
-
-        Object.keys(webspaceSettingsSecurityContextGroup).map((securityContextKey) => {
-            securityContexts[securityContextKey.replace('#webspace#', webspace)]
-                = toJS(webspaceSettingsSecurityContextGroup[securityContextKey]);
         });
 
         return securityContexts;
@@ -170,7 +172,7 @@ export default class Permissions extends React.Component<Props> {
     }
 
     renderMatrix(securityContextGroupKey: string, matrixIndex: number) {
-        if (securityContextGroupKey === 'Webspace Settings' || securityContextGroupKey === 'Webspaces') {
+        if (securityContextGroupKey === 'Webspaces') {
             return null;
         }
 
@@ -225,7 +227,7 @@ export default class Permissions extends React.Component<Props> {
                 }
             } else if (contextPermission.context.startsWith('sulu.webspace_settings.')) {
                 const suffix = contextPermission.context.replace('sulu.webspace_settings.', '');
-                const webspaceKey = suffix.substring(suffix.indexOf('.'));
+                const webspaceKey = suffix.substring(0, suffix.indexOf('.'));
                 if (newSelectedWebspaces.indexOf(webspaceKey) === -1) {
                     continue;
                 }

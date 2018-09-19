@@ -58,17 +58,13 @@ class WebsiteAdmin extends Admin
         $webspaceContexts = [];
         /* @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $webspaceContexts[self::getAnalyticsSecurityContext($webspace->getKey())] = [
-                PermissionTypes::VIEW,
-                PermissionTypes::ADD,
-                PermissionTypes::EDIT,
-                PermissionTypes::DELETE,
-            ];
+            $securityContextKey = self::getAnalyticsSecurityContext($webspace->getKey());
+            $webspaceContexts[$securityContextKey] = $this->getSecurityContextPermissions();
         }
 
         return [
             'Sulu' => [
-                'Webspace Settings' => $webspaceContexts,
+                'Webspaces' => $webspaceContexts,
             ],
         ];
     }
@@ -77,15 +73,20 @@ class WebsiteAdmin extends Admin
     {
         return [
             'Sulu' => [
-                'Webspace Settings' => [
-                    self::getAnalyticsSecurityContext('#webspace#') => [
-                        PermissionTypes::VIEW,
-                        PermissionTypes::ADD,
-                        PermissionTypes::EDIT,
-                        PermissionTypes::DELETE,
-                    ],
+                'Webspaces' => [
+                    self::getAnalyticsSecurityContext('#webspace#') => $this->getSecurityContextPermissions(),
                 ],
             ],
+        ];
+    }
+
+    private function getSecurityContextPermissions()
+    {
+        return [
+            PermissionTypes::VIEW,
+            PermissionTypes::ADD,
+            PermissionTypes::EDIT,
+            PermissionTypes::DELETE,
         ];
     }
 }

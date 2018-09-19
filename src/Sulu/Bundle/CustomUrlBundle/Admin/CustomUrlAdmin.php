@@ -52,17 +52,13 @@ class CustomUrlAdmin extends Admin
         $webspaceContexts = [];
         /* @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $webspaceContexts[self::getCustomUrlSecurityContext($webspace->getKey())] = [
-                 PermissionTypes::VIEW,
-                 PermissionTypes::ADD,
-                 PermissionTypes::EDIT,
-                 PermissionTypes::DELETE,
-             ];
+            $securityContextKey = self::getCustomUrlSecurityContext($webspace->getKey());
+            $webspaceContexts[$securityContextKey] = $this->getSecurityContextPermissions();
         }
 
         return [
              'Sulu' => [
-                 'Webspace Settings' => $webspaceContexts,
+                 'Webspaces' => $webspaceContexts,
              ],
          ];
     }
@@ -71,15 +67,20 @@ class CustomUrlAdmin extends Admin
     {
         return [
             'Sulu' => [
-                'Webspace Settings' => [
-                    self::getCustomUrlSecurityContext('#webspace#') => [
-                        PermissionTypes::VIEW,
-                        PermissionTypes::ADD,
-                        PermissionTypes::EDIT,
-                        PermissionTypes::DELETE,
-                    ],
+                'Webspaces' => [
+                    self::getCustomUrlSecurityContext('#webspace#') => $this->getSecurityContextPermissions(),
                 ],
             ],
+        ];
+    }
+
+    private function getSecurityContextPermissions()
+    {
+        return [
+            PermissionTypes::VIEW,
+            PermissionTypes::ADD,
+            PermissionTypes::EDIT,
+            PermissionTypes::DELETE,
         ];
     }
 }
