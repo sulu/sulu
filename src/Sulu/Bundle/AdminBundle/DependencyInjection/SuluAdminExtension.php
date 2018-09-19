@@ -51,22 +51,6 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             );
         }
 
-        if ($container->hasExtension('fos_rest')) {
-            $container->prependExtensionConfig(
-                'fos_rest',
-                [
-                    'zone' => [
-                        [
-                            'path' => '^/admin/api/*',
-                        ],
-                        [
-                            'path' => '^/api/*',
-                        ],
-                    ],
-                ]
-            );
-        }
-
         if ($container->hasExtension('jms_serializer')) {
             $container->prependExtensionConfig(
                 'jms_serializer',
