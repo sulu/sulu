@@ -108,7 +108,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
-        $this->contentQuery = $this->getContainer()->get('sulu_content.sulu.content.query_executor');
+        $this->contentQuery = $this->getContainer()->get('sulu_content_test.query_executor');
         $this->tagRepository = $this->getContainer()->get('sulu.repository.tag');
         $this->audienceTargetGroupRepository = $this->getContainer()->get('sulu.repository.target_group');
 

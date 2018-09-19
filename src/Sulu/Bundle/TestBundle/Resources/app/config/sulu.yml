@@ -31,7 +31,6 @@ sulu_core:
                  templates:
                      path: '%kernel.root_dir%/Resources/snippets'
                      type: snippet
-    webspace: ~
 
 doctrine:
     orm:

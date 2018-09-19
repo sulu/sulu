@@ -34,7 +34,7 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.core.localization_manager"/>            
         </service>
-        <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%">
+        <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%" public="true">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.collection_entity%</argument>
         </service>

@@ -24,7 +24,7 @@ matrix:
       php: 7.2
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction"
-        - SYMFONY_DEPRECATIONS_HELPER="strong"
+        - SYMFONY_DEPRECATIONS_HELPER="weak"
 
     - language: php
       php: 7.1

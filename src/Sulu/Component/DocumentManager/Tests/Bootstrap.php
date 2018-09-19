@@ -14,13 +14,13 @@ namespace Sulu\Component\DocumentManager\tests;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Jackalope\RepositoryFactoryDoctrineDBAL;
 use Jackalope\Transport\DoctrineDBAL\RepositorySchema;
-use JMS\Serializer\EventDispatcher\EventDispatcher;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use PHPCR\SessionInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Bootstrap
 {
@@ -123,7 +123,7 @@ class Bootstrap
 
         foreach (array_keys($container->findTaggedServiceIds('sulu_document_manager.event_subscriber')) as $subscriberId) {
             $def = $container->get($subscriberId);
-            $dispatcher->addSubscriberService($subscriberId, get_class($def));
+            $dispatcher->addSubscriber($def);
         }
 
         return $container;

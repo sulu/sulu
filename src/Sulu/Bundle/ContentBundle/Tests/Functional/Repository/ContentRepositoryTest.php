@@ -87,7 +87,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->propertyEncoder = $this->getContainer()->get('sulu_content.sulu_document_manager_test.property_encoder');
+        $this->propertyEncoder = $this->getContainer()->get('sulu_document_manager_test.property_encoder');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->localizationFinder = $this->getContainer()->get('sulu.content.localization_finder');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');

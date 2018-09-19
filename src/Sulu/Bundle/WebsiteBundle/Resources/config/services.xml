@@ -189,7 +189,7 @@
             <tag name="sulu.context" context="website"/>
         </service>
 
-        <service id="sulu_website.exception.controller" alias="twig.controller.exception" />
+        <service id="sulu_website.exception.controller" alias="twig.controller.exception" public="true" />
 
         <!-- cache clearer -->
         <service id="sulu_website.http_cache.clearer" class="Sulu\Bundle\WebsiteBundle\Cache\CacheClearer" public="true">

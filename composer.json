@@ -90,7 +90,7 @@
         "jackalope/jackalope-doctrine-dbal": "^1.2.5",
         "matthiasnoback/symfony-config-test": "^3.0|^4.0",
         "matthiasnoback/symfony-dependency-injection-test": "^2.0|^3.0",
-        "phpcr/phpcr-shell": "^1.0",
+        "phpcr/phpcr-shell": "^1.1.1",
         "phpdocumentor/reflection-docblock": "~3.1",
         "phpspec/prophecy": "^1.7",
         "phpunit/phpunit": "^6.5",

@@ -27,6 +27,10 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 {
     public function prepend(ContainerBuilder $container)
     {
+        $container->prependExtensionConfig('twig', [
+            'exception_controller' => 'sulu_website.exception.controller:showAction',
+        ]);
+
         if (SuluKernel::CONTEXT_WEBSITE !== $container->getParameter('sulu.context')) {
             return;
         }
