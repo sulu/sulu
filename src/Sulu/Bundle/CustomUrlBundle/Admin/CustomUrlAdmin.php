@@ -31,7 +31,7 @@ class CustomUrlAdmin extends Admin
      */
     public static function getCustomUrlSecurityContext($webspaceKey)
     {
-        return sprintf('%s%s.%s', ContentAdmin::SECURITY_SETTINGS_CONTEXT_PREFIX, $webspaceKey, 'custom-urls');
+        return sprintf('%s%s.%s', ContentAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'custom-urls');
     }
 
     /**
@@ -72,6 +72,11 @@ class CustomUrlAdmin extends Admin
                 ],
             ],
         ];
+    }
+
+    public function getSecurityContextsFieldType()
+    {
+        return 'sulu_content.webspace_permissions';
     }
 
     private function getSecurityContextPermissions()

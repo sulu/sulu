@@ -27,6 +27,7 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
+use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
