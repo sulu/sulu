@@ -58,7 +58,7 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
         return translate('sulu_media.select_media');
     }
 
-    handleRemove = (mediaId: string | number) => {
+    handleRemove = (mediaId: number) => {
         this.mediaSelectionStore.removeById(mediaId);
         this.callChangeHandler();
     };

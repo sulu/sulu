@@ -16,7 +16,7 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 type Props = {
     open: boolean,
     locale: IObservableValue<string>,
-    excludedIds: Array<string | number>,
+    excludedIds: Array<number>,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
 };
