@@ -12,6 +12,7 @@ type Props = {
     children: ChildrenArray<Element<typeof Item>>,
     name: string,
     onChange?: (name: string, value: {[string]: boolean}) => void,
+    title: ?string,
     values: MatrixRowValue,
 };
 
@@ -109,11 +110,12 @@ export default class Row extends React.Component<Props> {
         const {
             children,
             name,
+            title,
         } = this.props;
 
         return (
             <div className={matrixStyles.row}>
-                <div>{name}</div>
+                <div>{title ? title : name}</div>
                 <div>
                     {this.cloneItems(children)}
                     {this.renderAllButton()}

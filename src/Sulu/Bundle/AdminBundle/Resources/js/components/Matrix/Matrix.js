@@ -8,7 +8,6 @@ import matrixStyles from './matrix.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Row>>,
-    title: string,
     onChange: (value: MatrixValues) => void,
     values: MatrixValues,
 };
@@ -50,15 +49,11 @@ export default class Matrix extends React.PureComponent<Props> {
     render() {
         const {
             children,
-            title,
         } = this.props;
 
         return (
-            <div>
-                <div className={matrixStyles.title}>{title}</div>
-                <div className={matrixStyles.matrix}>
-                    {this.cloneRows(children)}
-                </div>
+            <div className={matrixStyles.matrix}>
+                {this.cloneRows(children)}
             </div>
         );
     }

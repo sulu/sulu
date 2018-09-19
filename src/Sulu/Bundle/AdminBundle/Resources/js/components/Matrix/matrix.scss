@@ -8,12 +8,6 @@ $itemBorderColor: $shakespeare;
 $itemBackgroundColorSelected: $shakespeare;
 $itemColorSelected: $white;
 
-.title {
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 22px;
-}
-
 .matrix {
     background: $white;
     border-radius: 3px;
@@ -29,12 +23,12 @@ $itemColorSelected: $white;
         font-size: 12px;
         line-height: 22px;
         display: inline-block;
-        width: 35%;
+        width: 50%;
     }
 
     > div:last-child {
         display: inline-block;
-        width: 65%;
+        width: 50%;
     }
 
     &:last-child {

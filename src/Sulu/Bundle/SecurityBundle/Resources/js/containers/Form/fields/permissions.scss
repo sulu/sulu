@@ -1,9 +1,11 @@
-.permissions {
-    > div {
-        margin-bottom: 40px;
+.matrix-container {
+    margin-bottom: 40px;
 
-        &:last-child {
-            margin-bottom: 0;
-        }
+    h3 {
+        margin-top: 30px;
     }
+}
+
+.select-container {
+    margin-bottom: 20px;
 }

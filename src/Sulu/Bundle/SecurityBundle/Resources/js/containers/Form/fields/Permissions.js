@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
@@ -18,8 +18,12 @@ type Props = FieldTypeProps<?Array<ContextPermission>>;
 
 @observer
 export default class Permissions extends React.Component<Props> {
-    @observable securityContextGroups: SecurityContextGroups;
+    @observable securityContextGroups: SecurityContextGroups = {};
     @observable availableWebspaces: Array<Webspace> = [];
+
+    @computed get hasWebspaces(): boolean {
+        return this.securityContextGroups.hasOwnProperty('Webspaces');
+    }
 
     @computed get system(): string {
         const {formInspector} = this.props;
@@ -51,9 +55,12 @@ export default class Permissions extends React.Component<Props> {
     @action componentDidMount() {
         securityContextsStore.loadSecurityContextGroups(this.system).then(action((securityContextGroups) => {
             this.securityContextGroups = securityContextGroups;
-        }));
-        webspaceStore.loadAllWebspaces().then(action((webspaces) => {
-            this.availableWebspaces = webspaces;
+
+            if (this.securityContextGroups.hasOwnProperty('Webspaces')) {
+                webspaceStore.loadAllWebspaces().then(action((webspaces) => {
+                    this.availableWebspaces = webspaces;
+                }));
+            }
         }));
     }
 
@@ -83,20 +90,6 @@ export default class Permissions extends React.Component<Props> {
                 contextPermissions.push(newContextPermission);
             }
         });
-
-        onChange(contextPermissions);
-        onFinish();
-    };
-
-    handleAllButtonClick = () => {
-        const {onChange, onFinish, value} = this.props;
-        const contextPermissions = value ? toJS(value) : [];
-
-        for (const contextPermission of contextPermissions) {
-            Object.keys(contextPermission.permissions).map((permissionKey) => {
-                contextPermission.permissions[permissionKey] = true;
-            });
-        }
 
         onChange(contextPermissions);
         onFinish();
@@ -160,14 +153,15 @@ export default class Permissions extends React.Component<Props> {
         });
 
         return (
-            <Matrix
-                key={'matrix-webspace-' + matrixIndex}
-                onChange={this.handleMatrixChange}
-                title={'Webspace: "' + webspace + '"'}
-                values={matrixValues}
-            >
-                {matrixRows}
-            </Matrix>
+            <Fragment key={'matrix-webspace-' + matrixIndex}>
+                <h3>{webspace}</h3>
+                <Matrix
+                    onChange={this.handleMatrixChange}
+                    values={matrixValues}
+                >
+                    {matrixRows}
+                </Matrix>
+            </Fragment>
         );
     }
 
@@ -188,20 +182,24 @@ export default class Permissions extends React.Component<Props> {
         });
 
         return (
-            <Matrix
-                key={'matrix-' + matrixIndex}
-                onChange={this.handleMatrixChange}
-                title={securityContextGroupKey}
-                values={matrixValues}
-            >
-                {matrixRows}
-            </Matrix>
+            <div className={permissionsStyle.matrixContainer} key={'matrix-' + matrixIndex}>
+                <h2>{securityContextGroupKey}</h2>
+                <Matrix
+                    onChange={this.handleMatrixChange}
+                    values={matrixValues}
+                >
+                    {matrixRows}
+                </Matrix>
+            </div>
         );
     }
 
     renderMatrixRow(rowIndex: number, securityContextKey: string, actions: Actions) {
+        const secondPointPosition = securityContextKey.indexOf('.', securityContextKey.indexOf('.') + 1) + 1;
+        const title = securityContextKey.substring(secondPointPosition);
+
         return (
-            <Matrix.Row key={'row-' + rowIndex} name={securityContextKey}>
+            <Matrix.Row key={'row-' + rowIndex} name={securityContextKey} title={title}>
                 {actions.map((action, itemIndex) => (
                     <Matrix.Item
                         icon={this.getIcon(action)}
@@ -269,16 +267,36 @@ export default class Permissions extends React.Component<Props> {
         }
 
         return (
-            <MultiSelect
-                allSelectedText="All selected"
-                noneSelectedText="None selected"
-                onChange={this.handleWebspaceSelectChange}
-                values={this.selectedWebspaces}
-            >
-                {this.availableWebspaces.map((webspace, index) => (
-                    <MultiSelect.Option key={index} value={webspace.key}>{webspace.name}</MultiSelect.Option>
-                ))}
-            </MultiSelect>
+            <div className={permissionsStyle.selectContainer}>
+                <MultiSelect
+                    allSelectedText="All selected"
+                    noneSelectedText="None selected"
+                    onChange={this.handleWebspaceSelectChange}
+                    values={this.selectedWebspaces}
+                >
+                    {this.availableWebspaces.map((webspace, index) => (
+                        <MultiSelect.Option key={index} value={webspace.key}>{webspace.name}</MultiSelect.Option>
+                    ))}
+                </MultiSelect>
+            </div>
+        );
+    }
+
+    renderWebspaceMatrixes() {
+        if (!this.hasWebspaces) {
+            return null;
+        }
+
+        return (
+            <Fragment>
+                <h2>Webspaces</h2>
+                {this.renderWebspaceSelect()}
+                <div className={permissionsStyle.matrixContainer}>
+                    {this.selectedWebspaces.map((webspace, matrixIndex) => (
+                        this.renderWebspaceMatrix(webspace.toString(), matrixIndex)
+                    ))}
+                </div>
+            </Fragment>
         );
     }
 
@@ -288,16 +306,12 @@ export default class Permissions extends React.Component<Props> {
         }
 
         return (
-            <div className={permissionsStyle.permissions}>
-                <Button active={true} onClick={this.handleAllButtonClick}>All</Button>
-                {this.renderWebspaceSelect()}
-                {this.selectedWebspaces.map((webspace, matrixIndex) => (
-                    this.renderWebspaceMatrix(webspace.toString(), matrixIndex)
-                ))}
-                {Object.keys(this.securityContextGroups).map((securityContextGroupKey, matrixIndex) => (
+            <Fragment>
+                {this.renderWebspaceMatrixes()}
+                {Object.keys(this.securityContextGroups).sort().map((securityContextGroupKey, matrixIndex) => (
                     this.renderMatrix(securityContextGroupKey, matrixIndex)
                 ))}
-            </div>
+            </Fragment>
         );
     }
 }
