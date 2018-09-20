@@ -46,7 +46,6 @@ jest.mock('../../../../utils/Translator', () => ({
 }));
 
 test('Should pass props correctly to selection component', () => {
-    const changeSpy = jest.fn();
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
