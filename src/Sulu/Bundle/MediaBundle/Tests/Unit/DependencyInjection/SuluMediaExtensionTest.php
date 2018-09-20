@@ -28,7 +28,14 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->container->setParameter('kernel.root_dir', __DIR__);
         $this->container->setParameter('kernel.bundles', []);
 
-        $this->load();
+        $this->load(
+            [
+                'ffmpeg' => [
+                    'ffmpeg_binary' => '/usr/local/bin/ffmpeg',
+                    'ffprobe_binary' => '/usr/local/bin/ffprobe',
+                ],
+            ]
+        );
 
         $this->assertContainerBuilderHasService('sulu_media.media_manager');
         $this->assertContainerBuilderHasParameter('sulu_media.format_manager.response_headers', [

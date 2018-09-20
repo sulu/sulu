@@ -10,6 +10,7 @@
  */
 
 namespace Sulu\Bundle\CoreBundle\Build;
+
 use PHPCR\Migrations\MigratorFactory;
 use PHPCR\Migrations\VersionStorage;
 
