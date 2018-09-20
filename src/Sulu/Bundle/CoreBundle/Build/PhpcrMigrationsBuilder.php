@@ -10,6 +10,8 @@
  */
 
 namespace Sulu\Bundle\CoreBundle\Build;
+use PHPCR\Migrations\MigratorFactory;
+use PHPCR\Migrations\VersionStorage;
 
 /**
  * Initialize the migrations when Sulu is built.
@@ -19,6 +21,22 @@ namespace Sulu\Bundle\CoreBundle\Build;
  */
 class PhpcrMigrationsBuilder extends SuluBuilder
 {
+    /**
+     * @var MigratorFactory
+     */
+    private $migratorFactory;
+
+    /**
+     * @var VersionStorage
+     */
+    private $versionStorage;
+
+    public function __construct(MigratorFactory $migratorFactory, VersionStorage $versionStorage)
+    {
+        $this->migratorFactory = $migratorFactory;
+        $this->versionStorage = $versionStorage;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,10 +58,9 @@ class PhpcrMigrationsBuilder extends SuluBuilder
      */
     public function build()
     {
-        $migrator = $this->container->get('phpcr_migrations.migrator_factory')->getMigrator();
-        $versionStorage = $this->container->get('phpcr_migrations.version_storage');
+        $migrator = $this->migratorFactory->getMigrator();
 
-        if (false === $versionStorage->hasVersioningNode()) {
+        if (false === $this->versionStorage->hasVersioningNode()) {
             $migrator->initialize();
         }
     }
