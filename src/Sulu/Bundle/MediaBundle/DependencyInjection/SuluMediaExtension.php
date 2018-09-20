@@ -54,7 +54,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                         ],
                     ],
                     'image_format_files' => [
-                        '%kernel.root_dir%/config/image-formats.xml',
+                        '%kernel.project_dir%/config/image-formats.xml',
                         __DIR__ . '/../Resources/config/image-formats.xml',
                     ],
                     'search' => ['enabled' => $container->hasExtension('massive_search')],
