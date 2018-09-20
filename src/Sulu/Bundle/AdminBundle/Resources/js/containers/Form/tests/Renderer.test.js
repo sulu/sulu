@@ -34,10 +34,12 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
         text: {
             label: 'Text',
             type: 'text_line',
+            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
+            visible: true,
         },
     };
     const fieldFinishSpy = jest.fn();
@@ -67,10 +69,68 @@ test('Should render field types based on schema', () => {
         text: {
             label: 'Text',
             type: 'text_line',
+            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
+            visible: true,
+        },
+    };
+
+    const changeSpy = jest.fn();
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    const renderer = render(
+        <Renderer
+            data={{}}
+            dataPath=""
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFieldFinish={jest.fn()}
+            schema={schema}
+            schemaPath=""
+        />
+    );
+
+    expect(renderer).toMatchSnapshot();
+});
+
+test('Should not render fields when the schema contains a visible flag of false', () => {
+    const schema = {
+        highlight: {
+            items: {
+                title: {
+                    type: 'text_line',
+                    visible: true,
+                },
+                url: {
+                    type: 'text_line',
+                    visible: false,
+                },
+            },
+            type: 'section',
+            visible: true,
+        },
+        highlight2: {
+            items: {
+                title: {
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+            type: 'section',
+            visible: false,
+        },
+        text: {
+            label: 'Text',
+            type: 'text_line',
+        },
+        datetime: {
+            label: 'Datetime',
+            type: 'datetime',
+            visible: false,
         },
     };
 
@@ -99,15 +159,19 @@ test('Should pass correct schemaPath to fields', () => {
             items: {
                 title: {
                     type: 'text_line',
+                    visible: true,
                 },
                 url: {
                     type: 'text_line',
+                    visible: true,
                 },
             },
             type: 'section',
+            visible: true,
         },
         article: {
             type: 'text_line',
+            visible: true,
         },
     };
 
@@ -138,10 +202,12 @@ test('Should pass name, schema and formInspector to fields', () => {
         text: {
             label: 'Text',
             type: 'text_line',
+            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
+            visible: true,
         },
     };
 
@@ -181,10 +247,12 @@ test('Should pass errors to fields that have already been modified at least once
         text: {
             label: 'Text',
             type: 'text_line',
+            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
+            visible: true,
         },
     };
 
@@ -232,10 +300,12 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
         text: {
             label: 'Text',
             type: 'text_line',
+            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
+            visible: true,
         },
     };
 
@@ -289,12 +359,15 @@ test('Should render nested sections', () => {
                 item11: {
                     label: 'Item 1.1',
                     type: 'text_line',
+                    visible: true,
                 },
                 section11: {
                     label: 'Section 1.1',
                     type: 'section',
+                    visible: true,
                 },
             },
+            visible: true,
         },
         section2: {
             label: 'Section 2',
@@ -303,8 +376,10 @@ test('Should render nested sections', () => {
                 item21: {
                     label: 'Item 2.1',
                     type: 'text_line',
+                    visible: true,
                 },
             },
+            visible: true,
         },
     };
 
@@ -335,8 +410,10 @@ test('Should render sections with size', () => {
                 item11: {
                     label: 'Item 1.1',
                     type: 'text_line',
+                    visible: true,
                 },
             },
+            visible: true,
         },
         section2: {
             label: 'Section 2',
@@ -346,8 +423,10 @@ test('Should render sections with size', () => {
                 item21: {
                     label: 'Item 2.1',
                     type: 'text_line',
+                    visible: true,
                 },
             },
+            visible: true,
         },
     };
 
@@ -377,8 +456,10 @@ test('Should render sections without label', () => {
                 item11: {
                     label: 'Item 1.1',
                     type: 'text_line',
+                    visible: true,
                 },
             },
+            visible: true,
         },
         section2: {
             label: 'Section 2',
@@ -388,8 +469,10 @@ test('Should render sections without label', () => {
                 item21: {
                     label: 'Item 2.1',
                     type: 'text_line',
+                    visible: true,
                 },
             },
+            visible: true,
         },
     };
 

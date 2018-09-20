@@ -1,5 +1,49 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Should not render fields when the schema contains a visible flag of false 1`] = `
+<div
+  class="grid grid"
+>
+  <div
+    class="section gridSection size size-12 space-before-0 space-after-0"
+  >
+    <div
+      class="item gridItem size size-12 space-before-0 space-after-0"
+    >
+      <div
+        class="field"
+      >
+        <input
+          type="text"
+        />
+        <label
+          class="errorLabel"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="item gridItem size size-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        Text
+      </label>
+      <input
+        type="text"
+      />
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Should render field types based on schema 1`] = `
 <div
   class="grid grid"
