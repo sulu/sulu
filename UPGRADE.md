@@ -2,6 +2,10 @@
 
 ## dev-develop
 
+### Websocket
+
+The websocket-bundle and component was removed without replacement.
+
 ### Preview
 
 To register a `sulu_preview.object_provider` you have to change your tag definition:

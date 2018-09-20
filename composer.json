@@ -16,7 +16,6 @@
     "require": {
         "php": "^7.1",
         "aferrandini/urlizer": "~1.0.0",
-        "cboden/ratchet": "0.3.*",
         "dantleech/phpcr-migrations-bundle": "~1.0",
         "doctrine/annotations": "^1.2",
         "doctrine/common": "^2.7.1",

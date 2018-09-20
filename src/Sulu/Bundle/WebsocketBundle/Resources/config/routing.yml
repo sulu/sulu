@@ -1,4 +1,0 @@
-sulu_websocket.fallback:
-    path: /{appName}
-    defaults: { _controller: sulu_websocket.fallback_controller:send }
-    methods: post
