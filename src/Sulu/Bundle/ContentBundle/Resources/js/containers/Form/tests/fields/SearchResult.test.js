@@ -4,7 +4,7 @@ import {observable} from 'mobx';
 import {shallow} from 'enzyme';
 import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils';
+import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import SearchResult from '../../fields/SearchResult';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
