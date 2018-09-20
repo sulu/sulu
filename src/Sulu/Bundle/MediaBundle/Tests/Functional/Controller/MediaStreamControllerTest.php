@@ -93,7 +93,7 @@ class MediaStreamControllerTest extends SuluTestCase
 
         $this->assertEquals(
             'attachment; filename=fitness-seasons.jpeg; filename*=utf-8\'\'fitness-seasons.agency--C-%26-C--Rodach%2C-Johannes',
-            $response->headers->get('content-disposition')
+            str_replace('"', '', $response->headers->get('Content-Disposition'))
         );
     }
 

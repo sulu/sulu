@@ -73,7 +73,10 @@ class CsvHandlerTest extends TestCase
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
-        $this->assertEquals($response->headers->get('Content-Disposition'), 'attachment; filename=contacts.csv');
+        $this->assertEquals(
+            str_replace('"', '', $response->headers->get('Content-Disposition')),
+            'attachment; filename=contacts.csv'
+        );
 
         $this->assertEquals(
             "id;fullName;birthday;enabled\n1;\"Max Mustermann\";1976-02-01T00:00:00+01:00;1\n2;\"Erika Mustermann\";1964-08-12T00:00:00+01:00;0\n",
@@ -114,7 +117,10 @@ class CsvHandlerTest extends TestCase
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
-        $this->assertEquals($response->headers->get('Content-Disposition'), 'attachment; filename=contacts.csv');
+        $this->assertEquals(
+            str_replace('"', '', $response->headers->get('Content-Disposition')),
+            'attachment; filename=contacts.csv'
+        );
 
         $this->assertEquals(
             "id,fullName,birthday\r\n1,'Max Mustermann',1976-02-01T00:00:00+01:00\r\n2,'Erika Mustermann',1964-08-12T00:00:00+01:00\r\n",
@@ -155,7 +161,10 @@ class CsvHandlerTest extends TestCase
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
-        $this->assertEquals($response->headers->get('Content-Disposition'), 'attachment; filename=contacts.csv');
+        $this->assertEquals(
+            str_replace('"', '', $response->headers->get('Content-Disposition')),
+            'attachment; filename=contacts.csv'
+        );
 
         $this->assertEquals(
             "id;fullName;properties\n1;\"Max Mustermann\";\"{\"\"test\"\":1}\"\n2;\"Erika Mustermann\";\"{\"\"test\"\":2}\"\n",
@@ -191,7 +200,10 @@ class CsvHandlerTest extends TestCase
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
-        $this->assertEquals($response->headers->get('Content-Disposition'), 'attachment; filename=contacts.csv');
+        $this->assertEquals(
+            str_replace('"', '', $response->headers->get('Content-Disposition')),
+            'attachment; filename=contacts.csv'
+        );
 
         $this->assertEquals('', $content);
     }
