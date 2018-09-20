@@ -192,6 +192,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         // load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('command.xml');
 
         if ('auto' === $config['adapter']) {
             $container->setAlias(
