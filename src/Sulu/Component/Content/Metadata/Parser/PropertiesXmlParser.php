@@ -13,8 +13,6 @@ namespace Sulu\Component\Content\Metadata\Parser;
 
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
-use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
-use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -29,39 +27,6 @@ class PropertiesXmlParser
      */
     private $expressionLanguage;
 
-    /**
-     * tags that are required in template
-     * TODO should be possible to inject from config.
-     *
-     * @var array
-     */
-    private $requiredPropertyNames = [
-        'title',
-    ];
-
-    /**
-     * reserved names for sulu internals
-     * TODO should be possible to inject from config.
-     *
-     * @var array
-     */
-    private $reservedPropertyNames = [
-        'template',
-        'changer',
-        'changed',
-        'creator',
-        'created',
-        'published',
-        'state',
-        'internal',
-        'nodeType',
-        'navContexts',
-        'shadow-on',
-        'shadow-base',
-        'author',
-        'authored',
-    ];
-
     public function __construct(ExpressionLanguage $expressionLanguage)
     {
         $this->expressionLanguage = $expressionLanguage;
@@ -72,41 +37,11 @@ class PropertiesXmlParser
         $path,
         &$tags,
         \DOMXPath $xpath,
-        \DOMNode $context = null,
-        bool $checkForRequiredProperties = true
+        \DOMNode $context = null
     ): array {
         $propertyData = $this->loadProperties($templateKey, $path, $tags, $xpath, $context);
 
-        if ($checkForRequiredProperties) {
-            $this->checkForRequiredProperties($propertyData, $templateKey);
-        }
-
         return $this->mapProperties($propertyData);
-    }
-
-    private function checkForRequiredProperties(array $propertyData, string $templateKey): void
-    {
-        // check if required properties are existing
-        foreach ($this->requiredPropertyNames as $requiredPropertyName) {
-            $requiredPropertyNameFound = false;
-            if (array_key_exists($requiredPropertyName, $propertyData)) {
-                $requiredPropertyNameFound = true;
-            }
-
-            // check all section properties as well
-            foreach ($propertyData as $property) {
-                if (!$requiredPropertyNameFound
-                    && 'section' == $property['type']
-                    && array_key_exists($requiredPropertyName, $property['properties'])
-                ) {
-                    $requiredPropertyNameFound = true;
-                }
-            }
-
-            if (!$requiredPropertyNameFound) {
-                throw new RequiredPropertyNameNotFoundException($templateKey, $requiredPropertyName);
-            }
-        }
     }
 
     /**
@@ -143,10 +78,6 @@ class PropertiesXmlParser
             $node,
             ['name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass', 'size', 'spaceAfter', 'label']
         );
-
-        if (in_array($result['name'], $this->reservedPropertyNames, false)) {
-            throw new ReservedPropertyNameException($templateKey, $result['name']);
-        }
 
         $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
         $result['multilingual'] = $this->getValueFromXPath('@multilingual', $xpath, $node, true);

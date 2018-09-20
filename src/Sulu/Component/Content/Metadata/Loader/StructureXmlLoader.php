@@ -14,9 +14,12 @@ namespace Sulu\Component\Content\Metadata\Loader;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
+use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
+use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
@@ -38,6 +41,39 @@ class StructureXmlLoader extends AbstractLoader
         'page' => ['sulu.rlp'],
         'home' => ['sulu.rlp'],
         'snippet' => [],
+    ];
+
+    /**
+     * reserved names for sulu internals
+     * TODO should be possible to inject from config.
+     *
+     * @var array
+     */
+    private $reservedPropertyNames = [
+        'template',
+        'changer',
+        'changed',
+        'creator',
+        'created',
+        'published',
+        'state',
+        'internal',
+        'nodeType',
+        'navContexts',
+        'shadow-on',
+        'shadow-base',
+        'author',
+        'authored',
+    ];
+
+    /**
+     * tags that are required in template
+     * TODO should be possible to inject from config.
+     *
+     * @var array
+     */
+    private $requiredPropertyNames = [
+        'title',
     ];
 
     /**
@@ -120,6 +156,16 @@ class StructureXmlLoader extends AbstractLoader
             $tags,
             $xpath
         );
+
+        $missingProperty = $this->findMissingRequiredProperties($result['properties']);
+        if ($missingProperty) {
+            throw new RequiredPropertyNameNotFoundException($result['key'], $missingProperty);
+        }
+
+        $reservedProperty = $this->findReservedProperties($result['properties']);
+        if ($reservedProperty) {
+            throw new ReservedPropertyNameException($result['key'], $reservedProperty);
+        }
 
         $result['properties'] = array_filter($result['properties'], function($property) {
             if (!$property instanceof PropertyMetadata) {
@@ -298,5 +344,71 @@ class StructureXmlLoader extends AbstractLoader
     {
         $structure->setTitles($meta['title']);
         $structure->setDescriptions($meta['info_text']);
+    }
+
+    private function findMissingRequiredProperties(array $propertyData): ?string
+    {
+        foreach ($this->requiredPropertyNames as $requiredPropertyName) {
+            if ($this->isRequiredPropertyMissing($propertyData, $requiredPropertyName)) {
+                return $requiredPropertyName;
+            }
+        }
+
+        return null;
+    }
+
+    private function isRequiredPropertyMissing(array $propertyData, string $requiredPropertyName): bool
+    {
+        foreach ($propertyData as $property) {
+            if ($property->getName() === $requiredPropertyName) {
+                return false;
+            }
+
+            if ($property instanceof SectionMetadata) {
+                $isPropertyMissing = $this->findMissingRequiredProperties(
+                    $property->getChildren(),
+                    $requiredPropertyName
+                );
+
+                if (!$isPropertyMissing) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function findReservedProperties(array $propertyData): ?string
+    {
+        foreach ($this->reservedPropertyNames as $reservedPropertyName) {
+            if ($this->isReservedProperty($propertyData, $reservedPropertyName)) {
+                return $reservedPropertyName;
+            }
+        }
+
+        return null;
+    }
+
+    private function isReservedProperty(array $propertyData, string $reservedPropertyName): bool
+    {
+        foreach ($propertyData as $property) {
+            if ($property->getName() === $reservedPropertyName) {
+                return true;
+            }
+
+            if ($property instanceof SectionMetadata) {
+                $isReservedProperty = $this->isReservedProperty(
+                    $property->getChildren(),
+                    $reservedPropertyName
+                );
+
+                if ($isReservedProperty) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
