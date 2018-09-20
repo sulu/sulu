@@ -120,21 +120,23 @@ class ContentAdmin extends Admin
                 ->setParent('sulu_content.page_add_form'),
             (new Route('sulu_content.page_edit_form', '/webspaces/:webspace/:locale/:id', 'sulu_content.page_tabs'))
                 ->addOption('resourceKey', 'pages')
-                ->addOption('preview', true)
                 ->addOption('backRoute', 'sulu_content.webspaces')
                 ->addOption('routerAttributesToFormStore', ['parentId', 'webspace'])
                 ->addOption('toolbarActions', $formToolbarActionsWithoutType),
             (new Route('sulu_content.page_edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_detail')
                 ->addOption('toolbarActions', $formToolbarActionsWithType)
+                ->addOption('preview', true)
                 ->setParent('sulu_content.page_edit_form'),
             (new Route('sulu_content.page_edit_form.seo', '/seo', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_seo')
                 ->addOption('resourceKey', 'pages_seo')
+                ->addOption('preview', true)
                 ->setParent('sulu_content.page_edit_form'),
             (new Route('sulu_content.page_edit_form.excerpt', '/excerpt', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_excerpt')
                 ->addOption('resourceKey', 'pages_excerpt')
+                ->addOption('preview', true)
                 ->setParent('sulu_content.page_edit_form'),
         ];
     }

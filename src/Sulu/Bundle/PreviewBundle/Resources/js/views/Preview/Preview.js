@@ -6,6 +6,7 @@ import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import Router from 'sulu-admin-bundle/services/Router';
 import {sidebarStore} from 'sulu-admin-bundle/containers/Sidebar';
+import {FormStore} from 'sulu-admin-bundle/containers/Form';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import Requester from 'sulu-admin-bundle/services/Requester';
 import Toolbar from 'sulu-admin-bundle/components/Toolbar';
@@ -15,6 +16,7 @@ import previewConfigStore from './stores/PreviewConfigStore';
 
 type Props = {
     resourceStore: ResourceStore,
+    formStore: FormStore,
     router: Router,
 };
 
@@ -24,7 +26,8 @@ export default class Preview extends React.Component<Props> {
     @observable token: ?string;
     @observable started: boolean = false;
 
-    disposer: () => void;
+    typeDisposer: () => void;
+    dataDisposer: () => void;
 
     componentDidMount() {
         if (previewConfigStore.mode === 'auto') {
@@ -35,6 +38,7 @@ export default class Preview extends React.Component<Props> {
     @action startPreview = () => {
         const {
             resourceStore,
+            formStore,
             router: {
                 attributes: {
                     locale,
@@ -55,7 +59,16 @@ export default class Preview extends React.Component<Props> {
             this.setToken(response.token);
         });
 
-        this.disposer = autorun(() => {
+        this.typeDisposer = autorun(() => {
+            if (formStore.loading || !this.iframeRef) {
+                return;
+            }
+
+            // $FlowFixMe
+            this.updateContext(formStore.type.get());
+        });
+
+        this.dataDisposer = autorun(() => {
             if (resourceStore.loading || !this.iframeRef) {
                 return;
             }
@@ -97,12 +110,47 @@ export default class Preview extends React.Component<Props> {
         });
     }, previewConfigStore.debounceDelay);
 
-    componentWillUnmount() {
-        if (!this.disposer) {
+    updateContext = debounce((type) => {
+        const {
+            router: {
+                attributes: {
+                    webspace,
+                },
+            },
+        } = this.props;
+
+        const route = previewConfigStore.generateRoute('update-context', {
+            webspace: webspace,
+            token: this.token,
+        });
+        if (!route) {
             return;
         }
 
-        this.disposer();
+        Requester.post(route, {context: {template: type}}).then((response) => {
+            const document = this.getPreviewDocument();
+            if (!document) {
+                return;
+            }
+
+            document.open();
+            document.write(response.content);
+            document.close();
+        });
+    }, previewConfigStore.debounceDelay);
+
+    componentWillUnmount() {
+        if (this.typeDisposer) {
+            this.typeDisposer();
+        }
+
+        if (this.dataDisposer) {
+            this.dataDisposer();
+        }
+
+        if (!this.started) {
+            return;
+        }
 
         const route = previewConfigStore.generateRoute('stop', {token: this.token});
         if (!route) {

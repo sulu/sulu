@@ -2,7 +2,7 @@
 import {action, computed, observable} from 'mobx';
 import queryString from 'query-string';
 
-export type PreviewRouteName = 'start' | 'render' | 'update' | 'stop';
+export type PreviewRouteName = 'start' | 'render' | 'update' | 'update-context' | 'stop';
 export type PreviewMode = 'auto' | 'on_request' | 'off';
 
 type PreviewConfigStoreConfig = {

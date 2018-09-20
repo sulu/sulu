@@ -4,6 +4,7 @@ import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
 import Requester from 'sulu-admin-bundle/services/Requester';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
+import FormStore from 'sulu-admin-bundle/containers/Form/stores/FormStore';
 import Router from 'sulu-admin-bundle/services/Router';
 import Preview from '../Preview';
 import type {PreviewRouteName} from '../stores/PreviewConfigStore';
@@ -35,6 +36,10 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resou
     this.id = id;
 }));
 
+jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn(function(resourceStore) {
+    this.resourceStore = resourceStore;
+}));
+
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function(history) {
     this.history = history;
     this.attributes = {locale: 'de'};
@@ -52,13 +57,21 @@ beforeEach(() => {
 
 test('Render correct preview', () => {
     const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const formStore = new FormStore(resourceStore);
     const router = new Router({});
 
-    expect(shallow(<Preview resourceStore={resourceStore} router={router} />)).toMatchSnapshot();
+    expect(shallow(
+        <Preview
+            formStore={formStore}
+            resourceStore={resourceStore}
+            router={router}
+        />
+    )).toMatchSnapshot();
 });
 
 test('Render button to start preview', () => {
     const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const formStore = new FormStore(resourceStore);
     const router = new Router({});
 
     previewConfigStore.setConfig({
@@ -67,19 +80,31 @@ test('Render button to start preview', () => {
         routes: {},
     });
 
-    expect(render(<Preview resourceStore={resourceStore} router={router} />)).toMatchSnapshot();
+    expect(render(
+        <Preview
+            formStore={formStore}
+            resourceStore={resourceStore}
+            router={router}
+        />
+    )).toMatchSnapshot();
 });
 
 test('React and update preview when data is changed', () => {
     const resourceStore = new ResourceStore('pages', 1);
     resourceStore.data = observable.map({title: 'Test'});
     resourceStore.loading = false;
+
+    const formStore = new FormStore(resourceStore);
+
+    // $FlowFixMe
+    formStore.type = observable.box('default');
+
     const router = new Router({});
     const requestPromise = Promise.resolve({token: '123-123-123'});
 
     Requester.get.mockReturnValue(requestPromise);
 
-    mount(<Preview resourceStore={resourceStore} router={router} />);
+    mount(<Preview formStore={formStore} resourceStore={resourceStore} router={router} />);
 
     expect(Requester.get).toBeCalledWith('/start');
 
@@ -87,5 +112,32 @@ test('React and update preview when data is changed', () => {
 
     return requestPromise.then(() => {
         expect(Requester.post).toBeCalledWith('/update', {data: {title: 'New Test'}});
+    });
+});
+
+test('React and update-context when type is changed', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    resourceStore.data = observable.map({title: 'Test'});
+    resourceStore.loading = false;
+
+    const formStore = new FormStore(resourceStore);
+
+    // $FlowFixMe
+    formStore.type = observable.box('default');
+
+    const router = new Router({});
+    const requestPromise = Promise.resolve({token: '123-123-123'});
+
+    Requester.get.mockReturnValue(requestPromise);
+
+    mount(<Preview formStore={formStore} resourceStore={resourceStore} router={router} />);
+
+    expect(Requester.get).toBeCalledWith('/start');
+
+    // $FlowFixMe
+    formStore.type.set('homepage');
+
+    return requestPromise.then(() => {
+        expect(Requester.post).toBeCalledWith('/update-context', {context: {template: 'homepage'}});
     });
 });

@@ -7,6 +7,7 @@ import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 
 jest.mock('../../../services/Initializer', () => jest.fn());
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
+jest.mock('../../../containers/Sidebar/withSidebar', () => jest.fn((Component) => Component));
 jest.mock('../toolbarActions/DeleteToolbarAction', () => jest.fn());
 jest.mock('../toolbarActions/SaveWithPublishingToolbarAction', () => jest.fn());
 jest.mock('../toolbarActions/SaveToolbarAction', () => jest.fn());
@@ -284,6 +285,84 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
         {type: 'button', value: 'save'},
         {type: 'button', value: 'delete'},
     ]);
+});
+
+test('Should initialize preview sidebar', () => {
+    const withSidebar = require('../../../containers/Sidebar/withSidebar');
+    const Form = require('../Form').default;
+    const sidebarFunction = findWithHighOrderComponentFunction(withSidebar, Form);
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const route = {
+        options: {
+            toolbarActions: [],
+            preview: true,
+        },
+    };
+    const router = {
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    const sidebarConfig = sidebarFunction.call(form.instance());
+    expect(sidebarConfig.view).toEqual('sulu_preview.preview');
+    expect(sidebarConfig.sizes).toEqual(['medium', 'large']);
+    expect(sidebarConfig.props.router).toEqual(router);
+    expect(sidebarConfig.props.resourceStore).toEqual(resourceStore);
+    expect(sidebarConfig.props.formStore).toBeDefined();
+});
+
+test('Should not initialize preview sidebar when option is false', () => {
+    const withSidebar = require('../../../containers/Sidebar/withSidebar');
+    const Form = require('../Form').default;
+    const sidebarFunction = findWithHighOrderComponentFunction(withSidebar, Form);
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const route = {
+        options: {
+            toolbarActions: [],
+            preview: false,
+        },
+    };
+    const router = {
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    const sidebarConfig = sidebarFunction.call(form.instance());
+    expect(sidebarConfig).toEqual({});
+});
+
+test('Should not initialize preview sidebar when option is not set', () => {
+    const withSidebar = require('../../../containers/Sidebar/withSidebar');
+    const Form = require('../Form').default;
+    const sidebarFunction = findWithHighOrderComponentFunction(withSidebar, Form);
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const route = {
+        options: {
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    const sidebarConfig = sidebarFunction.call(form.instance());
+    expect(sidebarConfig).toEqual({});
 });
 
 test('Should not add PublishIndicator if no publish status is available', () => {

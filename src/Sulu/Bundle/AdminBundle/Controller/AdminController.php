@@ -243,6 +243,7 @@ class AdminController
                     'start' => $this->urlGenerator->generate('sulu_preview.start'),
                     'render' => $this->urlGenerator->generate('sulu_preview.render'),
                     'update' => $this->urlGenerator->generate('sulu_preview.update'),
+                    'update-context' => $this->urlGenerator->generate('sulu_preview.update-context'),
                     'stop' => $this->urlGenerator->generate('sulu_preview.stop'),
                 ],
                 'debounceDelay' => $this->previewDelay,

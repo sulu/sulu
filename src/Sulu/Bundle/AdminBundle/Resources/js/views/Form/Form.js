@@ -7,6 +7,7 @@ import equals from 'fast-deep-equal';
 import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
+import {withSidebar} from '../../containers/Sidebar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import ResourceStore from '../../stores/ResourceStore';
 import toolbarActionRegistry from './registries/ToolbarActionRegistry';
@@ -230,7 +231,7 @@ class Form extends React.Component<Props> {
     }
 }
 
-export default withToolbar(Form, function() {
+const FormWithToolbar = withToolbar(Form, function() {
     const {router} = this.props;
     const {backRoute} = router.route.options;
     const {errors, resourceStore, showSuccess} = this;
@@ -284,5 +285,31 @@ export default withToolbar(Form, function() {
         items,
         icons,
         showSuccess,
+    };
+});
+
+export default withSidebar(FormWithToolbar, function() {
+    const {
+        router: {
+            route: {
+                options: {
+                    preview,
+                },
+            },
+        },
+    } = this.props;
+
+    if (!preview) {
+        return {};
+    }
+
+    return {
+        view: 'sulu_preview.preview',
+        sizes: ['medium', 'large'],
+        props: {
+            router: this.props.router,
+            resourceStore: this.resourceStore,
+            formStore: this.formStore,
+        },
     };
 });
