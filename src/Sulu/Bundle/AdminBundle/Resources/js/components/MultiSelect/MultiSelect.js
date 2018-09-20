@@ -4,14 +4,14 @@ import type {Element} from 'react';
 import type {SelectProps} from '../Select';
 import Select from '../Select';
 
-type Props = SelectProps & {
-    values: Array<string | number>,
+type Props<T> = SelectProps & {
+    values: Array<T>,
     noneSelectedText: string,
     allSelectedText: string,
-    onChange: (values: Array<string | number>) => void,
+    onChange: (values: Array<T>) => void,
 };
 
-export default class MultiSelect extends React.PureComponent<Props> {
+export default class MultiSelect<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         skin: 'default',
         values: [],
@@ -54,7 +54,7 @@ export default class MultiSelect extends React.PureComponent<Props> {
         return this.props.values.includes(option.props.value);
     };
 
-    handleSelect = (value: string | number) => {
+    handleSelect = (value: T) => {
         const newValues = [...this.props.values];
         const index = newValues.indexOf(value);
 

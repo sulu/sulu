@@ -12,7 +12,7 @@ export default class MediaSelectionStore {
     @observable selectedMedia: Array<MediaItem> = [];
     @observable loading: boolean = false;
 
-    constructor(selectedMediaIds: ?Array<string | number>, locale: IObservableValue<string>) {
+    constructor(selectedMediaIds: ?Array<number>, locale: IObservableValue<string>) {
         if (selectedMediaIds && selectedMediaIds.length) {
             this.loadSelectedMedia(selectedMediaIds, locale);
         }
@@ -23,7 +23,7 @@ export default class MediaSelectionStore {
         this.selectedMedia.push(preparedMedia);
     }
 
-    @action removeById(mediaId: string | number) {
+    @action removeById(mediaId: number) {
         this.selectedMedia = this.selectedMedia.filter((media) => media.id !== mediaId);
     }
 
@@ -35,7 +35,7 @@ export default class MediaSelectionStore {
         this.loading = loading;
     }
 
-    @computed get selectedMediaIds(): Array<string | number> {
+    @computed get selectedMediaIds(): Array<number> {
         return this.selectedMedia.map((media) => media.id);
     }
 
@@ -48,7 +48,7 @@ export default class MediaSelectionStore {
         };
     }
 
-    loadSelectedMedia = (selectedMediaIds: Array<string | number>, locale: IObservableValue<string>) => {
+    loadSelectedMedia = (selectedMediaIds: Array<number>, locale: IObservableValue<string>) => {
         this.setLoading(true);
         return ResourceRequester.getList(MEDIA_RESOURCE_KEY, {
             locale: locale.get(),

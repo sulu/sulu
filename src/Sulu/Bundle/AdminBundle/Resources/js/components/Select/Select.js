@@ -14,8 +14,8 @@ import selectStyles from './select.scss';
 const HORIZONTAL_OFFSET = -20;
 const VERTICAL_OFFSET = 2;
 
-type Props = SelectProps & {
-    onSelect: (values: string | number) => void,
+type Props<T> = SelectProps & {
+    onSelect: (values: T) => void,
     displayValue: string,
     closeOnSelect: boolean,
     isOptionSelected: (option: Element<typeof Option>) => boolean,
@@ -23,7 +23,7 @@ type Props = SelectProps & {
 };
 
 @observer
-export default class Select extends React.Component<Props> {
+export default class Select<T> extends React.Component<Props<T>> {
     static defaultProps = {
         closeOnSelect: true,
         skin: 'default',
@@ -94,7 +94,7 @@ export default class Select extends React.Component<Props> {
         });
     }
 
-    handleOptionClick = (value: string | number) => {
+    handleOptionClick = (value: T) => {
         this.props.onSelect(value);
 
         if (this.props.closeOnSelect) {

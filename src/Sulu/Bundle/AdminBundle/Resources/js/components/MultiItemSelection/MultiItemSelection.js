@@ -7,10 +7,10 @@ import Header from './Header';
 import Item from './Item';
 import multiItemSelectionStyles from './multiItemSelection.scss';
 
-type Props = {
+type Props<T> = {
     children?: ChildrenArray<Element<typeof Item>>,
     label?: string,
-    onItemRemove?: (itemid: string | number) => void,
+    onItemRemove?: (itemid: T) => void,
     onItemsSorted?: (oldIndex: number, newIndex: number) => void,
     leftButton?: Button,
     rightButton?: Button,
@@ -18,7 +18,7 @@ type Props = {
     sortable: boolean,
 };
 
-export default class MultiItemSelection extends React.PureComponent<Props> {
+export default class MultiItemSelection<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         loading: false,
         sortable: true,
@@ -72,7 +72,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
         return SortableContainer(container);
     }
 
-    handleItemRemove = (itemId: string | number) => {
+    handleItemRemove = (itemId: T) => {
         if (this.props.onItemRemove) {
             this.props.onItemRemove(itemId);
         }
