@@ -136,7 +136,7 @@
             <argument type="service" id="sulu.content.path_cleaner" />
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
-            <argument type="service" id="dubture_ffmpeg.ffprobe" on-invalid="null" />
+            <argument type="service" id="sulu_media.ffprobe" on-invalid="null" />
             <argument>%sulu_security.permissions%</argument>
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
@@ -205,7 +205,7 @@
         </service>
 
         <service id="sulu_media.video_thumbnail_generator" class="%sulu_media.video_thumbnail_generator.class%">
-            <argument type="service" id="dubture_ffmpeg.ffmpeg" on-invalid="null"/>
+            <argument type="service" id="sulu_media.ffmpeg" on-invalid="null"/>
         </service>
 
         <service id="sulu_media.permission_listener" class="Sulu\Bundle\MediaBundle\Search\EventListener\PermissionListener">

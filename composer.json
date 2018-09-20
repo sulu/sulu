@@ -93,8 +93,7 @@
         "phpdocumentor/reflection-docblock": "~3.1",
         "phpspec/prophecy": "^1.7",
         "phpunit/phpunit": "^6.5",
-        "pulse00/ffmpeg-bundle": "dev-symfony-4-support",
-        "alchemy/binary-driver": "2.0.0 as 1.6.0",
+        "php-ffmpeg/php-ffmpeg": "dev-master",
         "symfony/browser-kit": "^3.4|^4.0",
         "symfony/css-selector": "^3.4|^4.0",
         "symfony/debug": "^3.4|^4.0",
@@ -138,7 +137,7 @@
         "sulu/content-bundle": "self.version"
     },
     "suggest": {
-        "pulse00/ffmpeg-bundle": "Needed (as in require-dev) to generate preview images for videos",
+        "php-ffmpeg/php-ffmpeg": "Needed (as in require-dev) to generate preview images for videos",
         "symfony/monolog-bundle": "^3.1",
         "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch",
         "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)"
@@ -165,11 +164,5 @@
         "branch-alias": {
             "dev-develop": "2.0-dev"
         }
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/wachterjohannes/ffmpeg-bundle.git"
-        }
-    ]
+    }
 }
