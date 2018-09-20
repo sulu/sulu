@@ -71,6 +71,10 @@ export default class Renderer extends React.Component<Props> {
     }
 
     renderItem(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
+        if (schemaField.visible === false) {
+            return null;
+        }
+
         if (schemaField.type === 'section') {
             return this.renderSection(schemaField, schemaKey, schemaPath);
         }

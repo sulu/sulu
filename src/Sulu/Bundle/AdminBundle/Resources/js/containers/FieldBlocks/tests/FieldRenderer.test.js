@@ -25,7 +25,7 @@ test('Should pass props correctly to Renderer', () => {
         },
     };
     const schema = {
-        text: {label: 'Label', type: 'text_line'},
+        text: {label: 'Label', type: 'text_line', visible: true},
     };
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 

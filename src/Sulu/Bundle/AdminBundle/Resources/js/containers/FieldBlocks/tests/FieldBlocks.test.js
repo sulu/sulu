@@ -39,10 +39,12 @@ test('Render block with schema', () => {
                 text1: {
                     label: 'Text 1',
                     type: 'text_line',
+                    visible: true,
                 },
                 text2: {
                     label: 'Text 2',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -93,6 +95,7 @@ test('Render block with schema and error on fields already being modified', () =
                 text: {
                     label: 'Text',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -165,6 +168,7 @@ test('Render block with schema and error on fields already being modified', () =
                 text: {
                     label: 'Text',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -235,6 +239,7 @@ test('Should correctly pass props to the BlockCollection', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -280,6 +285,7 @@ test('Should pass correct schemaPath to FieldRender', () => {
             form: {
                 text: {
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -321,6 +327,7 @@ test('Should call onFinish when a field from the child renderer has finished edi
                 text: {
                     label: 'Text',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -361,6 +368,7 @@ test('Should call onFinish when the order of the blocks has changed', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },

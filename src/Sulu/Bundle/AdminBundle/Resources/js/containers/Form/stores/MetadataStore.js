@@ -1,6 +1,6 @@
 // @flow
 import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
-import type {Schema, SchemaTypes} from '../types';
+import type {RawSchema, SchemaTypes} from '../types';
 
 class MetadataStore {
     getSchemaTypes(resourceKey: string): Promise<SchemaTypes> {
@@ -24,7 +24,7 @@ class MetadataStore {
             });
     }
 
-    getSchema(resourceKey: string, type: ?string): Promise<Schema> {
+    getSchema(resourceKey: string, type: ?string): Promise<RawSchema> {
         return resourceMetadataStore.loadConfiguration(resourceKey)
             .then((configuration) => {
                 const typeConfiguration = this.getTypeConfiguration(configuration, type, resourceKey);

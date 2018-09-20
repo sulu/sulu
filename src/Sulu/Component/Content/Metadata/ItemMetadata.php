@@ -76,6 +76,11 @@ abstract class ItemMetadata
     protected $label = true;
 
     /**
+     * @var string
+     */
+    protected $visibilityCondition = null;
+
+    /**
      * @param mixed $name
      */
     public function __construct($name = null)
@@ -345,5 +350,17 @@ abstract class ItemMetadata
         }
 
         return '';
+    }
+
+    public function getVisibilityCondition(): ?string
+    {
+        return $this->visibilityCondition;
+    }
+
+    public function setVisibilityCondition(?string $visibilityCondition): self
+    {
+        $this->visibilityCondition = $visibilityCondition;
+
+        return $this;
     }
 }

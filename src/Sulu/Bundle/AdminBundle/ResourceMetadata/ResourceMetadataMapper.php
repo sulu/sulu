@@ -104,6 +104,7 @@ class ResourceMetadataMapper
         }
 
         $section->setSize($property->getSize());
+        $section->setVisibilityCondition($property->getVisibilityCondition());
 
         foreach ($property->getChildren() as $component) {
             if ($component instanceof BlockMetadata) {
@@ -131,6 +132,7 @@ class ResourceMetadataMapper
         }
 
         $field->setLabel($property->getTitle($locale));
+        $field->setVisibilityCondition($property->getVisibilityCondition());
         $field->setDescription($property->getDescription($locale));
         $field->setType($property->getType());
         $field->setSize($property->getSize());

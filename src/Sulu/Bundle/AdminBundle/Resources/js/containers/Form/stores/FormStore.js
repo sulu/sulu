@@ -4,8 +4,9 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Ajv from 'ajv';
 import jsonpointer from 'jsonpointer';
 import log from 'loglevel';
+import jexl from 'jexl';
 import ResourceStore from '../../../stores/ResourceStore';
-import type {Schema, SchemaEntry, SchemaTypes} from '../types';
+import type {RawSchema, RawSchemaEntry, Schema, SchemaEntry, SchemaTypes} from '../types';
 import metadataStore from './MetadataStore';
 
 // TODO do not hardcode "template", use some kind of metadata instead
@@ -14,7 +15,7 @@ const SECTION_TYPE = 'section';
 
 const ajv = new Ajv({allErrors: true, jsonPointers: true});
 
-function addSchemaProperties(data: Object, key: string, schema: Schema) {
+function addSchemaProperties(data: Object, key: string, schema: RawSchema) {
     const type = schema[key].type;
 
     if (type !== SECTION_TYPE) {
@@ -46,7 +47,7 @@ function sortObjectByPriority(a, b) {
 function collectTagPathsWithPriority(
     tagName: string,
     data: Object,
-    schema: Schema,
+    schema: RawSchema,
     parentPath: Array<string> = ['']
 ) {
     const pathsWithPriority = [];
@@ -93,16 +94,93 @@ function collectTagPathsWithPriority(
 function collectTagPaths(
     tagName: string,
     data: Object,
-    schema: Schema,
+    schema: RawSchema,
     parentPath: Array<string> = ['']
 ) {
     return collectTagPathsWithPriority(tagName, data, schema, parentPath)
         .map((pathWithPriority) => pathWithPriority.path);
 }
 
+function transformRawSchema(rawSchema: RawSchema, hiddenFieldPaths: Array<string>, basePath: string = ''): Schema {
+    return Object.keys(rawSchema).reduce((schema, schemaKey) => {
+        schema[schemaKey] = transformRawSchemaEntry(rawSchema[schemaKey], hiddenFieldPaths, basePath + '/' + schemaKey);
+        return schema;
+    }, {});
+}
+
+function transformRawSchemaEntry(
+    rawSchemaEntry: RawSchemaEntry,
+    hiddenFieldPaths: Array<string>,
+    path: string
+): SchemaEntry {
+    return Object.keys(rawSchemaEntry).reduce((schemaEntry, schemaEntryKey) => {
+        if (schemaEntryKey === 'visibilityCondition') {
+            // jexl could be directly used here, if it would support synchrounous execution
+            schemaEntry.visible = !hiddenFieldPaths.includes(path);
+        } else if (schemaEntryKey === 'items' && rawSchemaEntry.items) {
+            schemaEntry.items = transformRawSchema(rawSchemaEntry.items, hiddenFieldPaths, path);
+        } else if (schemaEntryKey === 'types' && rawSchemaEntry.types) {
+            const rawSchemaEntryTypes = rawSchemaEntry.types;
+
+            schemaEntry.types = Object.keys(rawSchemaEntryTypes).reduce((schemaEntryTypes, schemaEntryTypeKey) => {
+                schemaEntryTypes[schemaEntryTypeKey] = {
+                    title: rawSchemaEntryTypes[schemaEntryTypeKey].title,
+                    form: transformRawSchema(
+                        rawSchemaEntryTypes[schemaEntryTypeKey].form,
+                        hiddenFieldPaths,
+                        path + '/types/' + schemaEntryTypeKey + '/form'
+                    ),
+                };
+
+                return schemaEntryTypes;
+            }, {});
+        } else {
+            // $FlowFixMe
+            schemaEntry[schemaEntryKey] = rawSchemaEntry[schemaEntryKey];
+        }
+
+        return schemaEntry;
+    }, {});
+}
+
+function evaluateVisibilityConditions(rawSchema: RawSchema, data: Object, basePath: string = '') {
+    const visibilityConditionPromises = [];
+
+    Object.keys(rawSchema).forEach((schemaKey) => {
+        const {items, types, visibilityCondition} = rawSchema[schemaKey];
+        const schemaPath = basePath + '/' + schemaKey;
+
+        if (visibilityCondition) {
+            visibilityConditionPromises.push(jexl.eval(visibilityCondition, data).then((result) => {
+                if (!result) {
+                    return Promise.resolve(schemaPath);
+                }
+            }));
+        }
+
+        if (items) {
+            visibilityConditionPromises.push(...evaluateVisibilityConditions(items, data, schemaPath));
+        }
+
+        if (types) {
+            Object.keys(types).forEach((type) => {
+                visibilityConditionPromises.push(
+                    ...evaluateVisibilityConditions(
+                        types[type].form,
+                        data,
+                        schemaPath + '/types/' + type + '/form'
+                    )
+                );
+            });
+        }
+    });
+
+    return visibilityConditionPromises;
+}
+
 export default class FormStore {
     resourceStore: ResourceStore;
-    schema: Schema;
+    rawSchema: RawSchema;
     validator: ?(data: Object) => boolean;
     @observable errors: Object = {};
     options: Object;
@@ -114,6 +192,7 @@ export default class FormStore {
     typeDisposer: ?() => void;
     pathsByTag: {[tagName: string]: Array<string>} = {};
     @observable modifiedFields: Array<string> = [];
+    @observable hiddenFieldPaths: Array<string> = [];
 
     constructor(resourceStore: ResourceStore, options: Object = {}) {
         this.resourceStore = resourceStore;
@@ -163,16 +242,27 @@ export default class FormStore {
         });
     };
 
-    @action handleSchemaResponse = ([schema, jsonSchema]: [Schema, Object]) => {
+    @action handleSchemaResponse = ([schema, jsonSchema]: [RawSchema, Object]) => {
         this.validator = ajv.compile(jsonSchema);
         this.pathsByTag = {};
 
-        this.schema = schema;
+        this.rawSchema = schema;
         const schemaFields = Object.keys(schema)
             .reduce((data, key) => addSchemaProperties(data, key, schema), {});
         this.resourceStore.data = {...schemaFields, ...this.resourceStore.data};
         this.schemaLoading = false;
+
+        when(
+            () => !this.resourceStore.loading,
+            (): void => {
+                this.updateHiddenFieldPaths();
+            }
+        );
     };
+
+    @computed get schema(): Schema {
+        return transformRawSchema(this.rawSchema, this.hiddenFieldPaths);
+    }
 
     @computed get hasTypes(): boolean {
         return Object.keys(this.types).length > 0;
@@ -264,14 +354,24 @@ export default class FormStore {
         this.resourceStore.change(name, value);
     }
 
-    finishField(dataPath: string) {
+    finishField(dataPath: string): Promise<*> {
         if (!this.modifiedFields.includes(dataPath)) {
             this.modifiedFields.push(dataPath);
         }
+
+        return this.updateHiddenFieldPaths();
     }
 
     isFieldModified(dataPath: string): boolean {
         return this.modifiedFields.includes(dataPath);
+    }
+
+    updateHiddenFieldPaths(): Promise<*> {
+        const visibilityConditionPromises = evaluateVisibilityConditions(this.rawSchema, this.data);
+
+        return Promise.all(visibilityConditionPromises).then(action((visibilityConditionResults) => {
+            this.hiddenFieldPaths = visibilityConditionResults;
+        }));
     }
 
     @computed get locale(): ?IObservableValue<string> {
@@ -327,9 +427,9 @@ export default class FormStore {
     }
 
     getPathsByTag(tagName: string) {
-        const {data, schema} = this;
+        const {data, rawSchema} = this;
         if (!(tagName in this.pathsByTag)) {
-            this.pathsByTag[tagName] = collectTagPaths(tagName, data, schema);
+            this.pathsByTag[tagName] = collectTagPaths(tagName, data, rawSchema);
         }
 
         return this.pathsByTag[tagName];

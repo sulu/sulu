@@ -33,7 +33,7 @@ test('Render correct label with correct field type', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schema={{label: 'label1', type: 'text'}}
+            schema={{label: 'label1', type: 'text', visible: true}}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -48,7 +48,7 @@ test('Render correct label with correct field type', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schema={{label: 'label2', type: 'datetime'}}
+            schema={{label: 'label2', type: 'datetime', visible: true}}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -67,7 +67,7 @@ test('Render field with correct values for grid', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schema={{label: 'label1', type: 'text', size: 8, spaceAfter: 3}}
+            schema={{label: 'label1', type: 'text', size: 8, spaceAfter: 3, visible: true}}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -86,7 +86,7 @@ test('Render a required field with correct field type', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schema={{label: 'label1', required: true, type: 'text'}}
+            schema={{label: 'label1', required: true, type: 'text', visible: true}}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -102,7 +102,7 @@ test('Render a field without a label', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schema={{type: 'text'}}
+            schema={{type: 'text', visible: true}}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -118,7 +118,12 @@ test('Render a field with a description', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schema={{description: 'Small description describing the field', label: 'label1', type: 'text'}}
+            schema={{
+                description: 'Small description describing the field',
+                label: 'label1',
+                type: 'text',
+                visible: true,
+            }}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -139,7 +144,7 @@ test('Render a field with an error', () => {
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
-                schema={{label: 'label1', type: 'text'}}
+                schema={{label: 'label1', type: 'text', visible: true}}
                 schemaPath=""
             />
         )
@@ -167,7 +172,7 @@ test('Render a field with a error collection', () => {
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
-                schema={{label: 'label1', type: 'text'}}
+                schema={{label: 'label1', type: 'text', visible: true}}
                 schemaPath=""
             />
         )
@@ -187,6 +192,7 @@ test('Pass correct props to FieldType', () => {
         minOccurs: 2,
         type: 'text_line',
         types: {},
+        visible: true,
     };
     const field = shallow(
         <Field
@@ -234,6 +240,7 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
         },
         type: 'text_line',
         types: {},
+        visible: true,
     };
     const field = shallow(
         <Field
@@ -279,7 +286,7 @@ test('Call onChange callback when value of Field changes', () => {
             name="test"
             onChange={changeSpy}
             onFinish={jest.fn()}
-            schema={{label: 'label', type: 'text'}}
+            schema={{label: 'label', type: 'text', visible: true}}
             schemaPath=""
         />
     );
@@ -304,7 +311,7 @@ test('Call onFinish callback after editing the field has finished', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={finishSpy}
-            schema={{label: 'label', type: 'text'}}
+            schema={{label: 'label', type: 'text', visible: true}}
             schemaPath="/test"
         />
     );

@@ -122,6 +122,7 @@ class ResourceMetadataMapperTest extends TestCase
         /** @var Field $field1 */
         $field1 = $form->getItems()['test1'];
         $this->assertSame($field1->getName(), 'test1');
+        $this->assertSame($field1->getVisibilityCondition(), 'propertyVisibilityCondition');
         $this->assertSame($field1->getLabel(), 'Test 1');
         $this->assertSame($field1->getType(), 'text_line');
 
@@ -181,6 +182,7 @@ class ResourceMetadataMapperTest extends TestCase
         /** @var Field $block */
         $block = $form->getItems()['blocktest'];
         $this->assertSame($block->getName(), 'blocktest');
+        $this->assertSame($block->getVisibilityCondition(), 'blockVisibilityCondition');
         $this->assertSame($block->getLabel(), 'Block Test');
         $this->assertSame($block->getType(), 'block');
         $this->assertCount(2, $block->getTypes());
@@ -208,6 +210,7 @@ class ResourceMetadataMapperTest extends TestCase
         /** @var Section $section */
         $section = $form->getItems()['sectiontest'];
         $this->assertSame('sectiontest', $section->getName());
+        $this->assertSame($section->getVisibilityCondition(), 'sectionVisibilityCondition');
         $this->assertSame('Section Title', $section->getLabel());
         $this->assertCount(4, $section->getItems());
         $this->assertArrayHasKey('test1', $section->getItems());
@@ -233,6 +236,7 @@ class ResourceMetadataMapperTest extends TestCase
     private function getProperties(string $type): array
     {
         $property1 = new PropertyMetadata('test1');
+        $property1->setVisibilityCondition('propertyVisibilityCondition');
         $property1->setSpaceAfter('2');
         $property1->setRequired(false);
         $property1->setType('text_line');
@@ -302,6 +306,7 @@ class ResourceMetadataMapperTest extends TestCase
         );
 
         $block = new BlockMetadata('blocktest');
+        $block->setVisibilityCondition('blockVisibilityCondition');
         $block->setType('block');
         $block->setTitles([
             'de' => 'Block Test',
@@ -324,6 +329,7 @@ class ResourceMetadataMapperTest extends TestCase
         $block->addComponent($component2);
 
         $section = new SectionMetadata('sectiontest');
+        $section->setVisibilityCondition('sectionVisibilityCondition');
         $section->setTitles([
             'de' => 'Section Title',
         ]);
