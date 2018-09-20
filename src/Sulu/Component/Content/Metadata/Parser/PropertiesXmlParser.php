@@ -76,7 +76,18 @@ class PropertiesXmlParser
         $result = $this->loadValues(
             $xpath,
             $node,
-            ['name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass', 'size', 'spaceAfter', 'label']
+            [
+                'name',
+                'type',
+                'minOccurs',
+                'maxOccurs',
+                'colspan',
+                'cssClass',
+                'size',
+                'spaceAfter',
+                'label',
+                'visibilityCondition',
+            ]
         );
 
         $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
@@ -131,7 +142,7 @@ class PropertiesXmlParser
         $result = $this->loadValues(
             $xpath,
             $node,
-            ['name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass']
+            ['name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass', 'visibilityCondition']
         );
 
         $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
@@ -152,7 +163,7 @@ class PropertiesXmlParser
         $result = $this->loadValues(
             $xpath,
             $node,
-            ['name', 'colspan', 'cssClass']
+            ['name', 'colspan', 'cssClass', 'visibilityCondition']
         );
 
         $result['type'] = 'section';
@@ -356,11 +367,17 @@ class PropertiesXmlParser
         $section = new SectionMetadata();
         $section->setName($propertyName);
         $section->setSize($data['colspan']);
+
         if (isset($data['meta']['title'])) {
             $section->setTitles($data['meta']['title']);
         }
+
         if (isset($data['meta']['info_text'])) {
             $section->setDescriptions($data['meta']['info_text']);
+        }
+
+        if (isset($data['visibilityCondition'])) {
+            $section->setVisibilityCondition($data['visibilityCondition']);
         }
 
         foreach ($data['properties'] as $name => $property) {
@@ -376,9 +393,14 @@ class PropertiesXmlParser
         $blockProperty->setName($propertyName);
         $blockProperty->defaultComponentName = $data['default-type'];
 
+        if (isset($data['visibilityCondition'])) {
+            $blockProperty->setVisibilityCondition($data['visibilityCondition']);
+        }
+
         if (isset($data['meta']['title'])) {
             $blockProperty->setTitles($data['meta']['title']);
         }
+
         if (isset($data['meta']['info_text'])) {
             $blockProperty->setDescriptions($data['meta']['info_text']);
         }
@@ -422,6 +444,7 @@ class PropertiesXmlParser
         $property->setMinOccurs(null !== $data['minOccurs'] ? intval($data['minOccurs']) : null);
         $property->setMaxOccurs(null !== $data['maxOccurs'] ? intval($data['maxOccurs']) : null);
         $property->setLabel(array_key_exists('label', $data) ? $data['label'] : null);
+        $property->setVisibilityCondition(array_key_exists('visibilityCondition', $data) ? $data['visibilityCondition'] : null);
         $property->setParameters($data['params']);
         $property->setOnInvalid(array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
         $this->mapMeta($property, $data['meta']);
