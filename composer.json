@@ -93,8 +93,8 @@
         "phpdocumentor/reflection-docblock": "~3.1",
         "phpspec/prophecy": "^1.7",
         "phpunit/phpunit": "^6.5",
-        "pulse00/ffmpeg-bundle": "^0.6",
-        "sensio/generator-bundle": "^2.8 || ^3.0",
+        "pulse00/ffmpeg-bundle": "dev-symfony-4-support",
+        "alchemy/binary-driver": "2.0.0 as 1.6.0",
         "symfony/browser-kit": "^3.4|^4.0",
         "symfony/css-selector": "^3.4|^4.0",
         "symfony/debug": "^3.4|^4.0",
@@ -131,7 +131,6 @@
         "sulu/security-bundle": "self.version",
         "sulu/website-bundle": "self.version",
         "sulu/admin-bundle": "self.version",
-        "sulu/generator-bundle": "self.version",
         "sulu/contact-bundle": "self.version",
         "sulu/snippet-bundle": "self.version",
         "sulu/location-bundle": "self.version",
@@ -166,5 +165,11 @@
         "branch-alias": {
             "dev-develop": "2.0-dev"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/wachterjohannes/ffmpeg-bundle.git"
+        }
+    ]
 }
