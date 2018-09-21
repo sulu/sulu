@@ -28,7 +28,7 @@ $darkBackgroundColor: $white;
 
     &.dark,
     &.default {
-        display: block;
+        display: flex;
         width: 100%;
         border: $borderSize solid $borderColor;
         border-radius: $borderRadius;
