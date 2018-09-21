@@ -27,15 +27,15 @@ test('Render the Matrix component', () => {
 
     expect(render(
         <Matrix onChange={handleChange} title="Global">
-            <Row name="global.articles">
+            <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
                 <Item icon="su-trash-alt" name="delete" />
             </Row>
-            <Row name="global.redirects">
+            <Row name="global.redirects" title="redirects">
                 <Item icon="su-pen" name="view" />
             </Row>
-            <Row name="global.settings">
+            <Row name="global.settings" title="settings">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
             </Row>
@@ -62,15 +62,15 @@ test('Render the Matrix component with values', () => {
 
     expect(render(
         <Matrix onChange={handleChange} title="Global" values={values}>
-            <Row name="global.articles">
+            <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
                 <Item icon="su-trash-alt" name="delete" />
             </Row>
-            <Row name="global.redirects">
+            <Row name="global.redirects" title="redirects">
                 <Item icon="su-pen" name="view" />
             </Row>
-            <Row name="global.settings">
+            <Row name="global.settings" title="settings">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
             </Row>
@@ -97,15 +97,15 @@ test('Render the Matrix component with values', () => {
 
     expect(render(
         <Matrix onChange={handleChange} title="Global" values={values}>
-            <Row name="global.articles">
+            <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
                 <Item icon="su-trash-alt" name="delete" />
             </Row>
-            <Row name="global.redirects">
+            <Row name="global.redirects" title="redirects">
                 <Item icon="su-pen" name="view" />
             </Row>
-            <Row name="global.settings">
+            <Row name="global.settings" title="settings">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
             </Row>
@@ -132,15 +132,15 @@ test('Changing a value should call onChange ', () => {
 
     const matrix = mount(
         <Matrix onChange={handleChange} title="Global" values={values}>
-            <Row name="global.articles">
+            <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
                 <Item icon="su-trash-alt" name="delete" />
             </Row>
-            <Row name="global.redirects">
+            <Row name="global.redirects" title="redirects">
                 <Item icon="su-pen" name="view" />
             </Row>
-            <Row name="global.settings">
+            <Row name="global.settings" title="settings">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
             </Row>
@@ -164,9 +164,6 @@ test('Changing a value should call onChange ', () => {
 
     matrix.find(Item).at(3).simulate('click');
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
-
-    matrix.find(Item).at(3).simulate('click');
-    expect(handleChange).toHaveBeenCalledWith(values);
 });
 
 test('Deactivate all button should call onChange ', () => {
@@ -188,15 +185,15 @@ test('Deactivate all button should call onChange ', () => {
 
     const matrix = mount(
         <Matrix onChange={handleChange} title="Global" values={values}>
-            <Row name="global.articles">
+            <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
                 <Item icon="su-trash-alt" name="delete" />
             </Row>
-            <Row name="global.redirects">
+            <Row name="global.redirects" title="redirects">
                 <Item icon="su-pen" name="view" />
             </Row>
-            <Row name="global.settings">
+            <Row name="global.settings" title="settings">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
             </Row>
@@ -241,15 +238,15 @@ test('Activate all button should call onChange ', () => {
 
     const matrix = mount(
         <Matrix onChange={handleChange} title="Global" values={values}>
-            <Row name="global.articles">
+            <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
                 <Item icon="su-trash-alt" name="delete" />
             </Row>
-            <Row name="global.redirects">
+            <Row name="global.redirects" title="redirects">
                 <Item icon="su-pen" name="view" />
             </Row>
-            <Row name="global.settings">
+            <Row name="global.settings" title="settings">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
             </Row>

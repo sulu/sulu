@@ -1,8 +1,8 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable, toJS} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {Loader, Matrix} from 'sulu-admin-bundle/components';
+import {Loader} from 'sulu-admin-bundle/components';
 import MultiSelect from 'sulu-admin-bundle/components/MultiSelect/MultiSelect';
 import webspaceStore from 'sulu-content-bundle/stores/WebspaceStore';
 import type {Webspace} from 'sulu-content-bundle/stores/WebspaceStore/types';
@@ -84,6 +84,12 @@ export default class Permissions extends React.Component<Props> {
         }));
     }
 
+    handleChange = (value: Array<ContextPermission>) => {
+        const {onChange} = this.props;
+
+        onChange(value);
+    };
+
     getWebspaceSecurityContexts(webspace: string): SecurityContexts {
         if (!this.webspaceSecurityContextGroupKey) {
             return {};
@@ -100,12 +106,6 @@ export default class Permissions extends React.Component<Props> {
 
         return securityContexts;
     }
-
-    handleChange = (value: Array<ContextPermission>) => {
-        const {onChange} = this.props;
-
-        onChange(value);
-    };
 
     @action handleWebspaceSelectChange = (newSelectedWebspaces: Array<string | number>) => {
         const {value} = this.props;

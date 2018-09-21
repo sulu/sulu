@@ -1,300 +1,309 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render the Matrix component 1`] = `
-<div>
+<div
+  class="matrix"
+>
   <div
-    class="title"
+    class="row"
   >
-    Global
+    <div>
+      articles
+    </div>
+    <div>
+      <div
+        class="item"
+        title="View"
+      >
+        <span
+          aria-label="su-pen"
+          class="su-pen"
+        />
+      </div>
+      <div
+        class="item"
+        title="Edit"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus"
+        />
+      </div>
+      <div
+        class="item"
+        title="Delete"
+      >
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt"
+        />
+      </div>
+      <span
+        class="rowButton"
+      >
+        Activate all
+      </span>
+    </div>
   </div>
   <div
-    class="matrix"
+    class="row"
   >
-    <div
-      class="row"
-    >
-      <div>
-        global.articles
-      </div>
-      <div>
-        <div
-          class="item"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item"
-        >
-          <span
-            aria-label="su-plus"
-            class="su-plus"
-          />
-        </div>
-        <div
-          class="item"
-        >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-        <span
-          class="rowButton"
-        >
-          Activate all
-        </span>
-      </div>
+    <div>
+      redirects
     </div>
-    <div
-      class="row"
-    >
-      <div>
-        global.redirects
-      </div>
-      <div>
-        <div
-          class="item"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
+    <div>
+      <div
+        class="item"
+        title="View"
+      >
         <span
-          class="rowButton"
-        >
-          Activate all
-        </span>
+          aria-label="su-pen"
+          class="su-pen"
+        />
       </div>
+      <span
+        class="rowButton"
+      >
+        Activate all
+      </span>
     </div>
-    <div
-      class="row"
-    >
-      <div>
-        global.settings
-      </div>
-      <div>
-        <div
-          class="item"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item"
-        >
-          <span
-            aria-label="su-plus"
-            class="su-plus"
-          />
-        </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div>
+      settings
+    </div>
+    <div>
+      <div
+        class="item"
+        title="View"
+      >
         <span
-          class="rowButton"
-        >
-          Activate all
-        </span>
+          aria-label="su-pen"
+          class="su-pen"
+        />
       </div>
+      <div
+        class="item"
+        title="Edit"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus"
+        />
+      </div>
+      <span
+        class="rowButton"
+      >
+        Activate all
+      </span>
     </div>
   </div>
 </div>
 `;
 
 exports[`Render the Matrix component with values 1`] = `
-<div>
+<div
+  class="matrix"
+>
   <div
-    class="title"
+    class="row"
   >
-    Global
+    <div>
+      articles
+    </div>
+    <div>
+      <div
+        class="item selected"
+        title="View"
+      >
+        <span
+          aria-label="su-pen"
+          class="su-pen"
+        />
+      </div>
+      <div
+        class="item selected"
+        title="Edit"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus"
+        />
+      </div>
+      <div
+        class="item"
+        title="Delete"
+      >
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt"
+        />
+      </div>
+      <span
+        class="rowButton"
+      >
+        Deactivate all
+      </span>
+    </div>
   </div>
   <div
-    class="matrix"
+    class="row"
   >
-    <div
-      class="row"
-    >
-      <div>
-        global.articles
-      </div>
-      <div>
-        <div
-          class="item selected"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item selected"
-        >
-          <span
-            aria-label="su-plus"
-            class="su-plus"
-          />
-        </div>
-        <div
-          class="item"
-        >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-        <span
-          class="rowButton"
-        />
-      </div>
+    <div>
+      redirects
     </div>
-    <div
-      class="row"
-    >
-      <div>
-        global.redirects
-      </div>
-      <div>
-        <div
-          class="item selected"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
+    <div>
+      <div
+        class="item selected"
+        title="View"
+      >
         <span
-          class="rowButton"
+          aria-label="su-pen"
+          class="su-pen"
         />
       </div>
+      <span
+        class="rowButton"
+      >
+        Deactivate all
+      </span>
     </div>
-    <div
-      class="row"
-    >
-      <div>
-        global.settings
-      </div>
-      <div>
-        <div
-          class="item selected"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item"
-        >
-          <span
-            aria-label="su-plus"
-            class="su-plus"
-          />
-        </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div>
+      settings
+    </div>
+    <div>
+      <div
+        class="item selected"
+        title="View"
+      >
         <span
-          class="rowButton"
+          aria-label="su-pen"
+          class="su-pen"
         />
       </div>
+      <div
+        class="item"
+        title="Edit"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus"
+        />
+      </div>
+      <span
+        class="rowButton"
+      >
+        Deactivate all
+      </span>
     </div>
   </div>
 </div>
 `;
 
 exports[`Render the Matrix component with values 2`] = `
-<div>
+<div
+  class="matrix"
+>
   <div
-    class="title"
+    class="row"
   >
-    Global
+    <div>
+      articles
+    </div>
+    <div>
+      <div
+        class="item selected"
+        title="View"
+      >
+        <span
+          aria-label="su-pen"
+          class="su-pen"
+        />
+      </div>
+      <div
+        class="item selected"
+        title="Edit"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus"
+        />
+      </div>
+      <div
+        class="item"
+        title="Delete"
+      >
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt"
+        />
+      </div>
+      <span
+        class="rowButton"
+      >
+        Deactivate all
+      </span>
+    </div>
   </div>
   <div
-    class="matrix"
+    class="row"
   >
-    <div
-      class="row"
-    >
-      <div>
-        global.articles
-      </div>
-      <div>
-        <div
-          class="item selected"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item selected"
-        >
-          <span
-            aria-label="su-plus"
-            class="su-plus"
-          />
-        </div>
-        <div
-          class="item"
-        >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-        <span
-          class="rowButton"
-        />
-      </div>
+    <div>
+      redirects
     </div>
-    <div
-      class="row"
-    >
-      <div>
-        global.redirects
-      </div>
-      <div>
-        <div
-          class="item selected"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
+    <div>
+      <div
+        class="item selected"
+        title="View"
+      >
         <span
-          class="rowButton"
+          aria-label="su-pen"
+          class="su-pen"
         />
       </div>
+      <span
+        class="rowButton"
+      >
+        Deactivate all
+      </span>
     </div>
-    <div
-      class="row"
-    >
-      <div>
-        global.settings
-      </div>
-      <div>
-        <div
-          class="item selected"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item"
-        >
-          <span
-            aria-label="su-plus"
-            class="su-plus"
-          />
-        </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div>
+      settings
+    </div>
+    <div>
+      <div
+        class="item selected"
+        title="View"
+      >
         <span
-          class="rowButton"
+          aria-label="su-pen"
+          class="su-pen"
         />
       </div>
+      <div
+        class="item"
+        title="Edit"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus"
+        />
+      </div>
+      <span
+        class="rowButton"
+      >
+        Deactivate all
+      </span>
     </div>
   </div>
 </div>
