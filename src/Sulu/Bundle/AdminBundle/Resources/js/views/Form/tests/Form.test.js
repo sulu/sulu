@@ -2,7 +2,6 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
-import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 
@@ -54,7 +53,7 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 jest.mock('../../../stores/ResourceMetadataStore', () => ({
-    getEndpoint: jest.fn((key) => key),
+    isSameEndpoint: jest.fn(),
 }));
 
 jest.mock('../../../services/ResourceRequester', () => ({
@@ -244,9 +243,11 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
 
 test('Should clone the resourceStore if the passed resourceKey differs but the endpoint is the same', () => {
     const Form = require('../Form').default;
+    const resourceMetadataStore = require('../../../stores/ResourceMetadataStore');
     const ResourceRequester = require('../../../services/ResourceRequester');
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('pages', 10);
+
     const route = {
         options: {
             resourceKey: 'page-settings',
@@ -258,17 +259,12 @@ test('Should clone the resourceStore if the passed resourceKey differs but the e
         route,
     };
 
-    resourceMetadataStore.getEndpoint.mockImplementation((resourceKey) => {
-        switch (resourceKey) {
-            case 'pages':
-            case 'page-settings':
-                return '/pages';
-        }
-    });
+    resourceMetadataStore.isSameEndpoint.mockReturnValue(true);
 
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const formResourceStore = form.instance().resourceStore;
 
+    expect(resourceMetadataStore.isSameEndpoint).toBeCalledWith('page-settings', 'pages');
     expect(ResourceRequester.get).toHaveBeenCalledTimes(1);
     expect(ResourceRequester.get).toBeCalledWith('pages', 10, {});
     expect(resourceStore.resourceKey).toEqual('pages');

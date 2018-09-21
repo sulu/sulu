@@ -95,12 +95,9 @@ class Form extends React.Component<Props> {
                 locale = observable.box();
             }
 
-            const formEndpoint = resourceMetadataStore.getEndpoint(resourceKey);
-            const resourceStoreEndpoint = resourceMetadataStore.getEndpoint(resourceStore.resourceKey);
-
             if (idQueryParameter) {
                 this.resourceStore = new ResourceStore(resourceKey, id, {locale}, formStoreOptions, idQueryParameter);
-            } else if (formEndpoint === resourceStoreEndpoint) {
+            } else if (resourceMetadataStore.isSameEndpoint(resourceKey, resourceStore.resourceKey)) {
                 this.resourceStore = resourceStore.clone();
                 this.resourceStore.resourceKey = resourceKey;
             } else {
