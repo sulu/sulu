@@ -300,7 +300,7 @@ export default withSidebar(FormWithToolbar, function() {
     } = this.props;
 
     if (!preview) {
-        return {};
+        return null;
     }
 
     return {
@@ -308,7 +308,6 @@ export default withSidebar(FormWithToolbar, function() {
         sizes: ['medium', 'large'],
         props: {
             router: this.props.router,
-            resourceStore: this.resourceStore,
             formStore: this.formStore,
         },
     };

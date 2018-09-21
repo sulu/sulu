@@ -6,22 +6,17 @@
 
     <route id="sulu_preview.start" path="/start">
         <default key="_controller">sulu_preview.preview_controller:startAction</default>
-        <default key="_fos_rest_zone">true</default>
     </route>
     <route id="sulu_preview.render" path="/render">
         <default key="_controller">sulu_preview.preview_controller:renderAction</default>
-        <default key="_fos_rest_zone">true</default>
     </route>
     <route id="sulu_preview.update" path="/update" methods="POST">
         <default key="_controller">sulu_preview.preview_controller:updateAction</default>
-        <default key="_fos_rest_zone">true</default>
     </route>
     <route id="sulu_preview.update-context" path="/update-context">
         <default key="_controller">sulu_preview.preview_controller:updateContextAction</default>
-        <default key="_fos_rest_zone">true</default>
     </route>
     <route id="sulu_preview.stop" path="/stop">
         <default key="_controller">sulu_preview.preview_controller:stopAction</default>
-        <default key="_fos_rest_zone">true</default>
     </route>
 </routes>

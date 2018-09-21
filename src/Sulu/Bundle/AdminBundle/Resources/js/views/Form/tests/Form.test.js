@@ -312,7 +312,6 @@ test('Should initialize preview sidebar', () => {
     expect(sidebarConfig.view).toEqual('sulu_preview.preview');
     expect(sidebarConfig.sizes).toEqual(['medium', 'large']);
     expect(sidebarConfig.props.router).toEqual(router);
-    expect(sidebarConfig.props.resourceStore).toEqual(resourceStore);
     expect(sidebarConfig.props.formStore).toBeDefined();
 });
 
@@ -338,7 +337,7 @@ test('Should not initialize preview sidebar when option is false', () => {
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     const sidebarConfig = sidebarFunction.call(form.instance());
-    expect(sidebarConfig).toEqual({});
+    expect(sidebarConfig).toEqual(null);
 });
 
 test('Should not initialize preview sidebar when option is not set', () => {
@@ -362,7 +361,7 @@ test('Should not initialize preview sidebar when option is not set', () => {
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     const sidebarConfig = sidebarFunction.call(form.instance());
-    expect(sidebarConfig).toEqual({});
+    expect(sidebarConfig).toEqual(null);
 });
 
 test('Should not add PublishIndicator if no publish status is available', () => {

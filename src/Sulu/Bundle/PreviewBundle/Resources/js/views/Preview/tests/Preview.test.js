@@ -31,13 +31,7 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
     post: jest.fn().mockReturnValue(Promise.resolve()),
 }));
 
-jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id) {
-    this.resourceKey = resourceKey;
-    this.id = id;
-}));
-
-jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn(function(resourceStore) {
-    this.resourceStore = resourceStore;
+jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn(function() {
 }));
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function(history) {
@@ -63,7 +57,6 @@ test('Render correct preview', () => {
     expect(shallow(
         <Preview
             formStore={formStore}
-            resourceStore={resourceStore}
             router={router}
         />
     )).toMatchSnapshot();
@@ -83,19 +76,19 @@ test('Render button to start preview', () => {
     expect(render(
         <Preview
             formStore={formStore}
-            resourceStore={resourceStore}
             router={router}
         />
     )).toMatchSnapshot();
 });
 
 test('React and update preview when data is changed', () => {
-    const resourceStore = new ResourceStore('pages', 1);
-    resourceStore.data = observable.map({title: 'Test'});
-    resourceStore.loading = false;
-
+    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
     const formStore = new FormStore(resourceStore);
 
+    // $FlowFixMe
+    formStore.data = observable.map({title: 'Test'});
+    // $FlowFixMe
+    formStore.loading = false;
     // $FlowFixMe
     formStore.type = observable.box('default');
 
@@ -104,11 +97,11 @@ test('React and update preview when data is changed', () => {
 
     Requester.get.mockReturnValue(requestPromise);
 
-    mount(<Preview formStore={formStore} resourceStore={resourceStore} router={router} />);
+    mount(<Preview formStore={formStore} router={router} />);
 
     expect(Requester.get).toBeCalledWith('/start');
 
-    resourceStore.data.set('title', 'New Test');
+    formStore.data.set('title', 'New Test');
 
     return requestPromise.then(() => {
         expect(Requester.post).toBeCalledWith('/update', {data: {title: 'New Test'}});
@@ -116,11 +109,15 @@ test('React and update preview when data is changed', () => {
 });
 
 test('React and update-context when type is changed', () => {
-    const resourceStore = new ResourceStore('pages', 1);
-    resourceStore.data = observable.map({title: 'Test'});
-    resourceStore.loading = false;
-
+    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
     const formStore = new FormStore(resourceStore);
+
+    // $FlowFixMe
+    formStore.data = observable.map({title: 'Test'});
+    // $FlowFixMe
+    formStore.loading = false;
+    // $FlowFixMe
+    formStore.type = observable.box('default');
 
     // $FlowFixMe
     formStore.type = observable.box('default');
@@ -130,7 +127,7 @@ test('React and update-context when type is changed', () => {
 
     Requester.get.mockReturnValue(requestPromise);
 
-    mount(<Preview formStore={formStore} resourceStore={resourceStore} router={router} />);
+    mount(<Preview formStore={formStore} router={router} />);
 
     expect(Requester.get).toBeCalledWith('/start');
 

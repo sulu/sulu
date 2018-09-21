@@ -20,6 +20,8 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class Preview implements PreviewInterface
 {
+    const CONTENT_REPLACER = '<!-- CONTENT-REPLACER -->';
+
     /**
      * @var PreviewObjectProviderInterface[]
      */
@@ -100,7 +102,7 @@ class Preview implements PreviewInterface
             $targetGroupId
         );
 
-        return str_replace('<!-- CONTENT-REPLACER -->', $partialHtml, $cacheItem->getHtml());
+        return str_replace(self::CONTENT_REPLACER, $partialHtml, $cacheItem->getHtml());
     }
 
     public function updateContext(string $token, string $webspaceKey, array $context, ?int $targetGroupId): string
@@ -131,7 +133,7 @@ class Preview implements PreviewInterface
         );
 
         $crawler = new Crawler($html);
-        $cacheItem->setHtml(str_replace($crawler->filter('#content')->html(), '<!-- CONTENT-REPLACER -->', $html));
+        $cacheItem->setHtml(str_replace($crawler->filter('#content')->html(), self::CONTENT_REPLACER, $html));
         $this->save($cacheItem);
 
         return $html;
@@ -151,7 +153,7 @@ class Preview implements PreviewInterface
         );
 
         $crawler = new Crawler($html);
-        $cacheItem->setHtml(str_replace($crawler->filter('#content')->html(), '<!-- CONTENT-REPLACER -->', $html));
+        $cacheItem->setHtml(str_replace($crawler->filter('#content')->html(), self::CONTENT_REPLACER, $html));
         $this->save($cacheItem);
 
         return $html;

@@ -17,7 +17,7 @@ test('Pass props to rendered component', () => {
     };
 
     const ComponentWithSidebar = withSidebar(Component, () => {
-        return {};
+        return null;
     });
 
     expect(render(<ComponentWithSidebar title="Test" />)).toMatchSnapshot();
@@ -51,7 +51,7 @@ test('Call life-cycle events of rendered component', () => {
     };
 
     const ComponentWithSidebar = withSidebar(Component, () => {
-        return {};
+        return null;
     });
 
     const component = mount(<ComponentWithSidebar />);
@@ -101,7 +101,7 @@ test('Throw error when component has property sidebarDisposer', () => {
     };
 
     const ComponentWithSidebar = withSidebar(Component, function() {
-        return {disableAll: this.test};
+        return null;
     });
 
     expect(() => mount(<ComponentWithSidebar />))

@@ -7,7 +7,7 @@ import sidebarStore from './stores/SidebarStore';
 
 export default function withSidebar<P, C: Class<Component<P>>>(
     Component: C,
-    sidebar: () => SidebarConfig
+    sidebar: () => ?SidebarConfig
 ): C {
     const WithSidebarComponent = class extends Component {
         static hasSidebar = true;
@@ -24,7 +24,14 @@ export default function withSidebar<P, C: Class<Component<P>>>(
             }
 
             this.sidebarDisposer = autorun(() => {
-                sidebarStore.setConfig(sidebar.call(this));
+                const sidebarConfig = sidebar.call(this);
+                if (!sidebarConfig) {
+                    sidebarStore.clearConfig();
+
+                    return;
+                }
+
+                sidebarStore.setConfig(sidebarConfig);
             });
         }
 

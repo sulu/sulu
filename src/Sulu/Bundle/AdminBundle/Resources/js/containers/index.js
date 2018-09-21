@@ -10,6 +10,7 @@ import Datagrid, {
 import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './Datagrid';
 import {textEditorRegistry} from './TextEditor';
 import {viewRegistry} from './ViewRenderer';
+import Sidebar, {sidebarStore, sidebarViewRegistry} from './Sidebar';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
 import Form, {fieldRegistry, FormInspector, FormStore} from './Form';
@@ -41,6 +42,9 @@ export {
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
     SingleAutoComplete,
+    Sidebar,
+    sidebarStore,
+    sidebarViewRegistry,
     textEditorRegistry,
     viewRegistry,
     withToolbar,

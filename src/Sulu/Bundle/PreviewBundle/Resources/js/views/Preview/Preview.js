@@ -4,25 +4,21 @@ import ReactDOM from 'react-dom';
 import {action, autorun, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
-import Router from 'sulu-admin-bundle/services/Router';
-import {sidebarStore} from 'sulu-admin-bundle/containers/Sidebar';
-import {FormStore} from 'sulu-admin-bundle/containers/Form';
-import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
+import {Router} from 'sulu-admin-bundle/services';
+import {sidebarStore, FormStore} from 'sulu-admin-bundle/containers';
 import Requester from 'sulu-admin-bundle/services/Requester';
-import Toolbar from 'sulu-admin-bundle/components/Toolbar';
-import Loader from 'sulu-admin-bundle/components/Loader';
+import {Toolbar, Loader} from 'sulu-admin-bundle/components';
 import previewStyles from './preview.scss';
 import previewConfigStore from './stores/PreviewConfigStore';
 
-type Props = {
-    resourceStore: ResourceStore,
+type Props = {|
     formStore: FormStore,
     router: Router,
-};
+|};
 
 @observer
 export default class Preview extends React.Component<Props> {
-    @observable iframeRef: ?Object;
+    @observable iframeRef: ?HTMLIFrameElement;
     @observable token: ?string;
     @observable started: boolean = false;
 
@@ -37,7 +33,6 @@ export default class Preview extends React.Component<Props> {
 
     @action startPreview = () => {
         const {
-            resourceStore,
             formStore,
             router: {
                 attributes: {
@@ -47,9 +42,9 @@ export default class Preview extends React.Component<Props> {
         } = this.props;
 
         const route = previewConfigStore.generateRoute('start', {
-            provider: resourceStore.resourceKey,
+            provider: formStore.resourceKey,
             locale: locale,
-            id: resourceStore.id,
+            id: formStore.id,
         });
         if (!route) {
             return;
@@ -59,27 +54,26 @@ export default class Preview extends React.Component<Props> {
             this.setToken(response.token);
         });
 
+        this.dataDisposer = autorun(() => {
+            if (formStore.loading || !this.iframeRef) {
+                return;
+            }
+
+            this.updatePreview(toJS(formStore.data));
+        });
+
         this.typeDisposer = autorun(() => {
             if (formStore.loading || !this.iframeRef) {
                 return;
             }
 
-            // $FlowFixMe
-            this.updateContext(formStore.type.get());
-        });
-
-        this.dataDisposer = autorun(() => {
-            if (resourceStore.loading || !this.iframeRef) {
-                return;
-            }
-
-            this.updatePreview(toJS(resourceStore.data));
+            this.updateContext(toJS(formStore.type));
         });
 
         this.started = true;
     };
 
-    updatePreview = debounce((data) => {
+    updatePreview = debounce((data: Object) => {
         const {
             router: {
                 attributes: {
@@ -99,18 +93,11 @@ export default class Preview extends React.Component<Props> {
         }
 
         Requester.post(route, {data: data}).then((response) => {
-            const document = this.getPreviewDocument();
-            if (!document) {
-                return;
-            }
-
-            document.open();
-            document.write(response.content);
-            document.close();
+            this.setContent(response.content);
         });
     }, previewConfigStore.debounceDelay);
 
-    updateContext = debounce((type) => {
+    updateContext = (type: string) => {
         const {
             router: {
                 attributes: {
@@ -128,16 +115,20 @@ export default class Preview extends React.Component<Props> {
         }
 
         Requester.post(route, {context: {template: type}}).then((response) => {
-            const document = this.getPreviewDocument();
-            if (!document) {
-                return;
-            }
-
-            document.open();
-            document.write(response.content);
-            document.close();
+            this.setContent(response.content);
         });
-    }, previewConfigStore.debounceDelay);
+    };
+
+    setContent(content: string) {
+        const document = this.getPreviewDocument();
+        if (!document) {
+            return;
+        }
+
+        document.open();
+        document.write(content);
+        document.close();
+    }
 
     componentWillUnmount() {
         if (this.typeDisposer) {
@@ -161,7 +152,7 @@ export default class Preview extends React.Component<Props> {
     }
 
     getPreviewDocument = (): ?Document => {
-        // eslint-disable-next-line
+        // eslint-disable-next-line react/no-find-dom-node
         const iframe = ReactDOM.findDOMNode(this.iframeRef);
         if (!(iframe instanceof HTMLIFrameElement)) {
             return;
