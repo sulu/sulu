@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -113,9 +114,18 @@ EOT
 
         $candidatePaths = [];
         if (!$paths) {
+            $directories = array_map(
+                function (BundleInterface $bundle) {
+                    return $bundle->getPath();
+                },
+                $this->kernel->getBundles()
+            );
+
+            $directories[] = $this->kernel->getRootDir();
             $paths = [];
-            foreach ($this->kernel->getBundles() as $bundle) {
-                $candidatePath = $bundle->getPath() . '/DataFixtures/Document';
+
+            foreach ($directories as $directory) {
+                $candidatePath = $directory . '/DataFixtures/Document';
                 $candidatePaths[] = $candidatePath;
                 if (file_exists($candidatePath)) {
                     $paths[] = $candidatePath;
