@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Command;
 
-use Sulu\Component\Content\ContentTypeManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -28,7 +28,9 @@ class ContentTypesDumpCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('sulu:content:types:dump')
-            ->setDescription('Dumps all ContentTypes registered in the system');
+            ->setDescription('Dumps all ContentTypes registered in the system')->setDefinition([
+                new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, xml, json, or md)', 'txt'),
+            ]);
     }
 
     /**
@@ -36,15 +38,15 @@ class ContentTypesDumpCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var ContentTypeManagerInterface $contentTypeManager */
-        $contentTypeManager = $this->getContainer()->get('sulu.content.type_manager');
+        $command = $this->getApplication()->find('debug:container');
 
-        $table = new Table($output);
-        $table->setHeaders(['Alias', 'Service ID']);
+        $arguments = [
+            'command' => 'debug:container',
+            '--tag' => 'sulu.content.type',
+            '--show-private' => true,
+            '--format' => $input->getOption('format'),
+        ];
 
-        foreach ($contentTypeManager->getAll() as $alias => $service) {
-            $table->addRow([$alias, $service['id']]);
-        }
-        $table->render();
+        return $command->run(new ArrayInput($arguments), $output);
     }
 }

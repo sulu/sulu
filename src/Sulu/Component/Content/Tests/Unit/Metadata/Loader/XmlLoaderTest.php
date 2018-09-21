@@ -147,7 +147,7 @@ class XmlLoaderTest extends TestCase
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
         $this->contentTypeManager->has('test')->willReturn(false);
-        $this->contentTypeManager->getAll()->willReturn(['text_line' => [], 'resource_locator' => []]);
+        $this->contentTypeManager->getAll()->willReturn(['text_line', 'resource_locator']);
         $this->load('template_without_invalid_ignore.xml');
     }
 

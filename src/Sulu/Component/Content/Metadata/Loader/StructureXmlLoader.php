@@ -184,7 +184,7 @@ class StructureXmlLoader extends AbstractLoader
             throw new \InvalidArgumentException(sprintf(
                 'Content type with alias "%s" has not been registered. Known content types are: "%s"',
                 $propertyType,
-                implode('", "', array_keys($this->contentTypeManager->getAll() ?: []))
+                implode('", "', $this->contentTypeManager->getAll())
             ));
         });
 
